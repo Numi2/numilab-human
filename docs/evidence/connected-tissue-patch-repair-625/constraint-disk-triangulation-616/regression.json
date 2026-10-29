@@ -1,0 +1,324 @@
+{
+  "schema": "exact-constraint-disk-regression.v1",
+  "status": "PASS",
+  "helper_sha256": "eab86c0a1060a1292db4a9a01e0a766be8739ea2fa2c575a5658082a453d87ea",
+  "test_sha256": "c478555de36be6d469c845a57c296b7b016e5a1602bbb686787a2614aea10505",
+  "exact_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+  "fixtures": [
+    {
+      "fixture": "square",
+      "status": "PASS",
+      "exact_self_pairs": 0,
+      "details": {
+        "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+        "coordinate_changes": 0,
+        "topology": {
+          "vertices": 4,
+          "edges": 5,
+          "faces": 2,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "triangle_candidates": 4,
+          "eligible_triangles": 4,
+          "rejected_external_triangles": 0,
+          "external_exact_pairs": 0,
+          "external_aabb_candidates": 0,
+          "dp_solves": 1,
+          "branches_popped": 1,
+          "self_pair_conflicts": 0
+        },
+        "selection_cost": 2.000008,
+        "conflict_samples": [],
+        "elapsed_s": 0.00020220899023115635
+      }
+    },
+    {
+      "fixture": "concave",
+      "status": "PASS",
+      "exact_self_pairs": 0,
+      "details": {
+        "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+        "coordinate_changes": 0,
+        "topology": {
+          "vertices": 5,
+          "edges": 7,
+          "faces": 3,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "triangle_candidates": 10,
+          "eligible_triangles": 10,
+          "rejected_external_triangles": 0,
+          "external_exact_pairs": 0,
+          "external_aabb_candidates": 0,
+          "dp_solves": 1,
+          "branches_popped": 1,
+          "self_pair_conflicts": 0
+        },
+        "selection_cost": 1.3333467222222222,
+        "conflict_samples": [],
+        "elapsed_s": 0.00028375000692903996
+      }
+    },
+    {
+      "fixture": "retained_diagonal",
+      "status": "PASS",
+      "exact_self_pairs": 0,
+      "details": {
+        "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+        "coordinate_changes": 0,
+        "topology": {
+          "vertices": 4,
+          "edges": 5,
+          "faces": 2,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "triangle_candidates": 2,
+          "eligible_triangles": 2,
+          "rejected_external_triangles": 0,
+          "external_exact_pairs": 0,
+          "external_aabb_candidates": 0,
+          "dp_solves": 1,
+          "branches_popped": 1,
+          "self_pair_conflicts": 0
+        },
+        "selection_cost": 2.000008,
+        "conflict_samples": [],
+        "elapsed_s": 7.562502287328243e-05
+      }
+    },
+    {
+      "fixture": "nonplanar_conflict",
+      "status": "PASS",
+      "exact_self_pairs": 0,
+      "details": {
+        "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+        "coordinate_changes": 0,
+        "topology": {
+          "vertices": 8,
+          "edges": 13,
+          "faces": 6,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "triangle_candidates": 56,
+          "eligible_triangles": 56,
+          "rejected_external_triangles": 0,
+          "external_exact_pairs": 0,
+          "external_aabb_candidates": 0,
+          "dp_solves": 95,
+          "branches_popped": 51,
+          "self_pair_conflicts": 93
+        },
+        "selection_cost": 1.9490605562394752,
+        "conflict_samples": [
+          [
+            [
+              4,
+              6,
+              7
+            ],
+            [
+              2,
+              3,
+              4
+            ]
+          ],
+          [
+            [
+              4,
+              5,
+              7
+            ],
+            [
+              2,
+              3,
+              4
+            ]
+          ],
+          [
+            [
+              4,
+              6,
+              7
+            ],
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              4,
+              6
+            ],
+            [
+              1,
+              2,
+              4
+            ]
+          ],
+          [
+            [
+              4,
+              5,
+              7
+            ],
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              4,
+              6
+            ],
+            [
+              1,
+              3,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              4,
+              6
+            ],
+            [
+              1,
+              3,
+              4
+            ]
+          ],
+          [
+            [
+              0,
+              4,
+              7
+            ],
+            [
+              0,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              4,
+              7
+            ],
+            [
+              0,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              1,
+              3
+            ]
+          ],
+          [
+            [
+              0,
+              6,
+              7
+            ],
+            [
+              0,
+              1,
+              3
+            ]
+          ]
+        ],
+        "elapsed_s": 0.013054874958470464
+      },
+      "exhaustive_triangulations": 132,
+      "exhaustive_valid": 16,
+      "optimal_cost_parity": true
+    },
+    {
+      "fixture": "fully_blocked_distinct_surface",
+      "status": "PASS",
+      "rejection_expected": true
+    }
+  ],
+  "invalid_boundary_negative_controls": 2,
+  "physical_admission": false
+}

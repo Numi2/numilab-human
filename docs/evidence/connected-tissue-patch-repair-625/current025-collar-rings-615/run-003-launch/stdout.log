@@ -1,0 +1,42 @@
+{
+  "result": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/boundary-feasibility-612/current025-collar-rings-615/run-003-exact-dp-first/result.json",
+  "attempts": [
+    {
+      "tx": 34,
+      "ring": 2,
+      "status": "PASS",
+      "new_faces": 25,
+      "metrics": {
+        "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+        "coordinate_changes": 0,
+        "topology": {
+          "vertices": 27,
+          "edges": 51,
+          "faces": 25,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "triangle_candidates": 2802,
+          "eligible_triangles": 567,
+          "rejected_external_triangles": 2235,
+          "external_exact_pairs": 30386,
+          "external_aabb_candidates": 626950,
+          "dp_solves": 1,
+          "branches_popped": 1,
+          "self_pair_conflicts": 0
+        },
+        "selection_cost": 0.6455688533269206,
+        "conflict_samples": [],
+        "elapsed_s": 6.991264624986798
+      },
+      "operation": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/boundary-feasibility-612/current025-collar-rings-615/run-003-exact-dp-first/tx34-ring2.operation.json"
+    },
+    {
+      "tx": 80,
+      "ring": 1,
+      "status": "FAIL",
+      "error": "TimeoutError('disk triangle eligibility budget exhausted')"
+    }
+  ],
+  "elapsed_s": 19.85604733391665
+}

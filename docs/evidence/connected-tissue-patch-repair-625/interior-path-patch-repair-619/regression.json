@@ -1,0 +1,109 @@
+{
+  "schema": "certified-interior-path-patch-regression.v1",
+  "status": "PASS",
+  "helper_sha256": "a8af557b48c0bb1a4dbb65ad2c9f34d55f1f0704cc0ff89b4e44f1c21d68c934",
+  "fixture": "annulus-with-two-edge-graph-only-route",
+  "oriented_area": 32.0,
+  "expected_area": 32,
+  "details": {
+    "method": "certified_original_edge_cut_tree_then_exact_DP",
+    "paths": [
+      [
+        0,
+        8,
+        4
+      ]
+    ],
+    "old_edges": 28,
+    "impossible_cut_identity_chords": 8,
+    "blocked_old_edges": [],
+    "chord_pruning": {
+      "method": "exact_segment_triangle_necessary_chord_constraints",
+      "slot_chords": 66,
+      "blocked_chords": 3,
+      "blocked_boundary_edges": [],
+      "exact_segment_queries": 0,
+      "aabb_candidates_visited": 0,
+      "cache_hits": 46,
+      "witnesses": [
+        {
+          "slot_vertices": [
+            0,
+            8
+          ],
+          "witness": {
+            "reason": "zero_length_chord",
+            "physical_vertices": [
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "slot_vertices": [
+            1,
+            7
+          ],
+          "witness": {
+            "reason": "zero_length_chord",
+            "physical_vertices": [
+              8,
+              8
+            ]
+          }
+        },
+        {
+          "slot_vertices": [
+            2,
+            6
+          ],
+          "witness": {
+            "reason": "zero_length_chord",
+            "physical_vertices": [
+              4,
+              4
+            ]
+          }
+        }
+      ],
+      "elapsed_s": 4.2999861761927605e-05,
+      "coordinate_changes": 0
+    },
+    "dp": {
+      "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+      "coordinate_changes": 0,
+      "topology": {
+        "vertices": 12,
+        "edges": 21,
+        "faces": 10,
+        "euler_characteristic": 1
+      },
+      "statistics": {
+        "triangle_candidates": 100,
+        "eligible_triangles": 100,
+        "rejected_external_triangles": 0,
+        "external_exact_pairs": 0,
+        "external_aabb_candidates": 0,
+        "dp_solves": 1,
+        "branches_popped": 1,
+        "self_pair_conflicts": 0
+      },
+      "selection_cost": 1.7778527777777777,
+      "conflict_samples": [],
+      "elapsed_s": 0.0029815828893333673
+    },
+    "topology": {
+      "vertices": 9,
+      "edges": 19,
+      "faces": 10,
+      "euler_characteristic": 0,
+      "boundary_components": 2,
+      "interior_vertices": 1,
+      "vertex_links": "PASS"
+    },
+    "coordinate_changes": 0,
+    "elapsed_s": 0.004533750005066395
+  },
+  "duplicate_negative_control": true,
+  "physical_admission": false
+}

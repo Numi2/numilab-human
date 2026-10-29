@@ -1,0 +1,802 @@
+{
+  "schema": "candidate025-near-barrier-exact-dp-first.v1",
+  "candidate_sha256": "9790ed1fa49bacff36ea169c7b8354344e40f1df33f604c006bcfb7991723a2a",
+  "plan_sha256": "32e62133fb1beccb1ef7b8e83da77548f75e271ba02ba9009a140aad53db6028",
+  "dp_sha256": "eab86c0a1060a1292db4a9a01e0a766be8739ea2fa2c575a5658082a453d87ea",
+  "exact_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+  "replay_sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5",
+  "manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+  "fine_I_sha256": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+  "barrier_counts": {
+    "all185-native-F32": {
+      "total_faces": 469136,
+      "queried_faces": 955
+    },
+    "bone-105-86": {
+      "total_faces": 398,
+      "queried_faces": 0
+    },
+    "bone-99-84": {
+      "total_faces": 402,
+      "queried_faces": 0
+    },
+    "bone-139-142": {
+      "total_faces": 406,
+      "queried_faces": 0
+    },
+    "bone-153-155": {
+      "total_faces": 408,
+      "queried_faces": 0
+    },
+    "bone-139-133": {
+      "total_faces": 414,
+      "queried_faces": 63
+    },
+    "bone-139-136": {
+      "total_faces": 422,
+      "queried_faces": 0
+    },
+    "bone-49-77": {
+      "total_faces": 428,
+      "queried_faces": 0
+    },
+    "bone-50-78": {
+      "total_faces": 434,
+      "queried_faces": 0
+    },
+    "bone-43-16": {
+      "total_faces": 672,
+      "queried_faces": 0
+    },
+    "bone-109-114": {
+      "total_faces": 392,
+      "queried_faces": 0
+    },
+    "bone-65-99": {
+      "total_faces": 342,
+      "queried_faces": 0
+    },
+    "bone-71-103": {
+      "total_faces": 112,
+      "queried_faces": 0
+    },
+    "bone-139-143": {
+      "total_faces": 136,
+      "queried_faces": 0
+    },
+    "bone-48-72": {
+      "total_faces": 170,
+      "queried_faces": 0
+    },
+    "bone-66-100": {
+      "total_faces": 174,
+      "queried_faces": 0
+    },
+    "bone-76-106": {
+      "total_faces": 186,
+      "queried_faces": 0
+    },
+    "bone-1-1": {
+      "total_faces": 9922,
+      "queried_faces": 0
+    },
+    "bone-4-168": {
+      "total_faces": 3892,
+      "queried_faces": 0
+    },
+    "bone-10-167": {
+      "total_faces": 3512,
+      "queried_faces": 0
+    },
+    "bone-13-166": {
+      "total_faces": 3272,
+      "queried_faces": 0
+    },
+    "bone-16-165": {
+      "total_faces": 3214,
+      "queried_faces": 0
+    },
+    "bone-19-164": {
+      "total_faces": 2972,
+      "queried_faces": 0
+    },
+    "bone-20-26": {
+      "total_faces": 4624,
+      "queried_faces": 0
+    },
+    "bone-20-27": {
+      "total_faces": 2546,
+      "queried_faces": 0
+    },
+    "bone-20-36": {
+      "total_faces": 3276,
+      "queried_faces": 0
+    },
+    "bone-20-37": {
+      "total_faces": 5594,
+      "queried_faces": 0
+    },
+    "bone-20-38": {
+      "total_faces": 7254,
+      "queried_faces": 0
+    },
+    "bone-20-39": {
+      "total_faces": 8832,
+      "queried_faces": 0
+    },
+    "bone-20-40": {
+      "total_faces": 9710,
+      "queried_faces": 0
+    },
+    "bone-20-41": {
+      "total_faces": 10246,
+      "queried_faces": 0
+    },
+    "bone-20-42": {
+      "total_faces": 10032,
+      "queried_faces": 0
+    },
+    "bone-20-43": {
+      "total_faces": 8336,
+      "queried_faces": 0
+    },
+    "bone-20-44": {
+      "total_faces": 7576,
+      "queried_faces": 0
+    },
+    "bone-20-45": {
+      "total_faces": 6820,
+      "queried_faces": 0
+    },
+    "bone-20-46": {
+      "total_faces": 4866,
+      "queried_faces": 0
+    },
+    "bone-20-47": {
+      "total_faces": 2818,
+      "queried_faces": 0
+    },
+    "bone-20-48": {
+      "total_faces": 4728,
+      "queried_faces": 0
+    },
+    "bone-20-49": {
+      "total_faces": 8800,
+      "queried_faces": 0
+    },
+    "bone-20-50": {
+      "total_faces": 11942,
+      "queried_faces": 0
+    },
+    "bone-20-51": {
+      "total_faces": 8850,
+      "queried_faces": 0
+    },
+    "bone-20-52": {
+      "total_faces": 9710,
+      "queried_faces": 0
+    },
+    "bone-20-53": {
+      "total_faces": 10264,
+      "queried_faces": 0
+    },
+    "bone-20-54": {
+      "total_faces": 10032,
+      "queried_faces": 0
+    },
+    "bone-20-55": {
+      "total_faces": 8336,
+      "queried_faces": 0
+    },
+    "bone-20-56": {
+      "total_faces": 7576,
+      "queried_faces": 0
+    },
+    "bone-20-57": {
+      "total_faces": 6826,
+      "queried_faces": 0
+    },
+    "bone-20-58": {
+      "total_faces": 4866,
+      "queried_faces": 0
+    },
+    "bone-20-59": {
+      "total_faces": 2818,
+      "queried_faces": 0
+    },
+    "bone-20-169": {
+      "total_faces": 1700,
+      "queried_faces": 0
+    },
+    "bone-20-170": {
+      "total_faces": 1938,
+      "queried_faces": 0
+    },
+    "bone-20-171": {
+      "total_faces": 2038,
+      "queried_faces": 0
+    },
+    "bone-20-172": {
+      "total_faces": 2066,
+      "queried_faces": 0
+    },
+    "bone-20-173": {
+      "total_faces": 2280,
+      "queried_faces": 0
+    },
+    "bone-20-174": {
+      "total_faces": 2248,
+      "queried_faces": 0
+    },
+    "bone-20-175": {
+      "total_faces": 2574,
+      "queried_faces": 0
+    },
+    "bone-20-176": {
+      "total_faces": 2424,
+      "queried_faces": 0
+    },
+    "bone-20-177": {
+      "total_faces": 2586,
+      "queried_faces": 0
+    },
+    "bone-20-178": {
+      "total_faces": 2790,
+      "queried_faces": 0
+    },
+    "bone-20-179": {
+      "total_faces": 2674,
+      "queried_faces": 0
+    },
+    "bone-20-180": {
+      "total_faces": 2772,
+      "queried_faces": 0
+    },
+    "bone-23-28": {
+      "total_faces": 13002,
+      "queried_faces": 0
+    },
+    "bone-23-29": {
+      "total_faces": 13210,
+      "queried_faces": 396
+    },
+    "bone-23-30": {
+      "total_faces": 4928,
+      "queried_faces": 0
+    },
+    "bone-23-31": {
+      "total_faces": 4936,
+      "queried_faces": 0
+    },
+    "bone-23-32": {
+      "total_faces": 14510,
+      "queried_faces": 0
+    },
+    "bone-23-33": {
+      "total_faces": 12450,
+      "queried_faces": 559
+    },
+    "bone-23-34": {
+      "total_faces": 8154,
+      "queried_faces": 0
+    },
+    "bone-23-35": {
+      "total_faces": 5576,
+      "queried_faces": 0
+    },
+    "bone-26-70": {
+      "total_faces": 2094,
+      "queried_faces": 0
+    },
+    "bone-26-71": {
+      "total_faces": 2288,
+      "queried_faces": 0
+    },
+    "bone-26-181": {
+      "total_faces": 2030,
+      "queried_faces": 0
+    },
+    "bone-26-182": {
+      "total_faces": 2410,
+      "queried_faces": 0
+    },
+    "bone-26-183": {
+      "total_faces": 2196,
+      "queried_faces": 0
+    },
+    "bone-26-184": {
+      "total_faces": 2374,
+      "queried_faces": 0
+    },
+    "bone-26-185": {
+      "total_faces": 1820,
+      "queried_faces": 0
+    },
+    "bone-29-8": {
+      "total_faces": 1146,
+      "queried_faces": 0
+    },
+    "bone-34-10": {
+      "total_faces": 26172,
+      "queried_faces": 0
+    },
+    "bone-41-12": {
+      "total_faces": 3784,
+      "queried_faces": 0
+    },
+    "bone-42-14": {
+      "total_faces": 834,
+      "queried_faces": 0
+    },
+    "bone-45-75": {
+      "total_faces": 332,
+      "queried_faces": 0
+    },
+    "bone-46-74": {
+      "total_faces": 322,
+      "queried_faces": 0
+    },
+    "bone-47-76": {
+      "total_faces": 190,
+      "queried_faces": 0
+    },
+    "bone-52-88": {
+      "total_faces": 566,
+      "queried_faces": 0
+    },
+    "bone-53-93": {
+      "total_faces": 612,
+      "queried_faces": 0
+    },
+    "bone-54-94": {
+      "total_faces": 240,
+      "queried_faces": 0
+    },
+    "bone-55-79": {
+      "total_faces": 360,
+      "queried_faces": 0
+    },
+    "bone-56-80": {
+      "total_faces": 522,
+      "queried_faces": 0
+    },
+    "bone-57-89": {
+      "total_faces": 748,
+      "queried_faces": 0
+    },
+    "bone-59-95": {
+      "total_faces": 386,
+      "queried_faces": 0
+    },
+    "bone-60-96": {
+      "total_faces": 264,
+      "queried_faces": 0
+    },
+    "bone-61-97": {
+      "total_faces": 210,
+      "queried_faces": 0
+    },
+    "bone-62-90": {
+      "total_faces": 702,
+      "queried_faces": 0
+    },
+    "bone-64-98": {
+      "total_faces": 458,
+      "queried_faces": 0
+    },
+    "bone-67-91": {
+      "total_faces": 536,
+      "queried_faces": 0
+    },
+    "bone-69-101": {
+      "total_faces": 376,
+      "queried_faces": 0
+    },
+    "bone-70-102": {
+      "total_faces": 316,
+      "queried_faces": 0
+    },
+    "bone-72-92": {
+      "total_faces": 506,
+      "queried_faces": 0
+    },
+    "bone-74-104": {
+      "total_faces": 314,
+      "queried_faces": 0
+    },
+    "bone-75-105": {
+      "total_faces": 208,
+      "queried_faces": 0
+    },
+    "bone-79-9": {
+      "total_faces": 1176,
+      "queried_faces": 0
+    },
+    "bone-84-11": {
+      "total_faces": 28106,
+      "queried_faces": 0
+    },
+    "bone-91-13": {
+      "total_faces": 3844,
+      "queried_faces": 0
+    },
+    "bone-92-15": {
+      "total_faces": 824,
+      "queried_faces": 0
+    },
+    "bone-93-17": {
+      "total_faces": 632,
+      "queried_faces": 0
+    },
+    "bone-95-82": {
+      "total_faces": 314,
+      "queried_faces": 0
+    },
+    "bone-96-81": {
+      "total_faces": 312,
+      "queried_faces": 0
+    },
+    "bone-97-83": {
+      "total_faces": 210,
+      "queried_faces": 0
+    },
+    "bone-98-73": {
+      "total_faces": 304,
+      "queried_faces": 0
+    },
+    "bone-100-85": {
+      "total_faces": 356,
+      "queried_faces": 0
+    },
+    "bone-102-107": {
+      "total_faces": 578,
+      "queried_faces": 0
+    },
+    "bone-103-112": {
+      "total_faces": 346,
+      "queried_faces": 0
+    },
+    "bone-104-113": {
+      "total_faces": 268,
+      "queried_faces": 0
+    },
+    "bone-106-87": {
+      "total_faces": 452,
+      "queried_faces": 0
+    },
+    "bone-107-108": {
+      "total_faces": 774,
+      "queried_faces": 0
+    },
+    "bone-110-115": {
+      "total_faces": 306,
+      "queried_faces": 0
+    },
+    "bone-111-116": {
+      "total_faces": 328,
+      "queried_faces": 0
+    },
+    "bone-112-109": {
+      "total_faces": 708,
+      "queried_faces": 0
+    },
+    "bone-114-117": {
+      "total_faces": 460,
+      "queried_faces": 0
+    },
+    "bone-115-118": {
+      "total_faces": 384,
+      "queried_faces": 0
+    },
+    "bone-116-119": {
+      "total_faces": 266,
+      "queried_faces": 0
+    },
+    "bone-117-110": {
+      "total_faces": 528,
+      "queried_faces": 0
+    },
+    "bone-119-120": {
+      "total_faces": 376,
+      "queried_faces": 0
+    },
+    "bone-120-121": {
+      "total_faces": 340,
+      "queried_faces": 0
+    },
+    "bone-121-122": {
+      "total_faces": 196,
+      "queried_faces": 0
+    },
+    "bone-122-111": {
+      "total_faces": 500,
+      "queried_faces": 0
+    },
+    "bone-124-123": {
+      "total_faces": 274,
+      "queried_faces": 0
+    },
+    "bone-125-124": {
+      "total_faces": 254,
+      "queried_faces": 0
+    },
+    "bone-126-125": {
+      "total_faces": 198,
+      "queried_faces": 0
+    },
+    "bone-128-18": {
+      "total_faces": 2374,
+      "queried_faces": 0
+    },
+    "bone-128-19": {
+      "total_faces": 2332,
+      "queried_faces": 0
+    },
+    "bone-131-2": {
+      "total_faces": 3102,
+      "queried_faces": 0
+    },
+    "bone-136-4": {
+      "total_faces": 1664,
+      "queried_faces": 0
+    },
+    "bone-136-20": {
+      "total_faces": 1142,
+      "queried_faces": 0
+    },
+    "bone-137-22": {
+      "total_faces": 1380,
+      "queried_faces": 0
+    },
+    "bone-138-6": {
+      "total_faces": 1262,
+      "queried_faces": 0
+    },
+    "bone-138-60": {
+      "total_faces": 716,
+      "queried_faces": 0
+    },
+    "bone-138-61": {
+      "total_faces": 952,
+      "queried_faces": 0
+    },
+    "bone-138-62": {
+      "total_faces": 450,
+      "queried_faces": 0
+    },
+    "bone-138-63": {
+      "total_faces": 626,
+      "queried_faces": 0
+    },
+    "bone-138-64": {
+      "total_faces": 932,
+      "queried_faces": 0
+    },
+    "bone-138-126": {
+      "total_faces": 1122,
+      "queried_faces": 0
+    },
+    "bone-138-127": {
+      "total_faces": 752,
+      "queried_faces": 0
+    },
+    "bone-138-128": {
+      "total_faces": 700,
+      "queried_faces": 0
+    },
+    "bone-138-129": {
+      "total_faces": 674,
+      "queried_faces": 0
+    },
+    "bone-138-130": {
+      "total_faces": 794,
+      "queried_faces": 0
+    },
+    "bone-139-131": {
+      "total_faces": 486,
+      "queried_faces": 41
+    },
+    "bone-139-132": {
+      "total_faces": 440,
+      "queried_faces": 42
+    },
+    "bone-139-134": {
+      "total_faces": 264,
+      "queried_faces": 6
+    },
+    "bone-139-135": {
+      "total_faces": 200,
+      "queried_faces": 0
+    },
+    "bone-139-137": {
+      "total_faces": 292,
+      "queried_faces": 0
+    },
+    "bone-139-138": {
+      "total_faces": 260,
+      "queried_faces": 0
+    },
+    "bone-139-139": {
+      "total_faces": 438,
+      "queried_faces": 0
+    },
+    "bone-139-140": {
+      "total_faces": 350,
+      "queried_faces": 0
+    },
+    "bone-139-141": {
+      "total_faces": 244,
+      "queried_faces": 0
+    },
+    "bone-139-144": {
+      "total_faces": 210,
+      "queried_faces": 0
+    },
+    "bone-142-24": {
+      "total_faces": 306,
+      "queried_faces": 0
+    },
+    "bone-145-3": {
+      "total_faces": 3204,
+      "queried_faces": 0
+    },
+    "bone-150-5": {
+      "total_faces": 1692,
+      "queried_faces": 0
+    },
+    "bone-150-21": {
+      "total_faces": 1124,
+      "queried_faces": 0
+    },
+    "bone-151-23": {
+      "total_faces": 1356,
+      "queried_faces": 0
+    },
+    "bone-152-7": {
+      "total_faces": 1288,
+      "queried_faces": 0
+    },
+    "bone-152-65": {
+      "total_faces": 744,
+      "queried_faces": 0
+    },
+    "bone-152-66": {
+      "total_faces": 996,
+      "queried_faces": 0
+    },
+    "bone-152-67": {
+      "total_faces": 466,
+      "queried_faces": 0
+    },
+    "bone-152-68": {
+      "total_faces": 680,
+      "queried_faces": 0
+    },
+    "bone-152-69": {
+      "total_faces": 886,
+      "queried_faces": 0
+    },
+    "bone-152-145": {
+      "total_faces": 1172,
+      "queried_faces": 0
+    },
+    "bone-152-146": {
+      "total_faces": 774,
+      "queried_faces": 0
+    },
+    "bone-152-147": {
+      "total_faces": 742,
+      "queried_faces": 0
+    },
+    "bone-152-148": {
+      "total_faces": 772,
+      "queried_faces": 0
+    },
+    "bone-152-149": {
+      "total_faces": 864,
+      "queried_faces": 0
+    },
+    "bone-153-150": {
+      "total_faces": 516,
+      "queried_faces": 0
+    },
+    "bone-153-151": {
+      "total_faces": 378,
+      "queried_faces": 0
+    },
+    "bone-153-152": {
+      "total_faces": 380,
+      "queried_faces": 0
+    },
+    "bone-153-153": {
+      "total_faces": 324,
+      "queried_faces": 0
+    },
+    "bone-153-154": {
+      "total_faces": 240,
+      "queried_faces": 0
+    },
+    "bone-153-156": {
+      "total_faces": 294,
+      "queried_faces": 0
+    },
+    "bone-153-157": {
+      "total_faces": 336,
+      "queried_faces": 0
+    },
+    "bone-153-158": {
+      "total_faces": 438,
+      "queried_faces": 0
+    },
+    "bone-153-159": {
+      "total_faces": 284,
+      "queried_faces": 0
+    },
+    "bone-153-160": {
+      "total_faces": 226,
+      "queried_faces": 0
+    },
+    "bone-153-161": {
+      "total_faces": 396,
+      "queried_faces": 0
+    },
+    "bone-153-162": {
+      "total_faces": 226,
+      "queried_faces": 0
+    },
+    "bone-153-163": {
+      "total_faces": 220,
+      "queried_faces": 0
+    },
+    "bone-156-25": {
+      "total_faces": 310,
+      "queried_faces": 0
+    },
+    "fine-I-open": {
+      "total_faces": 205239,
+      "queried_faces": 36
+    }
+  },
+  "attempts": [
+    {
+      "tx": 34,
+      "ring": 2,
+      "status": "PASS",
+      "new_faces": 25,
+      "metrics": {
+        "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+        "coordinate_changes": 0,
+        "topology": {
+          "vertices": 27,
+          "edges": 51,
+          "faces": 25,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "triangle_candidates": 2802,
+          "eligible_triangles": 567,
+          "rejected_external_triangles": 2235,
+          "external_exact_pairs": 30386,
+          "external_aabb_candidates": 626950,
+          "dp_solves": 1,
+          "branches_popped": 1,
+          "self_pair_conflicts": 0
+        },
+        "selection_cost": 0.6455688533269206,
+        "conflict_samples": [],
+        "elapsed_s": 6.991264624986798
+      },
+      "operation": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/boundary-feasibility-612/current025-collar-rings-615/run-003-exact-dp-first/tx34-ring2.operation.json"
+    },
+    {
+      "tx": 80,
+      "ring": 1,
+      "status": "FAIL",
+      "error": "TimeoutError('disk triangle eligibility budget exhausted')"
+    }
+  ],
+  "elapsed_s": 19.85604733391665,
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0
+}
