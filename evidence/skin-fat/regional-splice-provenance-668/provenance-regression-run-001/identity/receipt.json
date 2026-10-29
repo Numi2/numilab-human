@@ -1,0 +1,102 @@
+{
+  "counts": {
+    "cells": 30442,
+    "changed_child_registration_rows": 5790,
+    "changed_label_tuples": [
+      [
+        15,
+        23,
+        23
+      ],
+      [
+        16,
+        23,
+        23
+      ]
+    ],
+    "changed_regional_cells": 5790,
+    "current006_parent_centroid_checks": 5790,
+    "cut_collar_faces_checked": 58,
+    "cut_collar_faces_preserved": 58,
+    "max_registration_residual_m": 3.7378079359257725e-05,
+    "nodes": 7491,
+    "protected149_rows": 149,
+    "retained_base_node_rows": 7491,
+    "retained_outside_cells": 24652,
+    "source330_endpoint_and_composition_checks": 5790
+  },
+  "identity_cli_comparison": {
+    "all_exact": true,
+    "labels_exact": true,
+    "materials_exact": true,
+    "nodes_exact_f32": true,
+    "tetrahedra_exact": true
+  },
+  "inputs": {
+    "base": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz",
+      "sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63"
+    },
+    "boundary_sidecars_sha256": null,
+    "cell_ancestry": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/run-004/attempt-004/retet-cell-parent-ancestry.csv",
+      "sha256": "a819a11136347a6dad9cb0439681262706247bad8968118df0550ef9e5dc8d30"
+    },
+    "geometry": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/run-004/attempt-003/current006-external-only-regional-splice-before-gates.npz",
+      "sha256": "f2c263069a4080162fa394ffac62585333c1f10f085f7ce2008a921017b4f559"
+    },
+    "node_sidecars_sha256": null,
+    "source330_labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "source330_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "source330_tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "mass_fractions_emitted": false,
+  "mass_measure": "not generated here; use existing conservative spatial mass-transfer owner",
+  "native_or_GPU_run": false,
+  "outputs": {
+    "child-source330-map.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/provenance-regression-run-001/identity/child-source330-map.csv",
+      "sha256": "deda243bf00cef54165169facd7b858706f927cbc183c5ca7e4d4c59e29c548d"
+    },
+    "child.labels.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/provenance-regression-run-001/identity/child.labels.csv",
+      "sha256": "9da3f79c98a65270503f441c8703361a210ae90603cf0cac42bc97a71708c980"
+    },
+    "mesh.ele": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/provenance-regression-run-001/identity/mesh.ele",
+      "sha256": "983227aa31f0057680ac07523bacae3e322f6ea9bb78012ef9910aa082987372"
+    },
+    "mesh.node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/provenance-regression-run-001/identity/mesh.node",
+      "sha256": "e707ffef13fa08df2aa98199b515cd471d50cf4b85eed5310fd5331c3cbab151"
+    }
+  },
+  "physical_admission": false,
+  "role_surfaces": {
+    "I_material16_other_parent_rows_recomputed": 4949,
+    "changed_roles": [],
+    "counts": {
+      "D": 4949,
+      "I": 4949,
+      "O": 4949
+    }
+  },
+  "schema": "regional-splice-native-child-inputs.v1",
+  "scope": "generic full-splice geometry and existing source330 cell ancestry packaged for the native mass-transfer owner; no mass result or physical qualification",
+  "source_cell_map": {
+    "changed_cell_parents": 5790,
+    "retained_cell_parents": 24652,
+    "source_measure_fractions_not_written": true
+  },
+  "status": "INPUTS_PREPARED_SOURCE_ONLY"
+}

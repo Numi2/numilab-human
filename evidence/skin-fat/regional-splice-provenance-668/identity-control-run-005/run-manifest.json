@@ -1,0 +1,55 @@
+{
+  "command": [
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/prepare_spliced_child_inputs.py",
+    "--base-npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz",
+    "--geometry-npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/run-004/attempt-003/current006-external-only-regional-splice-before-gates.npz",
+    "--cell-ancestry-csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/run-004/attempt-004/retet-cell-parent-ancestry.csv",
+    "--parent-labels-csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+    "--output-dir",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005",
+    "--compare-cli-dir",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/run-004/attempt-006-native-cli",
+    "--receipt-json",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005/receipt.json"
+  ],
+  "native_or_GPU_run": false,
+  "outputs": {
+    "child-source330-map.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005/child-source330-map.csv",
+      "sha256": "02eb59a7fd689b8ea8a14fd8b132f32f04765a5e42adc55fd7c3dc5151403962"
+    },
+    "child.labels.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005/child.labels.csv",
+      "sha256": "9da3f79c98a65270503f441c8703361a210ae90603cf0cac42bc97a71708c980"
+    },
+    "mesh.ele": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005/mesh.ele",
+      "sha256": "983227aa31f0057680ac07523bacae3e322f6ea9bb78012ef9910aa082987372"
+    },
+    "mesh.node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005/mesh.node",
+      "sha256": "e707ffef13fa08df2aa98199b515cd471d50cf4b85eed5310fd5331c3cbab151"
+    }
+  },
+  "physical_admission": false,
+  "receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/identity-control-run-005/receipt.json",
+    "sha256": "4c2646f1420c5f672efdbd54d21ea74fb38f5e8264da93c8852ddf76ec8689b0"
+  },
+  "schema": "regional-splice-native-child-inputs-run.v1",
+  "script": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/prepare_spliced_child_inputs.py",
+    "sha256": "6598a802a90dd3da4f3b88e87137b97549d7289c7dfe0475c9ebc339e29b6dd5"
+  },
+  "serial_wrapper": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+    "sha256": "88ce1f98414e0125f0cb31a94354db40cfdaba2281f79a9040aa9872d19edf35"
+  },
+  "status": "INPUTS_PREPARED_SOURCE_ONLY"
+}

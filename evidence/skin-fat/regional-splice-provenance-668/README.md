@@ -1,0 +1,11 @@
+# Regional child input preparation and provenance
+
+The existing native child importer accepts a regional retetrahedralization, but preparation previously trusted the supplied source-parent residual. This tool packages the existing node, element, semantic-label and source-parent inputs and verifies the immutable current006-to-original330 ancestry composition against the actual original330 geometry. It never assigns cell mass or source measure fractions; the existing native conservative spatial transport owner remains responsible for that calculation.
+
+The identity control has 7,491 nodes and 30,442 cells, including 5,790 retetrahedralized cells and 24,652 unchanged cells. The generated native node/element/label inputs exactly match the prior imported control. All 149 protected nodes and 58 cut-collar faces are retained. Reordered-node testing checks the same collar in its mapped row domain. Three negative cases reject a substituted same-label source parent, a forged registered point, and a forged residual. Five focused cases pass. The maximum independently checked source registration residual is 37.378 micrometres under the existing 0.4 mm bound.
+
+The source-only control does not certify a new physical boundary, conservative mass result, runtime creation, motion, or physiological performance. Runtime creation and accepted physical steps remain zero for these tests. The coarse physical O/I/D boundary still has unresolved crossings. The fine source surfaces' earlier zero-crossing certificates have a different scope.
+
+Run tools/check_spliced_child_input_provenance.py with --root pointing to the retained physical-transfer-209 evidence root and --output pointing to a fresh directory. It invokes prepare_spliced_child_inputs.py with explicit original330 node/tet/label CSVs. Exact input hashes, commands, successful controls and expected failures are retained below. Failed CSV inputs are losslessly gzip-compressed after their checks; restore the matching .csv before replaying a saved single command. The test driver recreates them directly.
+
+No public runtime interface, material model, tolerance, default scene, physical force or mass policy changes in this increment. The authoring tool requires explicit geometry and ancestry sidecars for changed domains and preserves existing full86 weights and retained coordinates.

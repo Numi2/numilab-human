@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/prepare_spliced_child_inputs.py", line 314, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/regional-identity-splice-001/generalized-splice-661/prepare_spliced_child_inputs.py", line 221, in main
+    if not np.isfinite(claimed_registered).all() or np.linalg.norm(source_registered-claimed_registered)>1e-10:raise ValueError(f"source330 barycentric endpoint does not reconstruct registered point at child {cr}")
+                                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: source330 barycentric endpoint does not reconstruct registered point at child 24652
