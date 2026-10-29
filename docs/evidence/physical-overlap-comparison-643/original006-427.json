@@ -1,0 +1,5956 @@
+{
+  "status": "coarse_material_bone_volume_inventory",
+  "coordinate_field": "reference",
+  "scope": "canonical Float32 physical material solids; positive intersection volumes are unresolved, no admission tolerance applied; per-bank volumes overlap and must not be summed as a union",
+  "candidate_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+  "bank_manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+  "script_sha256": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+  "point_count": 7491,
+  "tet_count": 29642,
+  "minimum_cell_volume_m3": 4.487014223207258e-13,
+  "layers": {
+    "skin": {
+      "material_index": 15,
+      "tetrahedra": 14821,
+      "boundary_vertices": 4994,
+      "boundary_faces": 9988,
+      "status": "Error.NoError",
+      "tet_volume_sum_m3": 0.003453980463501951,
+      "solid_volume_m3": 0.0034539804635019514,
+      "volume_closure_m3": 4.336808689942018e-19
+    },
+    "fat": {
+      "material_index": 16,
+      "tetrahedra": 14821,
+      "boundary_vertices": 4994,
+      "boundary_faces": 9988,
+      "status": "Error.NoError",
+      "tet_volume_sum_m3": 0.01165225701649411,
+      "solid_volume_m3": 0.01165225701649411,
+      "volume_closure_m3": 0.0
+    }
+  },
+  "banks": [
+    {
+      "body": 105,
+      "bone": 86,
+      "index": 105,
+      "operand_sha256": "c0ab51228ee90a2028812897634f39a2ee41ed05bc683a9031d2a8ef0de2dfbd",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 99,
+      "bone": 84,
+      "index": 100,
+      "operand_sha256": "ac28f1f0540e3c51e69346b8552d488eceaa97f0ca11a73e359f9fe340a0d9ad",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.639673392530696e-10,
+          "vertices": 15,
+          "faces": 26,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.22780576612475514,
+              -0.870836896318949,
+              0.12342987838019481
+            ],
+            [
+              0.22951558189767104,
+              -0.8689805379460337,
+              0.12455281179267585
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 142,
+      "index": 151,
+      "operand_sha256": "ea2834bc3f0ea37790880de342a009c8d8ba56929c604e446d452121f8b82e9b",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.1387656805719576e-08,
+          "vertices": 35,
+          "faces": 66,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.16210536238747975,
+              -1.7285712379026492,
+              0.22311977430187838
+            ],
+            [
+              -0.15276787517073523,
+              -1.7240848340888129,
+              0.23476318689929848
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.337232119533116e-07,
+          "vertices": 240,
+          "faces": 472,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1623122796475077,
+              -1.7303813342122194,
+              0.2118535960988023
+            ],
+            [
+              -0.14575604279344678,
+              -1.7210383586974614,
+              0.23642938201360494
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 155,
+      "index": 175,
+      "operand_sha256": "d7512c0265d4e7aea3cc17354a2f92080c21c8bbc6e937eafbff58f8dfb13d8c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 3.999881787005176e-10,
+          "vertices": 14,
+          "faces": 24,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.07391926985381234,
+              -1.7304452323492645,
+              0.23146672960422415
+            ],
+            [
+              0.07645964624998573,
+              -1.7301208968488642,
+              0.2338219508508577
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 133,
+      "index": 142,
+      "operand_sha256": "a436b95105433ce6650b5f92dade0528d28c25378ddabec0dca9cebecb537052",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.7446172781307227e-07,
+          "vertices": 254,
+          "faces": 500,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.12163922316130464,
+              -1.732476557524151,
+              0.23608243279407495
+            ],
+            [
+              -0.10473660615223077,
+              -1.7214073961220353,
+              0.2626425638014449
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 136,
+      "index": 145,
+      "operand_sha256": "76fd687b8b61fbffedaac75fe00b4dd9ec5d9a0f4e253ba2728bbaf2c3cff3fc",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.7282162648198287e-07,
+          "vertices": 131,
+          "faces": 258,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.13580832658853312,
+              -1.7318339863146341,
+              0.23145615652898113
+            ],
+            [
+              -0.12176416961837205,
+              -1.7263579636684965,
+              0.25909573518838713
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 49,
+      "bone": 77,
+      "index": 68,
+      "operand_sha256": "1f122f6321145b81735a1892c7bed16980b038d606cba6917d6df16ad2ba2b89",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 50,
+      "bone": 78,
+      "index": 69,
+      "operand_sha256": "0daafdde18ff4d1236ede71c0cba094bb700fd48f740efbfdbe0cd054b72ab94",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.154341469049222e-08,
+          "vertices": 79,
+          "faces": 154,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.27152542790778206,
+              -0.8808090970651286,
+              0.12342702130087949
+            ],
+            [
+              -0.26804469272213055,
+              -0.8750364901235648,
+              0.13143114155673416
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.1560468495854697e-07,
+          "vertices": 164,
+          "faces": 320,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.28616398431978735,
+              -0.886931881149555,
+              0.1234322091594509
+            ],
+            [
+              -0.2682820993981478,
+              -0.8750226339044586,
+              0.13845203864209163
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 43,
+      "bone": 16,
+      "index": 63,
+      "operand_sha256": "383cfb6127bff4e7a066a48ba1751d3cb3d4fd686f1859a3c8034af99fc9f336",
+      "layers": {
+        "skin": {
+          "intersection_m3": 4.928238460482238e-07,
+          "vertices": 82,
+          "faces": 160,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2868869599840744,
+              -0.8545657057222382,
+              0.12350546760687431
+            ],
+            [
+              -0.27031254083740724,
+              -0.836507481499175,
+              0.13597741866645133
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.0485583642012855e-06,
+          "vertices": 106,
+          "faces": 204,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2914298299543693,
+              -0.8542056083279839,
+              0.10924885540541202
+            ],
+            [
+              -0.2698747828561532,
+              -0.8322159570916837,
+              0.13505198548301886
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 109,
+      "bone": 114,
+      "index": 108,
+      "operand_sha256": "358a961e1bfb786c7ff38ee4828af1344b5c991556ae4e66ea8bd994de668f35",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.1931765505108003e-07,
+          "vertices": 165,
+          "faces": 326,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2538410125635728,
+              -0.9857517992004887,
+              0.13360651454879913
+            ],
+            [
+              0.2614329976387036,
+              -0.9472730181579827,
+              0.148426099152908
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.172076345085471e-07,
+          "vertices": 180,
+          "faces": 356,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25033857173902185,
+              -0.9856159898473006,
+              0.13184530780178969
+            ],
+            [
+              0.260740269221904,
+              -0.9465607117778866,
+              0.14857274756316394
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 65,
+      "bone": 99,
+      "index": 81,
+      "operand_sha256": "7031ca2f532696b8ee4fbb058615ed6524a161f50c2706bfda6e075fd1c22244",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.272831679625084e-08,
+          "vertices": 67,
+          "faces": 130,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.3187670787988754,
+              -1.015961402265033,
+              0.11399849086483146
+            ],
+            [
+              -0.3139366691248659,
+              -1.0055694938390514,
+              0.12232742652143246
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 8.404661180073449e-08,
+          "vertices": 94,
+          "faces": 184,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.31872847532203935,
+              -1.0162546485600188,
+              0.11412890736379745
+            ],
+            [
+              -0.3135098970863536,
+              -1.0063190956029289,
+              0.12321359220130373
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 71,
+      "bone": 103,
+      "index": 86,
+      "operand_sha256": "41385ccbf399e32667a18026d6f4efc16aa672b3eb5cf985defa714d411a45ef",
+      "layers": {
+        "skin": {
+          "intersection_m3": 3.686336414730526e-09,
+          "vertices": 57,
+          "faces": 110,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.3059913130652928,
+              -1.0124197060783748,
+              0.09154081618958196
+            ],
+            [
+              -0.301900905383612,
+              -1.0065646167969855,
+              0.09406088294756103
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.1424398400999909e-08,
+          "vertices": 90,
+          "faces": 164,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30946442485048675,
+              -1.0225334376869277,
+              0.09213550237133852
+            ],
+            [
+              -0.3019039653757754,
+              -1.006563482248402,
+              0.09826609630819169
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 143,
+      "index": 152,
+      "operand_sha256": "ab5757ba4e2642a8eb999606fb0478ffd46fae55005deed22483751d8803b353",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 9.552507454776588e-08,
+          "vertices": 83,
+          "faces": 162,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.16296003829953673,
+              -1.7293056090269259,
+              0.23471305744891852
+            ],
+            [
+              -0.15487353584686794,
+              -1.7230049364452187,
+              0.24156713899900745
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 48,
+      "bone": 72,
+      "index": 67,
+      "operand_sha256": "0773f1b008c4f6d490941a0d2e792eb452922c989046ac70e2bb6ab753c1d7a9",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 3.5951998612603647e-10,
+          "vertices": 10,
+          "faces": 16,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.28645526238414304,
+              -0.8702012672014168,
+              0.09646175081342076
+            ],
+            [
+              -0.28530508137021526,
+              -0.8666728984382946,
+              0.09823800690694032
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 66,
+      "bone": 100,
+      "index": 82,
+      "operand_sha256": "0ca0a372b8e136a667df2d8c6f27d512dce87225f7c4750b6e6a6edba54c59a1",
+      "layers": {
+        "skin": {
+          "intersection_m3": 4.347965769693233e-08,
+          "vertices": 136,
+          "faces": 260,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.32127221228703373,
+              -1.032492395090313,
+              0.11491594849975699
+            ],
+            [
+              -0.31479941544740514,
+              -1.0142296569330038,
+              0.12386127883235344
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.1380771502913357e-07,
+          "vertices": 169,
+          "faces": 334,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.3215797551800483,
+              -1.0324491492949976,
+              0.11450654218910414
+            ],
+            [
+              -0.3141016544997395,
+              -1.0139834167331325,
+              0.1229811384655069
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 76,
+      "bone": 106,
+      "index": 90,
+      "operand_sha256": "f339b244328969b8cf94a732ea4618e9d923cd30a6f73caa5ddeffb75ce220df",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 1,
+      "bone": 1,
+      "index": 0,
+      "operand_sha256": "ac4174ba6b3097ad7312f360b2a659deb589742a7d6c481d51682c21e42a897c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 4,
+      "bone": 168,
+      "index": 1,
+      "operand_sha256": "3ad469cff587b886ffc51a534d4af1aa046b1990b586279db99d3822685369e9",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 10,
+      "bone": 167,
+      "index": 2,
+      "operand_sha256": "137b9ab403383d1982a9759414f47ca5f8082e344190ad2b96fa4c864d6267b5",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 13,
+      "bone": 166,
+      "index": 3,
+      "operand_sha256": "93bd5d25df28560e56573d819e479c6ad099a591f8ebc5d9bd15a7477626a3b8",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 16,
+      "bone": 165,
+      "index": 4,
+      "operand_sha256": "14079ca08a35e2885b46bfad582eebb2d2ff2a8b44ec304e766ca25cc8ef3aa8",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 19,
+      "bone": 164,
+      "index": 5,
+      "operand_sha256": "5caaf701c892c277cd3b1537fe4dc734856372652503f95820cfab2b688437a5",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 26,
+      "index": 6,
+      "operand_sha256": "6a9d631ce871ceb7f72d188b7fd52384d02e4fe1168e0e381c0140fb33cdd748",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.284053787105782e-06,
+          "vertices": 373,
+          "faces": 738,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.04187413264647822,
+              -0.4871613872592544,
+              0.2238287176755921
+            ],
+            [
+              -0.007785897658990104,
+              -0.3878018615369347,
+              0.2605653799423854
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 27,
+      "index": 7,
+      "operand_sha256": "1e1706f6d0af521bb09a3e9ba3aeabe9a56919b2d63fa2e68304001c2ca0049f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.0167480560216599e-06,
+          "vertices": 201,
+          "faces": 398,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.03777927290933643,
+              -0.3837109419296051,
+              0.21119408831065675
+            ],
+            [
+              -0.00710128019417867,
+              -0.36136919425699693,
+              0.22619788983375924
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 36,
+      "index": 8,
+      "operand_sha256": "9c885debbce95a1f8d271d381e069f512ca193d73fe31c20a1422b980c16b192",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 37,
+      "index": 9,
+      "operand_sha256": "3c910e0aa16b4091603bd876cde2ff761c29b50234baee6087bc01fcf79edb8f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 38,
+      "index": 10,
+      "operand_sha256": "f5c098e3d139d2de5864c1e80eccfd6887343753ae273a4f452b0c9308d6a8ba",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 39,
+      "index": 11,
+      "operand_sha256": "37fa20089c2ee72f64ff0ca078189cc079c475f2e821f7e104bfad07301439e7",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 40,
+      "index": 12,
+      "operand_sha256": "6753b2ec068b48cfd33c4e820a8b4df83f241cff0b32e426c71c88c6c4440132",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 41,
+      "index": 13,
+      "operand_sha256": "e6bcb2e8cdc9a2974ff44b8e5753ab319d416b9cc194834b4652c20d9ad30b0a",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 42,
+      "index": 14,
+      "operand_sha256": "836bd4a795a66ebc2c37933c001b6b71571ffd320426e14cad1feb58751619d4",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.0014750680056513e-09,
+          "vertices": 31,
+          "faces": 58,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.13871718844791917,
+              -0.5557548619829026,
+              0.2214675814198297
+            ],
+            [
+              -0.13547047281038221,
+              -0.5516775099938339,
+              0.2251996436122891
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 43,
+      "index": 15,
+      "operand_sha256": "90b4851103e0d456c2f43a52be94c3e23802177c7bed6a8eadbfa319efb5d8de",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 44,
+      "index": 16,
+      "operand_sha256": "50526c0bcd09226a473721bded732ce6df185e72273f638595f00f84354d45fe",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 45,
+      "index": 17,
+      "operand_sha256": "0023f920bcfc6c0a9de0aae2cfa84db19ed72eeb1f17634689e3ce57384f8094",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 46,
+      "index": 18,
+      "operand_sha256": "54af5526cd12c8a7f59cc12f7443b6cd6fee2f8089cb6737a7b53bfb646ebe23",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 47,
+      "index": 19,
+      "operand_sha256": "c3785e0f66e3ae9766a363fa8e6150fca96fb788649938c7b3d8ebe1b1a0713f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 48,
+      "index": 20,
+      "operand_sha256": "e59b04d376661c7ded8a788085a1eaa07fee295f70b95e493baec76addcac029",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 49,
+      "index": 21,
+      "operand_sha256": "66d17e8ddb6e5958e4d64d1fb6e4e4520b268081425b644d7d0a2b9ad686159e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 50,
+      "index": 22,
+      "operand_sha256": "6b96a9ee3fcd357f2a2b095d1e66852605f72655bf70f85cb3c49308d8d622e9",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 51,
+      "index": 23,
+      "operand_sha256": "418dd65654ef225b17eac5892fb6b2f1a986519fd907f451047df8ebede6a58e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 52,
+      "index": 24,
+      "operand_sha256": "41862269c4b0b6ed1e27a6e026e69af9241aa143a08984def5f6bc58048c938a",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 53,
+      "index": 25,
+      "operand_sha256": "d4c3296ceb44d9ab8e7acd71c46c922e36e87abdc1e8fe0f7512c06a92b0fd45",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 54,
+      "index": 26,
+      "operand_sha256": "b3caeeb4b52580aa028b5c2117073c38ac82333678a76c600fc9dc14b6804a48",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 55,
+      "index": 27,
+      "operand_sha256": "7ce1d38e1caccaa85d6afd50aaaac1fc780513e75560509e5c736a509e59ff95",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 56,
+      "index": 28,
+      "operand_sha256": "1493fde2bd1003161d09e94d2d82ea5370a429d10f6f33bfb59f390682c9a820",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 57,
+      "index": 29,
+      "operand_sha256": "837be6550ec5fe823fc29ab280cebf2961fa25549b5d3fdf634066e2ef776a26",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 58,
+      "index": 30,
+      "operand_sha256": "b5f57ae72e0741760b8264a2828868743319739225b0b89ffc3f787117a04f62",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 59,
+      "index": 31,
+      "operand_sha256": "9b917df744bff016dacd76d306b51befc03d3156f66f86af850d9fb39eae239f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 169,
+      "index": 32,
+      "operand_sha256": "cc40f271f4a80a587827318e5acc2f4cdf42d03e25c6b1607b3fcd7d719976f9",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 170,
+      "index": 33,
+      "operand_sha256": "d4d7e61d7296e94f1fd5940293f850a7f709da96a868992eecce45772dfac71c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 171,
+      "index": 34,
+      "operand_sha256": "29366248dd8b023677a5019b47b0ead9e8bb19d6fd4c15226d21538967235063",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 172,
+      "index": 35,
+      "operand_sha256": "5a121587d118b873435c7102b2026174657f8cc3595212c8e549d874a16fc608",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 173,
+      "index": 36,
+      "operand_sha256": "f1f33dbf1637155d4b6a2ceb077b802b4431cff21a74a9391059b66aac1bcfad",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 174,
+      "index": 37,
+      "operand_sha256": "60876ac18a827ba06a13e27ffe254930489a8d39a54b183b41cb0f186a4ee496",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 175,
+      "index": 38,
+      "operand_sha256": "0c6e2d4c6723ae176ef3b14cf2a10cb4338f7ed1752429e977aba46c463c70aa",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 176,
+      "index": 39,
+      "operand_sha256": "d0e3939d9e835090d3a7da7664d779addd7d1515afdd06f84f200e3a7d259e97",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 177,
+      "index": 40,
+      "operand_sha256": "ac86783f9cf52f0c288e18614f21c94d58a8b117d1beb0db2fca23ea07ee6867",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 178,
+      "index": 41,
+      "operand_sha256": "57429ac04b59b4c5614574fc1137ac7ac887e27b5d5c62a5011ad82ac021688f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 179,
+      "index": 42,
+      "operand_sha256": "7566a87ec5763598e3d82b575810a3eafacfb8a8fa1fb342730b85ac9194facd",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 20,
+      "bone": 180,
+      "index": 43,
+      "operand_sha256": "231ea3281db385c01660d0f15724348bab8db36f32725d8b7b155be21b890642",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 28,
+      "index": 44,
+      "operand_sha256": "7de99ac682631d941b3c20af6985edcb78930944e689c3c967367e06ee97286b",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.924905327391785e-06,
+          "vertices": 1650,
+          "faces": 3268,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.10169061207671944,
+              -0.14655428005876805,
+              0.03665078047814008
+            ],
+            [
+              -0.023533175340931065,
+              -0.029470592550184763,
+              0.17380008676627046
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.020813210343246e-05,
+          "vertices": 6327,
+          "faces": 12650,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.10167243399660453,
+              -0.1458049918542996,
+              0.03431011846820724
+            ],
+            [
+              -0.019646714445822652,
+              -0.030442418612233364,
+              0.17785079163767017
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 29,
+      "index": 45,
+      "operand_sha256": "388201b584370eddf023655bffc514a04330d70cd8a2603dd9062cbcb2dd4195",
+      "layers": {
+        "skin": {
+          "intersection_m3": 6.082298994208934e-06,
+          "vertices": 1372,
+          "faces": 2716,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.03001429347770314,
+              -0.1445202033565673,
+              0.04487338067400951
+            ],
+            [
+              0.05050511049646765,
+              -0.029430501277860854,
+              0.17415736342944058
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.088069866185473e-05,
+          "vertices": 6207,
+          "faces": 12410,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.03263635343306408,
+              -0.14662949143045603,
+              0.03436818127908823
+            ],
+            [
+              0.04990238987822846,
+              -0.030444980633018478,
+              0.17667802455370898
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 30,
+      "index": 46,
+      "operand_sha256": "9e78349c39a7238193b3e29446596156a21388b570fa2e861b83f5ce46fb777d",
+      "layers": {
+        "skin": {
+          "intersection_m3": 4.2291512182778287e-07,
+          "vertices": 272,
+          "faces": 536,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.09948211931948715,
+              -0.1650285068551206,
+              0.08383878599166626
+            ],
+            [
+              -0.08157291144515535,
+              -0.11354612222107059,
+              0.13822796610425367
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.4323028314023364e-05,
+          "vertices": 1302,
+          "faces": 2600,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.09949054269219161,
+              -0.1762401136014195,
+              0.08399201512260077
+            ],
+            [
+              -0.0715446482893217,
+              -0.11328083196041822,
+              0.18321604580382905
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 31,
+      "index": 47,
+      "operand_sha256": "ca00c8ee0290cc0cad4c3d464bf0bc556dc0925cff848cd7f5234ee8cfc623eb",
+      "layers": {
+        "skin": {
+          "intersection_m3": 6.528903225741551e-07,
+          "vertices": 239,
+          "faces": 470,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.03404714643966093,
+              -0.1750350183708574,
+              0.0909488554246467
+            ],
+            [
+              0.04820836746528927,
+              -0.11686703638025638,
+              0.13250456391068505
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 9.236789463181405e-06,
+          "vertices": 904,
+          "faces": 1800,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.02624585936213721,
+              -0.1762823604508259,
+              0.08439734780769999
+            ],
+            [
+              0.048030518798525663,
+              -0.11334131512720383,
+              0.18217133437783853
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 32,
+      "index": 48,
+      "operand_sha256": "509d823330bf404ebaf01ae1a95fd5966097f906f4600f4a8cf4d82161041179",
+      "layers": {
+        "skin": {
+          "intersection_m3": 5.522900819529249e-06,
+          "vertices": 780,
+          "faces": 1548,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.081287112030233,
+              -0.11252446855418055,
+              0.16388585460105357
+            ],
+            [
+              0.03729930223928182,
+              -0.04690328369084223,
+              0.22718680364557312
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.816172193094895e-05,
+          "vertices": 4059,
+          "faces": 8118,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.0889453881718681,
+              -0.13320153436480597,
+              0.15740765386867606
+            ],
+            [
+              0.0372860697529856,
+              -0.03449743146567209,
+              0.22789376125686947
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 33,
+      "index": 49,
+      "operand_sha256": "6e2c97ebe1d8c584ee33119d0706d4bf834f3a83e9251931147da9f7151c3dcc",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.0806127665346283e-07,
+          "vertices": 298,
+          "faces": 572,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.08675777069727258,
+              -0.16481971660381525,
+              0.03279207877097943
+            ],
+            [
+              0.010617363525952158,
+              -0.10244252969090055,
+              0.08780526915205632
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.44376487961974e-05,
+          "vertices": 4288,
+          "faces": 8572,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.08719791688411022,
+              -0.17602332893778397,
+              0.031025971384664237
+            ],
+            [
+              0.03640284301602804,
+              -0.07891807661692204,
+              0.09705218489838045
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 34,
+      "index": 50,
+      "operand_sha256": "8d1a5b9fcb0a068269468c8fc8ecb0852c168fafeef29f6cd99c1a9adfc45c8c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 8.919412343263212e-08,
+          "vertices": 71,
+          "faces": 138,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.08189711287231696,
+              -0.1341015701838285,
+              0.16987824141035782
+            ],
+            [
+              -0.07777933791119507,
+              -0.11694195688007594,
+              0.17949520105037026
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 23,
+      "bone": 35,
+      "index": 51,
+      "operand_sha256": "7c2dd750751f8b11c93c7c52058dec6ad27ddf50dd2cc403b1b0a74a02be894e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 3.216074881615477e-10,
+          "vertices": 21,
+          "faces": 34,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.026415124790209986,
+              -0.23773608087860734,
+              0.19312014004760397
+            ],
+            [
+              0.0053482881974546564,
+              -0.2334133100952568,
+              0.22084285365608367
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.685680153852484e-06,
+          "vertices": 734,
+          "faces": 1460,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.06705579131175816,
+              -0.244977188920795,
+              0.16809987700439818
+            ],
+            [
+              0.012856477386501123,
+              -0.21927972416661703,
+              0.22312195595505918
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 70,
+      "index": 52,
+      "operand_sha256": "959f488444f8f90b9b08a9b4cb2f39c14e504c46ba1d6ad9677ea866fa5f1f31",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 71,
+      "index": 53,
+      "operand_sha256": "7c8b18b6f564833382552a981a5a3954be24abe93832e4a25720d0b7c4e8ceb2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 181,
+      "index": 54,
+      "operand_sha256": "6be025782cbbf34b8be460afbd7ae004579d943a20e7449b8e198e4aae0fead2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 182,
+      "index": 55,
+      "operand_sha256": "d93d0ba3fcaebaffad4314f9ddb9dc05d4f54a4739429e35d9a65d6192f7c314",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 183,
+      "index": 56,
+      "operand_sha256": "679803010271f351fe3b7f0ef253675fa2287bc8c7a762361c9a632e41798dbf",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 184,
+      "index": 57,
+      "operand_sha256": "470c15e8570e673ca60f9d8d79313bedb80b1d3a7106b222abbec666b1a4b2e6",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 26,
+      "bone": 185,
+      "index": 58,
+      "operand_sha256": "095c4181a80bad8773c8eb8308bac89dd157ff896efe6e27586e9eab830a8fa2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 29,
+      "bone": 8,
+      "index": 59,
+      "operand_sha256": "ac6118ca7d2818b1b2ee32b948a52a92a4013163564458f87a1fd5421aec2380",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 8.805917886828984e-07,
+          "vertices": 116,
+          "faces": 224,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.16891929827425234,
+              -0.3407233114191133,
+              0.11880512073070143
+            ],
+            [
+              -0.06125947886504901,
+              -0.3096153629213967,
+              0.19239412473156245
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 34,
+      "bone": 10,
+      "index": 60,
+      "operand_sha256": "555537042cc4883541e5dce18970c5a57b261517317b889db001780306156b9c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 41,
+      "bone": 12,
+      "index": 61,
+      "operand_sha256": "0747ab01056912c5da9bc81d0c9aaf524fdbeed19e7298982c9b83305df3b8e5",
+      "layers": {
+        "skin": {
+          "intersection_m3": 3.2899178608826245e-06,
+          "vertices": 324,
+          "faces": 640,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.24452337527503065,
+              -0.6070424948574074,
+              0.06861614231856733
+            ],
+            [
+              -0.18497334338624782,
+              -0.30183908032901646,
+              0.11016805969697555
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.7031225588382105e-05,
+          "vertices": 608,
+          "faces": 1204,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2444701928989819,
+              -0.6160197733192876,
+              0.0680636311791995
+            ],
+            [
+              -0.17744668509374706,
+              -0.30302411428459847,
+              0.11544231238601167
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 42,
+      "bone": 14,
+      "index": 62,
+      "operand_sha256": "9f2258920d4f4007809991ab7540ea32ec155480b603f6ee52d134b15f7d7005",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.680922464534851e-07,
+          "vertices": 147,
+          "faces": 286,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2892209014898797,
+              -0.8534297981434136,
+              0.08097210222574022
+            ],
+            [
+              -0.25006348960781827,
+              -0.7429834625201164,
+              0.09717477247629872
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 8.677056390296902e-06,
+          "vertices": 240,
+          "faces": 472,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2894500338718211,
+              -0.8523044522301542,
+              0.06687679337360042
+            ],
+            [
+              -0.20503552754136858,
+              -0.6143936200081409,
+              0.10123238093511423
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 45,
+      "bone": 75,
+      "index": 64,
+      "operand_sha256": "536769edf46bcdcc99e90e31db359050bd28a21dddcbd4d5ace36c8c57d4eb3b",
+      "layers": {
+        "skin": {
+          "intersection_m3": 9.369275275664351e-08,
+          "vertices": 99,
+          "faces": 190,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.29072633302447376,
+              -0.86673183406644,
+              0.10545186993368086
+            ],
+            [
+              -0.2749661437675469,
+              -0.8582818854252202,
+              0.11897085959195067
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.795587576398933e-07,
+          "vertices": 137,
+          "faces": 266,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2906080317321278,
+              -0.868983296535013,
+              0.10412979491115112
+            ],
+            [
+              -0.2741791046521147,
+              -0.8567848695325293,
+              0.11927912581777877
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 46,
+      "bone": 74,
+      "index": 65,
+      "operand_sha256": "8c5141762c06665d6017d6a84896872a23b48f98e1b50c454f22149ed0ae494a",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.343928077672956e-07,
+          "vertices": 161,
+          "faces": 314,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2903560832286741,
+              -0.8735400767129035,
+              0.11634146817473691
+            ],
+            [
+              -0.2724202520752014,
+              -0.8583113589068625,
+              0.13122818807775594
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.905929695539355e-07,
+          "vertices": 201,
+          "faces": 394,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2893202690089078,
+              -0.8745031811795455,
+              0.11639911300576887
+            ],
+            [
+              -0.27294406824889633,
+              -0.8573347605957647,
+              0.1313377299645249
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 47,
+      "bone": 76,
+      "index": 66,
+      "operand_sha256": "747555dd30e2ecbb8f1985783e4952bc633821ad13fed0c2d891d518c6ef0b89",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.5027208036316438e-08,
+          "vertices": 30,
+          "faces": 56,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.27183850284924016,
+              -0.8740558166799687,
+              0.09478828973511044
+            ],
+            [
+              -0.26805316335561846,
+              -0.8664206070597743,
+              0.09809671847645733
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.3521097039302043e-07,
+          "vertices": 82,
+          "faces": 160,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.27462738152773875,
+              -0.8777395264408315,
+              0.09416833744892558
+            ],
+            [
+              -0.26821934331194097,
+              -0.8663091820466213,
+              0.10132621488527674
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 52,
+      "bone": 88,
+      "index": 70,
+      "operand_sha256": "816cdad8141748749bd677a5817ced6cb31371857570352cb57550a931224180",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.0256031298140175e-10,
+          "vertices": 10,
+          "faces": 16,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2612293643311369,
+              -0.9136168377153798,
+              0.1588889706832968
+            ],
+            [
+              -0.2603023437323555,
+              -0.9125255061357774,
+              0.16030134380408645
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.0753271423936638e-07,
+          "vertices": 215,
+          "faces": 410,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2803049627505599,
+              -0.9238851197391462,
+              0.13693400002538023
+            ],
+            [
+              -0.25934511571003355,
+              -0.8823034474696534,
+              0.1629264913709663
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 53,
+      "bone": 93,
+      "index": 71,
+      "operand_sha256": "2d77623b0ff70bf23924bf88866be8169031bf68dd5cb321363cccbe3ef6f298",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.0359879836627324e-08,
+          "vertices": 172,
+          "faces": 332,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.26889090974080265,
+              -0.9492287776816543,
+              0.15379957859291196
+            ],
+            [
+              -0.25399616008520237,
+              -0.9280152242595436,
+              0.17274007675168837
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.8615006330329705e-07,
+          "vertices": 265,
+          "faces": 522,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2693952084790552,
+              -0.9491152516199456,
+              0.15251058074886178
+            ],
+            [
+              -0.25358314876986776,
+              -0.9248158424544339,
+              0.17267953741439837
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 54,
+      "bone": 94,
+      "index": 72,
+      "operand_sha256": "419d6d6b59681ee6bf66b0828ce39f093b0ae1c40929de9e5e7050ce19c1c2a0",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.285065606180595e-07,
+          "vertices": 168,
+          "faces": 332,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2630011371285046,
+              -0.9655623003651609,
+              0.16567751458099086
+            ],
+            [
+              -0.24992823508106293,
+              -0.9432277945139507,
+              0.1797253426912121
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.2369682398489734e-07,
+          "vertices": 154,
+          "faces": 304,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2628206127655938,
+              -0.9647257879489934,
+              0.16526650059306885
+            ],
+            [
+              -0.2504503347855518,
+              -0.9433221174717829,
+              0.17961940378163366
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 55,
+      "bone": 79,
+      "index": 73,
+      "operand_sha256": "6427682ed8ca76468529a120f6b28202a29fac5d3ac0e44a7f3734ee0f386ef2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 8.17226764048435e-09,
+          "vertices": 35,
+          "faces": 66,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2914153644843589,
+              -0.8838327840695189,
+              0.12739663578040278
+            ],
+            [
+              -0.2877098776577605,
+              -0.8793863138363532,
+              0.13148742501458088
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 56,
+      "bone": 80,
+      "index": 74,
+      "operand_sha256": "22b8baa1d5ccc918945c771b94e2fc63e51cc394085c85b9f51c22e49d97bc53",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 57,
+      "bone": 89,
+      "index": 75,
+      "operand_sha256": "405967c2a296e1fa7c2c5f65f7a8042d91abc6eb3e20c8e5b5a6e05d5189e50e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.4243097205732106e-07,
+          "vertices": 172,
+          "faces": 336,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30769373352812,
+              -0.9461424951726024,
+              0.12718886348833397
+            ],
+            [
+              -0.2951354283387416,
+              -0.9013716828615329,
+              0.1405984413146498
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 5.583715714564066e-07,
+          "vertices": 187,
+          "faces": 362,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.3069811264467142,
+              -0.9470533453794033,
+              0.12566962098602777
+            ],
+            [
+              -0.2881604658757032,
+              -0.8831133848502749,
+              0.14051288688555955
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 59,
+      "bone": 95,
+      "index": 76,
+      "operand_sha256": "e8c3036210a845323681e4cd83f101d3cc4233e606ea261eab18bc7a81560d11",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.24417646918687e-07,
+          "vertices": 97,
+          "faces": 190,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.3088301665592659,
+              -0.962326352576107,
+              0.1289733403783266
+            ],
+            [
+              -0.3019882999344598,
+              -0.946070109328731,
+              0.1425263413069791
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.3167706546316658e-07,
+          "vertices": 103,
+          "faces": 202,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.3078898473069,
+              -0.9612171470375868,
+              0.1282523932941576
+            ],
+            [
+              -0.3016663555049021,
+              -0.945577441190761,
+              0.14279992864984734
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 60,
+      "bone": 96,
+      "index": 77,
+      "operand_sha256": "e2f61ddcc00dd278174d1a42038819a450c902a8c3d117c98565d7979ae45eed",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 61,
+      "bone": 97,
+      "index": 78,
+      "operand_sha256": "af283c56a9d71cdfce6db4bcdd654807548ac202f0841ad003459ac47a11fa26",
+      "layers": {
+        "skin": {
+          "intersection_m3": 8.554676353848288e-08,
+          "vertices": 105,
+          "faces": 206,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.32003552782876643,
+              -1.0271089454490956,
+              0.14496173826209624
+            ],
+            [
+              -0.3144047000591069,
+              -1.013304613130186,
+              0.1490627810977363
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.2253039342765986e-12,
+          "vertices": 8,
+          "faces": 12,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.31537343092390757,
+              -1.0172192935752455,
+              0.14624583232813412
+            ],
+            [
+              -0.3148425445367958,
+              -1.0167873777966419,
+              0.1466888402825637
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 62,
+      "bone": 90,
+      "index": 79,
+      "operand_sha256": "c1cc96c6696466427c6b9e07848427ef350c63a307aa38f150d726f29924e46a",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.7131828725884914e-07,
+          "vertices": 223,
+          "faces": 438,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.308614879674641,
+              -0.945350186672869,
+              0.10977569657583494
+            ],
+            [
+              -0.29500820519677495,
+              -0.9041927825796382,
+              0.12397638660233634
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.2367716666729616e-06,
+          "vertices": 345,
+          "faces": 686,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30773680971374673,
+              -0.9455895461780913,
+              0.10973236575401492
+            ],
+            [
+              -0.2924252881293937,
+              -0.8838852917331244,
+              0.1253127905702779
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 64,
+      "bone": 98,
+      "index": 80,
+      "operand_sha256": "288df9efb9a8b28f419e304fac8c12781a64ea21db90d5bf4e4d6a821d03e16f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.695635522130434e-07,
+          "vertices": 140,
+          "faces": 272,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30971411120850456,
+              -0.9858875290282646,
+              0.10901883037075309
+            ],
+            [
+              -0.2983694693334678,
+              -0.944870232686155,
+              0.12294105687666274
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.116286770371965e-07,
+          "vertices": 114,
+          "faces": 224,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30850835965452644,
+              -0.967484168571987,
+              0.10924220065275209
+            ],
+            [
+              -0.2977015648831923,
+              -0.9447314210438617,
+              0.12432764981194706
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 67,
+      "bone": 91,
+      "index": 83,
+      "operand_sha256": "85bf363548af398827c92274faa0ba0eab3b052a8f5bf935aba4339337800e14",
+      "layers": {
+        "skin": {
+          "intersection_m3": 3.313424069719558e-08,
+          "vertices": 33,
+          "faces": 62,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.29936984035094194,
+              -0.9177248300445413,
+              0.09974447356842628
+            ],
+            [
+              -0.2959455544516664,
+              -0.908385415974334,
+              0.10559985897603501
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.090747004969992e-07,
+          "vertices": 141,
+          "faces": 270,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30080719453452076,
+              -0.9456061199584243,
+              0.096780529660889
+            ],
+            [
+              -0.2887157394360224,
+              -0.8938043803674615,
+              0.10710903182985608
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 69,
+      "bone": 101,
+      "index": 84,
+      "operand_sha256": "f63b8500ad638470a62ce19b3650b4f22c5f31006db53d3d7231804a0f90961e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 5.9589652188646084e-08,
+          "vertices": 109,
+          "faces": 210,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30478893851045896,
+              -0.984171147678949,
+              0.09342567568811525
+            ],
+            [
+              -0.29366353723247673,
+              -0.9473941840536454,
+              0.10306851992285014
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.535154257675519e-07,
+          "vertices": 182,
+          "faces": 356,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30476892199055117,
+              -0.9844001850119903,
+              0.09295433538735152
+            ],
+            [
+              -0.2900280822376107,
+              -0.9428467429599527,
+              0.10573450399024513
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 70,
+      "bone": 102,
+      "index": 85,
+      "operand_sha256": "998cfa74ba04738cb5b4e02a282d1c78d18f9f51f7ad29d92f9632d2fba52ad2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.607713510472059e-08,
+          "vertices": 199,
+          "faces": 386,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.306610721669,
+              -1.0116267021236809,
+              0.09041148559293066
+            ],
+            [
+              -0.29824002720879517,
+              -0.9829583598627267,
+              0.10187243294621263
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.80908672121108e-07,
+          "vertices": 206,
+          "faces": 404,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.30668712001096626,
+              -1.011668072357548,
+              0.09044768561368986
+            ],
+            [
+              -0.2983117156303959,
+              -0.9828146563500725,
+              0.10161749500591238
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 72,
+      "bone": 92,
+      "index": 87,
+      "operand_sha256": "9033febf3f4d104763018696bfb7569db40361e2829a56e21ab522ebdca46435",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.314271426665135e-07,
+          "vertices": 98,
+          "faces": 192,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.2911151210363233,
+              -0.9400000473076602,
+              0.08566162509121408
+            ],
+            [
+              -0.27806016429800895,
+              -0.9230590795301259,
+              0.09503347815087963
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 74,
+      "bone": 104,
+      "index": 88,
+      "operand_sha256": "850d3b2bbd5263b4a22107dbd3a36118004d0e02aa73d0de114575eb58c1023a",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.0528042992544301e-07,
+          "vertices": 79,
+          "faces": 154,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.29016406999965844,
+              -0.9694112848252642,
+              0.08413109339799743
+            ],
+            [
+              -0.2795065897527623,
+              -0.9411293549089612,
+              0.09067327040075245
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 6.035165365713247e-07,
+          "vertices": 126,
+          "faces": 248,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.29044555081065626,
+              -0.967028873831131,
+              0.08436036584403268
+            ],
+            [
+              -0.2791675237557867,
+              -0.9377268497197193,
+              0.0954840762037771
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 75,
+      "bone": 105,
+      "index": 89,
+      "operand_sha256": "b42a791dbb75b06693dcf2defcd417935809053dcdd1ea931a7ea6a5a95a5eed",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 79,
+      "bone": 9,
+      "index": 91,
+      "operand_sha256": "15f02f03f2ac280512f25d9d81d32c5e472025c039d332a6686bceb0afae8403",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.0923502129113063e-12,
+          "vertices": 7,
+          "faces": 10,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.11573045442302247,
+              -0.31178897230059716,
+              0.12339325854274939
+            ],
+            [
+              0.11626534748090392,
+              -0.31157976171291774,
+              0.12393685680567512
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.0395418626982463e-06,
+          "vertices": 197,
+          "faces": 386,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.00445415206189974,
+              -0.34352345042156923,
+              0.11024359296315402
+            ],
+            [
+              0.12011545529723264,
+              -0.30974245068179634,
+              0.193776284003065
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 84,
+      "bone": 11,
+      "index": 92,
+      "operand_sha256": "48e59669d0293fc72a15863b14afe7e022baafa3c1ccaa540ec58e6779f100ab",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.2139213203678263e-08,
+          "vertices": 170,
+          "faces": 336,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.12880266268526078,
+              -0.3174550575841778,
+              0.11802026780408525
+            ],
+            [
+              0.13648894582455015,
+              -0.31423228009824317,
+              0.12456744058758747
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 8.048292249838926e-07,
+          "vertices": 831,
+          "faces": 1658,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.12079456552745872,
+              -0.32178988756855953,
+              0.10654751531488665
+            ],
+            [
+              0.14111444905627174,
+              -0.3142406370457826,
+              0.1245773683252511
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 91,
+      "bone": 13,
+      "index": 93,
+      "operand_sha256": "ca9ef3aefbff9587a0b73f132bf6b26a3b07e8b0bf9946f4fc88aad48d467341",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.8646176437226472e-06,
+          "vertices": 357,
+          "faces": 710,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.13588094428202885,
+              -0.32940889254513406,
+              0.07041959964966786
+            ],
+            [
+              0.17361015191233733,
+              -0.3017233081988252,
+              0.11512485435642977
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.616980973672996e-05,
+          "vertices": 557,
+          "faces": 1106,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.12898677055897131,
+              -0.5968170884834959,
+              0.07014907640763889
+            ],
+            [
+              0.19170287354975982,
+              -0.3019488871954253,
+              0.11887326664022514
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 92,
+      "bone": 15,
+      "index": 94,
+      "operand_sha256": "6e22c99dc3c80f24f47c89b5b5e4ca80d471103941a1d09c3fda802dc2abbebb",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.676589343430174e-07,
+          "vertices": 100,
+          "faces": 196,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.22889599216468207,
+              -0.8564947350727992,
+              0.09102366340602179
+            ],
+            [
+              0.24101701509470044,
+              -0.8400434493792294,
+              0.10261228911542301
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.9075248228587528e-07,
+          "vertices": 86,
+          "faces": 168,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2281270649763618,
+              -0.8551024441171103,
+              0.09127088170905132
+            ],
+            [
+              0.24056446090140568,
+              -0.8369978339984598,
+              0.10350690962857574
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 93,
+      "bone": 17,
+      "index": 95,
+      "operand_sha256": "11adbf690a483de80ded96b8297f46c7e850c951c7a56b7599299ce16c4bcca6",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.7829030562344106e-07,
+          "vertices": 68,
+          "faces": 132,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.22103937864138407,
+              -0.8549164139682253,
+              0.1274503544933155
+            ],
+            [
+              0.23912693463951504,
+              -0.8344795057894444,
+              0.13758423997377078
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.2573043103797712e-07,
+          "vertices": 101,
+          "faces": 194,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.21672988467542456,
+              -0.8549359968613958,
+              0.11183695938873925
+            ],
+            [
+              0.23957941104593797,
+              -0.8330098566089735,
+              0.13684985783181614
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 95,
+      "bone": 82,
+      "index": 96,
+      "operand_sha256": "56a004d591bbceb80245e34c1ecd4041927a51d61ee9c6f521e2e86b12eb1901",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 96,
+      "bone": 81,
+      "index": 97,
+      "operand_sha256": "7a9d9ac03d77400614647708a00ce699218bb80fa0211498f3bd42009e33c5c5",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.7973629298720035e-07,
+          "vertices": 109,
+          "faces": 214,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.22210319901698022,
+              -0.8757763267530078,
+              0.12328148771867628
+            ],
+            [
+              0.2367974929526074,
+              -0.8591744631672017,
+              0.13336617230564435
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.907307548536645e-08,
+          "vertices": 117,
+          "faces": 230,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.22279221470209992,
+              -0.8761937334262514,
+              0.12295496280792292
+            ],
+            [
+              0.23712681249302114,
+              -0.8591077262303296,
+              0.13286878108330985
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 97,
+      "bone": 83,
+      "index": 98,
+      "operand_sha256": "baf8fedb430135fb2926f1fddbcc6d8ff0a88ed68d393f67f717c1d5ad4642ba",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.823724783115428e-09,
+          "vertices": 21,
+          "faces": 38,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.21736330632399437,
+              -0.8760786080257826,
+              0.09899559938387274
+            ],
+            [
+              0.21832661298437211,
+              -0.8720336076042335,
+              0.10242259489115012
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.3424738864934377e-07,
+          "vertices": 118,
+          "faces": 232,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.21759215113461153,
+              -0.8781221642959285,
+              0.09728053542150691
+            ],
+            [
+              0.22574892298296104,
+              -0.8677404093407315,
+              0.10468927035162424
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 98,
+      "bone": 73,
+      "index": 99,
+      "operand_sha256": "66659706c40b85518166244e5a1417908e5ab26831c450f660ef937269c06f49",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.2149193092978992e-08,
+          "vertices": 40,
+          "faces": 76,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.23416203811647904,
+              -0.8686027020147942,
+              0.10196099951597792
+            ],
+            [
+              0.23856847871256895,
+              -0.8648369309079382,
+              0.10658413238103584
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 5.429805117845068e-08,
+          "vertices": 121,
+          "faces": 234,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.22607692232718718,
+              -0.8738497740920073,
+              0.09826497027232381
+            ],
+            [
+              0.23838035801607008,
+              -0.8638035483009917,
+              0.1076071332197422
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 100,
+      "bone": 85,
+      "index": 101,
+      "operand_sha256": "6903923e1907b542ab8a8fed02adfea95d83b1d918bd87af39d1f89a1abc2f45",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.5062231874710532e-07,
+          "vertices": 122,
+          "faces": 240,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.21722457602094689,
+              -0.8847847279929799,
+              0.12741506065925148
+            ],
+            [
+              0.2278997972856479,
+              -0.8756245385347288,
+              0.14148274197768126
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.0101947678457707e-07,
+          "vertices": 123,
+          "faces": 242,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.21763994548110727,
+              -0.8859032788558353,
+              0.12688784355975247
+            ],
+            [
+              0.22822142023883396,
+              -0.8758483589954245,
+              0.14038966496641844
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 102,
+      "bone": 107,
+      "index": 102,
+      "operand_sha256": "c3800a4f1a5df6752fa7ed9d577f48e75dcbfcf0d5cd3fa3b77eda01b388cfa3",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.5001769836453897e-07,
+          "vertices": 136,
+          "faces": 268,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2082829920531725,
+              -0.9182027552405205,
+              0.1391143947307498
+            ],
+            [
+              0.22865804109575483,
+              -0.8822845654443174,
+              0.16445232755140377
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.94111231340535e-07,
+          "vertices": 166,
+          "faces": 328,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.20772318872360165,
+              -0.9228279594413308,
+              0.13820880076628006
+            ],
+            [
+              0.22945707357028491,
+              -0.882658298720636,
+              0.1646348337340769
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 103,
+      "bone": 112,
+      "index": 103,
+      "operand_sha256": "0f882d9e8a4ce9737f6627e0c69664f90551a456dd3c5190f2d30ad920a1cb12",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.10936859336079e-08,
+          "vertices": 52,
+          "faces": 100,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.20776152396912945,
+              -0.9514905309379877,
+              0.16850255944805953
+            ],
+            [
+              0.2119544635443173,
+              -0.9453630619965968,
+              0.17465646413514274
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.414313881552282e-08,
+          "vertices": 118,
+          "faces": 224,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.20556346478985255,
+              -0.9510356837001984,
+              0.16042138365046354
+            ],
+            [
+              0.21626559009682017,
+              -0.9205340885043723,
+              0.17496558541575669
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 104,
+      "bone": 113,
+      "index": 104,
+      "operand_sha256": "913f4cc6abd9f924e8f3cd4c7439c509b5d64bf59625a896d60865b83fca66ec",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.513085390382945e-08,
+          "vertices": 104,
+          "faces": 204,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.1993250042773374,
+              -0.96450752945056,
+              0.16762563726679244
+            ],
+            [
+              0.211872162514307,
+              -0.9468653964021287,
+              0.18164550956043965
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.4352873296571541e-07,
+          "vertices": 112,
+          "faces": 220,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.19826793194038822,
+              -0.96413748787204,
+              0.16732966165189808
+            ],
+            [
+              0.2114300661222475,
+              -0.9460938059270921,
+              0.1812242564876007
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 106,
+      "bone": 87,
+      "index": 106,
+      "operand_sha256": "cb402359bd905df9163ddff3f9dff790ff372c956db2c6acd5dca4309d9a7d57",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 107,
+      "bone": 108,
+      "index": 107,
+      "operand_sha256": "45ec1ac6527946ac4729e696417680df4ed20e88c32a8554052f8c5b89e4004c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.534470697304113e-07,
+          "vertices": 136,
+          "faces": 264,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.24692293334175566,
+              -0.9496050835432985,
+              0.13051762561117577
+            ],
+            [
+              0.2581249617569117,
+              -0.9085116592774622,
+              0.1414604976267885
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.0379044271078486e-06,
+          "vertices": 192,
+          "faces": 380,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.24496254270914708,
+              -0.9534942414251578,
+              0.1303154199120704
+            ],
+            [
+              0.2578648678406157,
+              -0.9041101573816653,
+              0.14279128892230228
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 110,
+      "bone": 115,
+      "index": 109,
+      "operand_sha256": "8beec1781f8b0d17dd144c5d2bf890af5fc5117baf13b383b08c24e37f9f8651",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.973602042349355e-08,
+          "vertices": 94,
+          "faces": 180,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2581516701336974,
+              -1.009436231938104,
+              0.14390426536655457
+            ],
+            [
+              0.2637713708687554,
+              -0.9870450260443426,
+              0.15071080141326104
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.190220062361642e-08,
+          "vertices": 42,
+          "faces": 80,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25790551762768676,
+              -0.9933845905706761,
+              0.1443669825661967
+            ],
+            [
+              0.26140779846455925,
+              -0.9868372192981189,
+              0.14990128059129004
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 111,
+      "bone": 116,
+      "index": 110,
+      "operand_sha256": "c911e47ee769b4f502691e1f326e8292d0a7e5143b44428e21a2d5b8933a4bbd",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.242186497340532e-10,
+          "vertices": 20,
+          "faces": 36,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2623528753013414,
+              -1.0104147272729187,
+              0.14927155310350207
+            ],
+            [
+              0.26386797809266527,
+              -1.0090749472292935,
+              0.15076305186451958
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 112,
+      "bone": 109,
+      "index": 111,
+      "operand_sha256": "9f6dc614d6b0015cfce7fd643826b467e9ce6ff000ec1eed48d7ba467567e78c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.221294105122901e-07,
+          "vertices": 129,
+          "faces": 258,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25117950707978987,
+              -0.9425864449042195,
+              0.11418531992927239
+            ],
+            [
+              0.2571087496248179,
+              -0.9244208676543277,
+              0.12891181746562205
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 8.853874645244144e-07,
+          "vertices": 165,
+          "faces": 326,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2453177028483498,
+              -0.9435087251186196,
+              0.11271425976091295
+            ],
+            [
+              0.2563952380591598,
+              -0.9181184088501749,
+              0.12971558359886687
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 114,
+      "bone": 117,
+      "index": 112,
+      "operand_sha256": "5b9ae1eb6d734ed9430e65134cc2e87ce383d8aaa5fc0c517dc76a1f9ffe4189",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.941321365539086e-07,
+          "vertices": 207,
+          "faces": 410,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25536264369972317,
+              -0.9901850135002731,
+              0.11414139851295019
+            ],
+            [
+              0.2624508087974383,
+              -0.9457674726601902,
+              0.126266981090121
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.711202273733624e-07,
+          "vertices": 207,
+          "faces": 410,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25297802682273807,
+              -0.989941985155873,
+              0.11290439253593035
+            ],
+            [
+              0.26188841761971493,
+              -0.945627198001203,
+              0.12762846241508594
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 115,
+      "bone": 118,
+      "index": 113,
+      "operand_sha256": "7fe774711ef38b544433784b766e20114fb2bb2a08d22f31058b64b8768e9f3e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.3630697274232804e-07,
+          "vertices": 141,
+          "faces": 274,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25857129015667624,
+              -1.0165425197580922,
+              0.11583451372922354
+            ],
+            [
+              0.26905421352908176,
+              -0.9884517967799961,
+              0.12677405985946008
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.5233659384253565e-07,
+          "vertices": 146,
+          "faces": 284,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25770158241624214,
+              -1.0166940263330853,
+              0.11681956626703381
+            ],
+            [
+              0.2687344928548138,
+              -0.9886357502710184,
+              0.12667661876939534
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 116,
+      "bone": 119,
+      "index": 114,
+      "operand_sha256": "304c52a30c135a38d729000dc64e29f85bd2ebc8a77319b6fc1aa347f5db41dc",
+      "layers": {
+        "skin": {
+          "intersection_m3": 6.559896098993804e-08,
+          "vertices": 142,
+          "faces": 276,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2639100232390726,
+              -1.033511368059399,
+              0.1186951899289928
+            ],
+            [
+              0.2701938975773857,
+              -1.0150015803546801,
+              0.12566585780114678
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.2825712176691432e-07,
+          "vertices": 229,
+          "faces": 450,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.26368131850363263,
+              -1.0335074326324378,
+              0.11961905970954682
+            ],
+            [
+              0.27118242723336294,
+              -1.0150803232065366,
+              0.12658716997501815
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 117,
+      "bone": 110,
+      "index": 115,
+      "operand_sha256": "2d0bfe76e09f01dc1505ca8e26d3c1c14fe5bd0dadb5a4cfef5bc8eec90f8881",
+      "layers": {
+        "skin": {
+          "intersection_m3": 5.201226687926076e-09,
+          "vertices": 14,
+          "faces": 24,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.24901422325838804,
+              -0.926899624313044,
+              0.10301495489198381
+            ],
+            [
+              0.2505325160508437,
+              -0.9211018053135218,
+              0.1075455832361987
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.2461454980480293e-07,
+          "vertices": 64,
+          "faces": 124,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.24341114485510698,
+              -0.9313102293291851,
+              0.10057647882579242
+            ],
+            [
+              0.2505922865744817,
+              -0.910031493040336,
+              0.10854530359185038
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 119,
+      "bone": 120,
+      "index": 116,
+      "operand_sha256": "27624ddc5d03a73aa60351bb6eb13707d3d7f0295d87d6f4df433a7dd1ccd725",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 120,
+      "bone": 121,
+      "index": 117,
+      "operand_sha256": "1fbc8f95c3c2ba226d34ff2f74eff24a5b9b5a21ff1bf074abaf8a13a63b2f65",
+      "layers": {
+        "skin": {
+          "intersection_m3": 5.826087651781645e-10,
+          "vertices": 23,
+          "faces": 42,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2492848216807681,
+              -1.011314832328331,
+              0.09353829344710864
+            ],
+            [
+              0.25159688316439155,
+              -1.0079939445273567,
+              0.09421837042105181
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.6072878768367163e-08,
+          "vertices": 110,
+          "faces": 208,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.24711907869710517,
+              -1.0119905643654388,
+              0.09347858119381237
+            ],
+            [
+              0.253655714121912,
+              -0.9852178161266626,
+              0.10194821051992686
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 121,
+      "bone": 122,
+      "index": 118,
+      "operand_sha256": "67543e600eb5ebb440468f0f38f3ecf8b00e01d9f32eb30c20b632e07e5c0416",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.6066758298734402e-08,
+          "vertices": 48,
+          "faces": 92,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.2566424792105805,
+              -1.0232165278395395,
+              0.09448194681620313
+            ],
+            [
+              0.2583785265732704,
+              -1.0135373534167578,
+              0.09893508713648473
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.4212158783574744e-08,
+          "vertices": 79,
+          "faces": 154,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.25590518665047746,
+              -1.0231634398328775,
+              0.09458605089151802
+            ],
+            [
+              0.2578070028126661,
+              -1.0075383413946635,
+              0.10202836512466949
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 122,
+      "bone": 111,
+      "index": 119,
+      "operand_sha256": "7c78c320fb68600e64693635300e91091d554c225de36aaeb3ec7df3d9aabeff",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 124,
+      "bone": 123,
+      "index": 120,
+      "operand_sha256": "741eb3c9d47d1cca84d0f9eff5544a814d26d127fd3ba48564222a4749a3511d",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.681868558379683e-08,
+          "vertices": 83,
+          "faces": 162,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.232977106415521,
+              -0.9718518545356452,
+              0.08655211455268301
+            ],
+            [
+              0.2400735056566559,
+              -0.9509104306897366,
+              0.09324393710343375
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.804186283503511e-08,
+          "vertices": 74,
+          "faces": 144,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.23280537159583475,
+              -0.9712116343347605,
+              0.08673502856076919
+            ],
+            [
+              0.24008346113063178,
+              -0.9499762742141823,
+              0.09347829748657094
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 125,
+      "bone": 124,
+      "index": 121,
+      "operand_sha256": "f50004c0ec2cc1bacf2f496700791e6c2a045d041135d4038071668c32b86a59",
+      "layers": {
+        "skin": {
+          "intersection_m3": 4.975118346465273e-10,
+          "vertices": 21,
+          "faces": 38,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.23964082174552293,
+              -0.9748714975782807,
+              0.08756113724895984
+            ],
+            [
+              0.24030394344884662,
+              -0.9718471591908993,
+              0.0892089511833236
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.6868513386351754e-11,
+          "vertices": 10,
+          "faces": 16,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.23998814522688103,
+              -0.9736945744513104,
+              0.08818183824864928
+            ],
+            [
+              0.2402526846921311,
+              -0.9720627524824835,
+              0.08889221417272002
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 126,
+      "bone": 125,
+      "index": 122,
+      "operand_sha256": "04ce0b92a2264a04f91ad274e0edeae8fc71500fe18234a447b3f5f1873e1be8",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 128,
+      "bone": 18,
+      "index": 123,
+      "operand_sha256": "f4729e05cb04550d225511784d798e6295d2ac0cd5162292d597a9d199860845",
+      "layers": {
+        "skin": {
+          "intersection_m3": 9.167658785296103e-07,
+          "vertices": 66,
+          "faces": 128,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1709590449748232,
+              -0.7522365547631834,
+              0.11725739283189567
+            ],
+            [
+              -0.1573987147778489,
+              -0.7234544958943456,
+              0.15139027015515039
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 9.406492970512558e-06,
+          "vertices": 172,
+          "faces": 336,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.17021276791496412,
+              -0.7823271770788413,
+              0.05245114767055769
+            ],
+            [
+              -0.08193654067537436,
+              -0.714012812463019,
+              0.18140252290955244
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 128,
+      "bone": 19,
+      "index": 124,
+      "operand_sha256": "d5e312f088d26ce55ec92cea2de391c3eef6102947b28964aa637ee667355e20",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.265484632971675e-07,
+          "vertices": 35,
+          "faces": 66,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.11205646811725851,
+              -0.7470309050958227,
+              0.12187741040353434
+            ],
+            [
+              0.12083457227504166,
+              -0.7278931078327209,
+              0.1464206483097193
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 6.206514586030576e-06,
+          "vertices": 222,
+          "faces": 432,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.015024602389836106,
+              -0.7816832524376977,
+              0.043511637247209564
+            ],
+            [
+              0.12063103200834772,
+              -0.7136474996625424,
+              0.1825171399850058
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 131,
+      "bone": 2,
+      "index": 125,
+      "operand_sha256": "d2ed244d3751b3ec4ea91882c5fdaaca5e003caa12ceca752f54a4ccf1551f95",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 136,
+      "bone": 4,
+      "index": 126,
+      "operand_sha256": "4f83e07e2b2606ddbe6058b2d377c3010a71700149987ef856cba542c600e640",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.5617464154722068e-06,
+          "vertices": 156,
+          "faces": 304,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.12551555175494428,
+              -1.671328080394024,
+              0.11610581144786904
+            ],
+            [
+              -0.07346681541540795,
+              -1.626033362282005,
+              0.13825782794844693
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 136,
+      "bone": 20,
+      "index": 127,
+      "operand_sha256": "a235c09e5eed65f4e295210174e3df841bb14c6eba69294de4cc94f76477811e",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 3.0108746863165393e-06,
+          "vertices": 183,
+          "faces": 362,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.13197900880574337,
+              -1.6903621633367618,
+              0.09367588441306514
+            ],
+            [
+              -0.12478195587656203,
+              -1.572355666421618,
+              0.11884487886483575
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 137,
+      "bone": 22,
+      "index": 128,
+      "operand_sha256": "49861caa6da6f2c242e7be7560e33cfe71bd902990ea254b28ebaa1be7b72db5",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.0315372644472983e-08,
+          "vertices": 24,
+          "faces": 44,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.0792004555660469,
+              -1.6924293583161802,
+              0.13248895147302303
+            ],
+            [
+              -0.07737787878726843,
+              -1.6856643460706136,
+              0.1376891167490932
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 6,
+      "index": 129,
+      "operand_sha256": "5c8faefefdd6702d5bfec94935052b336965d8f07d7d0ea3e205096bb715ab31",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.6712877571762435e-07,
+          "vertices": 115,
+          "faces": 222,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.11703287673870273,
+              -1.7395723742664917,
+              0.060495767939234724
+            ],
+            [
+              -0.08659516127059702,
+              -1.7144477109626342,
+              0.09310309424208853
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 60,
+      "index": 130,
+      "operand_sha256": "10d2b671d293f16314396fafc8dbcb7bb9e85551849a168833a24b81afe16bef",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 8.693949674317438e-07,
+          "vertices": 83,
+          "faces": 162,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.08845551281431019,
+              -1.7022056051774153,
+              0.13615365344606326
+            ],
+            [
+              -0.07414091847098656,
+              -1.6884782347618956,
+              0.15625454084254534
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 61,
+      "index": 131,
+      "operand_sha256": "4fa488602418f7cada601392fd45b1316b7f14a9ae48789c93b1646e03ffb914",
+      "layers": {
+        "skin": {
+          "intersection_m3": 5.296402423739483e-07,
+          "vertices": 124,
+          "faces": 244,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.09228249608302308,
+              -1.711019035791472,
+              0.15063421679175162
+            ],
+            [
+              -0.07939536640972614,
+              -1.691922291892732,
+              0.17882223391195834
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.8094815002088757e-06,
+          "vertices": 282,
+          "faces": 560,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.09956742992287677,
+              -1.7138944641906235,
+              0.1478766845132916
+            ],
+            [
+              -0.07932259766997261,
+              -1.6856680892034042,
+              0.18046510096864854
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 62,
+      "index": 132,
+      "operand_sha256": "4fbd674b832fb39881c444f67b9c9c4829713cdab9c19a1e25f5aa421ee90da8",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 63,
+      "index": 133,
+      "operand_sha256": "78a303cea6ab5f2fb9fa7ca5c53fa699e59f6a1bd235948926406b500d81d7ca",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 64,
+      "index": 134,
+      "operand_sha256": "049edcb8e4654bb0928e00cd145b754d133da029c1685b42736814b6f309e2d7",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 126,
+      "index": 135,
+      "operand_sha256": "3034e72caef2ff893dc9d0f93bd55f6d81ca9d21b64542d3a99d715f524f25a4",
+      "layers": {
+        "skin": {
+          "intersection_m3": 3.0923543915357603e-07,
+          "vertices": 141,
+          "faces": 274,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.09208657740120063,
+              -1.725783185167213,
+              0.17440646621264003
+            ],
+            [
+              -0.08302461814710277,
+              -1.692948829191875,
+              0.23030216617608637
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 4.520157155590087e-06,
+          "vertices": 435,
+          "faces": 862,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.10454547495201935,
+              -1.736223662628722,
+              0.17317378304072972
+            ],
+            [
+              -0.08372491269761911,
+              -1.6921664427240717,
+              0.23142359773477372
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 127,
+      "index": 136,
+      "operand_sha256": "efb4029f9d000cec5c7198c9cc1d988c162d4371c6d5c79be8530c2c3590e35b",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 8.974299449279979e-08,
+          "vertices": 54,
+          "faces": 104,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.11948279251949799,
+              -1.733069804953125,
+              0.21866781823396655
+            ],
+            [
+              -0.10987978410847316,
+              -1.7290682143810912,
+              0.23231691276015412
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 128,
+      "index": 137,
+      "operand_sha256": "7cb576d603ef6e14ed1bcd099285f8dd6dcdfcf2514e8a425fb6b6e0e1c0182a",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.767338921856025e-08,
+          "vertices": 37,
+          "faces": 70,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.13186252924219205,
+              -1.7310035582506655,
+              0.21461981689979326
+            ],
+            [
+              -0.12630256489885866,
+              -1.7290051899267167,
+              0.224308442619297
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 129,
+      "index": 138,
+      "operand_sha256": "684048a6185f328fe0609972c0dea15788c66957b95bee1859b88c78863c8c47",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 5.737363607459955e-08,
+          "vertices": 40,
+          "faces": 76,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.14335963322019463,
+              -1.7302917570715206,
+              0.2062432570250381
+            ],
+            [
+              -0.1355406856417306,
+              -1.728084731198303,
+              0.21748116148174534
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 138,
+      "bone": 130,
+      "index": 139,
+      "operand_sha256": "14474f6e5c4b918bc438c57f16cfb774b8b1b4e07ab925ded1779ba17fbf25ce",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 8.045975414116462e-08,
+          "vertices": 67,
+          "faces": 130,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.15735384322596171,
+              -1.7308745942451107,
+              0.19481021162930204
+            ],
+            [
+              -0.14900138831331736,
+              -1.7264731017961474,
+              0.20633692852079055
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 131,
+      "index": 140,
+      "operand_sha256": "ad7da0e9aaefacfeae85dfd9b1e5f7695e6e934296d1eaecf157c3c89cc79515",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.7371706144044014e-07,
+          "vertices": 141,
+          "faces": 270,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1037887173379622,
+              -1.7389612761978892,
+              0.23290926507445897
+            ],
+            [
+              -0.08238273737300336,
+              -1.7223792988646522,
+              0.25723714429402356
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.3202253583481192e-06,
+          "vertices": 339,
+          "faces": 674,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1056057473391235,
+              -1.7385823110121144,
+              0.23241969397919263
+            ],
+            [
+              -0.08062061611906021,
+              -1.722706997923069,
+              0.26560227807466985
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 132,
+      "index": 141,
+      "operand_sha256": "bfafd9ec782a48f6df9ff2bd091faaf65f9a0392cd76ec5888be37ccfe1ac01f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 6.657683969339584e-09,
+          "vertices": 32,
+          "faces": 60,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.09183854727147149,
+              -1.7400821957686585,
+              0.2657860489430469
+            ],
+            [
+              -0.08891543133991572,
+              -1.7370717612385034,
+              0.27140782568959726
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 9.71630957690083e-07,
+          "vertices": 263,
+          "faces": 522,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1081661912557899,
+              -1.7400659872341104,
+              0.25961584931092696
+            ],
+            [
+              -0.08895149440312922,
+              -1.7301652106781544,
+              0.285821953195668
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 134,
+      "index": 143,
+      "operand_sha256": "1b96a29dae4249f0cc190b2eb55e039e0ba494e8fe34097d2cd9a543ec1c0b40",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.27982859743829e-08,
+          "vertices": 96,
+          "faces": 184,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.12437644501207043,
+              -1.7329934988459037,
+              0.2617318625183213
+            ],
+            [
+              -0.11356896257137519,
+              -1.7288916263976402,
+              0.27859231566711556
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 135,
+      "index": 144,
+      "operand_sha256": "6451e55f96458ad9c21b626fc5ea9d7a6b980ea227f6b139424ac78f40054d7b",
+      "layers": {
+        "skin": {
+          "intersection_m3": 5.173854803002688e-08,
+          "vertices": 63,
+          "faces": 122,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.12577410105279463,
+              -1.7353783310993918,
+              0.2844532015691869
+            ],
+            [
+              -0.11880612457576664,
+              -1.730516013901868,
+              0.2886836943129233
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.2136138494615834e-07,
+          "vertices": 110,
+          "faces": 216,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.12513736112583448,
+              -1.7355266315919184,
+              0.27603354827569543
+            ],
+            [
+              -0.11596704136717623,
+              -1.7286268486200367,
+              0.2866064255234002
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 137,
+      "index": 146,
+      "operand_sha256": "45cce454a6fd8ca51828dd61d19d219f3ab358776b02f0d4f3ee2317c339ed83",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.822078642122149e-08,
+          "vertices": 147,
+          "faces": 278,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.13839161167463684,
+              -1.7327477461022727,
+              0.2568052667166801
+            ],
+            [
+              -0.12843157749931047,
+              -1.7266325282879216,
+              0.27350970538496366
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 138,
+      "index": 147,
+      "operand_sha256": "f705d02d622468084d231cd5ad11c14f90d1594e181ca6fa9516ebd0fb11f0ec",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.2545521910537255e-09,
+          "vertices": 62,
+          "faces": 116,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.13933286015125515,
+              -1.7326017151394717,
+              0.27904743417591427
+            ],
+            [
+              -0.13493357941604997,
+              -1.7289805275860113,
+              0.2829985751540082
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.7946390275279377e-07,
+          "vertices": 183,
+          "faces": 362,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.14017093195562016,
+              -1.7328925836255908,
+              0.2714997793616885
+            ],
+            [
+              -0.13152053878816486,
+              -1.7272687384914645,
+              0.28304315727559276
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 139,
+      "index": 148,
+      "operand_sha256": "a7c8c19f81662928b851bd4b8d765d61496bb812e00ad90cc5922fa38b365ec0",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.064136509803198e-08,
+          "vertices": 75,
+          "faces": 138,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.14991788717031337,
+              -1.7306170944566288,
+              0.22569167588892647
+            ],
+            [
+              -0.14029400269435643,
+              -1.726270433305506,
+              0.24695384210549862
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 140,
+      "index": 149,
+      "operand_sha256": "c42aaf0804910f5fbb7254c3d45650d083af54a2d394e9b15306c428a18cbde0",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 9.881776865926087e-08,
+          "vertices": 222,
+          "faces": 432,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.15233511861598137,
+              -1.7308796920493381,
+              0.2464921188107324
+            ],
+            [
+              -0.14192912276409228,
+              -1.7230362633271874,
+              0.2600960894798912
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 141,
+      "index": 150,
+      "operand_sha256": "bc3948fe070d8c1c5e7cf161cad5da56d492e05d50a22fdad4abcac179decc01",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.794055149921444e-09,
+          "vertices": 49,
+          "faces": 86,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1527230585049573,
+              -1.7308529300392215,
+              0.25860432277542755
+            ],
+            [
+              -0.14874647935301344,
+              -1.7239972621354582,
+              0.2675910986916147
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.7617566406107137e-07,
+          "vertices": 196,
+          "faces": 388,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.15352888163313136,
+              -1.7309044890164855,
+              0.2578957246471939
+            ],
+            [
+              -0.14482518177726927,
+              -1.72401133834516,
+              0.2690559725074396
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 139,
+      "bone": 144,
+      "index": 153,
+      "operand_sha256": "f1d6eeced03577fb173419641e90262980c677103b1fff8d517e5d5d2f0500e2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 9.76137230432223e-08,
+          "vertices": 115,
+          "faces": 222,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.1636734748647005,
+              -1.7290088352369894,
+              0.24044530397041428
+            ],
+            [
+              -0.15879852784899479,
+              -1.7240907083976178,
+              0.25102428811314254
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 142,
+      "bone": 24,
+      "index": 154,
+      "operand_sha256": "dddfce8ae2519f3b4ca05fa7071911fdced83dea92f19db99fa7307226a5d9a1",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.152517737477985e-06,
+          "vertices": 146,
+          "faces": 288,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              -0.12026035266970497,
+              -1.2940220657456165,
+              0.16743209140551438
+            ],
+            [
+              -0.08023779180189017,
+              -1.2605439329290369,
+              0.186394721477262
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 145,
+      "bone": 3,
+      "index": 155,
+      "operand_sha256": "ae30875eab321b9f52312c7c84b2a68a2546e6e3e2513045f0cd8e2dfea00462",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 150,
+      "bone": 5,
+      "index": 156,
+      "operand_sha256": "d92a4c39581dac5ed048c8c8dfda40ab7876a88b14487cc3e0929c7dcf4dcfb9",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.416349150599345e-07,
+          "vertices": 53,
+          "faces": 98,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.02206315848946924,
+              -1.6650097288015095,
+              0.11732504192554148
+            ],
+            [
+              0.05955636377594631,
+              -1.6240989296060693,
+              0.1364829291681989
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.2622058560156084e-05,
+          "vertices": 269,
+          "faces": 526,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.022478878198468357,
+              -1.6694230273249866,
+              0.11121262389268394
+            ],
+            [
+              0.07403413434383213,
+              -1.37982959737034,
+              0.1510543192739081
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 150,
+      "bone": 21,
+      "index": 157,
+      "operand_sha256": "7411d216e220526e071ae771ecc12d0ca4ef86d71c9d7b0b4eb5837589965dc2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 7.600617737955851e-07,
+          "vertices": 132,
+          "faces": 252,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.07397124823266658,
+              -1.6862761316187833,
+              0.09645309947057168
+            ],
+            [
+              0.08048801224813919,
+              -1.5343743861272154,
+              0.11829014290038886
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.3249195273444898e-05,
+          "vertices": 337,
+          "faces": 666,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.06521602260914203,
+              -1.6906227276647448,
+              0.09419141030632149
+            ],
+            [
+              0.09540506083068465,
+              -1.3322546551494718,
+              0.11938362473078193
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 151,
+      "bone": 23,
+      "index": 158,
+      "operand_sha256": "9d16cf1c0330f38e59de669a550810f268ec5c0b0b8a021b588b7fe0ece8e9cf",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 7,
+      "index": 159,
+      "operand_sha256": "3983e32c72bbf725fc9e7be5b9fb4832b53efc5ce15ef5fea3275532ce8894e6",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.8505290214389815e-08,
+          "vertices": 27,
+          "faces": 50,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.03455308270204679,
+              -1.7360837391743995,
+              0.07893103001126167
+            ],
+            [
+              0.0373243046100541,
+              -1.720487995443578,
+              0.0854570977089141
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 1.9029585973105683e-06,
+          "vertices": 148,
+          "faces": 292,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.03403071049966915,
+              -1.7398079905122676,
+              0.06724364985753477
+            ],
+            [
+              0.06782538138456212,
+              -1.7063508027133552,
+              0.09286705695922699
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 65,
+      "index": 160,
+      "operand_sha256": "24a49e4e1169eaf14c2e30684f5a85b5af039dc846a8948f8ec080aa8c3ad02d",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.0736637347193264e-07,
+          "vertices": 88,
+          "faces": 172,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.024799767354118367,
+              -1.7003136105963166,
+              0.1356281994472523
+            ],
+            [
+              0.02800229898470323,
+              -1.6903269197165784,
+              0.1488232766408232
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 66,
+      "index": 161,
+      "operand_sha256": "eacdb73e1f8b2ca7b18873733e0d8aa43a7cd898cf9eb5736791a5352b67fcbb",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 67,
+      "index": 162,
+      "operand_sha256": "90fdc343e543c038b10fc8887925d227aa1b173301cc733859a8994960b05631",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 68,
+      "index": 163,
+      "operand_sha256": "03eb05de3fcc147bf4a49a7c919e5237f70abfb3580382a63b8974ede581b019",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 69,
+      "index": 164,
+      "operand_sha256": "6d95c472a84438513954419fb6954cc6961172263e8d2604500f603942a1ad0c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 145,
+      "index": 165,
+      "operand_sha256": "2981bb9e42ddeb97302edaa6836f2a885df13da42e17c4b7a3e1185c010b4aef",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.0892320799635756e-07,
+          "vertices": 131,
+          "faces": 254,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.03234268711969351,
+              -1.7341865837922419,
+              0.17688088860991266
+            ],
+            [
+              0.05109971524544796,
+              -1.696968109810325,
+              0.22673161276252043
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 146,
+      "index": 166,
+      "operand_sha256": "eadbeb56ba19647f506306a3dcebeff7ed243371f35fd9d3d5c5e613f1119a38",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.1549530386876866e-08,
+          "vertices": 38,
+          "faces": 72,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.06311799169690059,
+              -1.7317243447452078,
+              0.21888285982051642
+            ],
+            [
+              0.06968000816235792,
+              -1.729613691558037,
+              0.2297402574337953
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 147,
+      "index": 167,
+      "operand_sha256": "c9cfd0110cb293a9ceea70036373fbc76cc8d49d6a2ce1557df63ce7381a46dc",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.1035075358990174e-09,
+          "vertices": 24,
+          "faces": 44,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.077264525880876,
+              -1.7300223553724967,
+              0.21643008217482393
+            ],
+            [
+              0.08146477869703841,
+              -1.729256095192886,
+              0.22198093386173964
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 148,
+      "index": 168,
+      "operand_sha256": "f061b65cdadbd4077d68e5a400ba991a9456e045e26bde06ac038fb3c11ef832",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 3.1148190245148246e-09,
+          "vertices": 19,
+          "faces": 34,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.08804231352596859,
+              -1.7294790127466027,
+              0.2068764972202924
+            ],
+            [
+              0.09169169907435108,
+              -1.728769518356361,
+              0.2132076835717719
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 152,
+      "bone": 149,
+      "index": 169,
+      "operand_sha256": "32c0604097101130356707e79af56e0fb883b6c03d842d16f5d785020e88913c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.7518776053533982e-12,
+          "vertices": 7,
+          "faces": 10,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.10165182372459841,
+              -1.7305105332216626,
+              0.1983157928310581
+            ],
+            [
+              0.1023202823293345,
+              -1.7304310865497887,
+              0.19901557172735182
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.448169208231355e-08,
+          "vertices": 75,
+          "faces": 146,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.09877683492626627,
+              -1.7305321960430906,
+              0.19384791809725582
+            ],
+            [
+              0.10719956879082178,
+              -1.7266356904251297,
+              0.20550485434518553
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 150,
+      "index": 170,
+      "operand_sha256": "c41eee42b6a954dc008ecf8acbf79d16a2ef48306ad84db4d7fbe9eca01c5b3b",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 4.898543077117169e-07,
+          "vertices": 233,
+          "faces": 446,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.030750983021931848,
+              -1.7370319776978143,
+              0.231991691810692
+            ],
+            [
+              0.05454906728140805,
+              -1.7212618769211265,
+              0.2650365585879164
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 151,
+      "index": 171,
+      "operand_sha256": "1c36da69beb9dc83d7af69063e892b1e38b5e01f1927e728e6dbdf96ad4e56dd",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 3.4273906784037184e-07,
+          "vertices": 153,
+          "faces": 298,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.03885440746299923,
+              -1.7375954730930214,
+              0.2628259596244361
+            ],
+            [
+              0.05697203497207958,
+              -1.729095439074049,
+              0.2854809371247768
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 152,
+      "index": 172,
+      "operand_sha256": "42e5dbb94be52e4e32a3a95a7116f95d52bd531df8d9b038596f5e15eda99933",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 1.0000299237714539e-10,
+          "vertices": 6,
+          "faces": 8,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.06286789698011376,
+              -1.7307291692252424,
+              0.23860392445609663
+            ],
+            [
+              0.06432324574456037,
+              -1.7304641428144538,
+              0.240204875083628
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 153,
+      "index": 173,
+      "operand_sha256": "9e88dea4500cc47d51e150027e9ec12662880e571bb0fddb5dc78e89c14971e0",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 154,
+      "index": 174,
+      "operand_sha256": "5270808d3785d1d9296d11bcc685f18d20011b05e444bb4984c2c03cbfcb0be3",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.691091675827305e-08,
+          "vertices": 75,
+          "faces": 142,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.06888705965963317,
+              -1.7335528400914868,
+              0.2769061807276714
+            ],
+            [
+              0.07584185519803019,
+              -1.7285263350557882,
+              0.2888341423938875
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 2.6410835609328726e-08,
+          "vertices": 143,
+          "faces": 274,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.06753798936708862,
+              -1.7331742951913418,
+              0.2759088991436465
+            ],
+            [
+              0.07565345030804323,
+              -1.7284387429819714,
+              0.28883416005426205
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 156,
+      "index": 176,
+      "operand_sha256": "fa224431e7a0d61c76634c2305bf5cd65213376a3cd15f4a238d6777aba5955f",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 157,
+      "index": 177,
+      "operand_sha256": "3cf817ce45b318238bbee5faafc5f7991efb46c3a25a6c0bf32010a213ff38a2",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.4344404511900602e-08,
+          "vertices": 71,
+          "faces": 138,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.08380156194409984,
+              -1.7310271907185164,
+              0.2734513135143662
+            ],
+            [
+              0.08882139717747733,
+              -1.7257587441663624,
+              0.2795595811850243
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.668966639807612e-09,
+          "vertices": 77,
+          "faces": 150,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.08364798314347519,
+              -1.730882384854864,
+              0.2731557037622488
+            ],
+            [
+              0.08884088636719108,
+              -1.7256736276252744,
+              0.2779762425453799
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 158,
+      "index": 178,
+      "operand_sha256": "3f8ab398f43279fb04e6b8fba7fc1d7cf4f7a885c566331cca67fd6ec4367f60",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 159,
+      "index": 179,
+      "operand_sha256": "e856388debd1dc72f91015653b9dd464c93541278a4888a1c50ca609be9221d3",
+      "layers": {
+        "skin": {
+          "intersection_m3": 4.354265389608505e-10,
+          "vertices": 22,
+          "faces": 40,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.09605207824370889,
+              -1.7234244261703164,
+              0.25728475502278686
+            ],
+            [
+              0.09912520616512788,
+              -1.7228266189375758,
+              0.2590875511624183
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 5.012149705544101e-09,
+          "vertices": 78,
+          "faces": 144,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.09550883085492147,
+              -1.729694024122403,
+              0.2467206700679924
+            ],
+            [
+              0.10177918810985358,
+              -1.7228382663491242,
+              0.25943378040586
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 160,
+      "index": 180,
+      "operand_sha256": "86172b49417041eae5afb5e44e9cbae4b17b293e3ce53f75ca07c0dff2371f5c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.6857135641498057e-08,
+          "vertices": 102,
+          "faces": 196,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.09663383672096348,
+              -1.7297853740429463,
+              0.25813668363180386
+            ],
+            [
+              0.10317619406064726,
+              -1.7228336011105225,
+              0.26747121303979077
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.422887084823576e-08,
+          "vertices": 184,
+          "faces": 360,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.09611296280962496,
+              -1.7297879384001085,
+              0.25796400723246493
+            ],
+            [
+              0.10321271062129421,
+              -1.7236031565956742,
+              0.26855834501163656
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 161,
+      "index": 181,
+      "operand_sha256": "5956074511479a2ab26f157cce0acdf90ef0837b3656db26f7b3e427bf57da8c",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 7.992167718110514e-09,
+          "vertices": 28,
+          "faces": 52,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.09837516278785316,
+              -1.7298499962499145,
+              0.21217993203151228
+            ],
+            [
+              0.10462324388583293,
+              -1.7285145231278007,
+              0.21651042546902768
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 162,
+      "index": 182,
+      "operand_sha256": "9295e93f27f6df438a7aa05434159cca8de7c9075955b65a708d6829176670cb",
+      "layers": {
+        "skin": {
+          "intersection_m3": 1.770850011126348e-10,
+          "vertices": 15,
+          "faces": 26,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.11182281183233643,
+              -1.7279159333328706,
+              0.2379393143675058
+            ],
+            [
+              0.1130387981941772,
+              -1.7270620554031713,
+              0.23940157156872907
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 7.218900225487748e-09,
+          "vertices": 90,
+          "faces": 172,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.1072751281091671,
+              -1.7285072801185037,
+              0.23541544154996985
+            ],
+            [
+              0.11307160390271481,
+              -1.7242236237050415,
+              0.2409772834327848
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 153,
+      "bone": 163,
+      "index": 183,
+      "operand_sha256": "da1a3d352cfd88d718ae73baba917770f6fb673b687d868f71a49c51c5be2e50",
+      "layers": {
+        "skin": {
+          "intersection_m3": 2.464618492816917e-08,
+          "vertices": 91,
+          "faces": 174,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.10948419602309407,
+              -1.728212067845746,
+              0.24058758799529362
+            ],
+            [
+              0.11353469572653702,
+              -1.7253042339874654,
+              0.25039917824995805
+            ]
+          ]
+        },
+        "fat": {
+          "intersection_m3": 3.549211289762771e-08,
+          "vertices": 128,
+          "faces": 252,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.1090244748295436,
+              -1.728149496735177,
+              0.23998696090754046
+            ],
+            [
+              0.11383175983694532,
+              -1.7235099129544926,
+              0.2504600687409133
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "body": 156,
+      "bone": 25,
+      "index": 184,
+      "operand_sha256": "8eb63557e706de363ce9967a7bebd25390eca48de7b357ef0026193f8615f8b6",
+      "layers": {
+        "skin": {
+          "intersection_m3": 0.0,
+          "vertices": 0,
+          "faces": 0,
+          "status": "Error.NoError"
+        },
+        "fat": {
+          "intersection_m3": 2.9460121060928707e-06,
+          "vertices": 111,
+          "faces": 218,
+          "status": "Error.NoError",
+          "bbox_world_m": [
+            [
+              0.03143840457198462,
+              -1.2933146415074723,
+              0.17075753766331508
+            ],
+            [
+              0.07014725788727084,
+              -1.2586650584985104,
+              0.1846283984862297
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "elapsed_s": 0.45730675011873245
+}
