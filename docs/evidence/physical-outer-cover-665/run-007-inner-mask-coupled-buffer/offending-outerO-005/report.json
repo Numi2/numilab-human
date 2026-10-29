@@ -1,0 +1,2841 @@
+{
+  "accepted_fine_O_source_pin": "2958a704db4b8b68422640a5e991c6b51af25f19d525c49adc8a742f0c207d7a",
+  "edge_connected_face_components": [
+    {
+      "face_ids": [
+        612,
+        836,
+        924
+      ],
+      "vertex_rows": [
+        1000,
+        1057,
+        1191,
+        1218,
+        1286
+      ]
+    },
+    {
+      "face_ids": [
+        1098
+      ],
+      "vertex_rows": [
+        1283,
+        1396,
+        1467
+      ]
+    },
+    {
+      "face_ids": [
+        1402,
+        1403,
+        1404,
+        1405,
+        1440,
+        1442,
+        1452,
+        1453,
+        1454
+      ],
+      "vertex_rows": [
+        1467,
+        1596,
+        1629,
+        1693,
+        7267,
+        7268,
+        7269,
+        7282,
+        7285,
+        7286
+      ]
+    }
+  ],
+  "elapsed_s": 1.1552275409922004,
+  "fine_O_registered_rows": {
+    "domain_registry_sha256": "63dfd1ebdc38d5c938bd210906332104a6ff66ff596785f3a48c622de4dd67fc",
+    "faces": 112063,
+    "registered_O_csv_sha256": "e3b2da9a2a65d2b0dd3d5dbab60d6146f6b7653cf830c8fd5d334c36900e0c9f",
+    "registered_O_faces_csv_sha256": "2ccdbf1fbfd7d977a9989a8b6f2d9a4a5fa6e9470d8e14ba7dfcee1792244fbb",
+    "vertices": 56054
+  },
+  "inputs_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets/volume/combined-node-map.csv": "b3bf0870519d81c3ff8c98d15ce61c107905beec21615da85505f2da2bd03bcf",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/registered-O-faces.csv": "2ccdbf1fbfd7d977a9989a8b6f2d9a4a5fa6e9470d8e14ba7dfcee1792244fbb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/registered-O.csv": "e3b2da9a2a65d2b0dd3d5dbab60d6146f6b7653cf830c8fd5d334c36900e0c9f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-current-surface-registration-399/sidecars/source-domain-registry.json": "63dfd1ebdc38d5c938bd210906332104a6ff66ff596785f3a48c622de4dd67fc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/bank-envelopes/bank-023-032-cube2um.npz": "4cb25b1387af6caabb3479ff990ac27b49d1592817af508e8e3d78d9d6f29067",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-042-current006-d23-bone32-cavity/attempt-005-bone32-subtraction/continuation-005/source330-registration-001/register_cavity_points_to_source330.py": "1b3405e41148882084417f8441a35bc982feee64efc01e6d9d51ea14d432b5d7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/raw-fat-skin-source-role-inventory.json": "bf7f300059710d55f5552d35ce408ed0dd94d33270f0b026d490b4fabb140174",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/run-007-inner-mask-coupled-buffer/candidate-fat-region23-f64.npz": "f46166a4800fbbd13232c858c7c715eee60448117f1d781c19b8fff4e1102e34",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/run-007-inner-mask-coupled-buffer/candidate-skin-region23-f64.npz": "3b534b8a616909f55c32f6dc097187014e58e9276e121ccf5785fb37765cd12f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/run-007-inner-mask-coupled-buffer/mask-inputs.npz": "3adfccf4435d93485d7156d9978a1e581199b4ae39ecd2c464ef019444639553",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/run-007-inner-mask-coupled-buffer/receipt.json": "4837c7aaeca0604c27e1c926d17b133bfb0ae0aaf2bc2cdb2fe00598ffea7eca",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/run-007-inner-mask-coupled-buffer/source-only-audit-004/report.json": "3d674761b41bf31d43843950ecbc72ffc7f897fc6c876e646238a98d12929811",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/run-007-inner-mask-coupled-buffer/source-view-maps.npz": "9dd4ec409275e7fae3919d43fd2bea40a9c1efc56568168cf8517488020e8a0c"
+  },
+  "offending_inventory_source_faces": [
+    {
+      "candidate_skin_tagged_area_m2": 0.00032706414747031597,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        1000,
+        1191,
+        1057
+      ],
+      "retained_area_fraction": 0.688083153533162,
+      "source330_stable_source_face_id_per_incident_tet": [
+        94918,
+        95499,
+        95885,
+        96367,
+        96424,
+        96488,
+        96827,
+        96828,
+        96833,
+        97007,
+        97068,
+        97298,
+        97302,
+        97363,
+        97758,
+        97760,
+        97922,
+        97946,
+        98828,
+        98975,
+        99507
+      ],
+      "source_area_m2": 0.0004753264860372042,
+      "source_skin23_face_row": 612,
+      "world_reference_f32_m": [
+        [
+          -0.07665921002626419,
+          -0.09438466280698776,
+          0.20885595679283142
+        ],
+        [
+          -0.05174265429377556,
+          -0.10151245445013046,
+          0.2293442189693451
+        ],
+        [
+          -0.07241687923669815,
+          -0.06622977554798126,
+          0.1988857239484787
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 0.0005731327283040993,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        1191,
+        1286,
+        1057
+      ],
+      "retained_area_fraction": 0.47157646628026145,
+      "source330_stable_source_face_id_per_incident_tet": [
+        94918,
+        95499,
+        95885,
+        96488,
+        97007,
+        97068,
+        97302,
+        97363,
+        97758,
+        97760,
+        97922,
+        97946,
+        98828,
+        98975,
+        99507,
+        99667,
+        100250,
+        100990,
+        101359,
+        102517,
+        102576,
+        103204
+      ],
+      "source_area_m2": 0.0012153548136634158,
+      "source_skin23_face_row": 836,
+      "world_reference_f32_m": [
+        [
+          -0.05174265429377556,
+          -0.10151245445013046,
+          0.2293442189693451
+        ],
+        [
+          -0.0288531631231308,
+          -0.046293724328279495,
+          0.20331916213035583
+        ],
+        [
+          -0.07241687923669815,
+          -0.06622977554798126,
+          0.1988857239484787
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 0.0001803360727241093,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        1218,
+        1286,
+        1191
+      ],
+      "retained_area_fraction": 0.8919465531717483,
+      "source330_stable_source_face_id_per_incident_tet": [
+        97007,
+        97302,
+        97363,
+        97758,
+        97760,
+        97922,
+        97946,
+        98828,
+        98975,
+        99507,
+        99667,
+        100243,
+        100250,
+        100878,
+        100896,
+        100990,
+        101359,
+        102517,
+        102576,
+        103204
+      ],
+      "source_area_m2": 0.00020218259948742107,
+      "source_skin23_face_row": 924,
+      "world_reference_f32_m": [
+        [
+          -0.040662795305252075,
+          -0.07771901786327362,
+          0.2245800495147705
+        ],
+        [
+          -0.0288531631231308,
+          -0.046293724328279495,
+          0.20331916213035583
+        ],
+        [
+          -0.05174265429377556,
+          -0.10151245445013046,
+          0.2293442189693451
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 0.0005607753706346847,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        1283,
+        1467,
+        1396
+      ],
+      "retained_area_fraction": 0.7690054235051061,
+      "source330_stable_source_face_id_per_incident_tet": [
+        100878,
+        100896,
+        101359,
+        102398,
+        102517,
+        102935,
+        103119,
+        103204,
+        104037,
+        104758,
+        104791,
+        105662,
+        105969,
+        106027,
+        106058
+      ],
+      "source_area_m2": 0.0007292216068889158,
+      "source_skin23_face_row": 1098,
+      "world_reference_f32_m": [
+        [
+          -0.02388681471347809,
+          -0.09625805914402008,
+          0.23192238807678223
+        ],
+        [
+          0.006575402803719044,
+          -0.08938880264759064,
+          0.22224019467830658
+        ],
+        [
+          -0.003039570990949869,
+          -0.05013762786984444,
+          0.2026771456003189
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 1.3957199685193526e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        1467,
+        7269,
+        7267
+      ],
+      "retained_area_fraction": 0.17792069560989945,
+      "source330_stable_source_face_id_per_incident_tet": [
+        102935,
+        103119,
+        104037,
+        104758,
+        105662,
+        105969,
+        106027,
+        106058
+      ],
+      "source_area_m2": 7.844618433706794e-05,
+      "source_skin23_face_row": 1402,
+      "world_reference_f32_m": [
+        [
+          0.006575402803719044,
+          -0.08938880264759064,
+          0.22224019467830658
+        ],
+        [
+          0.02547733299434185,
+          -0.0872059166431427,
+          0.19138143956661224
+        ],
+        [
+          0.01606036350131035,
+          -0.0855940654873848,
+          0.2127249538898468
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 5.123212321915527e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7268,
+        7269,
+        1467
+      ],
+      "retained_area_fraction": 0.2236008294667342,
+      "source330_stable_source_face_id_per_incident_tet": [
+        102935,
+        103119,
+        104037,
+        104758,
+        105662,
+        105969,
+        106027,
+        106058
+      ],
+      "source_area_m2": 0.00022912313581903432,
+      "source_skin23_face_row": 1403,
+      "world_reference_f32_m": [
+        [
+          0.01736075058579445,
+          -0.09985104203224182,
+          0.21624213457107544
+        ],
+        [
+          0.02547733299434185,
+          -0.0872059166431427,
+          0.19138143956661224
+        ],
+        [
+          0.006575402803719044,
+          -0.08938880264759064,
+          0.22224019467830658
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 1.207737538609057e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7269,
+        1693,
+        7267
+      ],
+      "retained_area_fraction": 0.15565242978667762,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105662,
+        106027,
+        106058,
+        106087,
+        106995,
+        107067,
+        107131,
+        107632,
+        107937,
+        107955
+      ],
+      "source_area_m2": 7.759194895089444e-05,
+      "source_skin23_face_row": 1404,
+      "world_reference_f32_m": [
+        [
+          0.02547733299434185,
+          -0.0872059166431427,
+          0.19138143956661224
+        ],
+        [
+          0.04430360719561577,
+          -0.08504212647676468,
+          0.16048772633075714
+        ],
+        [
+          0.01606036350131035,
+          -0.0855940654873848,
+          0.2127249538898468
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 3.495804144653818e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7268,
+        1693,
+        7269
+      ],
+      "retained_area_fraction": 0.15282178927193799,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105969,
+        106027,
+        106058,
+        106087,
+        106995,
+        107067,
+        107131,
+        107632,
+        107937,
+        107955
+      ],
+      "source_area_m2": 0.00022875037396880794,
+      "source_skin23_face_row": 1405,
+      "world_reference_f32_m": [
+        [
+          0.01736075058579445,
+          -0.09985104203224182,
+          0.21624213457107544
+        ],
+        [
+          0.04430360719561577,
+          -0.08504212647676468,
+          0.16048772633075714
+        ],
+        [
+          0.02547733299434185,
+          -0.0872059166431427,
+          0.19138143956661224
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 7.441937151159858e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7267,
+        7282,
+        1596
+      ],
+      "retained_area_fraction": 0.9472347233496687,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105662,
+        106058,
+        106087
+      ],
+      "source_area_m2": 7.856486853483611e-05,
+      "source_skin23_face_row": 1440,
+      "world_reference_f32_m": [
+        [
+          0.01606036350131035,
+          -0.0855940654873848,
+          0.2127249538898468
+        ],
+        [
+          0.03493150323629379,
+          -0.0834164023399353,
+          0.18185055255889893
+        ],
+        [
+          0.025542816147208214,
+          -0.0818004384636879,
+          0.20320679247379303
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 4.048318684128565e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7267,
+        1693,
+        7282
+      ],
+      "retained_area_fraction": 0.5129983102244906,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105662,
+        106027,
+        106058,
+        106087,
+        106995,
+        107067,
+        107131,
+        107632,
+        107937,
+        107955
+      ],
+      "source_area_m2": 7.891485417090363e-05,
+      "source_skin23_face_row": 1442,
+      "world_reference_f32_m": [
+        [
+          0.01606036350131035,
+          -0.0855940654873848,
+          0.2127249538898468
+        ],
+        [
+          0.04430360719561577,
+          -0.08504212647676468,
+          0.16048772633075714
+        ],
+        [
+          0.03493150323629379,
+          -0.0834164023399353,
+          0.18185055255889893
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 0.00016789644292322767,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        1629,
+        7286,
+        7268
+      ],
+      "retained_area_fraction": 0.732736419842533,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105520,
+        105969,
+        105983,
+        106027,
+        106381,
+        106995
+      ],
+      "source_area_m2": 0.0002291362055666744,
+      "source_skin23_face_row": 1452,
+      "world_reference_f32_m": [
+        [
+          0.028142793104052544,
+          -0.1103145107626915,
+          0.21024037897586823
+        ],
+        [
+          0.03622614964842796,
+          -0.09767799824476242,
+          0.18536461889743805
+        ],
+        [
+          0.01736075058579445,
+          -0.09985104203224182,
+          0.21624213457107544
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 0.00039401707383120166,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7285,
+        7286,
+        1629
+      ],
+      "retained_area_fraction": 0.9111326493533628,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105520,
+        105969,
+        105983,
+        106027,
+        106381,
+        106995
+      ],
+      "source_area_m2": 0.0004324475411026466,
+      "source_skin23_face_row": 1453,
+      "world_reference_f32_m": [
+        [
+          0.033882129937410355,
+          -0.1364297717809677,
+          0.19705398380756378
+        ],
+        [
+          0.03622614964842796,
+          -0.09767799824476242,
+          0.18536461889743805
+        ],
+        [
+          0.028142793104052544,
+          -0.1103145107626915,
+          0.21024037897586823
+        ]
+      ]
+    },
+    {
+      "candidate_skin_tagged_area_m2": 7.524431664175608e-05,
+      "full86_dominant_columns_by_corner": [
+        7,
+        7,
+        7
+      ],
+      "global_volume_node_rows": [
+        7286,
+        1693,
+        7268
+      ],
+      "retained_area_fraction": 0.328323996648385,
+      "source330_stable_source_face_id_per_incident_tet": [
+        105969,
+        106027,
+        106058,
+        106087,
+        106995,
+        107067,
+        107131,
+        107632,
+        107937,
+        107955
+      ],
+      "source_area_m2": 0.00022917702455461442,
+      "source_skin23_face_row": 1454,
+      "world_reference_f32_m": [
+        [
+          0.03622614964842796,
+          -0.09767799824476242,
+          0.18536461889743805
+        ],
+        [
+          0.04430360719561577,
+          -0.08504212647676468,
+          0.16048772633075714
+        ],
+        [
+          0.01736075058579445,
+          -0.09985104203224182,
+          0.21624213457107544
+        ]
+      ]
+    }
+  ],
+  "offending_node_witnesses": [
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9885618686676025,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.07665921002626419",
+        "current_y_m": "-0.09438466280698776",
+        "current_z_m": "0.20885595679283142",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "0.051176439226358575",
+        "donor_local_y_m": "-0.10901513318518886",
+        "donor_local_z_m": "0.0532963632820594",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1001",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "12717",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "7.450580596923828e-09",
+        "parent_current_residual_y_m": "7.450580596923828e-09",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "1.0536712127723509e-08",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "12717",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1000",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1000",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1001",
+        "source_vertex_row": "1000"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.31563471912312036,
+          0.2829255824559639,
+          0.40143969842091576
+        ],
+        "distance_m": 0.003412494493922038,
+        "dropped_degenerate_count": 0,
+        "face_row": 6451,
+        "point_m": [
+          -0.07390057510191012,
+          -0.09481588058147311,
+          0.20689404363059663
+        ],
+        "unit_normal": [
+          -0.8083924909673714,
+          0.1263643868886483,
+          0.5749205356167272
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          3.271214498168362e-07,
+          2.0916104157994227e-06,
+          0.9999975812681344
+        ],
+        "distance_m": 4.293528321587999e-09,
+        "dropped_degenerate_count": 0,
+        "face_row": 51343,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 32524,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.07665920699644307,
+          -0.09438466371584388,
+          0.2088559538896349
+        ],
+        "unit_normal": [
+          -0.7056716286143011,
+          0.21168047534739654,
+          0.6761796572846157
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          25454,
+          25469,
+          25514
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1000,
+      "world_reference_f32_m": [
+        -0.07665921002626419,
+        -0.09438466280698776,
+        0.20885595679283142
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9922622442245483,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.07241687923669815",
+        "current_y_m": "-0.06622977554798126",
+        "current_z_m": "0.1988857239484787",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "0.04703842228464865",
+        "donor_local_y_m": "-0.12082701056308043",
+        "donor_local_z_m": "0.025847195954642167",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1058",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "12279",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "0.0",
+        "parent_current_residual_y_m": "7.450580596923828e-09",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "7.450580596923828e-09",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "12279",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1057",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1057",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1058",
+        "source_vertex_row": "1057"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.0,
+          0.01854851940823654,
+          0.9814514805917635
+        ],
+        "distance_m": 0.005832181273613191,
+        "dropped_degenerate_count": 0,
+        "face_row": 15688,
+        "point_m": [
+          -0.06842361587072039,
+          -0.06933212697474483,
+          0.19597993632322416
+        ],
+        "unit_normal": [
+          -0.6904613228363473,
+          0.530082333556884,
+          0.49221527944383225
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          3.033592824719378e-07,
+          1.4502735374648387e-05,
+          0.9999851939053429
+        ],
+        "distance_m": 4.507065840440812e-09,
+        "dropped_degenerate_count": 0,
+        "face_row": 51312,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 32493,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.07241687530943051,
+          -0.0662297768011447,
+          0.19888572212644884
+        ],
+        "unit_normal": [
+          -0.8713579471789459,
+          0.27804418196767433,
+          0.40426075837511144
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          25284,
+          25598,
+          25610
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1057,
+      "world_reference_f32_m": [
+        -0.07241687923669815,
+        -0.06622977554798126,
+        0.1988857239484787
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9849690198898315,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.05174265429377556",
+        "current_y_m": "-0.10151245445013046",
+        "current_z_m": "0.2293442189693451",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "0.026146195869832405",
+        "donor_local_y_m": "-0.11914424746283539",
+        "donor_local_z_m": "0.07233046022180967",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1192",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13035",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "3.725290298461914e-09",
+        "parent_current_residual_y_m": "7.450580596923828e-09",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "8.33000234328132e-09",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "13038",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1191",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1191",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1192",
+        "source_vertex_row": "1191"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.184855324003116,
+          0.2274692099006402,
+          0.5876754660962438
+        ],
+        "distance_m": 0.00414553118442046,
+        "dropped_degenerate_count": 0,
+        "face_row": 10547,
+        "point_m": [
+          -0.050486721785701155,
+          -0.10125782603992738,
+          0.22540172905700773
+        ],
+        "unit_normal": [
+          -0.30296057421890504,
+          -0.06142238446064857,
+          0.9510216512551749
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.9999962048015724,
+          3.3469546207994e-06,
+          4.4824380679460376e-07
+        ],
+        "distance_m": 7.853056094844956e-09,
+        "dropped_degenerate_count": 0,
+        "face_row": 52052,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 33167,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.05174265324697385,
+          -0.10151245575879578,
+          0.2293442112971817
+        ],
+        "unit_normal": [
+          -0.13329864145603537,
+          0.16664408013544196,
+          0.9769653129675524
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          25978,
+          25887,
+          26374
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1191,
+      "world_reference_f32_m": [
+        -0.05174265429377556,
+        -0.10151245445013046,
+        0.2293442189693451
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9898218512535095,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.040662795305252075",
+        "current_y_m": "-0.07771901786327362",
+        "current_z_m": "0.2245800495147705",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "0.015136732448767686",
+        "donor_local_y_m": "-0.13179554225944828",
+        "donor_local_z_m": "0.051586196127553975",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1219",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "1.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "0.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13492",
+        "parent_bary0": "1.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "0.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "0.0",
+        "parent_current_residual_y_m": "0.0",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "0.0",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "13509",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1218",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1218",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1219",
+        "source_vertex_row": "1218"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.6888226128257384,
+          0.31117738717426163,
+          0.0
+        ],
+        "distance_m": 0.004529700369479108,
+        "dropped_degenerate_count": 0,
+        "face_row": 15838,
+        "point_m": [
+          -0.04014379175179796,
+          -0.07996511757535976,
+          0.22068083717993572
+        ],
+        "unit_normal": [
+          -0.14205409160960972,
+          0.5087277495087971,
+          0.8491270293287589
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          1.2333827084320959e-05,
+          6.940548293787058e-07,
+          0.9999869721180863
+        ],
+        "distance_m": 1.6217724673238717e-09,
+        "dropped_degenerate_count": 0,
+        "face_row": 52059,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 33174,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.040662795256018694,
+          -0.07771901822641211,
+          0.2245800479349438
+        ],
+        "unit_normal": [
+          -0.030357761578458875,
+          0.2239145776289185,
+          0.9741358571766099
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          26295,
+          26374,
+          26347
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1218,
+      "world_reference_f32_m": [
+        -0.040662795305252075,
+        -0.07771901786327362,
+        0.2245800495147705
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9857547283172607,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.02388681471347809",
+        "current_y_m": "-0.09625805914402008",
+        "current_z_m": "0.23192238807678223",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.001711453563985465",
+        "donor_local_y_m": "-0.12454422541934441",
+        "donor_local_z_m": "0.07009555576462996",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1284",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13624",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "-3.3527612686157227e-08",
+        "parent_current_residual_y_m": "-6.7427754402160645e-06",
+        "parent_current_residual_z_m": "5.21540641784668e-07",
+        "parent_registration_distance_m": "6.762998549388173e-06",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "13668",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1283",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1283",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1284",
+        "source_vertex_row": "1283"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.32695948604657576,
+          0.2290205785158053,
+          0.444019935437619
+        ],
+        "distance_m": 0.004250039188775785,
+        "dropped_degenerate_count": 0,
+        "face_row": 24766,
+        "point_m": [
+          -0.02390867799650367,
+          -0.09665368099113314,
+          0.2276908589847078
+        ],
+        "unit_normal": [
+          0.005144254453776128,
+          0.09308663509689284,
+          0.99564472328861
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.007754181670551308,
+          0.004779175653867311,
+          0.9874666426755814
+        ],
+        "distance_m": 0.00043316147360575,
+        "dropped_degenerate_count": 0,
+        "face_row": 109392,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63341,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.023890737180961085,
+          -0.0962290664191413,
+          0.23235456037849678
+        ],
+        "unit_normal": [
+          -0.009055439419268166,
+          0.06693283370159532,
+          0.9977163899573859
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          26374,
+          26692,
+          26499
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1283,
+      "world_reference_f32_m": [
+        -0.02388681471347809,
+        -0.09625805914402008,
+        0.23192238807678223
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9938613772392273,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.0288531631231308",
+        "current_y_m": "-0.046293724328279495",
+        "current_z_m": "0.20331916213035583",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "0.0034930642173888965",
+        "donor_local_y_m": "-0.13753093638769018",
+        "donor_local_z_m": "0.014028615232714741",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1287",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13359",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "-1.862645149230957e-09",
+        "parent_current_residual_y_m": "-3.725290298461914e-09",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "4.16500117164066e-09",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "13362",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1286",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1286",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1287",
+        "source_vertex_row": "1286"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.19309022628592354,
+          0.29335593775272567,
+          0.5135538359613507
+        ],
+        "distance_m": 0.006023159789034519,
+        "dropped_degenerate_count": 0,
+        "face_row": 16083,
+        "point_m": [
+          -0.028474093738070964,
+          -0.05086865604093095,
+          0.19941983397410523
+        ],
+        "unit_normal": [
+          -0.06293530278740886,
+          0.7595567564022391,
+          0.6473891267752083
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          4.5596528807450145e-06,
+          0.9999935603632731,
+          1.8799838461176375e-06
+        ],
+        "distance_m": 1.882438244143235e-08,
+        "dropped_degenerate_count": 0,
+        "face_row": 51738,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 32879,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.028853169679962633,
+          -0.04629371279134529,
+          0.20331917548192802
+        ],
+        "unit_normal": [
+          -0.3483159063417327,
+          0.6128718557781672,
+          0.7092701303342491
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          26433,
+          26463,
+          26418
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1286,
+      "world_reference_f32_m": [
+        -0.0288531631231308,
+        -0.046293724328279495,
+        0.20331916213035583
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9938775300979614,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "-0.003039570990949869",
+        "current_y_m": "-0.05013762786984444",
+        "current_z_m": "0.2026771456003189",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.02232462696007223",
+        "donor_local_y_m": "-0.13438981017544036",
+        "donor_local_z_m": "0.016288984995478293",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1397",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13706",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "2.8225360438227654e-05",
+        "parent_current_residual_y_m": "-2.3476779460906982e-05",
+        "parent_current_residual_z_m": "3.9711594581604004e-05",
+        "parent_registration_distance_m": "5.408179813890817e-05",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "13767",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1396",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1396",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1397",
+        "source_vertex_row": "1396"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.4141407712938421,
+          0.3365994964845493,
+          0.24925973222160858
+        ],
+        "distance_m": 0.006654880607915324,
+        "dropped_degenerate_count": 0,
+        "face_row": 31914,
+        "point_m": [
+          -0.00502210955713938,
+          -0.05502450529792941,
+          0.19861815487083304
+        ],
+        "unit_normal": [
+          0.29790745814905817,
+          0.7343298424125777,
+          0.6099269045725775
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.008228586803907461,
+          0.981724531164157,
+          0.010046882031935506
+        ],
+        "distance_m": 0.0004174561763030535,
+        "dropped_degenerate_count": 0,
+        "face_row": 108725,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63035,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          -0.002822447288076476,
+          -0.04983313163167555,
+          0.20286264222488418
+        ],
+        "unit_normal": [
+          0.5201113678475571,
+          0.7294088708076417,
+          0.4443499344242824
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          26766,
+          26781,
+          27092
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1396,
+      "world_reference_f32_m": [
+        -0.003039570990949869,
+        -0.05013762786984444,
+        0.2026771456003189
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9882879853248596,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.006575402803719044",
+        "current_y_m": "-0.08938880264759064",
+        "current_z_m": "0.22224019467830658",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.03211243934843714",
+        "donor_local_y_m": "-0.12204232315407276",
+        "donor_local_z_m": "0.058331265155695936",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1468",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13739",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "9.313225746154785e-10",
+        "parent_current_residual_y_m": "0.0",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "9.313225746154785e-10",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "13803",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1467",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1467",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1468",
+        "source_vertex_row": "1467"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.17012647032203046,
+          0.5985711496565681,
+          0.23130238002140144
+        ],
+        "distance_m": 0.001319649841826295,
+        "dropped_degenerate_count": 0,
+        "face_row": 25029,
+        "point_m": [
+          0.006031998177188909,
+          -0.08983498146446417,
+          0.22112345317721013
+        ],
+        "unit_normal": [
+          0.411779404889787,
+          0.33810394449489567,
+          0.8462407721361608
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          3.479205658463158e-06,
+          9.676335433241616e-06,
+          0.9999868444589083
+        ],
+        "distance_m": 1.8721974031540505e-08,
+        "dropped_degenerate_count": 0,
+        "face_row": 109498,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63371,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.006575410580061912,
+          -0.08938879895406632,
+          0.22224021130354887
+        ],
+        "unit_normal": [
+          0.41535913144871367,
+          0.1972828463724528,
+          0.8880069090099205
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          26933,
+          26950,
+          26963
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1467,
+      "world_reference_f32_m": [
+        0.006575402803719044,
+        -0.08938880264759064,
+        0.22224019467830658
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9910210371017456,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.025542816147208214",
+        "current_y_m": "-0.0818004384636879",
+        "current_z_m": "0.20320679247379303",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.050971739099677095",
+        "donor_local_y_m": "-0.11319529657192433",
+        "donor_local_z_m": "0.0397389742345035",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1597",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28333",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "1.6763806343078613e-08",
+        "parent_current_residual_y_m": "-7.450580596923828e-09",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "1.834492720998098e-08",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14049",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1596",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1596",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1597",
+        "source_vertex_row": "1596"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.6685064537729145,
+          0.18636270790227882,
+          0.14513083832480667
+        ],
+        "distance_m": 0.0037294639816813904,
+        "dropped_degenerate_count": 0,
+        "face_row": 31978,
+        "point_m": [
+          0.02267102551173302,
+          -0.08321291929063178,
+          0.20129195095289065
+        ],
+        "unit_normal": [
+          0.7700277170073312,
+          0.3787356129142952,
+          0.5134361211980615
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          4.530991268565802e-06,
+          0.9999795937873945,
+          1.5875221336895802e-05
+        ],
+        "distance_m": 2.636161713367618e-09,
+        "dropped_degenerate_count": 0,
+        "face_row": 108923,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63108,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.02554281854726686,
+          -0.08180043842209901,
+          0.20320679356344318
+        ],
+        "unit_normal": [
+          0.9104368028648445,
+          0.015776304461120928,
+          0.4133472344249932
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27346,
+          27315,
+          27305
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1596,
+      "world_reference_f32_m": [
+        0.025542816147208214,
+        -0.0818004384636879,
+        0.20320679247379303
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9860157370567322,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.028142793104052544",
+        "current_y_m": "-0.1103145107626915",
+        "current_z_m": "0.21024037897586823",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.053662316413685095",
+        "donor_local_y_m": "-0.09896983143009772",
+        "donor_local_z_m": "0.0654232161300402",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1630",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "13930",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "1.862645149230957e-09",
+        "parent_current_residual_y_m": "0.0",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "1.862645149230957e-09",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14022",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1629",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1629",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1630",
+        "source_vertex_row": "1629"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.3874544133486417,
+          0.30213607924269187,
+          0.31040950740866635
+        ],
+        "distance_m": 0.005201663103681239,
+        "dropped_degenerate_count": 0,
+        "face_row": 26528,
+        "point_m": [
+          0.024109831877853635,
+          -0.1104598948705692,
+          0.20695839996110418
+        ],
+        "unit_normal": [
+          0.775321497338951,
+          0.027949543247970467,
+          0.6309480159223237
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          6.05582716262076e-07,
+          0.999998115427218,
+          1.2789900657894875e-06
+        ],
+        "distance_m": 2.3432212778717292e-09,
+        "dropped_degenerate_count": 0,
+        "face_row": 109200,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63238,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.028142794369681545,
+          -0.11031451102653123,
+          0.21024038093016037
+        ],
+        "unit_normal": [
+          0.5401235534312484,
+          -0.11259702000985226,
+          0.834019459073769
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27340,
+          27360,
+          27146
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1629,
+      "world_reference_f32_m": [
+        0.028142793104052544,
+        -0.1103145107626915,
+        0.21024037897586823
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9919854998588562,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.04430360719561577",
+        "current_y_m": "-0.08504212647676468",
+        "current_z_m": "0.16048772633075714",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.06953025442796852",
+        "donor_local_y_m": "-0.07961369037498131",
+        "donor_local_z_m": "0.012994787737890385",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "1694",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28324",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.0",
+        "parent_bary2": "1.0",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "2.2351741790771484e-08",
+        "parent_current_residual_y_m": "-7.450580596923828e-09",
+        "parent_current_residual_z_m": "0.0",
+        "parent_registration_distance_m": "2.356080457693621e-08",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14076",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "1693",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "1693",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "1694",
+        "source_vertex_row": "1693"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.0,
+          0.553735274728675,
+          0.446264725271325
+        ],
+        "distance_m": 0.0129423350109336,
+        "dropped_degenerate_count": 0,
+        "face_row": 29064,
+        "point_m": [
+          0.035117134281675275,
+          -0.08611979087998047,
+          0.1695404270532331
+        ],
+        "unit_normal": [
+          0.704740656088296,
+          0.07836148159561661,
+          -0.7051241634339147
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          4.885895364517197e-07,
+          0.9999988783118242,
+          6.330986393352304e-07
+        ],
+        "distance_m": 9.52733624678555e-10,
+        "dropped_degenerate_count": 0,
+        "face_row": 108666,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 62986,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.04430360812238235,
+          -0.08504212646153597,
+          0.16048772655115032
+        ],
+        "unit_normal": [
+          0.9727446959933734,
+          0.015984217770682988,
+          0.23132717349896245
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27901,
+          27824,
+          27687
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 1693,
+      "world_reference_f32_m": [
+        0.04430360719561577,
+        -0.08504212647676468,
+        0.16048772633075714
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9896545112133026,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.01606036350131035",
+        "current_y_m": "-0.0855940654873848",
+        "current_z_m": "0.2127249538898468",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.041543349260497596",
+        "donor_local_y_m": "-0.11762025551195043",
+        "donor_local_z_m": "0.0490356990089232",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "7268",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28319",
+        "parent_bary0": "0.5",
+        "parent_bary1": "0.0",
+        "parent_bary2": "0.5",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "1.2628734111785889e-06",
+        "parent_current_residual_y_m": "5.513429641723633e-07",
+        "parent_current_residual_z_m": "1.4603137969970703e-06",
+        "parent_registration_distance_m": "2.0078208840691476e-06",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14049",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "2445",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "-1",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "2446",
+        "source_vertex_row": "2445"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.7864827031724971,
+          0.15031715095166032,
+          0.06320014587584258
+        ],
+        "distance_m": 0.0010476092259323493,
+        "dropped_degenerate_count": 0,
+        "face_row": 32003,
+        "point_m": [
+          0.015342860742543565,
+          -0.08595027040617963,
+          0.2120498295033468
+        ],
+        "unit_normal": [
+          0.6848954180679577,
+          0.3400169738652496,
+          0.6444429561978591
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.21764358651769378,
+          0.778195131163773,
+          0.00416128231853318
+        ],
+        "distance_m": 5.6044525259517624e-05,
+        "dropped_degenerate_count": 0,
+        "face_row": 109193,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63236,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.016095555763105354,
+          -0.08557855579396914,
+          0.21276572082413758
+        ],
+        "unit_normal": [
+          0.6279339798498713,
+          0.2767387776742929,
+          0.727402616080833
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27207,
+          27113,
+          27216
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 7267,
+      "world_reference_f32_m": [
+        0.01606036350131035,
+        -0.0855940654873848,
+        0.2127249538898468
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9871518611907959,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.01736075058579445",
+        "current_y_m": "-0.09985104203224182",
+        "current_z_m": "0.21624213457107544",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.042889038290432994",
+        "donor_local_y_m": "-0.1105078467575871",
+        "donor_local_z_m": "0.06187803763986347",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "7269",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28320",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.5",
+        "parent_bary2": "0.5",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "1.6540288925170898e-06",
+        "parent_current_residual_y_m": "6.146728992462158e-07",
+        "parent_current_residual_z_m": "1.8477439880371094e-06",
+        "parent_registration_distance_m": "2.5549544410177533e-06",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14064",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "2446",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "-1",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "2447",
+        "source_vertex_row": "2446"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.6750643977592491,
+          0.009649761674089027,
+          0.31528584056666187
+        ],
+        "distance_m": 0.0015581646561448285,
+        "dropped_degenerate_count": 0,
+        "face_row": 26660,
+        "point_m": [
+          0.016305948462028378,
+          -0.09992677238692496,
+          0.21509778563445817
+        ],
+        "unit_normal": [
+          0.6769516428230559,
+          0.04860227985822413,
+          0.734421058842779
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.741798286300766,
+          0.008708983595392203,
+          0.2494927301038418
+        ],
+        "distance_m": 0.00011789794096035831,
+        "dropped_degenerate_count": 0,
+        "face_row": 109258,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63257,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.017437004239274898,
+          -0.09982263499102338,
+          0.2163274477870668
+        ],
+        "unit_normal": [
+          0.6467768042368564,
+          0.2409460333831153,
+          0.7236192192708136
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27196,
+          27082,
+          27054
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 7268,
+      "world_reference_f32_m": [
+        0.01736075058579445,
+        -0.09985104203224182,
+        0.21624213457107544
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9901367425918579,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.02547733299434185",
+        "current_y_m": "-0.0872059166431427",
+        "current_z_m": "0.19138143956661224",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.050859240770449204",
+        "donor_local_y_m": "-0.10084723298545716",
+        "donor_local_z_m": "0.03566772146440223",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "7270",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28322",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.5",
+        "parent_bary2": "0.5",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "3.783963620662689e-05",
+        "parent_current_residual_y_m": "9.544193744659424e-06",
+        "parent_current_residual_z_m": "1.74790620803833e-05",
+        "parent_registration_distance_m": "4.276034744591487e-05",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14076",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "2447",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "-1",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "2448",
+        "source_vertex_row": "2447"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.7218077871044545,
+          0.22923152077256473,
+          0.048960692122980834
+        ],
+        "distance_m": 0.00017928825207197424,
+        "dropped_degenerate_count": 0,
+        "face_row": 30222,
+        "point_m": [
+          0.02561901982358869,
+          -0.08714211654214492,
+          0.19147087483293193
+        ],
+        "unit_normal": [
+          -0.7902739170548948,
+          -0.35585209995896894,
+          -0.4988350618967209
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.21103024649636548,
+          0.18227623058968673,
+          0.6066935229139477
+        ],
+        "distance_m": 0.005947452516206728,
+        "dropped_degenerate_count": 0,
+        "face_row": 109190,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63233,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.03074002694168223,
+          -0.08587758257788887,
+          0.1938128532418734
+        ],
+        "unit_normal": [
+          0.884865231458277,
+          0.22334504758703655,
+          0.408815987792349
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27373,
+          27391,
+          27387
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 7269,
+      "world_reference_f32_m": [
+        0.02547733299434185,
+        -0.0872059166431427,
+        0.19138143956661224
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9915032684803009,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.03493150323629379",
+        "current_y_m": "-0.0834164023399353",
+        "current_z_m": "0.18185055255889893",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.06025929463986932",
+        "donor_local_y_m": "-0.09641020731980304",
+        "donor_local_z_m": "0.02636549976095705",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "7283",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28360",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.5",
+        "parent_bary2": "0.5",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "8.31112265586853e-06",
+        "parent_current_residual_y_m": "4.872679710388184e-06",
+        "parent_current_residual_z_m": "3.293156623840332e-06",
+        "parent_registration_distance_m": "1.0181485545344712e-05",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14079",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "2460",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "-1",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "2461",
+        "source_vertex_row": "2460"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.5329555545387336,
+          0.16712165211229688,
+          0.29992279334896954
+        ],
+        "distance_m": 0.0017169633490604667,
+        "dropped_degenerate_count": 0,
+        "face_row": 30215,
+        "point_m": [
+          0.03345224504275209,
+          -0.08405046015956853,
+          0.18125244803607818
+        ],
+        "unit_normal": [
+          0.8615549040992411,
+          0.3692902472147651,
+          0.34835019812626083
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.7578077074112433,
+          0.00329570654705431,
+          0.2388965860417024
+        ],
+        "distance_m": 0.00018293001226380562,
+        "dropped_degenerate_count": 0,
+        "face_row": 108926,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63111,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.03508062997438087,
+          -0.0833285923527954,
+          0.18190983165751584
+        ],
+        "unit_normal": [
+          0.8152119832147657,
+          0.48001957717727023,
+          0.3240534337877063
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27546,
+          27092,
+          27408
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 7282,
+      "world_reference_f32_m": [
+        0.03493150323629379,
+        -0.0834164023399353,
+        0.18185055255889893
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9682874977588654,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.033882129937410355",
+        "current_y_m": "-0.1364297717809677",
+        "current_z_m": "0.19705398380756378",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.05938882298859103",
+        "donor_local_y_m": "-0.07153532964793766",
+        "donor_local_z_m": "0.07559095002347156",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "7286",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28370",
+        "parent_bary0": "0.0",
+        "parent_bary1": "0.5",
+        "parent_bary2": "0.5",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "3.726594150066376e-05",
+        "parent_current_residual_y_m": "-7.275491952896118e-06",
+        "parent_current_residual_z_m": "2.1599233150482178e-05",
+        "parent_registration_distance_m": "4.368306367205073e-05",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14112",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "2463",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "-1",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "2464",
+        "source_vertex_row": "2463"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "distance_m": 0.009530611275361114,
+        "dropped_degenerate_count": 0,
+        "face_row": 25809,
+        "point_m": [
+          0.02697052199733257,
+          -0.1300681563873291,
+          0.19866397652435303
+        ],
+        "unit_normal": [
+          0.42383874850628706,
+          -0.9057376636005728,
+          0.0
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.4975599927308508,
+          0.4973975430270738,
+          0.00504246424207541
+        ],
+        "distance_m": 0.00018108357426056086,
+        "dropped_degenerate_count": 0,
+        "face_row": 108900,
+        "face_source_body": -1,
+        "face_source_bone": -1,
+        "face_source_face_id": 63085,
+        "face_source_layer": 0,
+        "face_source_original_id": 1,
+        "point_m": [
+          0.0340310854792258,
+          -0.13644703853268203,
+          0.19715549915967706
+        ],
+        "unit_normal": [
+          0.8225789800300329,
+          -0.09535239065626705,
+          0.5605994498827888
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27687,
+          27360,
+          27340
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 7285,
+      "world_reference_f32_m": [
+        0.033882129937410355,
+        -0.1364297717809677,
+        0.19705398380756378
+      ]
+    },
+    {
+      "base_full86_dominant_column": 7,
+      "base_full86_dominant_weight": 0.9890006184577942,
+      "combined_node_record": {
+        "anatomical_region_id": "23",
+        "current_x_m": "0.03622614964842796",
+        "current_y_m": "-0.09767799824476242",
+        "current_z_m": "0.18536461889743805",
+        "donor_binding": "7",
+        "donor_body": "23",
+        "donor_local_x_m": "-0.06159923700790279",
+        "donor_local_y_m": "-0.08929238741115678",
+        "donor_local_z_m": "0.039209137700699725",
+        "frame_owner_method": "captured_native_current_rest_local_to_world_f32",
+        "geometric_donor_body": "23",
+        "incident_material_mask": "32768",
+        "joint_node_id": "7287",
+        "merge_peer_partition": "",
+        "merge_peer_tetgen_node_id": "",
+        "operational_reference_bary0": "0.0",
+        "operational_reference_bary1": "0.0",
+        "operational_reference_bary2": "1.0",
+        "operational_reference_bary3": "0.0",
+        "operational_reference_distance_m": "0.0",
+        "operational_reference_residual_x_m": "0.0",
+        "operational_reference_residual_y_m": "0.0",
+        "operational_reference_residual_z_m": "0.0",
+        "operational_reference_tet_row": "28372",
+        "parent_bary0": "0.5",
+        "parent_bary1": "0.0",
+        "parent_bary2": "0.5",
+        "parent_bary3": "0.0",
+        "parent_current_residual_x_m": "2.9616057872772217e-06",
+        "parent_current_residual_y_m": "3.166496753692627e-07",
+        "parent_current_residual_z_m": "5.662441253662109e-07",
+        "parent_registration_distance_m": "3.0318324930076753e-06",
+        "parent_registration_kind": "source_parent_tet_reference_registration",
+        "parent_registration_tie_count": "0",
+        "parent_tet_row": "14076",
+        "registered_I_source_vertex_row": "-1",
+        "registered_surface_layer": "O",
+        "registered_surface_vertex_row": "2464",
+        "role": "O",
+        "source_bary0": "0",
+        "source_bary1": "0",
+        "source_bary2": "0",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_row": "-1",
+        "source_mapping_kind": "vertex",
+        "source_parent_anatomical_region_id": "23",
+        "source_parent_geometric_donor_body": "23",
+        "source_parent_node_row": "-1",
+        "source_partition": "skin",
+        "source_residual_x_m": "0",
+        "source_residual_y_m": "0",
+        "source_residual_z_m": "0",
+        "source_tetgen_node_id": "2465",
+        "source_vertex_row": "2464"
+      },
+      "nearest_bone32": {
+        "barycentric": [
+          0.2441709779286916,
+          0.5794853853104102,
+          0.17634363676089823
+        ],
+        "distance_m": 0.000403364360175069,
+        "dropped_degenerate_count": 0,
+        "face_row": 21163,
+        "point_m": [
+          0.03583225664256465,
+          -0.0977206391235366,
+          0.18528890322898844
+        ],
+        "unit_normal": [
+          0.9765191096515218,
+          0.10571305495524015,
+          0.18771035799185326
+        ],
+        "valid_triangle_count": 32012
+      },
+      "nearest_fineO": {
+        "barycentric": [
+          0.12459812431658057,
+          0.10222903768442164,
+          0.7731728379989978
+        ],
+        "distance_m": 0.000472938232697495,
+        "dropped_degenerate_count": 0,
+        "face_row": 109069,
+        "face_source_body": 23,
+        "face_source_bone": 32,
+        "face_source_face_id": 41392,
+        "face_source_layer": 3,
+        "face_source_original_id": 322345,
+        "point_m": [
+          0.036687982068418556,
+          -0.09762800005212377,
+          0.18545339709591904
+        ],
+        "unit_normal": [
+          0.9765174140319379,
+          0.10571822953175171,
+          0.1877162647109952
+        ],
+        "valid_triangle_count": 112063,
+        "vertex_rows": [
+          27575,
+          27569,
+          27576
+        ]
+      },
+      "role": "O",
+      "volume_node_row": 7286,
+      "world_reference_f32_m": [
+        0.03622614964842796,
+        -0.09767799824476242,
+        0.18536461889743805
+      ]
+    }
+  ],
+  "schema": "numi.run007-old-OOO-source-patch-witness.v1",
+  "scope": {
+    "accepted_steps": 0,
+    "bone_clearance": "Euclidean nearest triangle on pinned bank32 surface; does not establish inside/outside or contact status",
+    "distance_units": "metres",
+    "fineO_projection": "Euclidean nearest triangle on frozen registered O sidecar; inferred geometric witness only, not identity map",
+    "physical_admission": false,
+    "runtime_created": 0
+  },
+  "source_node_patch": {
+    "one_tet_ring_volume_node_count": 92,
+    "one_tet_ring_volume_node_rows": [
+      894,
+      919,
+      932,
+      993,
+      999,
+      1000,
+      1033,
+      1034,
+      1037,
+      1057,
+      1087,
+      1104,
+      1119,
+      1127,
+      1128,
+      1191,
+      1203,
+      1218,
+      1219,
+      1243,
+      1248,
+      1283,
+      1286,
+      1309,
+      1356,
+      1396,
+      1400,
+      1467,
+      1518,
+      1558,
+      1559,
+      1595,
+      1596,
+      1629,
+      1689,
+      1693,
+      3411,
+      3444,
+      3445,
+      3448,
+      3468,
+      3498,
+      3515,
+      3602,
+      3614,
+      3629,
+      3630,
+      3654,
+      3659,
+      3694,
+      3697,
+      3720,
+      3767,
+      3807,
+      3811,
+      3878,
+      3929,
+      3969,
+      4007,
+      4040,
+      4100,
+      4104,
+      4106,
+      4129,
+      4154,
+      7267,
+      7268,
+      7269,
+      7272,
+      7273,
+      7274,
+      7282,
+      7285,
+      7286,
+      7290,
+      7303,
+      7305,
+      7306,
+      7307,
+      7353,
+      7354,
+      7355,
+      7358,
+      7368,
+      7371,
+      7372,
+      7389,
+      7391,
+      7392,
+      7393,
+      7394,
+      7399
+    ],
+    "protected149_direct_count": 0,
+    "protected149_direct_intersection": [],
+    "protected149_one_tet_ring_count": 0,
+    "protected149_one_tet_ring_intersection": [],
+    "protected149_total": 149,
+    "unique_volume_nodes": 17,
+    "volume_node_rows": [
+      1000,
+      1057,
+      1191,
+      1218,
+      1283,
+      1286,
+      1396,
+      1467,
+      1596,
+      1629,
+      1693,
+      7267,
+      7268,
+      7269,
+      7282,
+      7285,
+      7286
+    ]
+  },
+  "status": "SOURCE_ONLY_LOCAL_WITNESS"
+}

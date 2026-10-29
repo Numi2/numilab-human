@@ -1,0 +1,146 @@
+{
+  "accepted_steps": 0,
+  "baseline": {
+    "bone32_envelope_volume_m3": 9.76860177342682e-05,
+    "combined_bone_cut_m3": 5.375761398349593e-05,
+    "fat23": {
+      "allowed_volume_m3": [
+        0.0007183108018585644,
+        0.0008028179550183955
+      ],
+      "bone32_intersection_m3": 4.822329452277208e-05,
+      "immutable_mass_kg": 0.6823952617656361,
+      "solid_volume_m3": 0.0007587163539706969,
+      "tet_boundary_faces": 1790,
+      "used_vertices": 893
+    },
+    "skin23": {
+      "allowed_volume_m3": [
+        0.0002164440315133232,
+        0.0002645427051829506
+      ],
+      "bone32_intersection_m3": 5.534319460723848e-06,
+      "immutable_mass_kg": 0.2380884346646555,
+      "solid_volume_m3": 0.00023814391571377817,
+      "tet_boundary_faces": 1790,
+      "used_vertices": 893
+    }
+  },
+  "buffer_eligibility": {
+    "construction": "source positive-tet scalar clip O=1/I=0 <=0.5, protecting outer half of original skin band",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/inner-half-skin-clipped-domain-002/clipped-inner-skin-domain.npz",
+    "sha256": "678dd49df4a03f4426b3d6a745e997324952f9cd52d6556611859ea467052537",
+    "source_boundary_coordinates_modified": false,
+    "volume_m3": 0.00011820793796258987
+  },
+  "buffer_fit": {
+    "buffer_component_count": 8,
+    "buffer_is_closed": "Error.NoError",
+    "measured_skin23_buffer_m3": 8.641417911622831e-06,
+    "radius_m": 0.002,
+    "target_m3": 8.5e-06,
+    "trials": [
+      {
+        "band_volume_m3": 0.0001324625009305398,
+        "buffer_status": "Error.NoError",
+        "dilated_faces": 60078,
+        "radius_m": 0.002,
+        "skin_buffer_volume_m3": 8.641417911622831e-06
+      }
+    ]
+  },
+  "candidate": {
+    "bone32_fat_intersection_m3": 1.9705190611053436e-21,
+    "bone32_skin_intersection_m3": -1.9417644890136385e-22,
+    "capacity": {
+      "fat23": {
+        "allowed_volume_m3": [
+          0.0007183108018585644,
+          0.0008028179550183955
+        ],
+        "bounds_kg_m3": [
+          850.0,
+          950.0
+        ],
+        "density_kg_m3": 948.9118979126029,
+        "pass": true,
+        "volume_m3": 0.0007191344773595477
+      },
+      "skin23": {
+        "allowed_volume_m3": [
+          0.0002164440315133232,
+          0.0002645427051829506
+        ],
+        "bounds_kg_m3": [
+          900.0,
+          1100.0
+        ],
+        "density_kg_m3": 1063.0458149358083,
+        "pass": true,
+        "volume_m3": 0.0002239681783414315
+      }
+    },
+    "fat_component_count": 24,
+    "fat_volume_m3": 0.0007191344773595477,
+    "joint_material_volume_delta_m3": -5.375761398349586e-05,
+    "net_fat_change_from_bone_cut_and_transfer_m3": -3.958187661114924e-05,
+    "skin_component_count": 142,
+    "skin_fat_overlap_m3": -9.029687898743641e-11,
+    "skin_volume_m3": 0.0002239681783414315
+  },
+  "cheap_geometry": {
+    "fat": {
+      "f32_zero_area_faces": 299,
+      "faces": 25208,
+      "vertices": 12612
+    },
+    "skin": {
+      "f32_zero_area_faces": 150,
+      "faces": 11896,
+      "vertices": 6202
+    }
+  },
+  "elapsed_s": 5.1893025420140475,
+  "exact_geometry_audit": "NOT_RUN_PENDING_F32_NONDEGENERACY_AND_INTERFACE_REPAIR",
+  "fat_old_outer_skin_facet_inventory": {
+    "area_m2": 0.0,
+    "does_not_alone_establish_finite_cover": true,
+    "face_count": 0,
+    "source_face_rows": []
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/bank-envelopes/bank-023-032-cube2um.npz": "4cb25b1387af6caabb3479ff990ac27b49d1592817af508e8e3d78d9d6f29067",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/authoring-source-chain/build_inner_mask_coupled_buffer_047.py": "6ddc5c1d059b586309b11359f79ca317c23cc579e8f596d102cad843fd587bfb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/child-parent-reference-ledger.npz": "ed320a79755132a7418cd7dafbb97d034b491ee5ccba587e33324bc7e61b0210"
+  },
+  "notes": [
+    "This reconstructs a reduced physical layer boundary only; detailed accepted O/back sources are unchanged.",
+    "The new buffer is limited to original scalar-clipped inner Skin cells; all material masses/donor/region labels and density bounds remain fixed.",
+    "No TetGen/native mass flow/runtime or motion check was run."
+  ],
+  "operation": "Subtract the pinned 2um body23/bone32 envelope from source current006 material/donor/region 23 solids; transfer an 8.5mL buffer harvested from the adjacent skin23 material band into fat23 through a common derived interface.",
+  "physical_admission": false,
+  "runtime_created": 0,
+  "runtime_requested": false,
+  "schema": "numi.minimal-coupled-bone32-buffer.044.v1",
+  "scope": {
+    "buffer_selection": "skin23 intersect (Minkowski expansion of pinned bank32 2um envelope minus the same envelope); radius solved from measured CSG buffer volume, not a fixed physical clearance.",
+    "buffer_volume_target_m3": 8.5e-06,
+    "outside_groups_untouched_by_construction": true,
+    "source_groups": [
+      [
+        15,
+        23,
+        23
+      ],
+      [
+        16,
+        23,
+        23
+      ]
+    ],
+    "source_mass_and_density_limits_unchanged": true
+  },
+  "status": "SOURCE_ONLY_CANDIDATE_CAPACITY_AND_CHEAP_GEOMETRY"
+}
