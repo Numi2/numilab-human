@@ -1,0 +1,106 @@
+{
+  "authored_parent_headwall_faces": 180,
+  "child_nodes": 7239,
+  "child_tetrahedra": 28662,
+  "claim": "derived coarse candidate sidecars only; no geometry admission or physical motion qualification",
+  "contact_thickness": {
+    "D": {
+      "method": "exact original nodal values; new nodes interpolate explicit original-parent barycentrics",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/D-contact-thickness.csv",
+      "rows": 2413,
+      "sha256": "38dffbdb0bf0d9e16c0af507cb63c4a037e84e25d53676c26fb1dbc5e9aa56e3"
+    },
+    "I": {
+      "method": "exact original nodal values; new nodes interpolate explicit original-parent barycentrics",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/I-contact-thickness.csv",
+      "rows": 2413,
+      "sha256": "0a6900175536ea5f2d0618138997c885a74772712798cc311d706e53d94ab2cd"
+    },
+    "O": {
+      "method": "exact original nodal values; new nodes interpolate explicit original-parent barycentrics",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/O-contact-thickness.csv",
+      "rows": 2413,
+      "sha256": "cabadc4a70a53c1cd2fed4a8ff59f1c62d6a2e316327728076da5ae62844ef21"
+    }
+  },
+  "coordinate_frame_sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+  "derivation": {
+    "candidate_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-008-local-cavity-tetgen/pilot-004/candidate-vertexstar-tetgen.npz",
+    "candidate_npz_sha256": "0cb4c72b737b8be108654702d4138164bd2b295ed06072fbe5513864eeb2131a",
+    "child_cell_count": 28662,
+    "child_node_count": 7239,
+    "coordinate_contract": "child current equals reference at canonical Float32 candidate reference; captured source current/reference remain separate",
+    "method": "explicit local reference refinement with original node injection, child-source cell ancestry and conservative mass mapped separately",
+    "parent_geometry_preserved": false,
+    "parent_topology_preserved": false,
+    "reference_assembly_not_measured_individual": true,
+    "source_cell_count": 28632,
+    "source_node_count": 7233
+  },
+  "input_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.weights.csv": "98205ae7de44401544b7969184788f5c2ee39cd4404cd34b8037377e7ae63a76",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/parent-layer-rows.csv": "ae8f0c96ce34f3dedf4b2950eb7009436f827998ad5a35b7f9287d2cf4cc384f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-008-local-cavity-tetgen/pilot-004/candidate-vertexstar-tetgen.npz": "0cb4c72b737b8be108654702d4138164bd2b295ed06072fbe5513864eeb2131a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-008-local-cavity-tetgen/pilot-004/inserted-node-ancestry.csv": "59a06157f50ed6fe92bb43cb4e5f9b882370bd31f2ce9dbd246e6fb77933c694",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/canonical.node": "ea29f47f906bc10fe7e79c8997a991aded2e6940ef0799f6a0d89a8e9517b06d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/coarse-node-to-fine-surface.csv": "5f1ee934991ec7945005509707b7abf4abc8f0b4ba75b0e960917501a0ba4a26"
+  },
+  "mass_mapping_maximum_transport_distance_m": 0.02,
+  "method": "explicit connected reference refinement with source node/cell ancestry and exact child O/I/D facets",
+  "native_frame_source": "registered-skin-poses-100.json current/rest local_to_world_row_major_f32",
+  "native_steps": 0,
+  "node_map_rows": 9652,
+  "node_map_shared_I_pairs": 2413,
+  "output_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/donor-frames.csv": "b1704fb7b846254583f4b6a08c394ed3cad1603554244078706ca4b3811ac674",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/node-parent-registration.csv": "15c13820cd594f0e63b10193f66e31da9c8da80b97cdd1c285c62f05195dcc30",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/outer-face-ancestry.csv": "3572b2b54fcb8bc9fa43640f3b82a72222b1e27db0f475096cf2257d2b25bb3f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/registered-D-faces.csv": "96590ccb77257665759e5d29ac7d4b37158c30187ccf48ef01ee45c731d2685f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/registered-D.csv": "5b4bbeaa69143c23781698e3a324ec8dd213af60d6d55e6f6b41a3a9ef560114",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/registered-I-faces.csv": "b5e48988e33a8b158f6b0cb9c8a58a02261955023ffb7a15d28fd7eab153c122",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/registered-I.csv": "3cc138da2cd0e9dfaeb81e9b7eed9d4fee3342436ff475c1695992335f65f912",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/registered-O-faces.csv": "5af18fc15490c6bccaf1cbac7e8d706a5cc2b839099845815e46743c4a33fdc8",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/registered/registered-O.csv": "53d1806a6d7e6971019e62926aecb073192c4bd29b8f6323552813a747a9f74d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/D-contact-thickness.csv": "38dffbdb0bf0d9e16c0af507cb63c4a037e84e25d53676c26fb1dbc5e9aa56e3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/D-full86.csv": "8d3e40193ba45f6fb5e9a4c58c14b938101e54fc3add26001cfb4095a2a4d68b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/D-source.json": "bd190f9dbcfbb793ddcaa1c1491558e6fe1b33d998ca9623fffdf43f86c1b98f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/I-contact-thickness.csv": "0a6900175536ea5f2d0618138997c885a74772712798cc311d706e53d94ab2cd",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/I-full86.csv": "3dd834600c3db487cc96bc4f713993de50cb8826c5f7a0e821af1314dc625aac",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/I-source.json": "46f1c95beef806251ac3b86aa61fe9411127476ff1ac3f73fc379408c1296eea",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/O-contact-thickness.csv": "cabadc4a70a53c1cd2fed4a8ff59f1c62d6a2e316327728076da5ae62844ef21",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/O-full86.csv": "fb7ad08c8d99eca1b42b948d60fab8a012e9a11e5b2634f7490fa6c50997480e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/roles/O-source.json": "ed406e2891476da4c45a9d3f9fdd040292e16293f33d129765f808d9c79dcd92",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/source-domain-registry.json": "f43b94b4dd34df5470c21933cecd71347ef3b93f84dc2ed9874624367dd65560",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/cell-parent-map.csv": "f560f8954250f267762377bcdbbd23639daafd44850261c68a93cfc0e68bf9c6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/child.labels.csv": "871286ff367cd4e5c9a5bfabe73da3fed5a4f2337628cb2a19ea2bc07c0a4476",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/combined-node-map.csv": "13b710a8c724b52bbd7b1c56015c41592b2658dba7c3c77ed266183c38f6de89",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/facet-ancestry.csv": "d9cbdcb8098b15e1be3a0922602fe0eec11bb4931310fcd521c9dc2a42842ce2",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/mesh.ele": "c2c4f563394971aefbd0ae5cbca7acf10b20e3f477fc5a6f23744499d8ba5201",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/mesh.node": "ea29f47f906bc10fe7e79c8997a991aded2e6940ef0799f6a0d89a8e9517b06d"
+  },
+  "parent_capture": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003",
+  "parent_maximum_registration_distance_m": 0.0023991069358328815,
+  "physical_admission": false,
+  "registered_facet_rows": 19124,
+  "rejected_alternative_preserved": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/coarse-transfer-mass-assets-299/mass-preflight.log",
+  "role_faces": {
+    "D": 4781,
+    "I": 4781,
+    "O": 4781
+  },
+  "role_nodes": {
+    "D": 2413,
+    "I": 2413,
+    "O": 2413
+  },
+  "role_source_registry": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/source-domain-registry.json",
+  "schema": "numi-human.registered-volume-parent-identity-source-control.v1",
+  "source_body_count": 157,
+  "source_parent_nodes": 7233,
+  "source_parent_tetrahedra": 28632
+}

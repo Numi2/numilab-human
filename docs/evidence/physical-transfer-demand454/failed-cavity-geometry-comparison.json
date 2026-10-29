@@ -1,0 +1,50 @@
+{
+  "status": "exact_two_bank_before_after_comparison",
+  "coordinates": "canonical Float32 reference candidate coordinates vs pinned F64 bank operands",
+  "scope": "banks 107 and 108 only; overlapping per-bank layer intersections; no admission claim",
+  "before_candidate_sha256": "3ecfd327d078a87fb2a8ffdfc4ca0285f498a0939f68c8904a1d549ff52b395f",
+  "after_candidate_sha256": "0cb4c72b737b8be108654702d4138164bd2b295ed06072fbe5513864eeb2131a",
+  "bank_manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+  "before_script_sha256": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+  "after_script_sha256": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+  "before_report_sha256": "89a9cf3c3c441fad696f55f4f3dde96a2915853b9af5aab7b5f5b28324c6d170",
+  "after_report_sha256": "56ea8b9968778dbff639e937a0ebf3cb6415f1eab1da18b1a1a50984cbeca96c",
+  "banks": [
+    {
+      "index": 107,
+      "body": 107,
+      "bone": 108,
+      "layers": {
+        "skin": {
+          "before_m3": 2.1912399224944559e-07,
+          "after_m3": 2.1912399224944559e-07,
+          "delta_m3": 0.0
+        },
+        "fat": {
+          "before_m3": 9.877393658064491e-07,
+          "after_m3": 9.88295590569224e-07,
+          "delta_m3": 5.562247627748349e-10
+        }
+      }
+    },
+    {
+      "index": 108,
+      "body": 109,
+      "bone": 114,
+      "layers": {
+        "skin": {
+          "before_m3": 1.4881824055603467e-07,
+          "after_m3": 1.6921963005538104e-07,
+          "delta_m3": 2.0401389499346364e-08
+        },
+        "fat": {
+          "before_m3": 7.050052238514001e-07,
+          "after_m3": 7.887711107788558e-07,
+          "delta_m3": 8.376588692745573e-08
+        }
+      }
+    }
+  ],
+  "before_elapsed_s": 0.07159116608090699,
+  "after_elapsed_s": 0.06966900010593235
+}

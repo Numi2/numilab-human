@@ -1,0 +1,9 @@
+# Coupled physical skin/fat transfer demand
+
+The current fine surface and old reduced physical mesh are different approximations. Canonical native correspondence exposes 31,851 of 56,054 detailed O rows above the unchanged effective tetrahedral weight bound of 1.5. Those rows share only 321 selected coarse cells. Merging their complete vertex stars with the exact material/bone witnesses from inventory 448 retains five connected repair regions containing 4,778, 708, 526, 915 and 1,770 cells. The old detail map and geometry are not admitted by this inventory.
+
+A local cavity reconstruction replaces 150 old cells by 180 cells and passes positive-volume, oriented shared-face and existing registered CSV emission checks. It does not improve the measured target bone occupancy and fails conservative mass mapping in both predeclared trials. It remains a failed topology/producer control. The recorded lower-density capacity certificate identifies child cells 11566 and 11568: their permitted source neighbours provide 0.00353923549 kg, below the required 0.00372491565 kg by 0.00018568016 kg. No density, label, mass, distance, contact or transfer limit is relaxed.
+
+The offline mass-envelope tool now derives parent centroids from authoritative rest coordinates, exactly as the native mass mapper does. Original current/rest coordinates differ by at most 60.5 nm. Recomputing all three retained envelopes leaves their predeclared radii unchanged; old experiments remain retained rather than rewritten.
+
+The next connected repair starts from the mass-passing coarse baseline and replaces affected boundaries against the accepted fine anatomy, including bad original nodes and edges. New native physical motion, GPU reconstruction and anatomical admission remain unqualified. No images or clinical claims are part of this evidence.

@@ -1,0 +1,81 @@
+{
+  "plan": {
+    "script_sha256": "04680ca7bb0eace26c9899da5368bf622c846297a1b4d53ae50d4d3f4db5682d",
+    "topology_gate_sha256": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+    "connected_cell_preparation": "PASS",
+    "scope": "bounded conservative reference mass transport with declared source-cell ancestry; no native motion admission",
+    "candidate_sha256": "0cb4c72b737b8be108654702d4138164bd2b295ed06072fbe5513864eeb2131a",
+    "binary_sha256": "560d738e5c8e13cb0b14bbcd86ea28bd325e4b0b71b7b78234684ee981e54753",
+    "source_parent_packet_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "child_volume_sha256": {
+      "mesh.node": "ea29f47f906bc10fe7e79c8997a991aded2e6940ef0799f6a0d89a8e9517b06d",
+      "mesh.ele": "c2c4f563394971aefbd0ae5cbca7acf10b20e3f477fc5a6f23744499d8ba5201",
+      "child.labels.csv": "871286ff367cd4e5c9a5bfabe73da3fed5a4f2337628cb2a19ea2bc07c0a4476"
+    },
+    "maximum_declared_source_centroid_distance_m": 0.0260311056234703,
+    "predeclared_transport_envelope_m": 0.026033,
+    "rule": "ceil(max declared child-to-original-source-parent centroid displacement / 1um)*1um +1um, floor200um; no further enlargement after results",
+    "sensitivity_factors": [
+      0.5,
+      1.0
+    ],
+    "density_bounds_unchanged": true,
+    "physical_admission": false
+  },
+  "trials": [
+    {
+      "factor": 0.5,
+      "bound_m": 0.0130165,
+      "command": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/numi-human-physical-skin-child-mass-mapping-cli",
+        "--parent-mass-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+        "--labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+        "--child-node-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/mesh.node",
+        "--child-ele-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/mesh.ele",
+        "--child-labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/child.labels.csv",
+        "--coordinate-frame-sha256",
+        "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "--source-body-count",
+        "157",
+        "--maximum-transport-distance-m",
+        "0.0130165"
+      ],
+      "exit_code": 6,
+      "wall_s": 12.461162166902795,
+      "stdout_sha256": "ebe2ed5e55053c0110fdbcbc9d03b7366d6753b02871d6bcac7a2be4998a2cd7",
+      "stderr_sha256": "80abd5cd616cd0fc0e672687677cbdd8f05fa5959dbfd0af257c39b94fb87407"
+    },
+    {
+      "factor": 1.0,
+      "bound_m": 0.026033,
+      "command": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/numi-human-physical-skin-child-mass-mapping-cli",
+        "--parent-mass-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+        "--labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+        "--child-node-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/mesh.node",
+        "--child-ele-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/mesh.ele",
+        "--child-labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/hand-cavity-450/emitted/volume/child.labels.csv",
+        "--coordinate-frame-sha256",
+        "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "--source-body-count",
+        "157",
+        "--maximum-transport-distance-m",
+        "0.026033000000000001"
+      ],
+      "exit_code": 6,
+      "wall_s": 24.241658291080967,
+      "stdout_sha256": "ebe2ed5e55053c0110fdbcbc9d03b7366d6753b02871d6bcac7a2be4998a2cd7",
+      "stderr_sha256": "62c43e49f92b562e4d97f88c0f485cdd2631137bfdfcb22f0ecd9ec64fde05dc"
+    }
+  ]
+}
