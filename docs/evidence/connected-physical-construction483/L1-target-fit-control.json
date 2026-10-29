@@ -1,0 +1,90 @@
+{
+  "status": "bounded_connected_capacity_fit_proposal",
+  "source_sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54",
+  "target_sha256": "155c9320273a5256f11a3438fd7d465dd2b9abb8eb85d32fdd905354940c7979",
+  "candidate_sha256": "ce59d2cf317f445bf53fa1dffaad244a4c19f859c6a9fc75844676c91cb0c166",
+  "script_sha256": "8d225455e716cc7a83a4906ad2d041227a076997c51b1fac689aa41bfaf3e9f4",
+  "iterations": [
+    {
+      "iteration": 0,
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_L1_projection",
+        "iterations": 20119,
+        "max_primal_constraint_error_m": 2.168404344971009e-19,
+        "objective": 1.5654692272449877,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "target_objective_before": 0.041329472182607976,
+      "accepted": true,
+      "alpha": 0.25,
+      "target_objective_after": 0.03729500718761463,
+      "min_cell_volume_m3": 4.487014223206569e-13,
+      "max_move_from_source_m": 0.00021652937795200246,
+      "remaining_target_rms_m": 0.0008272793537581942
+    },
+    {
+      "iteration": 1,
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_L1_projection",
+        "iterations": 20121,
+        "max_primal_constraint_error_m": 4.0657581468206416e-19,
+        "objective": 1.3693672536555925,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "target_objective_before": 0.03729500718761463,
+      "accepted": true,
+      "alpha": 0.25,
+      "target_objective_after": 0.03392340052908017,
+      "min_cell_volume_m3": 4.487014223206569e-13,
+      "max_move_from_source_m": 0.0004330587559040049,
+      "remaining_target_rms_m": 0.0007868574871374034
+    },
+    {
+      "iteration": 2,
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_L1_projection",
+        "iterations": 17243,
+        "max_primal_constraint_error_m": 1.1519648082658485e-19,
+        "objective": 1.218754694698086,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "target_objective_before": 0.03392340052908017,
+      "accepted": true,
+      "alpha": 0.125,
+      "target_objective_after": 0.03246382517440206,
+      "min_cell_volume_m3": 4.487014223206569e-13,
+      "max_move_from_source_m": 0.0005412911747417635,
+      "remaining_target_rms_m": 0.000768158255604452
+    },
+    {
+      "iteration": 3,
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_L1_projection",
+        "iterations": 15949,
+        "max_primal_constraint_error_m": 1.1519648082658485e-19,
+        "objective": 1.154384522797013,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "target_objective_before": 0.03246382517440206,
+      "accepted": true,
+      "alpha": 0.125,
+      "target_objective_after": 0.0311213443427636,
+      "min_cell_volume_m3": 4.487014223206569e-13,
+      "max_move_from_source_m": 0.0006495494052324698,
+      "remaining_target_rms_m": 0.0007502086183373432
+    }
+  ],
+  "free_nodes": 1774,
+  "moved_nodes": 1762,
+  "target_nodes": 462,
+  "affected_cells": 10459,
+  "nonpositive_cells": 0,
+  "failed_capacity_groups": 0,
+  "pinned_nodes_unchanged": true,
+  "topology_labels_full86_unchanged": true,
+  "elapsed_s": 4.274561875034124,
+  "physical_admission": false,
+  "construction_mass_interval_inset_fraction": 0.05,
+  "construction_method": "L1 projection of smoothed target with unchanged physical gates",
+  "scope": "offline constrained mesh construction control; detailed boundary ancestry/embedding, solid penetration, sparse transport, native accepted-state and motion gates remain mandatory"
+}

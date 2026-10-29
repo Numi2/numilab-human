@@ -1,0 +1,80 @@
+{
+  "status": "pinned_fine_material_global_capacity_and_nesting_inventory",
+  "inputs": {
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/minimum-thickness-minkowski-328/attempt-006-anchored-local-topology/run-030-global-derived-patch-remesh/attempt-002/connected-witness-repair-001/result-003/candidate-O-open-f32-typed.npz",
+      "sha256": "2958a704db4b8b68422640a5e991c6b51af25f19d525c49adc8a742f0c207d7a"
+    },
+    "O_cap_parent": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/minimum-thickness-minkowski-328/attempt-006-anchored-local-topology/run-024-local-quality-condition/candidate-O-closed-f64-geometry.npz",
+      "sha256": "667ccca972c75d6aa10091b275854b66698cc9d3382665a25eac54dbbb781a55"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/closed-inputs/I-closed-current-f32.npz",
+      "sha256": "c6045dbca6954a65c8c53be1393fc79eca7e6d84f7c9fcbc7f0306cf4b30fcec"
+    },
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/closed-inputs/D-closed-run037-f32.npz",
+      "sha256": "0dfc1bd8b6705b2c884c5b816a62a4bbb71e69b2865a9eee849ce16690b2366b"
+    },
+    "parent_mass": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "script_sha256": "e13d3f1f5c24e311fdb2d25c80489715cbb467a08016a5b5cead47e2f864d520",
+  "explicit_head_caps": 41,
+  "head_vertices_float32_bit_identical": true,
+  "solids": {
+    "O": {
+      "volume_m3": 0.06871815883186148,
+      "status": "Error.NoError"
+    },
+    "I": {
+      "volume_m3": 0.06510798632194593,
+      "status": "Error.NoError"
+    },
+    "D": {
+      "volume_m3": 0.05381758571915104,
+      "status": "Error.NoError"
+    }
+  },
+  "layers": {
+    "skin": {
+      "material_index": 15,
+      "volume_m3": 0.0036101774840130163,
+      "parent_mass_kg": 3.4525704454739734,
+      "fixed_density_bounds_kg_m3": [
+        900.0,
+        1100.0
+      ],
+      "implied_mean_density_kg_m3": 956.3436869137388,
+      "allowed_total_volume_m3": [
+        0.0031387004049763393,
+        0.0038361893838599706
+      ],
+      "necessary_global_capacity_feasible": true
+    },
+    "fat": {
+      "material_index": 16,
+      "volume_m3": 0.011290405639105818,
+      "parent_mass_kg": 10.487108517986506,
+      "fixed_density_bounds_kg_m3": [
+        850.0,
+        950.0
+      ],
+      "implied_mean_density_kg_m3": 928.85134982777,
+      "allowed_total_volume_m3": [
+        0.011039061597880533,
+        0.012337774727042948
+      ],
+      "necessary_global_capacity_feasible": true
+    }
+  },
+  "nesting_residual_m3": {
+    "I_outside_O": 4.974097470130625e-09,
+    "D_outside_I": 5.036310919241427e-09
+  },
+  "physical_admission": false,
+  "scope": "necessary global mass capacity and raw solid nesting only; original open head loops remain separately identified; source group mass/embedding/physiology/native motion not admitted"
+}
