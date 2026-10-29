@@ -15,6 +15,7 @@ import numpy as np
 from scipy.spatial import cKDTree
 from scipy.spatial.transform import Rotation
 
+from conservative_parent_aabb_388 import parent_aabb_candidate_mask
 import export_child_semantic_labels_217 as native
 
 DOMAIN='derived_registered_skin_authoring'
@@ -404,8 +405,9 @@ def _exact_nearest_same_material(parent,mi,material,point,seed_row):
   q,bary,d2=_closest_tetra_exact(vertices,p)
   return {'row':int(row),'q':q,'bary':bary,'d2':d2}
  seed=exact_tet(int(seed_row));seed_d2=seed['d2'];evaluated=[seed];aabb_count=0
- for local,raw_row in enumerate(rows):
-  row=int(raw_row)
+ candidate_mask=parent_aabb_candidate_mask(point,mi['boundsMin'],mi['boundsMax'],seed_d2)
+ for local in np.flatnonzero(candidate_mask):
+  row=int(rows[local])
   if row==int(seed_row):continue
   if _exact_aabb_distance_squared(point,mi['boundsMin'][local],mi['boundsMax'][local])<=seed_d2:
    aabb_count+=1;evaluated.append(exact_tet(row))
@@ -435,7 +437,9 @@ def _exact_nearest_same_material(parent,mi,material,point,seed_row):
   'nextDistinctProjectionDistanceSquaredGapM2Exact':(_ratio_text(ranked_projections[1]['d2']-best_d2) if len(ranked_projections)>1 else None),
   'nextDistinctProjectionDistanceGapMDecimal80':(_sqrt_fraction_gap_decimal_text(
     ranked_projections[1]['d2'],best_d2) if len(ranked_projections)>1 else None),
-  'candidateCompletenessProof':'Every same-material parent tetrahedron was scanned; exact point-to-AABB lower bounds greater than the seed tetrahedron exact distance were excluded.'}
+  'candidateCompletenessProof':'Every same-material parent AABB received a conservative downward-rounded binary64 distance bound; only bounds above an upward-rounded exact seed distance were excluded. Remaining AABBs and parent projections were tested with exact rationals.',
+  'conservativeAABBPrefilterSurvivors':int(np.count_nonzero(candidate_mask)),
+  'conservativeAABBPrefilterExcluded':int(len(rows)-np.count_nonzero(candidate_mask))}
  if len(projections)>1:
   raise ExactProjectionTieError('nearest parent tie has distinct projected current-world points (exact equal-distance projections)',diagnostic)
  chosen=min(minimizers,key=lambda x:x['row']);ties=sorted(x['row'] for x in minimizers)
