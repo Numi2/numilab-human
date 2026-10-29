@@ -1,0 +1,58 @@
+{
+  "schema": "numi.I-derived-one-sided-exact-disk-remesh.v1",
+  "physical_admission": false,
+  "inputs": {
+    "candidate_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/output/candidate-closed-f32.npz",
+      "sha256": "2834811b92bf947259e8a703e40c6627096f28c9500555a0b9941bfa644a28af"
+    },
+    "candidate_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-protected-cap-f32.npz",
+      "sha256": "c2eb1c82fcbf84105b26adef36abe0f9c4603e8f35180ec7b5aef295a4bfcc1e"
+    },
+    "source_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-I-closed-f32-as-f64.npz",
+      "sha256": "40d41b951a0fef611ec51e7edadb445582d86698142b2e607a09a3afe4e8244a"
+    },
+    "source_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-O-closed-f32-as-f64.npz",
+      "sha256": "bfcbc78e3b07fb923d4cf5263d8ec2745cd442393c4b540d3119b4bf39be9f9e"
+    },
+    "collar_inventory": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/physical-I-witness-collars-629/collar-inventory.json",
+      "sha256": "d51363cd1fc47d6fe7b3bfe9dc1181afcaa22c3235587a3c31d511037efa74e0"
+    },
+    "exact_loader": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/D-witness-contract-001/run-042-abstract-cycle-coupled-remesh/remesh.py",
+      "sha256": "f1d697b42fc9d97472fbd70cec2d8adfe178bb591d3513680609396ec4c204ad"
+    },
+    "disk_dp": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/constraint-disk-triangulation-616/constraint_disk.py",
+      "sha256": "eab86c0a1060a1292db4a9a01e0a766be8739ea2fa2c575a5658082a453d87ea"
+    },
+    "chord_pruning": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/exact-chord-pruning-618/chord_pruning.py",
+      "sha256": "c59f57487dc180db31f8820db23b7e355d69585de3b363eb39c95edaadedbebc"
+    },
+    "parent_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/candidate.npz",
+      "sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54"
+    },
+    "parent_mass_csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "D037": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/closed-inputs/D-closed-run037-f32.npz",
+      "sha256": "0dfc1bd8b6705b2c884c5b816a62a4bbb71e69b2865a9eee849ce16690b2366b"
+    }
+  },
+  "plans": [],
+  "status": "ERROR",
+  "error": {
+    "type": "FileNotFoundError",
+    "message": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002/output/outer-region-dilation-f64-stage-f64.npz",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-011-I-one-sided-dp-remesh/repair_I_self_pairs_011.py\", line 143, in <module>\n    if not p.is_file():raise FileNotFoundError(p)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002/output/outer-region-dilation-f64-stage-f64.npz\n"
+  },
+  "elapsed_s": 0.005726624978706241
+}

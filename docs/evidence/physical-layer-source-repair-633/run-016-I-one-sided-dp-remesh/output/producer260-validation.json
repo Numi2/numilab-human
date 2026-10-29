@@ -1,0 +1,15 @@
+{
+  "schema": "numi.I-one-sided-remesh-producer260-validation.v1",
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/candidate-I-one-sided-dp-f32-typed.npz",
+  "candidate_sha256": "e734d962309c441fb0ce4f4ee304a33374d24f931763858372565803e71f41a3",
+  "source_view_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/I-one-sided-DP-derived-source.npz",
+  "source_view_sha256": "ce51748e50690c69bdf9f3b582c0d34680fa3f1faecbcbf6641dd012bde1649a",
+  "producer_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bounded-parent-registration-314/export_authoring_registered_surface_sidecars_230.py",
+  "producer_sha256": "093d55d21c08b33975db5ffa05983a33d9944f781c56179ca09982f4716d31cf",
+  "status": "ERROR",
+  "error": {
+    "type": "ValueError",
+    "message": "I candidate source ancestry invalid: 3: original source identity arrays absent; 209586: derived source has no pinned parent asset; 209586: derived source identity/face arrays absent",
+    "traceback": "Traceback (most recent call last):\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/validate_producer260_016.py\", line 20, in <module>\n    valid=m.validate_candidate(C,\"I\",require_f32=True)\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bounded-parent-registration-314/export_authoring_registered_surface_sidecars_230.py\", line 162, in validate_candidate\n    if errors:raise ValueError(f'{layer} candidate source ancestry invalid: '+ '; '.join(errors[:8]))\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: I candidate source ancestry invalid: 3: original source identity arrays absent; 209586: derived source has no pinned parent asset; 209586: derived source identity/face arrays absent\n"
+  }
+}

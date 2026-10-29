@@ -1,0 +1,28 @@
+{
+  "schema": "numi.O005-source-schema-normalization.v1",
+  "status": "ERROR",
+  "physical_admission": false,
+  "input_pins": {
+    "input_O005": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-protected-cap-f32.npz",
+      "sha256": "c2eb1c82fcbf84105b26adef36abe0f9c4603e8f35180ec7b5aef295a4bfcc1e"
+    },
+    "original_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-O-closed-f32-as-f64.npz",
+      "sha256": "bfcbc78e3b07fb923d4cf5263d8ec2745cd442393c4b540d3119b4bf39be9f9e"
+    },
+    "derived_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-added-source.npz",
+      "sha256": "7a7cb797d0f83a9e009d6b712284de59dfd6cb22a1e7246d32707e0e5a5818f9"
+    },
+    "producer260": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bounded-parent-registration-314/export_authoring_registered_surface_sidecars_230.py",
+      "sha256": "093d55d21c08b33975db5ffa05983a33d9944f781c56179ca09982f4716d31cf"
+    }
+  },
+  "error": {
+    "type": "TypeError",
+    "message": "int() argument must be a string, a bytes-like object or a real number, not 'list'",
+    "traceback": "Traceback (most recent call last):\n  File \"<string>\", line 91, in <module>\nTypeError: int() argument must be a string, a bytes-like object or a real number, not 'list'\n"
+  }
+}

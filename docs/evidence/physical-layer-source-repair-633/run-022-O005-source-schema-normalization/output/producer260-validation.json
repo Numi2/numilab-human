@@ -1,0 +1,88 @@
+{
+  "schema": "numi.O005-producer260-validation.v1",
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/candidate-O-protected-cap-f32-typed-schema-normalized.npz",
+    "sha256": "5e8693f0f06d9649f714e0822e6179502e68663b804b1af45a4c45938557bcef"
+  },
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bounded-parent-registration-314/export_authoring_registered_surface_sidecars_230.py",
+    "sha256": "093d55d21c08b33975db5ffa05983a33d9944f781c56179ca09982f4716d31cf"
+  },
+  "status": "PASS",
+  "physical_admission": false,
+  "validation": {
+    "layer": "O",
+    "role": "outerSurface",
+    "roleIndex": 1,
+    "vertexCount": 4522,
+    "faceCount": 9040,
+    "sourceOriginalFaceIDs": [
+      1,
+      5852
+    ],
+    "sourceRowsAllPointRowsDirect": true,
+    "sourceParentLineagePreservedPerFace": true,
+    "faceAncestry": {
+      "1": {
+        "sourcePath": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/source002-O-identity-normalized-view.npz",
+        "sourceSHA256": "ca91ff9442994e16fe2592a4cef59e48072e3390662d09e95746a5bdce1deebf",
+        "outputFaces": 4721,
+        "identityKeys": [
+          "source002_O_closed_face_id",
+          "none"
+        ]
+      },
+      "5852": {
+        "role": "O",
+        "operation": "protected_cap_outer_support_union_output",
+        "sourcePath": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/O005-protected-support-identity-normalized-view.npz",
+        "sourceSHA256": "57d1e6d604432248390686d0ad0018267db98f4ea534ff45e1e2da434dd59593",
+        "outputFaces": 4319,
+        "identityKeys": [
+          "O_protected_support_face_row",
+          "no_unique_parent_face"
+        ],
+        "identityFaceIDKey": "face_id",
+        "identityOriginalIDFilter": null,
+        "parentAssets": [
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-O-closed-f32-as-f64.npz",
+            "sha256": "bfcbc78e3b07fb923d4cf5263d8ec2745cd442393c4b540d3119b4bf39be9f9e"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/outer-region-dilation-f64-stage-f64.npz",
+            "sha256": "3ab9e45f318853cc915ba0516c7dc882f71126e9ff067bdd1087be228790a0a9"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/shared-cap-guard-f64.npz",
+            "sha256": "475bded92b79abfdaf9f106ac96d930dad2c21ef040e8baaf5a9a427ed38de54"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/outer-support-protected-f64.npz",
+            "sha256": "64d89b4065183b59c115bddfd4c2125321249d47a91b0c46cd96fe06069032e2"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-minskin-eroded-f64.npz",
+            "sha256": "66463322413d341d206049ee0c0944e7d1a2c211664485a5e51ed0411cb90a91"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-added-source.npz",
+            "sha256": "7a7cb797d0f83a9e009d6b712284de59dfd6cb22a1e7246d32707e0e5a5818f9"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-003-locality/build_protected_cap_minthickness_005.py",
+            "sha256": "9db7eb3e26611bb3c7d59ab22b440b6f161cb702040d36a9b92f2c42d2947913"
+          },
+          {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/receipt.json",
+            "sha256": "55fa007757a57b71644382f7fe906388228774db36330c25b38376de15d4d64c"
+          }
+        ],
+        "parentSourceIDs": [
+          1
+        ],
+        "sourceGeometryScope": "exact O-added-source support faces; source row order preserved"
+      }
+    }
+  }
+}

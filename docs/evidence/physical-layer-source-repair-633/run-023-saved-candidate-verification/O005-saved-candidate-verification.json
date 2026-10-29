@@ -1,0 +1,69 @@
+{
+  "schema": "numi.O005-saved-candidate-emission-verification.v1",
+  "status": "PASS_METADATA_ROUNDTRIP",
+  "physical_admission": false,
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/candidate-O-protected-cap-f32-typed-schema-normalized.npz",
+    "exists": true,
+    "sha256": "5e8693f0f06d9649f714e0822e6179502e68663b804b1af45a4c45938557bcef",
+    "bytes": 367813
+  },
+  "source_O005": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-protected-cap-f32.npz",
+    "exists": true,
+    "sha256": "c2eb1c82fcbf84105b26adef36abe0f9c4603e8f35180ec7b5aef295a4bfcc1e",
+    "bytes": 279544
+  },
+  "source_views": {
+    "source002_original": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/source002-O-identity-normalized-view.npz",
+      "exists": true,
+      "sha256": "ca91ff9442994e16fe2592a4cef59e48072e3390662d09e95746a5bdce1deebf",
+      "bytes": 128639
+    },
+    "derived_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/O005-protected-support-identity-normalized-view.npz",
+      "exists": true,
+      "sha256": "57d1e6d604432248390686d0ad0018267db98f4ea534ff45e1e2da434dd59593",
+      "bytes": 233356
+    }
+  },
+  "producer260_validation": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/producer260-validation.json",
+    "exists": true,
+    "sha256": "8d3738331b6b449a29a59429cf37e49437e1cee8af591ebe571f0a0dbc0099b2",
+    "bytes": 5556,
+    "status": "PASS",
+    "physical_admission": false
+  },
+  "assertions": {
+    "points_world_m_exact_emitted_f32_alias": true,
+    "faces_exact_emitted_f32_alias": true,
+    "f64_points_preserved": true,
+    "f64_faces_preserved": true,
+    "f32_points_payload_preserved": true,
+    "f32_faces_payload_preserved": true,
+    "emission_record_preserved": true,
+    "cap_mask_preserved": true,
+    "face_count": 9040,
+    "original_source_faces": 4721,
+    "derived_support_faces": 4319,
+    "no_unknown_source_ids": true,
+    "original_identity_rows_match_alias": true,
+    "derived_identity_rows_match_alias": true,
+    "body23_only_for_derived_support": true,
+    "bone_unknown_is_explicit": true
+  },
+  "emission_semantics": "The normalized candidate aliases the saved emitted F32 point and remapped-face arrays; it does not recast or rebuild the F64 geometry. The complete emission record remains exactly preserved in the NPZ.",
+  "retained_failure": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/normalization-receipt.json",
+    "exists": true,
+    "sha256": "3bc30dbbca193cf5f81e9bee62c18042c2b272ce5e5e911ad57c0059509dff30",
+    "bytes": 1849,
+    "status": "ERROR",
+    "physical_admission": false,
+    "error_type": "TypeError",
+    "error_message": "int() argument must be a string, a bytes-like object or a real number, not 'list'"
+  },
+  "retained_failure_note": "The existing normalization receipt records a post-save JSON serialization TypeError on nudged_vertices; it is preserved unchanged. Candidate, source views, and producer260 PASS are independently pinned here."
+}

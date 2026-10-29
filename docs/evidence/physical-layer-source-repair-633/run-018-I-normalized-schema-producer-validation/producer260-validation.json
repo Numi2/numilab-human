@@ -1,0 +1,88 @@
+{
+  "schema": "numi.I-one-sided-remesh-producer260-validation.v1",
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-017-I-source-schema-normalization/output/candidate-I-one-sided-dp-f32-typed-schema-normalized.npz",
+  "candidate_sha256": "22cd82aea77e3779a22e73b3161e0619cc08ea9a243fd9912e28ea919772e630",
+  "source_view_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/I-one-sided-DP-derived-source.npz",
+  "source_view_sha256": "ce51748e50690c69bdf9f3b582c0d34680fa3f1faecbcbf6641dd012bde1649a",
+  "producer_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bounded-parent-registration-314/export_authoring_registered_surface_sidecars_230.py",
+  "producer_sha256": "093d55d21c08b33975db5ffa05983a33d9944f781c56179ca09982f4716d31cf",
+  "status": "PASS",
+  "producer_validation": {
+    "layer": "I",
+    "role": "innerSurface",
+    "vertexCount": 10598,
+    "faceCount": 21192,
+    "sourceOriginalFaceIDs": [
+      3,
+      209586,
+      61000001,
+      61000002
+    ],
+    "sourceParentLineagePreservedPerFace": true,
+    "derivedAncestry": {
+      "role": "I",
+      "operation": "one_sided_exact_self_intersection_patch_retriangulation_616_618",
+      "sourcePath": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/I-one-sided-DP-derived-source.npz",
+      "sourceSHA256": "ce51748e50690c69bdf9f3b582c0d34680fa3f1faecbcbf6641dd012bde1649a",
+      "outputFaces": 18,
+      "identityKeys": [
+        "face_source_identity0",
+        "face_source_identity1"
+      ],
+      "identityFaceIDKey": "face_id",
+      "identityOriginalIDFilter": null,
+      "parentAssets": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/output/candidate-closed-f32.npz",
+          "sha256": "2834811b92bf947259e8a703e40c6627096f28c9500555a0b9941bfa644a28af"
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/physical-I-witness-collars-629/collar-inventory.json",
+          "sha256": "d51363cd1fc47d6fe7b3bfe9dc1181afcaa22c3235587a3c31d511037efa74e0"
+        }
+      ],
+      "parentSourceIDs": [
+        209586
+      ],
+      "sourceGeometryScope": "three witness-directed I support patches; fixed boundary vertices; no coordinate edits"
+    }
+  },
+  "candidate_CSR": {
+    "face_rows": 21192,
+    "ancestry_entries": 21690,
+    "nonempty_ancestry_derived_faces": 18,
+    "candidate_and_source_view_CSR_exactly_equal": true,
+    "derived_parent_source_ids_from_CSR": [
+      209586
+    ]
+  },
+  "candidate_to_source_view_geometry_exact": true,
+  "operation_schema": {
+    "coordinate_changes": 0,
+    "derived_operation": "one_sided_exact_self_intersection_patch_retriangulation_616_618",
+    "derived_parent_assets": [
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/output/candidate-closed-f32.npz",
+        "sha256": "2834811b92bf947259e8a703e40c6627096f28c9500555a0b9941bfa644a28af"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/physical-I-witness-collars-629/collar-inventory.json",
+        "sha256": "d51363cd1fc47d6fe7b3bfe9dc1181afcaa22c3235587a3c31d511037efa74e0"
+      }
+    ],
+    "derived_parent_source_ids": [
+      209586
+    ],
+    "face_count": 18,
+    "identity_face_id_key": "face_id",
+    "identity_keys": [
+      "face_source_identity0",
+      "face_source_identity1"
+    ],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/I-one-sided-DP-derived-source.npz",
+    "role": "I",
+    "sha256": "ce51748e50690c69bdf9f3b582c0d34680fa3f1faecbcbf6641dd012bde1649a",
+    "source_face_ancestry_policy": "each replacement face has the complete source ancestry CSR union of its retired patch faces; no unique measured face is asserted",
+    "source_geometry_scope": "three witness-directed I support patches; fixed boundary vertices; no coordinate edits"
+  }
+}

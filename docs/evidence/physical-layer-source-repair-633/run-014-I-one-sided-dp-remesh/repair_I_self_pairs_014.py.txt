@@ -1,0 +1,455 @@
+#!/usr/bin/env python3
+from pathlib import Path
+import csv, hashlib, importlib.util, itertools, json, sys, time, traceback
+import numpy as np
+
+BASE=Path("/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209")
+A=BASE/"reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm"
+RUN=Path(__file__).parent
+OUT=RUN/"output";OUT.mkdir(exist_ok=True)
+CAND=A/"run-006-I-derived-sliver-condition/output/candidate-closed-f32.npz"
+OCAND=A/"run-005-protected-cap-minthickness/output/O-protected-cap-f32.npz"
+ISRC=A.parent/"attempt-024-coupled-paired-thickness/source002-I-closed-f32-as-f64.npz"
+OSRC=A.parent/"attempt-024-coupled-paired-thickness/source002-O-closed-f32-as-f64.npz"
+INV=BASE/"physical-I-witness-collars-629/collar-inventory.json"
+EXACT_LOADER=BASE/"geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/D-witness-contract-001/run-042-abstract-cycle-coupled-remesh/remesh.py"
+DISK_DP=BASE/"constraint-disk-triangulation-616/constraint_disk.py"
+CHORD=BASE/"exact-chord-pruning-618/chord_pruning.py"
+CAP_MASS=BASE/"native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv"
+PARENT_CAND=A.parent/"attempt-002-parent-ancestry-walk/candidate.npz"
+D037=BASE/"geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/closed-inputs/D-closed-run037-f32.npz"
+OUTER_SUPPORT=A/"run-002/output/outer-region-dilation-f64-stage-f64.npz"
+INNER_SUPPORT=A/"run-002/output/inner-region-dilation-f64-stage-f64.npz"
+OUTER_SAFE=A/"run-005-protected-cap-minthickness/output/outer-support-protected-f64.npz"
+INNER_CLIPPED=A/"run-005-protected-cap-minthickness/output/inner-support-clipped-f64.npz"
+EXPECTED_EXACT_SHA="f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+EXPECTED_CAND_SHA="2834811b92bf947259e8a703e40c6627096f28c9500555a0b9941bfa644a28af"
+EXPECTED_INV_SHA="d51363cd1fc47d6fe7b3bfe9dc1181afcaa22c3235587a3c31d511037efa74e0"
+PROTECTED_SOURCE_ID=3
+PERMITTED_REMOVE_IDS={209586,61000001}
+NEW_OPERATION_ID=61000002
+KERNEL_RADIUS_M=0.0009
+KERNEL_SEGMENTS=16
+
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open("rb") as f:
+  for b in iter(lambda:f.read(1<<20),b""):h.update(b)
+ return h.hexdigest()
+def module(name,path):
+ spec=importlib.util.spec_from_file_location(name,path)
+ if spec is None or spec.loader is None:raise ImportError(f"could not load {path}")
+ m=importlib.util.module_from_spec(spec);sys.modules[name]=m;spec.loader.exec_module(m);return m
+def write(path,obj):
+ Path(path).write_text(json.dumps(obj,indent=2,default=lambda v:v.item() if hasattr(v,"item") else str(v))+"\n")
+def load_npz(path):
+ with np.load(path,allow_pickle=False) as z:return {k:z[k] for k in z.files}
+def edge_counts(F):
+ F=np.asarray(F,np.int64)
+ E=np.concatenate((F[:,[0,1]],F[:,[1,2]],F[:,[2,0]]),axis=0);E.sort(axis=1)
+ _,c=np.unique(E,axis=0,return_counts=True)
+ return {str(int(v)):int(np.count_nonzero(c==v)) for v in np.unique(c)}
+def widened_area(P,F):
+ tri=np.asarray(P,np.float32)[np.asarray(F,np.int64)].astype(np.float64)
+ cross=np.cross(tri[:,1]-tri[:,0],tri[:,2]-tri[:,0])
+ return np.linalg.norm(cross,axis=1),cross
+def cyclic_equal(a,b):
+ return any(np.array_equal(a,np.roll(b,k,axis=0)) for k in range(3))
+def cap_identity(src, points, faces, orig, fids, capmask):
+ P0=np.asarray(src["points_world_m_f64"],np.float64).astype(np.float32)
+ F0=np.asarray(src["faces_f64"],np.int64)
+ ids=np.asarray(src["face_id"],np.int64);capids=np.asarray(src["cap_face_ids"],np.int64)
+ sid=int(src["run_original_id"][0]);rows=np.flatnonzero(np.isin(ids,capids))
+ exact=0;missing=[];amb=[]
+ for r in rows:
+  fid=int(ids[r]);hits=np.flatnonzero((orig==sid)&(fids==fid))
+  if len(hits)!=1:(amb if len(hits)>1 else missing).append(fid);continue
+  if cyclic_equal(points[faces[hits[0]]],P0[F0[r]]):exact+=1
+  else:missing.append(fid)
+ rows_candidate=np.flatnonzero((orig==sid)&np.isin(fids,capids))
+ exp_ring={np.asarray(P0[v],np.float32).tobytes() for v in np.unique(F0[rows])}
+ got_ring={np.asarray(points[v],np.float32).tobytes() for v in np.unique(faces[rows_candidate])}
+ return {"source_id":sid,"source_cap_face_count":int(len(rows)),
+  "candidate_cap_rows_by_identity":int(len(rows_candidate)),
+  "exact_oriented_source_cap_face_descendants":exact,
+  "missing_face_ids":missing,"ambiguous_face_ids":amb,
+  "source_cap_ring_vertex_count":int(len(np.unique(F0[rows]))),
+  "candidate_cap_ring_vertex_count":int(len(np.unique(faces[rows_candidate]))),
+  "exact_F32_cap_ring_coordinate_set_equal":exp_ring==got_ring,
+  "declared_cap_mask_true_count":int(np.count_nonzero(capmask)),
+  "declared_cap_mask_matches_identity_rows":bool(np.array_equal(np.flatnonzero(capmask),rows_candidate)),
+  "pass":exact==len(rows) and not missing and not amb and len(rows_candidate)==len(rows) and exp_ring==got_ring}
+def boundary_edge_set(F):
+ E=np.concatenate((F[:,[0,1]],F[:,[1,2]],F[:,[2,0]]),axis=0);E.sort(axis=1)
+ U,c=np.unique(E,axis=0,return_counts=True)
+ return {tuple(map(int,e)) for e,n in zip(U,c) if n==1}
+def source_outside_support(src, out_points, out_faces, out_orig, out_fids, support_path):
+ sup=load_npz(support_path);S=np.asarray(sup["points_world_m_f64"],np.float64);lo=S.min(0);hi=S.max(0)
+ p0=np.asarray(src["points_world_m_f64"],np.float64).astype(np.float32);f0=np.asarray(src["faces_f64"],np.int64)
+ srcids=np.asarray(src["face_id"],np.int64);sid=int(src["run_original_id"][0])
+ tri=p0[f0];outside=~(np.all(tri.max(1)>=lo,axis=1)&np.all(tri.min(1)<=hi,axis=1))
+ lookup={}
+ for row in np.flatnonzero(out_orig==sid):lookup.setdefault(int(out_fids[row]),[]).append(int(row))
+ exact=0;missing=[];amb=[]
+ for r in np.flatnonzero(outside):
+  fid=int(srcids[r]);hit=lookup.get(fid,[])
+  if not hit:missing.append(fid);continue
+  if len(hit)!=1:amb.append(fid);continue
+  if cyclic_equal(out_points[out_faces[hit[0]]],tri[r]):exact+=1
+  else:missing.append(fid)
+ return {"outside_support_source_faces":int(outside.sum()),"exact_oriented_coordinate_descendants":exact,
+         "missing_or_changed_face_ids":missing,"ambiguous_face_ids":amb,"pass":exact==int(outside.sum()) and not missing and not amb,
+         "support_bbox_min_m":lo.tolist(),"support_bbox_max_m":hi.tolist()}
+def exact_records(pred,lattice,F,face_ids=None):
+ rec=pred._records(lattice,[tuple(map(int,t)) for t in np.asarray(F,np.int64)])
+ if face_ids is not None:
+  ids=np.asarray(face_ids,np.int64)
+  rec=[(r[0],r[1],r[2],int(ids[i]),r[4])for i,r in enumerate(rec)]
+ return rec
+def pair_audit(pred,A,B,same):
+ res=pred._audit_pair(A,B,same_surface=same)
+ return res,np.asarray(res.get("triangle_pairs",[]),np.int64).reshape(-1,2)
+def disk_boundary_orient_ok(F,rows,loop):
+ dirs={}
+ for r in rows:
+  f=F[int(r)]
+  for a,b in zip(f,np.roll(f,-1)):dirs[(int(a),int(b))]=dirs.get((int(a),int(b)),0)+1
+ net={}
+ for (a,b),v in dirs.items():
+  if (b,a) in dirs:continue
+  if v:net[(a,b)]=v
+ expected={(int(loop[i]),int(loop[(i+1)%len(loop)])):1 for i in range(len(loop))}
+ return net==expected
+def local_kernel_support(mf):
+ k=mf.Manifold.sphere(KERNEL_RADIUS_M,KERNEL_SEGMENTS)
+ if k.status()!=mf.Error.NoError:raise RuntimeError(f"sphere16 status {k.status()}")
+ z=k.to_mesh64();P=np.asarray(z.vert_properties,np.float64)[:,:3];F=np.asarray(z.tri_verts,np.int64)
+ center=(P.min(0)+P.max(0))/2
+ radial=np.linalg.norm(P-center,axis=1)
+ tri=P[F];n=np.cross(tri[:,1]-tri[:,0],tri[:,2]-tri[:,0]);nn=np.linalg.norm(n,axis=1)
+ d=np.abs(np.einsum("ij,ij->i",n,tri[:,0]-center))/nn
+ return {"nominal_radius_m":KERNEL_RADIUS_M,"segments":KERNEL_SEGMENTS,"center_m":center.tolist(),
+  "min_vertex_radius_m":float(radial.min()),"max_vertex_radius_m":float(radial.max()),
+  "measured_kernel_inradius_m":float(d.min()),"max_face_plane_distance_m":float(d.max()),
+  "statement":"Measured polyhedral sphere16 support; nominal parameter is not an exact directional minimum-thickness guarantee."}
+
+t0=time.monotonic();report={"schema":"numi.I-derived-one-sided-exact-disk-remesh.v1","physical_admission":False,
+ "inputs":{},"plans":[],"status":"PREFLIGHT"}
+try:
+ report["executed_source"]={"path":str(Path(__file__)),"sha256":sha(Path(__file__))}
+ for name,p in (("candidate_I",CAND),("candidate_O",OCAND),("source_I",ISRC),("source_O",OSRC),("collar_inventory",INV),
+   ("exact_loader",EXACT_LOADER),("disk_dp",DISK_DP),("chord_pruning",CHORD),("parent_candidate",PARENT_CAND),
+   ("parent_mass_csv",CAP_MASS),("D037",D037),("outer_support",OUTER_SUPPORT),("inner_support",INNER_SUPPORT),
+   ("outer_safe",OUTER_SAFE),("inner_clipped",INNER_CLIPPED)):
+  if not p.is_file():raise FileNotFoundError(p)
+  report["inputs"][name]={"path":str(p),"sha256":sha(p)}
+ if sha(CAND)!=EXPECTED_CAND_SHA:raise ValueError(f"current I candidate hash mismatch: {sha(CAND)}")
+ if sha(INV)!=EXPECTED_INV_SHA:raise ValueError(f"629 inventory hash mismatch: {sha(INV)}")
+ loader=module("one_sided_I_exact_loader_011",EXACT_LOADER)
+ pred=loader.load_exact_owner()
+ if sha(Path(pred.__file__))!=EXPECTED_EXACT_SHA:raise ValueError(f"exact owner hash mismatch: {sha(Path(pred.__file__))}")
+ disk=module("constraint_disk_dp_616",DISK_DP);chord=module("exact_chord_pruning_618",CHORD)
+ cand=load_npz(CAND);o=load_npz(OCAND);isrc=load_npz(ISRC);osrc=load_npz(OSRC);inv=json.loads(INV.read_text())
+ PI=np.asarray(cand["points_world_m"],np.float32);FI=np.asarray(cand["faces"],np.int64)
+ PO=np.asarray(o["points_world_m_f32"],np.float32);FO=np.asarray(o["faces_f32"],np.int64)
+ orig=np.asarray(cand["face_source_original_id"],np.int64);fids=np.asarray(cand["face_source_face_id"],np.int64)
+ capids=set(map(int,isrc["cap_face_ids"]));sid=int(isrc["run_original_id"][0])
+ Icap=(orig==sid)&np.isin(fids,list(capids))
+ Oorig=np.asarray(o["face_source_original_id"],np.int64);Ofids=np.asarray(o["face_source_face_id"],np.int64)
+ Ocapids=set(map(int,osrc["cap_face_ids"]));Osid=int(osrc["run_original_id"][0])
+ Ocap=(Oorig==Osid)&np.isin(Ofids,list(Ocapids))
+ if int(Icap.sum())!=41:raise ValueError(f"identity-derived I caps expected 41, got {int(Icap.sum())}")
+ schema=json.loads(str(cand["face_source_identity_schema_by_original_id_json"][0]))
+ if str(NEW_OPERATION_ID) in schema:raise ValueError("new operation ID already exists")
+
+  groups=inv["groups"]
+  desired={0:("minimum_face_cover_0",0),1:("minimum_face_cover_0",1),2:("minimum_face_cover_0",0)}
+  choice_rank={"minimum_face_cover_0":0,"minimum_face_cover_2":1,"endpoint_a":2,"endpoint_b":3}
+  selected=[];removed=set();pair_list=[];plan_attempts=[];patch_results=[];new_faces=[];patch_assign=[]
+  combined=np.vstack((PI,PO)).astype(np.float32);offsetO=len(PI);combinedF_O=FO+offsetO
+  Oopenrows=np.flatnonzero(~Ocap)
+  lattice=tuple(pred.float32_point_lattice_key(v) for v in combined)
+  next_candidate_id=9000000000000
+  for gi,group in enumerate(groups):
+   preferred=desired.get(gi)
+   plans=[p for p in group["plans"] if int(p.get("ring",99))<=4]
+   plans.sort(key=lambda p:(0 if (p["choice"],int(p["ring"]))==preferred else 1,
+                            int(p["ring"]),choice_rank.get(p["choice"],99),int(p.get("faces",10**9))))
+   accepted=False
+   for plan in plans:
+    plan_rows=set()
+    for piece in plan.get("pieces",[]):plan_rows.update(map(int,piece.get("face_rows",[])))
+    attempt={"group_index":gi,"choice":plan["choice"],"ring":int(plan["ring"]),
+             "candidate_face_count":len(plan_rows),"piece_count":len(plan.get("pieces",[]))}
+    if not plan_rows or plan_rows & removed:
+     attempt.update({"status":"SKIPPED_OVERLAP_OR_EMPTY"});plan_attempts.append(attempt);continue
+    if any(int(orig[r]) not in PERMITTED_REMOVE_IDS for r in plan_rows):
+     attempt.update({"status":"SKIPPED_PROTECTED_SOURCE"});plan_attempts.append(attempt);continue
+    if any(bool(Icap[r]) for r in plan_rows):
+     attempt.update({"status":"SKIPPED_CAP"});plan_attempts.append(attempt);continue
+    if any(not p.get("covers_every_witness_pair",False) for p in [plan]):
+     attempt.update({"status":"SKIPPED_INCOMPLETE_WITNESS_COVER"});plan_attempts.append(attempt);continue
+    trial_removed=removed|plan_rows
+    trial_rows=np.ones(len(FI),dtype=bool);trial_rows[np.asarray(sorted(trial_removed),np.int64)]=False
+    fixed_faces=np.vstack((FI[trial_rows],np.asarray(new_faces,np.int64).reshape(-1,3),combinedF_O[Oopenrows]))
+    fixed=exact_records(pred,lattice,fixed_faces)
+    base_index=pred._prepare_surface_aabb(fixed)
+    external_edges=set()
+    for face in fixed_faces:
+     for a,b in zip(face,np.roll(face,-1)):external_edges.add(tuple(sorted((int(a),int(b)))))
+    candidate_group_faces=[];candidate_group_records=[];candidate_group_patches=[];candidate_patch_assign=[]
+    local_cache={}
+    try:
+     for pi,piece in enumerate(plan["pieces"]):
+      if piece.get("kind")!="disk" or len(piece.get("boundary_loops",[]))!=1:
+       raise ValueError(f"piece {pi} is not one simple disk")
+      loop=list(map(int,piece["boundary_loops"][0]))
+      piece_rows=list(map(int,piece["face_rows"]))
+      if len(loop)<3 or len(set(loop))!=len(loop):raise ValueError(f"piece {pi} boundary is not a simple cycle")
+      if not disk_boundary_orient_ok(FI,piece_rows,loop):raise ValueError(f"piece {pi} directed boundary mismatch")
+      blocked,pruneinfo=chord.prune_chords(loop,lattice,base_index,pred,max_seconds=8.,cache=local_cache,max_witnesses=16)
+      tris,recs,dpinfo=disk.collision_aware_dp_disk(loop,combined.astype(np.float64),combined,
+        external_edges|blocked,base_index,pred,lattice,candidate_group_records,
+        next_candidate_id,max_seconds=12.,max_branches=512,chunk_size=64)
+      next_candidate_id+=len(tris)
+      tris=[tuple(map(int,t)) for t in tris]
+      if len(tris)!=len(piece_rows):raise ValueError(f"piece {pi} changed face count {len(piece_rows)}->{len(tris)}")
+      disk.validate_disk(tris,loop,external_edges|blocked)
+      candidate_group_faces.extend(tris);candidate_group_records.extend(recs)
+      candidate_patch_assign.extend([len(selected)+pi]*len(tris))
+      candidate_group_patches.append({"piece_index":pi,"removed_face_rows":piece_rows,"boundary_loop":loop,
+        "old_faces":len(piece_rows),"new_faces":tris,"chord_pruning":pruneinfo,"dp":dpinfo})
+      for f in tris:
+       for a,b in zip(f,(f[1],f[2],f[0])):external_edges.add(tuple(sorted((int(a),int(b)))))
+    except (ValueError,TimeoutError) as exc:
+     attempt.update({"status":"REJECTED_EXACT_DISK_CONSTRUCTION","error_type":type(exc).__name__,"error":str(exc)})
+     plan_attempts.append(attempt);continue
+    covered=True
+    for a,b in group["pairs"]:
+     if int(a) not in plan_rows and int(b) not in plan_rows:covered=False
+    if not covered:
+     attempt.update({"status":"REJECTED_WITNESS_COVER"});plan_attempts.append(attempt);continue
+    attempt.update({"status":"ACCEPTED","replacement_face_count":len(candidate_group_faces)})
+    plan_attempts.append(attempt)
+    selected.extend([{"group_index":gi,"choice":plan["choice"],"ring":int(plan["ring"]),
+       "patch_index":len(selected)+pi,"removed_face_rows":p["removed_face_rows"],"loop":p["boundary_loop"],
+       "old_face_count":p["old_faces"]} for pi,p in enumerate(candidate_group_patches)])
+    new_faces.extend(candidate_group_faces);patch_assign.extend(candidate_patch_assign)
+    patch_results.append({"group_index":gi,"choice":plan["choice"],"ring":int(plan["ring"]),
+       "removed_face_rows":sorted(plan_rows),"pieces":candidate_group_patches})
+    removed.update(plan_rows);pair_list.extend([[int(a),int(b)] for a,b in group["pairs"]])
+    report["plans"].append({"group_index":gi,"choice":plan["choice"],"ring":int(plan["ring"]),
+       "face_count":len(plan_rows),"pieces":[{"face_rows":p["face_rows"],"boundary_loops":p["boundary_loops"],
+       "kind":p["kind"]} for p in plan["pieces"]]})
+    accepted=True;break
+   if not accepted:raise ValueError(f"no exact one-sided disk plan passed for witness group {gi}; see retained plan_attempts")
+  if not removed:raise ValueError("empty selected patch")
+  report["preflight"]={"candidate_sha256":sha(CAND),"inventory_sha256":sha(INV),"removed_face_count":len(removed),
+    "removed_source_ids":{str(int(k)):int(sum(int(orig[r])==int(k) for r in removed)) for k in np.unique(orig[list(removed)])},
+    "covered_exact_witness_pairs":len(pair_list),"exact_witness_pair_count":int(sum(g["witness_pair_count"] for g in groups)),
+    "all_removed_source_ids_permitted":all(int(orig[r]) in PERMITTED_REMOVE_IDS for r in removed),
+    "protected_source_id_3_retained_faces":int(np.count_nonzero(orig==PROTECTED_SOURCE_ID)),
+    "identity_derived_cap_faces_retained":int(Icap.sum()),"coordinate_changes":0,
+    "ring_limit":4,"plan_attempt_count":len(plan_attempts)}
+  report["plan_attempts"]=plan_attempts
+  report["patch_construction"]={"method":"616 exact collision-aware polygon DP with 618 exact chord pruning",
+    "removed_face_rows":sorted(removed),"replacement_face_count":len(new_faces),"patches":patch_results,
+    "coordinate_changes":0,"search_policy":"try inventory disk choices in ring order through ring 4; retain exact failure reason per attempt"}
+
+ # Save compact operation source with full ancestry to the retired source-face patch.
+ new_faces=np.asarray(new_faces,np.int64)
+ patch_assign=np.asarray(patch_assign,np.int64)
+ old_ancestry_offsets=np.asarray(cand["face_ancestry_offsets"],np.int64)
+ old_ancestry_cache=np.asarray(cand["face_ancestry_input_cache_rows"],np.int64)
+ old_ancestry_orig=np.asarray(cand["face_ancestry_original_ids"],np.int64)
+ old_ancestry_fid=np.asarray(cand["face_ancestry_face_ids"],np.int64)
+ old_ancestry_i0=np.asarray(cand["face_ancestry_identity0"],np.int64)
+ old_ancestry_i1=np.asarray(cand["face_ancestry_identity1"],np.int64)
+ patch_parents=[]
+ for patch in selected:
+  parent_rows=patch["removed_face_rows"];items=set()
+  for row in parent_rows:
+   for slot in range(old_ancestry_offsets[row],old_ancestry_offsets[row+1]):
+    items.add((int(old_ancestry_cache[slot]),int(old_ancestry_orig[slot]),int(old_ancestry_fid[slot]),
+               int(old_ancestry_i0[slot]),int(old_ancestry_i1[slot])))
+  patch_parents.append(sorted(items))
+ view_rows=np.unique(new_faces.reshape(-1));view_map=np.full(len(PI),-1,np.int64);view_map[view_rows]=np.arange(len(view_rows))
+ viewF=view_map[new_faces]
+ view=OUT/"I-one-sided-DP-derived-source.npz"
+ view_entries=[]
+ for patch_index in patch_assign:view_entries.append(patch_parents[int(patch_index)])
+ view_offsets=[0];view_flat=[]
+ for row in view_entries:view_flat.extend(row);view_offsets.append(len(view_flat))
+ view_flat=np.asarray(view_flat,dtype=np.int64).reshape(-1,5)
+ np.savez_compressed(view,points_world_m_f64=PI[view_rows].astype(np.float64),faces_f64=viewF,
+    face_id=np.arange(len(new_faces),dtype=np.int64),face_source_identity0=np.arange(len(new_faces),dtype=np.int64),
+    face_source_identity1=np.full(len(new_faces),-1,np.int64),operation_face_patch_index=patch_assign,
+    retired_current_face_rows=np.asarray(sorted(removed),np.int64),
+    face_ancestry_offsets=np.asarray(view_offsets,np.int64),face_ancestry_input_cache_rows=view_flat[:,0],
+    face_ancestry_original_ids=view_flat[:,1],face_ancestry_face_ids=view_flat[:,2],
+    face_ancestry_identity0=view_flat[:,3],face_ancestry_identity1=view_flat[:,4],
+    parent_source_original_ids=np.unique(view_flat[:,1]).astype(np.int64))
+ schema[str(NEW_OPERATION_ID)]={
+  "role":"I","path":str(view),"sha256":sha(view),"identity_keys":["face_source_identity0","face_source_identity1"],
+  "identity_face_id_key":"face_id","face_count":int(len(new_faces)),
+  "derived_operation":"one_sided_exact_self_intersection_patch_retriangulation_616_618",
+  "derived_parent_source_ids":sorted({int(x[1]) for pp in patch_parents for x in pp}),
+  "derived_parent_assets":[{"path":str(CAND),"sha256":sha(CAND)},{"path":str(INV),"sha256":sha(INV)}],
+  "source_geometry_scope":"three witness-directed I support patches; fixed boundary vertices; no coordinate edits",
+  "source_face_ancestry_policy":"each replacement face has the complete source ancestry CSR union of its retired patch faces; no unique measured face is asserted",
+  "coordinate_changes":0
+ }
+ keep_rows=np.flatnonzero(~removed_mask)
+ outF=np.vstack((FI[keep_rows],new_faces))
+ # Copy all per-face attributes and assign fresh derived operation identity to the replacement rows.
+ new_count=len(new_faces);attrs={}
+ for key in ("face_source_layer","face_source_body","face_source_bone","face_source_identity0","face_source_identity1",
+             "face_source_original_id","face_source_face_id","face_cache_row"):
+  attrs[key]=np.concatenate((np.asarray(cand[key])[keep_rows],np.zeros(new_count,dtype=np.asarray(cand[key]).dtype)))
+ attrs["face_source_layer"][-new_count:]=1
+ attrs["face_source_body"][-new_count:]=-1
+ attrs["face_source_bone"][-new_count:]=-1
+ attrs["face_source_identity0"][-new_count:]=np.arange(new_count,dtype=np.int64)
+ attrs["face_source_identity1"][-new_count:]=-1
+ attrs["face_source_original_id"][-new_count:]=NEW_OPERATION_ID
+ attrs["face_source_face_id"][-new_count:]=np.arange(new_count,dtype=np.int64)
+ attrs["face_cache_row"][-new_count:]=-1
+ # Retained faces preserve their existing CSR entries; each new face inherits the full retired-patch ancestry.
+ entries=[]
+ for row in keep_rows:
+  entries.append([(int(old_ancestry_cache[s]),int(old_ancestry_orig[s]),int(old_ancestry_fid[s]),
+                   int(old_ancestry_i0[s]),int(old_ancestry_i1[s]))
+                  for s in range(old_ancestry_offsets[row],old_ancestry_offsets[row+1])])
+ for patch_index in patch_assign:
+  entries.append(patch_parents[int(patch_index)])
+ offs=[0];flat=[]
+ for row in entries:
+  flat.extend(row);offs.append(len(flat))
+ flat=np.asarray(flat,dtype=np.int64).reshape(-1,5)
+ new_cap=(attrs["face_source_original_id"]==sid)&np.isin(attrs["face_source_face_id"],list(capids))
+ outdata={k:np.asarray(v) for k,v in cand.items()}
+ outdata.update(points_world_m=PI.copy(),faces=outF,**attrs,
+  face_ancestry_offsets=np.asarray(offs,np.int64),face_ancestry_input_cache_rows=flat[:,0],
+  face_ancestry_original_ids=flat[:,1],face_ancestry_face_ids=flat[:,2],
+  face_ancestry_identity0=flat[:,3],face_ancestry_identity1=flat[:,4],
+  temporary_cap_descendant_face_mask=new_cap,output_face_keep_mask_after_exact_cap_removal=~new_cap,
+  face_source_identity_schema_by_original_id_json=np.asarray([json.dumps(schema,sort_keys=True)]))
+ op={"schema":"numi.I-one-sided-DP-remesh-operation.v1","input_candidate_sha256":sha(CAND),
+  "witness_inventory_sha256":sha(INV),"output_candidate":str(OUT/"candidate-I-one-sided-dp-f32-typed.npz"),
+  "new_operation_original_id":NEW_OPERATION_ID,"removed_face_rows":sorted(removed),"replacement_face_count":new_count,
+  "patches":patch_results,"coordinate_changes":0,"retained_original_source_id_3_and_caps":True,
+  "ancestry_policy":"full retired patch ancestry union per replacement face; see CSR arrays and compact source view",
+  "physical_admission":False}
+ outdata["one_sided_remesh_operation_json"]=np.asarray([json.dumps(op,sort_keys=True)])
+ candidate_out=OUT/"candidate-I-one-sided-dp-f32-typed.npz"
+ np.savez_compressed(candidate_out,**outdata)
+ report["candidate"]={"path":str(candidate_out),"sha256":sha(candidate_out),"points":len(PI),"faces":len(outF),
+  "source_view":{"path":str(view),"sha256":sha(view)},"new_operation_id":NEW_OPERATION_ID,
+  "face_ancestry_entries":int(len(flat)),"retained_point_coordinates_bitwise_equal_input":bool(np.array_equal(PI,np.asarray(cand["points_world_m"],np.float32))),
+  "retained_source_id_3_face_count":int(np.count_nonzero(attrs["face_source_original_id"]==PROTECTED_SOURCE_ID)),
+  "cap_mask_reconciled_by_identity":int(new_cap.sum())}
+ # Structure and Float32 area: widen exact emitted Float32 values before cross products.
+ areas,cross=widened_area(PI,outF);inc=edge_counts(outF)
+ report["structure"]={"edge_incidence_counts":inc,"closed_all_edges_incidence_2":inc=={"2":len(np.unique(np.sort(np.concatenate((outF[:,[0,1]],outF[:,[1,2]],outF[:,[2,0]])),axis=1),axis=0))},
+  "zero_area_faces_after_F32_widened_to_F64":np.flatnonzero(areas==0).astype(int).tolist(),
+  "minimum_double_area_m2":float(areas.min(initial=np.inf)),"euler_characteristic":int(len(np.unique(outF))-len(np.unique(np.sort(np.concatenate((outF[:,[0,1]],outF[:,[1,2]],outF[:,[2,0]])),axis=1),axis=0))+len(outF))}
+ cap_i=cap_identity(isrc,PI,outF,attrs["face_source_original_id"],attrs["face_source_face_id"],new_cap)
+ cap_o=cap_identity(osrc,PO,FO,Oorig,Ofids,Ocap)
+ report["cap_identity"]={"I":cap_i,"O":cap_o}
+ # One-sided locality: original source faces outside the support bbox remain exact oriented coordinate triangles.
+ report["source_locality"]={"I":source_outside_support(isrc,PI,outF,attrs["face_source_original_id"],attrs["face_source_face_id"],INNER_SUPPORT),
+  "O":source_outside_support(osrc,PO,FO,Oorig,Ofids,OUTER_SUPPORT)}
+ # Full exact I self check, and noncap open O/I cross; stop before volume checks if either remains.
+ combined=np.vstack((PI,PO)).astype(np.float32);lattice=tuple(pred.float32_point_lattice_key(v) for v in combined)
+ outIrecords=exact_records(pred,lattice,outF)
+ selfres,selfpairs=pair_audit(pred,outIrecords,outIrecords,True)
+ if len(selfpairs):np.save(OUT/"exact-I-self-pairs.npy",selfpairs)
+ report["exact_f32"]={"owner_path":str(Path(pred.__file__)),"owner_sha256":sha(Path(pred.__file__)),
+  "I_self":{"count":int(selfres["count"]),"aabb_candidate_pairs":int(selfres.get("aabb_candidate_pairs",0)),
+            "allowed_shared_vertex_or_edge_pairs":int(selfres.get("allowed_shared_vertex_or_edge_pairs",0)),
+            "witness_path":str(OUT/"exact-I-self-pairs.npy") if len(selfpairs) else None}}
+ Oopen=FO[~Ocap]+offsetO
+ Iopen=outF[~new_cap]
+ crossI=exact_records(pred,lattice,Iopen)
+ crossO=exact_records(pred,lattice,Oopen)
+ crossres,crosspairs=pair_audit(pred,crossI,crossO,False)
+ if len(crosspairs):np.save(OUT/"exact-noncap-O-I-pairs.npy",crosspairs)
+ report["exact_f32"]["noncap_O_I_cross"]={"count":int(crossres["count"]),
+  "aabb_candidate_pairs":int(crossres.get("aabb_candidate_pairs",0)),
+  "allowed_shared_vertex_or_edge_pairs":int(crossres.get("allowed_shared_vertex_or_edge_pairs",0)),
+  "witness_path":str(OUT/"exact-noncap-O-I-pairs.npy") if len(crosspairs) else None}
+ gates={
+  "closed_F32_index_topology":report["structure"]["closed_all_edges_incidence_2"],
+  "no_F32_zero_area_faces":not report["structure"]["zero_area_faces_after_F32_widened_to_F64"],
+  "source_I_caps_and_ring_exact":cap_i["pass"],"source_O_caps_and_ring_exact":cap_o["pass"],
+  "source_I_back_outside_support_exact":report["source_locality"]["I"]["pass"],
+  "source_O_back_outside_support_exact":report["source_locality"]["O"]["pass"],
+  "exact_I_self_zero":int(selfres["count"])==0,
+  "exact_noncap_O_I_cross_zero":int(crossres["count"])==0}
+ report["cheap_gates"]=gates
+ report["cheap_gates_pass"]=all(gates.values())
+ report["status"]="EXACT_PATCH_GATES_PASS" if report["cheap_gates_pass"] else "EXACT_PATCH_GATE_FAILURE"
+ report["source_I_containment_and_capacity"]={"status":"NOT_RUN_AFTER_CHEAP_GATE_FAILURE"}
+ # If the exact surface gates clear, perform saved-cache source containment and regional D037 mass-capacity diagnostics.
+ if report["cheap_gates_pass"]:
+  sys.path.insert(0,str(BASE.parent/"authoring-deps"));import manifold3d as mf
+  helper=module("protected_cap_local_volume_helper_011",BASE/"geometry-worker/fixed-physical-O-local-nested-001/build_union_only_local.py")
+  def mk(P,F,label):
+   m,_=helper.make_mesh(np.asarray(P,np.float32).astype(np.float64),np.asarray(F,np.int64))
+   if m.status()!=mf.Error.NoError:raise RuntimeError(f"{label} import {m.status()}")
+   return m
+  MO=mk(PO,FO,"O candidate");MI=mk(PI,outF,"I candidate")
+  I0=mk(np.asarray(isrc["points_world_m_f64"],np.float64).astype(np.float32),isrc["faces_f64"],"source I")
+  dz=load_npz(D037);MD=mk(np.asarray(dz["points_world_m_f64"],np.float64).astype(np.float32),dz["faces_f64"],"D037")
+  def bo(a,b,op,label):
+   m=mf.Manifold.batch_boolean([a,b],op)
+   if m.status()!=mf.Error.NoError:raise RuntimeError(f"{label} boolean {m.status()}")
+   return m
+  def metrics(m):return {"status":str(m.status()),"vertices":int(m.num_vert()),"faces":int(m.num_tri()),"volume_m3":float(m.volume()),"volume_ml":float(m.volume())*1e6}
+  I_source_minus_output=bo(I0,MI,mf.OpType.Subtract,"source I minus candidate I")
+  I_minus_O=bo(MI,MO,mf.OpType.Subtract,"I minus O")
+  D_minus_I=bo(MD,MI,mf.OpType.Subtract,"D037 minus I")
+  skin=bo(MO,MI,mf.OpType.Subtract,"O minus I")
+  fat=bo(MI,MD,mf.OpType.Subtract,"I minus D037")
+  outer_safe_z=load_npz(OUTER_SAFE);inner_clip_z=load_npz(INNER_CLIPPED)
+  outer_safe=mk(outer_safe_z["points_world_m_f64"],outer_safe_z["faces_f64"],"protected outer support")
+  inner_clipped=mk(inner_clip_z["points_world_m_f64"],inner_clip_z["faces_f64"],"clipped inner support")
+  local_skin=bo(outer_safe,MI,mf.OpType.Subtract,"local skin support minus I")
+  local_fat=bo(inner_clipped,MD,mf.OpType.Subtract,"local fat support minus D037")
+  mass_lookup={}
+  with CAP_MASS.open(newline="") as f:
+   for row in csv.DictReader(f):mass_lookup[int(row["source_tet_row"])]=float(row["mass_kg"])
+  x=load_npz(PARENT_CAND)
+  M=np.asarray(x["material_index"],np.int64);D=np.asarray(x["geometric_donor_body"],np.int64);Rg=np.asarray(x["anatomical_region_id"],np.int64);parents=np.asarray(x["child_parent_tet_row"],np.int64)
+  cap={}
+  for name,mat,solid,bounds in (("skin23",15,local_skin,(900.,1100.)),("fat23",16,local_fat,(850.,950.))):
+   mask=(M==mat)&(D==23)&(Rg==23);par=np.unique(parents[mask])
+   mass=float(sum(mass_lookup[int(row)] for row in par));vol=float(solid.volume())
+   rho=mass/vol if vol>0 else None
+   cap[name]={"volume_m3":vol,"volume_ml":vol*1e6,"immutable_parent_mass_kg":mass,
+    "density_kg_m3":rho,"allowed_density_kg_m3":list(bounds),
+    "allowed_volume_m3":[mass/bounds[1],mass/bounds[0]],
+    "passes_capacity":bool(vol>0 and mass/bounds[1]<=vol<=mass/bounds[0]),"parent_tet_count":int(len(par))}
+  R=local_kernel_support(mf)
+  report["source_I_containment_and_capacity"]={
+   "source_I_minus_candidate_I":metrics(I_source_minus_output),
+   "I_minus_O":metrics(I_minus_O),"D037_minus_I":metrics(D_minus_I),
+   "O_minus_I":metrics(skin),"I_minus_D037":metrics(fat),
+   "regional_capacity_after_D037":cap,"sphere16_skin_kernel":R,
+   "physical_admission":False,"mass_mapping":False}
+  report["status"]="POST_EMISSION_GATES_COMPLETE"
+ report["elapsed_s"]=time.monotonic()-t0
+ report["physical_admission"]=False
+ write(OUT/"report.json",report)
+ print(json.dumps({"status":report["status"],"cheap_gates":report.get("cheap_gates"),
+  "exact_f32":report.get("exact_f32"),"regional_capacity":report.get("source_I_containment_and_capacity"),
+  "candidate":report.get("candidate"),"report":str(OUT/"report.json"),"elapsed_s":report["elapsed_s"]},indent=2),flush=True)
+except BaseException as exc:
+ report["status"]="ERROR"
+ report["error"]={"type":type(exc).__name__,"message":str(exc),"traceback":traceback.format_exc()}
+ report["elapsed_s"]=time.monotonic()-t0
+ try:write(OUT/"report.json",report)
+ except Exception:pass
+ print(json.dumps({"status":"ERROR","error":report["error"],"report":str(OUT/"report.json"),"elapsed_s":report["elapsed_s"]},indent=2),flush=True)
+ raise
+

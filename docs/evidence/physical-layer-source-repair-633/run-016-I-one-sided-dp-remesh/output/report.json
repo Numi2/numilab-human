@@ -1,0 +1,1115 @@
+{
+  "schema": "numi.I-derived-one-sided-exact-disk-remesh.v1",
+  "physical_admission": false,
+  "inputs": {
+    "candidate_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/output/candidate-closed-f32.npz",
+      "sha256": "2834811b92bf947259e8a703e40c6627096f28c9500555a0b9941bfa644a28af"
+    },
+    "candidate_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-protected-cap-f32.npz",
+      "sha256": "c2eb1c82fcbf84105b26adef36abe0f9c4603e8f35180ec7b5aef295a4bfcc1e"
+    },
+    "source_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-I-closed-f32-as-f64.npz",
+      "sha256": "40d41b951a0fef611ec51e7edadb445582d86698142b2e607a09a3afe4e8244a"
+    },
+    "source_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-O-closed-f32-as-f64.npz",
+      "sha256": "bfcbc78e3b07fb923d4cf5263d8ec2745cd442393c4b540d3119b4bf39be9f9e"
+    },
+    "collar_inventory": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/physical-I-witness-collars-629/collar-inventory.json",
+      "sha256": "d51363cd1fc47d6fe7b3bfe9dc1181afcaa22c3235587a3c31d511037efa74e0"
+    },
+    "exact_loader": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/D-witness-contract-001/run-042-abstract-cycle-coupled-remesh/remesh.py",
+      "sha256": "f1d697b42fc9d97472fbd70cec2d8adfe178bb591d3513680609396ec4c204ad"
+    },
+    "disk_dp": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/constraint-disk-triangulation-616/constraint_disk.py",
+      "sha256": "eab86c0a1060a1292db4a9a01e0a766be8739ea2fa2c575a5658082a453d87ea"
+    },
+    "chord_pruning": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/exact-chord-pruning-618/chord_pruning.py",
+      "sha256": "c59f57487dc180db31f8820db23b7e355d69585de3b363eb39c95edaadedbebc"
+    },
+    "parent_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/candidate.npz",
+      "sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54"
+    },
+    "parent_mass_csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "D037": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/closed-inputs/D-closed-run037-f32.npz",
+      "sha256": "0dfc1bd8b6705b2c884c5b816a62a4bbb71e69b2865a9eee849ce16690b2366b"
+    },
+    "outer_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/outer-region-dilation-f64-stage-f64.npz",
+      "sha256": "3ab9e45f318853cc915ba0516c7dc882f71126e9ff067bdd1087be228790a0a9"
+    },
+    "inner_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/inner-region-dilation-f64-stage-f64.npz",
+      "sha256": "a4013282b57cac5c6123e7395b42e2a97d42a2194a2f7255395970b0865999f4"
+    },
+    "outer_safe": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/outer-support-protected-f64.npz",
+      "sha256": "64d89b4065183b59c115bddfd4c2125321249d47a91b0c46cd96fe06069032e2"
+    },
+    "inner_clipped": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/inner-support-clipped-f64.npz",
+      "sha256": "82fa1e0ef7e562f3713cff3adf41e7593b38a6ca89807c0033793df5d754c934"
+    }
+  },
+  "plans": [
+    {
+      "group_index": 0,
+      "choice": "minimum_face_cover_0",
+      "ring": 1,
+      "face_count": 6,
+      "pieces": [
+        {
+          "face_rows": [
+            13709,
+            13710,
+            13794,
+            13799,
+            13810,
+            13811
+          ],
+          "boundary_loops": [
+            [
+              5272,
+              5307,
+              5278,
+              5308,
+              5282,
+              5281,
+              5274,
+              5273
+            ]
+          ],
+          "kind": "disk"
+        }
+      ]
+    },
+    {
+      "group_index": 1,
+      "choice": "minimum_face_cover_0",
+      "ring": 1,
+      "face_count": 10,
+      "pieces": [
+        {
+          "face_rows": [
+            18044,
+            18046,
+            18075,
+            18214,
+            18215,
+            18221,
+            18236,
+            18246,
+            18247,
+            18268
+          ],
+          "boundary_loops": [
+            [
+              7527,
+              7684,
+              7861,
+              7910,
+              7923,
+              7930,
+              7931,
+              7933,
+              7936,
+              7942,
+              7949,
+              7626
+            ]
+          ],
+          "kind": "disk"
+        }
+      ]
+    },
+    {
+      "group_index": 2,
+      "choice": "minimum_face_cover_0",
+      "ring": 0,
+      "face_count": 2,
+      "pieces": [
+        {
+          "face_rows": [
+            19081,
+            19113
+          ],
+          "boundary_loops": [
+            [
+              8349,
+              8684,
+              8683,
+              8362
+            ]
+          ],
+          "kind": "disk"
+        }
+      ]
+    }
+  ],
+  "status": "POST_EMISSION_GATES_COMPLETE",
+  "executed_source": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/repair_I_self_pairs_016.py",
+    "sha256": "c0d950a3524395ef783837a2fc5ca0321358d73a44cecbe9af30bea0ad735d9f"
+  },
+  "preflight": {
+    "candidate_sha256": "2834811b92bf947259e8a703e40c6627096f28c9500555a0b9941bfa644a28af",
+    "inventory_sha256": "d51363cd1fc47d6fe7b3bfe9dc1181afcaa22c3235587a3c31d511037efa74e0",
+    "removed_face_count": 18,
+    "removed_source_ids": {
+      "209586": 17,
+      "61000001": 1
+    },
+    "covered_exact_witness_pairs": 23,
+    "exact_witness_pair_count": 23,
+    "all_removed_source_ids_permitted": true,
+    "protected_source_id_3_retained_faces": 5205,
+    "identity_derived_cap_faces_retained": 41,
+    "coordinate_changes": 0,
+    "ring_limit": 4,
+    "plan_attempt_count": 6
+  },
+  "plan_attempts": [
+    {
+      "group_index": 0,
+      "choice": "minimum_face_cover_0",
+      "ring": 0,
+      "candidate_face_count": 2,
+      "piece_count": 1,
+      "status": "REJECTED_EXACT_DISK_CONSTRUCTION",
+      "error_type": "ValueError",
+      "error": "no disk triangulation passes individual exact constraints: {'triangle_candidates': 2, 'eligible_triangles': 1, 'rejected_external_triangles': 1, 'external_exact_pairs': 3, 'external_aabb_candidates': 41, 'dp_solves': 1, 'branches_popped': 0, 'self_pair_conflicts': 0}"
+    },
+    {
+      "group_index": 0,
+      "choice": "endpoint_a",
+      "ring": 0,
+      "candidate_face_count": 5,
+      "piece_count": 2,
+      "status": "REJECTED_EXACT_DISK_CONSTRUCTION",
+      "error_type": "ValueError",
+      "error": "no disk triangulation passes individual exact constraints: {'triangle_candidates': 1, 'eligible_triangles': 0, 'rejected_external_triangles': 1, 'external_exact_pairs': 5, 'external_aabb_candidates': 18, 'dp_solves': 1, 'branches_popped': 0, 'self_pair_conflicts': 0}"
+    },
+    {
+      "group_index": 0,
+      "choice": "endpoint_b",
+      "ring": 0,
+      "candidate_face_count": 5,
+      "piece_count": 2,
+      "status": "REJECTED_EXACT_DISK_CONSTRUCTION",
+      "error_type": "ValueError",
+      "error": "no disk triangulation passes individual exact constraints: {'triangle_candidates': 2, 'eligible_triangles': 1, 'rejected_external_triangles': 1, 'external_exact_pairs': 3, 'external_aabb_candidates': 36, 'dp_solves': 1, 'branches_popped': 0, 'self_pair_conflicts': 0}"
+    },
+    {
+      "group_index": 0,
+      "choice": "minimum_face_cover_0",
+      "ring": 1,
+      "candidate_face_count": 6,
+      "piece_count": 1,
+      "status": "ACCEPTED",
+      "replacement_face_count": 6
+    },
+    {
+      "group_index": 1,
+      "choice": "minimum_face_cover_0",
+      "ring": 1,
+      "candidate_face_count": 10,
+      "piece_count": 1,
+      "status": "ACCEPTED",
+      "replacement_face_count": 10
+    },
+    {
+      "group_index": 2,
+      "choice": "minimum_face_cover_0",
+      "ring": 0,
+      "candidate_face_count": 2,
+      "piece_count": 1,
+      "status": "ACCEPTED",
+      "replacement_face_count": 2
+    }
+  ],
+  "patch_construction": {
+    "method": "616 exact collision-aware polygon DP with 618 exact chord pruning",
+    "removed_face_rows": [
+      13709,
+      13710,
+      13794,
+      13799,
+      13810,
+      13811,
+      18044,
+      18046,
+      18075,
+      18214,
+      18215,
+      18221,
+      18236,
+      18246,
+      18247,
+      18268,
+      19081,
+      19113
+    ],
+    "replacement_face_count": 18,
+    "patches": [
+      {
+        "group_index": 0,
+        "choice": "minimum_face_cover_0",
+        "ring": 1,
+        "removed_face_rows": [
+          13709,
+          13710,
+          13794,
+          13799,
+          13810,
+          13811
+        ],
+        "pieces": [
+          {
+            "piece_index": 0,
+            "removed_face_rows": [
+              13709,
+              13710,
+              13794,
+              13799,
+              13810,
+              13811
+            ],
+            "boundary_loop": [
+              5272,
+              5307,
+              5278,
+              5308,
+              5282,
+              5281,
+              5274,
+              5273
+            ],
+            "old_faces": 6,
+            "new_faces": [
+              [
+                5272,
+                5282,
+                5273
+              ],
+              [
+                5282,
+                5274,
+                5273
+              ],
+              [
+                5282,
+                5281,
+                5274
+              ],
+              [
+                5272,
+                5278,
+                5282
+              ],
+              [
+                5278,
+                5308,
+                5282
+              ],
+              [
+                5272,
+                5307,
+                5278
+              ]
+            ],
+            "chord_pruning": {
+              "method": "exact_segment_triangle_necessary_chord_constraints",
+              "slot_chords": 28,
+              "blocked_chords": 1,
+              "blocked_boundary_edges": [],
+              "exact_segment_queries": 491,
+              "aabb_candidates_visited": 491,
+              "cache_hits": 0,
+              "witnesses": [
+                {
+                  "slot_vertices": [
+                    5274,
+                    5278
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      5274,
+                      5278
+                    ],
+                    "retained_face_id": 13708,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "-4495402908040656550524328104062781545596862857216/154479",
+                      "-4787287719067703823126398635102579987950595997696/51493",
+                      "25376932301563478869852529052752851343942069780480/154479"
+                    ],
+                    "point_world_m": [
+                      -0.04077836593685025,
+                      -0.13027826945430698,
+                      0.23019734891768945
+                    ]
+                  }
+                }
+              ],
+              "elapsed_s": 0.003983750008046627,
+              "coordinate_changes": 0
+            },
+            "dp": {
+              "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+              "coordinate_changes": 0,
+              "topology": {
+                "vertices": 8,
+                "edges": 13,
+                "faces": 6,
+                "euler_characteristic": 1
+              },
+              "statistics": {
+                "triangle_candidates": 38,
+                "eligible_triangles": 30,
+                "rejected_external_triangles": 8,
+                "external_exact_pairs": 24,
+                "external_aabb_candidates": 966,
+                "dp_solves": 1,
+                "branches_popped": 1,
+                "self_pair_conflicts": 0
+              },
+              "selection_cost": 1.0033392720755607,
+              "conflict_samples": [],
+              "elapsed_s": 0.018541208002716303
+            }
+          }
+        ]
+      },
+      {
+        "group_index": 1,
+        "choice": "minimum_face_cover_0",
+        "ring": 1,
+        "removed_face_rows": [
+          18044,
+          18046,
+          18075,
+          18214,
+          18215,
+          18221,
+          18236,
+          18246,
+          18247,
+          18268
+        ],
+        "pieces": [
+          {
+            "piece_index": 0,
+            "removed_face_rows": [
+              18044,
+              18046,
+              18075,
+              18214,
+              18215,
+              18221,
+              18236,
+              18246,
+              18247,
+              18268
+            ],
+            "boundary_loop": [
+              7527,
+              7684,
+              7861,
+              7910,
+              7923,
+              7930,
+              7931,
+              7933,
+              7936,
+              7942,
+              7949,
+              7626
+            ],
+            "old_faces": 10,
+            "new_faces": [
+              [
+                7527,
+                7684,
+                7626
+              ],
+              [
+                7684,
+                7861,
+                7626
+              ],
+              [
+                7861,
+                7910,
+                7626
+              ],
+              [
+                7910,
+                7936,
+                7626
+              ],
+              [
+                7936,
+                7949,
+                7626
+              ],
+              [
+                7936,
+                7942,
+                7949
+              ],
+              [
+                7910,
+                7930,
+                7936
+              ],
+              [
+                7930,
+                7931,
+                7936
+              ],
+              [
+                7931,
+                7933,
+                7936
+              ],
+              [
+                7910,
+                7923,
+                7930
+              ]
+            ],
+            "chord_pruning": {
+              "method": "exact_segment_triangle_necessary_chord_constraints",
+              "slot_chords": 66,
+              "blocked_chords": 11,
+              "blocked_boundary_edges": [],
+              "exact_segment_queries": 3316,
+              "aabb_candidates_visited": 3316,
+              "cache_hits": 0,
+              "witnesses": [
+                {
+                  "slot_vertices": [
+                    7527,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7527,
+                      7942
+                    ],
+                    "retained_face_id": 18217,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "3842806105538984869531106262166386936759784877064192/526794611",
+                      "-53527618824784404713699901602605510816244006956040192/526794611",
+                      "11599231565631001783670825163952867913033276909944832/75256373"
+                    ],
+                    "point_world_m": [
+                      0.010222045142352093,
+                      -0.14238598590776883,
+                      0.21598151402096757
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7684,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7684,
+                      7942
+                    ],
+                    "retained_face_id": 18217,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "3726681503987004310648828834860635339627824706224128/510875509",
+                      "-51910149104222944886806962012972424782123322612645888/510875509",
+                      "78740910850131676636180153211645094074875570485723136/510875509"
+                    ],
+                    "point_world_m": [
+                      0.010222046225677827,
+                      -0.14238618007938192,
+                      0.2159812234291835
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7861,
+                    7930
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7861,
+                      7930
+                    ],
+                    "retained_face_id": 18201,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "5006560820371287103185975433247217460462456613634048/705999905",
+                      "-71744718501969811010233047355396731605847878651609088/705999905",
+                      "108796736399506154794294463654635568708900995156934656/705999905"
+                    ],
+                    "point_world_m": [
+                      0.009937233616391324,
+                      -0.1424019509750877,
+                      0.21594436282562943
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7861,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7861,
+                      7942
+                    ],
+                    "retained_face_id": 18201,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "3332605041716642878974938891536498290407775680856064/467175717",
+                      "-47474110171519641718420736190319661954365281997422592/467175717",
+                      "71995542288975114977235634342156594990919957614690304/467175717"
+                    ],
+                    "point_world_m": [
+                      0.009996183785294377,
+                      -0.1423990915147194,
+                      0.21595138440762163
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7861,
+                    7949
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7861,
+                      7949
+                    ],
+                    "retained_face_id": 18236,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "686980460355528142409648636597420047423026233344/94167",
+                      "-9568195880043937624236082917970202814780350136320/94167",
+                      "4838031739257812096376338641641557257112212471808/31389"
+                    ],
+                    "point_world_m": [
+                      0.010222951396108588,
+                      -0.14238425555730364,
+                      0.21598414879660696
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7910,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7910,
+                      7942
+                    ],
+                    "retained_face_id": 18217,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "65928554503114709325189680699481617795016898379776/9037903",
+                      "-918341875753600132168425201142507207517286711689216/9037903",
+                      "1393007630414256969423311878227110620271290878001152/9037903"
+                    ],
+                    "point_world_m": [
+                      0.010222015237425058,
+                      -0.1423860225340648,
+                      0.2159814564608904
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7923,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7923,
+                      7942
+                    ],
+                    "retained_face_id": 18235,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "583701837998677339653139501492396596690254036992/80005",
+                      "-8129231745810121746682536995469763775247138422784/80005",
+                      "12331257486316425945778505714643041309715876282368/80005"
+                    ],
+                    "point_world_m": [
+                      0.010223617139067805,
+                      -0.14238460048177334,
+                      0.21598365325628538
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7930,
+                    7949
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7930,
+                      7949
+                    ],
+                    "retained_face_id": 18234,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "10848600207165330331618269017102677776318687346688/1486883",
+                      "-151080413461445785181274064064099044740076455067648/1486883",
+                      "229175458215783328585246044676605036353164461211648/1486883"
+                    ],
+                    "point_world_m": [
+                      0.01022415806110815,
+                      -0.14238427056673753,
+                      0.2159841881699592
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7931,
+                    7949
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7931,
+                      7949
+                    ],
+                    "retained_face_id": 18236,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "146495747192719069311461178091802986452944420864/20079",
+                      "-26522631112308852660912810605739289595375817588736/261027",
+                      "13410829848860985289965326287862137726338221473792/87009"
+                    ],
+                    "point_world_m": [
+                      0.010223829153407733,
+                      -0.14238420641363542,
+                      0.2159842691276801
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7933,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7933,
+                      7942
+                    ],
+                    "retained_face_id": 18234,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "443928590413034739957016142124099554547354042368/60843",
+                      "-6182195872919514723216155317322523529883731099648/60843",
+                      "9377804370705821439119621906829220941775989899264/60843"
+                    ],
+                    "point_world_m": [
+                      0.01022428959807482,
+                      -0.14238452382159555,
+                      0.21598380854672888
+                    ]
+                  }
+                },
+                {
+                  "slot_vertices": [
+                    7626,
+                    7942
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      7626,
+                      7942
+                    ],
+                    "retained_face_id": 18217,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "17144843902983040418274310818580504207444756515520512/2350316971",
+                      "-238815637000122276204222556733548864275680624033923072/2350316971",
+                      "362253545882537873962056534896939900805403256012406784/2350316971"
+                    ],
+                    "point_world_m": [
+                      0.010222043974824721,
+                      -0.142385894972557,
+                      0.2159816500518389
+                    ]
+                  }
+                }
+              ],
+              "elapsed_s": 0.021743457997217774,
+              "coordinate_changes": 0
+            },
+            "dp": {
+              "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+              "coordinate_changes": 0,
+              "topology": {
+                "vertices": 12,
+                "edges": 21,
+                "faces": 10,
+                "euler_characteristic": 1
+              },
+              "statistics": {
+                "triangle_candidates": 130,
+                "eligible_triangles": 127,
+                "rejected_external_triangles": 3,
+                "external_exact_pairs": 8,
+                "external_aabb_candidates": 9947,
+                "dp_solves": 1,
+                "branches_popped": 1,
+                "self_pair_conflicts": 0
+              },
+              "selection_cost": 0.04582924694895228,
+              "conflict_samples": [],
+              "elapsed_s": 0.0958678750321269
+            }
+          }
+        ]
+      },
+      {
+        "group_index": 2,
+        "choice": "minimum_face_cover_0",
+        "ring": 0,
+        "removed_face_rows": [
+          19081,
+          19113
+        ],
+        "pieces": [
+          {
+            "piece_index": 0,
+            "removed_face_rows": [
+              19081,
+              19113
+            ],
+            "boundary_loop": [
+              8349,
+              8684,
+              8683,
+              8362
+            ],
+            "old_faces": 2,
+            "new_faces": [
+              [
+                8349,
+                8683,
+                8362
+              ],
+              [
+                8349,
+                8684,
+                8683
+              ]
+            ],
+            "chord_pruning": {
+              "method": "exact_segment_triangle_necessary_chord_constraints",
+              "slot_chords": 6,
+              "blocked_chords": 1,
+              "blocked_boundary_edges": [],
+              "exact_segment_queries": 1076,
+              "aabb_candidates_visited": 1076,
+              "cache_hits": 0,
+              "witnesses": [
+                {
+                  "slot_vertices": [
+                    8362,
+                    8684
+                  ],
+                  "witness": {
+                    "reason": "exact_segment_surface_contact",
+                    "physical_vertices": [
+                      8362,
+                      8684
+                    ],
+                    "retained_face_id": 19448,
+                    "shared_vertex_ids": [],
+                    "point_lattice_rationals": [
+                      "28226331487781159690867889422239242505949608989949952/2561526579",
+                      "-1378039544851345699179085805552570662116824199278362624/12807632895",
+                      "647251071647796715709130456250408309320091926043557888/4269210965"
+                    ],
+                    "point_world_m": [
+                      0.015441383779352526,
+                      -0.1507729581110125,
+                      0.2124495463373405
+                    ]
+                  }
+                }
+              ],
+              "elapsed_s": 0.0048264998476952314,
+              "coordinate_changes": 0
+            },
+            "dp": {
+              "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+              "coordinate_changes": 0,
+              "topology": {
+                "vertices": 4,
+                "edges": 5,
+                "faces": 2,
+                "euler_characteristic": 1
+              },
+              "statistics": {
+                "triangle_candidates": 2,
+                "eligible_triangles": 2,
+                "rejected_external_triangles": 0,
+                "external_exact_pairs": 0,
+                "external_aabb_candidates": 471,
+                "dp_solves": 1,
+                "branches_popped": 1,
+                "self_pair_conflicts": 0
+              },
+              "selection_cost": 1.0055589316795521,
+              "conflict_samples": [],
+              "elapsed_s": 0.010189583990722895
+            }
+          }
+        ]
+      }
+    ],
+    "coordinate_changes": 0,
+    "search_policy": "try inventory disk choices in ring order through ring 4; retain exact failure reason per attempt"
+  },
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/candidate-I-one-sided-dp-f32-typed.npz",
+    "sha256": "e734d962309c441fb0ce4f4ee304a33374d24f931763858372565803e71f41a3",
+    "points": 10598,
+    "faces": 21192,
+    "source_view": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/I-one-sided-DP-derived-source.npz",
+      "sha256": "ce51748e50690c69bdf9f3b582c0d34680fa3f1faecbcbf6641dd012bde1649a"
+    },
+    "new_operation_id": 61000002,
+    "face_ancestry_entries": 21690,
+    "retained_point_coordinates_bitwise_equal_input": true,
+    "retained_source_id_3_face_count": 5205,
+    "cap_mask_reconciled_by_identity": 41
+  },
+  "structure": {
+    "edge_incidence_counts": {
+      "2": 31788
+    },
+    "closed_all_edges_incidence_2": true,
+    "zero_area_faces_after_F32_widened_to_F64": [],
+    "minimum_double_area_m2": 3.3306690738754696e-16,
+    "euler_characteristic": 2
+  },
+  "cap_identity": {
+    "I": {
+      "source_id": 3,
+      "source_cap_face_count": 41,
+      "candidate_cap_rows_by_identity": 41,
+      "exact_oriented_source_cap_face_descendants": 41,
+      "missing_face_ids": [],
+      "ambiguous_face_ids": [],
+      "source_cap_ring_vertex_count": 45,
+      "candidate_cap_ring_vertex_count": 45,
+      "exact_F32_cap_ring_coordinate_set_equal": true,
+      "declared_cap_mask_true_count": 41,
+      "declared_cap_mask_matches_identity_rows": true,
+      "pass": true
+    },
+    "O": {
+      "source_id": 1,
+      "source_cap_face_count": 41,
+      "candidate_cap_rows_by_identity": 41,
+      "exact_oriented_source_cap_face_descendants": 41,
+      "missing_face_ids": [],
+      "ambiguous_face_ids": [],
+      "source_cap_ring_vertex_count": 45,
+      "candidate_cap_ring_vertex_count": 45,
+      "exact_F32_cap_ring_coordinate_set_equal": true,
+      "declared_cap_mask_true_count": 41,
+      "declared_cap_mask_matches_identity_rows": true,
+      "pass": true
+    }
+  },
+  "source_locality": {
+    "I": {
+      "outside_support_source_faces": 4048,
+      "exact_oriented_coordinate_descendants": 4048,
+      "missing_or_changed_face_ids": [],
+      "ambiguous_face_ids": [],
+      "pass": true,
+      "support_bbox_min_m": [
+        -0.10524275730848312,
+        -0.2983486710071564,
+        0.024107331228256226
+      ],
+      "support_bbox_max_m": [
+        0.08050553332567215,
+        -0.026447688978910446,
+        0.252235120344162
+      ]
+    },
+    "O": {
+      "outside_support_source_faces": 4046,
+      "exact_oriented_coordinate_descendants": 4046,
+      "missing_or_changed_face_ids": [],
+      "ambiguous_face_ids": [],
+      "pass": true,
+      "support_bbox_min_m": [
+        -0.10761340539455413,
+        -0.2983486710071564,
+        0.021957320910692215
+      ],
+      "support_bbox_max_m": [
+        0.08945266734361648,
+        -0.024053394612669945,
+        0.2546603439331055
+      ]
+    }
+  },
+  "exact_f32": {
+    "owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/tools/cardiac_cavity_intersections.py",
+    "owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "I_self": {
+      "count": 0,
+      "aabb_candidate_pairs": 406897,
+      "allowed_shared_vertex_or_edge_pairs": 167051,
+      "witness_path": null
+    },
+    "noncap_O_I_cross": {
+      "count": 0,
+      "aabb_candidate_pairs": 266318,
+      "allowed_shared_vertex_or_edge_pairs": 0,
+      "witness_path": null
+    }
+  },
+  "cheap_gates": {
+    "closed_F32_index_topology": true,
+    "no_F32_zero_area_faces": true,
+    "source_I_caps_and_ring_exact": true,
+    "source_O_caps_and_ring_exact": true,
+    "source_I_back_outside_support_exact": true,
+    "source_O_back_outside_support_exact": true,
+    "exact_I_self_zero": true,
+    "exact_noncap_O_I_cross_zero": true
+  },
+  "cheap_gates_pass": true,
+  "source_I_containment_and_capacity": {
+    "source_I_minus_candidate_I": {
+      "status": "Error.NoError",
+      "vertices": 2154,
+      "faces": 3344,
+      "volume_m3": 1.0355587177640806e-11,
+      "volume_ml": 1.0355587177640806e-05
+    },
+    "I_minus_O": {
+      "status": "Error.NoError",
+      "vertices": 85,
+      "faces": 142,
+      "volume_m3": 5.197790832715312e-09,
+      "volume_ml": 0.0051977908327153115
+    },
+    "D037_minus_I": {
+      "status": "Error.NoError",
+      "vertices": 10945,
+      "faces": 21654,
+      "volume_m3": 4.8259446238436935e-05,
+      "volume_ml": 48.25944623843694
+    },
+    "O_minus_I": {
+      "status": "Error.NoError",
+      "vertices": 15193,
+      "faces": 30406,
+      "volume_m3": 0.0034733942150702046,
+      "volume_ml": 3473.3942150702046
+    },
+    "I_minus_D037": {
+      "status": "Error.NoError",
+      "vertices": 77488,
+      "faces": 156784,
+      "volume_m3": 0.011509983150009583,
+      "volume_ml": 11509.983150009582
+    },
+    "regional_capacity_after_D037": {
+      "skin23": {
+        "volume_m3": 0.00026286328211489764,
+        "volume_ml": 262.86328211489763,
+        "immutable_parent_mass_kg": 0.2380884346646555,
+        "density_kg_m3": 905.7500642504607,
+        "allowed_density_kg_m3": [
+          900.0,
+          1100.0
+        ],
+        "allowed_volume_m3": [
+          0.0002164440315133232,
+          0.0002645427051829506
+        ],
+        "passes_capacity": true,
+        "parent_tet_count": 1990
+      },
+      "fat23": {
+        "volume_m3": 0.0007737939386505732,
+        "volume_ml": 773.7939386505732,
+        "immutable_parent_mass_kg": 0.6823952617656361,
+        "density_kg_m3": 881.8824078095931,
+        "allowed_density_kg_m3": [
+          850.0,
+          950.0
+        ],
+        "allowed_volume_m3": [
+          0.0007183108018585644,
+          0.0008028179550183955
+        ],
+        "passes_capacity": true,
+        "parent_tet_count": 1990
+      }
+    },
+    "sphere16_skin_kernel": {
+      "nominal_radius_m": 0.0009,
+      "segments": 16,
+      "center_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "min_vertex_radius_m": 0.0009,
+      "max_vertex_radius_m": 0.0009000000000000002,
+      "measured_kernel_inradius_m": 0.0008588663955446123,
+      "max_face_plane_distance_m": 0.000867159154010593,
+      "statement": "Measured polyhedral sphere16 support; nominal parameter is not an exact directional minimum-thickness guarantee."
+    },
+    "physical_admission": false,
+    "mass_mapping": false
+  },
+  "elapsed_s": 8.148613458033651
+}

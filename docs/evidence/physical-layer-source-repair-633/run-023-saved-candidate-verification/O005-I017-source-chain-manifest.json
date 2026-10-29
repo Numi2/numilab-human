@@ -1,0 +1,385 @@
+{
+  "schema": "numi.O005-I017-physical-source-chain.v1",
+  "status": "FROZEN_EVIDENCE_PHYSICAL_ADMISSION_PENDING",
+  "physical_admission": false,
+  "purpose": "Freeze exact O005 emitted geometry and the I005-to-I018 local repair and normalization source chain without replacing failed evidence.",
+  "important_limits": [
+    "O005 producer260 PASS validates typed schema and lineage only; it does not admit physical geometry.",
+    "I016 and I017 source repair has self, cap, and cross gates only; it did not prove minimum skin thickness or conservative native mass admission.",
+    "The nominal 0.9 mm erosion radius and sphere16 inradius are construction diagnostics, not by themselves a measured surface-thickness acceptance.",
+    "Fine O005 and I017 have independent vertex and face row domains; do not claim a rowwise paired rim. Authenticated row pairing applies only to the separate 410 coarse mechanical surface."
+  ],
+  "O005_verification_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-023-saved-candidate-verification/O005-saved-candidate-verification.json",
+    "exists": true,
+    "sha256": "25f04c4159fde5e98eac467e416f6d2558453d8b66626066066b9f3f558d182d",
+    "bytes": 4126,
+    "status": "PASS_METADATA_ROUNDTRIP",
+    "physical_admission": false
+  },
+  "source_chain": [
+    {
+      "stage": "O005 protected-cap construction and emission",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/receipt.json",
+          "exists": true,
+          "sha256": "55fa007757a57b71644382f7fe906388228774db36330c25b38376de15d4d64c",
+          "bytes": 18811,
+          "status": "FAILED_PROTECTED_CAP_MINIMUM_SKIN_COUNTERFACTUAL",
+          "physical_admission": false,
+          "note": "Original construction/emission result and failure context."
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-protected-cap-f32.npz",
+          "exists": true,
+          "sha256": "c2eb1c82fcbf84105b26adef36abe0f9c4603e8f35180ec7b5aef295a4bfcc1e",
+          "bytes": 279544,
+          "note": "Authoritative emitted geometry consumed by metadata-only schema view."
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-003-locality/build_protected_cap_minthickness_005.py",
+          "exists": true,
+          "sha256": "9db7eb3e26611bb3c7d59ab22b440b6f161cb702040d36a9b92f2c42d2947913",
+          "bytes": 28708,
+          "note": "Construction source."
+        }
+      ]
+    },
+    {
+      "stage": "I005 protected-cap construction baseline",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/receipt.json",
+          "exists": true,
+          "sha256": "55fa007757a57b71644382f7fe906388228774db36330c25b38376de15d4d64c",
+          "bytes": 18811,
+          "status": "FAILED_PROTECTED_CAP_MINIMUM_SKIN_COUNTERFACTUAL",
+          "physical_admission": false
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/I-candidate-f64.npz",
+          "exists": true,
+          "sha256": "caecdae97cc82db2796ede08cb6f00bd39719eb508af4da54a6771b6184c3522",
+          "bytes": 326710
+        }
+      ]
+    },
+    {
+      "stage": "I006 F32 seam conditioning",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/output/report.json",
+          "exists": true,
+          "sha256": "23de4c2137e399ad2e9104208f87daca5a28dca30f5723560497faee632e359c",
+          "bytes": 7320,
+          "status": null,
+          "physical_admission": null
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/output/candidate-f32.npz",
+          "exists": false
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/authoring-source-chain/condition_I_f32_seams_271.py",
+          "exists": true,
+          "sha256": "32d37d48b3564c320f736cbda0663c88f16b003a82a8cec4abfc0b7c536bf349",
+          "bytes": 10737
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-006-I-derived-sliver-condition/authoring-source-chain/condition_I_protected_support_slivers_006.py",
+          "exists": true,
+          "sha256": "5bffdbe1f8e495a1fab0a5ccffe729adb0c2677d95d2609cded81e421d55d15c",
+          "bytes": 12583
+        }
+      ]
+    },
+    {
+      "stage": "I local repair attempt 011",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-011-I-one-sided-dp-remesh/repair_I_self_pairs_011.py",
+          "exists": true,
+          "sha256": "cc5c254e9e2b1a8a171a1331418a38ef7a89e11903da6aca05be16471cde2fa3",
+          "bytes": 29465
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-011-I-one-sided-dp-remesh/output/report.json",
+          "exists": true,
+          "sha256": "7a8735b32b20a96622806b9126090f08fa0e9017f21f2323a3b771e184b1466e",
+          "bytes": 4614,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "FileNotFoundError",
+          "error_message": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002/output/outer-region-dilation-f64-stage-f64.npz",
+          "note": "Local failure or partial witness attempt retained."
+        }
+      ],
+      "outcome": "Saved source or report is pinned; missing report means no durable report file was present."
+    },
+    {
+      "stage": "I local repair attempt 012",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-012-I-one-sided-dp-remesh/repair_I_self_pairs_012.py",
+          "exists": true,
+          "sha256": "a63f14c8a05a74a22f98eb17205ef08390850057bdf39697f5f9906ad73cce62",
+          "bytes": 29528
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-012-I-one-sided-dp-remesh/output/report.json",
+          "exists": true,
+          "sha256": "ea39eb0184396e54841e97884d67061253d3c546bf4bc7cb424567637ed3533c",
+          "bytes": 6171,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "TypeError",
+          "error_message": "unsupported operand type(s) for &: 'set' and 'bool'",
+          "note": "Local failure or partial witness attempt retained."
+        }
+      ],
+      "outcome": "Saved source or report is pinned; missing report means no durable report file was present."
+    },
+    {
+      "stage": "I local repair attempt 013",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-013-I-one-sided-dp-remesh/repair_I_self_pairs_013.py",
+          "exists": true,
+          "sha256": "cc35c3073c1c075b2ff5f47c9e1126467d968aa6cd99daa28073e1695e4132fd",
+          "bytes": 29551
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-013-I-one-sided-dp-remesh/output/report.json",
+          "exists": true,
+          "sha256": "2d306dd855d67f0ca831746f659032bfcc7248dd9e30c8c519c25625d506824a",
+          "bytes": 9526,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "ValueError",
+          "error_message": "no disk triangulation passes individual exact constraints: {'triangle_candidates': 2, 'eligible_triangles': 1, 'rejected_external_triangles': 1, 'external_exact_pairs': 3, 'external_aabb_candidates': 41, 'dp_solves': 1, 'branches_popped': 0, 'self_pair_conflicts': 0}",
+          "note": "Local failure or partial witness attempt retained."
+        }
+      ],
+      "outcome": "Saved source or report is pinned; missing report means no durable report file was present."
+    },
+    {
+      "stage": "I local repair attempt 014",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-014-I-one-sided-dp-remesh/repair_I_self_pairs_014.py",
+          "exists": true,
+          "sha256": "6ce0e391d2e74053480be4407dceacb50277d8e7e5d276ac6d0119d3ab2909fe",
+          "bytes": 31161
+        }
+      ],
+      "outcome": "Saved source or report is pinned; missing report means no durable report file was present."
+    },
+    {
+      "stage": "I local repair attempt 015",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-015-I-one-sided-dp-remesh/repair_I_self_pairs_015.py",
+          "exists": true,
+          "sha256": "1d08acfcef859a172782a283145712118a98f8309190df70bc343da01bfe2f15",
+          "bytes": 31068
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-015-I-one-sided-dp-remesh/output/report.json",
+          "exists": true,
+          "sha256": "40fd09e9821512943e459ed2d9859cabbf072b516f46b85eeddb475a3ab3b614",
+          "bytes": 32278,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "NameError",
+          "error_message": "name 'removed_mask' is not defined",
+          "note": "Local failure or partial witness attempt retained."
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-015-I-one-sided-dp-remesh/output/I-one-sided-DP-derived-source.npz",
+          "exists": true,
+          "sha256": "ce51748e50690c69bdf9f3b582c0d34680fa3f1faecbcbf6641dd012bde1649a",
+          "bytes": 3894
+        }
+      ],
+      "outcome": "Saved source or report is pinned; missing report means no durable report file was present."
+    },
+    {
+      "stage": "I016 accepted local source repair checkpoint",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/report.json",
+          "exists": true,
+          "sha256": "c2f056f5399c9b882aa9c38aeb5686b14027a5dd0d92fd6c6f948281f4ea56b9",
+          "bytes": 38449,
+          "status": "POST_EMISSION_GATES_COMPLETE",
+          "physical_admission": false
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/candidate-I-one-sided-dp-f32-typed.npz",
+          "exists": true,
+          "sha256": "e734d962309c441fb0ce4f4ee304a33374d24f931763858372565803e71f41a3",
+          "bytes": 548984
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/output/producer260-validation.json",
+          "exists": true,
+          "sha256": "2db0e0b1bb1d1747622097bb8202a63d35290cebdd10712a2cd54d2df6857c56",
+          "bytes": 2375,
+          "status": "ERROR",
+          "physical_admission": null,
+          "error_type": "ValueError",
+          "error_message": "I candidate source ancestry invalid: 3: original source identity arrays absent; 209586: derived source has no pinned parent asset; 209586: derived source identity/face arrays absent"
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-016-I-one-sided-dp-remesh/repair_I_self_pairs_016.py",
+          "exists": true,
+          "sha256": "c0d950a3524395ef783837a2fc5ca0321358d73a44cecbe9af30bea0ad735d9f",
+          "bytes": 31167
+        }
+      ]
+    },
+    {
+      "stage": "I017 typed source-schema normalization",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-017-I-source-schema-normalization/output/normalization-receipt.json",
+          "exists": true,
+          "sha256": "3ae27d034723bb4d9ff8e9fde07223e79425082560a2be49fc9e54298c16710a",
+          "bytes": 5557,
+          "status": "SCHEMA_NORMALIZED",
+          "physical_admission": false
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-017-I-source-schema-normalization/output/candidate-I-one-sided-dp-f32-typed-schema-normalized.npz",
+          "exists": true,
+          "sha256": "22cd82aea77e3779a22e73b3161e0619cc08ea9a243fd9912e28ea919772e630",
+          "bytes": 550499
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-017-I-source-schema-normalization/output/source002-I-identity-normalized-view.npz",
+          "exists": true,
+          "sha256": "6bf518ea12278de884940cbadfa849fbc2cffda321e5b0599195288eb688d77b",
+          "bytes": 129446
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-017-I-source-schema-normalization/output/I-added-source-identity-normalized-view.npz",
+          "exists": true,
+          "sha256": "d95c8be00cb201b4b1ad0cbd9ad5c6a4527b4c66d182303bdf973da4181ba9a6",
+          "bytes": 441743
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-017-I-source-schema-normalization/normalize_source_schema_017.py",
+          "exists": true,
+          "sha256": "a53d89628acd74dddaa2a078b32ac27cfdb7c6da530cd7143c665328a56eb10c",
+          "bytes": 8137
+        }
+      ]
+    },
+    {
+      "stage": "I018 unchanged producer260 validation",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-018-I-normalized-schema-producer-validation/producer260-validation.json",
+          "exists": true,
+          "sha256": "5df647cc81b1ad44f4f8861f09e6811fc1f40041bcb928a5c98119b3241c5dec",
+          "bytes": 4947,
+          "status": "PASS",
+          "physical_admission": null
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-018-I-normalized-schema-producer-validation/validate_producer260_018.py",
+          "exists": true,
+          "sha256": "88e95f6d56497c8e4e5adbff8b11658ee433545f422773c8563d67ba670d55a0",
+          "bytes": 5160
+        }
+      ]
+    },
+    {
+      "stage": "O005 metadata or producer attempt 019",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-019-O-producer260-validation/validate_O005_producer260.py",
+          "exists": true,
+          "sha256": "672428647311800aa33d689e890935b4b4ef5a23751453d324798891d3fe6b0c",
+          "bytes": 1941
+        }
+      ],
+      "outcome": "No geometry regeneration was performed."
+    },
+    {
+      "stage": "O005 metadata or producer attempt 020",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-020-O005-source-schema-normalization/output/normalization-receipt.json",
+          "exists": true,
+          "sha256": "810a020f5365fa28066197e22cb55dd1446e8398aabec18d162a04bbed67dbd5",
+          "bytes": 1809,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "ValueError",
+          "error_message": "O005 points_f32 differ from one canonical cast of pinned F64"
+        }
+      ],
+      "outcome": "No geometry regeneration was performed."
+    },
+    {
+      "stage": "O005 metadata or producer attempt 021",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-021-O005-source-schema-normalization/output/normalization-receipt.json",
+          "exists": true,
+          "sha256": "fe26fab8b4f7bd66770daac99bf9558cd3b69ff6eae5501d750a8ff120d72db4",
+          "bytes": 1777,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "ValueError",
+          "error_message": "O005 F64/F32 indexed topology domains differ"
+        }
+      ],
+      "outcome": "No geometry regeneration was performed."
+    },
+    {
+      "stage": "O005 metadata or producer attempt 022",
+      "evidence": [
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/normalization-receipt.json",
+          "exists": true,
+          "sha256": "3bc30dbbca193cf5f81e9bee62c18042c2b272ce5e5e911ad57c0059509dff30",
+          "bytes": 1849,
+          "status": "ERROR",
+          "physical_admission": false,
+          "error_type": "TypeError",
+          "error_message": "int() argument must be a string, a bytes-like object or a real number, not 'list'"
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/producer260-validation.json",
+          "exists": true,
+          "sha256": "8d3738331b6b449a29a59429cf37e49437e1cee8af591ebe571f0a0dbc0099b2",
+          "bytes": 5556,
+          "status": "PASS",
+          "physical_admission": false
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/candidate-O-protected-cap-f32-typed-schema-normalized.npz",
+          "exists": true,
+          "sha256": "5e8693f0f06d9649f714e0822e6179502e68663b804b1af45a4c45938557bcef",
+          "bytes": 367813
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/source002-O-identity-normalized-view.npz",
+          "exists": true,
+          "sha256": "ca91ff9442994e16fe2592a4cef59e48072e3390662d09e95746a5bdce1deebf",
+          "bytes": 128639
+        },
+        {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-022-O005-source-schema-normalization/output/O005-protected-support-identity-normalized-view.npz",
+          "exists": true,
+          "sha256": "57d1e6d604432248390686d0ad0018267db98f4ea534ff45e1e2da434dd59593",
+          "bytes": 233356
+        }
+      ],
+      "outcome": "No geometry regeneration was performed."
+    }
+  ]
+}

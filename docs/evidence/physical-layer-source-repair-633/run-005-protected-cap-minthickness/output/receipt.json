@@ -1,0 +1,520 @@
+{
+  "schema": "numi.source002-protected-cap-minimum-skin-counterfactual.v1",
+  "status": "FAILED_PROTECTED_CAP_MINIMUM_SKIN_COUNTERFACTUAL",
+  "physical_admission": false,
+  "construction": {
+    "outer": "Oold UNION (outer_dilation minus common_cap_guard)",
+    "inner": "Iold UNION ((inner_dilation minus common_cap_guard) INTERSECT erode(Onew, 0.9mm sphere16))",
+    "common_cap_guard": "Union of convex hulls of the four pinned O/I cap vertex components, Minkowski-dilated by sphere16 radius 2.35mm; the exact same guard is subtracted from both cached supports.",
+    "minimum_skin_parameter_source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/build_union_only_local.py",
+    "minimum_skin_radius_m": 0.0009,
+    "minimum_skin_kernel_segments": 16,
+    "counterfactual_only": true
+  },
+  "inputs": {
+    "O_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-O-closed-f32-as-f64.npz",
+      "sha256": "bfcbc78e3b07fb923d4cf5263d8ec2745cd442393c4b540d3119b4bf39be9f9e"
+    },
+    "I_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-024-coupled-paired-thickness/source002-I-closed-f32-as-f64.npz",
+      "sha256": "40d41b951a0fef611ec51e7edadb445582d86698142b2e607a09a3afe4e8244a"
+    },
+    "D037": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-038-run037-fat-occupancy/closed-inputs/D-closed-run037-f32.npz",
+      "sha256": "0dfc1bd8b6705b2c884c5b816a62a4bbb71e69b2865a9eee849ce16690b2366b"
+    },
+    "counter_O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/O-closed-counterfactual-f32.npz",
+      "sha256": "9253ffae8e4a78989f7d0bc20393cfc2f9bc8d27b7bd64639844b0ae00404e8a"
+    },
+    "counter_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/I-closed-counterfactual-f32.npz",
+      "sha256": "574b9440d959247e184c172ee8b107289c985e7a5c0f190e63035686c139796b"
+    },
+    "outer_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/outer-region-dilation-f64-stage-f64.npz",
+      "sha256": "3ab9e45f318853cc915ba0516c7dc882f71126e9ff067bdd1087be228790a0a9"
+    },
+    "inner_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-002/output/inner-region-dilation-f64-stage-f64.npz",
+      "sha256": "a4013282b57cac5c6123e7395b42e2a97d42a2194a2f7255395970b0865999f4"
+    },
+    "source002_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/candidate.npz",
+      "sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54"
+    },
+    "parent_mass_csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "geometry_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/build_union_only_local.py",
+      "sha256": "1d969d84ef3ec98811c2c68bd2330bc17f8da6ae9a42090fe40b6aed764543f6"
+    },
+    "exact_owner": {
+      "path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/collision-free-seam-records-owner-315/src/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    }
+  },
+  "baseline_delta": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-003-locality/baseline-delta-report.json",
+    "sha256": "1a5525b1654dcc84b5e497caec37f1fa92539fc37f93da97f28a2b5e0c1d745d",
+    "status": "COMPLETE_BASELINE_COUNTERFACTUAL_DELTA",
+    "baseline_open_OI_pairs": 0,
+    "counter_open_OI_pairs": 22,
+    "baseline_manifold": {
+      "D037_minus_Iold": {
+        "status": "Error.NoError",
+        "vertices": 14689,
+        "faces": 29226,
+        "volume_m3": 7.006090075932838e-05,
+        "genus": -37
+      },
+      "Iold_minus_Oold": {
+        "status": "Error.NoError",
+        "vertices": 65,
+        "faces": 102,
+        "volume_m3": 5.197791019079273e-09,
+        "genus": -6
+      },
+      "Oold_minus_Iold": {
+        "status": "Error.NoError",
+        "vertices": 4875,
+        "faces": 9770,
+        "volume_m3": 0.0034577132168400523,
+        "genus": 6
+      },
+      "Iold_minus_D037": {
+        "status": "Error.NoError",
+        "vertices": 68475,
+        "faces": 138674,
+        "volume_m3": 0.011257531093623686,
+        "genus": 432
+      }
+    },
+    "counter_manifold": {
+      "D037_minus_Icounter": {
+        "status": "Error.NoError",
+        "vertices": 10861,
+        "faces": 21502,
+        "volume_m3": 4.822415102021186e-05,
+        "genus": -54
+      },
+      "Icounter_minus_Ocounter": {
+        "status": "Error.NoError",
+        "vertices": 61,
+        "faces": 106,
+        "volume_m3": 7.559171094410698e-10,
+        "genus": -3
+      },
+      "Ocounter_minus_Icounter": {
+        "status": "Error.NoError",
+        "vertices": 8524,
+        "faces": 17056,
+        "volume_m3": 0.0034710622693034762,
+        "genus": 3
+      },
+      "Icounter_minus_D037": {
+        "status": "Error.NoError",
+        "vertices": 71104,
+        "faces": 144000,
+        "volume_m3": 0.011513171638243154,
+        "genus": 449
+      }
+    },
+    "counter_minus_baseline_volume_m3": {
+      "D037_minus_I": -2.183674973911652e-05,
+      "I_minus_O": -4.441873909638203e-09,
+      "O_minus_I": 1.334905246342397e-05,
+      "I_minus_D037": 0.00025564054461946727
+    }
+  },
+  "cap_protection": {
+    "component_hulls": [
+      {
+        "role": "O",
+        "component": 0,
+        "face_rows": [
+          4777,
+          4778,
+          4783,
+          4784,
+          4785,
+          4786,
+          4787,
+          4792,
+          4791,
+          4790,
+          4789,
+          4788,
+          4793,
+          4794,
+          4795,
+          4782,
+          4781,
+          4780,
+          4779
+        ],
+        "vertex_rows": [
+          1365,
+          1392,
+          1393,
+          1394,
+          1395,
+          1426,
+          1427,
+          1428,
+          1430,
+          1470,
+          1471,
+          1513,
+          1514,
+          1515,
+          1516,
+          1561,
+          1562,
+          2316,
+          2317,
+          2318,
+          2319
+        ],
+        "vertex_count": 21,
+        "bbox_min_m": [
+          -0.00727322930470109,
+          -0.15603484213352203,
+          0.20335142314434052
+        ],
+        "bbox_max_m": [
+          0.0189273189753294,
+          -0.13966155052185059,
+          0.21300683915615082
+        ],
+        "hull_volume_m3": 8.76908509138321e-07,
+        "hull_faces": 38
+      },
+      {
+        "role": "O",
+        "component": 1,
+        "face_rows": [
+          4796,
+          4797,
+          4812,
+          4813,
+          4814,
+          4815,
+          4816,
+          4817,
+          4811,
+          4810,
+          4799,
+          4798,
+          4809,
+          4808,
+          4807,
+          4806,
+          4805,
+          4804,
+          4803,
+          4800,
+          4802,
+          4801
+        ],
+        "vertex_rows": [
+          1053,
+          1054,
+          1055,
+          1056,
+          1095,
+          1097,
+          1098,
+          1099,
+          1134,
+          1135,
+          1136,
+          1139,
+          1168,
+          1169,
+          1170,
+          1171,
+          1172,
+          1198,
+          1199,
+          1200,
+          1201,
+          1225,
+          1226,
+          2315
+        ],
+        "vertex_count": 24,
+        "bbox_min_m": [
+          -0.07095112651586533,
+          -0.15598271787166595,
+          0.2029312700033188
+        ],
+        "bbox_max_m": [
+          -0.04452642425894737,
+          -0.13964907824993134,
+          0.21330885589122772
+        ],
+        "hull_volume_m3": 9.265680193332186e-07,
+        "hull_faces": 44
+      },
+      {
+        "role": "I",
+        "component": 0,
+        "face_rows": [
+          4777,
+          4778,
+          4783,
+          4784,
+          4785,
+          4786,
+          4787,
+          4792,
+          4791,
+          4790,
+          4789,
+          4788,
+          4793,
+          4794,
+          4795,
+          4782,
+          4781,
+          4780,
+          4779
+        ],
+        "vertex_rows": [
+          3776,
+          3803,
+          3804,
+          3805,
+          3806,
+          3837,
+          3838,
+          3839,
+          3841,
+          3881,
+          3882,
+          3924,
+          3925,
+          3926,
+          3927,
+          3972,
+          3973,
+          4727,
+          4728,
+          4729,
+          4730
+        ],
+        "vertex_count": 21,
+        "bbox_min_m": [
+          -0.009479156695306301,
+          -0.1581319123506546,
+          0.2023524045944214
+        ],
+        "bbox_max_m": [
+          0.019238701090216637,
+          -0.13877205550670624,
+          0.21305367350578308
+        ],
+        "hull_volume_m3": 1.3114178616579453e-06,
+        "hull_faces": 38
+      },
+      {
+        "role": "I",
+        "component": 1,
+        "face_rows": [
+          4796,
+          4797,
+          4812,
+          4813,
+          4814,
+          4815,
+          4816,
+          4817,
+          4811,
+          4810,
+          4799,
+          4798,
+          4809,
+          4808,
+          4807,
+          4806,
+          4805,
+          4804,
+          4803,
+          4800,
+          4802,
+          4801
+        ],
+        "vertex_rows": [
+          3464,
+          3465,
+          3466,
+          3467,
+          3506,
+          3508,
+          3509,
+          3510,
+          3545,
+          3546,
+          3547,
+          3550,
+          3579,
+          3580,
+          3581,
+          3582,
+          3583,
+          3609,
+          3610,
+          3611,
+          3612,
+          3636,
+          3637,
+          4726
+        ],
+        "vertex_count": 24,
+        "bbox_min_m": [
+          -0.07150841504335403,
+          -0.15649953484535217,
+          0.2007753849029541
+        ],
+        "bbox_max_m": [
+          -0.04235493764281273,
+          -0.13777613639831543,
+          0.2129080593585968
+        ],
+        "hull_volume_m3": 1.5537968607723358e-06,
+        "hull_faces": 44
+      }
+    ],
+    "shared_union": {
+      "status": "Error.NoError",
+      "vertices": 203,
+      "faces": 398,
+      "volume_m3": 3.0413903782173036e-06,
+      "genus": -1
+    },
+    "guard": {
+      "status": "Error.NoError",
+      "vertices": 878,
+      "faces": 1748,
+      "volume_m3": 9.035956922644962e-06,
+      "genus": -1
+    },
+    "guard_bbox_m": [
+      [
+        -0.07385841504335404,
+        -0.1604819123506546,
+        0.1984253849029541
+      ],
+      [
+        0.021588701090216638,
+        -0.13542613639831544,
+        0.2156588558912277
+      ]
+    ],
+    "kernel_radius_m": 0.00235,
+    "kernel_segments": 16,
+    "same_guard_used_for_both_roles": true
+  },
+  "checkpoints": {
+    "shared_cap_guard": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/shared-cap-guard-f64.npz",
+      "sha256": "475bded92b79abfdaf9f106ac96d930dad2c21ef040e8baaf5a9a427ed38de54",
+      "vertices": 878,
+      "faces": 1748,
+      "volume_m3": 9.035956922644962e-06,
+      "status": "Error.NoError"
+    },
+    "outer_support_protected": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/outer-support-protected-f64.npz",
+      "sha256": "64d89b4065183b59c115bddfd4c2125321249d47a91b0c46cd96fe06069032e2",
+      "vertices": 6401,
+      "faces": 12810,
+      "volume_m3": 0.0015666346583430445,
+      "status": "Error.NoError"
+    },
+    "inner_support_protected": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/inner-support-protected-f64.npz",
+      "sha256": "477e2012da7bdb22fbdb414877511f0d46c9687d329d87c127d076f45acd82b9",
+      "vertices": 6184,
+      "faces": 12376,
+      "volume_m3": 0.0013004118696178252,
+      "status": "Error.NoError"
+    },
+    "O_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-candidate-f64.npz",
+      "sha256": "9487c48daa01e54c20ac367ccfb5ebd6b8c93e668c312c09fc5e43e97c1f06d2",
+      "vertices": 4522,
+      "faces": 9040,
+      "volume_m3": 0.068752698473393,
+      "status": "Error.NoError"
+    },
+    "O_minimum_skin_interior": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-minskin-eroded-f64.npz",
+      "sha256": "66463322413d341d206049ee0c0944e7d1a2c211664485a5e51ed0411cb90a91",
+      "vertices": 32307,
+      "faces": 64610,
+      "volume_m3": 0.06717040465569522,
+      "status": "Error.NoError"
+    },
+    "inner_support_clipped": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/inner-support-clipped-f64.npz",
+      "sha256": "82fa1e0ef7e562f3713cff3adf41e7593b38a6ca89807c0033793df5d754c934",
+      "vertices": 12110,
+      "faces": 24228,
+      "volume_m3": 0.0012983132945819948,
+      "status": "Error.NoError"
+    },
+    "I_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/I-candidate-f64.npz",
+      "sha256": "caecdae97cc82db2796ede08cb6f00bd39719eb508af4da54a6771b6184c3522",
+      "vertices": 10620,
+      "faces": 21236,
+      "volume_m3": 0.06527930945068747,
+      "status": "Error.NoError"
+    }
+  },
+  "minimum_skin_clip_removed_addition": {
+    "status": "Error.NoError",
+    "vertices": 7686,
+    "faces": 15188,
+    "volume_m3": 2.0985750358304085e-06,
+    "genus": -45
+  },
+  "pre_emission_caches": {
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/O-pre-emission-f64.npz",
+      "sha256": "4d24439b558fe90cd7ed3de9168984d3b024bf99ef966f518e706fcb8d49ae18",
+      "points_f64": 4522,
+      "faces_f64": 9040,
+      "faces_after_exact_cap_rows": 9040,
+      "cap_faces_removed": 0,
+      "cap_removed_by_source": {},
+      "geometry_sha256": "95df294c5131c092bd9015f717b15712d86e41e7ff5dfeb42d3f3bff524c5075",
+      "provenance_source_ids": [
+        "1",
+        "5852"
+      ]
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-005-protected-cap-minthickness/output/I-pre-emission-f64.npz",
+      "sha256": "22c0639846a91e6b697b6bfc669176e1f13887783b7a01e4491e8b5bd7b70d66",
+      "points_f64": 10620,
+      "faces_f64": 21236,
+      "faces_after_exact_cap_rows": 21236,
+      "cap_faces_removed": 0,
+      "cap_removed_by_source": {},
+      "geometry_sha256": "d3ebd0d0ca3d674a04323de029bda0926ebb42b475fb9cffad28a9394a2d05a5",
+      "provenance_source_ids": [
+        "3",
+        "209586"
+      ]
+    }
+  },
+  "error": "ValueError('No safe Float32 lattice point for geometry vertex 6639')",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-003-locality/build_protected_cap_minthickness_005.py\", line 326, in <module>\n    iout=emit_layer(\"I\",I,Inew,inner_wrap,inner_ent,srcI)\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-038-connected-minkowski-counterfactual-023mm/run-003-locality/build_protected_cap_minthickness_005.py\", line 307, in emit_layer\n    Y,F32,em=emit(prep[\"P64\"],prep[\"PF64\"],np.asarray(source32,np.float32))\n             ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/emit_f32.py\", line 49, in emit\n    if chosen is None:raise ValueError(f'No safe Float32 lattice point for geometry vertex {i}')\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: No safe Float32 lattice point for geometry vertex 6639\n",
+  "elapsed_s": 4.775872749974951
+}
