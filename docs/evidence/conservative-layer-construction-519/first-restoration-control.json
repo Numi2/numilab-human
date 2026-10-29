@@ -1,0 +1,55 @@
+{
+  "source_sha256": "7c4080b4d380e6879a9d1752a163d9d79a880e834aac8383d838471e7b93b3fd",
+  "linear_proposal_sha256": "0dc7b79986a0b2f6015b4a0e3eb451571686ce65c250697f9d69214f38197eb1",
+  "candidate_sha256": "13e3073723dbeb1993c54fb103e731580a4191ae026a8f2ffb074279c666a650",
+  "proposal_alpha": 0.5,
+  "iterations": [
+    {
+      "iteration": 0,
+      "nonpositive_cells": 8,
+      "below_construction_volume_floor": 8,
+      "failed_capacity_groups": 6,
+      "scaled_exact_violation": 182.46039181875284,
+      "free_nodes": 335,
+      "affected_cells": 2456,
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_measured_contact_L1_projection",
+        "iterations": 1391,
+        "max_primal_constraint_error_m": 8.470329472543003e-22,
+        "contact_rows": 0,
+        "contact_slack_sum_m": 0.0,
+        "objective": 0.00024438352291793105,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "accepted": true,
+      "alpha": 1.0,
+      "violation_after": 0.15393255857838767,
+      "max_restoration_m": 9.402632713317871e-05
+    },
+    {
+      "iteration": 1,
+      "nonpositive_cells": 0,
+      "below_construction_volume_floor": 3,
+      "failed_capacity_groups": 0,
+      "scaled_exact_violation": 0.15393255857838767,
+      "free_nodes": 80,
+      "affected_cells": 576,
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_measured_contact_L1_projection",
+        "iterations": 302,
+        "max_primal_constraint_error_m": 0.0,
+        "contact_rows": 0,
+        "contact_slack_sum_m": 0.0,
+        "objective": 8.873341496647628e-05,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "accepted": false
+    }
+  ],
+  "nonpositive_cells": 0,
+  "failed_capacity_groups": 0,
+  "scaled_exact_violation": 0.15393255857838767,
+  "pinned_nodes_unchanged": true,
+  "physical_admission": false,
+  "elapsed_s": 0.5065499590709805
+}

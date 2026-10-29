@@ -1,0 +1,797 @@
+{
+  "status": "bounded_connected_capacity_fit_proposal",
+  "source_sha256": "7c4080b4d380e6879a9d1752a163d9d79a880e834aac8383d838471e7b93b3fd",
+  "target_sha256": "155c9320273a5256f11a3438fd7d465dd2b9abb8eb85d32fdd905354940c7979",
+  "candidate_sha256": "91874580a823b494ed8c7b97406739a690e554c3d91d639b7928eda1d1671d1d",
+  "script_sha256": "865773f183d4c22ebfc1f35f4c7d37fac9408b05d4f075240da0f87359d15fb7",
+  "iterations": [
+    {
+      "iteration": 0,
+      "line_diagnostics": [
+        {
+          "alpha": 1.0,
+          "nonpositive_cell_count": 103,
+          "nonpositive_cells": [
+            4,
+            7,
+            151,
+            502,
+            503,
+            1157,
+            1566,
+            1567,
+            1813,
+            1935,
+            1956,
+            1982,
+            1997,
+            2001,
+            2035,
+            2036,
+            2135,
+            2155,
+            2196,
+            2206,
+            3897,
+            4027,
+            4165,
+            4828,
+            4967,
+            5404,
+            5405,
+            10546,
+            11325,
+            11326,
+            11508,
+            11511,
+            11556,
+            11578,
+            11614,
+            11701,
+            11731,
+            11747,
+            11749,
+            11945,
+            12005,
+            12070,
+            12088,
+            13630,
+            13634,
+            13709,
+            13887,
+            13982,
+            14078,
+            16317,
+            16319,
+            16323,
+            16349,
+            16354,
+            16511,
+            16516,
+            16609,
+            16633,
+            18000,
+            18606,
+            18615,
+            19106,
+            19107,
+            19108
+          ],
+          "failed_group_count": 45,
+          "failed_groups": [
+            {
+              "key": [
+                15,
+                42,
+                46
+              ],
+              "volume": 1.5001840789599654e-07,
+              "allowed_min": 1.5168027760327321e-07,
+              "allowed_max": 1.8538700595955617e-07
+            },
+            {
+              "key": [
+                15,
+                52,
+                43
+              ],
+              "volume": 8.894742694637482e-08,
+              "allowed_min": 8.983427560682636e-08,
+              "allowed_max": 1.0979744796389887e-07
+            },
+            {
+              "key": [
+                15,
+                53,
+                54
+              ],
+              "volume": 2.832454019083448e-07,
+              "allowed_min": 2.8473558179824507e-07,
+              "allowed_max": 3.480101555311884e-07
+            },
+            {
+              "key": [
+                15,
+                57,
+                59
+              ],
+              "volume": 8.028094921301659e-09,
+              "allowed_min": 8.046763746855633e-09,
+              "allowed_max": 9.834933468379106e-09
+            },
+            {
+              "key": [
+                15,
+                59,
+                49
+              ],
+              "volume": 2.5913463020345025e-07,
+              "allowed_min": 2.6083964702685533e-07,
+              "allowed_max": 3.188040130328232e-07
+            },
+            {
+              "key": [
+                15,
+                59,
+                64
+              ],
+              "volume": 3.237382630120886e-08,
+              "allowed_min": 2.5751258859890586e-08,
+              "allowed_max": 3.1473760828755165e-08
+            },
+            {
+              "key": [
+                15,
+                59,
+                65
+              ],
+              "volume": 1.241024854432381e-09,
+              "allowed_min": 1.6079865693912573e-09,
+              "allowed_max": 1.96531691814487e-09
+            },
+            {
+              "key": [
+                15,
+                64,
+                62
+              ],
+              "volume": 2.1158369877584019e-07,
+              "allowed_min": 1.7233134436781923e-07,
+              "allowed_max": 2.1062719867177905e-07
+            },
+            {
+              "key": [
+                15,
+                64,
+                65
+              ],
+              "volume": 2.7981907798334937e-08,
+              "allowed_min": 2.2859914953322264e-08,
+              "allowed_max": 2.7939896054060545e-08
+            },
+            {
+              "key": [
+                15,
+                71,
+                69
+              ],
+              "volume": 1.0912952053826733e-07,
+              "allowed_min": 8.642126249591178e-08,
+              "allowed_max": 1.0562598749500329e-07
+            },
+            {
+              "key": [
+                15,
+                74,
+                72
+              ],
+              "volume": 1.436728983910625e-08,
+              "allowed_min": 1.4899004960059723e-08,
+              "allowed_max": 1.8209894951184107e-08
+            },
+            {
+              "key": [
+                15,
+                97,
+                98
+              ],
+              "volume": 1.4404053791070731e-08,
+              "allowed_min": 1.5750668802037554e-08,
+              "allowed_max": 1.9250817424712566e-08
+            },
+            {
+              "key": [
+                15,
+                102,
+                103
+              ],
+              "volume": 2.932802511046509e-07,
+              "allowed_min": 2.9468644274334384e-07,
+              "allowed_max": 3.6017231890853137e-07
+            },
+            {
+              "key": [
+                15,
+                103,
+                107
+              ],
+              "volume": 1.6502012524312575e-08,
+              "allowed_min": 1.3097876714601898e-08,
+              "allowed_max": 1.600851598451343e-08
+            },
+            {
+              "key": [
+                15,
+                106,
+                122
+              ],
+              "volume": 1.618731339059147e-07,
+              "allowed_min": 1.32276713622065e-07,
+              "allowed_max": 1.616715388714128e-07
+            },
+            {
+              "key": [
+                15,
+                109,
+                107
+              ],
+              "volume": 1.5981951785425815e-09,
+              "allowed_min": 1.6153387694971654e-09,
+              "allowed_max": 1.9743029404965354e-09
+            },
+            {
+              "key": [
+                15,
+                122,
+                95
+              ],
+              "volume": 1.2169511018474186e-07,
+              "allowed_min": 9.574579451503866e-08,
+              "allowed_max": 1.170226377406028e-07
+            },
+            {
+              "key": [
+                15,
+                122,
+                97
+              ],
+              "volume": 1.7730602254734045e-07,
+              "allowed_min": 1.778784081210472e-07,
+              "allowed_max": 2.1740694325905768e-07
+            },
+            {
+              "key": [
+                15,
+                125,
+                125
+              ],
+              "volume": 2.3740511487605554e-07,
+              "allowed_min": 1.9051272753398084e-07,
+              "allowed_max": 2.328488892081988e-07
+            },
+            {
+              "key": [
+                16,
+                43,
+                72
+              ],
+              "volume": 2.736843394357497e-07,
+              "allowed_min": 2.7585725535429544e-07,
+              "allowed_max": 3.083110501018596e-07
+            },
+            {
+              "key": [
+                16,
+                46,
+                43
+              ],
+              "volume": 1.726723170250265e-07,
+              "allowed_min": 1.7278131430861036e-07,
+              "allowed_max": 1.9310852775668216e-07
+            },
+            {
+              "key": [
+                16,
+                59,
+                65
+              ],
+              "volume": 8.790118751223376e-10,
+              "allowed_min": 7.361075959304225e-10,
+              "allowed_max": 8.227084895692957e-10
+            },
+            {
+              "key": [
+                16,
+                62,
+                64
+              ],
+              "volume": 4.825152381186961e-08,
+              "allowed_min": 4.8609820169076556e-08,
+              "allowed_max": 5.432862254190909e-08
+            },
+            {
+              "key": [
+                16,
+                64,
+                62
+              ],
+              "volume": 3.8197455327078227e-07,
+              "allowed_min": 3.8490842849856374e-07,
+              "allowed_max": 4.301917730278065e-07
+            },
+            {
+              "key": [
+                16,
+                70,
+                64
+              ],
+              "volume": 4.494382220969425e-07,
+              "allowed_min": 4.525359907855818e-07,
+              "allowed_max": 5.057755191132972e-07
+            },
+            {
+              "key": [
+                16,
+                95,
+                95
+              ],
+              "volume": 4.260623070501742e-07,
+              "allowed_min": 3.796792101770495e-07,
+              "allowed_max": 4.2434735255082e-07
+            },
+            {
+              "key": [
+                16,
+                95,
+                97
+              ],
+              "volume": 8.718099003320979e-09,
+              "allowed_min": 1.537085742896986e-08,
+              "allowed_max": 1.7179193597083963e-08
+            },
+            {
+              "key": [
+                16,
+                95,
+                98
+              ],
+              "volume": 3.8842392686011035e-08,
+              "allowed_min": 3.947971361670682e-08,
+              "allowed_max": 4.4124385806907626e-08
+            },
+            {
+              "key": [
+                16,
+                95,
+                122
+              ],
+              "volume": 1.2607226616702138e-11,
+              "allowed_min": 9.34636473478403e-10,
+              "allowed_max": 1.044593705652333e-09
+            },
+            {
+              "key": [
+                16,
+                97,
+                98
+              ],
+              "volume": 1.9401033373763158e-08,
+              "allowed_min": 1.9481883054152746e-08,
+              "allowed_max": 2.1773869295817778e-08
+            },
+            {
+              "key": [
+                16,
+                97,
+                122
+              ],
+              "volume": 1.1270667005524587e-07,
+              "allowed_min": 1.157119982988625e-07,
+              "allowed_max": 1.2932517456931691e-07
+            },
+            {
+              "key": [
+                16,
+                98,
+                92
+              ],
+              "volume": 2.6654914886961113e-08,
+              "allowed_min": 2.7467698010833662e-08,
+              "allowed_max": 3.069919189446115e-08
+            },
+            {
+              "key": [
+                16,
+                98,
+                95
+              ],
+              "volume": 7.834613162600566e-08,
+              "allowed_min": 8.276295859170539e-08,
+              "allowed_max": 9.249977724955308e-08
+            },
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": -5.482705912976459e-10,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            },
+            {
+              "key": [
+                16,
+                102,
+                122
+              ],
+              "volume": 1.9935628396301763e-08,
+              "allowed_min": 2.0178324695351827e-08,
+              "allowed_max": 2.255224524774616e-08
+            },
+            {
+              "key": [
+                16,
+                103,
+                104
+              ],
+              "volume": 3.83273208632116e-07,
+              "allowed_min": 3.411630243047756e-07,
+              "allowed_max": 3.8129985069357275e-07
+            },
+            {
+              "key": [
+                16,
+                103,
+                107
+              ],
+              "volume": 2.459898117645838e-08,
+              "allowed_min": 2.1797502750144446e-08,
+              "allowed_max": 2.4361914838396734e-08
+            },
+            {
+              "key": [
+                16,
+                106,
+                95
+              ],
+              "volume": 3.0651418904307365e-07,
+              "allowed_min": 2.7179630924859124e-07,
+              "allowed_max": 3.0377234563077846e-07
+            },
+            {
+              "key": [
+                16,
+                109,
+                107
+              ],
+              "volume": 1.0619258115325515e-10,
+              "allowed_min": 5.805814776306905e-10,
+              "allowed_max": 6.4888518088136e-10
+            },
+            {
+              "key": [
+                16,
+                109,
+                115
+              ],
+              "volume": 2.43641873365884e-07,
+              "allowed_min": 2.445983794455299e-07,
+              "allowed_max": 2.733746593802982e-07
+            },
+            {
+              "key": [
+                16,
+                114,
+                119
+              ],
+              "volume": 1.367788110045021e-08,
+              "allowed_min": 1.4712599980420667e-08,
+              "allowed_max": 1.6443494095764277e-08
+            },
+            {
+              "key": [
+                16,
+                120,
+                119
+              ],
+              "volume": 2.2409498097815046e-08,
+              "allowed_min": 2.4984930335174222e-08,
+              "allowed_max": 2.7924333904018246e-08
+            },
+            {
+              "key": [
+                16,
+                121,
+                121
+              ],
+              "volume": 8.531747142334659e-07,
+              "allowed_min": 8.547539669740744e-07,
+              "allowed_max": 9.553132572063185e-07
+            },
+            {
+              "key": [
+                16,
+                124,
+                119
+              ],
+              "volume": 4.778752310762268e-08,
+              "allowed_min": 4.9050766185618646e-08,
+              "allowed_max": 5.4821444560397316e-08
+            },
+            {
+              "key": [
+                16,
+                124,
+                125
+              ],
+              "volume": 5.071552289830768e-10,
+              "allowed_min": 5.595003933840148e-10,
+              "allowed_max": 6.253239690762518e-10
+            }
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "nonpositive_cell_count": 8,
+          "nonpositive_cells": [
+            16511,
+            22394,
+            23694,
+            25096,
+            25210,
+            25222,
+            25339,
+            25357
+          ],
+          "failed_group_count": 6,
+          "failed_groups": [
+            {
+              "key": [
+                15,
+                59,
+                65
+              ],
+              "volume": 1.6073725279394053e-09,
+              "allowed_min": 1.6079865693912573e-09,
+              "allowed_max": 1.96531691814487e-09
+            },
+            {
+              "key": [
+                16,
+                95,
+                97
+              ],
+              "volume": 1.3803578009221297e-08,
+              "allowed_min": 1.537085742896986e-08,
+              "allowed_max": 1.7179193597083963e-08
+            },
+            {
+              "key": [
+                16,
+                95,
+                122
+              ],
+              "volume": 7.503491124940972e-10,
+              "allowed_min": 9.34636473478403e-10,
+              "allowed_max": 1.044593705652333e-09
+            },
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 6.636814633904101e-10,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            },
+            {
+              "key": [
+                16,
+                109,
+                107
+              ],
+              "volume": 4.869425690082403e-10,
+              "allowed_min": 5.805814776306905e-10,
+              "allowed_max": 6.4888518088136e-10
+            },
+            {
+              "key": [
+                16,
+                120,
+                119
+              ],
+              "volume": 2.4960468097763554e-08,
+              "allowed_min": 2.4984930335174222e-08,
+              "allowed_max": 2.7924333904018246e-08
+            }
+          ]
+        },
+        {
+          "alpha": 0.25,
+          "nonpositive_cell_count": 2,
+          "nonpositive_cells": [
+            25096,
+            25210
+          ],
+          "failed_group_count": 4,
+          "failed_groups": [
+            {
+              "key": [
+                16,
+                95,
+                97
+              ],
+              "volume": 1.5092669599938063e-08,
+              "allowed_min": 1.537085742896986e-08,
+              "allowed_max": 1.7179193597083963e-08
+            },
+            {
+              "key": [
+                16,
+                95,
+                122
+              ],
+              "volume": 9.29242026391878e-10,
+              "allowed_min": 9.34636473478403e-10,
+              "allowed_max": 1.044593705652333e-09
+            },
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 9.754798766682057e-10,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            },
+            {
+              "key": [
+                16,
+                109,
+                107
+              ],
+              "volume": 5.798458875441189e-10,
+              "allowed_min": 5.805814776306905e-10,
+              "allowed_max": 6.4888518088136e-10
+            }
+          ]
+        },
+        {
+          "alpha": 0.125,
+          "nonpositive_cell_count": 0,
+          "nonpositive_cells": [],
+          "failed_group_count": 1,
+          "failed_groups": [
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 1.0538302218720181e-09,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            }
+          ]
+        },
+        {
+          "alpha": 0.0625,
+          "nonpositive_cell_count": 0,
+          "nonpositive_cells": [],
+          "failed_group_count": 1,
+          "failed_groups": [
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 1.074039954723306e-09,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            }
+          ]
+        },
+        {
+          "alpha": 0.03125,
+          "nonpositive_cell_count": 0,
+          "nonpositive_cells": [],
+          "failed_group_count": 1,
+          "failed_groups": [
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 1.0787334306914351e-09,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            }
+          ]
+        },
+        {
+          "alpha": 0.015625,
+          "nonpositive_cell_count": 0,
+          "nonpositive_cells": [],
+          "failed_group_count": 1,
+          "failed_groups": [
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 1.0798929820570556e-09,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            }
+          ]
+        },
+        {
+          "alpha": 0.0078125,
+          "nonpositive_cell_count": 0,
+          "nonpositive_cells": [],
+          "failed_group_count": 1,
+          "failed_groups": [
+            {
+              "key": [
+                16,
+                98,
+                97
+              ],
+              "volume": 1.0798687638102906e-09,
+              "allowed_min": 1.080027225547634e-09,
+              "allowed_max": 1.2070892520826499e-09
+            }
+          ]
+        },
+        {
+          "alpha": 0.00390625,
+          "nonpositive_cell_count": 0,
+          "nonpositive_cells": [],
+          "failed_group_count": 0,
+          "failed_groups": []
+        }
+      ],
+      "qp": {
+        "method": "existing_SciPy_sparse_HiGHS_measured_contact_L1_projection",
+        "iterations": 25619,
+        "max_primal_constraint_error_m": 4.3935011948484376e-10,
+        "contact_rows": 1817,
+        "contact_slack_sum_m": 2.041919317341428,
+        "objective": 4095.8694424630567,
+        "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      "target_objective_before": 0.03157076449093253,
+      "accepted": true,
+      "overlap_before_m3_per_bank_not_union": 0.0004224260729666184,
+      "overlap_after_m3_per_bank_not_union": 0.00042238649232677295,
+      "positive_material_bank_pairs_before": 181,
+      "positive_material_bank_pairs_after": 181,
+      "alpha": 0.00390625,
+      "target_objective_after": 0.03160397611284146,
+      "min_cell_volume_m3": 4.696089238403177e-13,
+      "max_move_from_source_m": 0.0010013682338155562,
+      "remaining_target_rms_m": 0.0007267237138386231
+    }
+  ],
+  "free_domain": "all",
+  "free_nodes": 7084,
+  "moved_nodes": 7048,
+  "target_nodes": 462,
+  "affected_cells": 28596,
+  "nonpositive_cells": 0,
+  "failed_capacity_groups": 0,
+  "pinned_nodes_unchanged": true,
+  "topology_labels_full86_unchanged": true,
+  "elapsed_s": 3.7184123750776052,
+  "physical_admission": false,
+  "contact_coverage_complete": true,
+  "construction_mass_interval_inset_fraction": 0.05,
+  "construction_method": "L1 correction of measured Boolean boundary penetrations with unchanged physical gates",
+  "scope": "offline constrained mesh construction control; detailed boundary ancestry/embedding, solid penetration, sparse transport, native accepted-state and motion gates remain mandatory"
+}
