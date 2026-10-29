@@ -1,0 +1,657 @@
+{
+  "schema": "I-inherited-exact-pair-local-remesh.v1",
+  "status": "LOCAL_BATCH_PATCH_AND_TYPED_PROVENANCE_PASS_FULL_SELF_AUDIT_PENDING",
+  "input_f64": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-287-inherited-pair-repair-001/result/candidate-f64.npz",
+    "sha256": "cff1dec926b63fdec6bd84f2ca1a60b23a74ef2995e50c7169b1f7437b66a02c"
+  },
+  "input_typed": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-287-inherited-pair-repair-001/result/candidate-f32-typed.npz",
+    "sha256": "88d47d0648ae5a7d3012e4fbd1814a63f4d84b163abb6655bb6af721fea5187a"
+  },
+  "input_local_exact_pair_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-287-inherited-pair-repair-001/result/local-pair-query-report.json",
+  "input_local_query_scope": "all changed faces versus current full surface; prior 51 pairs removed by batch 287; no full audit claimed",
+  "input_exact_pair_archive": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-287-inherited-pair-repair-001/result/new-face-exact-self-witnesses.npz",
+    "sha256": "f929893788e6a9aa442417ea9e988ccb3b45259a5518beb422ba92b7bbbbf667",
+    "pair_count": 8
+  },
+  "input_region_inventory": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-287-inherited-pair-repair-001/pair-cluster-inventory-002/inventory.json",
+    "sha256": "5ebcc87a5d7849d71c934b917a885f0131391a88c72b50ae24e81d87a0d02c83",
+    "pair_clusters": 4,
+    "topological_components": 4
+  },
+  "authoring_source": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/authoring_source.py",
+    "sha256": "d11d6e84c9fcea482630a1f8636483d2c7d26d10f277cb10f02e460acb0d067d"
+  },
+  "derived_source_view": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/I-inherited-pair-repair-derived-source.npz",
+    "sha256": "719a397282f2199dff1079a2c638d62d91014861ed537d4e5f8cac82657aa44e",
+    "operation_id": 120000204,
+    "face_count": 14,
+    "parent_source_ids": [
+      841487,
+      40001492,
+      40003384,
+      40078344
+    ]
+  },
+  "candidate_f64": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/candidate-f64.npz",
+    "sha256": "2b4d215002af3fb9cd3573b17e9e7b4f05588568411309e4b4fed4f7a6a3644e",
+    "vertices": 102622,
+    "faces": 205280,
+    "cap_faces": 41,
+    "closed_edge_incidence_histogram": {
+      "2": 307920
+    },
+    "closed_f64_to_f32_orientation_failures": 0
+  },
+  "candidate_f32_typed": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/candidate-f32-typed.npz",
+    "sha256": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+    "vertices": 102622,
+    "faces": 205239,
+    "boundary_edges": 45,
+    "boundary_loop_lengths": [
+      21,
+      24
+    ],
+    "zero_area_faces": 0,
+    "duplicate_coordinate_rows": 0,
+    "local_new_face_exact_pairs_vs_whole_surface": 0
+  },
+  "producer260_validation": {
+    "status": "PASS",
+    "sha256": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+    "faceCount": 205239,
+    "sourceParentLineagePreservedPerFace": true
+  },
+  "patch_attempts": [
+    {
+      "round": 0,
+      "selected_face_count": 30,
+      "component_count": 4,
+      "successful_patch_count": 4,
+      "successful_patches": [
+        {
+          "patch_index": 0,
+          "rows": [
+            51471,
+            51472,
+            171300,
+            171301,
+            205228,
+            205229,
+            205250
+          ],
+          "seed_rows": [
+            205228,
+            205229,
+            205250
+          ],
+          "loop_vertices": [
+            6070,
+            6071,
+            6106,
+            6072,
+            6075
+          ],
+          "boundary_edges": 5,
+          "new_faces": [
+            [
+              6075,
+              6070,
+              6071
+            ],
+            [
+              6075,
+              6071,
+              6106
+            ],
+            [
+              6106,
+              6072,
+              6075
+            ]
+          ],
+          "new_face_count": 3,
+          "triangulation": {
+            "basis": "abstract_unit_circle_in_boundary_order",
+            "boundary_vertex_count": 5,
+            "min_unit_circle_triangle_quality": 0.7134110364304975,
+            "occupied_external_diagonal_count": 307866,
+            "exact_search": {
+              "nodes": 3,
+              "triangle_candidates": 3,
+              "exact_external_calls": 3,
+              "exact_external_pairs": 0,
+              "exact_internal_calls": 3,
+              "exact_internal_pairs": 0,
+              "external_cache_hits": 0,
+              "internal_cache_hits": 0,
+              "backtracks": 0,
+              "max_depth": 2
+            },
+            "elapsed_s": 0.0012634999584406614
+          },
+          "directed_boundary_preserved": true
+        },
+        {
+          "patch_index": 1,
+          "rows": [
+            53691,
+            53696,
+            53701,
+            171707,
+            171709,
+            205230,
+            205251,
+            205252
+          ],
+          "seed_rows": [
+            205230,
+            205251,
+            205252
+          ],
+          "loop_vertices": [
+            7980,
+            7984,
+            7991,
+            7985,
+            7988,
+            8005
+          ],
+          "boundary_edges": 6,
+          "new_faces": [
+            [
+              7988,
+              8005,
+              7980
+            ],
+            [
+              7988,
+              7980,
+              7984
+            ],
+            [
+              7988,
+              7984,
+              7991
+            ],
+            [
+              7991,
+              7985,
+              7988
+            ]
+          ],
+          "new_face_count": 4,
+          "triangulation": {
+            "basis": "abstract_unit_circle_in_boundary_order",
+            "boundary_vertex_count": 6,
+            "min_unit_circle_triangle_quality": 0.6,
+            "occupied_external_diagonal_count": 307867,
+            "exact_search": {
+              "nodes": 4,
+              "triangle_candidates": 5,
+              "exact_external_calls": 5,
+              "exact_external_pairs": 2,
+              "exact_internal_calls": 18,
+              "exact_internal_pairs": 0,
+              "external_cache_hits": 0,
+              "internal_cache_hits": 0,
+              "backtracks": 0,
+              "max_depth": 3
+            },
+            "elapsed_s": 0.00256641604937613
+          },
+          "directed_boundary_preserved": true
+        },
+        {
+          "patch_index": 2,
+          "rows": [
+            57294,
+            57295,
+            57297,
+            57300,
+            57303,
+            205235,
+            205236,
+            205237
+          ],
+          "seed_rows": [
+            205235,
+            205236,
+            205237
+          ],
+          "loop_vertices": [
+            13167,
+            13169,
+            13171,
+            13186,
+            13184,
+            13182
+          ],
+          "boundary_edges": 6,
+          "new_faces": [
+            [
+              13186,
+              13184,
+              13182
+            ],
+            [
+              13171,
+              13186,
+              13182
+            ],
+            [
+              13169,
+              13171,
+              13182
+            ],
+            [
+              13167,
+              13169,
+              13182
+            ]
+          ],
+          "new_face_count": 4,
+          "triangulation": {
+            "basis": "abstract_unit_circle_in_boundary_order",
+            "boundary_vertex_count": 6,
+            "min_unit_circle_triangle_quality": 0.5999999999999999,
+            "occupied_external_diagonal_count": 307870,
+            "exact_search": {
+              "nodes": 4,
+              "triangle_candidates": 4,
+              "exact_external_calls": 4,
+              "exact_external_pairs": 0,
+              "exact_internal_calls": 34,
+              "exact_internal_pairs": 0,
+              "external_cache_hits": 0,
+              "internal_cache_hits": 0,
+              "backtracks": 0,
+              "max_depth": 3
+            },
+            "elapsed_s": 0.002437541028484702
+          },
+          "directed_boundary_preserved": true
+        },
+        {
+          "patch_index": 3,
+          "rows": [
+            105753,
+            105756,
+            189859,
+            189860,
+            205245,
+            205253,
+            205254
+          ],
+          "seed_rows": [
+            205245,
+            205253,
+            205254
+          ],
+          "loop_vertices": [
+            62115,
+            62125,
+            62148,
+            62230,
+            62116
+          ],
+          "boundary_edges": 5,
+          "new_faces": [
+            [
+              62125,
+              62148,
+              62230
+            ],
+            [
+              62115,
+              62125,
+              62230
+            ],
+            [
+              62115,
+              62230,
+              62116
+            ]
+          ],
+          "new_face_count": 3,
+          "triangulation": {
+            "basis": "abstract_unit_circle_in_boundary_order",
+            "boundary_vertex_count": 5,
+            "min_unit_circle_triangle_quality": 0.7134110364304976,
+            "occupied_external_diagonal_count": 307874,
+            "exact_search": {
+              "nodes": 3,
+              "triangle_candidates": 3,
+              "exact_external_calls": 3,
+              "exact_external_pairs": 0,
+              "exact_internal_calls": 36,
+              "exact_internal_pairs": 0,
+              "external_cache_hits": 0,
+              "internal_cache_hits": 0,
+              "backtracks": 0,
+              "max_depth": 2
+            },
+            "elapsed_s": 0.006143250036984682
+          },
+          "directed_boundary_preserved": true
+        }
+      ],
+      "failure": null
+    }
+  ],
+  "successful_patches": [
+    {
+      "patch_index": 0,
+      "rows": [
+        51471,
+        51472,
+        171300,
+        171301,
+        205228,
+        205229,
+        205250
+      ],
+      "seed_rows": [
+        205228,
+        205229,
+        205250
+      ],
+      "loop_vertices": [
+        6070,
+        6071,
+        6106,
+        6072,
+        6075
+      ],
+      "boundary_edges": 5,
+      "new_faces": [
+        [
+          6075,
+          6070,
+          6071
+        ],
+        [
+          6075,
+          6071,
+          6106
+        ],
+        [
+          6106,
+          6072,
+          6075
+        ]
+      ],
+      "new_face_count": 3,
+      "triangulation": {
+        "basis": "abstract_unit_circle_in_boundary_order",
+        "boundary_vertex_count": 5,
+        "min_unit_circle_triangle_quality": 0.7134110364304975,
+        "occupied_external_diagonal_count": 307866,
+        "exact_search": {
+          "nodes": 3,
+          "triangle_candidates": 3,
+          "exact_external_calls": 3,
+          "exact_external_pairs": 0,
+          "exact_internal_calls": 3,
+          "exact_internal_pairs": 0,
+          "external_cache_hits": 0,
+          "internal_cache_hits": 0,
+          "backtracks": 0,
+          "max_depth": 2
+        },
+        "elapsed_s": 0.0012634999584406614
+      },
+      "directed_boundary_preserved": true
+    },
+    {
+      "patch_index": 1,
+      "rows": [
+        53691,
+        53696,
+        53701,
+        171707,
+        171709,
+        205230,
+        205251,
+        205252
+      ],
+      "seed_rows": [
+        205230,
+        205251,
+        205252
+      ],
+      "loop_vertices": [
+        7980,
+        7984,
+        7991,
+        7985,
+        7988,
+        8005
+      ],
+      "boundary_edges": 6,
+      "new_faces": [
+        [
+          7988,
+          8005,
+          7980
+        ],
+        [
+          7988,
+          7980,
+          7984
+        ],
+        [
+          7988,
+          7984,
+          7991
+        ],
+        [
+          7991,
+          7985,
+          7988
+        ]
+      ],
+      "new_face_count": 4,
+      "triangulation": {
+        "basis": "abstract_unit_circle_in_boundary_order",
+        "boundary_vertex_count": 6,
+        "min_unit_circle_triangle_quality": 0.6,
+        "occupied_external_diagonal_count": 307867,
+        "exact_search": {
+          "nodes": 4,
+          "triangle_candidates": 5,
+          "exact_external_calls": 5,
+          "exact_external_pairs": 2,
+          "exact_internal_calls": 18,
+          "exact_internal_pairs": 0,
+          "external_cache_hits": 0,
+          "internal_cache_hits": 0,
+          "backtracks": 0,
+          "max_depth": 3
+        },
+        "elapsed_s": 0.00256641604937613
+      },
+      "directed_boundary_preserved": true
+    },
+    {
+      "patch_index": 2,
+      "rows": [
+        57294,
+        57295,
+        57297,
+        57300,
+        57303,
+        205235,
+        205236,
+        205237
+      ],
+      "seed_rows": [
+        205235,
+        205236,
+        205237
+      ],
+      "loop_vertices": [
+        13167,
+        13169,
+        13171,
+        13186,
+        13184,
+        13182
+      ],
+      "boundary_edges": 6,
+      "new_faces": [
+        [
+          13186,
+          13184,
+          13182
+        ],
+        [
+          13171,
+          13186,
+          13182
+        ],
+        [
+          13169,
+          13171,
+          13182
+        ],
+        [
+          13167,
+          13169,
+          13182
+        ]
+      ],
+      "new_face_count": 4,
+      "triangulation": {
+        "basis": "abstract_unit_circle_in_boundary_order",
+        "boundary_vertex_count": 6,
+        "min_unit_circle_triangle_quality": 0.5999999999999999,
+        "occupied_external_diagonal_count": 307870,
+        "exact_search": {
+          "nodes": 4,
+          "triangle_candidates": 4,
+          "exact_external_calls": 4,
+          "exact_external_pairs": 0,
+          "exact_internal_calls": 34,
+          "exact_internal_pairs": 0,
+          "external_cache_hits": 0,
+          "internal_cache_hits": 0,
+          "backtracks": 0,
+          "max_depth": 3
+        },
+        "elapsed_s": 0.002437541028484702
+      },
+      "directed_boundary_preserved": true
+    },
+    {
+      "patch_index": 3,
+      "rows": [
+        105753,
+        105756,
+        189859,
+        189860,
+        205245,
+        205253,
+        205254
+      ],
+      "seed_rows": [
+        205245,
+        205253,
+        205254
+      ],
+      "loop_vertices": [
+        62115,
+        62125,
+        62148,
+        62230,
+        62116
+      ],
+      "boundary_edges": 5,
+      "new_faces": [
+        [
+          62125,
+          62148,
+          62230
+        ],
+        [
+          62115,
+          62125,
+          62230
+        ],
+        [
+          62115,
+          62230,
+          62116
+        ]
+      ],
+      "new_face_count": 3,
+      "triangulation": {
+        "basis": "abstract_unit_circle_in_boundary_order",
+        "boundary_vertex_count": 5,
+        "min_unit_circle_triangle_quality": 0.7134110364304976,
+        "occupied_external_diagonal_count": 307874,
+        "exact_search": {
+          "nodes": 3,
+          "triangle_candidates": 3,
+          "exact_external_calls": 3,
+          "exact_external_pairs": 0,
+          "exact_internal_calls": 36,
+          "exact_internal_pairs": 0,
+          "external_cache_hits": 0,
+          "internal_cache_hits": 0,
+          "backtracks": 0,
+          "max_depth": 2
+        },
+        "elapsed_s": 0.006143250036984682
+      },
+      "directed_boundary_preserved": true
+    }
+  ],
+  "selected_input_open_face_rows": [
+    51471,
+    51472,
+    53691,
+    53696,
+    53701,
+    57294,
+    57295,
+    57297,
+    57300,
+    57303,
+    105753,
+    105756,
+    171300,
+    171301,
+    171707,
+    171709,
+    189859,
+    189860,
+    205228,
+    205229,
+    205230,
+    205235,
+    205236,
+    205237,
+    205245,
+    205250,
+    205251,
+    205252,
+    205253,
+    205254
+  ],
+  "removed_input_open_face_count": 30,
+  "replacement_face_count": 14,
+  "source_points_and_cap_faces_unchanged": true,
+  "elapsed_s": 7.72059666714631,
+  "physical_admission": false,
+  "limitations": [
+    "Full exact self-intersection, all-185 current-frame bone, O/I/D containment and thickness, volume meshing, mass mapping, native dynamics, and physical admission remain outstanding."
+  ]
+}
