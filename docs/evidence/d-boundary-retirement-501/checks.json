@@ -1,0 +1,71 @@
+{
+  "accepted_physics_steps": 0,
+  "attempt_history_path": "docs/evidence/d-boundary-retirement-501/attempt-history.json",
+  "attempt_history_sha256": "b4fbee0a8bbd1e225cfc2132332d2057c098bb6b08dcfef77f572b9d6e279605",
+  "base_commit": "b672eb49b703e63d1da9c74e8b65491ae93dae00",
+  "commands": {
+    "d_tests": "/Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/test_d_boundary_retirement_501.py --evidence-root /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209",
+    "o_tests": "/Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/test_o_boundary_retirement_433.py",
+    "operational_map_control": "/Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/test_operational_reference_map_433.py --default-map /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-020-final-producer-default/sidecars/volume/combined-node-map.csv --baseline-map /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-015-433-native-export/volume/combined-node-map.csv --operational-map /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/volume/combined-node-map.csv --candidate /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-005-capacity-gradient-ulp/candidate.npz --parent-capture /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003 --receipt /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/receipt.json",
+    "py_compile": "/Users/numi/numi-human-prep-venv-20261005/bin/python -m py_compile /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/export_refined_coarse_registered_volume_433.py /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/test_d_boundary_retirement_501.py /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/test_o_boundary_retirement_433.py /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/source/test_operational_reference_map_433.py",
+    "review_diff_check": "git -C /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/apply-check diff --cached --check",
+    "review_patch_apply_check": "git -C /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/apply-check apply --check /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-retirement-publication-662/review.patch"
+  },
+  "csg_diagnostic": {
+    "faces": 5044,
+    "native185_replay_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz",
+    "native185_replay_sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-042-current006-d23-bone32-cavity/attempt-005-bone32-subtraction/continuation-005/cavity-minus-bank32-f64-tagged.npz",
+    "points": 2524,
+    "sha256": "06c52fa4a6c3797f04fc69db0b9aef73beb410fed10bb952e23cda07b52e0513",
+    "source_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-042-current006-d23-bone32-cavity/attempt-005-bone32-subtraction/continuation-005/original-fat-cavity-shell.npz",
+    "source_shell_sha256": "e403d026fdb1893a2dd868a346da74d84ae665213f97fe80d5f7c51c21b3d11e",
+    "status": "diagnostic only; no TetGen child volume/facet map and prior audits retain unresolved interface pairs"
+  },
+  "d_test_stdout_sha256": "2dae7fa9a2cecf39fa86d46b46318b5c3d30cc504840593bb26171f37882d6da",
+  "diff_check_added_lines_trailing_whitespace": 0,
+  "diffcheck": {
+    "changed_files": 2,
+    "git_apply_check": "PASS",
+    "git_diff_cached_check": "PASS",
+    "git_diff_check_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "git_diff_check_stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "patch_sha256": "bf3e1e552aa1375f77ff5255e9c8d243a3bbfa8531cd7bfcf2adf472e4793877",
+    "summary": "1050 exporter additions, 5 exporter removals, 571 new D test lines; no whitespace errors"
+  },
+  "frozen006": {
+    "530_refinement_sha256": "bc3831a56663cd561d5465d5943eb7cab275ca82b3c0be92561d62c42e8e8606",
+    "534_ledger_sha256": "ed320a79755132a7418cd7dafbb97d034b491ee5ccba587e33324bc7e61b0210",
+    "candidate_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "d_boundary_facets": 4949,
+    "preexisting_derived_d_nodes": 86,
+    "preexisting_derived_nodes": 258,
+    "receipt_sha256": "74fcbaf6a6776067d8d2fd90158afa3b1b9c815226ce3d60ba612ab5e9625fbf",
+    "row7423_existing_source_residual_m": 0.0004348535504125359,
+    "source002_candidate_sha256": "2f547b21c6be0f3e21a021d80dad6c63c3a0e6af31d5ebe1780ca1b32c237a54",
+    "unique_330_d_faces_covered": 4777
+  },
+  "native_steps": 0,
+  "new_d_node_policy": "The existing 0.4 mm bound is unchanged. New or changed D-derived nodes require original 330 tet/barycentric ancestry and must stay within it. A pre-existing 530/534 current006 derived row is exempt only if its emitted-F32 coordinates and original tet/bary ancestry are unchanged; modified/reparented rows are checked as new.",
+  "new_d_test_path": "tools/evidence/o-boundary-retirement-433/test_d_boundary_retirement_501.py",
+  "new_d_test_sha256": "d5138f42abe76ae410321d0d66e29e40dff6ee901752be1fe31917fbb1894336",
+  "o_test_stdout_sha256": "ead11f0e6ce4fb56e0651f8568d03799f9065e2ee8f81aec06221acac12c7536",
+  "operational_reference_test_stdout_sha256": "9b8a5c11776dbff71e4767f12c26dbbefce797ad94954c8513af95bfdd40d823",
+  "owner_exporter_base_sha256": "ad63b10701c42b37b1aa6aa79e0dc0c9f7ac87cdea7622f65582f9d1a63af2b1",
+  "owner_exporter_diff_added_lines": 1050,
+  "owner_exporter_diff_removed_lines": 5,
+  "owner_exporter_new_sha256": "8fdc4c3f2dbe1273d10544bf94eacec384e4fcf542ec3e837079ab8c23a8abfa",
+  "owner_exporter_path": "tools/evidence/o-boundary-retirement-433/export_refined_coarse_registered_volume_433.py",
+  "physical_admission": false,
+  "py_compile": true,
+  "remote_human_main_verified": true,
+  "review_patch_sha256": "bf3e1e552aa1375f77ff5255e9c8d243a3bbfa8531cd7bfcf2adf472e4793877",
+  "scope": "source-only compiler/test validation; no candidate promotion, physical admission, native simulation, or accepted physics steps",
+  "status": "PASS",
+  "test_counts": {
+    "d_retirement": 13,
+    "o_retirement": 5,
+    "operational_reference_map": 1
+  },
+  "test_fixture_limit": "The exporter integration fixture moves one unprotected D source node by at most 1 micrometre, preserves positive child tets, supplies synthetic identity Boolean output for incident facets, and checks exact F32 orientation/coordinate binding. It exercises exporter wiring only."
+}

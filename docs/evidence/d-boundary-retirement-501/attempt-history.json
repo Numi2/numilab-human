@@ -1,0 +1,26 @@
+{
+  "current_result": "13 D tests pass; physical admission remains false and no native steps ran",
+  "scope": "source-only implementation history; no physical candidate was promoted",
+  "separate_latest_geometry_diagnostic": {
+    "fat_f64_sha256": "7ee3c4a7e72a43656988c4702389a561689b35dffffa711e34259ff579f089d0",
+    "physical_admission": false,
+    "registration_gate": "failed 1839 of 11818 fat points against the existing 0.4 mm limit; maximum reported residual 2.446110 mm",
+    "skin_f64_sha256": "51604f750d99d5e57fde591842febf7748826c984272aedaef8ec380f9ad27c9",
+    "skin_to_fat_buffer_f64_sha256": "e4ef93da3c49b466264c9092d1f876710ef5f0071cabd9236b540988934a41a0",
+    "source": "repair_method current report delivered during this task",
+    "status": "F64 diagnostic surfaces only; no D-role replacement, TetGen nodes/elements, child facet map, or native candidate"
+  },
+  "superseded_failures": [
+    {
+      "case": "first new-node residual gate against every current006 parent_volume_node_row=-1 D point",
+      "classification": "row 7423 is one of the frozen current006 530/534-derived baseline nodes, not a node introduced by the new D retirement operation",
+      "correction": "exempt only a pre-existing current006 derived row whose emitted-F32 coordinates and original source tet/bary ancestry remain exactly unchanged; check every changed or reparented row as new",
+      "result": "failed at unchanged baseline row 7423: 0.4348535504125359 m source residual, exceeding the 0.4 mm new-node bound"
+    },
+    {
+      "case": "first source-only integration attempt after adding the preservation predicate",
+      "correction": "pass the full candidate points array; reran all 13 D tests successfully",
+      "result": "failed because exporter-local variable p had been reused for a single node coordinate before the residual helper call"
+    }
+  ]
+}
