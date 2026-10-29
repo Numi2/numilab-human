@@ -1,0 +1,46 @@
+{
+  "compile_argv": [
+    "clang++",
+    "-std=c++23",
+    "-O2",
+    "-arch",
+    "arm64",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-UNDEBUG",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/apps",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/actual_refined_mass_check.cpp",
+    "-o",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/actual_refined_mass_check"
+  ],
+  "run_argv": [
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/actual_refined_mass_check",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/parent-reduced-boundary.node",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/parent-reduced-boundary.ele",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-002-parent-ancestry-walk/parent-reduced-boundary.labels.csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.source.csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/source-refined.node",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/source-refined.ele",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/child-parent-reference-ledger.csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/child-source-donor-ledger.csv"
+  ],
+  "compile_exit_code": 0,
+  "exit_code": 0,
+  "result": "PASS child_nodes=7491 child_cells=29642 total_mass_kg=13.939678963460452 max_parent_mass_closure_kg=0 max_parent_measure_closure_m3=0 source_groups=148 source_contribution_input_rows=9644 child_source_donor_rows=37136 source_group_closure_max_kg=1.1102230246251565e-15 density_min_kg_m3=853.06384159658671 density_max_kg_m3=1098.6115371372127 negative_operational_measure=REJECTED negative_cross_material=REJECTED negative_missing_measure=REJECTED unprojected_source_control=true physical_admission=false runtime=0 accepted_steps=0",
+  "error": "",
+  "runtime": 0,
+  "accepted_steps": 0,
+  "physical_admission": false,
+  "hashes": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/actual_refined_mass_check.cpp": "369d7cb5517bdf10848d80e11ecd29d331e7241756464c7237756fa09efb1fff",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/actual_refined_mass_check": "2792e8e25b81728621d0c2be08c04b94d6d06673a16ffa09a66fe424476c6f87",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/actual.stdout": "dbfd91765b1baa22919098b4c911f16429d621e946baf1b8a9de0451c5c62c35",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/child-parent-reference-ledger.csv": "8fca86e9e0f008f35c685fc2fa2ef02e8ca82e9d3a4b99f503577b2638c2c4ca",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-reference-ledger-534/run-001/child-source-donor-ledger.csv": "d4c94b1ea66dca838e62940071ab505b36e4f635b25460c42ee8fd16fad9956f",
+    "/Users/numi/Work/skin-fat-native-integration-209/apps/NumiHumanParentReferenceMassTransfer.hpp": "9a188f98b93ea480ffd6de7fbb522e2e3ca5ee6b6a262a2b26a6ed721eb7eee5"
+  }
+}
