@@ -1,0 +1,33 @@
+{
+  "status": "INVALID_BANK_SELECTION_RETAINED",
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-void-coalescence-366/D-closed-csg-only.npz": "e236293dbbda6f00678fd2d0fbd82d74b2bd89a0380f5937e0c8f88bc8677c49",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-connected-patch-remesh-371/D-closed-csg-only.npz": "7bd8a65a09cd7609475e443a0c4c70e6a457f35c59f5fb503c97297248f69419",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-connected-patch-remesh-371/candidate-f32-typed.npz": "3140f02c2527db6abe930128d591ae0bab763952b99961115cb3859872761f12",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-connected-patch-remesh-371/receipt.json": "0b6a7fa79dce2b2601963e102ebd89d6f28c7827cfc649430da95f22e2286e7c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c"
+  },
+  "old_core_volume_m3": 0.05381758502870851,
+  "new_core_volume_m3": 0.05381758498547023,
+  "lost_excluded_core_volume_m3": 5.156342165132445e-11,
+  "added_excluded_core_volume_m3": 8.325137013928705e-12,
+  "source_ancestry_selected_changed_banks": [
+    [
+      139,
+      139
+    ]
+  ],
+  "bank_cases": [
+    {
+      "body": 139,
+      "bone": 139,
+      "lost_core_intersect_bone_volume_m3": 3.399765291649185e-17
+    }
+  ],
+  "sum_lost_core_intersect_changed_bones_m3": 3.399765291649185e-17,
+  "maximum_sampled_patch_deviation_m": 9.025927746472091e-06,
+  "interpretation": "F64 solid diagnostic of construction changes, not exact all185 containment or physical admission. Positive lost-core/bone intersection is a newly exposed bone volume in the fat domain and requires review.",
+  "physical_admission": false,
+  "elapsed_s": 0.3752555421087891,
+  "selection_error": "face_ancestry_identity0/1 are source face identities, not body/bone indices. Only core difference volumes are valid; the bank sum is not an all-affected-bank result."
+}
