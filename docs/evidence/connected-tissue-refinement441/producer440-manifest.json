@@ -1,0 +1,106 @@
+{
+  "authored_parent_headwall_faces": 180,
+  "child_nodes": 7234,
+  "child_tetrahedra": 28635,
+  "claim": "derived coarse candidate sidecars only; no geometry admission or physical motion qualification",
+  "contact_thickness": {
+    "D": {
+      "method": "exact original nodal values; new nodes interpolate explicit original-parent barycentrics",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/D-contact-thickness.csv",
+      "rows": 2411,
+      "sha256": "4ac9a31597230b49573fa08f236ba557e7e1c3897a94930d3e27788ee6d25cb7"
+    },
+    "I": {
+      "method": "exact original nodal values; new nodes interpolate explicit original-parent barycentrics",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/I-contact-thickness.csv",
+      "rows": 2411,
+      "sha256": "4ac9a31597230b49573fa08f236ba557e7e1c3897a94930d3e27788ee6d25cb7"
+    },
+    "O": {
+      "method": "exact original nodal values; new nodes interpolate explicit original-parent barycentrics",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/O-contact-thickness.csv",
+      "rows": 2411,
+      "sha256": "4ac9a31597230b49573fa08f236ba557e7e1c3897a94930d3e27788ee6d25cb7"
+    }
+  },
+  "coordinate_frame_sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+  "derivation": {
+    "candidate_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-refinement-control-434/candidate.npz",
+    "candidate_npz_sha256": "a01655dc0719327d405f261f16e0929eb7040cb27812b0bccc820e8ce2e1ab3e",
+    "child_cell_count": 28635,
+    "child_node_count": 7234,
+    "coordinate_contract": "child current equals reference at canonical Float32 candidate reference; captured source current/reference remain separate",
+    "method": "explicit local reference refinement with original node injection, child-source cell ancestry and conservative mass mapped separately",
+    "parent_geometry_preserved": false,
+    "parent_topology_preserved": false,
+    "reference_assembly_not_measured_individual": true,
+    "source_cell_count": 28632,
+    "source_node_count": 7233
+  },
+  "input_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.weights.csv": "98205ae7de44401544b7969184788f5c2ee39cd4404cd34b8037377e7ae63a76",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/parent-layer-rows.csv": "ae8f0c96ce34f3dedf4b2950eb7009436f827998ad5a35b7f9287d2cf4cc384f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-refinement-control-434/candidate.npz": "a01655dc0719327d405f261f16e0929eb7040cb27812b0bccc820e8ce2e1ab3e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-refinement-control-434/coarse-node-to-fine-surface.csv": "a99a17486bec628346ac6673d93f9e6967ad41a59ada81b7c0df63f03e0204ea",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-refinement-control-434/parent-reduced-boundary.node": "7330491ec3b6864936d4e3e605bd7a528a4af8eb5ead97b70efa74a6c508dc36",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-refinement-control-434/refined-node-parent-ancestry.csv": "8c3d88f7cc4826619aee5ac94c92c0262e6de9ae5c1b74b8548ea935914f38ed"
+  },
+  "mass_mapping_maximum_transport_distance_m": 0.010795,
+  "method": "explicit connected reference refinement with source node/cell ancestry and exact child O/I/D facets",
+  "native_frame_source": "registered-skin-poses-100.json current/rest local_to_world_row_major_f32",
+  "native_steps": 0,
+  "node_map_rows": 9645,
+  "node_map_shared_I_pairs": 2411,
+  "output_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/donor-frames.csv": "b1704fb7b846254583f4b6a08c394ed3cad1603554244078706ca4b3811ac674",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/node-parent-registration.csv": "2183587c391d5fd4d55903703fa8a947a616c7edcafa4c741baaa45b058a11d4",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/outer-face-ancestry.csv": "b694cf38bfa962a5878992b299f82f757e3d31e4a8a6ddb5838a1d324e0cb92f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/registered-D-faces.csv": "e4b4d099b41daffe4173592d168e38389828222219e75f9a8b32bc42ffb08b48",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/registered-D.csv": "40c4f96f7f9db56853f88b17aee49fa87beb584768e4c97105dc5639d64fc4ed",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/registered-I-faces.csv": "c35204767f2bee819de809761e8f561f9aa16c4cddd6eb4f749b8d25cc0d4d02",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/registered-I.csv": "784edc1d3f5d2bd11ad00729144ddf47f63296cfe3329144bdd3fe980ddba7a0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/registered-O-faces.csv": "0a41d9287b3ae14a754a1d1f273f03c18715e718bb2a3f292057a1de4acd1181",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/registered/registered-O.csv": "1af1837206e96d9c885aab9e0a08cfc23b2dd173a11ccac2949edba1aa650d92",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/D-contact-thickness.csv": "4ac9a31597230b49573fa08f236ba557e7e1c3897a94930d3e27788ee6d25cb7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/D-full86.csv": "3cc383ecd0678b5777bc7db00ce104309a09389c0975cfa6c252f14a5e8690a0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/D-source.json": "65f72473664f55b4ec781d227069a16bf52c39376d1771bfb85559cf518052f0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/I-contact-thickness.csv": "4ac9a31597230b49573fa08f236ba557e7e1c3897a94930d3e27788ee6d25cb7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/I-full86.csv": "3cc383ecd0678b5777bc7db00ce104309a09389c0975cfa6c252f14a5e8690a0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/I-source.json": "6c6329fa53312a9912697885660f9f46760539d47e868706dedc21f11eb92c68",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/O-contact-thickness.csv": "4ac9a31597230b49573fa08f236ba557e7e1c3897a94930d3e27788ee6d25cb7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/O-full86.csv": "3cc383ecd0678b5777bc7db00ce104309a09389c0975cfa6c252f14a5e8690a0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/roles/O-source.json": "cadffdafcfbfabf050e7c2d1c237e43dbc50573a45f604efb017ec87428b5e3a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/source-domain-registry.json": "542b49995f9ddec6d8a86c79b46ecb2fc04af23a79e9ccca5e2b652de8138890",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/volume/cell-parent-map.csv": "52a07d8730d54ea512747c76d2399ba4a5e56cbc06d1582805627143744fdfa1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/volume/child.labels.csv": "0a61095603c8a6b6b45e1882e5f36acd1b89d0654f18e51d85d251f482ca4193",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/volume/combined-node-map.csv": "e7dcb313765285dd617b00060c4263643e2ce1d9ef53d6ab0353bca59a5b7d17",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/volume/facet-ancestry.csv": "232ad4b8b8cca712a0b38aa09f9aa4ee917868de9448c2d68ab53cc84ff29e8b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/volume/mesh.ele": "a5ccad3ea76680861a14885e8bd1aa5368dcd89574014f1ef32ce8cbe068d2a7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/volume/mesh.node": "7330491ec3b6864936d4e3e605bd7a528a4af8eb5ead97b70efa74a6c508dc36"
+  },
+  "parent_capture": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003",
+  "parent_maximum_registration_distance_m": 0.00035137510691875804,
+  "physical_admission": false,
+  "registered_facet_rows": 19108,
+  "rejected_alternative_preserved": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/coarse-transfer-mass-assets-299/mass-preflight.log",
+  "role_faces": {
+    "D": 4777,
+    "I": 4777,
+    "O": 4777
+  },
+  "role_nodes": {
+    "D": 2411,
+    "I": 2411,
+    "O": 2411
+  },
+  "role_source_registry": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/refined-native-producer-433/interior-regression-440/source-domain-registry.json",
+  "schema": "numi-human.registered-volume-parent-identity-source-control.v1",
+  "source_body_count": 157,
+  "source_parent_nodes": 7233,
+  "source_parent_tetrahedra": 28632
+}

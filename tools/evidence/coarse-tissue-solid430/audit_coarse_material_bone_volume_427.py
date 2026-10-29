@@ -23,6 +23,11 @@ def exterior(t):
  f=t[:,np.array([[1,2,3],[0,3,2],[0,1,3],[0,2,1]])].reshape(-1,3)
  keys,inv,cnt=np.unique(np.sort(f,axis=1),axis=0,return_inverse=True,return_counts=True)
  if np.any(cnt>2):raise ValueError("nonmanifold tetrahedral face incidence")
+ # Positive local volumes can still cover the same side of a shared facet.
+ # Interior cancellation requires opposite orientation, not just multiplicity.
+ sign=np.where(((f[:,0]>f[:,1]).astype(int)+(f[:,0]>f[:,2]).astype(int)+(f[:,1]>f[:,2]).astype(int))%2, -1,1)
+ signed=np.bincount(inv,weights=sign,minlength=len(cnt))
+ if np.any((cnt==2)&(signed!=0)):raise ValueError("equal-oriented paired tetrahedral face")
  return f[cnt[inv]==1]
 
 def volumes(p,t):

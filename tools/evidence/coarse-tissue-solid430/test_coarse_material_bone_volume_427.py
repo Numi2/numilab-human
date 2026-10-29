@@ -14,4 +14,7 @@ outside=m.solid(p[:4]+[3,0,0],m.exterior(t[:1]));assert (s^outside).is_empty()
 try:m.exterior(np.vstack([t,t[:1],t[:1]]))
 except ValueError:pass
 else:raise AssertionError("nonmanifold incidence admitted")
+try:m.exterior(np.array([[0,1,2,3],[0,1,2,4]]))
+except ValueError as e:assert "equal-oriented" in str(e)
+else:raise AssertionError("same-sided shared facet admitted")
 print("PASS: outward tet boundary; shared-face cancellation; exact positive/empty intersections; nonmanifold incidence rejection")

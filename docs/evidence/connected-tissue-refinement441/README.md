@@ -1,0 +1,13 @@
+# Connected tissue refinement preparation
+
+The existing registered O/I/D CSV compiler now supports explicit local reference refinement: original nodes are retained once, inserted nodes carry original-cell barycentrics and full86 weights, and every child cell retains its declared original material, donor, region and source-face identity. Captured source measurements remain separate from derived reference coordinates. Original thickness values remain exact; inserted boundary values interpolate the declared source ancestry. Native thickness bounds remain unchanged.
+
+A control inserts one interior node and replaces one fat tetrahedron with four children: 7,234 nodes and 28,635 tetrahedra. The native C++ CSV reader accepts its 9,645 source rows and 2,411 shared I pairs; the sixteen malformed-input regressions pass. This is a protocol control, not a geometry repair or native physical run.
+
+The existing conservative spatial mapper preserves all 13.939678963460464 kg, with zero total closure error and maximum parent-cell mass closure error 7.88e-16 kg. Skin remains within 900-1100 kg/m3 and fat within 850-950 kg/m3. For changed resolution, the bounded transport neighborhood is declared before execution from child-to-declared-original-parent centroid distances (10.795 mm for this control); the half-envelope sensitivity trial fails, and the full declared envelope passes. This is asset reference remapping, not a change to physical contact or material tolerances. Flow source contributions remain explicitly recorded; centroid proximity alone is not anatomical correspondence.
+
+The offline hinge-constrained fitting helper normalizes constraint rows into common distance units, certifies its sparse linear solve, and uses descent/energy backtracking with bounded penalty continuation. Its bound, coupled, dependent, infeasible and nonfinite fixtures pass. It creates no runtime physics path and does not make a failed fit valid.
+
+An attempted fourteen-node hand refinement had positive local tetrahedral volumes but ten equally oriented paired faces. It is retained as a failed connected-volume construction. The compiler and fast material-solid audit now reject such faces before cancellation, including within one material. A new negative fixture covers the same-sided case. The hand candidate was not sent through native physics.
+
+Physical skin/fat geometry remains unadmitted. Detailed source surface zero-crossing claims do not establish a clear coarse physical volume; the latest complete coarse audit still records unresolved material/bone intersections. The last physical diagnostic accepted zero steps. Native motion qualification, anatomical layer nesting and the final integrated resting run remain open.
