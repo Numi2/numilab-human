@@ -402,15 +402,28 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
     # Select one exact same-material parent tet per node for the semantic tuple.
     # Every I row uses its skin-side anchor, while both node-map copies retain
     # the same O/I/D source identity and current target.
+    source_incident=defaultdict(list)
+    for pt,tet in enumerate(parent_tets):
+        for old in tet:source_incident[int(old)].append(pt)
     selected_parent=[]
     for node in range(len(points)):
         role=role_by_node[node][0];wanted=16 if role=="D" else 15
         eligible=[c for c in incident[node] if role=="interior" or cell_material[c]==wanted]
         if not eligible:raise ValueError("node has no correctly labeled incident child cell")
         if pn[node]>=0:
-            cell=eligible[0];pt=int(cp[cell]);old=int(pn[node]);tet=parent_tets[pt]
-            match=np.flatnonzero(tet==old)
-            if len(match)!=1:raise ValueError("original boundary node is not in its declared source cell")
+            # Retriangulation changes incident child cells. Original-node
+            # ancestry stays in the original source packet, never in a
+            # coincident child-cell index. Keep the existing semantic gate.
+            old=int(pn[node])
+            allowed={tuple(int(cell_labels[c][k]) for k in keys[:3]) for c in eligible}
+            source_candidates=[pt for pt in source_incident[old]
+                               if tuple(int(source_labels[pt][k]) for k in keys[:3]) in allowed]
+            if not source_candidates:
+                raise ValueError(f"original node {old} source material/donor/region absent in refined incident cells")
+            child_sources={int(cp[c]) for c in eligible}
+            pt=min(source_candidates,key=lambda pt:(pt not in child_sources,pt))
+            tet=parent_tets[pt];match=np.flatnonzero(tet==old)
+            if len(match)!=1:raise ValueError("original node source ancestry is not a unique original cell corner")
             beta=tuple(1. if k==int(match[0]) else 0. for k in range(4))
         else:pt,beta=node_parent_ancestry[node]
         key=tuple(int(source_labels[pt][k]) for k in keys[:3])
