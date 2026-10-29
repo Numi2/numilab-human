@@ -1,0 +1,49 @@
+{
+  "status": "interpretation_addendum_not_authoring",
+  "raw_receipt_sha256": "7c26267ecb99181e2ae35f77721bdd00ccca24602e6557b1fe50cc03235b5e62",
+  "original_contained_sites": [
+    {
+      "site_row": 1,
+      "volume_node_row": 6155,
+      "source_vertex_row": 29464,
+      "original_containment_witnesses": [
+        {
+          "position": "original",
+          "body": 23,
+          "bone": 33,
+          "distance_to_boundary_m": 0.0015370962042891155,
+          "absolute_winding": 1.0000000000000004,
+          "bank_face_row": 6411
+        }
+      ],
+      "nearest_full_surface_distance_m": 0.004098411623772132,
+      "requires_connected_attachment_registration_repair": true
+    },
+    {
+      "site_row": 2,
+      "volume_node_row": 5626,
+      "source_vertex_row": 14506,
+      "original_containment_witnesses": [
+        {
+          "position": "original",
+          "body": 139,
+          "bone": 132,
+          "distance_to_boundary_m": 0.0013543736047912543,
+          "absolute_winding": 1.0,
+          "bank_face_row": 182
+        }
+      ],
+      "nearest_full_surface_distance_m": 0.0013543736047914674,
+      "requires_connected_attachment_registration_repair": true
+    }
+  ],
+  "other_original_sites_with_no_owned_bank_containment": 12,
+  "other_sites_max_nearest_full_D_distance_m": 1.2043996823153585e-07,
+  "same_body_lookup": "Deliberately tested negative lookup control, not a repair target. Derived fine D faces may use body=-1 with full CSR ancestry. Filtering on face_source_body alone can jump to a distant bank surface; maximum here is 68.0554 mm. Do not consume same_body_fine_surface_point_m as a replacement attachment.",
+  "proposal_containment_fields": "fine_surface_proposal labels in raw receipt identify this rejected same-body lookup control. Nanometre-depth classifications are numerical winding diagnostics, not exact solid proofs.",
+  "accepted_relocations": 0,
+  "source_geometry_or_binding_changes": false,
+  "next_required_owner_action": "Use source-identity/CSR-aware local reference surface correspondence to repair the two erroneous locations and their connected skin/fat cells; update existing compliant attachment target through its owner, preserving site identity, donor/frame binding, source provenance, mass and rollback. Other12sitesremainunchanged.",
+  "runtime": 0,
+  "accepted_steps": 0
+}

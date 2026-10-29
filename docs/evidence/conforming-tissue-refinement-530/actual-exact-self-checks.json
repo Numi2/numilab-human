@@ -1,0 +1,34 @@
+{
+  "status": "exact_refined_material_boundary_self_audit",
+  "candidate_sha256": "5d83d235761999ca303b6d1ee1c6de8a36112f451e64afb7e75c9370621abe5d",
+  "refinement_source_sha256": "bc3831a56663cd561d5465d5943eb7cab275ca82b3c0be92561d62c42e8e8606",
+  "query_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+  "coordinate_contract": "canonical Float32 metre coordinates; exact integer predicates; no seam exemptions",
+  "layers": {
+    "skin": {
+      "faces": 9988,
+      "self_intersection_pairs": 0,
+      "audit": {
+        "triangle_pairs": [],
+        "count": 0,
+        "aabb_candidate_pairs": 118686,
+        "allowed_shared_vertex_or_edge_pairs": 67252
+      }
+    },
+    "fat": {
+      "faces": 9988,
+      "self_intersection_pairs": 0,
+      "audit": {
+        "triangle_pairs": [],
+        "count": 0,
+        "aabb_candidate_pairs": 111238,
+        "allowed_shared_vertex_or_edge_pairs": 67252
+      }
+    }
+  },
+  "elapsed_s": 2.561217333888635,
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "scope": "unprojected source002 refinement control only; no bone-clearance or anatomy qualification"
+}
