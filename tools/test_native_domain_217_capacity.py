@@ -61,6 +61,53 @@ class CapacityTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     module.plc_capacity_preflight({"skin": shell})
 
+    def test_emission_rejects_rounding_collapse_and_distinct_collinear_points(self):
+        for points in (np.array([[1., 0, 0], [1. + 1e-8, 0, 0], [1., 1., 0]]),
+                       np.array([[0., 0, 0], [1., 1., 0], [2., 2., 0]])):
+            with self.subTest(points=points.tolist()):
+                before = points.copy()
+                report = module.plc_emission_preflight({
+                    "skin": {"points_world_m": points, "faces": np.array([[0, 1, 2]])}})
+                self.assertFalse(report["emission_possible"])
+                self.assertEqual(report["domains"]["skin"]["invalid_face_rows_first_16"], [0])
+                np.testing.assert_array_equal(points, before)
+
+    def test_positive_submicron_facets_do_not_trigger_a_construction_threshold(self):
+        report = module.plc_emission_preflight({"skin": {
+            "points_world_m": np.array([[1., 0, 0], [1. + 2.**-23, 0, 0], [1., 1., 0]]),
+            "faces": np.array([[0, 1, 2]])}})
+        self.assertTrue(report["emission_possible"])
+        self.assertFalse(report["physical_admission"])
+
+    def test_emission_failure_precedes_hole_search_and_tetgen(self):
+        with tempfile.TemporaryDirectory() as name:
+            root = Path(name)
+            sources = {key: root / (key + ".npz") for key in
+                       ("outer", "inner", "deep", "collar", "wall-csv", "parent-cells", "parent-nodes")}
+            for path in sources.values(): np.savez(path, placeholder=np.array([0]))
+            output = root / "failed-attempt"
+            args = ["build_native_domain_217.py", "--run-tetgen", "--output", str(output)]
+            for key, path in sources.items(): args += ["--" + key, str(path)]
+            invalid = {"points_world_m": np.array([[1., 0, 0], [1. + 1e-8, 0, 0], [1., 1., 0]]),
+                       "faces": np.array([[0, 1, 2]])}
+            with mock.patch("sys.argv", args), \
+                 mock.patch.object(module, "load_surface", return_value={}), \
+                 mock.patch.object(module, "read_wall_provenance", return_value={}), \
+                 mock.patch.object(module, "assemble_shells", return_value=(invalid, tetra(), {})), \
+                 mock.patch.object(module, "plc_capacity_preflight") as capacity, \
+                 mock.patch.object(module, "_core_holes") as holes, \
+                 mock.patch.object(module, "run_tetgen") as tetgen, \
+                 contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(module.main(), 2)
+            capacity.assert_not_called()
+            holes.assert_not_called()
+            tetgen.assert_not_called()
+            receipt = json.loads((output / "adapter-receipt.json").read_text())
+            self.assertEqual(receipt["status"], "TETGEN_GEOMETRY_REJECTED")
+            self.assertEqual(receipt["emission"]["domains"]["skin"]["invalid_float32_area_faces"], 1)
+            self.assertIsNone(receipt["tetgen"])
+            self.assertFalse(receipt["physical_admission"])
+
     def test_capacity_failure_precedes_hole_search_and_tetgen(self):
         with tempfile.TemporaryDirectory() as name:
             root = Path(name)

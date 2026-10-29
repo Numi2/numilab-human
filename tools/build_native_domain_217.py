@@ -1262,6 +1262,40 @@ def _test_tetgen_result(node_path: Path, ele_path: Path, material: int,
             "positive_element_sha256": sha256(positive_ele_path),
             "cells_reoriented_positive": int(np.count_nonzero(mesh["element_reoriented"]))}
 
+def plc_emission_preflight(shells: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    """Reject facets that collapse in emitted coordinates before meshing.
+
+    Widen exact Float32 coordinates for this area measurement. No welding,
+    smoothing or construction-length threshold changes the input geometry.
+    Positive area is necessary, not a certificate of orientation, nesting,
+    self-intersection freedom or valid volume cells.
+    """
+    domains: dict[str, Any] = {}
+    for name, shell in shells.items():
+        points = np.asarray(shell["points_world_m"], dtype=np.float64)
+        faces = np.asarray(shell["faces"], dtype=np.int64)
+        if points.ndim != 2 or points.shape[1] != 3 or not np.isfinite(points).all():
+            raise ValueError(f"{name} emission preflight has invalid points")
+        if faces.ndim != 2 or faces.shape[1] != 3 or not len(faces) or \
+           np.any(faces < 0) or np.any(faces >= len(points)):
+            raise ValueError(f"{name} emission preflight has invalid facets")
+        emitted = points.astype(np.float32).astype(np.float64)
+        if not np.isfinite(emitted).all():
+            raise ValueError(f"{name} emission preflight overflows Float32")
+        triangles = emitted[faces]
+        cross = np.cross(triangles[:, 1] - triangles[:, 0],
+                         triangles[:, 2] - triangles[:, 0])
+        area2 = np.linalg.norm(cross, axis=1)
+        invalid = np.flatnonzero(~np.isfinite(area2) | (area2 <= 0.0))
+        domains[name] = {"faces_checked": int(len(faces)),
+                         "invalid_float32_area_faces": int(len(invalid)),
+                         "invalid_face_rows_first_16": invalid[:16].tolist()}
+    return {"domains": domains,
+            "emission_possible": all(d["invalid_float32_area_faces"] == 0
+                                     for d in domains.values()),
+            "coordinates_changed": False, "physical_admission": False}
+
+
 def plc_capacity_preflight(shells: dict[str, dict[str, Any]],
                            maximum_cells: int = MAX_COMBINED_TETRAHEDRA) -> dict[str, Any]:
     """Conservative necessary capacity bound, not a mesh-quality certificate.
@@ -1511,6 +1545,24 @@ def main() -> int:
     wall_rows = read_wall_provenance(collar, args.wall_csv, args.parent_cells,
                                      args.parent_nodes)
     skin, fat, assembly = assemble_shells(outer, inner, deep, collar, wall_rows)
+    emission = plc_emission_preflight({"skin": skin, "fat": fat})
+    if not emission["emission_possible"]:
+        # Keep deterministic witnesses before any hole search, PLC generation,
+        # TetGen or parent mass assignment can consume collapsed facets.
+        args.output.mkdir(parents=True)
+        report = {
+            "classification": "native domain Float32 facet rejection",
+            "status": "TETGEN_GEOMETRY_REJECTED",
+            "inputs": {str(p): sha256(p) for p in (
+                args.outer, args.inner, args.deep, args.collar, args.wall_csv,
+                args.parent_cells, args.parent_nodes)},
+            "assembly": assembly, "emission": emission,
+            "tetgen": None, "physical_admission": False,
+            "elapsed_s": time.monotonic() - start,
+        }
+        (args.output / "adapter-receipt.json").write_text(json.dumps(report, indent=2) + "\n")
+        print(json.dumps(report, separators=(",", ":")))
+        return 2
     capacity = plc_capacity_preflight({"skin": skin, "fat": fat})
     if args.run_tetgen and not capacity["capacity_possible"]:
         # Retain the failed necessary condition before hole search or TetGen.
