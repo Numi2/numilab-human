@@ -1,0 +1,967 @@
+{
+  "accepted_steps": 0,
+  "candidate": {
+    "open_faces": 257827,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/pair-geometry-014-linked-remesh/fine-I-bone-barrier-run-024/full-native-self-028/current-collar-plan-032/engine-20-ops-one-sided624-run-006/candidate-f32-linked-remesh-typed.npz",
+    "sha256": "c17794a1012f76924dcd9e4e754bb026c774deb5a3d37e2f1c79635ccfe9dc83",
+    "vertices": 129546
+  },
+  "cap_cap_classification": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/closed-cap-nesting-629/run-003/result/closure-cap-cap-classification.json",
+  "closed_nesting": {
+    "D_component_relations": [],
+    "I_component_relations": [],
+    "all_D_shells_inside_I_filled_region": false,
+    "all_I_void_shells_outside_D_filled_region": false,
+    "all_component_orientation_nesting_valid": false,
+    "queries": [],
+    "status": "NOT_RUN_CAP_PAIR_GATE_FAILED"
+  },
+  "closure_assets": {
+    "D": {
+      "caps": 41,
+      "edge_audit": {
+        "boundary_edge_count": 0,
+        "edge_incidence_histogram": {
+          "2": 386802
+        },
+        "nonmanifold_edge_count": 0,
+        "same_direction_shared_edge_count": 0
+      },
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/occupied-fat-run007-001/closed-inputs/D-closed-run007-f32.npz",
+      "sha256": "03396a361c3b5c65a6886379241cfb2d69aac4ce64de2779e91f465469844e86"
+    },
+    "I": {
+      "caps": 41,
+      "edge_audit": {
+        "boundary_edge_count": 0,
+        "edge_incidence_histogram": {
+          "2": 307920
+        },
+        "nonmanifold_edge_count": 0,
+        "same_direction_shared_edge_count": 0
+      },
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/occupied-fat-run007-001/closed-inputs/I-closed-current-f32.npz",
+      "sha256": "c6045dbca6954a65c8c53be1393fc79eca7e6d84f7c9fcbc7f0306cf4b30fcec"
+    }
+  },
+  "closure_cap_exact_checks": {
+    "D_cap_self": {
+      "aabb_candidate_pairs": 820,
+      "allowed_shared_topology_pairs": 162,
+      "exact_pair_count": 0
+    },
+    "D_caps_vs_D_open": {
+      "aabb_candidate_pairs": 500,
+      "allowed_shared_topology_pairs": 284,
+      "exact_pair_count": 0
+    },
+    "D_caps_vs_I_caps": {
+      "aabb_candidate_pairs": 224,
+      "allowed_shared_topology_pairs": 0,
+      "exact_pair_count": 30,
+      "temporary_coplanar_cut_interface_pairs": 0,
+      "unclassified_pairs": 30
+    },
+    "D_caps_vs_I_open": {
+      "aabb_candidate_pairs": 307,
+      "allowed_shared_topology_pairs": 0,
+      "exact_pair_count": 20
+    },
+    "I_cap_self": {
+      "aabb_candidate_pairs": 820,
+      "allowed_shared_topology_pairs": 162,
+      "exact_pair_count": 0
+    },
+    "I_caps_vs_D_open": {
+      "aabb_candidate_pairs": 346,
+      "allowed_shared_topology_pairs": 0,
+      "exact_pair_count": 0
+    },
+    "I_caps_vs_I_open": {
+      "aabb_candidate_pairs": 0,
+      "allowed_shared_topology_pairs": 0,
+      "exact_pair_count": 0
+    }
+  },
+  "closure_pair_archive": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/closed-cap-nesting-629/run-003/result/closure-cap-exact-pairs.npz",
+  "component_topology_and_orientation": {
+    "D": [
+      {
+        "face_count": 252438,
+        "orientation_sign": "positive",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 0,
+        "root_face_row": 1,
+        "signed_volume_m3": 0.05381640053726294,
+        "vertex_count": 125577
+      },
+      {
+        "face_count": 1244,
+        "orientation_sign": "positive",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 10205,
+        "root_face_row": 62167,
+        "signed_volume_m3": 8.207862393683169e-07,
+        "vertex_count": 624
+      },
+      {
+        "face_count": 20,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 49125,
+        "root_face_row": 65496,
+        "signed_volume_m3": -7.36374128294001e-14,
+        "vertex_count": 12
+      },
+      {
+        "face_count": 18,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 49209,
+        "root_face_row": 66488,
+        "signed_volume_m3": -3.101299270253323e-13,
+        "vertex_count": 11
+      },
+      {
+        "face_count": 22,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 53040,
+        "root_face_row": 67443,
+        "signed_volume_m3": -1.0634073095892956e-11,
+        "vertex_count": 13
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 53005,
+        "root_face_row": 67548,
+        "signed_volume_m3": -1.136145699096847e-12,
+        "vertex_count": 6
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 54630,
+        "root_face_row": 68156,
+        "signed_volume_m3": -1.3786204451029275e-13,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 36,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 55548,
+        "root_face_row": 68324,
+        "signed_volume_m3": -2.791883280837482e-12,
+        "vertex_count": 20
+      },
+      {
+        "face_count": 28,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 55715,
+        "root_face_row": 68497,
+        "signed_volume_m3": -8.783827808104633e-14,
+        "vertex_count": 16
+      },
+      {
+        "face_count": 22,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 56801,
+        "root_face_row": 68897,
+        "signed_volume_m3": -9.889175764711242e-18,
+        "vertex_count": 13
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 60833,
+        "root_face_row": 69470,
+        "signed_volume_m3": -1.8539185478844733e-22,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 28,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 60201,
+        "root_face_row": 69493,
+        "signed_volume_m3": -5.188209331767792e-12,
+        "vertex_count": 16
+      },
+      {
+        "face_count": 30,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 35135,
+        "root_face_row": 70189,
+        "signed_volume_m3": -5.507617557597655e-12,
+        "vertex_count": 17
+      },
+      {
+        "face_count": 36,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 40128,
+        "root_face_row": 70888,
+        "signed_volume_m3": -4.457620151879269e-12,
+        "vertex_count": 20
+      },
+      {
+        "face_count": 40,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 46235,
+        "root_face_row": 71455,
+        "signed_volume_m3": -8.119192596658094e-12,
+        "vertex_count": 22
+      },
+      {
+        "face_count": 28,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 46203,
+        "root_face_row": 71864,
+        "signed_volume_m3": -5.6551657547166565e-12,
+        "vertex_count": 16
+      },
+      {
+        "face_count": 30,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 46234,
+        "root_face_row": 71939,
+        "signed_volume_m3": -1.6939429057331486e-11,
+        "vertex_count": 17
+      },
+      {
+        "face_count": 150,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71483,
+        "root_face_row": 74937,
+        "signed_volume_m3": -6.119776911761246e-11,
+        "vertex_count": 77
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71703,
+        "root_face_row": 75659,
+        "signed_volume_m3": -3.977180332762879e-12,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 63289,
+        "root_face_row": 75812,
+        "signed_volume_m3": -3.065883617217443e-12,
+        "vertex_count": 6
+      },
+      {
+        "face_count": 90,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 64070,
+        "root_face_row": 77201,
+        "signed_volume_m3": -9.928113225659513e-11,
+        "vertex_count": 47
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 69436,
+        "root_face_row": 77370,
+        "signed_volume_m3": -1.17968119270219e-13,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 70297,
+        "root_face_row": 77385,
+        "signed_volume_m3": -4.159377939029745e-13,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 66535,
+        "root_face_row": 78281,
+        "signed_volume_m3": -8.426328757221785e-15,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71242,
+        "root_face_row": 78507,
+        "signed_volume_m3": -1.9342048410601704e-15,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71141,
+        "root_face_row": 80691,
+        "signed_volume_m3": -2.871620960811786e-12,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 44,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 69734,
+        "root_face_row": 80779,
+        "signed_volume_m3": -2.9202665232091468e-12,
+        "vertex_count": 24
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 63544,
+        "root_face_row": 81431,
+        "signed_volume_m3": -1.3753146748498096e-15,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 67505,
+        "root_face_row": 82198,
+        "signed_volume_m3": -4.9362797687931875e-14,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 69319,
+        "root_face_row": 82223,
+        "signed_volume_m3": -4.82217172606035e-18,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 20,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 69513,
+        "root_face_row": 82225,
+        "signed_volume_m3": -9.74124508403742e-12,
+        "vertex_count": 12
+      },
+      {
+        "face_count": 80,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71082,
+        "root_face_row": 82230,
+        "signed_volume_m3": -1.7430578087218307e-12,
+        "vertex_count": 42
+      },
+      {
+        "face_count": 14,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 69927,
+        "root_face_row": 82243,
+        "signed_volume_m3": -2.1644025871125235e-12,
+        "vertex_count": 9
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71619,
+        "root_face_row": 82252,
+        "signed_volume_m3": -1.093396883838329e-17,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 28,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 66851,
+        "root_face_row": 82815,
+        "signed_volume_m3": -8.303472791743252e-12,
+        "vertex_count": 16
+      },
+      {
+        "face_count": 72,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 70497,
+        "root_face_row": 82862,
+        "signed_volume_m3": -1.972765006200342e-11,
+        "vertex_count": 38
+      },
+      {
+        "face_count": 28,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 67746,
+        "root_face_row": 86517,
+        "signed_volume_m3": -3.6046490871313016e-17,
+        "vertex_count": 16
+      },
+      {
+        "face_count": 14,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 63483,
+        "root_face_row": 87922,
+        "signed_volume_m3": -6.179736377855889e-13,
+        "vertex_count": 9
+      },
+      {
+        "face_count": 28,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 65322,
+        "root_face_row": 89689,
+        "signed_volume_m3": -5.703277038229451e-13,
+        "vertex_count": 16
+      },
+      {
+        "face_count": 82,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 32195,
+        "root_face_row": 93021,
+        "signed_volume_m3": -2.221012274598795e-11,
+        "vertex_count": 43
+      },
+      {
+        "face_count": 44,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 32299,
+        "root_face_row": 93032,
+        "signed_volume_m3": -5.308235798927932e-13,
+        "vertex_count": 24
+      },
+      {
+        "face_count": 136,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 32324,
+        "root_face_row": 93203,
+        "signed_volume_m3": -9.325112200067242e-12,
+        "vertex_count": 70
+      },
+      {
+        "face_count": 52,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 32216,
+        "root_face_row": 93430,
+        "signed_volume_m3": -4.0262532862630624e-13,
+        "vertex_count": 28
+      },
+      {
+        "face_count": 16,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 37674,
+        "root_face_row": 94008,
+        "signed_volume_m3": -4.692082923334252e-13,
+        "vertex_count": 10
+      },
+      {
+        "face_count": 20,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 40882,
+        "root_face_row": 95268,
+        "signed_volume_m3": -1.6768983599360914e-12,
+        "vertex_count": 12
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 41186,
+        "root_face_row": 95273,
+        "signed_volume_m3": -1.2560919882381435e-12,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 114,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 40896,
+        "root_face_row": 95310,
+        "signed_volume_m3": -4.10887892743282e-12,
+        "vertex_count": 59
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 43767,
+        "root_face_row": 95895,
+        "signed_volume_m3": -5.206010710041948e-13,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 44245,
+        "root_face_row": 95935,
+        "signed_volume_m3": -4.524846655362742e-12,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 68,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 63299,
+        "root_face_row": 100037,
+        "signed_volume_m3": -3.5998027143288733e-12,
+        "vertex_count": 36
+      },
+      {
+        "face_count": 14,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 58982,
+        "root_face_row": 100228,
+        "signed_volume_m3": -1.2808772407137819e-11,
+        "vertex_count": 9
+      },
+      {
+        "face_count": 16,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 73365,
+        "root_face_row": 100971,
+        "signed_volume_m3": -3.779571891022192e-12,
+        "vertex_count": 10
+      },
+      {
+        "face_count": 26,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 74161,
+        "root_face_row": 101086,
+        "signed_volume_m3": -5.870935902311433e-12,
+        "vertex_count": 15
+      },
+      {
+        "face_count": 22,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 74675,
+        "root_face_row": 101175,
+        "signed_volume_m3": -7.348219775064599e-12,
+        "vertex_count": 13
+      },
+      {
+        "face_count": 32,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 74997,
+        "root_face_row": 103065,
+        "signed_volume_m3": -6.864879565201272e-15,
+        "vertex_count": 18
+      },
+      {
+        "face_count": 38,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 72897,
+        "root_face_row": 103081,
+        "signed_volume_m3": -2.2616672963645574e-15,
+        "vertex_count": 21
+      },
+      {
+        "face_count": 160,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 71552,
+        "root_face_row": 103258,
+        "signed_volume_m3": -1.7993707034484253e-11,
+        "vertex_count": 82
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 78588,
+        "root_face_row": 103880,
+        "signed_volume_m3": -8.607155227116096e-13,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 76686,
+        "root_face_row": 104084,
+        "signed_volume_m3": -1.631187988413073e-13,
+        "vertex_count": 6
+      },
+      {
+        "face_count": 34,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 77587,
+        "root_face_row": 104088,
+        "signed_volume_m3": -5.491090998647721e-12,
+        "vertex_count": 19
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 73222,
+        "root_face_row": 104440,
+        "signed_volume_m3": -1.5758495531632155e-13,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 22,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 77734,
+        "root_face_row": 104633,
+        "signed_volume_m3": -1.1299744172197231e-12,
+        "vertex_count": 13
+      },
+      {
+        "face_count": 46,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 78898,
+        "root_face_row": 104641,
+        "signed_volume_m3": -3.2771909404596786e-13,
+        "vertex_count": 25
+      },
+      {
+        "face_count": 38,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 77377,
+        "root_face_row": 104826,
+        "signed_volume_m3": -2.388779112097375e-13,
+        "vertex_count": 21
+      },
+      {
+        "face_count": 42,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 76298,
+        "root_face_row": 105131,
+        "signed_volume_m3": -3.2683782387529783e-12,
+        "vertex_count": 23
+      },
+      {
+        "face_count": 40,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 73824,
+        "root_face_row": 105393,
+        "signed_volume_m3": -5.648840750148534e-14,
+        "vertex_count": 22
+      },
+      {
+        "face_count": 26,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 72044,
+        "root_face_row": 105435,
+        "signed_volume_m3": -2.3064623200961777e-12,
+        "vertex_count": 15
+      },
+      {
+        "face_count": 50,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 75170,
+        "root_face_row": 105501,
+        "signed_volume_m3": -5.296989436570489e-12,
+        "vertex_count": 27
+      },
+      {
+        "face_count": 100,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 76541,
+        "root_face_row": 105592,
+        "signed_volume_m3": -9.27476200580554e-12,
+        "vertex_count": 52
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 76562,
+        "root_face_row": 105614,
+        "signed_volume_m3": -1.7939657416987686e-14,
+        "vertex_count": 6
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 84791,
+        "root_face_row": 119780,
+        "signed_volume_m3": -7.696902048577138e-13,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 22,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 84419,
+        "root_face_row": 120607,
+        "signed_volume_m3": -2.8061233728758875e-14,
+        "vertex_count": 13
+      },
+      {
+        "face_count": 24,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 74013,
+        "root_face_row": 120937,
+        "signed_volume_m3": -7.020709690204611e-13,
+        "vertex_count": 14
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 86057,
+        "root_face_row": 121353,
+        "signed_volume_m3": -6.557037785928997e-12,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 88946,
+        "root_face_row": 122184,
+        "signed_volume_m3": -5.679741748646826e-15,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 14,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 88461,
+        "root_face_row": 122504,
+        "signed_volume_m3": -4.1100166126203487e-13,
+        "vertex_count": 9
+      },
+      {
+        "face_count": 12,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 99099,
+        "root_face_row": 128746,
+        "signed_volume_m3": -1.9344369935642334e-14,
+        "vertex_count": 8
+      },
+      {
+        "face_count": 34,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 102050,
+        "root_face_row": 128988,
+        "signed_volume_m3": -2.3033888626725876e-12,
+        "vertex_count": 19
+      },
+      {
+        "face_count": 16,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 92592,
+        "root_face_row": 129503,
+        "signed_volume_m3": -5.342383771798069e-13,
+        "vertex_count": 10
+      },
+      {
+        "face_count": 24,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 92687,
+        "root_face_row": 129509,
+        "signed_volume_m3": -1.3723548892867993e-12,
+        "vertex_count": 14
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 95892,
+        "root_face_row": 130741,
+        "signed_volume_m3": -1.710828523957508e-13,
+        "vertex_count": 6
+      },
+      {
+        "face_count": 20,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 83638,
+        "root_face_row": 140569,
+        "signed_volume_m3": -2.1549420591475419e-13,
+        "vertex_count": 12
+      },
+      {
+        "face_count": 24,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 84665,
+        "root_face_row": 140771,
+        "signed_volume_m3": -2.041366193296514e-15,
+        "vertex_count": 14
+      },
+      {
+        "face_count": 16,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 84814,
+        "root_face_row": 140807,
+        "signed_volume_m3": -1.9444016995959092e-13,
+        "vertex_count": 10
+      },
+      {
+        "face_count": 32,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 86398,
+        "root_face_row": 141688,
+        "signed_volume_m3": -1.206123108587738e-12,
+        "vertex_count": 18
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 89145,
+        "root_face_row": 142726,
+        "signed_volume_m3": -8.773860402378865e-15,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 96503,
+        "root_face_row": 145353,
+        "signed_volume_m3": -6.410119368694894e-13,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 16,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 102678,
+        "root_face_row": 146111,
+        "signed_volume_m3": -3.973809724249643e-12,
+        "vertex_count": 10
+      },
+      {
+        "face_count": 4,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 102193,
+        "root_face_row": 146168,
+        "signed_volume_m3": -8.568290826320485e-12,
+        "vertex_count": 4
+      },
+      {
+        "face_count": 1568,
+        "orientation_sign": "positive",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 126222,
+        "root_face_row": 225448,
+        "signed_volume_m3": 1.2080483707379894e-06,
+        "vertex_count": 786
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 78116,
+        "root_face_row": 257660,
+        "signed_volume_m3": -3.308431213704774e-20,
+        "vertex_count": 6
+      },
+      {
+        "face_count": 8,
+        "orientation_sign": "negative",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 83730,
+        "root_face_row": 257667,
+        "signed_volume_m3": -4.5645546891144964e-14,
+        "vertex_count": 6
+      }
+    ],
+    "I": [
+      {
+        "face_count": 205280,
+        "orientation_sign": "positive",
+        "representative_selection": "smallest_vertex_on_open_surface_excluding_temporary_cap_vertices",
+        "representative_vertex_row": 0,
+        "root_face_row": 2606,
+        "signed_volume_m3": 0.06510798632194593,
+        "vertex_count": 102622
+      }
+    ]
+  },
+  "elapsed_s": 6.785578374983743,
+  "physical_admission": false,
+  "prior_surface_certificates": {
+    "D_full_self": {
+      "exact_pairs": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/complete-locality-self-replay-622/joint15-run-002/report.json",
+      "sha256": "5661751e02258fdfa5696afa2619b07e425a699f3790af3f5e9ef28a0595ce3d",
+      "status": "PASS_SELF_GATE"
+    },
+    "I_full_self": {
+      "exact_pairs": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/exact-native-387-001/self.json",
+      "sha256": "af94d841f904d25e99713d88581a9bf6f0d227616ca3ebe93f4cda4f664ace27"
+    },
+    "open_D_vs_open_I": {
+      "exact_pairs": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/whole-D-fine-I-interface-627/run-001/report.json",
+      "sha256": "ea5ef3a3879f4b9e78ae49f0c4dfe8c699e718825cba20b573f03bf03bba22f3",
+      "status": "PASS_SURFACE_PAIR_GATE"
+    }
+  },
+  "runtime": 0,
+  "schema": "closed-D-I-cap-intersections-and-exact-component-nesting.629.v1",
+  "scope": "Closure-cap self/cross checks, separately classified pinned coplanar temporary D/I cut-cap interfaces, and exact component orientation/nesting point location; no bone rerun, Boolean volume, mass, or physics.",
+  "source_pins": {
+    "D": "c17794a1012f76924dcd9e4e754bb026c774deb5a3d37e2f1c79635ccfe9dc83",
+    "D_I_open": "ea5ef3a3879f4b9e78ae49f0c4dfe8c699e718825cba20b573f03bf03bba22f3",
+    "D_cap_source": "03396a361c3b5c65a6886379241cfb2d69aac4ce64de2779e91f465469844e86",
+    "D_self": "5661751e02258fdfa5696afa2619b07e425a699f3790af3f5e9ef28a0595ce3d",
+    "I": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+    "I_closed": "c6045dbca6954a65c8c53be1393fc79eca7e6d84f7c9fcbc7f0306cf4b30fcec",
+    "I_self": "af94d841f904d25e99713d88581a9bf6f0d227616ca3ebe93f4cda4f664ace27",
+    "exact_owner_loader": "f1d697b42fc9d97472fbd70cec2d8adfe178bb591d3513680609396ec4c204ad",
+    "exact_predicate_source": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "operations": "6baddfa15e7fe40dd608b97eeca686059f25d00ade19ec583e2c429879923183"
+  },
+  "status": "CLOSED_CAP_INTERSECTION_OR_NESTING_REVIEW_REQUIRED"
+}
