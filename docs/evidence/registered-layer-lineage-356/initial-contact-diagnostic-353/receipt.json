@@ -1,0 +1,66 @@
+{
+  "scope": "retained failed release source/trace classification, not new native run",
+  "status_code": 6,
+  "status_meaning": "NM_STATUS_CONTACT_FAILURE",
+  "kernel": "nm_contact_limit_rigid_line_search",
+  "shader_path": "matter/src/metal/contact.metalinc",
+  "diagnostic_components": [
+    "sample separation_m",
+    "relative Newton correction travel_m",
+    "collision thickness_m",
+    "directional separation_m"
+  ],
+  "diagnostic_values": [
+    -5.7772275852130406e-09,
+    0.7753334045410156,
+    9.999999717180685e-10,
+    0.7753334045410156
+  ],
+  "failing_index_domain": "contact pair row, not tetrahedron index",
+  "pair_index": 1582,
+  "compiled_bed_plane_normal": [
+    0,
+    0,
+    1
+  ],
+  "compiled_bed_plane_offset_m": 0,
+  "source_node_row_at_same_ordinal": {
+    "parent_node_index": "1582",
+    "compiled_global_node": "3248",
+    "current_x_m": "0.017604691907763481",
+    "current_y_m": "-0.84742164611816406",
+    "current_z_m": "-5.7772275852130406e-09",
+    "rest_x_m": "0.017604691075024596",
+    "rest_y_m": "-0.84742162555582135",
+    "rest_z_m": "-5.7772277517464943e-09",
+    "compiled_lumped_mass_kg": "4.040955172968097e-05",
+    "node_frame_owner_body": "128",
+    "donor_local_x_m": "-0.11748176888144636",
+    "donor_local_y_m": "-0.018310558211906528",
+    "donor_local_z_m": "-0.042343878544624548",
+    "mass_bits": "942243181"
+  },
+  "minimum_over_first_2411_outer_rows": {
+    "parent_node_index": "1582",
+    "compiled_global_node": "3248",
+    "current_x_m": "0.017604691907763481",
+    "current_y_m": "-0.84742164611816406",
+    "current_z_m": "-5.7772275852130406e-09",
+    "rest_x_m": "0.017604691075024596",
+    "rest_y_m": "-0.84742162555582135",
+    "rest_z_m": "-5.7772277517464943e-09",
+    "compiled_lumped_mass_kg": "4.040955172968097e-05",
+    "node_frame_owner_body": "128",
+    "donor_local_x_m": "-0.11748176888144636",
+    "donor_local_y_m": "-0.018310558211906528",
+    "donor_local_z_m": "-0.042343878544624548",
+    "mass_bits": "942243181"
+  },
+  "outer_row_order_assumption": "old paired shell outer layer first, consistent with source/node dump; pair->node identity needs direct compiled pair capture for authoritative replay",
+  "source_nodes_sha256": "cfde650bc6d21c3d5c295a25e2a8a11e8e602f773e6e5de441b3fb0e4c57c905",
+  "first_touch_bound_admitted_m": 1e-06,
+  "observed_minimum_gap_m": -5.7772275852130406e-09,
+  "conclusion": "The old control started with a negative bed gap already equal to its rejected sample separation. Positive initial tetrahedra do not diagnose this contact failure. Current initialization must certify the compiled bed gap is above the physical contact floor. No physical tolerances were changed.",
+  "accepted_physical_steps": 0,
+  "motion_qualification": false
+}
