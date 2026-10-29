@@ -874,6 +874,33 @@ def validate_d_boolean_face_lineage(document, boolean_npz, source_shell_npz,
 D_RETIREMENT_MAX_PARENT_RESIDUAL_M = 4.0e-4
 
 
+def validate_parent_registration_distance_m(value):
+    try:
+        distance = float(value)
+    except (TypeError, ValueError, OverflowError) as exc:
+        raise ValueError("maximum parent registration distance must be a positive finite value in meters") from exc
+    if not math.isfinite(distance) or distance <= 0.0:
+        raise ValueError("maximum parent registration distance must be a positive finite value in meters")
+    return distance
+
+
+def parse_parent_registration_distance_m(value):
+    try:
+        return validate_parent_registration_distance_m(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(str(exc)) from exc
+
+
+def add_parent_registration_distance_argument(parser):
+    parser.add_argument(
+        "--maximum-parent-registration-distance-m",
+        type=parse_parent_registration_distance_m,
+        default=D_RETIREMENT_MAX_PARENT_RESIDUAL_M,
+        metavar="METERS",
+        help="maximum original-330 parent registration residual for newly constructed D nodes (default: 0.0004)",
+    )
+
+
 def unchanged_preexisting_derived_node_rows(baseline_parent_node_by_child, baseline_points_f32,
                                              baseline_ancestry_rows, candidate_parent_node_by_child,
                                              candidate_points, candidate_node_ancestry):
@@ -927,8 +954,7 @@ def validate_d_new_node_source_residuals(points, parent_points, parent_tets,
                                          role_by_node, maximum_m=D_RETIREMENT_MAX_PARENT_RESIDUAL_M,
                                          preexisting_derived_node_rows=()):
     """Keep newly constructed D boundary nodes on the existing 330 source map."""
-    if not math.isfinite(maximum_m) or maximum_m <= 0.0:
-        raise ValueError("D retirement source-registration bound must be positive and finite")
+    maximum_m = validate_parent_registration_distance_m(maximum_m)
     preexisting=set(map(int,preexisting_derived_node_rows))
     node_rows = [int(node) for node, (role, _role_row) in role_by_node.items()
                  if role == "D" and int(parent_node_by_child[int(node)]) < 0 and int(node) not in preexisting]
@@ -948,11 +974,15 @@ def validate_d_new_node_source_residuals(points, parent_points, parent_tets,
                                     for k in range(4)) for axis in range(3))
         distance = norm(sub(points[node], source_position))
         if not math.isfinite(distance) or distance > maximum_m:
-            raise ValueError(f"new D node {node} exceeds the 0.4 mm original-source registration bound")
+            if maximum_m == D_RETIREMENT_MAX_PARENT_RESIDUAL_M:
+                raise ValueError(f"new D node {node} exceeds the 0.4 mm original-source registration bound")
+            raise ValueError(
+                f"new D node {node} exceeds the declared original-source registration bound ({maximum_m:.17g} m)")
         maximum = max(maximum, distance)
     return {"new_d_boundary_node_count": len(node_rows),
             "new_d_boundary_node_maximum_source_residual_m": maximum,
             "new_d_boundary_node_maximum_source_residual_limit_m": maximum_m,
+            "declared_maximum_parent_registration_distance_m": maximum_m,
             "preexisting_current006_derived_node_count_excluded_from_new_node_gate": len(
                 preexisting & {int(node) for node,(role,_row) in role_by_node.items() if role=="D"}),
             "new_d_boundary_nodes_parent_tet_bary_and_full86_prevalidated": True}
@@ -1388,6 +1418,8 @@ def validate_o_boundary_face_retirement(document, source_o_faces, child_o_faces,
     }
 
 def export(args: argparse.Namespace) -> dict[str, Any]:
+    d_parent_registration_limit_m = validate_parent_registration_distance_m(
+        getattr(args, "maximum_parent_registration_distance_m", D_RETIREMENT_MAX_PARENT_RESIDUAL_M))
     capture = args.capture.resolve()
     out = args.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -1996,6 +2028,7 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
         unchanged_derived_d_rows=baseline_derived_d_rows & preexisting_derived_nodes
         d_source_residual_summary=validate_d_new_node_source_residuals(
             points,parent_points,parent_tets,pn,selected_parent,role_by_node,
+            maximum_m=d_parent_registration_limit_m,
             preexisting_derived_node_rows=preexisting_derived_nodes)
         d_source_residual_summary["preexisting_current006_d_nodes_unchanged_and_exempt"]=len(unchanged_derived_d_rows)
         d_source_residual_summary["preexisting_current006_d_nodes_changed_and_checked_as_new"]=len(baseline_derived_d_rows-unchanged_derived_d_rows)
@@ -2288,6 +2321,7 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    add_parent_registration_distance_argument(parser)
     parser.add_argument("--candidate-npz",type=pathlib.Path,required=True)
     parser.add_argument("--candidate-node",type=pathlib.Path,required=True)
     parser.add_argument("--candidate-node-map",type=pathlib.Path,required=True)

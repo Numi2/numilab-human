@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "D": 13,
+  "O": 5,
+  "operational_map": 1,
+  "assertions_enabled": true,
+  "python_compile": "PASS",
+  "physical_admission": false,
+  "runtime_created": 0,
+  "accepted_steps": 0,
+  "operational_map_argv": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/d-boundary-registration-publication-664/source/test_operational_reference_map_433.py",
+    "--default-map",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-020-final-producer-default/sidecars/volume/combined-node-map.csv",
+    "--baseline-map",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-015-433-native-export/volume/combined-node-map.csv",
+    "--operational-map",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/volume/combined-node-map.csv",
+    "--candidate",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-005-capacity-gradient-ulp/candidate.npz",
+    "--parent-capture",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003",
+    "--receipt",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/receipt.json"
+  ],
+  "operational_map_seconds": 0.16980290412902832,
+  "retained_attempt": "run_root_checks.py failed only after both D and O suites passed, because operational control was invoked without required arguments. The corrected operational command and its output are recorded separately."
+}

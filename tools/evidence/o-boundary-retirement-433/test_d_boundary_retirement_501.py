@@ -87,26 +87,53 @@ def expect_error(call,message):
 
 
 def test_new_d_node_source_residual_is_bounded_only_for_explicit_d_path():
-    points=[(0.,0.,0.),(1.,0.,0.),(0.,1.,0.),(0.,0.,1.),(.25,.25,.2501)]
-    parent_points=points[:4]
-    parent_tets=np.asarray([[0,1,2,3]],np.int64)
-    parent_rows=np.asarray([0,1,2,3,-1],np.int64)
+    parser=argparse.ArgumentParser()
+    producer.add_parent_registration_distance_argument(parser)
+    assert parser.parse_args([]).maximum_parent_registration_distance_m==4.0e-4
+    assert parser.parse_args(["--maximum-parent-registration-distance-m","0.0025"]).maximum_parent_registration_distance_m==0.0025
+    for invalid in ("nan","inf","-inf","0","-0.1"):
+        try:producer.parse_parent_registration_distance_m(invalid)
+        except argparse.ArgumentTypeError as exc:assert "positive finite" in str(exc)
+        else:raise AssertionError("invalid parent-registration CLI value was accepted: "+invalid)
+
+    parent_points=[(0.,0.,0.),(1.,0.,0.),(0.,1.,0.),(0.,0.,1.)]
+    parent_tets=np.asarray([[0,1,2,3]],dtype=np.int64)
+    parent_rows=np.asarray([0,1,2,3,-1],dtype=np.int64)
+    roles={0:("D",0),1:("D",1),2:("D",2),3:("D",3),4:("D",4)}
     selected=[(0,(1.,0.,0.,0.)),(0,(0.,1.,0.,0.)),
               (0,(0.,0.,1.,0.)),(0,(0.,0.,0.,1.)),
               (0,(.25,.25,.25,.25))]
-    roles={0:("D",0),1:("D",1),2:("D",2),3:("D",3),4:("D",4)}
+    def with_residual(residual):
+        return [(0.,0.,0.),(1.,0.,0.),(0.,1.,0.),(0.,0.,1.),(.25,.25,.25+residual)]
+
     result=producer.validate_d_new_node_source_residuals(
-        points,parent_points,parent_tets,parent_rows,selected,roles)
+        with_residual(.0001),parent_points,parent_tets,parent_rows,selected,roles)
     assert result["new_d_boundary_node_count"]==1
     assert result["new_d_boundary_node_maximum_source_residual_m"] < 4.0e-4
+    assert result["declared_maximum_parent_registration_distance_m"]==4.0e-4
+    expect_error(lambda:producer.validate_d_new_node_source_residuals(
+        with_residual(.0005),parent_points,parent_tets,parent_rows,selected,roles),
+        "exceeds the 0.4 mm original-source registration bound")
+
+    # The explicit 2.5 mm source-registration reference accepts this node and
+    # records that exact declared setting; the physical gates are unchanged.
+    wider=producer.validate_d_new_node_source_residuals(
+        with_residual(.0005),parent_points,parent_tets,parent_rows,selected,roles,maximum_m=.0025)
+    assert abs(wider["new_d_boundary_node_maximum_source_residual_m"]-.0005)<1.0e-12
+    assert wider["new_d_boundary_node_maximum_source_residual_limit_m"]==.0025
+    assert wider["declared_maximum_parent_registration_distance_m"]==.0025
+    expect_error(lambda:producer.validate_d_new_node_source_residuals(
+        with_residual(.0026),parent_points,parent_tets,parent_rows,selected,roles,maximum_m=.0025),
+        "exceeds the declared original-source registration bound")
+
     # An unchanged original node is not treated as a newly constructed D node.
     assert producer.validate_d_new_node_source_residuals(
-        points,parent_points,parent_tets,np.asarray([0,1,2,3,4]),selected,roles
-    )["new_d_boundary_node_count"]==0
-    too_far=list(points);too_far[4]=(.25,.25,.2509)
-    expect_error(lambda:producer.validate_d_new_node_source_residuals(
-        too_far,parent_points,parent_tets,parent_rows,selected,roles),
-        "exceeds the 0.4 mm original-source registration bound")
+        with_residual(.0026),parent_points,parent_tets,np.asarray([0,1,2,3,4]),selected,roles,
+        maximum_m=.0025)["new_d_boundary_node_count"]==0
+    for invalid in (float("nan"),float("inf"),float("-inf"),0.0,-.1):
+        expect_error(lambda value=invalid:producer.validate_d_new_node_source_residuals(
+            with_residual(.0001),parent_points,parent_tets,parent_rows,selected,roles,maximum_m=value),
+            "positive finite")
 
 
 def test_source_protected_set_is_149():
@@ -512,7 +539,19 @@ def test_exporter_full_d_retirement_integration():
         assert d["preexisting_current006_d_nodes_changed_and_checked_as_new"]==0
         assert d["new_d_boundary_node_count"]==1
         assert d["new_d_boundary_node_maximum_source_residual_m"]<=d["new_d_boundary_node_maximum_source_residual_limit_m"]
+        assert d["declared_maximum_parent_registration_distance_m"]==4.0e-4
+        default_receipt=json.loads((out/"receipt.json").read_text())
+        assert default_receipt["d_boundary_retirement"]["declared_maximum_parent_registration_distance_m"]==4.0e-4
         assert delta<=1.0e-6 and abs(float(points[retired_child,axis])-float(base["points_current_world_m_f32"][retired_child,axis]))<1.1e-6
+
+        # Exercise the same exporter with an explicitly declared reconstruction
+        # reference bound and confirm that exact value reaches the saved receipt.
+        args.out=temp/"export-explicit-limit"
+        args.maximum_parent_registration_distance_m=0.0025
+        wider_result=producer.export(args)
+        assert wider_result["d_boundary_retirement"]["declared_maximum_parent_registration_distance_m"]==0.0025
+        wider_receipt=json.loads((args.out/"receipt.json").read_text())
+        assert wider_receipt["d_boundary_retirement"]["declared_maximum_parent_registration_distance_m"]==0.0025
 
 
 
