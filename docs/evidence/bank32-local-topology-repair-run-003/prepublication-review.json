@@ -1,0 +1,436 @@
+{
+  "README_sha256": "9efdbc4a6a930f8588d50ee90180e4ac5acc21fe32adf656304e49d41314ec76",
+  "accepted_physical_steps": 0,
+  "bundle_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle",
+  "commands": {
+    "compile_checks": [
+      {
+        "argv": [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "-m",
+          "py_compile",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/repair_local_clusters.py"
+        ],
+        "exit_code": 0
+      },
+      {
+        "argv": [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "-m",
+          "py_compile",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/verify_saved_candidate.py"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "saved_file_readback": {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/verify_saved_candidate.py"
+      ],
+      "exit_code": 0,
+      "host": "numi",
+      "python": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "source_sha256": "22ba22edb8b0fe45993bedcb74b301acf35f69d98cad354cc1793d277efe7807",
+      "status": "PASS",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "93d437d71baf0dc443a0f2bf2ea34703120be4cba1b5234da75a7215b21c832f"
+    },
+    "search": {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/repair_local_clusters.py"
+      ],
+      "elapsed_s": 1.8957388328853995,
+      "exit_code": 0,
+      "host": "numi",
+      "python": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "source_sha256": "0abc1b68d886eb9df381c000db95ee240f26dfe9c763462b295d3ea97d08a6ce",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "7d22824e214613cdc253b11090132f281fac132ba70c34d95059ae6ed0f47881"
+    }
+  },
+  "commit": null,
+  "derived_source_view_sha256": "012730d7310ad62f07d9f14664e81ee4df483f5898158486c6d8266842ee3741",
+  "exact_readback_status": "PASS",
+  "failed_setup_attempts": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "command": "ssh numi: run_geometry_serial.py <python> repair_local_clusters.py > run-003-local-topology-repair/results/wrapper.stdout 2> .../wrapper.stderr",
+        "exit_code": 1,
+        "geometry_started": false,
+        "reason": "wrapper log directory had not yet been created",
+        "stderr": "zsh: no such file or directory: .../run-003-local-topology-repair/results/wrapper.stdout"
+      },
+      {
+        "attempt": 2,
+        "command": "ssh numi: run_geometry_serial.py <python> repair_local_clusters.py > run-003-local-topology-repair/results/wrapper.stdout 2> .../wrapper.stderr",
+        "exit_code": 1,
+        "geometry_started": false,
+        "reason": "the wrapper log directory was incorrectly also selected as the script result directory",
+        "stderr": "RuntimeError: output directory is not empty: .../run-003-local-topology-repair/results"
+      }
+    ],
+    "schema": "numi.bank32-local-repair-failed-setup-attempts.v1"
+  },
+  "files": [
+    {
+      "destination": "tools/bank32-local-topology-repair-run-003/repair_local_clusters.py",
+      "sha256": "0abc1b68d886eb9df381c000db95ee240f26dfe9c763462b295d3ea97d08a6ce",
+      "size_bytes": 40588,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/tools/repair_local_clusters.py",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/repair_local_clusters.py"
+    },
+    {
+      "destination": "tools/bank32-local-topology-repair-run-003/verify_saved_candidate.py",
+      "sha256": "22ba22edb8b0fe45993bedcb74b301acf35f69d98cad354cc1793d277efe7807",
+      "size_bytes": 7705,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/tools/verify_saved_candidate.py",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/verify_saved_candidate.py"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/candidate-f32.npz",
+      "sha256": "22bd7be7e85fe63ebd6717ff1abdda9c847964cdc470644fba92d643e693fd39",
+      "size_bytes": 968437,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/candidate-f32.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/candidate-f32.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/candidate-f64.npz",
+      "sha256": "9a1963acd8744fb1671861bc5e292e4c8d58614eb8d81bd27690d4df4f524dec",
+      "size_bytes": 977974,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/candidate-f64.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/candidate-f64.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/derived-source-view.npz",
+      "sha256": "012730d7310ad62f07d9f14664e81ee4df483f5898158486c6d8266842ee3741",
+      "size_bytes": 7359,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/derived-source-view.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/BONE-derived-126000033-source.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/result.json",
+      "sha256": "7510b6dbe88456f5faf34b14487f028bcaa9ebec461e7dca7864a4353691e7d2",
+      "size_bytes": 25096,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/result.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/result.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/operations.json",
+      "sha256": "b6b180191f6a0c3f759ae1fa629d772938a52b0ffe7b8d990590d75018366966",
+      "size_bytes": 20506,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/operations.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/operations.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/final-self-pairs.npz",
+      "sha256": "421ee82962ced7839ec315f069310cfe1f9b25e2b715d002efc9694ce7e4fe48",
+      "size_bytes": 216,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/final-self-pairs.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/candidate-self-intersections.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/readback-result.json",
+      "sha256": "93d437d71baf0dc443a0f2bf2ea34703120be4cba1b5234da75a7215b21c832f",
+      "size_bytes": 1502,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/readback-result.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/result.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/readback-self-pairs.npz",
+      "sha256": "421ee82962ced7839ec315f069310cfe1f9b25e2b715d002efc9694ce7e4fe48",
+      "size_bytes": 216,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/readback-self-pairs.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/saved-candidate-self-pairs.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/readback-native-cross-pairs.npz",
+      "sha256": "421ee82962ced7839ec315f069310cfe1f9b25e2b715d002efc9694ce7e4fe48",
+      "size_bytes": 216,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/readback-native-cross-pairs.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/saved-candidate-native-cross-pairs.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/readback.stdout",
+      "sha256": "93d437d71baf0dc443a0f2bf2ea34703120be4cba1b5234da75a7215b21c832f",
+      "size_bytes": 1502,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/readback.stdout",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/wrapper.stdout"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/readback.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/readback.stderr",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/wrapper.stderr"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/search.stdout",
+      "sha256": "7d22824e214613cdc253b11090132f281fac132ba70c34d95059ae6ed0f47881",
+      "size_bytes": 1188,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/search.stdout",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/results/wrapper.stdout"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/search.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/search.stderr",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/results/wrapper.stderr"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass1-report.json",
+      "sha256": "e717a3e3dacac7031f00c54c42ffe0b93f666496ced6d37a92669be257a95ab3",
+      "size_bytes": 853939,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass1-report.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/output/report.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass1-structural-result.json",
+      "sha256": "558639718c0d525ecd8e268168e37b608d935a68960294799c453395724a6926",
+      "size_bytes": 144,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass1-structural-result.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/output/bank-structural-result.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass1-conditioner-events.json",
+      "sha256": "42bd2210ba5554bb9478e876e189b3f10af71ae335bcdd8b714a8808fbde20e8",
+      "size_bytes": 121732,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass1-conditioner-events.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/output/conditioner-events-before-emission.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass1-candidate-f32.npz",
+      "sha256": "aca987996494fe155ca41bedb5f7658324fc211613bfd6807d6296a14f41da01",
+      "size_bytes": 939303,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass1-candidate-f32.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/output/candidate-f32.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass2-exact-gate-result.json",
+      "sha256": "afafe1e9a18f7c24035791195b269a94ab639912a13b43dde58c9f39535cd41c",
+      "size_bytes": 13373,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass2-exact-gate-result.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/result.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass2-structural-result.json",
+      "sha256": "60f103a378b2c932e06d6a34b4ded39d3d2c4a3e562880edad79923e7305be13",
+      "size_bytes": 10919,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass2-structural-result.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/structural-result.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass2-eight-self-pairs.npz",
+      "sha256": "fe16f3f07e0037eb58022390110dfd3ae4f26e2266df913dea648a9958d0c849",
+      "size_bytes": 249,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass2-eight-self-pairs.npz",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/candidate-self-intersections.npz"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass2-eight-self-pair-summary.json",
+      "sha256": "64010dd9ce579e021d3c7f24a3ad8f1a1185693c8ff6a0d0920a2e8f784a721a",
+      "size_bytes": 14234,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass2-eight-self-pair-summary.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/self-pair-witness-summary.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/pass2-initial-orientation-witnesses.json",
+      "sha256": "e58330c08ddefc0eb5a132a580c021c3f39ac7d3e7dc4cf7c4780f367b776310",
+      "size_bytes": 6722,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/failed/pass2-initial-orientation-witnesses.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/initial-orientation-witnesses.json"
+    },
+    {
+      "destination": "tools/bank32-local-topology-repair-run-003/pass2_ulp_and_gate.py",
+      "sha256": "3b8ff9afc0b280752b5c6151e0768107be8de3b2af6c95488eca4045fbcb6f0d",
+      "size_bytes": 16274,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/tools/pass2_ulp_and_gate.py",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/condition_and_gate_bank32.py"
+    },
+    {
+      "destination": "tools/bank32-local-topology-repair-run-003/pass1_f32_conditioner.py",
+      "sha256": "c7ffb7e8a7832ab799104e93acbf4d3ef10a3cb631603a1f7f598ca6c2e1b5be",
+      "size_bytes": 31888,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/tools/pass1_f32_conditioner.py",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/condition_bank32_f32.py"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/failed/failed-setup-attempts.json",
+      "sha256": "dbdc0a356458594b326e661409121f20c5c4d58e9b725f2007f2b30b89d0a594",
+      "size_bytes": 976,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/failed-setup-attempts.json",
+      "source_original": null
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/asset-source-provenance.json",
+      "sha256": "0c74b6ad10fcbf068562f731e7c62030f0560445c8d5f30ce927a495281dda76",
+      "size_bytes": 5614,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/asset-source-provenance.json",
+      "source_original": null
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/native-replay-report.json",
+      "sha256": "8a042dc010352d3b8da18464b29a1d7d1760339297ab7048dd3ea484f50bbc81",
+      "size_bytes": 409815,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/native-replay-report.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/report.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/native-bank-operand-manifest.json",
+      "sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+      "size_bytes": 113487,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/native-bank-operand-manifest.json",
+      "source_original": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json"
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/source-pins.json",
+      "sha256": "346fe1136f762eb0fbb29143574e3b097fb578539fcc55049ae51f34a478aa17",
+      "size_bytes": 8242,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/source-pins.json",
+      "source_original": null
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/launches.json",
+      "sha256": "0c772c05120d1369a76cc225ccde184cebbe8859f67ffd45574e53bcc4e520e9",
+      "size_bytes": 2533,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/evidence/launches.json",
+      "source_original": null
+    },
+    {
+      "destination": "docs/evidence/bank32-local-topology-repair-run-003/README.md",
+      "sha256": "9efdbc4a6a930f8588d50ee90180e4ac5acc21fe32adf656304e49d41314ec76",
+      "size_bytes": 1562,
+      "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-local-topology-repair-publication-review-001/bundle/README.md",
+      "source_original": null
+    }
+  ],
+  "final_candidate_sha256": "22bd7be7e85fe63ebd6717ff1abdda9c847964cdc470644fba92d643e693fd39",
+  "human_main_base": "3ec5e836",
+  "limits": {
+    "max_elapsed_s": 600.0,
+    "max_face_ring": 2,
+    "max_local_operations": 20,
+    "max_source_geometric_displacement_m": 2e-07
+  },
+  "manifest_input_sha256": "800570449baf19ce59090938082f73fa5a9d71c89a2137f99c62889e0aca31f9",
+  "physical_admission": false,
+  "physical_transfer_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209",
+  "publication_state": "PREPARED_FOR_ROOT_REVIEW_NOT_PUBLISHED",
+  "pushed": false,
+  "result_status": "PASS_LOCAL_GATES_SELF_ZERO",
+  "runtime": 0,
+  "schema": "numi.human.bank32-envelope-repair-publication-review.v1",
+  "source_pins": {
+    "aggregate_stable_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-source-stable-map.npz",
+      "sha256": "530c8d2e7efa99090186a33b179e36e24280308cae87990f4eec149da14df4e4"
+    },
+    "asset_source_bodies_csv": {
+      "path": "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/bone-clearance-fit-038-exact-bank-export-039/run-002/source-preflight/exact-emitted.bodies.csv",
+      "sha256": "dae52ab190e02586421b56381b03a4453aff1058edca7b6a42afcb9051b50b90"
+    },
+    "asset_source_helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/p205-hand-fingers-b65-99-b57-89-20261027-001/scripts/bone-bank-input-helper.py",
+      "sha256": "ea833990d8b1ffb309d4960e62fb8c67e5cf0ecdbcdc0d8e9ad40c20eaf4c6db"
+    },
+    "asset_source_triangles_csv": {
+      "path": "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/bone-clearance-fit-038-exact-bank-export-039/run-002/source-preflight/exact-emitted.triangles.csv",
+      "sha256": "0d3418064af1d4f34d19a1ec91992afceacaaa70b6c982d4a2637ded1d829eac"
+    },
+    "bank_envelope": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/bank-envelopes/bank-023-032-cube2um.npz",
+      "sha256": "4cb25b1387af6caabb3479ff990ac27b49d1592817af508e8e3d78d9d6f29067"
+    },
+    "bank_operand_manifest": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json",
+      "sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c"
+    },
+    "cgal_exact_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/authoring-deps/igl/copyleft/cgal/pyigl_copyleft_cgal.abi3.so",
+      "sha256": "eb5b958e7c7a1adcf604e91ef3c429a44336f33f1ca4ed41542cf1b457adab5e"
+    },
+    "conditioner_input_source_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/input/D-conditioner-resume-f64.npz",
+      "sha256": "853ce71fe5be6bd0afa24be683c5901412686c30fbf8a6715da63d71991623c3"
+    },
+    "final_candidate_f32": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/candidate-f32.npz",
+      "sha256": "22bd7be7e85fe63ebd6717ff1abdda9c847964cdc470644fba92d643e693fd39"
+    },
+    "final_candidate_f64": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/candidate-f64.npz",
+      "sha256": "9a1963acd8744fb1671861bc5e292e4c8d58614eb8d81bd27690d4df4f524dec"
+    },
+    "final_result": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/result.json",
+      "sha256": "7510b6dbe88456f5faf34b14487f028bcaa9ebec461e7dca7864a4353691e7d2"
+    },
+    "final_source_view": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/BONE-derived-126000033-source.npz",
+      "sha256": "012730d7310ad62f07d9f14664e81ee4df483f5898158486c6d8266842ee3741"
+    },
+    "geometry_serial_wrapper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+      "sha256": "88ce1f98414e0125f0cb31a94354db40cfdaba2281f79a9040aa9872d19edf35"
+    },
+    "native_registered_poses": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json",
+      "sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a"
+    },
+    "native_replay": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz",
+      "sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5"
+    },
+    "native_replay_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/report.json",
+      "sha256": "8a042dc010352d3b8da18464b29a1d7d1760339297ab7048dd3ea484f50bbc81"
+    },
+    "operation_log": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/result/operations.json",
+      "sha256": "b6b180191f6a0c3f759ae1fa629d772938a52b0ffe7b8d990590d75018366966"
+    },
+    "parent_native_bone_operand": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/batch-007/bank-operands/bank-23-32.npz",
+      "sha256": "509d823330bf404ebaf01ae1a95fd5966097f906f4600f4a8cf4d82161041179"
+    },
+    "pass1_candidate_f32": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/output/candidate-f32.npz",
+      "sha256": "aca987996494fe155ca41bedb5f7658324fc211613bfd6807d6296a14f41da01"
+    },
+    "pass1_candidate_f64": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/output/candidate-f64.npz",
+      "sha256": "113a3db12871eef6bda0d8cff4f119eb06114fd83a8a89ffdf8ef4fe40bd8506"
+    },
+    "pass2_candidate_f32": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/candidate-f32.npz",
+      "sha256": "da83ed13621e25624625cabaf15452748c31b4a129a265874c28f13afc437b92"
+    },
+    "pass2_candidate_f64": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/candidate-f64.npz",
+      "sha256": "c82e2f003d6b3fb5dddb08a6b26e71bb4c58ec08a32720a4527fd3570dafc28a"
+    },
+    "pass2_self_pair_npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-002-ulp-and-exact-gates/candidate-self-intersections.npz",
+      "sha256": "fe16f3f07e0037eb58022390110dfd3ae4f26e2266df913dea648a9958d0c849"
+    },
+    "readback_result": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/result.json",
+      "sha256": "93d437d71baf0dc443a0f2bf2ea34703120be4cba1b5234da75a7215b21c832f"
+    },
+    "readback_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/verify_saved_candidate.py",
+      "sha256": "22ba22edb8b0fe45993bedcb74b301acf35f69d98cad354cc1793d277efe7807"
+    },
+    "repair_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/repair_local_clusters.py",
+      "sha256": "0abc1b68d886eb9df381c000db95ee240f26dfe9c763462b295d3ea97d08a6ce"
+    }
+  }
+}

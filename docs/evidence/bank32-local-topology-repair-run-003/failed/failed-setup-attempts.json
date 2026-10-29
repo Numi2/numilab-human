@@ -1,0 +1,21 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "command": "ssh numi: run_geometry_serial.py <python> repair_local_clusters.py > run-003-local-topology-repair/results/wrapper.stdout 2> .../wrapper.stderr",
+      "exit_code": 1,
+      "geometry_started": false,
+      "reason": "wrapper log directory had not yet been created",
+      "stderr": "zsh: no such file or directory: .../run-003-local-topology-repair/results/wrapper.stdout"
+    },
+    {
+      "attempt": 2,
+      "command": "ssh numi: run_geometry_serial.py <python> repair_local_clusters.py > run-003-local-topology-repair/results/wrapper.stdout 2> .../wrapper.stderr",
+      "exit_code": 1,
+      "geometry_started": false,
+      "reason": "the wrapper log directory was incorrectly also selected as the script result directory",
+      "stderr": "RuntimeError: output directory is not empty: .../run-003-local-topology-repair/results"
+    }
+  ],
+  "schema": "numi.bank32-local-repair-failed-setup-attempts.v1"
+}

@@ -1,0 +1,52 @@
+{
+  "compile_checks": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "-m",
+        "py_compile",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/repair_local_clusters.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "-m",
+        "py_compile",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/verify_saved_candidate.py"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "saved_file_readback": {
+    "argv": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/readback/verify_saved_candidate.py"
+    ],
+    "exit_code": 0,
+    "host": "numi",
+    "python": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "source_sha256": "22ba22edb8b0fe45993bedcb74b301acf35f69d98cad354cc1793d277efe7807",
+    "status": "PASS",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "93d437d71baf0dc443a0f2bf2ea34703120be4cba1b5234da75a7215b21c832f"
+  },
+  "search": {
+    "argv": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bank32-f32-conditioning-001/run-003-local-topology-repair/repair_local_clusters.py"
+    ],
+    "elapsed_s": 1.8957388328853995,
+    "exit_code": 0,
+    "host": "numi",
+    "python": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "source_sha256": "0abc1b68d886eb9df381c000db95ee240f26dfe9c763462b295d3ea97d08a6ce",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stdout_sha256": "7d22824e214613cdc253b11090132f281fac132ba70c34d95059ae6ed0f47881"
+  }
+}

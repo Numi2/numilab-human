@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "scope": "source-only protected-point audit scoping regression",
+  "cases": [
+    "default whole-body scope preserved",
+    "regional scope derived from complete same-label source-tet group",
+    "two true regional failures remain failures",
+    "eleven unrelated-body points classified outside partial domain",
+    "empty source group rejects",
+    "missing source-parent node rejects",
+    "malformed domains reject"
+  ],
+  "results": {
+    "skin": {
+      "required_count": 90,
+      "out_of_scope_count": 0,
+      "genuine_missing_source_nodes": [],
+      "outside_region_missing_source_nodes": []
+    },
+    "fat": {
+      "required_count": 93,
+      "out_of_scope_count": 11,
+      "genuine_missing_source_nodes": [
+        5958,
+        5994
+      ],
+      "outside_region_missing_source_nodes": [
+        5514,
+        5574,
+        5612,
+        5626,
+        6379,
+        6413,
+        6541,
+        6612,
+        6653,
+        6664,
+        6809
+      ]
+    }
+  },
+  "runtime_created": 0,
+  "accepted_steps": 0,
+  "physical_admission": false,
+  "inputs_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/authoring-source-chain/audit_local_mask_preservation_scoped_050.py": "cf1dceb53babdb1d7b9993f794ac68259a27dc1ac026d4af6f4eb5ece26d2672",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-045-outerO-local-fine-joint-cap/run-001-ring1/mask-preservation-audit-001/report.json": "a5743adb22e4243d0fa8cc975e6c08b76f3a7a32022ddb5ad161047738294ae0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-044-minimal-coupled-bone32-buffer/authoring-source-chain/test_regional_protected_scope_050.py": "c564b06f011f0ac8c00bd35f2300a59dfced11a7567b6a614213fcaffb458c3d"
+  }
+}
