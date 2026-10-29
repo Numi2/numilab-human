@@ -1,0 +1,53 @@
+{
+  "schema": "human-geometric-donor-ownership-audit.v1",
+  "status": "read_only_semantics_audit_no_admission_change",
+  "date": "2026-10-29",
+  "conclusion": {
+    "frameOwnerIsDistinct": "The registered-surface exporter selects geometric donor from the selected current parent tetrahedron, but independently derives the frame owner as the dominant interpolated full86 binding. It records rows where those differ.",
+    "sourceMassIsDistinct": "Compiled parent source mass is reconstructed from actual node/material/source-donor contribution rows. Transport keeps this CSR source-donor ledger separate from the parent cell geometric donor.",
+    "currentTransportConstraint": "Spatial mass transport partitions capacities and flow by material, cell donor, and anatomical region; it additionally checks source-donor mass closure by material and source donor. Therefore current group constraints are stronger than source-donor closure alone.",
+    "physicalMeaning": "The geometric donor is not merely a pose/frame selector: parent labels are recovered from original registered source-vertex donor labels and retained with stable source-face ancestry. The examined code does not establish that this label directly owns material parameters; density bounds are material-indexed. Existing source/topology provenance may still justify maintaining the group partition.",
+    "disposition": "Keep the existing material/geometric-donor/region partition unchanged for this work. Do not remove the donor group absent an explicit owner-semantic decision and paired invariance/negative tests."
+  },
+  "invarianceTestsRequiredBeforeAnyFutureChange": [
+    "Freeze parent/child geometry, material/region labels, coordinates, source contributions and source-face ancestry; vary only frame-owner mapping and require unchanged mass output.",
+    "If later comparing a model without the geometric-donor grouping, check per-material/per-source-donor mass and first moments, density bounds, closure, distance limits, deterministic flow and receipts on identical geometry.",
+    "Keep rejection cases for wrong material/region, invalid source donor, bad source-face ancestry and nonclosing source ledger."
+  ],
+  "evidence": [
+    {
+      "file": "apps/NumiHumanConservativeSpatialMassTransport.hpp",
+      "sha256": "7019e52f5299f4200ccc71c70f203958d0221959596cb15d5eb17552da73eba1",
+      "lines": "40-48,101-105,591-598,718-745,1060-1081",
+      "finding": "Source-donor split is explicitly separate; grouping and closure use material/donor/region; source closure uses material/source-donor."
+    },
+    {
+      "file": "apps/NumiHumanPhysicalSkinChildMassMapping.hpp",
+      "sha256": "2919510900c11631ce6ec99f409208582c0ccabf71186472df7548f51ce6d9ae",
+      "lines": "1010-1025,1039-1044,1091-1100,1158-1162",
+      "finding": "Actual source contributions feed source splits; geometric cell labels feed group transport and dominant-parent checks."
+    },
+    {
+      "file": "apps/NumiHumanPhysicalSkinChildRegisteredVolumeImport.hpp",
+      "sha256": "a85ce991c06c193d2b6c98f712c8b29d8d8b43be0271ab7af63650d839b01271",
+      "lines": "26-52,160-176,512-538",
+      "finding": "Pose-frame donor and geometric donor are separate fields; inferred parent geometric donor/region must match the selected parent tetrahedron."
+    },
+    {
+      "file": "apps/NumiHumanSkinFatReductionLabels.hpp",
+      "sha256": "f39321f987b0ac88868f49325d4caf1b58e5aa8abd98c55aa409a28c8525df5a",
+      "lines": "2723-2766,3549-3565",
+      "finding": "Parent donor is a dominant label recovered from three original registered source vertices and retained with source-face ancestry."
+    },
+    {
+      "file": "streamed-layer-registration-398/run-002/export_authoring_registered_surface_sidecars_230.py",
+      "sha256": "18fbc383044c18f29d7fd7dccf822cc5b65957bc75aca0f4b6ac964ea27cb74a",
+      "lines": "510-540,543-547",
+      "finding": "Geometric parent donor comes from nearest same-material parent registration; frame owner comes separately from dominant full86 weights, and mismatches are counted."
+    }
+  ],
+  "policyChanged": false,
+  "physicalAdmission": false,
+  "nativeRuntimeCreated": 0,
+  "acceptedSteps": 0
+}
