@@ -606,25 +606,34 @@ def export(args:argparse.Namespace)->dict[str,Any]:
  if staged.exists():raise ValueError(f'refuse existing staging directory {staged}')
  staged.mkdir(parents=True)
  try:
-  outputs={};regrows=[];metrics={};exact_fallback_reports={}
-  for layer in ('O','I','D'):
-   result=register_layer(surfaces[layer],parent,index,
-       material_indices,frames,parent_weights86,binding_bodies,
-       args.maximum_parent_distance_m,args.tie_tolerance_m)
-   outputs[layer]=result;metrics[layer]=result['metrics']
-   if result.get('exactNearTieFallbacks'):
-    report=staged/f'exact-parent-near-tie-fallbacks-{layer}.json'
-    report.write_text(json.dumps({'schema':'exact-parent-near-tie-fallbacks.v1','layer':layer,
-      'candidatePath':surfaces[layer]['path'],'candidateSHA256':surfaces[layer]['sha256'],
-      'parentCurrentSHA256':parentmeta['nodeSHA256'],'poseSnapshotSHA256':posemeta['sha256'],
-      'fallbacks':result['exactNearTieFallbacks'],'physical_admission':False,'native_steps':0},indent=2,sort_keys=True)+'\n')
-    exact_fallback_reports[layer]={'path':report.name,'sha256':sha(report),'count':len(result['exactNearTieFallbacks'])}
-   write_csv(staged/f'registered-{layer}.csv',NODE_HEADER,result['nodes'])
-   write_csv(staged/f'registered-{layer}-faces.csv',FACE_HEADER,result['faces'])
-   write_csv(staged/f'parent-tet-full-weights-{layer}.csv',WEIGHT_HEADER,result['weightRows'])
-   write_csv(staged/f'parent-tet-full-weight-owners-{layer}.csv',WEIGHT_OWNER_HEADER,result['weightOwnerRows'])
-   regrows.extend(result['registrations'])
-  write_csv(staged/'node-parent-registration.csv',PARENT_HEADER,regrows)
+  outputs={};metrics={};exact_fallback_reports={}
+  # Write each layer before constructing the next; detailed full86 row dictionaries
+  # are authoring scratch, not persistent state. Preserve CSV row order and bytes.
+  registration_file=(staged/'node-parent-registration.csv').open('w',encoding='utf-8',newline='')
+  try:
+   registration_writer=csv.DictWriter(registration_file,fieldnames=PARENT_HEADER,extrasaction='raise',lineterminator='\n')
+   registration_writer.writeheader()
+   for layer in ('O','I','D'):
+    result=register_layer(surfaces[layer],parent,index,
+        material_indices,frames,parent_weights86,binding_bodies,
+        args.maximum_parent_distance_m,args.tie_tolerance_m)
+    outputs[layer]={'sourceDomain':result['sourceDomain']};metrics[layer]=result['metrics']
+    if result.get('exactNearTieFallbacks'):
+     report=staged/f'exact-parent-near-tie-fallbacks-{layer}.json'
+     report.write_text(json.dumps({'schema':'exact-parent-near-tie-fallbacks.v1','layer':layer,
+       'candidatePath':surfaces[layer]['path'],'candidateSHA256':surfaces[layer]['sha256'],
+       'parentCurrentSHA256':parentmeta['nodeSHA256'],'poseSnapshotSHA256':posemeta['sha256'],
+       'fallbacks':result['exactNearTieFallbacks'],'physical_admission':False,'native_steps':0},indent=2,sort_keys=True)+'\n')
+     exact_fallback_reports[layer]={'path':report.name,'sha256':sha(report),'count':len(result['exactNearTieFallbacks'])}
+    write_csv(staged/f'registered-{layer}.csv',NODE_HEADER,result['nodes'])
+    write_csv(staged/f'registered-{layer}-faces.csv',FACE_HEADER,result['faces'])
+    write_csv(staged/f'parent-tet-full-weights-{layer}.csv',WEIGHT_HEADER,result['weightRows'])
+    write_csv(staged/f'parent-tet-full-weight-owners-{layer}.csv',WEIGHT_OWNER_HEADER,result['weightOwnerRows'])
+    registration_writer.writerows(result['registrations'])
+    registration_file.flush()
+    del result
+  finally:
+   registration_file.close()
   write_csv(staged/'donor-frames.csv',FRAME_HEADER,frame_csv_rows(frames,binding_bodies))
   registry=[outputs[l]['sourceDomain'] for l in ('O','I','D')]
   (staged/'source-domain-registry.json').write_text(json.dumps(registry,indent=2,sort_keys=True)+'\n')
