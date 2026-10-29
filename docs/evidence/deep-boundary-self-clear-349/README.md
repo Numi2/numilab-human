@@ -6,4 +6,5 @@ This is a source-geometry diagnostic. All-bone clearance, nested layers, volume 
 
 The [restorable diagnostic archive](https://github.com/Numi2/numilab-human/releases/tag/human-deep-boundary349-self-clear-20261029) contains the exact candidate, ancestry, source scripts, predicate owner and per-file checksums. It is a mixed-source anatomical reference assembly, not one measured person. The archive supports replay of the exact surface check; it does not include every upstream asset needed to reconstruct the complete union.
 
-Archive SHA-256: `14cbd39ec127974c68bc54f60df02c8140676730d978de4a85f2dd4daf1f61e6`. Candidate SHA-256: `a155b1c935a62335fc537852db4647505dc4d058441bf5d8f6e1d26c3b95ff75`. Physical admission: false.
+Archive SHA-256: `92cc98b550bf2b5c401abefbd6f48b7065ce0b851e10b984ac780fbc6cb9e196`. Candidate SHA-256: `a155b1c935a62335fc537852db4647505dc4d058441bf5d8f6e1d26c3b95ff75`. Physical admission: false.
+The archive includes BodyParts3D attribution, source notices, repository licence and pinned source registry.
