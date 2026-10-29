@@ -1,0 +1,157 @@
+{
+  "accepted_steps": 0,
+  "candidate_operational_map_sha256": "b923542a7cbd5748697223c5a84de1bdce331b4fb17b5e7e0bfee17df11f1fed",
+  "candidate_sha256": "46e5ca16f21ffb1c64c3c0ae5404e6fb140fce510e85564b6279cf892324c8af",
+  "checked_epoch": 1793264742,
+  "checks": {
+    "candidate_operational_54_column": {
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/native-map-reader",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/volume/combined-node-map.csv",
+        "1"
+      ],
+      "exit_code": 0,
+      "expectation_met": true,
+      "expected_success": true,
+      "input_sha256": "b923542a7cbd5748697223c5a84de1bdce331b4fb17b5e7e0bfee17df11f1fed",
+      "stderr": "",
+      "stdout": "native_csv_parse=PASS rows=9644 nodes=7233 shared_I=2411 separated=1"
+    },
+    "default_42_column": {
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/native-map-reader",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-020-final-producer-default/sidecars/volume/combined-node-map.csv",
+        "0"
+      ],
+      "exit_code": 0,
+      "expectation_met": true,
+      "expected_success": true,
+      "input_sha256": "8adbb753c774b509b0f810496a8ae596e46e57590dcd89ff7f27639b96786fc7",
+      "stderr": "",
+      "stdout": "native_csv_parse=PASS rows=9644 nodes=7233 shared_I=2411 separated=0"
+    },
+    "wrong_map_bad_support_index": {
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/native-map-reader",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/wrong-operational-map.csv",
+        "1"
+      ],
+      "exit_code": 1,
+      "expectation_met": true,
+      "expected_success": false,
+      "input_sha256": "150b218cf1746d6faebea2f564c6e04afe6721e1a4e3700454dd162ab84ff280",
+      "stderr": "separated operational-reference map has an invalid source-parent identity or support tet",
+      "stdout": ""
+    },
+    "wrong_mode_default_as_operational": {
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/native-map-reader",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-020-final-producer-default/sidecars/volume/combined-node-map.csv",
+        "1"
+      ],
+      "exit_code": 1,
+      "expectation_met": true,
+      "expected_success": false,
+      "input_sha256": "8adbb753c774b509b0f810496a8ae596e46e57590dcd89ff7f27639b96786fc7",
+      "stderr": "combined-node-map CSV header differs from the registered volume contract",
+      "stdout": ""
+    },
+    "wrong_mode_operational_as_default": {
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/native-map-reader",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/volume/combined-node-map.csv",
+        "0"
+      ],
+      "exit_code": 1,
+      "expectation_met": true,
+      "expected_success": false,
+      "input_sha256": "b923542a7cbd5748697223c5a84de1bdce331b4fb17b5e7e0bfee17df11f1fed",
+      "stderr": "combined-node-map CSV header differs from the registered volume contract",
+      "stdout": ""
+    }
+  },
+  "cpp_csv_header_sha256": "ad25eb2240bdcba20c29451998590e8a6da547e9b57e38ada99f513703e02c1e",
+  "default_map_sha256": "8adbb753c774b509b0f810496a8ae596e46e57590dcd89ff7f27639b96786fc7",
+  "physical_admission": false,
+  "reader_binary_sha256": "017d36717a76621cb76efc167836598fea5a0de14eacf4660772b7c42d606855",
+  "registry": {
+    "candidate_operational_reference_map": {
+      "candidate_npz_sha256": "46e5ca16f21ffb1c64c3c0ae5404e6fb140fce510e85564b6279cf892324c8af",
+      "coordinate_frame_sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+      "immutable_source_parent_packet_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+      "node_map_sha256": "b923542a7cbd5748697223c5a84de1bdce331b4fb17b5e7e0bfee17df11f1fed",
+      "schema": "numi-human.candidate-operational-reference-node-map.v1"
+    },
+    "control_only": false,
+    "derivation": {
+      "candidate_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-005-capacity-gradient-ulp/candidate.npz",
+      "candidate_npz_sha256": "46e5ca16f21ffb1c64c3c0ae5404e6fb140fce510e85564b6279cf892324c8af",
+      "child_cell_count": 28632,
+      "child_node_count": 7233,
+      "coordinate_contract": "child current equals reference at canonical Float32 candidate reference; captured source current/reference remain separate",
+      "method": "explicit local reference refinement with original node injection, child-source cell ancestry and conservative mass mapped separately",
+      "parent_geometry_preserved": false,
+      "parent_topology_preserved": false,
+      "reference_assembly_not_measured_individual": true,
+      "source_cell_count": 28632,
+      "source_node_count": 7233
+    },
+    "physical_admission": false,
+    "registration_domain": "candidateOperationalReference",
+    "roles": [
+      {
+        "full86_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/roles/O-full86.csv",
+        "full86_row_count": 2411,
+        "full86_sha256": "3cc383ecd0678b5777bc7db00ce104309a09389c0975cfa6c252f14a5e8690a0",
+        "registered_faces_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/registered/registered-O-faces.csv",
+        "registered_faces_sha256": "0a41d9287b3ae14a754a1d1f273f03c18715e718bb2a3f292057a1de4acd1181",
+        "registered_nodes_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/registered/registered-O.csv",
+        "registered_nodes_sha256": "3f7e72424787bf012ccb3ef942d2f587a82d40e5ee038afc4e89df61fc8a6097",
+        "role": "O",
+        "source_asset": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/roles/O-source.json",
+        "source_asset_sha256": "ad0f022edf40c52aa27823331ba9e69b004d304310eab3bb17ac0f48f80df350",
+        "source_domain": "derived_connected_refinement433_O",
+        "source_face_count": 4777,
+        "source_vertex_count": 2411
+      },
+      {
+        "full86_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/roles/I-full86.csv",
+        "full86_row_count": 2411,
+        "full86_sha256": "3cc383ecd0678b5777bc7db00ce104309a09389c0975cfa6c252f14a5e8690a0",
+        "registered_faces_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/registered/registered-I-faces.csv",
+        "registered_faces_sha256": "c35204767f2bee819de809761e8f561f9aa16c4cddd6eb4f749b8d25cc0d4d02",
+        "registered_nodes_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/registered/registered-I.csv",
+        "registered_nodes_sha256": "7ee9d3f75814300fa05ee51a1e5f38fb8665c92781b3cd4fedc258e6ffd7bb9f",
+        "role": "I",
+        "source_asset": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/roles/I-source.json",
+        "source_asset_sha256": "26cfccb3dcc71f460a5cc55df5c53a3818f58d4efcb4066412c0381521a07afa",
+        "source_domain": "D37_coarse_parent",
+        "source_face_count": 4777,
+        "source_vertex_count": 2411
+      },
+      {
+        "full86_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/roles/D-full86.csv",
+        "full86_row_count": 2411,
+        "full86_sha256": "3cc383ecd0678b5777bc7db00ce104309a09389c0975cfa6c252f14a5e8690a0",
+        "registered_faces_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/registered/registered-D-faces.csv",
+        "registered_faces_sha256": "e4b4d099b41daffe4173592d168e38389828222219e75f9a8b32bc42ffb08b48",
+        "registered_nodes_csv": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/registered/registered-D.csv",
+        "registered_nodes_sha256": "ac6dbd59167f170fd674c34f6fca0324dcee1d6bc73d8000e2426d3d7eae5cc4",
+        "role": "D",
+        "source_asset": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/connected-measured-contact-472/run-021-final-producer-operational/sidecars/roles/D-source.json",
+        "source_asset_sha256": "920c782f0583fab0b3f57338f9e43fc39da41014d46beb9f4e12abd0954a1f0a",
+        "source_domain": "D37_coarse_parent",
+        "source_face_count": 4777,
+        "source_vertex_count": 2411
+      }
+    ],
+    "schema": "numi-human.registered-volume-role-source-registry.v1",
+    "typed_role_domain_indices": {
+      "D": 2,
+      "I": 1,
+      "O": 0
+    }
+  },
+  "runtime_created": false,
+  "scope": "native source CSV parser only; no runtime, GPU, mass admission, or physical step"
+}

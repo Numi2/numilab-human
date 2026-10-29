@@ -29,6 +29,14 @@ MATERIAL = {"O": 15, "I": 15, "D": 16}
 CORNER_FACES = ((1, 2, 3), (0, 3, 2), (0, 1, 3), (0, 2, 1))
 IDENTITY_KIND = "source_parent_tet_reference_registration"
 FRAME_METHOD = "captured_native_current_rest_local_to_world_f32"
+OPERATIONAL_REFERENCE_MAP_FIELDS = [
+    "source_parent_node_row", "operational_reference_tet_row",
+    "operational_reference_bary0", "operational_reference_bary1",
+    "operational_reference_bary2", "operational_reference_bary3",
+    "operational_reference_residual_x_m", "operational_reference_residual_y_m",
+    "operational_reference_residual_z_m", "operational_reference_distance_m",
+    "source_parent_geometric_donor_body", "source_parent_anatomical_region_id",
+]
 
 
 def digest(path: pathlib.Path) -> str:
@@ -50,6 +58,66 @@ def write_csv(path: pathlib.Path, header: list[str], rows: list[list[Any]]) -> N
         writer = csv.writer(f, lineterminator="\n")
         writer.writerow(header)
         writer.writerows(rows)
+
+
+def candidate_operational_reference_fields(
+        node: int, source_parent_node_row: int, source_parent_tet_row: int,
+        parent_labels: list[dict[str, Any]], child_tets: list[tuple[int, ...]],
+        child_labels: list[dict[str, Any]], incident_cells: list[list[int]]) -> list[Any]:
+    """Create exact self-tet registration while keeping source ancestry separate."""
+    if node < 0 or node >= len(incident_cells):
+        raise ValueError("candidate operational reference node is outside the child mesh")
+    if source_parent_node_row < -1 or source_parent_tet_row < 0 or source_parent_tet_row >= len(parent_labels):
+        raise ValueError("candidate operational reference lacks immutable source-parent ancestry")
+    parent_label = parent_labels[source_parent_tet_row]
+    donor = int(parent_label["geometric_donor_body"])
+    region = int(parent_label["anatomical_region_id"])
+    if donor < 0 or region < 0:
+        raise ValueError("candidate operational reference source-parent tuple is invalid")
+    eligible = [cell for cell in incident_cells[node]
+                if 0 <= cell < len(child_tets) and
+                int(child_labels[cell]["geometric_donor_body"]) == donor and
+                int(child_labels[cell]["anatomical_region_id"]) == region]
+    if not eligible:
+        raise ValueError("candidate node has no incident operational tet in its source-parent donor/region")
+    cell = min(eligible)
+    tet = child_tets[cell]
+    corners = [corner for corner, volume_node in enumerate(tet) if int(volume_node) == node]
+    if len(corners) != 1 or len(set(tet)) != 4:
+        raise ValueError("candidate operational reference tet does not uniquely contain its node")
+    bary = [0.0, 0.0, 0.0, 0.0]
+    bary[corners[0]] = 1.0
+    return [source_parent_node_row, cell, *bary, 0.0, 0.0, 0.0, 0.0, donor, region]
+
+
+def validate_candidate_operational_reference_fields(
+        fields: list[Any], node: int, expected_source_parent_node_row: int,
+        expected_source_parent_tet_row: int, parent_labels: list[dict[str, Any]],
+        child_tets: list[tuple[int, ...]], child_labels: list[dict[str, Any]],
+        incident_cells: list[list[int]]) -> None:
+    if len(fields) != len(OPERATIONAL_REFERENCE_MAP_FIELDS):
+        raise ValueError("candidate operational reference map row has the wrong width")
+    source_node, cell = int(fields[0]), int(fields[1])
+    if source_node != expected_source_parent_node_row:
+        raise ValueError("candidate map changed the immutable source-parent node identity")
+    if cell < 0 or cell >= len(child_tets) or cell not in incident_cells[node]:
+        raise ValueError("candidate operational support tet is not incident to its node")
+    parent_label = parent_labels[expected_source_parent_tet_row]
+    donor = int(parent_label["geometric_donor_body"])
+    region = int(parent_label["anatomical_region_id"])
+    if int(fields[10]) != donor or int(fields[11]) != region:
+        raise ValueError("candidate map changed immutable source-parent donor/region ancestry")
+    child_label = child_labels[cell]
+    if int(child_label["geometric_donor_body"]) != donor or int(child_label["anatomical_region_id"]) != region:
+        raise ValueError("candidate operational support tet is outside its typed donor/region domain")
+    bary = [float(value) for value in fields[2:6]]
+    tet = child_tets[cell]
+    if len(set(tet)) != 4 or node not in tet or bary != [1.0 if int(volume_node) == node else 0.0 for volume_node in tet]:
+        raise ValueError("candidate operational registration is not an exact one-hot self-tet reference")
+    residual = [float(value) for value in fields[6:9]]
+    distance = float(fields[9])
+    if residual != [0.0, 0.0, 0.0] or distance != 0.0:
+        raise ValueError("candidate operational self-tet registration must have exact zero residual and distance")
 
 
 def f32(x: float) -> float:
@@ -931,7 +999,10 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
 
     # Semantic child labels remain exact parent rows. The combined node map
     # preserves frame-owner, geometric donor, region and source namespace as
-    # distinct typed fields.
+    # distinct typed fields. The candidate operational map is default-off; its
+    # extra columns keep the immutable source-parent registration distinct from
+    # an exact self-tet registration in the emitted candidate reference.
+    candidate_operational_reference = bool(getattr(args, "candidate_operational_reference", False))
     map_header = ["joint_node_id", "source_partition", "source_tetgen_node_id",
                   "registered_I_source_vertex_row", "merge_peer_partition",
                   "merge_peer_tetgen_node_id", "registered_surface_layer",
@@ -947,12 +1018,21 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
                   "parent_current_residual_z_m", "parent_registration_distance_m",
                   "parent_registration_tie_count", "incident_material_mask",
                   "geometric_donor_body", "anatomical_region_id"]
+    if candidate_operational_reference:
+        map_header.extend(OPERATIONAL_REFERENCE_MAP_FIELDS)
     map_rows = []
     for node in range(len(points)):
         role, local = role_by_node[node]
         cell, beta = selected_parent[node]
         layer_row = role_rows[role][local] if role!="interior" else {"frame_owner_body":owner_by_node[node]}
         label = source_labels[cell]
+        operational_fields = []
+        if candidate_operational_reference:
+            operational_fields = candidate_operational_reference_fields(
+                node, int(pn[node]), int(cell), source_labels, cell_tets, cell_labels, incident)
+            validate_candidate_operational_reference_fields(
+                operational_fields, node, int(pn[node]), int(cell), source_labels,
+                cell_tets, cell_labels, incident)
         mask = 0
         for incident_cell in incident[node]:
             mask |= 1 << cell_material[incident_cell]
@@ -968,6 +1048,8 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
                   *local_point, ROLE_DOMAIN.get(role,"derived_volume_interior_no_surface_ancestry"), "vertex" if role!="interior" else "none", local, -1, 0, 0, 0,
                   0, 0, 0, FRAME_METHOD if role!="interior" else "derived_full_all_bodies_geometric_donor_pose", IDENTITY_KIND, cell, *beta, *parent_residual[node], norm(parent_residual[node]), 0,
                   mask, int(label["geometric_donor_body"]), int(label["anatomical_region_id"])]
+        if candidate_operational_reference:
+            common.extend(operational_fields)
         if role == "O":
             common[1] = "skin"; common[2] = local + 1
             map_rows.append(common)
@@ -1077,6 +1159,15 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
         "typed_role_domain_indices": {"O": 0, "I": 1, "D": 2},
         "physical_admission": False,
     }
+    if candidate_operational_reference:
+        role_registry["registration_domain"] = "candidateOperationalReference"
+        role_registry["candidate_operational_reference_map"] = {
+            "schema": "numi-human.candidate-operational-reference-node-map.v1",
+            "node_map_sha256": digest(node_map),
+            "candidate_npz_sha256": input_hashes[str(candidate_path)],
+            "immutable_source_parent_packet_sha256": input_hashes[str(packet)],
+            "coordinate_frame_sha256": input_hashes[str(pose_path)],
+        }
     registry_path = out / "source-domain-registry.json"
     registry_path.write_text(json.dumps(role_registry, indent=2, sort_keys=True) + "\n")
 
@@ -1144,6 +1235,22 @@ def export(args: argparse.Namespace) -> dict[str, Any]:
     }
     if retirement_summary is not None:
         receipt["o_boundary_retirement"]=retirement_summary
+    if candidate_operational_reference:
+        receipt["registration_domain"] = "candidateOperationalReference"
+        receipt["candidate_operational_reference_map"] = {
+            "schema": "numi-human.candidate-operational-reference-node-map.v1",
+            "node_map_sha256": output_hashes[str(node_map)],
+            "candidate_npz_sha256": input_hashes[str(candidate_path)],
+            "candidate_node_sha256": output_hashes[str(volume_dir / "mesh.node")],
+            "candidate_element_sha256": output_hashes[str(volume_dir / "mesh.ele")],
+            "candidate_labels_sha256": output_hashes[str(volume_dir / "child.labels.csv")],
+            "coordinate_frame_sha256": input_hashes[str(pose_path)],
+            "immutable_source_parent_packet_sha256": input_hashes[str(packet)],
+            "source_parent_node_identity_rows": len(parent_points),
+            "operational_registration": "exact candidate self-tet one-hot with zero residual and distance",
+            "source_parent_ancestry": "existing original 330 source tet/bary/residual plus one-to-one retained source-node row and donor/region tuple",
+            "physical_admission": False,
+        }
     receipt_path = out / "receipt.json"
     receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n")
     return receipt
@@ -1160,6 +1267,8 @@ def main() -> int:
     parser.add_argument("--capture", type=pathlib.Path, required=True)
     parser.add_argument("--out", type=pathlib.Path, required=True)
     parser.add_argument("--maximum-mass-transport-distance-m", type=float, default=0.02)
+    parser.add_argument("--candidate-operational-reference", action="store_true",
+                        help="emit the opt-in 54-column map with exact candidate self-tet registration; source-mass gates remain active")
     args = parser.parse_args()
     if not math.isfinite(args.maximum_mass_transport_distance_m) or args.maximum_mass_transport_distance_m <= 0:
         parser.error("mass transport distance must be positive and finite")
