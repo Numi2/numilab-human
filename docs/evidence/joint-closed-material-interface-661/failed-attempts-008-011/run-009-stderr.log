@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/joint-closed-material-interface-652/component-diagnostic-653/run-009/certify_nonshared_boundaries_653.py", line 192, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/joint-closed-material-interface-652/component-diagnostic-653/run-009/certify_nonshared_boundaries_653.py", line 120, in main
+    if not np.array_equal(ff,np.vstack((F['fine_I_faces'],F['reversed_fine_D_faces'],F['oriented_rim_faces']))):raise ValueError('fat face layout/winding differs from pinned I/D/rim source arrays')
+                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: fat face layout/winding differs from pinned I/D/rim source arrays
