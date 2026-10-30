@@ -1,0 +1,213 @@
+{
+  "accepted_steps": 0,
+  "binary_sha256": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+  "compiler": "/usr/bin/clang++ -O3 with pinned TetGen v1.6.0 source and predicates.o",
+  "fat": {
+    "argv_options": "-pYq1.2/10AS512O0/0/0T5.0533497135862433e-11",
+    "automatic_region_labels_retained": [
+      17,
+      18,
+      19,
+      20,
+      21,
+      22
+    ],
+    "census_note": "The instrumentation field expected15 is Skin-specific; for Fat the correct expected set is declared region attribute 16 plus existing automatic labels 17-22. Exact output histogram is in geometry_and_attribute_comparison.new_material_histogram.",
+    "declared_regions": {
+      "region_attribute_histogram": {
+        "16": 84
+      },
+      "region_count": 84
+    },
+    "expected_region_attribute": 16,
+    "geometry_and_attribute_comparison": {
+      "cell_ids_and_connectivity_token_exact": true,
+      "cell_rows": 853727,
+      "changed_attribute_histogram": {
+        "0->16": 68
+      },
+      "new_ele_sha256": "a6e3e2ab0f9da4839ab4cad312b856b556ef2263759a3a2b137875e326f8783d",
+      "new_material_histogram": {
+        "16": 853696,
+        "17": 10,
+        "18": 15,
+        "19": 1,
+        "20": 1,
+        "21": 1,
+        "22": 3
+      },
+      "new_node_sha256": "57a42f2a825df82bfe3e237a571b5e7d20a18bc1c803014abc8c3144cc019a1b",
+      "node_ids_and_xyz_token_exact": true,
+      "node_rows": 246508,
+      "old_ele_sha256": "1a522a174c46a774979ac98c8012a759f29d9af7e257177f3c0e68c54f735a3a",
+      "old_material_histogram": {
+        "0": 68,
+        "16": 853628,
+        "17": 10,
+        "18": 15,
+        "19": 1,
+        "20": 1,
+        "21": 1,
+        "22": 3
+      },
+      "old_node_sha256": "cfd05a44484df0c494ff6272ad115650b68efb9f9aac4be13a0868a3b715955d",
+      "only_region_attribute_changes": true
+    },
+    "input_poly_sha256": "c1e579aa0d57e5f2eccaa2bd6991d56b67b7b66fe21c80ed8c36fc08a99e3ae2",
+    "stage_census": [
+      {
+        "cells": 1873344,
+        "invalid_hull_attrs": 0,
+        "stage": "after_boundary_before_carve",
+        "zero": 1873344
+      },
+      {
+        "cells": 857343,
+        "expected16_plus_automatic17_to_22": 857343,
+        "invalid_hull_attrs": 0,
+        "stage": "after_carveholes",
+        "zero": 0
+      },
+      {
+        "cells": 855792,
+        "expected16_plus_automatic17_to_22": 855792,
+        "invalid_hull_attrs": 0,
+        "stage": "after_suppresssteinerpoints",
+        "zero": 0
+      },
+      {
+        "cells": 854608,
+        "expected16_plus_automatic17_to_22": 854608,
+        "invalid_hull_attrs": 0,
+        "stage": "after_recoverdelaunay",
+        "zero": 0
+      },
+      {
+        "cells": 853888,
+        "expected16_plus_automatic17_to_22": 853888,
+        "invalid_hull_attrs": 0,
+        "stage": "after_delaunayrefinement",
+        "zero": 0
+      },
+      {
+        "cells": 853727,
+        "expected16_plus_automatic17_to_22": 853727,
+        "invalid_hull_attrs": 0,
+        "stage": "after_smoothing",
+        "zero": 0
+      },
+      {
+        "cells": 853727,
+        "expected16_plus_automatic17_to_22": 853727,
+        "invalid_hull_attrs": 0,
+        "stage": "after_improvement_gate",
+        "zero": 0
+      }
+    ],
+    "tetgen_f32_orientation": {
+      "negative": 93,
+      "note": "Inherited from the pre-fix output because point XYZ and tetra connectivity are token-identical.",
+      "source_diagnostic_sha256": "f18563584bdb015a8eaac69f1fd60acb0eb6d48d2d0f54d8de88fdab88731362",
+      "zeros": 16
+    }
+  },
+  "implementation": "When a hull tetra slot becomes real in flip23/flip32/flip41, restore the complete attribute tuple and varvolume bound from the real tet across the old hull face. Mark missing owners or unprotected mismatched real interfaces invalid instead of guessing. No coordinate, predicate, or flip decision changes.",
+  "limitations": [
+    "This validates region attribute propagation and exact preservation of the baseline TetGen geometry on these two frozen inputs only.",
+    "Skin has 8 negative Float32 cell orientations; Fat retains 16 Float32 zeros and 93 negative cells from the unchanged baseline geometry. Physical admission remains false.",
+    "No native import, conservative mass mapping, or runtime execution was performed."
+  ],
+  "physical_admission": false,
+  "runtime": 0,
+  "skin": {
+    "argv_options": "-pYq1.2/10AS512O0/0/0T1.2094522811226541e-09",
+    "expected_region_attribute": 15,
+    "geometry_and_attribute_comparison": {
+      "cell_ids_and_connectivity_token_exact": true,
+      "cell_rows": 743609,
+      "changed_attribute_histogram": {
+        "0->15": 41
+      },
+      "new_ele_sha256": "c60dba073830d235a7442236da50ed3d298fb851cb0e0aa647bd605dc20d81c7",
+      "new_material_histogram": {
+        "15": 743609
+      },
+      "new_node_sha256": "3132a5073cf65378d36fba53247936275f738fd782087f48da2408b040eb6647",
+      "node_ids_and_xyz_token_exact": true,
+      "node_rows": 202549,
+      "old_ele_sha256": "6cc98c6f91f6826ff379d7cd55e60fc9d7a5fd70d05bdb764e8f8955087c4c7c",
+      "old_material_histogram": {
+        "0": 41,
+        "15": 743568
+      },
+      "old_node_sha256": "c2e73507c0742f45341e51c57b8781b089902d01cf17d76cda7f1527d1f057a3",
+      "only_region_attribute_changes": true
+    },
+    "input_poly_sha256": "938e0c70fb871c9592598dd7bf8a095ce55680ddec5914fe6788a9595e828b49",
+    "stage_census": [
+      {
+        "cells": 1536896,
+        "expected15": 0,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_boundary_before_carve",
+        "zero": 1536896
+      },
+      {
+        "cells": 745399,
+        "expected15": 745399,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_carveholes",
+        "zero": 0
+      },
+      {
+        "cells": 743501,
+        "expected15": 743501,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_suppresssteinerpoints",
+        "zero": 0
+      },
+      {
+        "cells": 743552,
+        "expected15": 743552,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_recoverdelaunay",
+        "zero": 0
+      },
+      {
+        "cells": 744376,
+        "expected15": 744376,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_delaunayrefinement",
+        "zero": 0
+      },
+      {
+        "cells": 743609,
+        "expected15": 743609,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_smoothing",
+        "zero": 0
+      },
+      {
+        "cells": 743609,
+        "expected15": 743609,
+        "invalid_hull_attrs": 0,
+        "other": 0,
+        "stage": "after_improvement_gate",
+        "zero": 0
+      }
+    ],
+    "tetgen_f32_orientation": {
+      "negative": 8,
+      "source_diagnostic_sha256": "5e3a7f7828d70cd3a8b8b38a0261edeaf1f9c739592fa7a2d155ecc70244c5ac",
+      "zeros": 0
+    }
+  },
+  "source_sha256": "98c7c993c8c8fb04211995be79ede5927027532185606a34c11a5141b27cc307",
+  "status": "ATTRIBUTE_FIX_VALIDATED_ON_FROZEN_SKIN_AND_FAT_TETGEN_REPLAYS"
+}

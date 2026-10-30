@@ -1,0 +1,38 @@
+{
+  "base_remote_commit": "95fc9b7f5c0d94be9af1f536c0c8b897ac91aa8e",
+  "physical_admission": false,
+  "runtime": 0,
+  "schema": "numi.human.tetgen.hull-attribute-build-validation.v1",
+  "status": "PATCH_RECONSTRUCTION_AND_BUILD_PASS",
+  "steps": [
+    {
+      "derivative_byte_equal": true,
+      "name": "copy-pinned-054-source-to-derivative-path-and-apply-diff",
+      "pass": true,
+      "patch_sha256": "e71598fe0af114a2dbd8b36b3257527e1c02a022fce1f69bd40ed3f990bf7c12"
+    },
+    {
+      "build_script_sha256": "7ddb6cf31fd3ba877632fb68feef48e83e6f084172451488deb1eae2a6293cf7",
+      "built_binary_sha256": "4a88541a0fd00e43463a95c0c18fcb701aacea3d48b7daec22bfab319f169af6",
+      "name": "compile-six-focused-controls-and-fixed-tetgen-source",
+      "pass": true,
+      "test_count": 6,
+      "test_stdout_sha256": "43d9172ab33720ca746d67c579646abc3b7454c04bb78674a95c12ac3ca16b15"
+    }
+  ],
+  "test_environment": "Isolated temporary checkout extracted from the pinned Human main tree; the shared /Users/numi/numilab-human worktree was not used for build outputs.",
+  "validation_attempts": [
+    {
+      "attempt": 1,
+      "correction": "Changed the package-root traversal from five parents to four and reran in a fresh isolated scratch tree.",
+      "issue": "Initial scratch-recipe test resolved repo root one directory too high and could not locate the pinned base source. No compile or geometry run occurred.",
+      "status": "FAILED_BEFORE_COMPILE"
+    },
+    {
+      "attempt": 2,
+      "correction": "Regenerated the review patch with the derivative destination as both patch paths, then applied it to a copy of the pinned base source at that destination.",
+      "issue": "The first diff-label experiment used different old/new paths; patch treated it as an in-place update to the old file.",
+      "status": "PATCH_RECONSTRUCTION_CHECKED"
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "accepted_steps": 0,
+  "attribute_census_from_wrapped_fixed_binary_run": [
+    {
+      "cells": 1873344,
+      "invalid_hull_attrs": 0,
+      "stage": "after_boundary_before_carve",
+      "zero": 1873344
+    },
+    {
+      "cells": 857343,
+      "invalid_hull_attrs": 0,
+      "stage": "after_carveholes",
+      "zero": 0
+    },
+    {
+      "cells": 855801,
+      "invalid_hull_attrs": 0,
+      "stage": "after_suppresssteinerpoints",
+      "zero": 0
+    },
+    {
+      "cells": 854610,
+      "invalid_hull_attrs": 0,
+      "stage": "after_recoverdelaunay",
+      "zero": 0
+    },
+    {
+      "cells": 853587,
+      "invalid_hull_attrs": 0,
+      "stage": "after_delaunayrefinement",
+      "zero": 0
+    },
+    {
+      "cells": 853314,
+      "invalid_hull_attrs": 0,
+      "stage": "after_smoothing",
+      "zero": 0
+    },
+    {
+      "cells": 853314,
+      "invalid_hull_attrs": 0,
+      "stage": "after_improvement_gate",
+      "zero": 0
+    }
+  ],
+  "explicit_seed_proof": {
+    "added_region_records": 6,
+    "all_31_cells_f32_nonzero": true,
+    "all_31_centroids_inside_exact_closed_fat": true,
+    "automatic_unseeded_cell_count": 31,
+    "automatic_unseeded_component_count": 6,
+    "original_declared_region_records": 84,
+    "original_unique_material_attribute": [
+      16
+    ],
+    "prepared_region_records": 90,
+    "prepared_unique_material_attribute": [
+      16
+    ],
+    "selected_seed_cells_f32_nonzero": true
+  },
+  "interpretation": "All output attributes are 16 after explicit verified seeds were added for the six automatic labels. The seed addition changed output cell count, Steiner coordinates, and connectivity; the prior and seeded meshes remain separate artifacts and no cell-label transfer or corrected physical volume claim is made.",
+  "mesh": {
+    "baseline_fixed_output": {
+      "attribute_histogram": {
+        "16": 853696,
+        "17": 10,
+        "18": 15,
+        "19": 1,
+        "20": 1,
+        "21": 1,
+        "22": 3
+      },
+      "cells": 853727,
+      "ele_sha256": "a6e3e2ab0f9da4839ab4cad312b856b556ef2263759a3a2b137875e326f8783d",
+      "f32_negative": 93,
+      "f32_zeros": 16,
+      "node_sha256": "57a42f2a825df82bfe3e237a571b5e7d20a18bc1c803014abc8c3144cc019a1b",
+      "nodes": 246508
+    },
+    "changed_cell_connectivity_diagnostic": {
+      "baseline_only": 26997,
+      "baseline_unique_tetrahedra": 853727,
+      "common_by_sorted_vertex_ids": 826730,
+      "seeded_only": 26584,
+      "seeded_unique_tetrahedra": 853314
+    },
+    "geometry_changed_from_fixed_baseline": true,
+    "input_facet_count": 492956,
+    "input_point_count": 245996,
+    "input_point_xyz_prefix_equal_between_both_outputs": true,
+    "seeded_rerun": {
+      "absolute_volume_difference_m3": 4.667655151280314e-13,
+      "attribute_histogram": {
+        "16": 853314
+      },
+      "cells": 853314,
+      "edge_sha256": "d9400253825a36ef4d73808943164a551e4a05b03047d003a900aa6d4db60f00",
+      "ele_sha256": "2930a96f1e045c69c62bb2c5640f61840fb6e27b2a19de4eefa4a306104e4fdb",
+      "f32_negative": 89,
+      "f32_zeros": 16,
+      "f64_negative": 0,
+      "f64_zeros": 0,
+      "face_sha256": "14b69c38d1a4c80c40e2bcbb750811101c6cda4aa2be321fbf644bd2835fc5d1",
+      "input_facet_rows": 492956,
+      "node_sha256": "44c500ca15bd2fefb9e93a9bdef692944b14b574da25edc9e3167902272d37f6",
+      "nodes": 246508,
+      "output_boundary_extra_faces": 210,
+      "output_boundary_faces_on_input_facets": 493166,
+      "source_input_point_prefix_exact": true,
+      "source_shell_volume_m3": 0.011443639668402068,
+      "steiner_points_inside_domain": 407,
+      "steiner_points_on_input_segments": 105,
+      "total_absolute_f32_cell_volume_m3": 0.011443639667935303,
+      "volume_closure_tolerance_m3": 1.144363966840207e-11
+    }
+  },
+  "physical_admission": false,
+  "remaining_blockers": [
+    "16 Float32 zero-orientation cells",
+    "89 negative Float32 cells",
+    "105 boundary Steiner points that add 210 boundary faces beyond input facet count",
+    "No skin/fat combined volume, source330 mass, native import, or runtime admission"
+  ],
+  "runtime": 0,
+  "source_pins": {
+    "hull_fix_binary_sha256": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "hull_fix_source_sha256": "98c7c993c8c8fb04211995be79ede5927027532185606a34c11a5141b27cc307",
+    "matching_closed_fat_shell_sha256": "0d905075270d539c2493d2b3a626d2d88bfe04f594ae8b1e5fbc1f21e99078be",
+    "native217_owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd",
+    "original_fat_poly_sha256": "c1e579aa0d57e5f2eccaa2bd6991d56b67b7b66fe21c80ed8c36fc08a99e3ae2",
+    "prepared_fat_poly_sha256": "ca78e1f320e3d54c2f72d03ab03b10c775206ea9ce23fd95233fcfcbcd71239d",
+    "seed_preparation_receipt_sha256": "acec8eb39882c7957cff8ba526c732b156d1d9b28c3e3756c679eaf46c1fda36",
+    "seed_preparation_script_sha256": "41bf0718629835e3816a8d4f835a10e8909a4337ba36ce1adf8d13aec63492e0"
+  },
+  "source_shell_parity": {
+    "exact_plc_points_faces_and_markers_match_shell_npz": true,
+    "face_count": 492956,
+    "point_count": 245996,
+    "source_poly_face_markers_i64_sha256": "c7e3eef4c5c8d096a46ae25024edf39ca51c16f18693adf958ce989e3c581757",
+    "source_poly_faces_i64_sha256": "55563c08533e1931fb4c61d0927e16fb0a5a58fc80db9a10b66fdabce4b5b1d8",
+    "source_poly_points_f32_sha256": "17cbb6307519e08391f3d657839dc5347f2cd331f4fd106cd5cc097fc40b8285"
+  },
+  "status": "SEED_COMPLETION_RERUN_FINISHED_NOT_ADMISSION",
+  "tetgen_argv_options": "-pYq1.2/10AS512O0/0/0T5.0533497135862433e-11"
+}

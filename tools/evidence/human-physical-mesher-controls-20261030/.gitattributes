@@ -28,3 +28,7 @@
 /failure/055/map_cell_witnesses.py whitespace=-blank-at-eof
 /region-seeds/complete_region_seeds.py whitespace=-blank-at-eof
 /region-seeds/test_complete_region_seeds.py whitespace=-blank-at-eof
+
+# Preserve the byte-exact TetGen v1.6 derivative and its whitespace-bearing diff.
+/hull-attribute-fix-001/tetgen-hull-attribute-fix-minimal.cxx -text -whitespace
+/hull-attribute-fix-001/tetgen-hull-attribute-fix-minimal.patch -text -whitespace
