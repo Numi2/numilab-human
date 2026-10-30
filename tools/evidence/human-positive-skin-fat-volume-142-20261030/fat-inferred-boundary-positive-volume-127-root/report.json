@@ -1,0 +1,50 @@
+{
+  "changed_D_source_vertex": 19084,
+  "changed_Fat_PLC_vertex": 144452,
+  "displacement_m": 1.4901161193847656e-08,
+  "filtered_exact_whole_volume_sign_audit": {
+    "exact_dyadic_rechecks": 0,
+    "negative_row_ids": [],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-positive-volume-127-root/fat-positive-inferred-boundary-proposal.npz",
+    "permanent_filter": "32 * float64 epsilon * six-term determinant permanent; uncertain rows rechecked with exact dyadic integer arithmetic",
+    "point_count": 246524,
+    "point_dtype": "float32",
+    "sha256": "23ceea4acb0ab21783ac2bc7856e7389bf232b3a12be6842ef707150c9b8ce07",
+    "sign_counts": {
+      "negative": 0,
+      "positive": 853406,
+      "zero": 0
+    },
+    "tet_count": 853406,
+    "tet_dtype": "int64",
+    "uncertain_count": 0,
+    "uncertain_row_ids": [],
+    "zero_row_ids": []
+  },
+  "new_cells": 18,
+  "old_cells": 16,
+  "outputs": {
+    "candidate-D-inferred-boundary-f32-repair.npz": "7201d57205d890bebaea339c9df752184398912f92813cbbb5d41efe754e88c2",
+    "fat-positive-inferred-boundary-proposal.npz": "23ceea4acb0ab21783ac2bc7856e7389bf232b3a12be6842ef707150c9b8ce07",
+    "fat-shell-inferred-boundary-f32-repair.npz": "d7cadd6ff833a3b8dea1c272d2434d8b13dd35369dacf1b29db8b7cd26f68030"
+  },
+  "patch": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-last-cavity-inferred-boundary-126-root/inferred-D-boundary-edit-proposal.npz",
+  "patch_sha256": "4411145ba03e942086f75de126ddd5b27478d74670fa777a7b57886c43dbaa8a",
+  "physical_admission": false,
+  "point_after_m": [
+    -0.15922729671001434,
+    -1.7232239246368408,
+    0.23550863564014435
+  ],
+  "point_before_m": [
+    -0.15922728180885315,
+    -1.7232239246368408,
+    0.23550863564014435
+  ],
+  "purpose": "One-ULP correction of inferred inner-fat boundary to permit positive Float32 volume construction; O/I, source identity and attachment maps unchanged.",
+  "retained_current123_rows": 853388,
+  "runtime": 0,
+  "source_candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-local-milp-composite-123-six-certified-cavities/fat-current-six-certified-restored-cavities.npz",
+  "source_candidate_sha256": "332fb09b921ef2da5652553d94e1669d365046cbf06a3f2ed06c1b349094de76",
+  "status": "PASS_FILTERED_EXACT_POSITIVE_VOLUME_ONLY"
+}
