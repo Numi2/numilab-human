@@ -1,0 +1,156 @@
+{
+  "accepted_steps": 0,
+  "affected_evidence": {
+    "derived_gate_binding": {
+      "invalidated_assertion": "full-surface self-zero inheritance; geometry-equivalence remains valid but cannot repair incomplete predicate coverage",
+      "prior_status": "PASS_DERIVED_BY_GEOMETRY_EQUIVALENCE",
+      "sha256": "73542f12a7f46f4124dc44ed6d6fb262dfb42cb5b2ad074534e7e7480f2df4bc"
+    },
+    "exact_f32_gates_006": {
+      "coverage": {
+        "D": {
+          "omitted_unchanged_faces": 231720,
+          "queried_changed_faces": 15043,
+          "reported_changed_subset_self_pairs": 0,
+          "surface_face_count": 246763
+        },
+        "I": {
+          "omitted_unchanged_faces": 246671,
+          "queried_changed_faces": 5346,
+          "reported_changed_subset_self_pairs": 0,
+          "surface_face_count": 252017
+        },
+        "O": {
+          "omitted_unchanged_faces": 152765,
+          "queried_changed_faces": 2174,
+          "reported_changed_subset_self_pairs": 0,
+          "surface_face_count": 154939
+        }
+      },
+      "prior_status": "PASS_CHANGED_FACES_SELF_CROSS_ALL185",
+      "sha256": "590eb970e76be3cdcb719678215f729e85a37ec9a87d2e2cd337e2208698065c"
+    },
+    "exact_f32_gates_007": {
+      "coverage": {
+        "D": {
+          "omitted_unchanged_faces": 231720,
+          "queried_changed_faces": 15043,
+          "reported_changed_subset_self_pairs": 0,
+          "surface_face_count": 246763
+        },
+        "I": {
+          "omitted_unchanged_faces": 246671,
+          "queried_changed_faces": 5346,
+          "reported_changed_subset_self_pairs": 0,
+          "surface_face_count": 252017
+        },
+        "O": {
+          "omitted_unchanged_faces": 152765,
+          "queried_changed_faces": 2174,
+          "reported_changed_subset_self_pairs": 0,
+          "surface_face_count": 154939
+        }
+      },
+      "prior_status": "PASS_CHANGED_FACES_SELF_CROSS_ALL185",
+      "sha256": "87824eea467bb84910e09edda8a9e6d0e52732c5c3eb9d9986dc12f7dcc998d8"
+    }
+  },
+  "counterevidence": {
+    "source_seam_classification_report": {
+      "affine_dimension_counts": {
+        "0": 1,
+        "1": 9,
+        "2": 1
+      },
+      "current_I_face_pairs": [
+        [
+          93588,
+          251987
+        ],
+        [
+          93588,
+          251988
+        ],
+        [
+          143420,
+          143424
+        ],
+        [
+          143420,
+          143622
+        ],
+        [
+          143424,
+          143450
+        ],
+        [
+          143450,
+          143622
+        ],
+        [
+          234809,
+          234820
+        ],
+        [
+          234809,
+          234821
+        ],
+        [
+          234809,
+          234823
+        ],
+        [
+          234819,
+          234823
+        ],
+        [
+          251986,
+          251988
+        ]
+      ],
+      "pair_count": 11,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/source-seam-classification-001/report.json",
+      "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/tetgen-failure/source-seam-classification-001.json",
+      "seam_contact_authorized_pairs": 0,
+      "sha256": "7a9f7297326691230b603b03dc7afefc984e06a5e5d5ca5a2ad4e0f1702c73b6",
+      "source_gate_authorized_pairs": 0
+    }
+  },
+  "gate_disposition": {
+    "F64": {
+      "no_self_or_cross_layer_claim": true,
+      "retained_scope": [
+        "F64 bone surface intersection only; no F64 self or O/I cross surface audit.",
+        "O and I were checked as full current surfaces; D changed faces were checked against F64 while unchanged D faces inherit the pinned whole-D F32/F64 exact report plus exact unchanged-F32 triangle certificate.",
+        "No TetGen, mass transport, native Runtime, or physical admission.",
+        "Candidate artifact paths now refer to canonical scalar-CSR siblings. Exact F64 predicates are inherited from the pinned source report by the exact-array equivalence certificate; no predicate was rerun for the rank-only metadata correction."
+      ],
+      "sha256": "53cc666555c6941a19528c30f41e63ccc8a5615224f74ce77d0120639b69904f"
+    },
+    "TetGen": {
+      "manifest_sha256": "f90420d6d0572c2867b430ed75bfa7185d259b243443adf0ba20c31a3e3296fc",
+      "return_code": 3,
+      "skipped_facet_count": 6,
+      "status": "STOP_SKIN_TETGEN_FAILED"
+    },
+    "all185_full_surface_zero": "NOT ESTABLISHED by changed-face subset comparisons; await corrected coverage audit",
+    "full_cross_layer_zero": "NOT ESTABLISHED by changed-face subset comparisons; await corrected coverage audit",
+    "full_role_self_surface_zero": "WITHDRAWN; at least 11 current-I self intersections are proven and complete full-role counts are unknown",
+    "geometry_equivalence": {
+      "sha256": "dbbafb330f2b1ac9e739d33ab7759d7eed90664e73e22b46e982a47f698dd640",
+      "status": "RETAINS_METADATA_ONLY_BITWISE_GEOMETRY_EQUIVALENCE"
+    }
+  },
+  "mass_or_density_admission": false,
+  "notes": [
+    "Original reports are retained byte-for-byte as historical evidence.",
+    "The earlier warning-participant classifier that marked 11 shared vertex/edge contacts as allowed is superseded by the ancestry-aware source-seam report; it authorized zero pairs.",
+    "No corrected full-role exact surface audit or volume/mass admission is included."
+  ],
+  "physical_admission": false,
+  "reason": "The incremental exact-gate self checks compared only changed faces against themselves and omitted retained faces. A later ancestry-aware source-seam audit of TetGen warning participants found 11 actual current-I self-intersection pairs and authorized zero of them as source seams.",
+  "runtime": 0,
+  "schema": "numi.human.h706.exact-surface-gate-invalidation.v1",
+  "status": "SUPERSEDED_INVALID_COVERAGE_FOR_FULL_SURFACE_SELF_GATES",
+  "volume_admission": false
+}

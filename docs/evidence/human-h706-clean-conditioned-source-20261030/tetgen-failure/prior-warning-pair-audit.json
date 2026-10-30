@@ -1,0 +1,673 @@
+{
+  "TetGen_retried": false,
+  "accepted_steps": 0,
+  "exact_query": {
+    "aabb_candidate_pairs": 43,
+    "allowed_shared_vertex_or_edge_pairs": 32,
+    "count": 11,
+    "elapsed_s": 0.0052277089562267065,
+    "predicate": "existing exact owner float32_surface_records + _audit_pair(same_surface=True)",
+    "same_surface_source_seams": [],
+    "triangle_pairs": [
+      [
+        248527,
+        406926
+      ],
+      [
+        248527,
+        406927
+      ],
+      [
+        298359,
+        298363
+      ],
+      [
+        298359,
+        298561
+      ],
+      [
+        298363,
+        298389
+      ],
+      [
+        298389,
+        298561
+      ],
+      [
+        389748,
+        389759
+      ],
+      [
+        389748,
+        389760
+      ],
+      [
+        389748,
+        389762
+      ],
+      [
+        389758,
+        389762
+      ],
+      [
+        406925,
+        406927
+      ]
+    ]
+  },
+  "inputs": {
+    "TetGen_attribution_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skipped-facet-attribution-001/report.json",
+      "sha256": "bffe9a7e493aa22359613fdfcaecc7fb9477957b5e120af4142957c88486903d"
+    },
+    "TetGen_witness_npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skipped-facet-attribution-001/witnesses.npz",
+      "sha256": "2ac84d4191c76be772c2803b9cfb797004b4d9b8c23b97c5daa60e2e5493b4ee"
+    },
+    "exact_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "shell_npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/skin-shell.npz",
+      "sha256": "69681fda457251e5cc29fe9a6c5a7f4dc1c733b231a78172887cda37bd965e7d"
+    }
+  },
+  "interpretation": "This bounded exact query classifies only triangles participating in the preserved TetGen warnings. A zero count would not replace full exact-shell or physical-volume admission gates.",
+  "pair_details": [
+    {
+      "face_pair": [
+        248527,
+        406926
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            326
+          ],
+          "face_ancestry_source_original_ids": [
+            532406
+          ],
+          "face_ancestry_source_rows": [
+            93588
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": 59,
+          "face_source_bone": 95,
+          "face_source_face_id": 326,
+          "face_source_layer": 3,
+          "face_source_original_id": 532406,
+          "face_source_role": "inner_I",
+          "face_source_row": 93588,
+          "shell_face_row": 248527
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            8
+          ],
+          "face_ancestry_source_original_ids": [
+            120000203
+          ],
+          "face_ancestry_source_rows": [
+            251987
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 8,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000203,
+          "face_source_role": "inner_I",
+          "face_source_row": 251987,
+          "shell_face_row": 406926
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        248527,
+        406927
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            326
+          ],
+          "face_ancestry_source_original_ids": [
+            532406
+          ],
+          "face_ancestry_source_rows": [
+            93588
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": 59,
+          "face_source_bone": 95,
+          "face_source_face_id": 326,
+          "face_source_layer": 3,
+          "face_source_original_id": 532406,
+          "face_source_role": "inner_I",
+          "face_source_row": 93588,
+          "shell_face_row": 248527
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            9
+          ],
+          "face_ancestry_source_original_ids": [
+            120000203
+          ],
+          "face_ancestry_source_rows": [
+            251988
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 9,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000203,
+          "face_source_role": "inner_I",
+          "face_source_row": 251988,
+          "shell_face_row": 406927
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        298359,
+        298363
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            365
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143420
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 365,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143420,
+          "shell_face_row": 298359
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            366
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143424
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 366,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143424,
+          "shell_face_row": 298363
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        298359,
+        298561
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            365
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143420
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 365,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143420,
+          "shell_face_row": 298359
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            395
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143622
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 395,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143622,
+          "shell_face_row": 298561
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        298363,
+        298389
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            366
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143424
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 366,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143424,
+          "shell_face_row": 298363
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            93892
+          ],
+          "face_ancestry_source_original_ids": [
+            841487
+          ],
+          "face_ancestry_source_rows": [
+            143450
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 93892,
+          "face_source_layer": 1,
+          "face_source_original_id": 841487,
+          "face_source_role": "inner_I",
+          "face_source_row": 143450,
+          "shell_face_row": 298389
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        298389,
+        298561
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            93892
+          ],
+          "face_ancestry_source_original_ids": [
+            841487
+          ],
+          "face_ancestry_source_rows": [
+            143450
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 93892,
+          "face_source_layer": 1,
+          "face_source_original_id": 841487,
+          "face_source_role": "inner_I",
+          "face_source_row": 143450,
+          "shell_face_row": 298389
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            395
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143622
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 395,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143622,
+          "shell_face_row": 298561
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        389748,
+        389759
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            1023
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234809
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 1023,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234809,
+          "shell_face_row": 389748
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            2610
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234820
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 2610,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234820,
+          "shell_face_row": 389759
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        389748,
+        389760
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            1023
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234809
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 1023,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234809,
+          "shell_face_row": 389748
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            2610
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234821
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 2610,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234821,
+          "shell_face_row": 389760
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        389748,
+        389762
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            1023
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234809
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 1023,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234809,
+          "shell_face_row": 389748
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            2616
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234823
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 2616,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234823,
+          "shell_face_row": 389762
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        389758,
+        389762
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            2610
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234819
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 2610,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234819,
+          "shell_face_row": 389758
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            2616
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234823
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 2616,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234823,
+          "shell_face_row": 389762
+        }
+      ]
+    },
+    {
+      "face_pair": [
+        406925,
+        406927
+      ],
+      "faces": [
+        {
+          "face_ancestry_parent_face_rows": [
+            7
+          ],
+          "face_ancestry_source_original_ids": [
+            120000203
+          ],
+          "face_ancestry_source_rows": [
+            251986
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 7,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000203,
+          "face_source_role": "inner_I",
+          "face_source_row": 251986,
+          "shell_face_row": 406925
+        },
+        {
+          "face_ancestry_parent_face_rows": [
+            9
+          ],
+          "face_ancestry_source_original_ids": [
+            120000203
+          ],
+          "face_ancestry_source_rows": [
+            251988
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 9,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000203,
+          "face_source_role": "inner_I",
+          "face_source_row": 251988,
+          "shell_face_row": 406927
+        }
+      ]
+    }
+  ],
+  "physical_admission": false,
+  "runtime": 0,
+  "schema": "numi.paired-fullbody-tetgen-exact-witness-subset.v1",
+  "scope": {
+    "selected_shell_face_count": 34,
+    "selected_shell_face_rows": [
+      2799,
+      2806,
+      2812,
+      34115,
+      34117,
+      34119,
+      198787,
+      198788,
+      248527,
+      298359,
+      298363,
+      298389,
+      298561,
+      379957,
+      379958,
+      379959,
+      384199,
+      384205,
+      388247,
+      389660,
+      389748,
+      389758,
+      389759,
+      389760,
+      389762,
+      396285,
+      396289,
+      396291,
+      402745,
+      403013,
+      405474,
+      406925,
+      406926,
+      406927
+    ],
+    "selection": "all uniquely coordinate-mapped skipped facets, all exact/near segment incident shell faces, and all uniquely mapped segment-facet warning triangles"
+  },
+  "status": "PASS_BOUNDED_EXACT_WITNESS_TRIANGLE_QUERY"
+}

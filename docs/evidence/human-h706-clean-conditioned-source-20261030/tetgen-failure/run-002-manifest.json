@@ -1,0 +1,75 @@
+{
+  "accepted_steps": 0,
+  "capacity_profile": "full-reference-500k-nodes-2m-cells",
+  "completed_stages": [
+    "skin"
+  ],
+  "default_tetgen_switches": "-pYq1.2/10AS512",
+  "handoff_owner_loader": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/handoff/prepare_tetgen_handoff_697_typedD.py",
+    "sha256": "027423d413ea72e0efec3c1642020f54973118e7d56f7a8bcbf87fe9193d2622"
+  },
+  "inner_input": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-csr-canonical-011/I/candidate-I-csr-canonical.npz",
+    "sha256": "43d2345312a7b15c2e4370460036a5d14e196d2dc7317e34e230cb4158f00bfa"
+  },
+  "notes": [
+    "Each immutable .poly was copied into its own fresh stage directory and rehashed before calling the existing owner.",
+    "No alternative TetGen switches or retries are used in this attempt."
+  ],
+  "only_run_next_stage_if_prior_tetgen_gate_passes": true,
+  "output_directory": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002",
+  "owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/build_native_domain_217.py",
+    "sha256": "d7f411c18f91905c6e1d91ab75592ec5782a8852892ac8a1fdb566ee2206df09"
+  },
+  "physical_admission": false,
+  "plc_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/receipt.json",
+    "sha256": "7d96182b4bc04d8fe4679646d505cf78187610a8303284822ddcdb8d256bbc87"
+  },
+  "poly_inputs": {
+    "fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/fat.poly",
+      "sha256": "e1ed2ad6a8065c48e19e15223f0ee7d9721db15a7780ca3a45745e78e075e0f9"
+    },
+    "skin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/skin.poly",
+      "sha256": "a417405744521245e0472d3a0f636593beff8fca7ab730916df28de403bc4639"
+    }
+  },
+  "runtime": 0,
+  "schema": "numi.paired-fullbody-tetgen-default-run.v1",
+  "shell_inputs": {
+    "fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/fat-shell.npz",
+      "sha256": "0c1f8f2a33b737c3adb2728e244ba69cee167e688835a25d9c6ba11c66e48ab3"
+    },
+    "skin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/skin-shell.npz",
+      "sha256": "69681fda457251e5cc29fe9a6c5a7f4dc1c733b231a78172887cda37bd965e7d"
+    }
+  },
+  "skin_poly_trial_sha256": "a417405744521245e0472d3a0f636593beff8fca7ab730916df28de403bc4639",
+  "skin_result": {
+    "command": [
+      "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen",
+      "-pYq1.2/10AS512",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skin.poly"
+    ],
+    "return_code": 3,
+    "status": "TETGEN_FAILED",
+    "timed_out": false,
+    "wall_s": 11.287404750008136
+  },
+  "stage_order": [
+    "skin",
+    "fat",
+    "strict_registered_I_combine"
+  ],
+  "status": "STOP_SKIN_TETGEN_FAILED",
+  "tetgen_binary": {
+    "path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen",
+    "sha256": "95b1df3923d7405b168ba5a3c4b39498ddfc0e7ba94000dedff7ebf93350de07"
+  }
+}

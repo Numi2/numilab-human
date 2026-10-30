@@ -1,0 +1,1132 @@
+{
+  "TetGen_retried": false,
+  "accepted_steps": 0,
+  "candidate_pair_reproduction": [
+    {
+      "candidate_I_face_pair": [
+        93588,
+        251987
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        93588,
+        251988
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        143420,
+        143424
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        143420,
+        143622
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        143424,
+        143450
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        143450,
+        143622
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        234809,
+        234820
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        234809,
+        234821
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        234809,
+        234823
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        234819,
+        234823
+      ],
+      "exact_pair_reported": true
+    },
+    {
+      "candidate_I_face_pair": [
+        251986,
+        251988
+      ],
+      "exact_pair_reported": true
+    }
+  ],
+  "coordinate_crosswalk_method": "The shell face was matched to current I faces by exact unordered F32 triangle-coordinate bytes, and each vertex by exact F32 coordinate bytes. This does not assume shell row IDs equal I candidate row IDs.",
+  "current_I_candidate_subset_exact_audit": {
+    "aabb_candidate_pairs": 22,
+    "allowed_shared_vertex_or_edge_pairs": 11,
+    "count": 11,
+    "selected_candidate_I_face_rows": [
+      93588,
+      143420,
+      143424,
+      143450,
+      143622,
+      234809,
+      234819,
+      234820,
+      234821,
+      234823,
+      251986,
+      251987,
+      251988
+    ],
+    "triangle_pairs": [
+      [
+        93588,
+        251987
+      ],
+      [
+        93588,
+        251988
+      ],
+      [
+        143420,
+        143424
+      ],
+      [
+        143420,
+        143622
+      ],
+      [
+        143424,
+        143450
+      ],
+      [
+        143450,
+        143622
+      ],
+      [
+        234809,
+        234820
+      ],
+      [
+        234809,
+        234821
+      ],
+      [
+        234809,
+        234823
+      ],
+      [
+        234819,
+        234823
+      ],
+      [
+        251986,
+        251988
+      ]
+    ]
+  },
+  "inputs": {
+    "current_I_npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-csr-canonical-011/I/candidate-I-csr-canonical.npz",
+      "sha256": "43d2345312a7b15c2e4370460036a5d14e196d2dc7317e34e230cb4158f00bfa"
+    },
+    "exact_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "prior_exact_witness_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/exact-witness-pair-audit-001/report.json",
+      "sha256": "5c0cc8549157076b70f460ce836277bf4b52815a6332487cee8aaf77df2491f5"
+    },
+    "shell_npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/skin-shell.npz",
+      "sha256": "69681fda457251e5cc29fe9a6c5a7f4dc1c733b231a78172887cda37bd965e7d"
+    }
+  },
+  "interpretation": "Exact triangle intersections are reported for only the TetGen-warning participant set. No full-shell gate or physical admission is inferred.",
+  "intersection_details": [
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          93588
+        ],
+        [
+          251987
+        ]
+      ],
+      "exact_intersection_point_count": 5,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-222988204763927265833517535600250755670343680/1",
+          "-703093000337990062548418131983078850438365184/1",
+          "99883221402014628811655130515381192264515584/1"
+        ],
+        [
+          "-2542824076771521574483656450602354417261067354020773888/11374486001",
+          "-7997880268713673370533090687080078173888168779667472384/11374486001",
+          "1132088285076232827290121741870919182868360593366056960/11374486001"
+        ],
+        [
+          "-222988204763927265833517535600250755670343680/1",
+          "-703093000337990062548418131983078850438365184/1",
+          "99883221402014628811655130515381192264515584/1"
+        ],
+        [
+          "-222988204763927265833517535600250755670343680/1",
+          "-703093000337990062548418131983078850438365184/1",
+          "99883221402014628811655130515381192264515584/1"
+        ],
+        [
+          "-222988204763927265833517535600250755670343680/1",
+          "-703093000337990062548418131983078850438365184/1",
+          "99883221402014628811655130515381192264515584/1"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 248527,
+          "source_ancestry_original_ids": [
+            532406
+          ],
+          "source_ancestry_parent_face_rows": [
+            326
+          ],
+          "source_ancestry_rows": [
+            93588
+          ],
+          "source_body": 59,
+          "source_bone": 95,
+          "source_face_id": 326,
+          "source_layer": 3,
+          "source_original_id": 532406,
+          "source_row": 93588
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 406926,
+          "source_ancestry_original_ids": [
+            120000203
+          ],
+          "source_ancestry_parent_face_rows": [
+            8
+          ],
+          "source_ancestry_rows": [
+            251987
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 8,
+          "source_layer": 1,
+          "source_original_id": 120000203,
+          "source_row": 251987
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        83430
+      ],
+      "shell_face_pair": [
+        248527,
+        406926
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          93588
+        ],
+        [
+          251988
+        ]
+      ],
+      "exact_intersection_point_count": 2,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-68153120976439668269772288592401130604937062170578911232/304860549409",
+          "-4072845582983537034930870899382997568926122797932272943104/5792350438771",
+          "576505480782080614053895366195604886264379475207483555840/5792350438771"
+        ],
+        [
+          "-2542824076771521574483656450602354417261067354020773888/11374486001",
+          "-7997880268713673370533090687080078173888168779667472384/11374486001",
+          "1132088285076232827290121741870919182868360593366056960/11374486001"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 248527,
+          "source_ancestry_original_ids": [
+            532406
+          ],
+          "source_ancestry_parent_face_rows": [
+            326
+          ],
+          "source_ancestry_rows": [
+            93588
+          ],
+          "source_body": 59,
+          "source_bone": 95,
+          "source_face_id": 326,
+          "source_layer": 3,
+          "source_original_id": 532406,
+          "source_row": 93588
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 406927,
+          "source_ancestry_original_ids": [
+            120000203
+          ],
+          "source_ancestry_parent_face_rows": [
+            9
+          ],
+          "source_ancestry_rows": [
+            251988
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 9,
+          "source_layer": 1,
+          "source_original_id": 120000203,
+          "source_row": 251988
+        }
+      ],
+      "shared_shell_vertex_rows": [],
+      "shell_face_pair": [
+        248527,
+        406927
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          143420
+        ],
+        [
+          143424
+        ]
+      ],
+      "exact_intersection_point_count": 4,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-59635463114699363420038857154413745391271936/1",
+          "-41422575183741830727228336770283264941228032/1",
+          "105012956815699843589711536261502133566701568/1"
+        ],
+        [
+          "-59635463114699363420038857154413745391271936/1",
+          "-41422575183741830727228336770283264941228032/1",
+          "105012956815699843589711536261502133566701568/1"
+        ],
+        [
+          "-59635463114699363420038857154413745391271936/1",
+          "-41422575183741830727228336770283264941228032/1",
+          "105012956815699843589711536261502133566701568/1"
+        ],
+        [
+          "-536719141447734355082032256313582502914555904/9",
+          "-372803429206995675679070882655890837736521728/9",
+          "945116558172178760910768910201236790886531072/9"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298359,
+          "source_ancestry_original_ids": [
+            120000200
+          ],
+          "source_ancestry_parent_face_rows": [
+            365
+          ],
+          "source_ancestry_rows": [
+            143420
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 365,
+          "source_layer": 1,
+          "source_original_id": 120000200,
+          "source_row": 143420
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298363,
+          "source_ancestry_original_ids": [
+            120000200
+          ],
+          "source_ancestry_parent_face_rows": [
+            366
+          ],
+          "source_ancestry_rows": [
+            143424
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 366,
+          "source_layer": 1,
+          "source_original_id": 120000200,
+          "source_row": 143424
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        125372
+      ],
+      "shell_face_pair": [
+        298359,
+        298363
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 0,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          143420
+        ],
+        [
+          143622
+        ]
+      ],
+      "exact_intersection_point_count": 2,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-536719141447734355082032256313582502914555904/9",
+          "-372803429206995675679070882655890837736521728/9",
+          "945116558172178760910768910201236790886531072/9"
+        ],
+        [
+          "-536719141447734355082032256313582502914555904/9",
+          "-372803429206995675679070882655890837736521728/9",
+          "945116558172178760910768910201236790886531072/9"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298359,
+          "source_ancestry_original_ids": [
+            120000200
+          ],
+          "source_ancestry_parent_face_rows": [
+            365
+          ],
+          "source_ancestry_rows": [
+            143420
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 365,
+          "source_layer": 1,
+          "source_original_id": 120000200,
+          "source_row": 143420
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298561,
+          "source_ancestry_original_ids": [
+            120000200
+          ],
+          "source_ancestry_parent_face_rows": [
+            395
+          ],
+          "source_ancestry_rows": [
+            143622
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 395,
+          "source_layer": 1,
+          "source_original_id": 120000200,
+          "source_row": 143622
+        }
+      ],
+      "shared_shell_vertex_rows": [],
+      "shell_face_pair": [
+        298359,
+        298561
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 2,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          143424
+        ],
+        [
+          143450
+        ]
+      ],
+      "exact_intersection_point_count": 5,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-59635457797787380280375365539185504269893632/1",
+          "-41422609743669721135041032269266832230187008/1",
+          "105012946181875877310384553031045651323944960/1"
+        ],
+        [
+          "-59635463114699363420038857154413745391271936/1",
+          "-41422575183741830727228336770283264941228032/1",
+          "105012956815699843589711536261502133566701568/1"
+        ],
+        [
+          "-59635463114699363420038857154413745391271936/1",
+          "-41422575183741830727228336770283264941228032/1",
+          "105012956815699843589711536261502133566701568/1"
+        ],
+        [
+          "-59635457797787380280375365539185504269893632/1",
+          "-41422609743669721135041032269266832230187008/1",
+          "105012946181875877310384553031045651323944960/1"
+        ],
+        [
+          "-536719141447734355082032256313582502914555904/9",
+          "-372803429206995675679070882655890837736521728/9",
+          "945116558172178760910768910201236790886531072/9"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298363,
+          "source_ancestry_original_ids": [
+            120000200
+          ],
+          "source_ancestry_parent_face_rows": [
+            366
+          ],
+          "source_ancestry_rows": [
+            143424
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 366,
+          "source_layer": 1,
+          "source_original_id": 120000200,
+          "source_row": 143424
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298389,
+          "source_ancestry_original_ids": [
+            841487
+          ],
+          "source_ancestry_parent_face_rows": [
+            93892
+          ],
+          "source_ancestry_rows": [
+            143450
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 93892,
+          "source_layer": 1,
+          "source_original_id": 841487,
+          "source_row": 143450
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        125372,
+        125373
+      ],
+      "shell_face_pair": [
+        298363,
+        298389
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          143450
+        ],
+        [
+          143622
+        ]
+      ],
+      "exact_intersection_point_count": 4,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-536719141447734355082032256313582502914555904/9",
+          "-372803429206995675679070882655890837736521728/9",
+          "945116558172178760910768910201236790886531072/9"
+        ],
+        [
+          "-59635457797787380280375365539185504269893632/1",
+          "-41422609743669721135041032269266832230187008/1",
+          "105012946181875877310384553031045651323944960/1"
+        ],
+        [
+          "-59635457797787380280375365539185504269893632/1",
+          "-41422609743669721135041032269266832230187008/1",
+          "105012946181875877310384553031045651323944960/1"
+        ],
+        [
+          "-59635457797787380280375365539185504269893632/1",
+          "-41422609743669721135041032269266832230187008/1",
+          "105012946181875877310384553031045651323944960/1"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298389,
+          "source_ancestry_original_ids": [
+            841487
+          ],
+          "source_ancestry_parent_face_rows": [
+            93892
+          ],
+          "source_ancestry_rows": [
+            143450
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 93892,
+          "source_layer": 1,
+          "source_original_id": 841487,
+          "source_row": 143450
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 298561,
+          "source_ancestry_original_ids": [
+            120000200
+          ],
+          "source_ancestry_parent_face_rows": [
+            395
+          ],
+          "source_ancestry_rows": [
+            143622
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 395,
+          "source_layer": 1,
+          "source_original_id": 120000200,
+          "source_row": 143622
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        125373
+      ],
+      "shell_face_pair": [
+        298389,
+        298561
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          234809
+        ],
+        [
+          234820
+        ]
+      ],
+      "exact_intersection_point_count": 2,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "133237691376797211469171079864925519684922821075248611328/775149707219",
+          "-686241792175106538664632492204798398896799744/1",
+          "40542807822914942755139465357014317337063474193756061696/775149707219"
+        ],
+        [
+          "145373898122558119028050366360390185491934701066964172800/845755819511",
+          "-580393070824283816974175376871661487938340002822944194560/845755819511",
+          "44235723660318561923043673608689080805325260104553988096/845755819511"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389748,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            1023
+          ],
+          "source_ancestry_rows": [
+            234809
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 1023,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234809
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389759,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            2610
+          ],
+          "source_ancestry_rows": [
+            234820
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 2610,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234820
+        }
+      ],
+      "shared_shell_vertex_rows": [],
+      "shell_face_pair": [
+        389748,
+        389759
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          234809
+        ],
+        [
+          234821
+        ]
+      ],
+      "exact_intersection_point_count": 5,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "171787448283984799459269143605726035849510912/1",
+          "-686583605812678621351181451997963610065207296/1",
+          "52263096761821703698527081058013735691485184/1"
+        ],
+        [
+          "171787448283984799459269143605726035849510912/1",
+          "-686583605812678621351181451997963610065207296/1",
+          "52263096761821703698527081058013735691485184/1"
+        ],
+        [
+          "171787448283984799459269143605726035849510912/1",
+          "-686583605812678621351181451997963610065207296/1",
+          "52263096761821703698527081058013735691485184/1"
+        ],
+        [
+          "145373898122558119028050366360390185491934701066964172800/845755819511",
+          "-580393070824283816974175376871661487938340002822944194560/845755819511",
+          "44235723660318561923043673608689080805325260104553988096/845755819511"
+        ],
+        [
+          "171787448283984799459269143605726035849510912/1",
+          "-686583605812678621351181451997963610065207296/1",
+          "52263096761821703698527081058013735691485184/1"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389748,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            1023
+          ],
+          "source_ancestry_rows": [
+            234809
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 1023,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234809
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389760,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            2610
+          ],
+          "source_ancestry_rows": [
+            234821
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 2610,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234821
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        156580
+      ],
+      "shell_face_pair": [
+        389748,
+        389760
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          234809
+        ],
+        [
+          234823
+        ]
+      ],
+      "exact_intersection_point_count": 2,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "51752569431883868700327825811408690146100358055588790272/301085722703",
+          "-206617506121658117742979011549500079232329309461434859520/301085722703",
+          "15747757574372709292965355082343506055945326146822864896/301085722703"
+        ],
+        [
+          "1557298864402604400121394946896540293633983878529024/9059711",
+          "-6216953125870087854501247589171981481687975293091840/9059711",
+          "473875220798605561652746219631221762557591989256192/9059711"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389748,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            1023
+          ],
+          "source_ancestry_rows": [
+            234809
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 1023,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234809
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389762,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            2616
+          ],
+          "source_ancestry_rows": [
+            234823
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 2616,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234823
+        }
+      ],
+      "shared_shell_vertex_rows": [],
+      "shell_face_pair": [
+        389748,
+        389762
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          234819
+        ],
+        [
+          234823
+        ]
+      ],
+      "exact_intersection_point_count": 5,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "171886385382167062317521119772836822456991744/1",
+          "-686241792175106538664632492204798398896799744/1",
+          "52303191595086559900917351494180032005275648/1"
+        ],
+        [
+          "171886385382167062317521119772836822456991744/1",
+          "-686241792175106538664632492204798398896799744/1",
+          "52303191595086559900917351494180032005275648/1"
+        ],
+        [
+          "171886385382167062317521119772836822456991744/1",
+          "-686241792175106538664632492204798398896799744/1",
+          "52303191595086559900917351494180032005275648/1"
+        ],
+        [
+          "1557298864402604400121394946896540293633983878529024/9059711",
+          "-6216953125870087854501247589171981481687975293091840/9059711",
+          "473875220798605561652746219631221762557591989256192/9059711"
+        ],
+        [
+          "171886385382167062317521119772836822456991744/1",
+          "-686241792175106538664632492204798398896799744/1",
+          "52303191595086559900917351494180032005275648/1"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389758,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            2610
+          ],
+          "source_ancestry_rows": [
+            234819
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 2610,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234819
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 389762,
+          "source_ancestry_original_ids": [
+            40072182
+          ],
+          "source_ancestry_parent_face_rows": [
+            2616
+          ],
+          "source_ancestry_rows": [
+            234823
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 2616,
+          "source_layer": 1,
+          "source_original_id": 40072182,
+          "source_row": 234823
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        156701
+      ],
+      "shell_face_pair": [
+        389758,
+        389762
+      ]
+    },
+    {
+      "coordinate_triangle_match_unique": [
+        true,
+        true
+      ],
+      "exact_affine_dimension": 1,
+      "exact_coordinate_I_candidate_face_rows": [
+        [
+          251986
+        ],
+        [
+          251988
+        ]
+      ],
+      "exact_intersection_point_count": 5,
+      "exact_intersection_points_metre_rationals": [
+        [
+          "-222966490495388123447817779008114015961350144/1",
+          "-703734134852564975730891062665306230719774720/1",
+          "99676670005293619164332862128670108960161792/1"
+        ],
+        [
+          "-222966490495388123447817779008114015961350144/1",
+          "-703734134852564975730891062665306230719774720/1",
+          "99676670005293619164332862128670108960161792/1"
+        ],
+        [
+          "-68153120976439668269772288592401130604937062170578911232/304860549409",
+          "-4072845582983537034930870899382997568926122797932272943104/5792350438771",
+          "576505480782080614053895366195604886264379475207483555840/5792350438771"
+        ],
+        [
+          "-222966490495388123447817779008114015961350144/1",
+          "-703734134852564975730891062665306230719774720/1",
+          "99676670005293619164332862128670108960161792/1"
+        ],
+        [
+          "-222966490495388123447817779008114015961350144/1",
+          "-703734134852564975730891062665306230719774720/1",
+          "99676670005293619164332862128670108960161792/1"
+        ]
+      ],
+      "face_metadata": [
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 406925,
+          "source_ancestry_original_ids": [
+            120000203
+          ],
+          "source_ancestry_parent_face_rows": [
+            7
+          ],
+          "source_ancestry_rows": [
+            251986
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 7,
+          "source_layer": 1,
+          "source_original_id": 120000203,
+          "source_row": 251986
+        },
+        {
+          "exact_source_row": -1,
+          "marker": 2,
+          "role": "inner_I",
+          "shell_face_row": 406927,
+          "source_ancestry_original_ids": [
+            120000203
+          ],
+          "source_ancestry_parent_face_rows": [
+            9
+          ],
+          "source_ancestry_rows": [
+            251988
+          ],
+          "source_body": -1,
+          "source_bone": -1,
+          "source_face_id": 9,
+          "source_layer": 1,
+          "source_original_id": 120000203,
+          "source_row": 251988
+        }
+      ],
+      "shared_shell_vertex_rows": [
+        83446
+      ],
+      "shell_face_pair": [
+        406925,
+        406927
+      ]
+    }
+  ],
+  "physical_admission": false,
+  "runtime": 0,
+  "schema": "numi.paired-fullbody-tetgen-exact-pair-classification.v1",
+  "status": "PASS_EXACT_LOCAL_INTERSECTION_CLASSIFICATION"
+}

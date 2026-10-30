@@ -1,0 +1,590 @@
+{
+  "PLC_013": {
+    "gates": {
+      "positive_core_seeds": "PASS"
+    },
+    "physical_admission": false,
+    "receipt_sha256": "7d96182b4bc04d8fe4679646d505cf78187610a8303284822ddcdb8d256bbc87",
+    "runtime": 0,
+    "status": "PASS_PREPARED_SOURCE_DOMAINS_AND_POSITIVE_CORE_SEEDS_ONLY",
+    "tetgen_started_by_PLC_receipt": false
+  },
+  "accepted_steps": 0,
+  "canonicalization": {
+    "all_other_npz_members_bit_identical": true,
+    "all_points_and_faces_bit_identical": true,
+    "certificate_sha256": "5481521c31819fd877edf7f3a3560d8d64cfaf1ea282e757e3c6f4d1cf5baed0",
+    "geometry_equivalence_sha256": "dbbafb330f2b1ac9e739d33ab7759d7eed90664e73e22b46e982a47f698dd640",
+    "geometry_predicates_rerun": false,
+    "operation": "flatten scalar CSR arrays from (n,1) to (n,); array values unchanged",
+    "owner_sha256": "640a46625d1d8e8669027be535f2f405760642adad22fff6e24d94ed65018de7"
+  },
+  "collar_012": {
+    "paired_rim_ordered_triangle_bits_unchanged": true,
+    "physical_admission": false,
+    "protected149_count": 149,
+    "receipt_sha256": "d915ab8f72da326f6ac950c6e744970c55661aefdee25c82271cd87d98b6cc1b",
+    "runtime": 0,
+    "status": "PASS_COLLAR_AND_PROTECTED149_REINDEX_SOURCE_ONLY",
+    "wall_ancestry_existing_owner_pass": true
+  },
+  "construction_cores_009": {
+    "D": {
+      "cap_source_exact_pairs": 0,
+      "negative_components": 89,
+      "positive_components": 3
+    },
+    "I": {
+      "cap_source_exact_pairs": 0,
+      "negative_components": 0,
+      "positive_components": 1
+    },
+    "construction_caps_are_not_anatomical_closure": true,
+    "physical_admission": false,
+    "receipt_sha256": "6fe99eb2f5c745252ae204273efd9c449aa4ec35cee14d90cb3ea39536760d7c",
+    "status": "PASS_CONSTRUCTION_CORE_AND_OWNER_HOLE_EXTRACTION_ONLY"
+  },
+  "limitations": [
+    "The historical incremental F32 self report queried only changed-face subsets and omitted unchanged faces; its full-role self-zero claim is invalidated. At least 11 current-I self intersections are proven; complete full-role counts remain unknown.",
+    "Historical F32 cross-layer and all185 results are retained as changed-face subset diagnostics, not full-surface clearance claims, pending corrected coverage.",
+    "The later Skin TetGen run failed with return code 3 and six skipped facets. Its ancestry-aware warning-participant audit found 11 current-I self pairs, none authorized as source seams.",
+    "F64 evidence retains only its stated O/I-vs-F64-bone and changed-D-vs-F64-bone scope; it is not a self or cross-layer audit.",
+    "No admitted TetGen volume, positive-cell proof, source330 child-mass transfer, density admission, native import, Runtime, or physical motion is included.",
+    "Construction cores use temporary caps; those caps are not anatomical closure surfaces."
+  ],
+  "physical_admission": false,
+  "reported_F32_exact_surface_gate_007": {
+    "all185_changed_face_pair_counts_retained_as_historical_subset_diagnostics": {
+      "D": 0,
+      "I": 0,
+      "O": 0
+    },
+    "cross_pair_counts_retained_as_historical_subset_diagnostics": {
+      "I-D": 0,
+      "O-D": 0,
+      "O-I": 0
+    },
+    "disposition": "HISTORICAL_REPORT_SUPERSEDED_FOR_FULL_SURFACE_SELF_CLAIM",
+    "invalidation_receipt_sha256": "8ffb3207646b26b7f47d00b8d7e732887c5c8c53a3e528fba05f7b34531e65de",
+    "prior_reported_changed_subset_self_pair_counts": {
+      "D": 0,
+      "I": 0,
+      "O": 0
+    },
+    "queried_versus_omitted_faces": {
+      "D": {
+        "omitted_unchanged_faces": 231720,
+        "queried_changed_faces": 15043,
+        "reported_changed_subset_self_pairs": 0,
+        "surface_face_count": 246763
+      },
+      "I": {
+        "omitted_unchanged_faces": 246671,
+        "queried_changed_faces": 5346,
+        "reported_changed_subset_self_pairs": 0,
+        "surface_face_count": 252017
+      },
+      "O": {
+        "omitted_unchanged_faces": 152765,
+        "queried_changed_faces": 2174,
+        "reported_changed_subset_self_pairs": 0,
+        "surface_face_count": 154939
+      }
+    },
+    "report_sha256": "87824eea467bb84910e09edda8a9e6d0e52732c5c3eb9d9986dc12f7dcc998d8",
+    "scope": "No full-role self, cross-layer, or all185 zero-pair claim is made; corrected coverage is pending."
+  },
+  "reported_F64_exact_surface_gate_004": {
+    "pair_counts": {
+      "D_changed_vs_F64": 0,
+      "I_full_vs_F64": 0,
+      "O_full_vs_F64": 0
+    },
+    "report_sha256": "53cc666555c6941a19528c30f41e63ccc8a5615224f74ce77d0120639b69904f",
+    "scope": [
+      "F64 bone surface intersection only; no F64 self or O/I cross surface audit.",
+      "O and I were checked as full current surfaces; D changed faces were checked against F64 while unchanged D faces inherit the pinned whole-D F32/F64 exact report plus exact unchanged-F32 triangle certificate.",
+      "No TetGen, mass transport, native Runtime, or physical admission.",
+      "Candidate artifact paths now refer to canonical scalar-CSR siblings. Exact F64 predicates are inherited from the pinned source report by the exact-array equivalence certificate; no predicate was rerun for the rank-only metadata correction."
+    ]
+  },
+  "retained_D_witness_exclusion": {
+    "direct_input_faces": 86,
+    "direct_input_points": 30,
+    "excluded_witness_pair_count": 6,
+    "expanded_faces": 103,
+    "failed_exact_report_sha256": "4c2caf68f6ee81b704c2a9641507fc7e33a51497d4c42d0b9ce227758e9e87ae",
+    "failed_pair_file_sha256": "19288938249b57d703680ef12d96e6bff232e2074d7399bff44c342f000f7b6e",
+    "receipt_sha256": "b3fff201897084a59625efaaf7dd6b7868d4556ecc284ffdc88f6c30a7228ec6"
+  },
+  "role_operations": [
+    {
+      "canonical_output": {
+        "face_rows": 154939,
+        "point_rows": 77492,
+        "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/surfaces/O-canonical.npz",
+        "sha256": "578cee97a3bbecb73c0e1a6d7c26f45ac6cc111a552996f3910866a4a3652a9b"
+      },
+      "conditioned_input": {
+        "face_rows": 154939,
+        "point_rows": 77492,
+        "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/surfaces/O-microcollapsed-input.npz",
+        "sha256": "1b3820a1a7aa46c3bed0f1475c0f68a9929a2e1353097a3cc4a28240b39844fe"
+      },
+      "conditioner_receipt_sha256": null,
+      "final_topology": {
+        "boundary_edges": 45,
+        "components": 1,
+        "face_rows": 154939,
+        "point_rows": 77492,
+        "zero_f32_faces": 0
+      },
+      "immediate_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/candidate-O-f32.npz",
+      "immediate_parent_sha256": "1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa",
+      "initial_topology": {
+        "face_rows": 156939,
+        "point_rows": 78492
+      },
+      "iterations": [
+        {
+          "eligible": 1362,
+          "iteration": 1,
+          "selected": 462
+        },
+        {
+          "eligible": 824,
+          "iteration": 2,
+          "selected": 266
+        },
+        {
+          "eligible": 521,
+          "iteration": 3,
+          "selected": 154
+        },
+        {
+          "eligible": 341,
+          "iteration": 4,
+          "selected": 118
+        }
+      ],
+      "maximum_input_point_displacement_m": 9.978216315974716e-07,
+      "physical_admission": false,
+      "role": "O",
+      "selected_link_safe_collapses": 1000
+    },
+    {
+      "canonical_output": {
+        "face_rows": 252017,
+        "point_rows": 126011,
+        "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/surfaces/I-canonical.npz",
+        "sha256": "43d2345312a7b15c2e4370460036a5d14e196d2dc7317e34e230cb4158f00bfa"
+      },
+      "conditioned_input": {
+        "face_rows": 252017,
+        "point_rows": 126011,
+        "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/surfaces/I-microcollapsed-input.npz",
+        "sha256": "fee20f3d7a1697158398c73a8a771302625e122b52ee23840101c552e3832205"
+      },
+      "conditioner_receipt_sha256": "579da70a8b92d1e276d6db0ced0f43acdaf7b25ddc260ef503819d55163b7b71",
+      "final_topology": {
+        "bad_vertex_link_count": 0,
+        "bad_vertex_link_examples": [],
+        "boundary_edges": 45,
+        "components": 1,
+        "duplicate_face_count": 0,
+        "edge_rows": 378048,
+        "euler": -20,
+        "f32_zero_or_nonfinite_faces": 0,
+        "face_rows": 252017,
+        "nonmanifold_or_orientation_count": 0,
+        "nonmanifold_or_orientation_examples": [],
+        "point_rows": 126011,
+        "unused_point_rows": 0,
+        "used_point_rows": 126011
+      },
+      "immediate_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/candidate-I-f32-local-child-refined.npz",
+      "immediate_parent_sha256": "a702f368961cae10aeb2e9be38ac05cfdd422907d2beeab1d953d597a0d73469",
+      "initial_topology": {
+        "bad_vertex_link_count": 0,
+        "bad_vertex_link_examples": [],
+        "boundary_edges": 45,
+        "components": 1,
+        "duplicate_face_count": 0,
+        "edge_rows": 385044,
+        "euler": -20,
+        "f32_zero_or_nonfinite_faces": 0,
+        "face_rows": 256681,
+        "nonmanifold_or_orientation_count": 0,
+        "nonmanifold_or_orientation_examples": [],
+        "point_rows": 128343,
+        "unused_point_rows": 0,
+        "used_point_rows": 128343
+      },
+      "iterations": [
+        {
+          "changed_current_faces": 8912,
+          "dropped_current_faces": 2212,
+          "eligible_link_safe_edges": 3310,
+          "iteration": 1,
+          "max_input_point_displacement_m": 9.975156068053755e-07,
+          "reason_counts": {
+            "link_condition": 111,
+            "no_orientation_and_displacement_direction": 245,
+            "overlapping_local_stars_this_iteration": 2204,
+            "typed_stratum_boundary": 48
+          },
+          "selected_collapses": 1106,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 1,
+            "duplicate_face_count": 0,
+            "edge_rows": 381726,
+            "euler": -20,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 254469,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 127237,
+            "unused_point_rows": 0,
+            "used_point_rows": 127237
+          }
+        },
+        {
+          "changed_current_faces": 5107,
+          "dropped_current_faces": 1198,
+          "eligible_link_safe_edges": 2037,
+          "iteration": 2,
+          "max_input_point_displacement_m": 9.988225117247636e-07,
+          "reason_counts": {
+            "link_condition": 113,
+            "no_orientation_and_displacement_direction": 151,
+            "overlapping_local_stars_this_iteration": 1438,
+            "typed_stratum_boundary": 47
+          },
+          "selected_collapses": 599,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 1,
+            "duplicate_face_count": 0,
+            "edge_rows": 379929,
+            "euler": -20,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 253271,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 126638,
+            "unused_point_rows": 0,
+            "used_point_rows": 126638
+          }
+        },
+        {
+          "changed_current_faces": 3186,
+          "dropped_current_faces": 750,
+          "eligible_link_safe_edges": 1340,
+          "iteration": 3,
+          "max_input_point_displacement_m": 9.988225117247636e-07,
+          "reason_counts": {
+            "link_condition": 82,
+            "no_orientation_and_displacement_direction": 93,
+            "overlapping_local_stars_this_iteration": 965,
+            "typed_stratum_boundary": 47
+          },
+          "selected_collapses": 375,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 1,
+            "duplicate_face_count": 0,
+            "edge_rows": 378804,
+            "euler": -20,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 252521,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 126263,
+            "unused_point_rows": 0,
+            "used_point_rows": 126263
+          }
+        },
+        {
+          "changed_current_faces": 2226,
+          "dropped_current_faces": 504,
+          "eligible_link_safe_edges": 901,
+          "iteration": 4,
+          "max_input_point_displacement_m": 9.988225117247636e-07,
+          "reason_counts": {
+            "excluded_exact_intersection_witness_operation": 1,
+            "link_condition": 60,
+            "no_orientation_and_displacement_direction": 58,
+            "overlapping_local_stars_this_iteration": 648,
+            "typed_stratum_boundary": 47
+          },
+          "selected_collapses": 252,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 1,
+            "duplicate_face_count": 0,
+            "edge_rows": 378048,
+            "euler": -20,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 252017,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 126011,
+            "unused_point_rows": 0,
+            "used_point_rows": 126011
+          }
+        }
+      ],
+      "maximum_input_point_displacement_m": 9.988225117247636e-07,
+      "physical_admission": false,
+      "role": "I",
+      "selected_link_safe_collapses": 2332
+    },
+    {
+      "canonical_output": {
+        "face_rows": 246763,
+        "point_rows": 122942,
+        "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/surfaces/D-canonical.npz",
+        "sha256": "3ead2ed5324e52004d29e76723a4651f1d8056274bcb143c406077cdd85c2f16"
+      },
+      "conditioned_input": {
+        "face_rows": 246763,
+        "point_rows": 122942,
+        "repository_path": "docs/evidence/human-h706-clean-conditioned-source-20261030/surfaces/D-microcollapsed-input.npz",
+        "sha256": "5503033cf67b3adb6533abc7711f2cde5a612fe4275833ef15b8ae1aba202115"
+      },
+      "conditioner_receipt_sha256": "ce3b01ef8efab07f067a157034ce0e2d63cb0a4fb24393f926a1f59019794c87",
+      "final_topology": {
+        "bad_vertex_link_count": 0,
+        "bad_vertex_link_examples": [],
+        "boundary_edges": 45,
+        "components": 92,
+        "duplicate_face_count": 0,
+        "edge_rows": 370167,
+        "euler": -462,
+        "f32_zero_or_nonfinite_faces": 0,
+        "face_rows": 246763,
+        "nonmanifold_or_orientation_count": 0,
+        "nonmanifold_or_orientation_examples": [],
+        "point_rows": 122942,
+        "unused_point_rows": 0,
+        "used_point_rows": 122942
+      },
+      "immediate_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/candidate-D-d010-ring1-composed-schema62000204-compact-unused.npz",
+      "immediate_parent_sha256": "f18ea8a8f38afe6a724b8fb840ebe97efb7568fbbf98ea8f0c308eef1bf538d0",
+      "initial_topology": {
+        "bad_vertex_link_count": 0,
+        "bad_vertex_link_examples": [],
+        "boundary_edges": 45,
+        "components": 92,
+        "duplicate_face_count": 0,
+        "edge_rows": 386220,
+        "euler": -462,
+        "f32_zero_or_nonfinite_faces": 0,
+        "face_rows": 257465,
+        "nonmanifold_or_orientation_count": 0,
+        "nonmanifold_or_orientation_examples": [],
+        "point_rows": 128293,
+        "unused_point_rows": 0,
+        "used_point_rows": 128293
+      },
+      "iterations": [
+        {
+          "changed_current_faces": 21582,
+          "dropped_current_faces": 5024,
+          "eligible_link_safe_edges": 6345,
+          "iteration": 1,
+          "max_input_point_displacement_m": 9.994336672612412e-07,
+          "reason_counts": {
+            "excluded_stable_original_witness_patch_operation": 19,
+            "link_condition": 251,
+            "no_orientation_and_displacement_direction": 272,
+            "overlapping_local_stars_this_iteration": 3814,
+            "typed_stratum_boundary": 11577
+          },
+          "selected_collapses": 2512,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 92,
+            "duplicate_face_count": 0,
+            "edge_rows": 378684,
+            "euler": -462,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 252441,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 125781,
+            "unused_point_rows": 0,
+            "used_point_rows": 125781
+          }
+        },
+        {
+          "changed_current_faces": 13343,
+          "dropped_current_faces": 2942,
+          "eligible_link_safe_edges": 3597,
+          "iteration": 2,
+          "max_input_point_displacement_m": 9.994336672612412e-07,
+          "reason_counts": {
+            "excluded_stable_original_witness_patch_operation": 19,
+            "link_condition": 196,
+            "no_orientation_and_displacement_direction": 154,
+            "overlapping_local_stars_this_iteration": 2107,
+            "typed_stratum_boundary": 11546
+          },
+          "selected_collapses": 1471,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 92,
+            "duplicate_face_count": 0,
+            "edge_rows": 374271,
+            "euler": -462,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 249499,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 124310,
+            "unused_point_rows": 0,
+            "used_point_rows": 124310
+          }
+        },
+        {
+          "changed_current_faces": 8425,
+          "dropped_current_faces": 1804,
+          "eligible_link_safe_edges": 1965,
+          "iteration": 3,
+          "max_input_point_displacement_m": 9.999403651044516e-07,
+          "reason_counts": {
+            "excluded_stable_original_witness_patch_operation": 19,
+            "link_condition": 180,
+            "no_orientation_and_displacement_direction": 103,
+            "overlapping_local_stars_this_iteration": 1044,
+            "typed_stratum_boundary": 11524
+          },
+          "selected_collapses": 902,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 92,
+            "duplicate_face_count": 0,
+            "edge_rows": 371565,
+            "euler": -462,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 247695,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 123408,
+            "unused_point_rows": 0,
+            "used_point_rows": 123408
+          }
+        },
+        {
+          "changed_current_faces": 4506,
+          "dropped_current_faces": 932,
+          "eligible_link_safe_edges": 965,
+          "iteration": 4,
+          "max_input_point_displacement_m": 9.999403651044516e-07,
+          "reason_counts": {
+            "excluded_stable_original_witness_patch_operation": 19,
+            "link_condition": 181,
+            "no_orientation_and_displacement_direction": 78,
+            "overlapping_local_stars_this_iteration": 480,
+            "typed_stratum_boundary": 11509
+          },
+          "selected_collapses": 466,
+          "topology": {
+            "bad_vertex_link_count": 0,
+            "bad_vertex_link_examples": [],
+            "boundary_delta_edges": 0,
+            "boundary_edges": 45,
+            "component_delta": 0,
+            "components": 92,
+            "duplicate_face_count": 0,
+            "edge_rows": 370167,
+            "euler": -462,
+            "euler_delta": 0,
+            "f32_zero_or_nonfinite_faces": 0,
+            "face_rows": 246763,
+            "nonmanifold_or_orientation_count": 0,
+            "nonmanifold_or_orientation_examples": [],
+            "point_rows": 122942,
+            "unused_point_rows": 0,
+            "used_point_rows": 122942
+          }
+        }
+      ],
+      "maximum_input_point_displacement_m": 9.999403651044516e-07,
+      "physical_admission": false,
+      "role": "D",
+      "selected_link_safe_collapses": 5351
+    }
+  ],
+  "runtime": 0,
+  "schema": "numi.human.h706-clean-conditioned-source-20261030.summary.v1",
+  "source_seam_classification": {
+    "affine_dimension_counts": {
+      "0": 1,
+      "1": 9,
+      "2": 1
+    },
+    "classification": "11 current-I self-intersections; zero authorized as source seams",
+    "limitations": [
+      "This is a bounded subset around TetGen warnings, not a new full-surface predicate.",
+      "Source seam authorization is not a TetGen weld or positive-link proof; the default PLC route failed and remains unqualified."
+    ],
+    "pair_count": 11,
+    "report_sha256": "7a9f7297326691230b603b03dc7afefc984e06a5e5d5ca5a2ad4e0f1702c73b6",
+    "seam_contact_authorized_pairs": 0,
+    "source_gate_authorized_pairs": 0
+  },
+  "status": "CONDITIONED_SOURCE_RETAINED_WITH_INVALIDATED_SELF_GATE_AND_TETGEN_FAILURE",
+  "subsequent_retained_TetGen_trial": {
+    "allowed_shared_vertex_or_edge_pair_count": 11,
+    "current_I_warning_participant_pair_count": 11,
+    "interpretation": "bounded warning-participant evidence; not a full-shell exact audit or physical qualification",
+    "manifest_sha256": "f90420d6d0572c2867b430ed75bfa7185d259b243443adf0ba20c31a3e3296fc",
+    "older_generic_classification_disposition": "SUPERSEDED; ancestry-aware source-seam rules authorize zero of the 11 pairs.",
+    "physical_admission": false,
+    "runtime": 0,
+    "skin_result_sha256": "1fcdb058b445c2c70f50a3226dec4763c65d9e6fdb6ace3f5b78765384e99d9b",
+    "skipped_facet_attribution_sha256": "bffe9a7e493aa22359613fdfcaecc7fb9477957b5e120af4142957c88486903d",
+    "skipped_facets": 6,
+    "source_seam_authorized_pair_count": 0,
+    "status": "STOP_SKIN_TETGEN_FAILED",
+    "tetgen_return_code": 3,
+    "warning_participant_classification_sha256": "7a9f7297326691230b603b03dc7afefc984e06a5e5d5ca5a2ad4e0f1702c73b6"
+  }
+}

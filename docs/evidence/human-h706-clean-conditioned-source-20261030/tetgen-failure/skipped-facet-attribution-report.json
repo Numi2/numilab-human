@@ -1,0 +1,2613 @@
+{
+  "accepted_steps": 0,
+  "coordinate_join_contract": "Each referenced TetGen output-node coordinate is cast to F32 and joined by exact coordinate bytes against all immutable PLC shell points; duplicate coordinate rows remain explicit and prevent unique attribution. No TetGen node ID is treated as a shell row.",
+  "geometry_predicates_rerun": false,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/skin-shell.npz": "69681fda457251e5cc29fe9a6c5a7f4dc1c733b231a78172887cda37bd965e7d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/paired-domains/skin.poly": "a417405744521245e0472d3a0f636593beff8fca7ab730916df28de403bc4639",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/manifest.json": "f90420d6d0572c2867b430ed75bfa7185d259b243443adf0ba20c31a3e3296fc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/result.json": "1fcdb058b445c2c70f50a3226dec4763c65d9e6fdb6ace3f5b78765384e99d9b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skin-tetgen.stdout.log": "6118d06e363daf0bde90b04312141ee5aded8553cba7e226faeaa344d9daa46b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skin_skipped.face": "f5632119fa5f94f5ba1f6f2c1a3a62d613cd8696d5967695d435b63c090fc4ff",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skin_skipped.node": "ae46ba924efd40b7040af83156122dc2bebe04d466a4ebfe8fc6f8ba83ed11f6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/build_native_domain_217.py": "d7f411c18f91905c6e1d91ab75592ec5782a8852892ac8a1fdb566ee2206df09"
+  },
+  "notes": [
+    "No TetGen flag retry was attempted.",
+    "The run stopped after the Skin stage; Fat and strict shared-I combine were not run."
+  ],
+  "physical_admission": false,
+  "reported_intersection_warnings": [
+    {
+      "kind": "Warning:  Two segments exactly intersect.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              125372
+            ],
+            [
+              125374
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            298359,
+            298389
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                365
+              ],
+              "face_ancestry_source_original_ids": [
+                120000200
+              ],
+              "face_ancestry_source_rows": [
+                143420
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 120000200,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 365,
+              "face_source_layer": 1,
+              "face_source_original_id": 120000200,
+              "face_source_role": "inner_I",
+              "face_source_row": 143420,
+              "shell_face_row": 298359,
+              "shell_vertex_rows": [
+                125374,
+                125418,
+                125372
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                93892
+              ],
+              "face_ancestry_source_original_ids": [
+                841487
+              ],
+              "face_ancestry_source_rows": [
+                143450
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 841487,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 93892,
+              "face_source_layer": 1,
+              "face_source_original_id": 841487,
+              "face_source_role": "inner_I",
+              "face_source_row": 143450,
+              "shell_face_row": 298389,
+              "shell_vertex_rows": [
+                125374,
+                125372,
+                125373
+              ]
+            }
+          ],
+          "length_m": 7.271476572730816e-08,
+          "node_ids": [
+            125373,
+            125375
+          ],
+          "tags": "1st seg  [125373,125375] tag(-1)."
+        },
+        {
+          "candidate_rows": [
+            [
+              125371
+            ],
+            [
+              125373
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            298363,
+            298561
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                366
+              ],
+              "face_ancestry_source_original_ids": [
+                120000200
+              ],
+              "face_ancestry_source_rows": [
+                143424
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 120000200,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 366,
+              "face_source_layer": 1,
+              "face_source_original_id": 120000200,
+              "face_source_role": "inner_I",
+              "face_source_row": 143424,
+              "shell_face_row": 298363,
+              "shell_vertex_rows": [
+                125373,
+                125372,
+                125371
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                395
+              ],
+              "face_ancestry_source_original_ids": [
+                120000200
+              ],
+              "face_ancestry_source_rows": [
+                143622
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 120000200,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 395,
+              "face_source_layer": 1,
+              "face_source_original_id": 120000200,
+              "face_source_role": "inner_I",
+              "face_source_row": 143622,
+              "shell_face_row": 298561,
+              "shell_vertex_rows": [
+                125373,
+                125371,
+                125363
+              ]
+            }
+          ],
+          "length_m": 5.281510531439567e-08,
+          "node_ids": [
+            125372,
+            125374
+          ],
+          "tags": "2nd seg: [125372,125374] tag(-1)."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              158997
+            ],
+            [
+              159010
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            198787,
+            198788
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                17523
+              ],
+              "face_ancestry_source_original_ids": [
+                3
+              ],
+              "face_ancestry_source_rows": [
+                43848
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 3,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 17523,
+              "face_source_layer": 1,
+              "face_source_original_id": 3,
+              "face_source_role": "inner_I",
+              "face_source_row": 43848,
+              "shell_face_row": 198787,
+              "shell_vertex_rows": [
+                159000,
+                158997,
+                159010
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                17523
+              ],
+              "face_ancestry_source_original_ids": [
+                3
+              ],
+              "face_ancestry_source_rows": [
+                43849
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 3,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 17523,
+              "face_source_layer": 1,
+              "face_source_original_id": 3,
+              "face_source_role": "inner_I",
+              "face_source_row": 43849,
+              "shell_face_row": 198788,
+              "shell_vertex_rows": [
+                159010,
+                158997,
+                159150
+              ]
+            }
+          ],
+          "length_m": 0.0005801128652694581,
+          "node_ids": [
+            158998,
+            159011
+          ],
+          "tags": "1st: [158998,159011]."
+        },
+        {
+          "candidate_rows": [
+            [
+              158997
+            ],
+            [
+              159000
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            198787,
+            388247
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                17523
+              ],
+              "face_ancestry_source_original_ids": [
+                3
+              ],
+              "face_ancestry_source_rows": [
+                43848
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 3,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 17523,
+              "face_source_layer": 1,
+              "face_source_original_id": 3,
+              "face_source_role": "inner_I",
+              "face_source_row": 43848,
+              "shell_face_row": 198787,
+              "shell_vertex_rows": [
+                159000,
+                158997,
+                159010
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                10060
+              ],
+              "face_ancestry_source_original_ids": [
+                40046524
+              ],
+              "face_ancestry_source_rows": [
+                233308
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40046524,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 10060,
+              "face_source_layer": 1,
+              "face_source_original_id": 40046524,
+              "face_source_role": "inner_I",
+              "face_source_row": 233308,
+              "shell_face_row": 388247,
+              "shell_vertex_rows": [
+                159000,
+                159052,
+                158997
+              ]
+            }
+          ],
+          "length_m": 0.00022056952536200975,
+          "node_ids": [
+            158998,
+            159001
+          ],
+          "tags": "2nd: [158998,159001]."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              94673
+            ],
+            [
+              94976
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            379958,
+            379959
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                83
+              ],
+              "face_ancestry_source_original_ids": [
+                40015065
+              ],
+              "face_ancestry_source_rows": [
+                225019
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40015065,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 83,
+              "face_source_layer": 1,
+              "face_source_original_id": 40015065,
+              "face_source_role": "inner_I",
+              "face_source_row": 225019,
+              "shell_face_row": 379958,
+              "shell_vertex_rows": [
+                94673,
+                94976,
+                94807
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                85
+              ],
+              "face_ancestry_source_original_ids": [
+                40015065
+              ],
+              "face_ancestry_source_rows": [
+                225020
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40015065,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 85,
+              "face_source_layer": 1,
+              "face_source_original_id": 40015065,
+              "face_source_role": "inner_I",
+              "face_source_row": 225020,
+              "shell_face_row": 379959,
+              "shell_vertex_rows": [
+                94673,
+                94704,
+                94976
+              ]
+            }
+          ],
+          "length_m": 0.0022501510371432743,
+          "node_ids": [
+            94674,
+            94977
+          ],
+          "tags": "1st: [94674,94977]."
+        },
+        {
+          "candidate_rows": [
+            [
+              94673
+            ],
+            [
+              94704
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            379957,
+            379959
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                88
+              ],
+              "face_ancestry_source_original_ids": [
+                40015065
+              ],
+              "face_ancestry_source_rows": [
+                225018
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40015065,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 88,
+              "face_source_layer": 1,
+              "face_source_original_id": 40015065,
+              "face_source_role": "inner_I",
+              "face_source_row": 225018,
+              "shell_face_row": 379957,
+              "shell_vertex_rows": [
+                94673,
+                94946,
+                94704
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                85
+              ],
+              "face_ancestry_source_original_ids": [
+                40015065
+              ],
+              "face_ancestry_source_rows": [
+                225020
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40015065,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 85,
+              "face_source_layer": 1,
+              "face_source_original_id": 40015065,
+              "face_source_role": "inner_I",
+              "face_source_row": 225020,
+              "shell_face_row": 379959,
+              "shell_vertex_rows": [
+                94673,
+                94704,
+                94976
+              ]
+            }
+          ],
+          "length_m": 0.00023861200897828307,
+          "node_ids": [
+            94674,
+            94705
+          ],
+          "tags": "2nd: [94674,94705]."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              171470
+            ],
+            [
+              171030
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            396285,
+            396291
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                3577
+              ],
+              "face_ancestry_source_original_ids": [
+                40086148
+              ],
+              "face_ancestry_source_rows": [
+                241346
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40086148,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 3577,
+              "face_source_layer": 1,
+              "face_source_original_id": 40086148,
+              "face_source_role": "inner_I",
+              "face_source_row": 241346,
+              "shell_face_row": 396285,
+              "shell_vertex_rows": [
+                171486,
+                171470,
+                171030
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                3339
+              ],
+              "face_ancestry_source_original_ids": [
+                40086148
+              ],
+              "face_ancestry_source_rows": [
+                241352
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40086148,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 3339,
+              "face_source_layer": 1,
+              "face_source_original_id": 40086148,
+              "face_source_role": "inner_I",
+              "face_source_row": 241352,
+              "shell_face_row": 396291,
+              "shell_vertex_rows": [
+                171470,
+                171164,
+                171030
+              ]
+            }
+          ],
+          "length_m": 0.003333427921971391,
+          "node_ids": [
+            171471,
+            171031
+          ],
+          "tags": "1st: [171471,171031]."
+        },
+        {
+          "candidate_rows": [
+            [
+              171470
+            ],
+            [
+              171164
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            396289,
+            396291
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                3339
+              ],
+              "face_ancestry_source_original_ids": [
+                40086148
+              ],
+              "face_ancestry_source_rows": [
+                241350
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40086148,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 3339,
+              "face_source_layer": 1,
+              "face_source_original_id": 40086148,
+              "face_source_role": "inner_I",
+              "face_source_row": 241350,
+              "shell_face_row": 396289,
+              "shell_vertex_rows": [
+                171445,
+                171164,
+                171470
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                3339
+              ],
+              "face_ancestry_source_original_ids": [
+                40086148
+              ],
+              "face_ancestry_source_rows": [
+                241352
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40086148,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 3339,
+              "face_source_layer": 1,
+              "face_source_original_id": 40086148,
+              "face_source_role": "inner_I",
+              "face_source_row": 241352,
+              "shell_face_row": 396291,
+              "shell_vertex_rows": [
+                171470,
+                171164,
+                171030
+              ]
+            }
+          ],
+          "length_m": 0.0024142400230158503,
+          "node_ids": [
+            171471,
+            171165
+          ],
+          "tags": "2nd: [171471,171165]."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              155676
+            ],
+            [
+              154804
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            389660,
+            403013
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                325
+              ],
+              "face_ancestry_source_original_ids": [
+                40072182
+              ],
+              "face_ancestry_source_rows": [
+                234721
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40072182,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 325,
+              "face_source_layer": 1,
+              "face_source_original_id": 40072182,
+              "face_source_role": "inner_I",
+              "face_source_row": 234721,
+              "shell_face_row": 389660,
+              "shell_vertex_rows": [
+                154804,
+                155066,
+                155676
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                3249
+              ],
+              "face_ancestry_source_original_ids": [
+                61000001
+              ],
+              "face_ancestry_source_rows": [
+                248074
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 61000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 3249,
+              "face_source_layer": 1,
+              "face_source_original_id": 61000001,
+              "face_source_role": "inner_I",
+              "face_source_row": 248074,
+              "shell_face_row": 403013,
+              "shell_vertex_rows": [
+                154804,
+                155676,
+                154813
+              ]
+            }
+          ],
+          "length_m": 0.0024684290567194298,
+          "node_ids": [
+            155677,
+            154805
+          ],
+          "tags": "1st: [155677,154805]."
+        },
+        {
+          "candidate_rows": [
+            [
+              155676
+            ],
+            [
+              155066
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            389660,
+            405474
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                325
+              ],
+              "face_ancestry_source_original_ids": [
+                40072182
+              ],
+              "face_ancestry_source_rows": [
+                234721
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40072182,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 325,
+              "face_source_layer": 1,
+              "face_source_original_id": 40072182,
+              "face_source_role": "inner_I",
+              "face_source_row": 234721,
+              "shell_face_row": 389660,
+              "shell_vertex_rows": [
+                154804,
+                155066,
+                155676
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                484
+              ],
+              "face_ancestry_source_original_ids": [
+                61000002
+              ],
+              "face_ancestry_source_rows": [
+                250535
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 61000002,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 484,
+              "face_source_layer": 1,
+              "face_source_original_id": 61000002,
+              "face_source_role": "inner_I",
+              "face_source_row": 250535,
+              "shell_face_row": 405474,
+              "shell_vertex_rows": [
+                155066,
+                155222,
+                155676
+              ]
+            }
+          ],
+          "length_m": 0.001563187025247313,
+          "node_ids": [
+            155677,
+            155067
+          ],
+          "tags": "2nd: [155677,155067]."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              98602
+            ],
+            [
+              97014
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            384205,
+            402745
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                355
+              ],
+              "face_ancestry_source_original_ids": [
+                40030441
+              ],
+              "face_ancestry_source_rows": [
+                229266
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40030441,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 355,
+              "face_source_layer": 1,
+              "face_source_original_id": 40030441,
+              "face_source_role": "inner_I",
+              "face_source_row": 229266,
+              "shell_face_row": 384205,
+              "shell_vertex_rows": [
+                97794,
+                98602,
+                97014
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                2119
+              ],
+              "face_ancestry_source_original_ids": [
+                61000001
+              ],
+              "face_ancestry_source_rows": [
+                247806
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 61000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 2119,
+              "face_source_layer": 1,
+              "face_source_original_id": 61000001,
+              "face_source_role": "inner_I",
+              "face_source_row": 247806,
+              "shell_face_row": 402745,
+              "shell_vertex_rows": [
+                98602,
+                97812,
+                97014
+              ]
+            }
+          ],
+          "length_m": 0.0037992569764232578,
+          "node_ids": [
+            98603,
+            97015
+          ],
+          "tags": "1st: [98603,97015]."
+        },
+        {
+          "candidate_rows": [
+            [
+              98602
+            ],
+            [
+              97812
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            384199,
+            402745
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                537
+              ],
+              "face_ancestry_source_original_ids": [
+                40030441
+              ],
+              "face_ancestry_source_rows": [
+                229260
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40030441,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 537,
+              "face_source_layer": 1,
+              "face_source_original_id": 40030441,
+              "face_source_role": "inner_I",
+              "face_source_row": 229260,
+              "shell_face_row": 384199,
+              "shell_vertex_rows": [
+                98602,
+                100052,
+                97812
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                2119
+              ],
+              "face_ancestry_source_original_ids": [
+                61000001
+              ],
+              "face_ancestry_source_rows": [
+                247806
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 2,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 61000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 2119,
+              "face_source_layer": 1,
+              "face_source_original_id": 61000001,
+              "face_source_role": "inner_I",
+              "face_source_row": 247806,
+              "shell_face_row": 402745,
+              "shell_vertex_rows": [
+                98602,
+                97812,
+                97014
+              ]
+            }
+          ],
+          "length_m": 0.001899630790163627,
+          "node_ids": [
+            98603,
+            97813
+          ],
+          "tags": "2nd: [98603,97813]."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              20643
+            ],
+            [
+              20181
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            34115,
+            34117
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                103103
+              ],
+              "face_ancestry_source_original_ids": [
+                40029310
+              ],
+              "face_ancestry_source_rows": [
+                931
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40029310,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 931,
+              "face_source_layer": 0,
+              "face_source_original_id": 40029310,
+              "face_source_role": "outer_O",
+              "face_source_row": 34115,
+              "shell_face_row": 34115,
+              "shell_vertex_rows": [
+                20181,
+                20328,
+                20643
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                103105
+              ],
+              "face_ancestry_source_original_ids": [
+                40029310
+              ],
+              "face_ancestry_source_rows": [
+                931
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40029310,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 931,
+              "face_source_layer": 0,
+              "face_source_original_id": 40029310,
+              "face_source_role": "outer_O",
+              "face_source_row": 34117,
+              "shell_face_row": 34117,
+              "shell_vertex_rows": [
+                20181,
+                20643,
+                20646
+              ]
+            }
+          ],
+          "length_m": 0.01040249548866191,
+          "node_ids": [
+            20644,
+            20182
+          ],
+          "tags": "1st: [20644,20182]."
+        },
+        {
+          "candidate_rows": [
+            [
+              20643
+            ],
+            [
+              20328
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            34115,
+            34119
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                103103
+              ],
+              "face_ancestry_source_original_ids": [
+                40029310
+              ],
+              "face_ancestry_source_rows": [
+                931
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40029310,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 931,
+              "face_source_layer": 0,
+              "face_source_original_id": 40029310,
+              "face_source_role": "outer_O",
+              "face_source_row": 34115,
+              "shell_face_row": 34115,
+              "shell_vertex_rows": [
+                20181,
+                20328,
+                20643
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                103107
+              ],
+              "face_ancestry_source_original_ids": [
+                40029310
+              ],
+              "face_ancestry_source_rows": [
+                931
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 40029310,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 931,
+              "face_source_layer": 0,
+              "face_source_original_id": 40029310,
+              "face_source_role": "outer_O",
+              "face_source_row": 34119,
+              "shell_face_row": 34119,
+              "shell_vertex_rows": [
+                20328,
+                20623,
+                20643
+              ]
+            }
+          ],
+          "length_m": 0.007200104181805653,
+          "node_ids": [
+            20644,
+            20329
+          ],
+          "tags": "2nd: [20644,20329]."
+        }
+      ]
+    },
+    {
+      "kind": "Warning:  Two line segments are nearly overlapping.",
+      "segments": [
+        {
+          "candidate_rows": [
+            [
+              11083
+            ],
+            [
+              11960
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            2806,
+            2812
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                117923
+              ],
+              "face_ancestry_source_original_ids": [
+                60000001
+              ],
+              "face_ancestry_source_rows": [
+                233
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 60000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 233,
+              "face_source_layer": 0,
+              "face_source_original_id": 60000001,
+              "face_source_role": "outer_O",
+              "face_source_row": 2806,
+              "shell_face_row": 2806,
+              "shell_vertex_rows": [
+                11083,
+                11960,
+                11488
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                117924
+              ],
+              "face_ancestry_source_original_ids": [
+                60000001
+              ],
+              "face_ancestry_source_rows": [
+                234
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 60000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 234,
+              "face_source_layer": 0,
+              "face_source_original_id": 60000001,
+              "face_source_role": "outer_O",
+              "face_source_row": 2812,
+              "shell_face_row": 2812,
+              "shell_vertex_rows": [
+                11083,
+                11747,
+                11960
+              ]
+            }
+          ],
+          "length_m": 0.005038719462011393,
+          "node_ids": [
+            11084,
+            11961
+          ],
+          "tags": "1st: [11084,11961]."
+        },
+        {
+          "candidate_rows": [
+            [
+              11083
+            ],
+            [
+              11488
+            ]
+          ],
+          "incident_shell_edge_face_rows": [
+            2799,
+            2806
+          ],
+          "incident_shell_edge_lineage": [
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                117922
+              ],
+              "face_ancestry_source_original_ids": [
+                60000001
+              ],
+              "face_ancestry_source_rows": [
+                232
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 60000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 232,
+              "face_source_layer": 0,
+              "face_source_original_id": 60000001,
+              "face_source_role": "outer_O",
+              "face_source_row": 2799,
+              "shell_face_row": 2799,
+              "shell_vertex_rows": [
+                11083,
+                11488,
+                11065
+              ]
+            },
+            {
+              "face_ancestry_kind": 6,
+              "face_ancestry_parent_face_rows": [
+                117923
+              ],
+              "face_ancestry_source_original_ids": [
+                60000001
+              ],
+              "face_ancestry_source_rows": [
+                233
+              ],
+              "face_exact_source_row": -1,
+              "face_marker": 1,
+              "face_parent_material_index": -1,
+              "face_parent_source_node_rows": [
+                -1,
+                -1,
+                -1
+              ],
+              "face_parent_tet_row": -1,
+              "face_run_original_id": 60000001,
+              "face_source_body": -1,
+              "face_source_bone": -1,
+              "face_source_face_id": 233,
+              "face_source_layer": 0,
+              "face_source_original_id": 60000001,
+              "face_source_role": "outer_O",
+              "face_source_row": 2806,
+              "shell_face_row": 2806,
+              "shell_vertex_rows": [
+                11083,
+                11960,
+                11488
+              ]
+            }
+          ],
+          "length_m": 0.0023016590251714562,
+          "node_ids": [
+            11084,
+            11489
+          ],
+          "tags": "2nd: [11084,11489]."
+        }
+      ]
+    },
+    {
+      "facet": {
+        "candidate_face_rows": [
+          389762
+        ],
+        "candidate_rows": [
+          [
+            156701
+          ],
+          [
+            156859
+          ],
+          [
+            156844
+          ]
+        ],
+        "lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              2616
+            ],
+            "face_ancestry_source_original_ids": [
+              40072182
+            ],
+            "face_ancestry_source_rows": [
+              234823
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 40072182,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 2616,
+            "face_source_layer": 1,
+            "face_source_original_id": 40072182,
+            "face_source_role": "inner_I",
+            "face_source_row": 234823,
+            "shell_face_row": 389762,
+            "shell_vertex_rows": [
+              156701,
+              156859,
+              156844
+            ]
+          }
+        ],
+        "node_ids": [
+          156702,
+          156860,
+          156845
+        ],
+        "raw": "facet triangle: [156702,156860,156845] tag(2)"
+      },
+      "kind": "TetGen reports a segment-facet intersection",
+      "segment": {
+        "candidate_rows": [
+          [
+            156580
+          ],
+          [
+            156740
+          ]
+        ],
+        "incident_shell_edge_face_rows": [
+          389748,
+          389758
+        ],
+        "incident_shell_edge_lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              1023
+            ],
+            "face_ancestry_source_original_ids": [
+              40072182
+            ],
+            "face_ancestry_source_rows": [
+              234809
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 40072182,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 1023,
+            "face_source_layer": 1,
+            "face_source_original_id": 40072182,
+            "face_source_role": "inner_I",
+            "face_source_row": 234809,
+            "shell_face_row": 389748,
+            "shell_vertex_rows": [
+              155924,
+              156580,
+              156740
+            ]
+          },
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              2610
+            ],
+            "face_ancestry_source_original_ids": [
+              40072182
+            ],
+            "face_ancestry_source_rows": [
+              234819
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 40072182,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 2610,
+            "face_source_layer": 1,
+            "face_source_original_id": 40072182,
+            "face_source_role": "inner_I",
+            "face_source_row": 234819,
+            "shell_face_row": 389758,
+            "shell_vertex_rows": [
+              156580,
+              156701,
+              156740
+            ]
+          }
+        ],
+        "length_m": 0.0006431230747740581,
+        "node_ids": [
+          156581,
+          156741
+        ],
+        "raw": "segment: [156581,156741] tag(-1)."
+      }
+    },
+    {
+      "facet": {
+        "candidate_face_rows": [
+          389748
+        ],
+        "candidate_rows": [
+          [
+            155924
+          ],
+          [
+            156580
+          ],
+          [
+            156740
+          ]
+        ],
+        "lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              1023
+            ],
+            "face_ancestry_source_original_ids": [
+              40072182
+            ],
+            "face_ancestry_source_rows": [
+              234809
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 40072182,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 1023,
+            "face_source_layer": 1,
+            "face_source_original_id": 40072182,
+            "face_source_role": "inner_I",
+            "face_source_row": 234809,
+            "shell_face_row": 389748,
+            "shell_vertex_rows": [
+              155924,
+              156580,
+              156740
+            ]
+          }
+        ],
+        "node_ids": [
+          155925,
+          156581,
+          156741
+        ],
+        "raw": "facet triangle: [155925,156581,156741] tag(2)"
+      },
+      "kind": "TetGen reports a segment-facet intersection",
+      "segment": {
+        "candidate_rows": [
+          [
+            156701
+          ],
+          [
+            156676
+          ]
+        ],
+        "incident_shell_edge_face_rows": [
+          389759,
+          389760
+        ],
+        "incident_shell_edge_lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              2610
+            ],
+            "face_ancestry_source_original_ids": [
+              40072182
+            ],
+            "face_ancestry_source_rows": [
+              234820
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 40072182,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 2610,
+            "face_source_layer": 1,
+            "face_source_original_id": 40072182,
+            "face_source_role": "inner_I",
+            "face_source_row": 234820,
+            "shell_face_row": 389759,
+            "shell_vertex_rows": [
+              156676,
+              156724,
+              156701
+            ]
+          },
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              2610
+            ],
+            "face_ancestry_source_original_ids": [
+              40072182
+            ],
+            "face_ancestry_source_rows": [
+              234821
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 40072182,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 2610,
+            "face_source_layer": 1,
+            "face_source_original_id": 40072182,
+            "face_source_role": "inner_I",
+            "face_source_row": 234821,
+            "shell_face_row": 389760,
+            "shell_vertex_rows": [
+              156580,
+              156676,
+              156701
+            ]
+          }
+        ],
+        "length_m": 0.00018786123410939379,
+        "node_ids": [
+          156702,
+          156677
+        ],
+        "raw": "segment: [156702,156677] tag(-1)."
+      }
+    },
+    {
+      "facet": {
+        "candidate_face_rows": [
+          248527
+        ],
+        "candidate_rows": [
+          [
+            83430
+          ],
+          [
+            83161
+          ],
+          [
+            83171
+          ]
+        ],
+        "lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              326
+            ],
+            "face_ancestry_source_original_ids": [
+              532406
+            ],
+            "face_ancestry_source_rows": [
+              93588
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 532406,
+            "face_source_body": 59,
+            "face_source_bone": 95,
+            "face_source_face_id": 326,
+            "face_source_layer": 3,
+            "face_source_original_id": 532406,
+            "face_source_role": "inner_I",
+            "face_source_row": 93588,
+            "shell_face_row": 248527,
+            "shell_vertex_rows": [
+              83430,
+              83161,
+              83171
+            ]
+          }
+        ],
+        "node_ids": [
+          83431,
+          83162,
+          83172
+        ],
+        "raw": "facet triangle: [83431,83162,83172] tag(2)"
+      },
+      "kind": "TetGen reports a segment-facet intersection",
+      "segment": {
+        "candidate_rows": [
+          [
+            83446
+          ],
+          [
+            83172
+          ]
+        ],
+        "incident_shell_edge_face_rows": [
+          406926,
+          406927
+        ],
+        "incident_shell_edge_lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              8
+            ],
+            "face_ancestry_source_original_ids": [
+              120000203
+            ],
+            "face_ancestry_source_rows": [
+              251987
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 120000203,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 8,
+            "face_source_layer": 1,
+            "face_source_original_id": 120000203,
+            "face_source_role": "inner_I",
+            "face_source_row": 251987,
+            "shell_face_row": 406926,
+            "shell_vertex_rows": [
+              83446,
+              83172,
+              83430
+            ]
+          },
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              9
+            ],
+            "face_ancestry_source_original_ids": [
+              120000203
+            ],
+            "face_ancestry_source_rows": [
+              251988
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 120000203,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 9,
+            "face_source_layer": 1,
+            "face_source_original_id": 120000203,
+            "face_source_role": "inner_I",
+            "face_source_row": 251988,
+            "shell_face_row": 406927,
+            "shell_vertex_rows": [
+              83446,
+              83218,
+              83172
+            ]
+          }
+        ],
+        "length_m": 0.0011881212701167032,
+        "node_ids": [
+          83447,
+          83173
+        ],
+        "raw": "segment: [83447,83173] tag(-1)."
+      }
+    },
+    {
+      "facet": {
+        "candidate_face_rows": [
+          406927
+        ],
+        "candidate_rows": [
+          [
+            83446
+          ],
+          [
+            83218
+          ],
+          [
+            83172
+          ]
+        ],
+        "lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              9
+            ],
+            "face_ancestry_source_original_ids": [
+              120000203
+            ],
+            "face_ancestry_source_rows": [
+              251988
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 120000203,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 9,
+            "face_source_layer": 1,
+            "face_source_original_id": 120000203,
+            "face_source_role": "inner_I",
+            "face_source_row": 251988,
+            "shell_face_row": 406927,
+            "shell_vertex_rows": [
+              83446,
+              83218,
+              83172
+            ]
+          }
+        ],
+        "node_ids": [
+          83447,
+          83219,
+          83173
+        ],
+        "raw": "facet triangle: [83447,83219,83173] tag(2)"
+      },
+      "kind": "TetGen reports a segment-facet intersection",
+      "segment": {
+        "candidate_rows": [
+          [
+            83171
+          ],
+          [
+            83430
+          ]
+        ],
+        "incident_shell_edge_face_rows": [
+          248527,
+          406925
+        ],
+        "incident_shell_edge_lineage": [
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              326
+            ],
+            "face_ancestry_source_original_ids": [
+              532406
+            ],
+            "face_ancestry_source_rows": [
+              93588
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 532406,
+            "face_source_body": 59,
+            "face_source_bone": 95,
+            "face_source_face_id": 326,
+            "face_source_layer": 3,
+            "face_source_original_id": 532406,
+            "face_source_role": "inner_I",
+            "face_source_row": 93588,
+            "shell_face_row": 248527,
+            "shell_vertex_rows": [
+              83430,
+              83161,
+              83171
+            ]
+          },
+          {
+            "face_ancestry_kind": 6,
+            "face_ancestry_parent_face_rows": [
+              7
+            ],
+            "face_ancestry_source_original_ids": [
+              120000203
+            ],
+            "face_ancestry_source_rows": [
+              251986
+            ],
+            "face_exact_source_row": -1,
+            "face_marker": 2,
+            "face_parent_material_index": -1,
+            "face_parent_source_node_rows": [
+              -1,
+              -1,
+              -1
+            ],
+            "face_parent_tet_row": -1,
+            "face_run_original_id": 120000203,
+            "face_source_body": -1,
+            "face_source_bone": -1,
+            "face_source_face_id": 7,
+            "face_source_layer": 1,
+            "face_source_original_id": 120000203,
+            "face_source_role": "inner_I",
+            "face_source_row": 251986,
+            "shell_face_row": 406925,
+            "shell_vertex_rows": [
+              83446,
+              83430,
+              83171
+            ]
+          }
+        ],
+        "length_m": 0.0009394922233258799,
+        "node_ids": [
+          83172,
+          83431
+        ],
+        "raw": "segment: [83172,83431] tag(-1)."
+      }
+    }
+  ],
+  "runtime": 0,
+  "schema": "numi.paired-fullbody-tetgen-skin-failure-attribution.v1",
+  "shell_face_count": 407046,
+  "shell_point_count": 203503,
+  "skip_face_count": 6,
+  "skipped_faces": [
+    {
+      "candidate_face_rows": [
+        298389
+      ],
+      "coordinate_join_candidate_rows": [
+        [
+          125374
+        ],
+        [
+          125372
+        ],
+        [
+          125373
+        ]
+      ],
+      "face_mapping_unique": true,
+      "lineage": [
+        {
+          "face_ancestry_kind": 6,
+          "face_ancestry_parent_face_rows": [
+            93892
+          ],
+          "face_ancestry_source_original_ids": [
+            841487
+          ],
+          "face_ancestry_source_rows": [
+            143450
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_parent_material_index": -1,
+          "face_parent_source_node_rows": [
+            -1,
+            -1,
+            -1
+          ],
+          "face_parent_tet_row": -1,
+          "face_run_original_id": 841487,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 93892,
+          "face_source_layer": 1,
+          "face_source_original_id": 841487,
+          "face_source_role": "inner_I",
+          "face_source_row": 143450,
+          "shell_face_row": 298389,
+          "shell_vertex_rows": [
+            125374,
+            125372,
+            125373
+          ]
+        }
+      ],
+      "tetgen_face_marker": 2,
+      "tetgen_node_ids": [
+        125375,
+        125373,
+        125374
+      ],
+      "tetgen_skipped_face_id": 1,
+      "triangle_metrics": {
+        "area_m2": 1.8619006149354548e-16,
+        "edge_lengths_m": [
+          7.271476572730816e-08,
+          5.1214274335159065e-08,
+          2.2351741790771484e-08
+        ],
+        "min_edge_m": 2.2351741790771484e-08
+      },
+      "unique_candidate_vertex_rows": [
+        125374,
+        125372,
+        125373
+      ]
+    },
+    {
+      "candidate_face_rows": [
+        298359
+      ],
+      "coordinate_join_candidate_rows": [
+        [
+          125374
+        ],
+        [
+          125418
+        ],
+        [
+          125372
+        ]
+      ],
+      "face_mapping_unique": true,
+      "lineage": [
+        {
+          "face_ancestry_kind": 6,
+          "face_ancestry_parent_face_rows": [
+            365
+          ],
+          "face_ancestry_source_original_ids": [
+            120000200
+          ],
+          "face_ancestry_source_rows": [
+            143420
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_parent_material_index": -1,
+          "face_parent_source_node_rows": [
+            -1,
+            -1,
+            -1
+          ],
+          "face_parent_tet_row": -1,
+          "face_run_original_id": 120000200,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 365,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000200,
+          "face_source_role": "inner_I",
+          "face_source_row": 143420,
+          "shell_face_row": 298359,
+          "shell_vertex_rows": [
+            125374,
+            125418,
+            125372
+          ]
+        }
+      ],
+      "tetgen_face_marker": 2,
+      "tetgen_node_ids": [
+        125375,
+        125419,
+        125373
+      ],
+      "tetgen_skipped_face_id": 2,
+      "triangle_metrics": {
+        "area_m2": 4.922020397367503e-12,
+        "edge_lengths_m": [
+          0.00013865049037288272,
+          0.00013866621156328614,
+          7.271476572730816e-08
+        ],
+        "min_edge_m": 7.271476572730816e-08
+      },
+      "unique_candidate_vertex_rows": [
+        125374,
+        125418,
+        125372
+      ]
+    },
+    {
+      "candidate_face_rows": [
+        389762
+      ],
+      "coordinate_join_candidate_rows": [
+        [
+          156701
+        ],
+        [
+          156859
+        ],
+        [
+          156844
+        ]
+      ],
+      "face_mapping_unique": true,
+      "lineage": [
+        {
+          "face_ancestry_kind": 6,
+          "face_ancestry_parent_face_rows": [
+            2616
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234823
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_parent_material_index": -1,
+          "face_parent_source_node_rows": [
+            -1,
+            -1,
+            -1
+          ],
+          "face_parent_tet_row": -1,
+          "face_run_original_id": 40072182,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 2616,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234823,
+          "shell_face_row": 389762,
+          "shell_vertex_rows": [
+            156701,
+            156859,
+            156844
+          ]
+        }
+      ],
+      "tetgen_face_marker": 2,
+      "tetgen_node_ids": [
+        156702,
+        156860,
+        156845
+      ],
+      "tetgen_skipped_face_id": 3,
+      "triangle_metrics": {
+        "area_m2": 4.381644233108201e-09,
+        "edge_lengths_m": [
+          0.00048175086725359275,
+          1.930450608667246e-05,
+          0.00047563588906583275
+        ],
+        "min_edge_m": 1.930450608667246e-05
+      },
+      "unique_candidate_vertex_rows": [
+        156701,
+        156859,
+        156844
+      ]
+    },
+    {
+      "candidate_face_rows": [
+        389748
+      ],
+      "coordinate_join_candidate_rows": [
+        [
+          155924
+        ],
+        [
+          156580
+        ],
+        [
+          156740
+        ]
+      ],
+      "face_mapping_unique": true,
+      "lineage": [
+        {
+          "face_ancestry_kind": 6,
+          "face_ancestry_parent_face_rows": [
+            1023
+          ],
+          "face_ancestry_source_original_ids": [
+            40072182
+          ],
+          "face_ancestry_source_rows": [
+            234809
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_parent_material_index": -1,
+          "face_parent_source_node_rows": [
+            -1,
+            -1,
+            -1
+          ],
+          "face_parent_tet_row": -1,
+          "face_run_original_id": 40072182,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 1023,
+          "face_source_layer": 1,
+          "face_source_original_id": 40072182,
+          "face_source_role": "inner_I",
+          "face_source_row": 234809,
+          "shell_face_row": 389748,
+          "shell_vertex_rows": [
+            155924,
+            156580,
+            156740
+          ]
+        }
+      ],
+      "tetgen_face_marker": 2,
+      "tetgen_node_ids": [
+        155925,
+        156581,
+        156741
+      ],
+      "tetgen_skipped_face_id": 4,
+      "triangle_metrics": {
+        "area_m2": 2.9836460981940604e-07,
+        "edge_lengths_m": [
+          0.0012978937216804494,
+          0.0006431230747740581,
+          0.0009647980947727966
+        ],
+        "min_edge_m": 0.0006431230747740581
+      },
+      "unique_candidate_vertex_rows": [
+        155924,
+        156580,
+        156740
+      ]
+    },
+    {
+      "candidate_face_rows": [
+        248527
+      ],
+      "coordinate_join_candidate_rows": [
+        [
+          83430
+        ],
+        [
+          83161
+        ],
+        [
+          83171
+        ]
+      ],
+      "face_mapping_unique": true,
+      "lineage": [
+        {
+          "face_ancestry_kind": 6,
+          "face_ancestry_parent_face_rows": [
+            326
+          ],
+          "face_ancestry_source_original_ids": [
+            532406
+          ],
+          "face_ancestry_source_rows": [
+            93588
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_parent_material_index": -1,
+          "face_parent_source_node_rows": [
+            -1,
+            -1,
+            -1
+          ],
+          "face_parent_tet_row": -1,
+          "face_run_original_id": 532406,
+          "face_source_body": 59,
+          "face_source_bone": 95,
+          "face_source_face_id": 326,
+          "face_source_layer": 3,
+          "face_source_original_id": 532406,
+          "face_source_role": "inner_I",
+          "face_source_row": 93588,
+          "shell_face_row": 248527,
+          "shell_vertex_rows": [
+            83430,
+            83161,
+            83171
+          ]
+        }
+      ],
+      "tetgen_face_marker": 2,
+      "tetgen_node_ids": [
+        83431,
+        83162,
+        83172
+      ],
+      "tetgen_skipped_face_id": 5,
+      "triangle_metrics": {
+        "area_m2": 1.996502096988798e-08,
+        "edge_lengths_m": [
+          0.000991055650226544,
+          6.612100435338449e-05,
+          0.0009394922233258799
+        ],
+        "min_edge_m": 6.612100435338449e-05
+      },
+      "unique_candidate_vertex_rows": [
+        83430,
+        83161,
+        83171
+      ]
+    },
+    {
+      "candidate_face_rows": [
+        406927
+      ],
+      "coordinate_join_candidate_rows": [
+        [
+          83446
+        ],
+        [
+          83218
+        ],
+        [
+          83172
+        ]
+      ],
+      "face_mapping_unique": true,
+      "lineage": [
+        {
+          "face_ancestry_kind": 6,
+          "face_ancestry_parent_face_rows": [
+            9
+          ],
+          "face_ancestry_source_original_ids": [
+            120000203
+          ],
+          "face_ancestry_source_rows": [
+            251988
+          ],
+          "face_exact_source_row": -1,
+          "face_marker": 2,
+          "face_parent_material_index": -1,
+          "face_parent_source_node_rows": [
+            -1,
+            -1,
+            -1
+          ],
+          "face_parent_tet_row": -1,
+          "face_run_original_id": 120000203,
+          "face_source_body": -1,
+          "face_source_bone": -1,
+          "face_source_face_id": 9,
+          "face_source_layer": 1,
+          "face_source_original_id": 120000203,
+          "face_source_role": "inner_I",
+          "face_source_row": 251988,
+          "shell_face_row": 406927,
+          "shell_vertex_rows": [
+            83446,
+            83218,
+            83172
+          ]
+        }
+      ],
+      "tetgen_face_marker": 2,
+      "tetgen_node_ids": [
+        83447,
+        83219,
+        83173
+      ],
+      "tetgen_skipped_face_id": 6,
+      "triangle_metrics": {
+        "area_m2": 1.715941415187422e-07,
+        "edge_lengths_m": [
+          0.0011417110001412417,
+          0.0003006912786708286,
+          0.0011881212701167032
+        ],
+        "min_edge_m": 0.0003006912786708286
+      },
+      "unique_candidate_vertex_rows": [
+        83446,
+        83218,
+        83172
+      ]
+    }
+  ],
+  "status": "PASS_EXACT_COORDINATE_JOIN_OF_TETGEN_FAILURE_WITNESSES",
+  "tetgen_intersection_claim": "TetGen reported input-surface intersections and skipped six PLC facets; this is a construction failure witness, not a new independent exact-predicate result.",
+  "tetgen_skipped_node_count": 204024,
+  "uniquely_mapped_skip_faces": 6,
+  "witness_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-full-PLC-013/tetgen-run-002/skin/skipped-facet-attribution-001/witnesses.npz",
+  "witness_npz_sha256": "2ac84d4191c76be772c2803b9cfb797004b4d9b8c23b97c5daa60e2e5493b4ee"
+}

@@ -1,0 +1,168 @@
+{
+  "accepted_steps": 0,
+  "candidate_domains": {
+    "I": {
+      "faces": 252017,
+      "points": 126011,
+      "sha256": "fee20f3d7a1697158398c73a8a771302625e122b52ee23840101c552e3832205"
+    },
+    "O": {
+      "faces": 154939,
+      "points": 77492,
+      "sha256": "1b3820a1a7aa46c3bed0f1475c0f68a9929a2e1353097a3cc4a28240b39844fe"
+    }
+  },
+  "gates": [
+    {
+      "F64_records": 469136,
+      "aabb_candidate_pairs": 329823,
+      "elapsed_s": 3.0260435838717967,
+      "first_pairs": [],
+      "name": "O_full_vs_F64",
+      "pair_count": 0,
+      "pairs_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-f64-gates-003/O_full_vs_F64-pairs.npy",
+      "pairs_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+      "query_faces": 154939,
+      "status": "PASS"
+    },
+    {
+      "F64_records": 469136,
+      "aabb_candidate_pairs": 660983,
+      "elapsed_s": 6.411832750076428,
+      "first_pairs": [],
+      "name": "I_full_vs_F64",
+      "pair_count": 0,
+      "pairs_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-f64-gates-003/I_full_vs_F64-pairs.npy",
+      "pairs_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+      "query_faces": 252017,
+      "status": "PASS"
+    },
+    {
+      "F64_records": 469136,
+      "aabb_candidate_pairs": 125721,
+      "elapsed_s": 1.4064157081302255,
+      "first_pairs": [],
+      "name": "D_changed_vs_F64",
+      "pair_count": 0,
+      "pairs_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-f64-gates-003/D_changed_vs_F64-pairs.npy",
+      "pairs_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+      "query_faces": 15043,
+      "status": "PASS"
+    }
+  ],
+  "inputs": {
+    "D_baseline_F32_F64": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/full-exact-report-derived-by-storage-compaction.json",
+      "sha256": "3c26f9355a4009dc1567bd283cc7ead4702b7d2c82ed1bc8b52d5ccfa755c52a"
+    },
+    "D_current": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-D-retry-007/candidate-D-microcollapsed.npz",
+      "sha256": "5503033cf67b3adb6533abc7711f2cde5a612fe4275833ef15b8ae1aba202115"
+    },
+    "D_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/candidate-D-d010-ring1-composed-schema62000204-compact-unused.npz",
+      "sha256": "f18ea8a8f38afe6a724b8fb840ebe97efb7568fbbf98ea8f0c308eef1bf538d0"
+    },
+    "F32_incremental": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-gates-006/report.json",
+      "sha256": "590eb970e76be3cdcb719678215f729e85a37ec9a87d2e2cd337e2208698065c"
+    },
+    "F64_manifest": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json",
+      "sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c"
+    },
+    "I_current": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-I-retry-001/candidate-I-microcollapsed.npz",
+      "sha256": "fee20f3d7a1697158398c73a8a771302625e122b52ee23840101c552e3832205"
+    },
+    "I_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/candidate-I-f32-local-child-refined.npz",
+      "sha256": "a702f368961cae10aeb2e9be38ac05cfdd422907d2beeab1d953d597a0d73469"
+    },
+    "O_current": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/candidate-O-microcollapsed.npz",
+      "sha256": "1b3820a1a7aa46c3bed0f1475c0f68a9929a2e1353097a3cc4a28240b39844fe"
+    },
+    "O_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/candidate-O-f32.npz",
+      "sha256": "1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa"
+    },
+    "bone_helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bone-barrier-remeshing-609/bone_barrier.py",
+      "sha256": "734527f060dcae186ae1b9609eca1ab95768d952aa0e9e8c7af76cae882b236b"
+    },
+    "exact_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "f64_barrier": {
+      "bank_count": 185,
+      "f64_negative_record_index_end_inclusive": -469137,
+      "f64_negative_record_index_start": -938272,
+      "loader": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/bone-barrier-remeshing-609/bone_barrier.py",
+      "loader_seconds": 3.517934500006959,
+      "loader_sha256": "734527f060dcae186ae1b9609eca1ab95768d952aa0e9e8c7af76cae882b236b",
+      "manifest_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json",
+      "manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+      "native_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz",
+      "native_sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5",
+      "record_count": 469136
+    },
+    "native_F32": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz",
+      "sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5"
+    }
+  },
+  "limitations": [
+    "F64 bone surface intersection only; no F64 self or O/I cross surface audit.",
+    "O and I were checked as full current surfaces; D changed faces were checked against F64 while unchanged D faces inherit the pinned whole-D F32/F64 exact report plus exact unchanged-F32 triangle certificate.",
+    "No TetGen, mass transport, native Runtime, or physical admission."
+  ],
+  "physical_admission": false,
+  "runtime_created": 0,
+  "schema": "numi.fine-physical-volume.microedge-f64-bone-gates.v1",
+  "stages": {
+    "D_changed_vs_F64": {
+      "F64_records": 469136,
+      "aabb_candidate_pairs": 125721,
+      "elapsed_s": 1.4064157081302255,
+      "first_pairs": [],
+      "pair_count": 0,
+      "pairs_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-f64-gates-003/D_changed_vs_F64-pairs.npy",
+      "pairs_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+      "query_faces": 15043,
+      "status": "PASS"
+    },
+    "I_full_vs_F64": {
+      "F64_records": 469136,
+      "aabb_candidate_pairs": 660983,
+      "elapsed_s": 6.411832750076428,
+      "first_pairs": [],
+      "pair_count": 0,
+      "pairs_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-f64-gates-003/I_full_vs_F64-pairs.npy",
+      "pairs_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+      "query_faces": 252017,
+      "status": "PASS"
+    },
+    "O_full_vs_F64": {
+      "F64_records": 469136,
+      "aabb_candidate_pairs": 329823,
+      "elapsed_s": 3.0260435838717967,
+      "first_pairs": [],
+      "pair_count": 0,
+      "pairs_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-f64-gates-003/O_full_vs_F64-pairs.npy",
+      "pairs_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+      "query_faces": 154939,
+      "status": "PASS"
+    },
+    "f64_records_prepared": {
+      "D_changed_faces": 15043,
+      "D_unchanged_faces": 231720,
+      "elapsed_s": 8.245093666948378,
+      "f64_banks": 185,
+      "f64_records": 469136,
+      "status": "PASS"
+    }
+  },
+  "status": "PASS_CURRENT_OI_AND_CHANGED_D_VS_ALL185_F64"
+}
