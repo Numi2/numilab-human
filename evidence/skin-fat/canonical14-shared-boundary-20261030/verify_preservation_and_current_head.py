@@ -49,4 +49,3 @@ for name,path,digest in [
  (R/'head-I-and-O-incremental-exact-gates.json').write_text(json.dumps({'status':'PASS'if all(r['count']==0 for r in reports)else'FAILED','reports':reports,'elapsed_s':time.monotonic()-T,'physical_admission':False,'runtime':0,'accepted_steps':0},indent=2)+'\n')
  print(json.dumps(reports[-1]),flush=True)
  if rr['count']:raise SystemExit(2)
-

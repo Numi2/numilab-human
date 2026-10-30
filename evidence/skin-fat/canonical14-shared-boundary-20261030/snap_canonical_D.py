@@ -71,4 +71,3 @@ if __name__=='__main__':
  try:main()
  except Exception as e:
   OUT.mkdir(exist_ok=True);(OUT/'failure.json').write_text(json.dumps({'error':repr(e),'traceback':__import__('traceback').format_exc(),'runtime':0,'accepted_steps':0},indent=2)+'\n');raise
-
