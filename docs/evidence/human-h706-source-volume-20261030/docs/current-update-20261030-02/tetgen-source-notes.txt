@@ -1,0 +1,12 @@
+Source inspection, not an additional meshing trial.
+TetGen source: /Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen.cxx
+SHA-256: a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc
+
+The exact native v1.6.0 source already disables mergefacets() when -Y is set (line14688). Adding -M to the present -pYq1.2/10AS512 command would not enable a different facet-merging path here, so no speculative -M trial was run.
+
+The near-overlap warnings inspected at line20228 arise during segment recovery when insertpoint reports an existing or nearby input vertex; the short-edge diagnostic uses the current relative epsilon and minedgelength. The skipped-segment list is reported at line23261. This supports conditioning the measured nanometre-altitude surface slivers, while retaining exact geometry gates, rather than repeating arbitrary tolerance flags.
+
+Authoritative manual: https://wias-berlin.de/software/tetgen/1.5/doc/manual/manual009.html
+The manual distinguishes code2 internal failure from code3 detected self-intersection. The current code2 failures do not overturn the exact zero-crossing source audits. They also do not establish valid positive tetrahedra, mass transfer or physical admission.
+
+No third-party code was modified. No new native runtime or accepted step was produced.

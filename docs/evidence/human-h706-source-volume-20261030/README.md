@@ -2,6 +2,21 @@
 
 This bundle records a hash-pinned current O/I/D source packet, its source330/core/wall inputs, preflight checks, the full-reference capacity-profile checks, and the TetGen construction trials that failed. It does not contain a qualified volume mesh.
 
+
+## Current checkpoint update — 2026-10-30 14:43 UTC
+
+Use this update for the latest candidate state. Older reports and source snapshots below remain available, but their claims do not supersede the pinned checkpoint and correction receipts in current-update-20261030-02/.
+
+- Checkpoint 7eebaedb23b3b0223bf3c7f0125477a76b783feead2298e5fea65f613ecd060b reports full O/I/D self-pair counts of 0, O-I/O-D/I-D crossings of 0, and complete all185 native-F32 and source-F64 bone comparisons of 0 on the common 2^-149 m exact lattice with no prefilter. These are source-surface results, not volume qualification.
+- Earlier exact-gates-010 mixed-unit F32-prefilter results are invalidated. The source-seam correction also invalidates earlier changed-only self-zero claims; both correction records are preserved in the addendum.
+- The current source004 TetGen replay failed for both Skin and Fat (return code 2); no combined child mesh was produced. The retained warning-lineage report records 7 Skin warning pairs and 21 Fat warning pairs; Fat stdout reports six skipped segments. The current gate remains FAILED_CURRENT_DEFAULT_TETGEN_RETAINED_WITNESSES.
+- Regional conservative mass/density, native physical installation, and accepted-state motion remain pending. The checkpoint records physical admission false, Runtime 0, and accepted steps 0.
+- The 217 source004 package has 17 focused tests passing and an asset-preparation benchmark with output parity. It is source/tooling evidence only; its 500,000-node/2,000,000-cell profile does not establish that this candidate fits or produces a valid volume.
+- Route 712 binds a native026 static scene revision and passes its static input hash checks. Five of six selected static payloads have hashes different from the former H706 pins; they are called a compatible revision, not byte-identical replacements. Route readiness still lacks current registered volume, geometry admission, and mass/density receipts.
+- The current surface-quality report finds 18/16/498 faces below 0.0001 degrees and 263/660/3,109 faces below 20 nm altitude for O/I/D respectively; This is a source-quality diagnostic, not a volume acceptance result.
+
+The update is listed in current-update-20261030-02/artifact-manifest-addendum.json; the original manifest remains the inventory for the earlier 720 publication. A whitespace attribute is scoped to the exact published face-incidence source path. Its existing final blank line remains byte-for-byte unchanged for the recorded test receipt; the bare-tree review retains that single documented EOF warning as an exception, with no global whitespace configuration change.
+
 ## Current source geometry
 
 - O049: `surfaces/O049.npz`, 1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa.
@@ -37,4 +52,4 @@ The documented attempt is an assembled anatomy/reference, not a measurement set 
 
 ## Reproducibility and scope
 
-`artifact-manifest.json` records the exact source path, file hash, and byte count for every bundled artifact. A few source/log files with pre-existing trailing blank bytes are retained as deterministic gzip copies; their original SHA-256 and uncompressed byte count are also recorded. Native launch-route source and eight focused refusal/safety tests are in `tools/evidence/human-h706-native-route-711/`; `readiness-006.json` is deliberately waiting on missing 228/217 and admission inputs. No native runtime, GPU execution, or accepted step was performed.
+artifact-manifest.json records the exact source path, file hash, and byte count for the earlier bundle. The additive artifact-manifest-addendum lists this update. A few source/log files with pre-existing trailing blank bytes are retained as deterministic gzip copies; their original SHA-256 and uncompressed byte count are also recorded. Route 711 remains historical; route 712 records 19 focused refusal/safety tests, hash-checked native721/source330 pins, and corrected native026 static inputs. The 712 readiness is still waiting for current registered volume assets and geometry/mass admission. No native runtime, GPU execution, or accepted step was performed.

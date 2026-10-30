@@ -1,0 +1,94 @@
+{
+  "candidate_skin": {
+    "binding_count": 86,
+    "index_count": 327633,
+    "internal_source_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/back412-skin-reference-native-021-003/assets/bodyparts3d-myosim-skinned-shell.nhskin",
+    "payload_abi": 5,
+    "registration_fingerprint32": 2981367981,
+    "sha256": "b01028f163bde0d46c9605d730f2e104713a1c490be3c718e77ff9cebb865710",
+    "vertex_count": 54949
+  },
+  "current_712_sources": {
+    "bone_registration_fingerprint32": 2981367981,
+    "bones": {
+      "path": "/Users/numi/numi-human-resting-build-20261005/resting-scene-20261005/Build/current-bone-registration-b1b410ad/bodyparts3d-myosim-major-bones.nhbones",
+      "sha256": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49"
+    },
+    "core": {
+      "path": "/Users/numi/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-core-reference.nhrigid",
+      "sha256": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4"
+    },
+    "muscle": {
+      "path": "/Users/numi/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo",
+      "sha256": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b"
+    },
+    "shared_source_sha256": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975"
+  },
+  "current_render_ownership": {
+    "691_detail_bridge_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-child-detail-bridge-691/receipt.json",
+      "physical_admission": false,
+      "runtime": 0,
+      "sha256": "1e70dc50c1695523c0cf73302208cc95867d656febdb4f3b81477f13ae1a15ef"
+    },
+    "712_mass_admission": null,
+    "712_skeleton_native_preflight_env": {},
+    "721_code_status": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-spatial-native-install-721/source-manifest.json",
+      "physical_admission": false,
+      "runtime": 0,
+      "sha256": "bce291c465f2b3e8def582c8926fe8321e785678968981c312f3c2ba95a338e2"
+    },
+    "current_scene_geometry_owner": "No actual detail-bridge install is evidenced; do not claim that the candidate current scene has replaced NHSKIN's rendered geometry.",
+    "detail_bridge_semantics": "In 721 bridge mode, rendered triangles use detail.detailFaces and detailReferenceWorldPoints instead of outer.faces; NHSKIN is still used for the 86-lane binding registry, coarse O prefix, and support-source identity. This mode is opt-in and no actual 712/721 bridge install was found."
+  },
+  "missing_original": {
+    "exact_original_recovered": false,
+    "expected_sha256": "898990d49a3f1dfa0cbe85b10765bf62fa0cc3c834a3371f5503c83facfacba2",
+    "path": "/Users/n/numi-human-resting-evidence-20261005/common-atlas-skin-composition-907/bodyparts3d-myosim-skinned-shell.nhskin"
+  },
+  "prior_026_native_proof": {
+    "accepted_steps": 8000,
+    "exit_code": 0,
+    "matched_input_hashes": {
+      "bones": "7d94e2f28ac6cea30c6c11a79919077acc40281636eb20b11b50b50aebd3ec49",
+      "core": "2c78cb4150b97cea6e8169dad9e8f5dd59af667b247e07b56e48e857435560e4",
+      "muscle": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+      "skin": "b01028f163bde0d46c9605d730f2e104713a1c490be3c718e77ff9cebb865710"
+    },
+    "qualification": "Native latest-source positive anatomy-parent regression with preserved back412, repaired skin and retired liver alias; forearm and later axillary defects remain. Complete anatomy qualification pending.",
+    "run_declaration_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/anatomy-parents-native-026-001-main-control/baseline/run-declaration.json",
+    "run_declaration_sha256": "469db6cc257cc89e2bbab0f12010be4eb855fea72ecfe349fbd1d63449ae36fb",
+    "run_metadata_path": "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/anatomy-parents-native-026-001-main-control/baseline/native-run/run-metadata.json",
+    "run_metadata_sha256": "edd1645d2adcbf3eb15dbd9b191d6c1e4cd57c582c8920e310ceed37644a185a",
+    "seconds": 16.0
+  },
+  "qualification_boundary": "Compatibility only. Does not qualify the full scene revision, physical O/detail installation, anatomy, mass, or runtime.",
+  "root_pose": {
+    "current_712": {
+      "root_delta_quaternion_xyzw": [
+        -0.7009092642998509,
+        0.0,
+        0.0,
+        0.7132504491541817
+      ],
+      "root_pitch_degrees": -89.0,
+      "root_translation_xyz_m": [
+        -0.05000000074505806,
+        0.20000000298023224,
+        0.10571993142366409
+      ]
+    },
+    "matches_026_scene_manifest": true
+  },
+  "schema": "numi.human.skin-shell-compatibility-check.v1",
+  "skin_native_reader_checks": {
+    "invalid_binding_transform_rows": [],
+    "matches_current_bone_registration_fingerprint": true,
+    "matches_current_rigid_and_bone_source_sha": true,
+    "prior_026_native_loader_accepted_candidate": true,
+    "unique_binding_body_rows": 86
+  },
+  "status": "B010_NATIVE_INPUT_COMPATIBILITY_VERIFIED"
+}

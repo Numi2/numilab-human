@@ -1,0 +1,1600 @@
+{
+  "classification": "existing-format native domain adapter; no physical admission",
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-csr-canonical-011/O/candidate-O-csr-canonical.npz": "578cee97a3bbecb73c0e1a6d7c26f45ac6cc111a552996f3910866a4a3652a9b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-saved-operation-replay-011/I/candidate-I-saved-op-replay.npz": "9721102247157eeb42c59633fda59d63fd5ba48ad11ba4e63987834136711e31",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/candidate-D-saved-op-replay-source-mapped.npz": "15afa8eecdaeff456cda25ef26890da60d60dd06e0412ed2035c77a8cbeb460f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-collar-014-saved-op-replay/collar-current.npz": "7e4a5f8f09c019925f6932b573bcbf3577bf51413070f4aacfc81ce86fe95da4",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-collar-014-saved-op-replay/wall-provenance-current.csv": "62373bf5fc8e7ebcdf03261acbf4a564957485eaa058db3d1140dd47df3e97a7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/plan-source004-020/manifest.217-parent-views/parent-cells.csv.gz": "dd5d6e1c47982a4305468ecad904015a23abdcbb3c2b031cb3688547074019cd",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/plan-source004-020/manifest.217-parent-views/parent-nodes.csv.gz": "0fddb38bfafeb3da5925e49f4f89704fb8c626ad8de122d176724d85044503c0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878"
+  },
+  "parent_table_roles": {
+    "source330_mass_and_region_seeds": {
+      "parent_cells": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/plan-source004-020/manifest.217-parent-views/parent-cells.csv.gz",
+      "parent_nodes": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/plan-source004-020/manifest.217-parent-views/parent-nodes.csv.gz"
+    },
+    "wall_ancestry_only": {
+      "parent_cells": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz",
+      "parent_nodes": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz"
+    }
+  },
+  "source_npz_keys": {
+    "O": [
+      "closed_emitted_vertex_rows",
+      "closed_face_rows",
+      "face_ancestry_method",
+      "face_ancestry_offsets",
+      "face_ancestry_parent_face_rows",
+      "face_ancestry_source_face_rows",
+      "face_ancestry_source_original_ids",
+      "face_exact_source_row",
+      "face_group_id",
+      "face_parent_source_face_rows",
+      "face_source_body",
+      "face_source_bone",
+      "face_source_face_id",
+      "face_source_identity0",
+      "face_source_identity1",
+      "face_source_identity_schema_by_original_id_json",
+      "face_source_layer",
+      "face_source_original_id",
+      "faces",
+      "lineage_preparation_input_sha256",
+      "microedge_input_face_to_representative_output_row",
+      "microedge_input_point_to_output_row",
+      "microedge_max_displacement_m",
+      "microedge_parent_candidate_sha256",
+      "microedge_parent_input_face_offsets",
+      "microedge_parent_input_face_rows",
+      "microedge_parent_input_point_offsets",
+      "microedge_parent_input_point_rows",
+      "microedge_schema",
+      "points_world_m",
+      "reference_original_vertex_rows",
+      "reference_subdivision_closed_mapping_status",
+      "reference_subdivision_field_amplitude_m",
+      "reference_subdivision_parent_face_rows",
+      "reference_subdivision_target_edge_m",
+      "reference_vertex_parent_face_barycentric",
+      "reference_vertex_parent_face_offsets",
+      "reference_vertex_parent_face_rows",
+      "run043_backtracking_alpha",
+      "run043_shared_grid_delta_world_m",
+      "run049_current_witness_grid_delta_world_m",
+      "source_cache_sha256",
+      "source_group_face_rows",
+      "source_group_keys_json",
+      "source_group_offsets",
+      "temporary_head_cap_faces_removed"
+    ],
+    "I": [
+      "edge_flip_parent_face_rows",
+      "edge_flip_parent_offsets",
+      "face_ancestry_method",
+      "face_ancestry_offsets",
+      "face_ancestry_parent_face_rows",
+      "face_ancestry_source_face_rows",
+      "face_ancestry_source_original_ids",
+      "face_exact_source_row",
+      "face_group_id",
+      "face_parent_offsets",
+      "face_parent_rows",
+      "face_parent_source_face_rows",
+      "face_source_body",
+      "face_source_bone",
+      "face_source_face_id",
+      "face_source_identity0",
+      "face_source_identity1",
+      "face_source_identity_schema_by_original_id_json",
+      "face_source_layer",
+      "face_source_original_id",
+      "faces",
+      "float32_emission_json",
+      "lineage_preparation_input_sha256",
+      "microedge_input_face_to_representative_output_row",
+      "microedge_input_point_to_output_row",
+      "microedge_max_displacement_m",
+      "microedge_parent_candidate_sha256",
+      "microedge_parent_input_face_offsets",
+      "microedge_parent_input_face_rows",
+      "microedge_parent_input_point_offsets",
+      "microedge_parent_input_point_rows",
+      "microedge_schema",
+      "points_world_m",
+      "reference_incremental_parent_input_face_rows",
+      "reference_incremental_target_edge_m",
+      "reference_input_vertex_to_collapsed_output_row",
+      "reference_original_input_vertex_offsets",
+      "reference_original_input_vertex_rows",
+      "reference_subdivision_field_amplitude_m",
+      "reference_subdivision_parent_face_rows",
+      "reference_subdivision_target_edge_m",
+      "reference_vertex_parent_face_barycentric",
+      "reference_vertex_parent_face_offsets",
+      "reference_vertex_parent_face_rows",
+      "run043_backtracking_alpha",
+      "run043_shared_grid_delta_world_m",
+      "run049_current_witness_grid_delta_world_m",
+      "source_group_face_rows",
+      "source_group_keys_json",
+      "source_group_offsets",
+      "temporary_cap_faces_removed"
+    ],
+    "D": [
+      "candidate_face_ancestry_offsets",
+      "candidate_face_ancestry_rows",
+      "canonical14_star_conditioning_json",
+      "canonical_attachment_shared_vertex_snap_json",
+      "d010_ring1_composition_json",
+      "d289_parent_row_indptr",
+      "d289_parent_rows",
+      "face_ancestry_input_cache_rows",
+      "face_ancestry_source_rows",
+      "face_cache_row",
+      "face_exact_source_row",
+      "face_id",
+      "face_run_original_id",
+      "face_source_body",
+      "face_source_bone",
+      "face_source_face_id",
+      "face_source_identity0",
+      "face_source_identity1",
+      "face_source_identity_schema_by_original_id_json",
+      "face_source_layer",
+      "face_source_original_id",
+      "face_source_row",
+      "faces",
+      "float32_emission_json",
+      "input_candidate_f32_sha256",
+      "input_candidate_sha256",
+      "microedge_input_face_to_representative_output_row",
+      "microedge_input_point_to_output_row",
+      "microedge_max_displacement_m",
+      "microedge_parent_candidate_sha256",
+      "microedge_parent_input_face_offsets",
+      "microedge_parent_input_face_rows",
+      "microedge_parent_input_point_offsets",
+      "microedge_parent_input_point_rows",
+      "microedge_schema",
+      "operational_emission_json",
+      "operational_inserted_vertex_lineage_json",
+      "operational_output_face_parent_offsets",
+      "operational_output_face_parent_rows",
+      "operational_reference_repair_json",
+      "output_vertex_input_parent_offsets",
+      "output_vertex_input_parent_rows",
+      "output_vertex_input_rows",
+      "pair_linked_remesh_operation_json",
+      "point_preservation_source_asset_index",
+      "point_preservation_source_vertex_row",
+      "points_world_m",
+      "topology_patch_boundary_loop_vertex_rows",
+      "topology_patch_new_faces",
+      "topology_patch_operation_json",
+      "topology_patch_original_D696_parent_face_rows",
+      "topology_patch_output_face_rows",
+      "topology_patch_parent_candidate_face_rows",
+      "union_face_ancestry_face_ids",
+      "union_face_ancestry_offsets",
+      "union_face_ancestry_rows",
+      "union_face_ancestry_run_original_ids",
+      "union_input_face_id",
+      "union_input_face_rows",
+      "union_input_run_original_id"
+    ],
+    "collar": [
+      "points_world_m",
+      "outer_faces",
+      "skin_sidewall_faces",
+      "fat_sidewall_faces",
+      "donor_O_parent_node_rows",
+      "donor_O_to_candidate_vertex",
+      "donor_I_parent_node_rows",
+      "donor_D_parent_node_rows",
+      "skin_sidewall_parent_tet_rows",
+      "fat_sidewall_parent_tet_rows",
+      "exact_candidate_face_source_rows"
+    ]
+  },
+  "wall_coordinate_frame": {
+    "mode": "registered-native-current",
+    "source_coordinate_field": "source330.current_x/y/z_m",
+    "registered_frame_receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-018-native-current-reference/receipt.json",
+    "registered_frame_receipt_sha256": "636a2d3e223734d0a9f9950ceb674aaeabd6102f1f653111afbe6ee275adfc96",
+    "source330_parent_nodes_sha256": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878",
+    "source330_parent_cells_sha256": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f",
+    "attempt016_receipt_sha256": "ee0b23e4ca1d607f0606d78385d5649890317c39f3c2b0b8414d2bcea4686daf",
+    "source_to_capture_node_map": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-018-native-current-reference/d37-parent-node-to-capture016.csv",
+    "source_to_capture_node_map_sha256": "288021b027ea40464cb9761033550862c3ab0c5bf4b01caee4405a36976fc716",
+    "capture016_parent_nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "run006_stdout": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/stdout.txt",
+    "run006_stdout_sha256": "631ce8ea45eb4bb1078b04efad3061af99a881ecba428273ebdb374c0170c71a",
+    "registered_pose100": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/registered-skin-poses-100.json",
+    "registered_pose100_sha256": "eb2ae08f74852f08d5b08a18f3d7738b53b8e7265336f77646cbe8f949ece117",
+    "field_mode": "run006 common_native_SE3 applied to source330 current XYZ; F32 round once",
+    "rotation_row_major": [
+      [
+        0.9999999999999996,
+        -7.6046974895341e-10,
+        -3.195341290709369e-08
+      ],
+      [
+        7.604699335557185e-10,
+        1.0,
+        5.777232895524813e-09
+      ],
+      [
+        3.195341290270028e-08,
+        -5.77723291982442e-09,
+        0.9999999999999996
+      ]
+    ],
+    "translation_m": [
+      1.188898923754067e-09,
+      -1.256228454593611e-10,
+      -5.654962409167019e-06
+    ],
+    "existing_reference_residual_bound_m": 0.0004,
+    "mapped_parent_nodes": 7233,
+    "raw_source_to_capture_max_residual_m": 5.663774358527132e-06,
+    "registered_source_to_capture_max_residual_m": 1.255257119805485e-07,
+    "physical_admission": false
+  },
+  "D37_positive_wall_parent_tets": {
+    "skin_rows": [
+      13005,
+      13006,
+      13029,
+      13030,
+      13035,
+      13036,
+      13188,
+      13189,
+      13191,
+      13192,
+      13197,
+      13198,
+      13200,
+      13201,
+      13302,
+      13303,
+      13338,
+      13338,
+      13339,
+      13340,
+      13344,
+      13344,
+      13345,
+      13346,
+      13350,
+      13352,
+      13359,
+      13361,
+      13419,
+      13420,
+      13426,
+      13427,
+      13428,
+      13429,
+      13446,
+      13447,
+      13512,
+      13513,
+      13513,
+      13514,
+      13518,
+      13520,
+      13561,
+      13562,
+      13563,
+      13565,
+      13581,
+      13582,
+      13809,
+      13810,
+      13818,
+      13819,
+      13863,
+      13864,
+      13866,
+      13867,
+      13867,
+      13868,
+      13899,
+      13900,
+      13902,
+      13903,
+      13905,
+      13907,
+      13908,
+      13910,
+      13911,
+      13913,
+      13914,
+      13915,
+      13938,
+      13939,
+      13944,
+      13945,
+      13947,
+      13948,
+      13957,
+      13958,
+      13962,
+      13963,
+      13963,
+      13964,
+      13999,
+      14000,
+      14037,
+      14039,
+      14040,
+      14041,
+      14046,
+      14047
+    ],
+    "fat_rows": [
+      27321,
+      27322,
+      27345,
+      27346,
+      27351,
+      27352,
+      27504,
+      27505,
+      27507,
+      27508,
+      27513,
+      27514,
+      27516,
+      27517,
+      27618,
+      27619,
+      27654,
+      27654,
+      27655,
+      27656,
+      27660,
+      27660,
+      27661,
+      27662,
+      27666,
+      27668,
+      27675,
+      27677,
+      27735,
+      27736,
+      27742,
+      27743,
+      27744,
+      27745,
+      27762,
+      27763,
+      27828,
+      27829,
+      27829,
+      27830,
+      27834,
+      27836,
+      27877,
+      27878,
+      27879,
+      27881,
+      27897,
+      27898,
+      28125,
+      28126,
+      28134,
+      28135,
+      28179,
+      28180,
+      28182,
+      28183,
+      28183,
+      28184,
+      28215,
+      28216,
+      28218,
+      28219,
+      28221,
+      28223,
+      28224,
+      28226,
+      28227,
+      28229,
+      28230,
+      28231,
+      28254,
+      28255,
+      28260,
+      28261,
+      28263,
+      28264,
+      28273,
+      28274,
+      28278,
+      28279,
+      28279,
+      28280,
+      28315,
+      28316,
+      28353,
+      28355,
+      28356,
+      28357,
+      28362,
+      28363
+    ],
+    "all_positive_reference_volume": true
+  },
+  "assembly": {
+    "marker_roles": {
+      "skin_outer_O": 1,
+      "skin_inner_I": 2,
+      "skin_wall_OI": 3,
+      "fat_outer_I": 4,
+      "fat_inner_D": 5,
+      "fat_wall_ID": 6
+    },
+    "wall_donor_I_ring_local_rows": [
+      49967,
+      50081,
+      50230,
+      50185,
+      50634,
+      50256,
+      50254,
+      50490,
+      50921,
+      51747,
+      51587,
+      50584,
+      51865,
+      51977,
+      52076,
+      51861,
+      51976,
+      52139,
+      52075,
+      52133,
+      52225,
+      52241,
+      52299,
+      55458,
+      55607,
+      55628,
+      55634,
+      55766,
+      55915,
+      56022,
+      55939,
+      56112,
+      56343,
+      56689,
+      56824,
+      56958,
+      56842,
+      56921,
+      57024,
+      56979,
+      51317,
+      55755,
+      55847,
+      56387,
+      56608
+    ],
+    "orientation": {
+      "O_flipped_to_wall": false,
+      "I_skin_flipped_to_wall": true,
+      "I_fat_flipped_to_wall": false,
+      "D_flipped_to_wall": true,
+      "skin_global_positive_volume_flip": false,
+      "fat_global_positive_volume_flip": false
+    },
+    "skin_shell": {
+      "vertices": 203518,
+      "faces": 407076,
+      "signed_volume_m3": 0.003619450794541127,
+      "edge_report": {
+        "edges": 610614,
+        "incidence_histogram": {
+          "2": 610614
+        },
+        "boundary_edges": 0,
+        "nonmanifold_edges": 0,
+        "same_direction_twoface_edges": 0
+      }
+    },
+    "fat_shell": {
+      "vertices": 248981,
+      "faces": 498926,
+      "signed_volume_m3": 0.01144455102535842,
+      "edge_report": {
+        "edges": 748389,
+        "incidence_histogram": {
+          "2": 748389
+        },
+        "boundary_edges": 0,
+        "nonmanifold_edges": 0,
+        "same_direction_twoface_edges": 0
+      }
+    }
+  },
+  "material_region_attributes": {
+    "skin": 15,
+    "fat": 16
+  },
+  "region_seed_components": {
+    "skin": [
+      {
+        "positive_component_index": 0,
+        "signed_component_volume_m3": 0.003619450794541418,
+        "seed_method": "source330_parent_cell_centroid",
+        "source330_parent_tet_row": 1,
+        "point_world_m": [
+          -0.24717361479997635,
+          -0.9506501108407974,
+          0.17885414138436317
+        ],
+        "whole_material_solid_contains_seed": true
+      }
+    ],
+    "fat": [
+      {
+        "positive_component_index": 0,
+        "signed_component_volume_m3": 0.011446579428414358,
+        "seed_method": "source330_parent_cell_centroid",
+        "source330_parent_tet_row": 14316,
+        "point_world_m": [
+          -0.2501833327114582,
+          -0.944088950753212,
+          0.1754935048520565
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 1,
+        "signed_component_volume_m3": 1.0634073095893116e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.04556524712086476,
+          -0.09751255300207431,
+          0.036177529874741106
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 2,
+        "signed_component_volume_m3": 1.1361456990964604e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.04572575099486139,
+          -0.0980814067319703,
+          0.036902286808324934
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 3,
+        "signed_component_volume_m3": 5.507598289756063e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08509754676713012,
+          -0.1367312095645618,
+          0.07273506273857598
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 4,
+        "signed_component_volume_m3": 4.4576201518795275e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.0806255537158886,
+          -0.13647442308234933,
+          0.06981417925356632
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 5,
+        "signed_component_volume_m3": 8.119192596657839e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.07066551440816268,
+          -0.11349465817563309,
+          0.047500190879739904
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 6,
+        "signed_component_volume_m3": 5.655165754716719e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.07101712277471448,
+          -0.11392578020491825,
+          0.047791199725492034
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 7,
+        "signed_component_volume_m3": 1.6939429057331447e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.0706776597126757,
+          -0.11424077333612069,
+          0.0495531995302145
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 8,
+        "signed_component_volume_m3": 7.363741282936611e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.06253069491866686,
+          -0.1063761822980017,
+          0.03928145808495728
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 9,
+        "signed_component_volume_m3": 3.1012992843954393e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.06239419695546553,
+          -0.1064947926809771,
+          0.03973348350027999
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 10,
+        "signed_component_volume_m3": 1.3786204451025183e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.0396577411087496,
+          -0.09336871346885216,
+          0.039156136063522876
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 11,
+        "signed_component_volume_m3": 2.7918855777182355e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.03627773403777344,
+          -0.08803744313206079,
+          0.03983356140763053
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 12,
+        "signed_component_volume_m3": 8.661659005500199e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.03624387910680596,
+          -0.0875552808712068,
+          0.039747665016115825
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 13,
+        "signed_component_volume_m3": 5.188209331767802e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.028839540613508234,
+          -0.08084702512396753,
+          0.04199328567418291
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 14,
+        "signed_component_volume_m3": 3.0658836172175535e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02744772218364276,
+          -0.05653604729897447,
+          0.05877332544576258
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 15,
+        "signed_component_volume_m3": 9.928113225659316e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02594475511669257,
+          -0.05223886996803201,
+          0.0632340748461797
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 16,
+        "signed_component_volume_m3": 1.17968119270163e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02601649562663159,
+          -0.04980335832079108,
+          0.06578227029057881
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 17,
+        "signed_component_volume_m3": 8.426328757222863e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.026794484060789207,
+          -0.04416053989427366,
+          0.07476739974137533
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 18,
+        "signed_component_volume_m3": 2.920267177989913e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025784089417185147,
+          -0.03859892980899289,
+          0.08083119429369783
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 19,
+        "signed_component_volume_m3": 1.3753146748491365e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.027645861758950827,
+          -0.034721835988771134,
+          0.08771026538902674
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 20,
+        "signed_component_volume_m3": 4.936279768784571e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02642354412539973,
+          -0.03365735505627613,
+          0.09489892014400604
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 21,
+        "signed_component_volume_m3": 9.741245084036702e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02595316541664868,
+          -0.034117303919060024,
+          0.09536496916568585
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 22,
+        "signed_component_volume_m3": 8.30347279174448e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.026415804538703624,
+          -0.031518920223124504,
+          0.09889197041506495
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 23,
+        "signed_component_volume_m3": 6.179736377857397e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02760559527641982,
+          -0.03153727234674616,
+          0.13036884406614174
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 24,
+        "signed_component_volume_m3": 5.703277038232978e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.027077140370506042,
+          -0.031485895417179104,
+          0.1446614181294917
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 25,
+        "signed_component_volume_m3": 9.325113502431919e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08768103514173681,
+          -0.09434064796291411,
+          0.1724053968634476
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 26,
+        "signed_component_volume_m3": 4.0262532862629114e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08791321742605063,
+          -0.09437404400425176,
+          0.1728549916743858
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 27,
+        "signed_component_volume_m3": 2.2210131085510618e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08792157492076251,
+          -0.09153257153158566,
+          0.17184307367991444
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 28,
+        "signed_component_volume_m3": 5.308240063722173e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08792205853972755,
+          -0.09240727862970796,
+          0.17259926249226004
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 29,
+        "signed_component_volume_m3": 4.692082923335814e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08298346536100126,
+          -0.105128369132391,
+          0.1737452132164463
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 30,
+        "signed_component_volume_m3": 1.6768983599360444e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.08005144504505284,
+          -0.0729031319702423,
+          0.1675619681151159
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 31,
+        "signed_component_volume_m3": 4.109148434753516e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.07997246059435165,
+          -0.07213869130841014,
+          0.16782140679096325
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 32,
+        "signed_component_volume_m3": 1.2560919882385472e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.07999056068294894,
+          -0.07240526429451222,
+          0.1672783913860866
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 33,
+        "signed_component_volume_m3": 5.20601071004225e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.07544836026664609,
+          -0.06263859254879366,
+          0.16745893983431243
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 34,
+        "signed_component_volume_m3": 4.5248466553615486e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.07434989324230433,
+          -0.06223229065392432,
+          0.16717347095236076
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 35,
+        "signed_component_volume_m3": 3.598577064393859e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.027583177412916226,
+          -0.03603743835130621,
+          0.15824808858486794
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 36,
+        "signed_component_volume_m3": 1.280877240713868e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.029671487875035256,
+          -0.03736262166427391,
+          0.16055712567989877
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 37,
+        "signed_component_volume_m3": 7.696902048571432e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.008518128687960034,
+          -0.09555956796215002,
+          0.03673463114688702
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 38,
+        "signed_component_volume_m3": 2.8061234431535508e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.00951169286214735,
+          -0.09509006340719967,
+          0.03852806840335928
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 39,
+        "signed_component_volume_m3": 6.557037785929168e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.004202838598251503,
+          -0.09846403393651466,
+          0.03703374087295888
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 40,
+        "signed_component_volume_m3": 4.110191930418685e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.004475206516607532,
+          -0.10216025850189457,
+          0.03857682577065888
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 41,
+        "signed_component_volume_m3": 5.6797417486506045e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.005591650474531333,
+          -0.1014345751241061,
+          0.037327136972059846
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 42,
+        "signed_component_volume_m3": 7.020709690204482e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02464547092213186,
+          -0.07989062876226893,
+          0.041384328294725777
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 43,
+        "signed_component_volume_m3": 3.77957189102228e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.024769473225662475,
+          -0.07190856432881308,
+          0.04591280713655015
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 44,
+        "signed_component_volume_m3": 6.119199800090327e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025218593431000986,
+          -0.06771108242012527,
+          0.047208762078446743
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 45,
+        "signed_component_volume_m3": 5.870935902311451e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02442547005708794,
+          -0.06606380441737975,
+          0.04801731359230645
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 46,
+        "signed_component_volume_m3": 7.348219775064746e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02439019600371006,
+          -0.06659101433072305,
+          0.04887936542198347
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 47,
+        "signed_component_volume_m3": 3.9771803327630444e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02536639707263882,
+          -0.061584446223713105,
+          0.052035661750408045
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 48,
+        "signed_component_volume_m3": 6.858889105149656e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.024422503507463684,
+          -0.053411289464529006,
+          0.05901295115440198
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 49,
+        "signed_component_volume_m3": 2.2497836412318917e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025112622246571275,
+          -0.053130556758718604,
+          0.05938993781905768
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 50,
+        "signed_component_volume_m3": 1.7993760405341726e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.024671463199441343,
+          -0.05023255886680987,
+          0.06445874377032425
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 51,
+        "signed_component_volume_m3": 4.1593779390288834e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02552984243686015,
+          -0.04937665825630132,
+          0.0654398631372042
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 52,
+        "signed_component_volume_m3": 8.607155227116156e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.022461561298513004,
+          -0.046242677335615795,
+          0.06917436965220972
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 53,
+        "signed_component_volume_m3": 5.4910909986472616e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02297390264208052,
+          -0.045706639277390985,
+          0.0701995852625232
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 54,
+        "signed_component_volume_m3": 1.6311879884127928e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.023275735554542234,
+          -0.045279227110159866,
+          0.07011032638173853
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 55,
+        "signed_component_volume_m3": 1.9344369935640213e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.030936916535552913,
+          -0.1378381923598577,
+          0.06792861908863129
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 56,
+        "signed_component_volume_m3": 2.303388610313576e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.03577571066680093,
+          -0.13739176110894152,
+          0.074072898027969
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 57,
+        "signed_component_volume_m3": 1.3723548892870953e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.017041102875773637,
+          -0.1110071865599223,
+          0.04466225844026096
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 58,
+        "signed_component_volume_m3": 5.34238377180186e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.016708281096698186,
+          -0.10940178776930846,
+          0.04391677022858356
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 59,
+        "signed_component_volume_m3": 1.7108285239570503e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.02522997353128413,
+          -0.1215557528415923,
+          0.053297008794162735
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 60,
+        "signed_component_volume_m3": 1.9342048410601704e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025588124687326286,
+          -0.038243944217572226,
+          0.07710461918560635
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 61,
+        "signed_component_volume_m3": 1.1299744172192389e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.022641969734558644,
+          -0.03909519796416002,
+          0.0825481698515545
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 62,
+        "signed_component_volume_m3": 2.87162096081195e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02557908556085766,
+          -0.03795200629056531,
+          0.08031658017585805
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 63,
+        "signed_component_volume_m3": 1.575849553164508e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.024832409283836464,
+          -0.03636626784706385,
+          0.08153042392788146
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 64,
+        "signed_component_volume_m3": 3.276283688312058e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.022228208428366217,
+          -0.038699779187388476,
+          0.08276694126290549
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 65,
+        "signed_component_volume_m3": 2.388779112097213e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.023052590127802877,
+          -0.03756287011438862,
+          0.08634777900915086
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 66,
+        "signed_component_volume_m3": 3.268378238752896e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.023685098976619762,
+          -0.036595242028926604,
+          0.08939274696079347
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 67,
+        "signed_component_volume_m3": 2.1644025871126236e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025667643902550354,
+          -0.0334125259354691,
+          0.09518572118039695
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 68,
+        "signed_component_volume_m3": 1.742897622257504e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.02525565608278392,
+          -0.03284755817096109,
+          0.0951817055953443
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 69,
+        "signed_component_volume_m3": 5.6477902857272326e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.024776661021157373,
+          -0.03371851371368949,
+          0.09584563347982261
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 70,
+        "signed_component_volume_m3": 2.306462320096191e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025154268824902973,
+          -0.03391587038152527,
+          0.0965081527844633
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 71,
+        "signed_component_volume_m3": 1.972765006200406e-11,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.025125659887508544,
+          -0.0324221873521388,
+          0.09914760443924463
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 72,
+        "signed_component_volume_m3": 5.296893350992514e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.024108425976781495,
+          -0.03237617951905452,
+          0.09955058965783135
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 73,
+        "signed_component_volume_m3": 1.793965741697449e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.023630306332314287,
+          -0.0314551571958646,
+          0.10064100859512473
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 74,
+        "signed_component_volume_m3": 9.274762005805729e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.023467684975620514,
+          -0.03189328504816604,
+          0.10070248538556364
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 75,
+        "signed_component_volume_m3": 2.1549420591483658e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.01183875891523845,
+          -0.03765108848173921,
+          0.16028857313940875
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 76,
+        "signed_component_volume_m3": 4.557762889380222e-14,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.011672254779496736,
+          -0.036736538818417104,
+          0.1604608323740196
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 77,
+        "signed_component_volume_m3": 2.0300198195011337e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.008844399080495557,
+          -0.036742980464487006,
+          0.15878882953421472
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 78,
+        "signed_component_volume_m3": 1.944401699596157e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.008432936807852866,
+          -0.036267208910825854,
+          0.15959604683790718
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 79,
+        "signed_component_volume_m3": 1.206123108587626e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          -0.003036570292993993,
+          -0.03965065853428726,
+          0.15958259991292648
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 80,
+        "signed_component_volume_m3": 8.77386040238748e-15,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.006055551925696328,
+          -0.04557900337753239,
+          0.16471578097838918
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 81,
+        "signed_component_volume_m3": 6.410119368694043e-13,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.026210086587858072,
+          -0.06644864234675465,
+          0.16818923735026842
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 82,
+        "signed_component_volume_m3": 8.568290826321312e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.03604999933414679,
+          -0.0873112457054101,
+          0.1711804222661525
+        ],
+        "whole_material_solid_contains_seed": true
+      },
+      {
+        "positive_component_index": 83,
+        "signed_component_volume_m3": 3.973809724249147e-12,
+        "seed_method": "verified_component_interior_point_construction_only",
+        "source330_parent_tet_row": null,
+        "point_world_m": [
+          0.03644642654241583,
+          -0.09195913121356236,
+          0.17159233116177902
+        ],
+        "whole_material_solid_contains_seed": true
+      }
+    ]
+  },
+  "region_seed_status": "one verified seed per positive connected shell component; negative cavity shells excluded",
+  "face_ancestry_files": [
+    "skin-face-ancestry.csv.gz",
+    "fat-face-ancestry.csv.gz"
+  ],
+  "tetgen": [
+    {
+      "return_code": 2,
+      "timed_out": false,
+      "wall_s": 8.676274541998282,
+      "command": [
+        "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen",
+        "-pYq1.2/10AS512",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/volume-004-current-replay-source004/skin.poly"
+      ],
+      "status": "TETGEN_FAILED"
+    },
+    {
+      "return_code": 2,
+      "timed_out": false,
+      "wall_s": 15.262286125216633,
+      "command": [
+        "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen",
+        "-pYq1.2/10AS512",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/volume-004-current-replay-source004/fat.poly"
+      ],
+      "status": "TETGEN_FAILED"
+    }
+  ],
+  "combined_skin_fat_child_mesh": null,
+  "physical_admission": false,
+  "elapsed_s": 45.73149674991146,
+  "outputs": {
+    "fat-tetgen.stdout.log": "14c29f0ca5a07dc83b7a74fecba64d12e2ad4b38e61b793f143ae0bb682c1053",
+    "skin.poly": "662f3f213b7fb39a3a21498e4d863c83ec63aa7c6e34266d9f11b39e653fca45",
+    "skin-shell.npz": "0e696d8dfddf8cd5b37b61d0f42ccec6c3f8ee36d2cecbe3104382f05410ef24",
+    "skin-tetgen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "fat-tetgen.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "skin-face-ancestry.csv.gz": "92ebd9e7864c35e77ad24d575febebcf74e8ed31e6debc0cb70b1329cf58c882",
+    "fat-shell.npz": "dae6fc2c1fc2fb5cab95fa415b008b7d0afcac8b8d892cbddfabb5edd9aebe70",
+    "fat-face-ancestry.csv.gz": "621cdf7ffaeecc703e617ee9000e2bb8f23bc56ec95ad49de8527e4890919c6e",
+    "fat.poly": "11363aef6cde374516af6f1fc96059cbe84b63c0ea580f9f80685f87fbb046bb",
+    "skin-tetgen.stdout.log": "4410736502db75acd8cb50735300e34a759fc18cceda7d79f853244321615431"
+  }
+}
