@@ -1,0 +1,82 @@
+{
+  "boundary_facet_lower_bound": {
+    "combined_minimum_child_tets": 390285,
+    "fat_boundary_faces": 463152,
+    "fat_components": 92,
+    "fat_minimum_tets": 231484,
+    "full_profile_max_cells": 2000000,
+    "minimum_excess_over_legacy_cap": 90285,
+    "note": "Connected-dual Euler lower bound only; actual TetGen count remains unknown.",
+    "previous_legacy_child_count_cap": 300000,
+    "skin_boundary_faces": 317604,
+    "skin_components": 1,
+    "skin_minimum_tets": 158801
+  },
+  "completion_utc": "2026-10-30T11:35:39.548022+00:00",
+  "full_cli": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/cli-mass-mapping-task-002/build-004/numi-human-physical-skin-child-mass-mapping-cli-full",
+    "sha256": "e2ac32aea295c3439c634e0a92c454501787664d2207ec8a64f7ac37609a0ea2"
+  },
+  "full_profile": {
+    "macro": "NUMI_HUMAN_FULL_REFERENCE_SKIN_CAPACITY=1",
+    "max_augmentations": 4000000,
+    "max_candidate_edges": 12000000,
+    "max_cells": 2000000,
+    "max_nodes": 500000
+  },
+  "full_volume_transport_run": false,
+  "legacy_cli": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/cli-mass-mapping-task-002/build-004/numi-human-physical-skin-child-mass-mapping-cli-legacy",
+    "sha256": "4fc8f3b673ad8550346fc57cac40b93b44dc7f9d7d73e8ad1a4f20f2f305dcb4"
+  },
+  "legacy_profile": {
+    "max_augmentations": 300000,
+    "max_candidate_edges": 3000000,
+    "max_cells": 200000,
+    "max_nodes": 300000
+  },
+  "native_runtime": false,
+  "overlay": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/cli-mass-mapping-task-002/overlay-002.json",
+    "sha256": "e7e4c319d1b0c0bbf90292175889557b14dc0ae87f7a1988895c8af9e4bf3669"
+  },
+  "physical_admission": false,
+  "profile_patch": {
+    "changed_headers": [
+      "NumiHumanPhysicalSkinChildCapacity.hpp",
+      "NumiHumanPhysicalSkinChildMassMapping.hpp"
+    ],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/cli-mass-mapping-task-002/profile-budget-002.patch",
+    "sha256": "15bade29604e14050b9c91bd9788712325c538b86eafca4284e93d8bdedac57f"
+  },
+  "report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/cli-mass-mapping-task-002/build-report-002.json",
+    "sha256": "7abf736ef40bd5628e495ecdef063b7e522ef4f5a578bb237cab752c0717da33"
+  },
+  "schema": "numi.full-reference-mass-mapping-profile-002-result.v1",
+  "snapshot_header_count": 8,
+  "snapshot_headers_sha256": {
+    "NumiHumanPhysicalSkinAuthoringDetailBridgeCSV.hpp": "2b74fdeddf38f17c34f995dc26d60507fa18f0be04db9af912d02e67e6aacafb",
+    "NumiHumanPhysicalSkinAuthoringRoleConsumer.hpp": "6737dc0008aaae33ce09af58271d753073fd315b6ab267d5207a52ca2848a25d",
+    "NumiHumanPhysicalSkinChildCapacity.hpp": "9f099b6710224ad0eda48b31ce9e04c83a27142d171a7e0f38a3901d8d7932a6",
+    "NumiHumanPhysicalSkinChildMassMapping.hpp": "66c0e8eda2ea77a101286451045c9907194beeaef95411c5496789bf088cc848",
+    "NumiHumanPhysicalSkinChildRegisteredFacetMaps.hpp": "291f9679f30676e54a6ddde0283ecdcfb1b70403103d75651ff64f38b761070b",
+    "NumiHumanPhysicalSkinChildRegisteredVolumeCSV.hpp": "ed14fdab4cbfef3c8ea242273bd2548b9607feb7a8d3e7c1fa1cfaba799ed072",
+    "NumiHumanPhysicalSkinChildTetGen.hpp": "dafb99dec977c2116ded1968ec0ae3ef493331109da6be6b19eb0f7148ea9e0c",
+    "NumiHumanUnpairedSkinFatVolume.hpp": "2e3fbec0d1d6a737205d56868a801db40ab6a6ac1538eaef7c17e3f6213fc4fd"
+  },
+  "source330_parent_mass_kg": 13.939678963460464,
+  "source_manifest": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/cli-mass-mapping-task-002/source-manifest-002.json",
+    "sha256": "9a0aba8f575d5ddd62c3181b2a92fd305676896f7b8461ef7d20f735d834fdf2"
+  },
+  "status": "BUILD_AND_FOCUSED_OWNER_TESTS_PASS",
+  "tests": {
+    "all_exit_codes_zero": true,
+    "capacity_profile_probes": 2,
+    "conservative_transport_controls": 2,
+    "full_and_legacy_cli_compile_help": 2,
+    "mass_mapping_owner_fixtures": 2,
+    "source330_parent_reader": 1
+  }
+}

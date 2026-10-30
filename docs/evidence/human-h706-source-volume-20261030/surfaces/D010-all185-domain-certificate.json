@@ -1,0 +1,47 @@
+{
+  "accepted_steps": 0,
+  "all185_source_sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5",
+  "bank_count": 185,
+  "candidate_sha256": "f18ea8a8f38afe6a724b8fb840ebe97efb7568fbbf98ea8f0c308eef1bf538d0",
+  "domain_partition": {
+    "pinned_f64_exact": {
+      "negative_face_index_end": 938272,
+      "negative_face_index_start": 469136,
+      "range_count": 185,
+      "ranges_contiguous": true,
+      "record_count": 469136
+    },
+    "source_order_native_f32_replay": {
+      "negative_face_index_end": 469136,
+      "negative_face_index_start": 0,
+      "range_count": 185,
+      "ranges_contiguous": true,
+      "record_count": 469136
+    }
+  },
+  "geometry_predicates_rerun": false,
+  "interpretation": "The helper supplied one disjoint record list containing two coordinate domains for the same 185-bank source: 469136 native Float32 face records and 469136 pinned Float64 face records. Their negative face IDs map to adjacent, nonoverlapping authenticated ranges. The exact query was run once against the union and returned zero pairs; each domain subset therefore also has zero pairs. No per-domain AABB counts or runtimes are claimed.",
+  "metadata_only_equality_certificate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/metadata-only-schema-62000204-001/metadata-only-equality.json",
+  "metadata_only_equality_certificate_sha256": "edc3d4ad68b86ee181c74c0b7cf76d022936196141e9c7de128b8940c040b2ef",
+  "physical_admission": false,
+  "physical_face_count": 469136,
+  "pinned_f64_manifest_sha256": "0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c",
+  "runtime": 0,
+  "schema": "numi.composed-D-all185-domain-subset-certificate.v1",
+  "scope": "Exact surface-pair subset consequence only; no nesting, volume, mass, TetGen, or runtime admission.",
+  "source_candidate_sha256": "306fe6f4f2dd43d34829b9fcb0c2de921439e26237b16806bb88d23755f49022",
+  "source_full_exact_report_sha256": "fefbad4adbd818ebc0f3db5bdec8f6e1381b34093f195a62a9a188ad36e8b071",
+  "status": "PASS_BY_SUBSET_OF_ZERO_UNION",
+  "storage_compaction_derivation": {
+    "certificate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/storage-compaction-certificate.json",
+    "certificate_sha256": "25ea15c3abf9daae39ff8dfd49aadcb40565e4a7413164bcf84f88f13ba99752",
+    "exact_geometry_predicates_rerun": false
+  },
+  "union_query": {
+    "aabb_candidate_pairs": 5605613,
+    "elapsed_s": 55.339529666816816,
+    "name": "D_vs_all185_F32_F64",
+    "pair_count": 0,
+    "pair_file_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de"
+  }
+}

@@ -1,0 +1,454 @@
+{
+  "GPU": false,
+  "accepted_steps": 0,
+  "candidate_surfaces": {
+    "D": {
+      "faces": 257465,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/candidate-D-d010-ring1-composed-schema62000204-compact-unused.npz",
+      "points": 128293,
+      "registry_62000204_face_count": 15,
+      "registry_62000204_present": true,
+      "sha256": "f18ea8a8f38afe6a724b8fb840ebe97efb7568fbbf98ea8f0c308eef1bf538d0",
+      "unreferenced_vertices": 0,
+      "used_vertices": 128293
+    },
+    "I": {
+      "faces": 256681,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/candidate-I-f32-local-child-refined.npz",
+      "points": 128343,
+      "sha256": "a702f368961cae10aeb2e9be38ac05cfdd422907d2beeab1d953d597a0d73469",
+      "unreferenced_vertices": 0,
+      "used_vertices": 128343
+    },
+    "O": {
+      "faces": 156939,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/candidate-O-f32.npz",
+      "points": 78492,
+      "sha256": "1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa",
+      "unreferenced_vertices": 0,
+      "used_vertices": 78492
+    }
+  },
+  "component_kind": "candidate-geometry-readiness-component",
+  "execution_state": {
+    "TetGen": "NOT_RUN_FOR_PAIRED_FULLBODY",
+    "accepted_steps": 0,
+    "native_runtime": false,
+    "physical_admission": false,
+    "runtime": 0
+  },
+  "gate_evidence": {
+    "bone_clearance": {
+      "D_vs_all185_F32_F64": {
+        "domain_subset_certificate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/all185-domain-subset-derived-by-storage-compaction.json",
+        "domain_subset_certificate_sha256": "e419a959d8a9fbda8208d2d4dee6f40d4da0caf351c7d777762ab894e0f29bc3",
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/full-exact-report-derived-by-storage-compaction.json",
+        "physical_F32_face_count": 469136,
+        "sha256": "3c26f9355a4009dc1567bd283cc7ead4702b7d2c82ed1bc8b52d5ccfa755c52a"
+      },
+      "I_vs_all185_F32": {
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/report.json",
+        "sha256": "524d20a59265811b4596b0569fc5e9f1f6a6b7015e20faf3a383c0ba7ca2eec8"
+      },
+      "O_vs_all185_F32": {
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/report.json",
+        "sha256": "524d20a59265811b4596b0569fc5e9f1f6a6b7015e20faf3a383c0ba7ca2eec8"
+      },
+      "single_185_F32_bank_face_count": 469136
+    },
+    "canonical_D_attachment_surface_routes": {
+      "attachment_count": 14,
+      "paired_inner_sha256": "a702f368961cae10aeb2e9be38ac05cfdd422907d2beeab1d953d597a0d73469",
+      "proof_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/candidate-preflight-receipt.json",
+      "proof_sha256": "c304bb3eaa5fc07470e17c32c8044251caba5140c922a0a22a04a14e161c2259",
+      "target_map_sha256": "fc14fa06d4bafc4c92f3c267a965c124beec51282f3929a65e19876f16496bc4"
+    },
+    "canonical_D_surface_quality": {
+      "minimum_surface_star_altitude_m": 7.72749126763576e-05,
+      "proof_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/candidate-preflight-receipt.json",
+      "proof_sha256": "c304bb3eaa5fc07470e17c32c8044251caba5140c922a0a22a04a14e161c2259",
+      "scope": "surface star only; no positive TetGen volume-star claim",
+      "surface_screen_m": 5e-05
+    },
+    "head_rims": {
+      "fat_ID_faces": 90,
+      "registered_wall_nodes_exact_F32_rows": 90,
+      "skin_OI_faces": 90,
+      "source330_mass_and_region_seeds_unchanged": true,
+      "wall_ancestry_parent_assets": "separate legacy D37 baseline tables authenticated by registered-native-SE3 map; not direct source330 wall ancestry",
+      "wall_preflight_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/registered-wall-preflight-002.json",
+      "wall_preflight_sha256": "a007d8e8e18095d8f3bb98831e07f54e968da8ebdbd42c78e905654cbdff9603",
+      "wall_rows": 180
+    },
+    "native_plan_preflight": {
+      "capacity": {
+        "failures": [],
+        "limitations": [
+          "Steiner nodes, quality constraints and disconnected interiors may require more cells",
+          "No shape, intersection, material or mass admission is implied"
+        ],
+        "materials": [
+          {
+            "boundary_edges": 620565,
+            "boundary_euler_characteristic": -20,
+            "boundary_faces": 413710,
+            "boundary_vertices": 206835,
+            "label": "skin",
+            "necessary_minimum_cells": 206865
+          },
+          {
+            "boundary_edges": 771354,
+            "boundary_euler_characteristic": -482,
+            "boundary_faces": 514236,
+            "boundary_vertices": 256636,
+            "label": "fat",
+            "necessary_minimum_cells": 257359
+          }
+        ],
+        "maximum_cells": 2000000,
+        "maximum_nodes": 500000,
+        "native_runtime": false,
+        "necessary_combined_cells": 464224,
+        "necessary_combined_nodes": 335128,
+        "physical_admission": false,
+        "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/handoff/native_capacity_preflight.py",
+        "source_sha256": "70025dea58312e4aea040f4a10cdf737d09ecb2a6b9c5292c127ae17c6ac0b30",
+        "status": "PASS_NECESSARY_BOUNDS_ONLY",
+        "used_boundary_nodes_by_role": {
+          "D": 128293,
+          "I": 128343,
+          "O": 78492
+        }
+      },
+      "manifest_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/plan-003/manifest.json",
+      "manifest_sha256": "1e4d83b2f3f6ac62d4c552881a967fdb205c7d001f701f26fd20447f64752bd4",
+      "result_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/plan-003/result.json",
+      "result_sha256": "04e23fcd72485af32dab1817c0906398388bfadc1da98f85251003cce3d966a7",
+      "status": "PREFLIGHT_PASS_PLAN_ONLY",
+      "stdout_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/plan-003/stdout.log",
+      "stdout_sha256": "b2a3840dc793205647d20655feff85905112ba3d989aa78ae0f13c5d60baf470"
+    },
+    "paired_interfaces": {
+      "D_vs_I050": {
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/full-exact-report-derived-by-storage-compaction.json",
+        "sha256": "3c26f9355a4009dc1567bd283cc7ead4702b7d2c82ed1bc8b52d5ccfa755c52a"
+      },
+      "D_vs_O049": {
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/full-exact-report-derived-by-storage-compaction.json",
+        "sha256": "3c26f9355a4009dc1567bd283cc7ead4702b7d2c82ed1bc8b52d5ccfa755c52a"
+      },
+      "O_vs_I": {
+        "aabb_candidate_pairs": 1664796,
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/report.json",
+        "sha256": "524d20a59265811b4596b0569fc5e9f1f6a6b7015e20faf3a383c0ba7ca2eec8"
+      }
+    },
+    "positive_core_seeds": {
+      "deep_core": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/D010-ring1-cavity-core-001/cavity-core.npz",
+        "sha256": "974bfcd5f1189aca7434b9e1e87d353e91b82725e7a33a67f7187797d5d8a43a"
+      },
+      "inner_core": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/I050-cavity-core-001/cavity-core.npz",
+        "sha256": "7ccc4e5ddaad68009f146c69cc0598e1cdf9b15f45a0d8f5e13b3b42b3479bb5"
+      },
+      "note": "Both exact core files are hash-pinned by plan-only preflight; actual core-in-volume validation remains part of the 217 execution preflight.",
+      "status": "PENDING_217_EXECUTION_PREFLIGHT"
+    },
+    "protected149": {
+      "CSV_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/operational-protected-149-targets.csv",
+      "CSV_sha256": "cab0e939dc2154db67b6c742b4c6083fcd60eb0b3ae538c10a5453db8ee520a6",
+      "H706_result_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/result.json",
+      "H706_result_sha256": "515095ed00ef7b93ce4d127a631eee1939a7e2ca360b0bc17378693461f799ae",
+      "all_routes_exact_used_F32_rows": true,
+      "canonical_count": 149,
+      "current_D_attachment_routes": 14,
+      "role_counts": {
+        "D": 59,
+        "I": 45,
+        "O": 45
+      },
+      "route_rebind_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/surface-route-validation-row-rebind.json",
+      "route_rebind_sha256": "1d3e9b238b9206563c464feceaf874466b8d67de8062bfb2bc20b2a7afeff3f9"
+    },
+    "surface_self": {
+      "D_self": {
+        "compaction_certificate_sha256": "25ea15c3abf9daae39ff8dfd49aadcb40565e4a7413164bcf84f88f13ba99752",
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/full-exact-report-derived-by-storage-compaction.json",
+        "sha256": "3c26f9355a4009dc1567bd283cc7ead4702b7d2c82ed1bc8b52d5ccfa755c52a"
+      },
+      "I_self": {
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/result.json",
+        "sha256": "e8305606f2fdcba411b5ed077bf9c39ceec90e80b30da4dde53c69e1d317d693",
+        "subgate_only": true
+      },
+      "O_self": {
+        "pairs": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/result.json",
+        "sha256": "c0465175ffd1c058d55ae2a8ebd7ec3cf7cd58826d75a353a7c0447e15616013",
+        "subgate_only": true
+      },
+      "scope": "O/I broader legacy results have other pair failures; only their current self subgates are used."
+    }
+  },
+  "gates": {
+    "bone_clearance": "PASS",
+    "canonical_D_attachment_surface_routes": "PASS",
+    "canonical_D_surface_quality": "PASS",
+    "head_rims": "PASS",
+    "native_plan_preflight": "PASS_PLAN_ONLY",
+    "paired_interfaces": "PASS",
+    "positive_core_seeds": "PENDING_217_EXECUTION_PREFLIGHT",
+    "protected149": "PASS",
+    "surface_self": "PASS"
+  },
+  "inputs": {
+    "all185_domain_subset_certificate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/all185-domain-subset-derived-by-storage-compaction.json",
+      "sha256": "e419a959d8a9fbda8208d2d4dee6f40d4da0caf351c7d777762ab894e0f29bc3"
+    },
+    "canonical_d_proof": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/candidate-preflight-receipt.json",
+      "sha256": "c304bb3eaa5fc07470e17c32c8044251caba5140c922a0a22a04a14e161c2259"
+    },
+    "current_D_full_exact_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/full-exact-report-derived-by-storage-compaction.json",
+      "sha256": "3c26f9355a4009dc1567bd283cc7ead4702b7d2c82ed1bc8b52d5ccfa755c52a"
+    },
+    "current_fine_OI_bone_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/report.json",
+      "sha256": "524d20a59265811b4596b0569fc5e9f1f6a6b7015e20faf3a383c0ba7ca2eec8"
+    },
+    "deep": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/candidate-D-d010-ring1-composed-schema62000204-compact-unused.npz",
+      "sha256": "f18ea8a8f38afe6a724b8fb840ebe97efb7568fbbf98ea8f0c308eef1bf538d0"
+    },
+    "inner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/candidate-I-f32-local-child-refined.npz",
+      "sha256": "a702f368961cae10aeb2e9be38ac05cfdd422907d2beeab1d953d597a0d73469"
+    },
+    "metadata_only_identity_certificate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/metadata-only-schema-62000204-001/metadata-only-equality.json",
+      "sha256": "edc3d4ad68b86ee181c74c0b7cf76d022936196141e9c7de128b8940c040b2ef"
+    },
+    "native_handoff_plan": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/plan-003/manifest.json",
+      "sha256": "1e4d83b2f3f6ac62d4c552881a967fdb205c7d001f701f26fd20447f64752bd4"
+    },
+    "operational_target_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/candidate-operational-target-map.json",
+      "sha256": "fc14fa06d4bafc4c92f3c267a965c124beec51282f3929a65e19876f16496bc4"
+    },
+    "outer": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/candidate-O-f32.npz",
+      "sha256": "1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa"
+    },
+    "protected149_routes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/surface-route-validation-row-rebind.json",
+      "sha256": "1d3e9b238b9206563c464feceaf874466b8d67de8062bfb2bc20b2a7afeff3f9"
+    },
+    "protected_targets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/operational-protected-149-targets.csv",
+      "sha256": "cab0e939dc2154db67b6c742b4c6083fcd60eb0b3ae538c10a5453db8ee520a6"
+    },
+    "registered_wall_preflight": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/registered-wall-preflight-002.json",
+      "sha256": "a007d8e8e18095d8f3bb98831e07f54e968da8ebdbd42c78e905654cbdff9603"
+    },
+    "storage_compaction_certificate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/storage-compaction-certificate.json",
+      "sha256": "25ea15c3abf9daae39ff8dfd49aadcb40565e4a7413164bcf84f88f13ba99752"
+    },
+    "storage_compaction_row_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/old-to-compact-row-map.npz",
+      "sha256": "77e69f976fc598599f0d78c3b88a08e2ec6c0509f8fa4a4ee1893df894fa9a2d"
+    }
+  },
+  "limitations": [
+    "This component is a source-geometry and plan-only preflight, not physical admission.",
+    "Positive core assets are hash-pinned; 217 must verify actual core-in-volume status before TetGen.",
+    "No paired full-body TetGen, positive-volume, mass-transfer, or native Runtime result is claimed.",
+    "D full exact zero gates are inherited through exact unused-row compaction; no geometric predicates were rerun on the compact storage layout.",
+    "O/I self subgates are used narrowly; their broader historical layer reports remain failed on unrelated legacy inputs."
+  ],
+  "native_capacity_preflight": {
+    "failures": [],
+    "limitations": [
+      "Steiner nodes, quality constraints and disconnected interiors may require more cells",
+      "No shape, intersection, material or mass admission is implied"
+    ],
+    "materials": [
+      {
+        "boundary_edges": 620565,
+        "boundary_euler_characteristic": -20,
+        "boundary_faces": 413710,
+        "boundary_vertices": 206835,
+        "label": "skin",
+        "necessary_minimum_cells": 206865
+      },
+      {
+        "boundary_edges": 771354,
+        "boundary_euler_characteristic": -482,
+        "boundary_faces": 514236,
+        "boundary_vertices": 256636,
+        "label": "fat",
+        "necessary_minimum_cells": 257359
+      }
+    ],
+    "maximum_cells": 2000000,
+    "maximum_nodes": 500000,
+    "native_runtime": false,
+    "necessary_combined_cells": 464224,
+    "necessary_combined_nodes": 335128,
+    "physical_admission": false,
+    "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/handoff/native_capacity_preflight.py",
+    "source_sha256": "70025dea58312e4aea040f4a10cdf737d09ecb2a6b9c5292c127ae17c6ac0b30",
+    "status": "PASS_NECESSARY_BOUNDS_ONLY",
+    "used_boundary_nodes_by_role": {
+      "D": 128293,
+      "I": 128343,
+      "O": 78492
+    }
+  },
+  "native_plan_command": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/handoff/prepare_tetgen_handoff_697_typedD.py",
+    "--outer",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/candidate-O-f32.npz",
+    "--inner",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/candidate-I-f32-local-child-refined.npz",
+    "--deep",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/candidate-D-d010-ring1-composed-schema62000204-compact-unused.npz",
+    "--collar",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-062-full-reference-capacity-overlay/current-O049-I050-D010-ring1-collar-003/collar-O049-I050-D010ring1.npz",
+    "--wall-csv",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-062-full-reference-capacity-overlay/current-O049-I050-D010-ring1-collar-003/wall-provenance-O049-I050-D010ring1.csv",
+    "--parent-cells",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+    "--parent-nodes",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+    "--source330-base",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+    "--poses",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json",
+    "--full86-weights",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.weights.csv",
+    "--protected-targets",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/operational-protected-149-targets.csv",
+    "--canonical-D-proof",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-055-D-seam-disk-remesh/d010-ring1-composition-002/compact-unused-storage-001/H706-rebound-003/candidate-preflight-receipt.json",
+    "--inner-hole-core",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/I050-cavity-core-001/cavity-core.npz",
+    "--deep-hole-core",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/D010-ring1-cavity-core-001/cavity-core.npz",
+    "--tetgen-binary",
+    "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen",
+    "--capacity-profile",
+    "full-reference-500k-nodes-2m-cells",
+    "--native-build-receipt",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-reference-native-capacity-705/native-build-004/link-result.json",
+    "--output",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/volume-003",
+    "--manifest-out",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/plan-003/manifest.json",
+    "--wall-coordinate-frame",
+    "registered-native-current",
+    "--wall-parent-cells",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz",
+    "--wall-parent-nodes",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz"
+  ],
+  "native_plan_status": "PREFLIGHT_PASS_PLAN_ONLY",
+  "physical_admission": false,
+  "registered_wall_preflight": {
+    "frame": {
+      "attempt016_receipt_sha256": "ee0b23e4ca1d607f0606d78385d5649890317c39f3c2b0b8414d2bcea4686daf",
+      "capture016_parent_nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+      "existing_reference_residual_bound_m": 0.0004,
+      "field_mode": "run006 common_native_SE3 applied to source330 current XYZ; F32 round once",
+      "mapped_parent_nodes": 7233,
+      "mode": "registered-native-current",
+      "physical_admission": false,
+      "raw_source_to_capture_max_residual_m": 5.663774358527132e-06,
+      "registered_frame_receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-018-native-current-reference/receipt.json",
+      "registered_frame_receipt_sha256": "636a2d3e223734d0a9f9950ceb674aaeabd6102f1f653111afbe6ee275adfc96",
+      "registered_pose100": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/registered-skin-poses-100.json",
+      "registered_pose100_sha256": "eb2ae08f74852f08d5b08a18f3d7738b53b8e7265336f77646cbe8f949ece117",
+      "registered_source_to_capture_max_residual_m": 1.255257119805485e-07,
+      "rotation_row_major": [
+        [
+          0.9999999999999996,
+          -7.6046974895341e-10,
+          -3.195341290709369e-08
+        ],
+        [
+          7.604699335557185e-10,
+          1.0,
+          5.777232895524813e-09
+        ],
+        [
+          3.195341290270028e-08,
+          -5.77723291982442e-09,
+          0.9999999999999996
+        ]
+      ],
+      "run006_stdout": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/P/native-kind-aware-source-preflight-226/run-006-native-emission/stdout.txt",
+      "run006_stdout_sha256": "631ce8ea45eb4bb1078b04efad3061af99a881ecba428273ebdb374c0170c71a",
+      "source330_parent_cells_sha256": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f",
+      "source330_parent_nodes_sha256": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878",
+      "source_coordinate_field": "source330.current_x/y/z_m",
+      "source_to_capture_node_map": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/registered-surface-sidecar-222/attempt-018-native-current-reference/d37-parent-node-to-capture016.csv",
+      "source_to_capture_node_map_sha256": "288021b027ea40464cb9761033550862c3ab0c5bf4b01caee4405a36976fc716",
+      "translation_m": [
+        1.188898923754067e-09,
+        -1.256228454593611e-10,
+        -5.654962409167019e-06
+      ]
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/registered-wall-preflight-002.json",
+    "sha256": "a007d8e8e18095d8f3bb98831e07f54e968da8ebdbd42c78e905654cbdff9603",
+    "source330_mass_and_region_seeds_unchanged": true,
+    "wall_ancestry_parent_cells": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz",
+      "sha256": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f"
+    },
+    "wall_ancestry_parent_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz",
+      "sha256": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878"
+    },
+    "wall_rows": {
+      "exact_D_ring_rows": 45,
+      "exact_I_ring_rows": 45,
+      "fat_ID": 90,
+      "skin_OI": 90,
+      "total": 180
+    }
+  },
+  "runtime": 0,
+  "schema": "numi.paired-fullbody-tetgen-readiness-697.v1",
+  "status": "PARTIAL_GEOMETRY_PASS_TETGEN_AND_CORE_EXECUTION_PENDING",
+  "storage_compaction_derivation": {
+    "compact_candidate_sha256": "f18ea8a8f38afe6a724b8fb840ebe97efb7568fbbf98ea8f0c308eef1bf538d0",
+    "dropped_source_ids": {
+      "72893": 129246,
+      "82725": 129241
+    },
+    "geometry_predicates_rerun": false,
+    "ordered_face_coordinate_bits_identical": true,
+    "per_face_ancestry_identity_preserved": true,
+    "removed_unreferenced_rows": [
+      72893,
+      82725
+    ],
+    "retained_point_bits_identical": true,
+    "source_candidate_sha256": "5fb9e4265091af0583d443a7ac4768d777016a5aedd0d3a628d686040b2ea8ae"
+  }
+}

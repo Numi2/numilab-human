@@ -1,0 +1,55 @@
+{
+  "accepted_steps": 0,
+  "elapsed_s": 31.648278624983504,
+  "inputs": {
+    "I": {
+      "faces": 256681,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-050-I-self-child-reference-refinement/attempt-002/candidate-I-f32-local-child-refined.npz",
+      "points": 128343,
+      "sha256": "a702f368961cae10aeb2e9be38ac05cfdd422907d2beeab1d953d597a0d73469"
+    },
+    "O": {
+      "faces": 156939,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/candidate-O-f32.npz",
+      "points": 78492,
+      "sha256": "1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa"
+    },
+    "all185": {
+      "faces": 469136,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz",
+      "points": 234812,
+      "sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5"
+    }
+  },
+  "physical_admission": false,
+  "runtime": 0,
+  "stages": [
+    {
+      "aabb_candidate_pairs": 1664796,
+      "elapsed_s": 14.656888999976218,
+      "exact_pairs": 0,
+      "name": "O_vs_I",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/O-vs-I-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    },
+    {
+      "aabb_candidate_pairs": 334379,
+      "banks": [],
+      "elapsed_s": 3.138251124881208,
+      "exact_pairs": 0,
+      "name": "O_vs_all185",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/O-vs-all185-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    },
+    {
+      "aabb_candidate_pairs": 679431,
+      "banks": [],
+      "elapsed_s": 6.867167624877766,
+      "exact_pairs": 0,
+      "name": "I_vs_all185",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/full-fine-bone-clearance-001/I-vs-all185-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    }
+  ],
+  "status": "PASS_ALL_CURRENT_FINE_O_I_AND_NATIVE_BONES"
+}

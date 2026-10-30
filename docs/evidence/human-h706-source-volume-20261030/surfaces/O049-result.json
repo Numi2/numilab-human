@@ -1,0 +1,155 @@
+{
+  "all185_pure_bone_gate": "NOT_RUN",
+  "candidate_hashes": {
+    "I": "2c9863ab4f911e0f0dfd8041bd2d579bc67e91fd2b2a9c2a804bb01ef706a707",
+    "O": "1e828ea593d941eeb0e071fa84d10d8499c6eca3d680e43d9d0aaf0331a46afa"
+  },
+  "construction": {
+    "D_orientation_minus_into_fat": 0,
+    "D_orientation_plus_into_fat": 9,
+    "D_orientation_unresolved_using_global_plus": 2,
+    "D_unchanged": true,
+    "I": {
+      "faces": 256661,
+      "maximum_vertex_displacement_m": 0.0004853192394625096,
+      "minimum_area_ratio": 0.3844986137591593,
+      "nonpositive_oriented": 0,
+      "ring_changes": 0,
+      "zero_area": 0
+    },
+    "O": {
+      "faces": 156939,
+      "maximum_vertex_displacement_m": 0.0005331821879908832,
+      "minimum_area_ratio": 0.5294366969281723,
+      "nonpositive_oriented": 0,
+      "ring_changes": 0,
+      "zero_area": 0
+    },
+    "achieved_outward_displacement_mm": {
+      "max": 0.12528721407912535,
+      "median": 0.062312290018005714,
+      "min": -0.05835613260349986,
+      "target": 0.1
+    },
+    "all_F32_faces_positive_oriented": true,
+    "all_head_rings_fixed": true,
+    "barycentric_reconstruction_max_error_m": 3.94053425015214e-17,
+    "constraint_residual_mm": {
+      "max": 0.025287214079125347,
+      "median": -0.03768770998199429,
+      "min": -0.15835613260349987
+    },
+    "constraint_rows": 1156,
+    "constraint_weight": 10.0,
+    "control_coefficient_bounds_mm": [
+      -0.5,
+      0.5
+    ],
+    "control_nodes": 7655,
+    "grid_padding_m": 0.004,
+    "grid_step_m": 0.00125,
+    "h1_weight": 0.08,
+    "h2_weight": 0.02,
+    "l2_weight": 1.0,
+    "minimum_sampled_jacobian_determinant": 0.7457928151110002,
+    "ring_pin_weight": 10000.0,
+    "solver": {
+      "control_coefficient_bounds_mm": [
+        -0.5,
+        0.5
+      ],
+      "cost": 22.001130758282876,
+      "iterations": 0,
+      "l2_weight": 1.0,
+      "maximum_absolute_control_coefficient_mm": 0.46917636295448045,
+      "message": "The unconstrained solution is optimal.",
+      "method": "scipy.optimize.lsq_linear sparse bounded TRF/LSMR",
+      "optimality": 4.031596620469868e-06,
+      "status": 3,
+      "success": true
+    },
+    "starting_O_I": "incremental from exact-audited run043 O/I; fresh current exact O-D/I-D witnesses",
+    "target_outward_clearance_m": 0.0001,
+    "witnessed_D_faces": 11
+  },
+  "elapsed_s": 122.09765716595575,
+  "exact_gates": {
+    "I_D": {
+      "broadphase_candidate_count": 1880865,
+      "pair_count": 354,
+      "pair_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/I_D-pairs.npy",
+      "pair_sha256": "b4f0f27e6cdcaec17fdd3400b9bc73f3d2b1a23d1f477021067c8b55f16879c4"
+    },
+    "I_self": {
+      "broadphase_candidate_count": 3609587,
+      "pair_count": 3,
+      "pair_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/I_self-pairs.npy",
+      "pair_sha256": "b4fec617fc1bf3b7f6c65d5da53b1ac4e9a5950d5170aa96ed8f2c1b8126a0fd"
+    },
+    "O_D": {
+      "broadphase_candidate_count": 959025,
+      "pair_count": 179,
+      "pair_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/O_D-pairs.npy",
+      "pair_sha256": "9ecf2660565ce12bee791bc58de33426aa3bcde7e9092cc48f9703a6cd7bee2f"
+    },
+    "O_I": {
+      "broadphase_candidate_count": 1664731,
+      "pair_count": 0,
+      "pair_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/O_I-pairs.npy",
+      "pair_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de"
+    },
+    "O_self": {
+      "broadphase_candidate_count": 2172238,
+      "pair_count": 0,
+      "pair_file": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/output/O_self-pairs.npy",
+      "pair_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de"
+    }
+  },
+  "full_nesting_gate": "NOT_RUN",
+  "physical_admission": false,
+  "pins": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-D-boundary-binding-696/run-001/source-D-canonical-attached.npz",
+      "sha256": "53b953cbef01be32ec8e05330535069834d23f71c82ea8a70fe6dc345e1a8048"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-043-shared-grid-backtracking/output/candidate-I-f32.npz",
+      "sha256": "0011f3cc238cfc2b3ea18d63a8db85b502fc095db376db14531827316eb7a4d0"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-043-shared-grid-backtracking/output/candidate-O-f32.npz",
+      "sha256": "a6c1e5541c44c9aa2f39ad4ab04cc1cc5897647ecaa0b5700808e81d2e29576f"
+    },
+    "closed fat orientation reference": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-019-witness-taper-exact-audit/candidate-closed-surfaces-reconstructed.npz",
+      "sha256": "463a151d89aa68c5346ef987a9cf456bb8150648c9078b1a5a80aeed469202b9"
+    },
+    "exact owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "loader": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/D-witness-contract-001/run-042-abstract-cycle-coupled-remesh/remesh.py",
+      "sha256": "f1d697b42fc9d97472fbd70cec2d8adfe178bb591d3513680609396ec4c204ad"
+    },
+    "run043 I-D pairs": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-043-shared-grid-backtracking/output/I_D-pairs.npy",
+      "sha256": "459f1970eeaddfab13c05f8bc69cef47ed4f37256d603a9fe8929dd2d381f07e"
+    },
+    "run043 O-D pairs": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-043-shared-grid-backtracking/output/O_D-pairs.npy",
+      "sha256": "3fa3a1c38f603619a35522490957b5bb5b3a4f1e25e6f00e85075b93c8296285"
+    },
+    "run043 exact report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-043-shared-grid-backtracking/output/result.json",
+      "sha256": "66981667ad7837535452b421d7cb13cdfd8dceb75099b8e7d0dab261eb23c559"
+    },
+    "script": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-049-current-witness-refit-signed-id/source/build_and_audit.py",
+      "sha256": "551a68c68cef45b45c6a12fc152254b975b8fe08ab7ed11655d5103171434489"
+    }
+  },
+  "runtime_created": 0,
+  "schema": "numi.paired-head-reference-fit-684.current-witness-refit.v1",
+  "status": "FAIL_EXACT_LAYERS"
+}
