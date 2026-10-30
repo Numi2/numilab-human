@@ -1,0 +1,1724 @@
+{
+  "counts": {
+    "carrierized_parents": 62,
+    "carriers": 1407,
+    "minimum_demand_planning_pairs": 8854,
+    "source_parents": 14316,
+    "uncovered_children_addressed": 1087
+  },
+  "elapsed_s": 9.765270124888048,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/batched_reference_tet_projection_149_root.py": "02b04cff325b4adea24d055fdfd2121ab4d596a3c075ab6fe8183094eb46e1d6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/independent-verification.json": "b0940d6954779767009f257da92de587a6cc57d58c304b925177a3a3e972ea2d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/receipt.json": "055a1fb7f909205248b6d8ebe160ef8ea1c743f335615fc93dd14192728de246",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/skin-connected-region-support.npz": "965e8db62b104165a8234d473908e69a293f575eedc63be9ab4f6a3a9b32ef1a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-semantic-atlas-088/skin-semantic-atlas-002/output-001/skin-current-semantic-support.npz": "dd92b3284fb448459050f6d858c9e2ddaaf9fb3763785ebb17bec65078bd0648",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-source004-admission-073-retry001/skin.ele": "aaa070b48cecd64f65cb80308b8a64cd01eeaea6f41b309506f9205466092105",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-source004-admission-073-retry001/skin.node": "b4a7e41745d533289b25659220662c4787e85a7cb56a9701b621e542dcc2a6db",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-002/semantic-support.bin": "a85ec581fcabe2062b4f782f6a316aef6ebf63edec6e95722c9e24fa723cc803",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-002/source-carrier-quadrature-9908.bin": "5146c2df794e268ae6b62a3a9c86a91dccf19285b5ce2dc3eda455c181fcab5a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-002/source-carrier-quadrature-9908.json": "afd06237ff75c260acbbc98c4d2061bf1f02679587e4d30a70fc626e1db1bbeb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-003-source-carrier-090/child-reachability-census-004.json": "401f3bc53f90ac1d6ff27382cbc3daaa7b99df379ce52b3b775ab0b0ee2ac733",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-004-source-batch/prepare_skin_batch_source_quadrature_007.py": "3e9284c9b01b777a7dbc2746cc02dc8a9850c9fbaf07b8c6075680b8f23e55e0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-004-source-batch/uncovered-child-p1-source-pools.npz": "146b3c8310211543d2ac159b0d7120bf4e8850dbc0dafc8b79276f5ac5e48007",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/registered-skin-poses-100.json": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a"
+  },
+  "maximum_transport_distance_m": 0.019353,
+  "method": "Positive degree1 source-tet quadrature. Required witness site mass is planned against actual900kg/m3 receiver minimum and at most75percentofeachoriginalsourcevertexlumpedbudget after a separately recorded5percent reservation of its prior valid source sites. Remaining mass/firstmoment completed with authenticated same-material ball-bounded source sites. Exact allocation and re-census pending; not intersection-volume remapping. Source geometry, mass, donor/region and child density bounds unchanged.",
+  "minimum_receiver_mass_kg": 0.005309372845378152,
+  "native_steps": 0,
+  "outputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-004-source-batch/source-quadrature-007/source-quadrature.bin": {
+      "sha256": "e387ebfef6ac57b95a4cdab35f8fe1fc2c9cf25d99c7d356c4a50f6328a5bc6e",
+      "size_bytes": 244985
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/skin-743497-run-004-source-batch/source-quadrature-007/source-quadrature.npz": {
+      "sha256": "e5e0edf9883f979ca2e06f55f831e7cc90576740be31c14f0e014f4439f1b0bd",
+      "size_bytes": 98449
+    }
+  },
+  "parents": [
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 2014,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.0009581674594473924,
+      "parent_row": 2014,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0009581674594473924,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0009581674594472965,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.2719202621569003e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 2062,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.05,
+      "parent_row": 2062,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 5.551115123125783e-17
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.249000902703301e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 2063,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.05,
+      "parent_row": 2063,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.249000902703301e-16
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.05,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.237726045655905e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 2142,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.008659071038448082,
+      "parent_row": 2142,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.008659071038448082,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 2.7755575615628914e-17
+        },
+        {
+          "barycentric_moment_error": 2.220446049250313e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.008659071038447777,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 3.787898901196402e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 2175,
+      "mandatory_sites": 6,
+      "minimum_weight": 0.003350138276182507,
+      "parent_row": 2175,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.003350138276182507,
+          "sum_error": 0.0,
+          "world_moment_error_m": 6.206335383118183e-17
+        },
+        {
+          "barycentric_moment_error": 4.163336342344337e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.003350138276182507,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 3.815760786470701e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 2176,
+      "mandatory_sites": 4,
+      "minimum_weight": 0.0028207383843100405,
+      "parent_row": 2176,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0028207383843100405,
+          "sum_error": 0.0,
+          "world_moment_error_m": 5.551115123125783e-17
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.002820738384310211,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.2412670766236366e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 2177,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.02572860628361954,
+      "parent_row": 2177,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.02572860628361954,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 6.206335383118183e-17
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.02572860628361954,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 2.3551386880256624e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 2178,
+      "mandatory_sites": 2,
+      "minimum_weight": 0.024757888396483872,
+      "parent_row": 2178,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.024757888396483872,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.2719202621569003e-16
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.024757888396483872,
+          "sum_error": 0.0,
+          "world_moment_error_m": 6.206335383118183e-17
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 2179,
+      "mandatory_sites": 2,
+      "minimum_weight": 0.022533218276325748,
+      "parent_row": 2179,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.022533218276325748,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.7755575615628914e-17
+        },
+        {
+          "barycentric_moment_error": 8.326672684688674e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.022533218276325748,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.482534153247273e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 2316,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.004435646762602658,
+      "parent_row": 2316,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.004435646762602658,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 1.2719202621569003e-16
+        },
+        {
+          "barycentric_moment_error": 1.3877787807814457e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.00443564676260259,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 1.2719202621569003e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 3418,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.00803515716527459,
+      "parent_row": 3418,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00803515716527459,
+          "sum_error": 0.0,
+          "world_moment_error_m": 6.206335383118183e-17
+        },
+        {
+          "barycentric_moment_error": 2.7755575615628914e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.008035157165274899,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 3.510833468576701e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 3419,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.003146565930320772,
+      "parent_row": 3419,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.003146565930320772,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.2887833992611187e-16
+        },
+        {
+          "barycentric_moment_error": 2.498001805406602e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.003146565930320674,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 3.521787733787174e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 1.3877787807814457e-16,
+      "global_parent": 3750,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.01969992773372798,
+      "parent_row": 3750,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.019699927733727994,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.498001805406602e-16
+        },
+        {
+          "barycentric_moment_error": 1.3877787807814457e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.01969992773372798,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.1443916996305594e-16
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 3934,
+      "mandatory_sites": 7,
+      "minimum_weight": 0.0013289018890128566,
+      "parent_row": 3934,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0013289018890128566,
+          "sum_error": 0.0,
+          "world_moment_error_m": 5.551115123125783e-17
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0013289018890128566,
+          "sum_error": 0.0,
+          "world_moment_error_m": 5.721958498152797e-17
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 8.326672684688674e-17,
+      "global_parent": 3935,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.004224770199825258,
+      "parent_row": 3935,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00422477019982551,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1527756336890508e-16
+        },
+        {
+          "barycentric_moment_error": 8.326672684688674e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.004224770199825258,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1188630228279524e-16
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 3937,
+      "mandatory_sites": 7,
+      "minimum_weight": 0.0009107891794366287,
+      "parent_row": 3937,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0009107891794366287,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1443916996305594e-16
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0009107891794366837,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.242025235105681e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 8.326672684688674e-17,
+      "global_parent": 3938,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.0002427232255249731,
+      "parent_row": 3938,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0002427232255249731,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.249000902703301e-16
+        },
+        {
+          "barycentric_moment_error": 8.326672684688674e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0002427232255249731,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1443916996305594e-16
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 3939,
+      "mandatory_sites": 6,
+      "minimum_weight": 6.166626389482496e-06,
+      "parent_row": 3939,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 6.166626389482496e-06,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1102230246251565e-16
+        },
+        {
+          "barycentric_moment_error": 2.220446049250313e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 6.166626389482496e-06,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 2.5172027167143304e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 3963,
+      "mandatory_sites": 2,
+      "minimum_weight": 0.009377192369393187,
+      "parent_row": 3963,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.009377192369393187,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 2.7755575615628914e-17
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.009377192369393293,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1443916996305594e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 3972,
+      "mandatory_sites": 5,
+      "minimum_weight": 0.000935764585524974,
+      "parent_row": 3972,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.000935764585524974,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.249000902703301e-16
+        },
+        {
+          "barycentric_moment_error": 9.992007221626409e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.000935764585524974,
+          "sum_error": 1.3322676295501878e-15,
+          "world_moment_error_m": 1.0577205229617819e-15
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 3973,
+      "mandatory_sites": 4,
+      "minimum_weight": 0.0003545987926633157,
+      "parent_row": 3973,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0003545987926633157,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0003545987926633157,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.249000902703301e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 4024,
+      "mandatory_sites": 4,
+      "minimum_weight": 0.004036033324239986,
+      "parent_row": 4024,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.004036033324239986,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 3.1031676915590914e-17
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.004036033324239986,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1188630228279524e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 4026,
+      "mandatory_sites": 3,
+      "minimum_weight": 7.516250241036424e-05,
+      "parent_row": 4026,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 7.516250241036424e-05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1527756336890508e-16
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 7.516250241036424e-05,
+          "sum_error": 6.661338147750939e-16,
+          "world_moment_error_m": 4.775249788392736e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 4348,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.0036266699045327455,
+      "parent_row": 4348,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0036266699045327455,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1775693440128312e-16
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0036266699045331154,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 6.206335383118183e-17
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 4674,
+      "mandatory_sites": 1,
+      "minimum_weight": 3.539626963506982e-05,
+      "parent_row": 4674,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 3.539626963506982e-05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 3.539626963504741e-05,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.1527756336890508e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 4781,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.0005306379423732143,
+      "parent_row": 4781,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0005306379423732143,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 2.220446049250313e-16
+        },
+        {
+          "barycentric_moment_error": 1.3877787807814457e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0005306379423735268,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 4.443059973708341e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 4931,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.0007642009774236952,
+      "parent_row": 4931,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0007642009774236952,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.7755575615628914e-17
+        },
+        {
+          "barycentric_moment_error": 1.3877787807814457e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0007642009774238756,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 0.0
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 5548,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.002619933703022269,
+      "parent_row": 5548,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.002619933703022168,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 2.242025235105681e-16
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.002619933703022269,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.237726045655905e-16
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 6793,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.02636071494326119,
+      "parent_row": 6793,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.02636071494326119,
+          "sum_error": 0.0,
+          "world_moment_error_m": 4.336808689942018e-19
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.026360714943261265,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.1444656540804702e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 6850,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.05,
+      "parent_row": 6850,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1124928701621238e-16
+        },
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1102420827028943e-16
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 6851,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.044944402003024006,
+      "parent_row": 6851,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.044944402003024006,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.04494440200302402,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.1145513959121702e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 6967,
+      "mandatory_sites": 1,
+      "minimum_weight": 3.5356762581522165e-05,
+      "parent_row": 6967,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 3.5356762581522165e-05,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 1.1102230246251565e-16
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 3.535676258156513e-05,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.2889313081609405e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7398,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.0004907504045495164,
+      "parent_row": 7398,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0004907504045495164,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.4304896245381992e-17
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0004907504045494732,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 2.238801616996866e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7401,
+      "mandatory_sites": 2,
+      "minimum_weight": 0.01248452804683182,
+      "parent_row": 7401,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.01248452804683182,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.220717083251841e-16
+        },
+        {
+          "barycentric_moment_error": 4.440892098500626e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.012484528046831388,
+          "sum_error": 6.661338147750939e-16,
+          "world_moment_error_m": 1.558368826830554e-15
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7408,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.0036188396083637053,
+      "parent_row": 7408,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0036188396083637053,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0036188396083637053,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.2215299868541707e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7410,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.003905628548415036,
+      "parent_row": 7410,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.003905628548415036,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.2250491372754983e-16
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.003905628548415076,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.225860458774576e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7620,
+      "mandatory_sites": 4,
+      "minimum_weight": 0.008465590100795757,
+      "parent_row": 7620,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.008465590100795757,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.220446049250313e-16
+        },
+        {
+          "barycentric_moment_error": 2.498001805406602e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.008465590100795681,
+          "sum_error": 6.661338147750939e-16,
+          "world_moment_error_m": 1.1124758794073864e-15
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 7626,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.002448236652860306,
+      "parent_row": 7626,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.002448236652860306,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 2.498001805406602e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0024482366528600537,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 6.674696580260239e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7972,
+      "mandatory_sites": 2,
+      "minimum_weight": 0.05,
+      "parent_row": 7972,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 3.469446951953614e-18
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.05,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 4.444278938805073e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 7984,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.0007441209140308987,
+      "parent_row": 7984,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.0007441209140308987,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 2.7755575615628914e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0007441209140311475,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 4.446309804673419e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 8090,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.010353413187733165,
+      "parent_row": 8090,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.010353413187733165,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.225860458774576e-16
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.010353413187733494,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 6.664228726384596e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 8091,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.002001438290705863,
+      "parent_row": 8091,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.002001438290705863,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 2.220717083251841e-16
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0020014382907057073,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.220717083251841e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 8701,
+      "mandatory_sites": 23,
+      "minimum_weight": 4.9266558451775775e-05,
+      "parent_row": 8701,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 4.9266558451775775e-05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.962615573354719e-17
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 4.9266558451775775e-05,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 8.89586765947378e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 8703,
+      "mandatory_sites": 1,
+      "minimum_weight": 6.831299033815837e-10,
+      "parent_row": 8703,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 6.831299033815837e-10,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 2.7755575615628914e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 6.831299033815837e-10,
+          "sum_error": 6.661338147750939e-16,
+          "world_moment_error_m": 1.1121512300645504e-15
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 8707,
+      "mandatory_sites": 162,
+      "minimum_weight": 1.9042606911842007e-11,
+      "parent_row": 8707,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 1.9042606911842007e-11,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.220446049250313e-16
+        },
+        {
+          "barycentric_moment_error": 1.942890293094024e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 1.9042606911842007e-11,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 6.662783593823664e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 8709,
+      "mandatory_sites": 9,
+      "minimum_weight": 2.3495680381852487e-13,
+      "parent_row": 8709,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 2.3495680381852487e-13,
+          "sum_error": 0.0,
+          "world_moment_error_m": 6.938893903907228e-18
+        },
+        {
+          "barycentric_moment_error": 1.6653345369377348e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 2.3495680381852487e-13,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 6.666034701520425e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 1.1102230246251565e-16,
+      "global_parent": 8781,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.0004025185121455448,
+      "parent_row": 8781,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00040251851214634257,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.1210126175528405e-16
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0004025185121455448,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.1123893155135927e-16
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 8790,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.00025167624564819194,
+      "parent_row": 8790,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00025167624564819194,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 3.3306690738754696e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.00025167624564798513,
+          "sum_error": 7.771561172376096e-16,
+          "world_moment_error_m": 7.790434350695908e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 8990,
+      "mandatory_sites": 61,
+      "minimum_weight": 3.3014470738816785e-11,
+      "parent_row": 8990,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 3.3014470738816785e-11,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 1.962615573354719e-17
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 3.3014470738816785e-11,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.220446049250313e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 9749,
+      "mandatory_sites": 1,
+      "minimum_weight": 6.330513047976157e-06,
+      "parent_row": 9749,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 6.330513047976157e-06,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 1.3877787807814457e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 6.330513047981597e-06,
+          "sum_error": 3.3306690738754696e-16,
+          "world_moment_error_m": 3.4219371797089426e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 9770,
+      "mandatory_sites": 1,
+      "minimum_weight": 1.823928637598736e-05,
+      "parent_row": 9770,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 1.823928637598736e-05,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 1.942890293094024e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 1.8239286375732867e-05,
+          "sum_error": 3.3306690738754696e-16,
+          "world_moment_error_m": 2.276126435504334e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 9908,
+      "mandatory_sites": 0,
+      "minimum_weight": 0.003072882567192413,
+      "parent_row": 9908,
+      "prior_reservation_sites": 4,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.003072882567192413,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 2.220446049250313e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.003072882567192413,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 4.484050470211362e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 13048,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.00912074669891087,
+      "parent_row": 13048,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00912074669891087,
+          "sum_error": 0.0,
+          "world_moment_error_m": 6.938893903907228e-18
+        },
+        {
+          "barycentric_moment_error": 1.8318679906315083e-15,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.009120746698910071,
+          "sum_error": 3.1086244689504383e-15,
+          "world_moment_error_m": 5.133843714892315e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 13640,
+      "mandatory_sites": 6,
+      "minimum_weight": 6.855475274203804e-10,
+      "parent_row": 13640,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 6.855475274203804e-10,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.5515838457795457e-17
+        },
+        {
+          "barycentric_moment_error": 4.440892098500626e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 6.855475274203804e-10,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 4.443059973708341e-17
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 13688,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.002609263519987524,
+      "parent_row": 13688,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.002609263519987524,
+          "sum_error": 0.0,
+          "world_moment_error_m": 2.7755575615628914e-17
+        },
+        {
+          "barycentric_moment_error": 2.220446049250313e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.002609263519987524,
+          "sum_error": 4.440892098500626e-16,
+          "world_moment_error_m": 1.1527756336890508e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 13690,
+      "mandatory_sites": 2,
+      "minimum_weight": 0.00024401841280475203,
+      "parent_row": 13690,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00024401841280475203,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.7755575615628914e-17
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.00024401841280475203,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 2.964296775167217e-17
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 13691,
+      "mandatory_sites": 53,
+      "minimum_weight": 1.5511150451759856e-09,
+      "parent_row": 13691,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 1.5511150451759856e-09,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 6.938893903907228e-18
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 1.5511150451759856e-09,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 6.938893903907228e-18
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 5.551115123125783e-17,
+      "global_parent": 14148,
+      "mandatory_sites": 40,
+      "minimum_weight": 4.971267819085325e-12,
+      "parent_row": 14148,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 4.971267819085325e-12,
+          "sum_error": 1.1102230246251565e-16,
+          "world_moment_error_m": 1.3877787807814457e-17
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 4.971267819085325e-12,
+          "sum_error": 0.0,
+          "world_moment_error_m": 3.1031676915590914e-17
+        }
+      ],
+      "refinement": "refined_LP_basis"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 14202,
+      "mandatory_sites": 1,
+      "minimum_weight": 0.006699428636403708,
+      "parent_row": 14202,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.006699428636403708,
+          "sum_error": 0.0,
+          "world_moment_error_m": 3.179800655392251e-17
+        },
+        {
+          "barycentric_moment_error": 8.326672684688674e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.006699428636404368,
+          "sum_error": 1.1102230246251565e-15,
+          "world_moment_error_m": 2.1688900131555367e-16
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 0.0,
+      "global_parent": 14224,
+      "mandatory_sites": 3,
+      "minimum_weight": 0.00070528917034378,
+      "parent_row": 14224,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 0.0,
+          "method": "raw_positive_LP",
+          "minimum_weight": 0.00070528917034378,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        },
+        {
+          "barycentric_moment_error": 5.551115123125783e-17,
+          "method": "refined_LP_basis",
+          "minimum_weight": 0.0007052891703437728,
+          "sum_error": 0.0,
+          "world_moment_error_m": 0.0
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 14239,
+      "mandatory_sites": 9,
+      "minimum_weight": 1.5991817396707336e-06,
+      "parent_row": 14239,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 1.5991817396707336e-06,
+          "sum_error": 0.0,
+          "world_moment_error_m": 6.938893903907228e-18
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 1.5991817396707336e-06,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 3.3993498887762956e-17
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    },
+    {
+      "filler_sites": 4,
+      "first_moment_error": 2.7755575615628914e-17,
+      "global_parent": 14255,
+      "mandatory_sites": 617,
+      "minimum_weight": 2.5814766368462028e-11,
+      "parent_row": 14255,
+      "prior_reservation_sites": 1,
+      "prior_reservation_weight": 0.05,
+      "proposal_checks": [
+        {
+          "barycentric_moment_error": 2.7755575615628914e-17,
+          "method": "raw_positive_LP",
+          "minimum_weight": 2.5814766368462028e-11,
+          "sum_error": 0.0,
+          "world_moment_error_m": 1.3877787807814457e-17
+        },
+        {
+          "barycentric_moment_error": 1.1102230246251565e-16,
+          "method": "refined_LP_basis",
+          "minimum_weight": 2.5814766368462028e-11,
+          "sum_error": 2.220446049250313e-16,
+          "world_moment_error_m": 1.3877787807814457e-17
+        }
+      ],
+      "refinement": "raw_positive_LP"
+    }
+  ],
+  "physical_admission": false,
+  "role": "Skin",
+  "schema": "numi.human.source-tetra-centroid-carrier-quadrature.v1",
+  "status": "PASS_SOURCE_ONLY_BATCH_POSITIVE_FIRST_MOMENT_QUADRATURE"
+}
