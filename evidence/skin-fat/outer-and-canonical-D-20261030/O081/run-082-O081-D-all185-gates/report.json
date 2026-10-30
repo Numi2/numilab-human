@@ -1,0 +1,83 @@
+{
+  "accepted_physical_steps": 0,
+  "completed_gates": [
+    {
+      "exact_candidate_self_pairs": 0,
+      "gate": "O_self",
+      "receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-081-OI-local-topology-repair/report.json",
+      "receipt_sha256": "da8d23dadac4bccacca20be69750a78b67352a08b69694d455d9ab3a35a53ce3",
+      "status": "PASS"
+    },
+    {
+      "aabb_candidate_pairs": 1213781,
+      "aabb_scanned": 1213781,
+      "exact_pair_count": 0,
+      "gate": "O-I",
+      "receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-081-OI-local-topology-repair/report.json",
+      "receipt_sha256": "da8d23dadac4bccacca20be69750a78b67352a08b69694d455d9ab3a35a53ce3",
+      "status": "PASS_ZERO_EXACT_PAIRS"
+    },
+    {
+      "aabb_candidate_pairs": 816602,
+      "aabb_scanned": 816602,
+      "exact_pair_count": 0,
+      "gate": "O-D",
+      "status": "PASS_ZERO_EXACT_PAIRS",
+      "witness": null
+    },
+    {
+      "aabb_candidate_pairs": 313791,
+      "bank_count": 185,
+      "bank_pair_counts": [],
+      "exact_pair_count": 0,
+      "first_witness": null,
+      "gate": "O-all185-native-bones",
+      "scope": "full O081 emitted surface against all 185 native F32 bone operands; distinct surfaces, no shared-feature waiver",
+      "status": "PASS_ZERO_EXACT_PAIRS"
+    }
+  ],
+  "elapsed_s": 24.22303312504664,
+  "failed_gate": null,
+  "input_pins": {
+    "D007": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-D-boundary-binding-696/run-007-collar-expanded-safe-replay/source-D-canonical14-stars-conditioned.npz",
+      "sha256": "3b3a5c183b49504aa00a4630cbc71b0bbecb0d5618dc8bbe958b5fd259971841"
+    },
+    "I328": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/candidate-f32-typed.npz",
+      "sha256": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-081-OI-local-topology-repair/candidate-O-self-and-OI-repaired.npz",
+      "sha256": "c9074b9f54bfad16193cfd14dc52fbdcda0fcca86f01a34f9552529fc6bb6b72"
+    },
+    "O_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-081-OI-local-topology-repair/report.json",
+      "sha256": "da8d23dadac4bccacca20be69750a78b67352a08b69694d455d9ab3a35a53ce3"
+    },
+    "audit_script": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/complete-cross-surface-pair-audit-654/audit_cross_layer_pairs_654.py",
+      "sha256": "dc5c1c58a07f5ac28e2f41eb14319c76a17326e21bb710aa99ffdac71a84c187"
+    },
+    "bones": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz",
+      "sha256": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5"
+    },
+    "driver": {
+      "path": "/private/tmp/audit_O081_OD_all185_082.py",
+      "sha256": "ddb5661b385e6dd71924b792d9db9ef1d1bbc0f7e7b83973ce4381d8695e62bb"
+    },
+    "exact_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/tools/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "loader": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/D-witness-contract-001/run-042-abstract-cycle-coupled-remesh/remesh.py",
+      "sha256": "f1d697b42fc9d97472fbd70cec2d8adfe178bb591d3513680609396ec4c204ad"
+    }
+  },
+  "physical_admission": false,
+  "runtime_created": 0,
+  "schema": "numi.O081-D-and-all185-exact-gates.082",
+  "status": "PASS_O081_D_AND_ALL185_GATES"
+}
