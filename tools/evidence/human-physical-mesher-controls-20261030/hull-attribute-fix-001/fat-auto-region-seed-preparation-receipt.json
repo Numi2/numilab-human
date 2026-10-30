@@ -1,0 +1,188 @@
+{
+  "absolute_volume_difference_m3": 3.9177341926155407e-13,
+  "absolute_volume_tolerance_m3": 1.144363966840207e-11,
+  "accepted_steps": 0,
+  "auto_cell_count": 31,
+  "auto_component_count": 6,
+  "components": [
+    {
+      "all_centroids_inside_closed_fat": true,
+      "all_f32_cells_nonzero": true,
+      "automatic_attribute": 17,
+      "cell_count": 10,
+      "cell_rows": [
+        27068,
+        27085,
+        213017,
+        213044,
+        213050,
+        213073,
+        213079,
+        213085,
+        739911,
+        758852
+      ],
+      "seed_cell_f32_volume_m3": 9.557265476952996e-18,
+      "seed_cell_row": 213085,
+      "seed_world_m": [
+        -0.03366696368902922,
+        -0.08503009006381035,
+        0.04003765620291233
+      ]
+    },
+    {
+      "all_centroids_inside_closed_fat": true,
+      "all_f32_cells_nonzero": true,
+      "automatic_attribute": 18,
+      "cell_count": 15,
+      "cell_rows": [
+        31890,
+        252979,
+        253723,
+        253772,
+        253808,
+        253809,
+        253810,
+        253834,
+        253872,
+        253875,
+        253876,
+        311813,
+        749174,
+        760576,
+        797914
+      ],
+      "seed_cell_f32_volume_m3": 1.1953964795049798e-17,
+      "seed_cell_row": 760576,
+      "seed_world_m": [
+        -0.02654461469501257,
+        -0.03133908100426197,
+        0.11368286982178688
+      ]
+    },
+    {
+      "all_centroids_inside_closed_fat": true,
+      "all_f32_cells_nonzero": true,
+      "automatic_attribute": 19,
+      "cell_count": 1,
+      "cell_rows": [
+        208161
+      ],
+      "seed_cell_f32_volume_m3": 1.8539185478844733e-22,
+      "seed_cell_row": 208161,
+      "seed_world_m": [
+        -0.028668183833360672,
+        -0.0800228901207447,
+        0.04153781943023205
+      ]
+    },
+    {
+      "all_centroids_inside_closed_fat": true,
+      "all_f32_cells_nonzero": true,
+      "automatic_attribute": 20,
+      "cell_count": 1,
+      "cell_rows": [
+        248714
+      ],
+      "seed_cell_f32_volume_m3": 4.82217172606035e-18,
+      "seed_cell_row": 248714,
+      "seed_world_m": [
+        -0.02611142909154296,
+        -0.03361048176884651,
+        0.09510746784508228
+      ]
+    },
+    {
+      "all_centroids_inside_closed_fat": true,
+      "all_f32_cells_nonzero": true,
+      "automatic_attribute": 21,
+      "cell_count": 1,
+      "cell_rows": [
+        532350
+      ],
+      "seed_cell_f32_volume_m3": 1.093396883838329e-17,
+      "seed_cell_row": 532350,
+      "seed_world_m": [
+        -0.025505507364869118,
+        -0.03387653734534979,
+        0.0955039095133543
+      ]
+    },
+    {
+      "all_centroids_inside_closed_fat": true,
+      "all_f32_cells_nonzero": true,
+      "automatic_attribute": 22,
+      "cell_count": 3,
+      "cell_rows": [
+        568556,
+        568560,
+        568561
+      ],
+      "seed_cell_f32_volume_m3": 3.070554749049837e-20,
+      "seed_cell_row": 568556,
+      "seed_world_m": [
+        -0.022876702714711428,
+        -0.04767535161226988,
+        0.06733819469809532
+      ]
+    }
+  ],
+  "explanation": "The pinned TetGen carveholes source assigns max_declared_attr+1, incremented per uninfected connected component. The 17-22 cells here match six such components. This preparation appends one explicit region seed with the existing declared material attribute 16 in each verified component; it does not rewrite any output cell label.",
+  "mesh_total_abs_f32_volume_m3": 0.011443639668010295,
+  "physical_admission": false,
+  "poly_completion": {
+    "added_regions": 6,
+    "existing_regions": 84,
+    "faces": 492956,
+    "holes": 3,
+    "points": 245996
+  },
+  "prepared_poly_sha256": "ca78e1f320e3d54c2f72d03ab03b10c775206ea9ce23fd95233fcfcbcd71239d",
+  "prior_fixed_mesh": {
+    "cell_attribute_histogram": {
+      "16": 853696,
+      "17": 10,
+      "18": 15,
+      "19": 1,
+      "20": 1,
+      "21": 1,
+      "22": 3
+    },
+    "cell_count": 853727,
+    "ele_sha256": "a6e3e2ab0f9da4839ab4cad312b856b556ef2263759a3a2b137875e326f8783d",
+    "node_count": 246508,
+    "node_sha256": "57a42f2a825df82bfe3e237a571b5e7d20a18bc1c803014abc8c3144cc019a1b"
+  },
+  "region_table_after": {
+    "all_region_maxvol_zero": true,
+    "declared_attribute_histogram": {
+      "16": 90
+    },
+    "region_count": 90,
+    "unique_declared_attributes": [
+      16
+    ]
+  },
+  "region_table_before": {
+    "all_region_maxvol_zero": true,
+    "declared_attribute_histogram": {
+      "16": 84
+    },
+    "region_count": 84,
+    "unique_declared_attributes": [
+      16
+    ]
+  },
+  "runtime": 0,
+  "shell_volume_m3": 0.011443639668402068,
+  "source_pins": {
+    "fat_poly_sha256": "c1e579aa0d57e5f2eccaa2bd6991d56b67b7b66fe21c80ed8c36fc08a99e3ae2",
+    "fixed_binary_sha256": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "fixed_source_sha256": "98c7c993c8c8fb04211995be79ede5927027532185606a34c11a5141b27cc307",
+    "native217_owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd",
+    "seed_helper_056_sha256": "0aea6dbf689705cfaae9b0ee72cf76f7459b7ebce665af97c84726509cab2d14",
+    "source_shell_npz_sha256": "0d905075270d539c2493d2b3a626d2d88bfe04f594ae8b1e5fbc1f21e99078be"
+  },
+  "status": "VERIFIED_AUTOMATIC_REGION_SEEDS_PREPARED_ONLY",
+  "tetgen_options": "-pYq1.2/10AS512O0/0/0T5.0533497135862433e-11"
+}
