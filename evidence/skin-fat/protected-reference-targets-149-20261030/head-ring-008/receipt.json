@@ -1,0 +1,72 @@
+{
+  "base_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz",
+  "base_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+  "canonical_protected_rows": 149,
+  "head_rows_covered": 135,
+  "remaining_D_attachment_rows": 14,
+  "remaining_D_attachment_canonical_protected_rows": [
+    90,
+    91,
+    92,
+    93,
+    102,
+    118,
+    130,
+    135,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143
+  ],
+  "gates": {
+    "O": {
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/surface-transfer-checkpoint-392/payload/O/candidate.npz",
+      "sha256": "2958a704db4b8b68422640a5e991c6b51af25f19d525c49adc8a742f0c207d7a",
+      "boundary_vertices": 45,
+      "boundary_edges": 45,
+      "boundary_cycles": [
+        21,
+        24
+      ],
+      "max_source_to_current_distance_m": 6.116169994579978e-06,
+      "unique_within_7um": true,
+      "complete_edge_set_isomorphism": true
+    },
+    "I": {
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/candidate-f32-typed.npz",
+      "sha256": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+      "boundary_vertices": 45,
+      "boundary_edges": 45,
+      "boundary_cycles": [
+        21,
+        24
+      ],
+      "max_source_to_current_distance_m": 6.537857940340133e-08,
+      "unique_within_7um": true,
+      "complete_edge_set_isomorphism": true
+    },
+    "D": {
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/pair-geometry-014-linked-remesh/fine-I-bone-barrier-run-024/full-native-self-028/current-collar-plan-032/engine-20-ops-one-sided624-run-006/candidate-f32-linked-remesh-typed.npz",
+      "sha256": "c17794a1012f76924dcd9e4e754bb026c774deb5a3d37e2f1c79635ccfe9dc83",
+      "boundary_vertices": 45,
+      "boundary_edges": 45,
+      "boundary_cycles": [
+        21,
+        24
+      ],
+      "max_source_to_current_distance_m": 6.537857940340133e-08,
+      "unique_within_7um": true,
+      "complete_edge_set_isomorphism": true
+    }
+  },
+  "csv_sha256": "88ef387bace516a843a8f98122905820a6a2d317454074099fce07e6e352ed62",
+  "physical_admission": false,
+  "runtime": 0,
+  "limitations": [
+    "Bounded geometric and complete boundary-graph correspondence; this does not replace historical source330 tet registration in the native importer.",
+    "These are declared open head boundary loops. No caps or anatomical closure are invented.",
+    "Output targets are not yet volume nodes; local retet and owner checks remain mandatory."
+  ]
+}
