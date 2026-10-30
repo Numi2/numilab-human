@@ -1,0 +1,54 @@
+Opening /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-local-tetgen-070/component-010/skin.poly.
+Delaunizing vertices...
+Delaunay seconds:  1.2e-05
+Creating surface mesh ...
+Surface mesh seconds:  1.4e-05
+Recovering boundaries...
+ATTR_CENSUS stage=after_boundary_before_carve total=48 zero=48 expected15=0 other=0 flip23=21 flip32=16 flip41=0 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  0.000141
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=19 zero=0 expected15=19 other=0 flip23=21 flip32=16 flip41=0 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  1e-05
+Suppressing Steiner points ...
+Steiner suppression seconds:  1e-06
+ATTR_CENSUS stage=after_suppresssteinerpoints total=19 zero=0 expected15=19 other=0 flip23=21 flip32=16 flip41=0 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=20 zero=0 expected15=20 other=0 flip23=26 flip32=20 flip41=0 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  1.4e-05
+Refining mesh...
+  19 insertions, added 0 points, 1 tetrahedra in queue.
+  6 insertions, added 0 points, 0 tetrahedra in queue.
+  8 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=20 zero=0 expected15=20 other=0 flip23=26 flip32=20 flip41=0 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  4.3e-05
+Smoothing vertices...
+ATTR_CENSUS stage=after_smoothing total=20 zero=0 expected15=20 other=0 flip23=26 flip32=20 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh smoothing seconds:  2e-06
+ATTR_CENSUS stage=after_improvement_gate total=20 zero=0 expected15=20 other=0 flip23=26 flip32=20 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  2e-06
+
+Writing /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-local-tetgen-070/component-010/skin.1.node.
+Writing /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-local-tetgen-070/component-010/skin.1.ele.
+Writing /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-local-tetgen-070/component-010/skin.1.face.
+Writing /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-local-tetgen-070/component-010/skin.1.edge.
+
+Output seconds:  0.000171
+Total running seconds:  0.000439
+
+Statistics:
+
+  Input points: 14
+  Input facets: 24
+  Input segments: 36
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 15
+  Mesh tetrahedra: 20
+  Mesh faces: 52
+  Mesh faces on exterior boundary: 24
+  Mesh faces on input facets: 24
+  Mesh edges on input segments: 36
+  Steiner points inside domain: 1
+

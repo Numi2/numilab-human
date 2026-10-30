@@ -1,0 +1,55 @@
+{
+  "status": "BATCHED_RESTORED_SKIN_CAVITY_PARTIAL_NOT_PHYSICAL_ADMISSION",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "source_sha256": "25a0c12b94b80d3a0f766e3fb9f1dd42a4e0d11e31b1a24ab7bfe243cf8fefef",
+  "components": 1,
+  "accepted_components": 1,
+  "candidate_nodes": 202525,
+  "candidate_cells": 743497,
+  "F32_zero": 0,
+  "F32_negative": 0,
+  "missing_original_PLC_facets": 0,
+  "extra_boundary_facets": 0,
+  "nonmanifold_tet_faces": 0,
+  "material_histogram": {
+    "15": 743497
+  },
+  "details": [
+    {
+      "component": 0,
+      "source_cells": 31,
+      "parent_original_PLC_faces": [
+        321469,
+        321468,
+        321614,
+        321619,
+        321613,
+        321612,
+        321502,
+        321501,
+        321500,
+        321503,
+        321623,
+        321622
+      ],
+      "fan_gate": {
+        "cells": 31,
+        "status": "PASS_INTERIOR_KERNEL_FAN",
+        "new_cells": 30,
+        "margin_m": 1.5488308865036084e-07,
+        "material": 15,
+        "center": [
+          0.2616039216518402,
+          -0.9871821999549866,
+          0.14248019456863403
+        ],
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 30
+    }
+  ]
+}

@@ -1,0 +1,1070 @@
+{
+  "accepted_steps": 0,
+  "geometry_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038/merge-run004-run005-O/full-check/independent-verification-001/report.json",
+    "sha256": "af18d3e4d3f02284acc4a27740c5c9256464c17fb99ca443a7186716a836cdf7"
+  },
+  "owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py",
+    "sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "physical_admission": false,
+  "runtime": 0,
+  "seed_views": {
+    "cells": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-handoff-036/batch035-plan040/manifest.217-parent-views/parent-cells.csv.gz",
+      "sha256": "ac6b8c0ece65363177eae9b5a093fdc6fc4c63c55e0d48d032258882809f7f56"
+    },
+    "nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-handoff-036/batch035-plan040/manifest.217-parent-views/parent-nodes.csv.gz",
+      "sha256": "d34661837bb571b5c4627cd0bbe3eb2ce02bb45783749eb97e2138d7d3c2cb72"
+    }
+  },
+  "status": "VERIFIED_PLCS_PREPARED_NOT_ADMISSION",
+  "tetgen": [
+    {
+      "hole_count": 1,
+      "label": "skin",
+      "material": 15,
+      "parent_preparation_source_sha256": "659109a4f57102b1e7b399a928bdd4bb7ce793ec0e83d6c39aabc5a12f5f86a3",
+      "poly_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verified-volume-preparation-010-merged038005/plcs/skin.poly",
+      "poly_sha256": "938e0c70fb871c9592598dd7bf8a095ce55680ddec5914fe6788a9595e828b49",
+      "seed_records": [
+        {
+          "point_world_m": [
+            -0.24717361479997635,
+            -0.9506501108407974,
+            0.17885414138436317
+          ],
+          "positive_component_index": 0,
+          "seed_method": "source330_parent_cell_centroid",
+          "signed_component_volume_m3": 0.003626316932452062,
+          "source330_parent_tet_row": 1,
+          "whole_material_solid_contains_seed": true
+        }
+      ],
+      "shell_signed_volume_m3": 0.003626316932451737,
+      "status": "VERIFIED_PLC_PREPARED_NOT_RUN"
+    },
+    {
+      "hole_count": 3,
+      "label": "fat",
+      "material": 16,
+      "parent_preparation_source_sha256": "659109a4f57102b1e7b399a928bdd4bb7ce793ec0e83d6c39aabc5a12f5f86a3",
+      "poly_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verified-volume-preparation-010-merged038005/plcs/fat.poly",
+      "poly_sha256": "c1e579aa0d57e5f2eccaa2bd6991d56b67b7b66fe21c80ed8c36fc08a99e3ae2",
+      "seed_records": [
+        {
+          "point_world_m": [
+            -0.2501833327114582,
+            -0.944088950753212,
+            0.1754935048520565
+          ],
+          "positive_component_index": 0,
+          "seed_method": "source330_parent_cell_centroid",
+          "signed_component_volume_m3": 0.011445668070696254,
+          "source330_parent_tet_row": 14316,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.04556524712086476,
+            -0.09751255300207431,
+            0.036177529874741106
+          ],
+          "positive_component_index": 1,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.0634073095893116e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.04572575099486139,
+            -0.0980814067319703,
+            0.036902286808324934
+          ],
+          "positive_component_index": 2,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.1361456990964604e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08509754676713012,
+            -0.1367312095645618,
+            0.07273506273857598
+          ],
+          "positive_component_index": 3,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.507598289756063e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.0806255537158886,
+            -0.13647442308234933,
+            0.06981417925356632
+          ],
+          "positive_component_index": 4,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.457475309067949e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.07066551440816268,
+            -0.11349465817563309,
+            0.047500190879739904
+          ],
+          "positive_component_index": 5,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.1191925960442e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.07101712277471448,
+            -0.11392578020491825,
+            0.047791199725492034
+          ],
+          "positive_component_index": 6,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.655165754716719e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.0706776597126757,
+            -0.11424077333612069,
+            0.0495531995302145
+          ],
+          "positive_component_index": 7,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.6939429057331447e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.06253065765287967,
+            -0.10637619728414298,
+            0.039281572269604215
+          ],
+          "positive_component_index": 8,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 7.349198540669617e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.06239419695546553,
+            -0.1064947926809771,
+            0.03973348350027999
+          ],
+          "positive_component_index": 9,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.1012992843954393e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.0396577411087496,
+            -0.09336871346885216,
+            0.039156136063522876
+          ],
+          "positive_component_index": 10,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.3786204451025183e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.03627773403777344,
+            -0.08803744313206079,
+            0.03983356140763053
+          ],
+          "positive_component_index": 11,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.7918855777182355e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.03624387910680596,
+            -0.0875552808712068,
+            0.039747665016115825
+          ],
+          "positive_component_index": 12,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.661659005500199e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.028839540613508234,
+            -0.08084702512396753,
+            0.04199328567418291
+          ],
+          "positive_component_index": 13,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.188209331767802e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02744772218364276,
+            -0.05653604729897447,
+            0.05877332544576258
+          ],
+          "positive_component_index": 14,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.0658836172175535e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02594475511669257,
+            -0.05223886996803201,
+            0.0632340748461797
+          ],
+          "positive_component_index": 15,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 9.928113225659316e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02601649562663159,
+            -0.04980335832079108,
+            0.06578227029057881
+          ],
+          "positive_component_index": 16,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.17968119270163e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.026794484060789207,
+            -0.04416053989427366,
+            0.07476739974137533
+          ],
+          "positive_component_index": 17,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.426328757222863e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.025784089417185147,
+            -0.03859892980899289,
+            0.08083119429369783
+          ],
+          "positive_component_index": 18,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.920267177989913e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.027645861758950827,
+            -0.034721835988771134,
+            0.08771026538902674
+          ],
+          "positive_component_index": 19,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.3753146748491365e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02642354412539973,
+            -0.03365735505627613,
+            0.09489892014400604
+          ],
+          "positive_component_index": 20,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.936279768784571e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02595316541664868,
+            -0.034117303919060024,
+            0.09536496916568585
+          ],
+          "positive_component_index": 21,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 9.741245084036702e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.026415804538703624,
+            -0.031518920223124504,
+            0.09889197041506495
+          ],
+          "positive_component_index": 22,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.30347279174448e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02760559527641982,
+            -0.03153727234674616,
+            0.13036884406614174
+          ],
+          "positive_component_index": 23,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 6.179620380161687e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.027077140370506042,
+            -0.031485895417179104,
+            0.1446614181294917
+          ],
+          "positive_component_index": 24,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.703178031266154e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08768103514173681,
+            -0.09434064796291411,
+            0.1724053968634476
+          ],
+          "positive_component_index": 25,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 9.325113788077384e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08791321742605063,
+            -0.09437404400425176,
+            0.1728549916743858
+          ],
+          "positive_component_index": 26,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.0262505514356126e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08792157492076251,
+            -0.09153257153158566,
+            0.17184307367991444
+          ],
+          "positive_component_index": 27,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.2210131105780404e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08792205853972755,
+            -0.09240727862970796,
+            0.17259926249226004
+          ],
+          "positive_component_index": 28,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.308239544583596e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08298346536100126,
+            -0.105128369132391,
+            0.1737452132164463
+          ],
+          "positive_component_index": 29,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.692068803569511e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.08005144504505284,
+            -0.0729031319702423,
+            0.1675619681151159
+          ],
+          "positive_component_index": 30,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.6768983599360444e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.07997246059435165,
+            -0.07213869130841014,
+            0.16782140679096325
+          ],
+          "positive_component_index": 31,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.108718875832067e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.07999056068294894,
+            -0.07240526429451222,
+            0.1672783913860866
+          ],
+          "positive_component_index": 32,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.2560919882385472e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.07544836026664609,
+            -0.06263859254879366,
+            0.16745893983431243
+          ],
+          "positive_component_index": 33,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.20601071004225e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.07434989324230433,
+            -0.06223229065392432,
+            0.16717347095236076
+          ],
+          "positive_component_index": 34,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.5248466553615486e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.027583177412916226,
+            -0.03603743835130621,
+            0.15824808858486794
+          ],
+          "positive_component_index": 35,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.598573178405823e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.029671487875035256,
+            -0.03736262166427391,
+            0.16055712567989877
+          ],
+          "positive_component_index": 36,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.280877240713868e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.008518128687960034,
+            -0.09555956796215002,
+            0.03673463114688702
+          ],
+          "positive_component_index": 37,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 7.696902048571432e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.009511697222561089,
+            -0.09509006586432132,
+            0.03852808702628394
+          ],
+          "positive_component_index": 38,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.8061744890899676e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.004202838598251503,
+            -0.09846403393651466,
+            0.03703374087295888
+          ],
+          "positive_component_index": 39,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 6.557037785929168e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.004475206516607532,
+            -0.10216025850189457,
+            0.03857682577065888
+          ],
+          "positive_component_index": 40,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.110191930418685e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.005591650474531333,
+            -0.1014345751241061,
+            0.037327136972059846
+          ],
+          "positive_component_index": 41,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.6797417486506045e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02464547092213186,
+            -0.07989062876226893,
+            0.041384328294725777
+          ],
+          "positive_component_index": 42,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 7.020709690204482e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.024769473225662475,
+            -0.07190856432881308,
+            0.04591280713655015
+          ],
+          "positive_component_index": 43,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.77957189102228e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.025218593431000986,
+            -0.06771108242012527,
+            0.047208762078446743
+          ],
+          "positive_component_index": 44,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 6.119199801165549e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02442547005708794,
+            -0.06606380441737975,
+            0.04801731359230645
+          ],
+          "positive_component_index": 45,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.870935902311451e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02439019600371006,
+            -0.06659101433072305,
+            0.04887936542198347
+          ],
+          "positive_component_index": 46,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 7.348219775064746e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02536639707263882,
+            -0.061584446223713105,
+            0.052035661750408045
+          ],
+          "positive_component_index": 47,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.97718395348041e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.024422503507463684,
+            -0.053411289464529006,
+            0.05901295115440198
+          ],
+          "positive_component_index": 48,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 6.817157570608437e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.025112622246571275,
+            -0.053130556758718604,
+            0.05938993781905768
+          ],
+          "positive_component_index": 49,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.2498026723184834e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.024671463199441343,
+            -0.05023255886680987,
+            0.06445874377032425
+          ],
+          "positive_component_index": 50,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.799372037265499e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02552984243686015,
+            -0.04937665825630132,
+            0.0654398631372042
+          ],
+          "positive_component_index": 51,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.1593779390288834e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.022461561298513004,
+            -0.046242677335615795,
+            0.06917436965220972
+          ],
+          "positive_component_index": 52,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.607155227116156e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02297390264208052,
+            -0.045706639277390985,
+            0.0701995852625232
+          ],
+          "positive_component_index": 53,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.4910909986472616e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.023275735554542234,
+            -0.045279227110159866,
+            0.07011032638173853
+          ],
+          "positive_component_index": 54,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.6311879884127928e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.030936916535552913,
+            -0.1378381923598577,
+            0.06792861908863129
+          ],
+          "positive_component_index": 55,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.9344369935640213e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.03577571066680093,
+            -0.13739176110894152,
+            0.074072898027969
+          ],
+          "positive_component_index": 56,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.3033886663099818e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.017041102875773637,
+            -0.1110071865599223,
+            0.04466225844026096
+          ],
+          "positive_component_index": 57,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.3723548892870953e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.016708281096698186,
+            -0.10940178776930846,
+            0.04391677022858356
+          ],
+          "positive_component_index": 58,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.34238377180186e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.02522997353128413,
+            -0.1215557528415923,
+            0.053297008794162735
+          ],
+          "positive_component_index": 59,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.7108285239570503e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.025588124687326286,
+            -0.038243944217572226,
+            0.07710461918560635
+          ],
+          "positive_component_index": 60,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.9342048410601704e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.022641969734558644,
+            -0.03909519796416002,
+            0.0825481698515545
+          ],
+          "positive_component_index": 61,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.1299744172192389e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02557908556085766,
+            -0.03795200629056531,
+            0.08031658017585805
+          ],
+          "positive_component_index": 62,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.8716391574512874e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.024832409283836464,
+            -0.03636626784706385,
+            0.08153042392788146
+          ],
+          "positive_component_index": 63,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.575849553164508e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.022228208428366217,
+            -0.038699779187388476,
+            0.08276694126290549
+          ],
+          "positive_component_index": 64,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.276283688312058e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.023052590127802877,
+            -0.03756287011438862,
+            0.08634777900915086
+          ],
+          "positive_component_index": 65,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.388779112097213e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.023685098976619762,
+            -0.036595242028926604,
+            0.08939274696079347
+          ],
+          "positive_component_index": 66,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.268365558339889e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.025667643902550354,
+            -0.0334125259354691,
+            0.09518572118039695
+          ],
+          "positive_component_index": 67,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.164401969985222e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02525565608278392,
+            -0.03284755817096109,
+            0.0951817055953443
+          ],
+          "positive_component_index": 68,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.7294482014565508e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.024776661021157373,
+            -0.03371851371368949,
+            0.09584563347982261
+          ],
+          "positive_component_index": 69,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.6477687098359314e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.02518672061759043,
+            -0.033948844607705274,
+            0.09648260095027952
+          ],
+          "positive_component_index": 70,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.2545014818080153e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.025125659887508544,
+            -0.0324221873521388,
+            0.09914760443924463
+          ],
+          "positive_component_index": 71,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.972765006200406e-11,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.024108425976781495,
+            -0.03237617951905452,
+            0.09955058965783135
+          ],
+          "positive_component_index": 72,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 5.296893350992514e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.023630306332314287,
+            -0.0314551571958646,
+            0.10064100859512473
+          ],
+          "positive_component_index": 73,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.793965741697449e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.023467684975620514,
+            -0.03189328504816604,
+            0.10070248538556364
+          ],
+          "positive_component_index": 74,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 9.274762005805729e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.01183875891523845,
+            -0.03765108848173921,
+            0.16028857313940875
+          ],
+          "positive_component_index": 75,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.1549420591483658e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.011672254779496736,
+            -0.036736538818417104,
+            0.1604608323740196
+          ],
+          "positive_component_index": 76,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 4.557762889380222e-14,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.008844399080495557,
+            -0.036742980464487006,
+            0.15878882953421472
+          ],
+          "positive_component_index": 77,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 2.0300198195011337e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.008432936807852866,
+            -0.036267208910825854,
+            0.15959604683790718
+          ],
+          "positive_component_index": 78,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.944401699596157e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            -0.003036570292993993,
+            -0.03965065853428726,
+            0.15958259991292648
+          ],
+          "positive_component_index": 79,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 1.0031603848277066e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.006055551925696328,
+            -0.04557900337753239,
+            0.16471578097838918
+          ],
+          "positive_component_index": 80,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.77386040238748e-15,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.026210086587858072,
+            -0.06644864234675465,
+            0.16818923735026842
+          ],
+          "positive_component_index": 81,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 6.410119368694043e-13,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.03604999933414679,
+            -0.0873112457054101,
+            0.1711804222661525
+          ],
+          "positive_component_index": 82,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 8.568290826321312e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        },
+        {
+          "point_world_m": [
+            0.03644642654241583,
+            -0.09195913121356236,
+            0.17159233116177902
+          ],
+          "positive_component_index": 83,
+          "seed_method": "verified_component_interior_point_construction_only",
+          "signed_component_volume_m3": 3.973809724249147e-12,
+          "source330_parent_tet_row": null,
+          "whole_material_solid_contains_seed": true
+        }
+      ],
+      "shell_signed_volume_m3": 0.011443639668402015,
+      "status": "VERIFIED_PLC_PREPARED_NOT_RUN"
+    }
+  ]
+}
