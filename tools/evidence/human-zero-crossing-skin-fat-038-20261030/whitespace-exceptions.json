@@ -1,0 +1,16 @@
+{
+  "exceptions": [
+    {
+      "path": "provenance/dtype-restoration/restore_dtype.py",
+      "reason": "Frozen source script contains one blank line at EOF; bytes remain unchanged.",
+      "rule": "blank-at-eof"
+    },
+    {
+      "path": "verification/baseline/audit_current_surfaces_all185_f32_f64_014.py",
+      "reason": "Frozen verifier source contains one blank line at EOF; bytes remain unchanged.",
+      "rule": "blank-at-eof"
+    }
+  ],
+  "policy": "Frozen source bytes are preserved. Exceptions apply only to these two pre-existing source paths; the bundle-wide whitespace check is otherwise clean.",
+  "schema": "human.zero-crossing-skin-fat-038.whitespace-exceptions.v1"
+}

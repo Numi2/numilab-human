@@ -1,0 +1,62 @@
+{
+  "baseline_geometry_proofs": [
+    {
+      "path": "tools/evidence/human-zero-crossing-skin-fat-038-20261030/evidence/baseline/exact-gates-010-report.json",
+      "scope": "Baseline complete self/interlayer geometry. The old bone subsection is invalid.",
+      "sha256": "810a2f07d589eb3646155c277840ce0e98455b965cfe1d935e01f36d7e29acbc"
+    },
+    {
+      "path": "tools/evidence/human-zero-crossing-skin-fat-038-20261030/evidence/baseline/exact-gates-014-current-all185-F32-F64-report.json",
+      "scope": "Baseline all185 bone checks in both F32/F64 coordinate domains.",
+      "sha256": "48f5e8d76cb123f4ac890061163641331403ed342f1adf01821a0b8ff73c26bc"
+    }
+  ],
+  "changed_face_pairs_vs_complete_current_surface_records": 0,
+  "changed_faces_vs_all185_bones_both_coordinate_domains": 0,
+  "complete_current_surface_records": 646159,
+  "complete_surface_audit": false,
+  "fixed_coordinate_geometry_delta": "PASS_FIXED_COORDINATE_GEOMETRY_DELTA",
+  "geometry_counts": {
+    "D": {
+      "boundary_edges": 45,
+      "faces": 242135,
+      "new_faces": 3951,
+      "points": 120628
+    },
+    "I": {
+      "boundary_edges": 45,
+      "faces": 250731,
+      "new_faces": 1546,
+      "points": 125368
+    },
+    "O": {
+      "boundary_edges": 45,
+      "faces": 153293,
+      "new_faces": 2117,
+      "points": 76669
+    }
+  },
+  "not_qualified": [
+    "Complete all-to-all surface audit for this incremental report; it checks 7,614 changed/selected faces against 646,159 complete-surface records and relies on cited complete baseline proofs.",
+    "Positive noncollapsed TetGen volume/F32 cell quality.",
+    "Mass mapping or mass/density conservation.",
+    "Native runtime, physical or physiological admission."
+  ],
+  "operation_counts": {
+    "merged_O_selected_operations": 202,
+    "run004_selected_into_O": 190,
+    "run004_skipped_overlap": 8,
+    "run005_selected_into_O": 12,
+    "source_run004_operations": 198,
+    "source_run005_operations": 515
+  },
+  "parent_reported_current_volume_context": {
+    "f32_collapsed_or_zero_tetrahedra": 16,
+    "fat_tetgen_output_tetrahedra": 853727,
+    "status": "Parent-reported staging context only; not a result from this bundle and not a qualification claim."
+  },
+  "protected_targets_verified": 149,
+  "schema": "human.zero-crossing-skin-fat-038.qualification-context.v1",
+  "selected_changed_faces": 7614,
+  "source_bundle_status": "SOURCE_AND_TYPED_SURFACE_PREPARATION_ONLY"
+}

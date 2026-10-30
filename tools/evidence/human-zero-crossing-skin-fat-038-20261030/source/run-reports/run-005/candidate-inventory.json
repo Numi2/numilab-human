@@ -1,0 +1,138 @@
+{
+  "candidate_inputs": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/D-warning-local-connected-union-proposal.npz",
+      "sha256": "c9ef206daa0bf2323e44ee1321f2f29d23609182dbae1f1cf55e73932e2284dd"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/I-warning-local-connected-union-proposal.npz",
+      "sha256": "36ab7242d8789b4b7459e6cd97d88cabc1b3ec60c69ddd80c63309c3e030aad7"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/O-warning-local-connected-union-proposal.npz",
+      "sha256": "ac7e5e874765a9febd33908ca58df97c455f1da8893b0bdbe75cb7c5ce30bcf0"
+    }
+  },
+  "cell_witnesses": {
+    "negative_attr15_cells": 20,
+    "nonpositive_attr15_cells": 40,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/cell-role-witnesses-001.json",
+    "seed_faces_by_role": {
+      "D": 0,
+      "I": 380,
+      "O": 40
+    },
+    "sha256": "4310f874bc5c636acf0e1f3def78c1a216e964e144f9d2527493b400203e7ca0",
+    "source_result_sha256": "4f31dcccd00abc9b4fa20bc6a460c21b1fec1aa1145747eb5368b43099941bf4",
+    "unowned_attr0_cells": 31,
+    "zero_attr15_cells": 20
+  },
+  "current_037_report_sha256": "6ca0f691f5dab1cb20323ca2e5213dae5d35d2fdd7b371545ebbd4a09f77da18",
+  "current_037_verifier_sha256": "f816989cac5ead69f8312e08ff8424559b2d7b4c64443537dd7fe8225b9c3add",
+  "global_priority_candidate_count": 611,
+  "global_priority_warning_first": true,
+  "limits": {
+    "max_loop_vertices": 22,
+    "max_patch_faces": 240,
+    "per_patch_seconds": 5.0,
+    "wall_budget_seconds": 180.0
+  },
+  "quality_before": {
+    "D": {
+      "bad_at_legacy_1e-4deg": 1897,
+      "bad_at_output_target": 54250,
+      "faces": 244877,
+      "minimum_altitude_m": 1.5466330782274921e-10,
+      "minimum_angle_degrees": 1.4716440585322183e-06,
+      "minimum_edge_m": 3.4924596548080444e-10,
+      "source_defect_face_count": 1897
+    },
+    "I": {
+      "bad_at_legacy_1e-4deg": 71,
+      "bad_at_output_target": 6642,
+      "faces": 251045,
+      "minimum_altitude_m": 2.6360403717773296e-09,
+      "minimum_angle_degrees": 8.706750585329037e-05,
+      "minimum_edge_m": 1.053671194739536e-08,
+      "source_defect_face_count": 71
+    },
+    "O": {
+      "bad_at_legacy_1e-4deg": 21,
+      "bad_at_output_target": 2228,
+      "faces": 154531,
+      "minimum_altitude_m": 2.6175766632058828e-09,
+      "minimum_angle_degrees": 0.00011354760236462102,
+      "minimum_edge_m": 2.9802322387695312e-08,
+      "source_defect_face_count": 21
+    }
+  },
+  "roles": {
+    "D": {
+      "quality_feasible_candidate_count": 916,
+      "rejections": {
+        "loop_limit": 296,
+        "no_quality_feasible_disk": 707,
+        "not_single_disk": 161,
+        "patch_too_large": 4,
+        "protected_vertex_in_patch": 12
+      },
+      "selected_bad_face_coverage": 918,
+      "selected_disjoint_patch_count": 538,
+      "selected_fatal_cell_patch_count": 0,
+      "selected_warning_patch_count": 7,
+      "warning_endpoint_count": 23,
+      "warning_seed_face_count": 207
+    },
+    "I": {
+      "quality_feasible_candidate_count": 363,
+      "rejections": {
+        "loop_limit": 302,
+        "no_quality_feasible_disk": 25,
+        "not_single_disk": 20
+      },
+      "selected_bad_face_coverage": 47,
+      "selected_disjoint_patch_count": 57,
+      "selected_fatal_cell_patch_count": 6,
+      "selected_warning_patch_count": 11,
+      "warning_endpoint_count": 33,
+      "warning_seed_face_count": 264
+    },
+    "O": {
+      "quality_feasible_candidate_count": 51,
+      "rejections": {
+        "loop_limit": 4,
+        "no_quality_feasible_disk": 3,
+        "not_single_disk": 3
+      },
+      "selected_bad_face_coverage": 16,
+      "selected_disjoint_patch_count": 16,
+      "selected_fatal_cell_patch_count": 2,
+      "selected_warning_patch_count": 0,
+      "warning_endpoint_count": 0,
+      "warning_seed_face_count": 0
+    }
+  },
+  "schema": "numi.quality-warning-connected-union-038.inventory.v1",
+  "source_015": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/candidate-D-saved-op-replay-source-mapped.npz",
+      "sha256": "15afa8eecdaeff456cda25ef26890da60d60dd06e0412ed2035c77a8cbeb460f"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-saved-operation-replay-011/I/candidate-I-saved-op-replay.npz",
+      "sha256": "9721102247157eeb42c59633fda59d63fd5ba48ad11ba4e63987834136711e31"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-csr-canonical-011/O/candidate-O-csr-canonical.npz",
+      "sha256": "578cee97a3bbecb73c0e1a6d7c26f45ac6cc111a552996f3910866a4a3652a9b"
+    }
+  },
+  "source_stratum_filter": "removed: source layer/body/bone are ancestry fields, not physical material strata; role and bone barriers remain",
+  "thresholds": {
+    "legacy_angle_degrees": 0.0001,
+    "minimum_altitude_m": 2e-08,
+    "minimum_angle_degrees": 0.1
+  },
+  "warning_map_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/geometry-feasibility-008-warning037/warning-current-role-map-001/report.json",
+  "warning_map_sha256": "1a3c4c5da3a7392be06417376e08e31440363efae9b5c461825f816b84ec94ac"
+}

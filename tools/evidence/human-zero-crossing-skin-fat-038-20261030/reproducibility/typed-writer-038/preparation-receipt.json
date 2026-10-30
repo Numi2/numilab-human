@@ -1,0 +1,37 @@
+{
+  "schema": "quality-warning-connected-union-typed-metadata-successor-preparation.v1",
+  "status": "READY_FOR_FROZEN_038_INPUTS",
+  "task_folder": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-001",
+  "base_writer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037-typed-metadata-001/prepare_warning_union_typed_metadata.py",
+    "sha256": "d9adaa4a72c03e3a8a6380a600756ef9410bd595787a280cc2afdaef37971e57"
+  },
+  "successor_writer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-001/prepare_typed_connected_union.py",
+    "sha256": "95f88bf74b82d52eb06bb2145740a8d850acef386152e1b22c74876aed15b2d8"
+  },
+  "focused_test": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-001/test_typed_connected_union_parent_keys.py",
+    "sha256": "2c5835182ea7cc1b9806aecb598b9102f62f68f3bf302f627d31f8c429ee1074",
+    "result": "PASS: generic 038 fields, 037 fallback, explicit custom keys, mismatched nested rows rejected, missing configured rows rejected"
+  },
+  "legacy_037_compatibility": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-001/validate_037_compat.py",
+    "sha256": "390ecc7659a2c7396b61a236b707586f6187caf8fc9ffa87508334165a8212db",
+    "result": "PASS: legacy operation parser parity for 11 frozen 037 operation files (O=1, I=2, D=8), with same normalized row arrays, paths, and file hashes"
+  },
+  "source_037_inputs_used_for_compatibility": {
+    "operation_directory": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002",
+    "roles": ["O", "I", "D"]
+  },
+  "provisional_038_contract": {
+    "proposal_parent_face_map_key": "face_output_to_parent_rows",
+    "proposal_parent_point_map_key": "point_output_to_parent_rows",
+    "operation_immediate_parent_face_key": "retired_input_face_rows",
+    "operation_immediate_parent_point_key": "new_faces_input_point_rows",
+    "source015_row_fields_preserved": ["source_initial_face_rows", "source_original_face_rows", "new_faces_source_point_rows"],
+    "note": "Use actual frozen 038 doc names and explicit CLI overrides if they differ; source015 fields remain in the hash-pinned operation JSON and are not relabeled as immediate-parent rows."
+  },
+  "verification_environment": "/Users/numi/numi-human-prep-venv-20261005/bin/python on SSH host numi",
+  "not_performed": ["No 038 typed metadata emitted because frozen 038 proposal/operation inputs are not yet available", "No geometry query", "No CSV export", "No native or TetGen run", "No admission claim"]
+}
