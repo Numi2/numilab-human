@@ -1,0 +1,33 @@
+{
+  "status": "FAIL_NATIVE_CAPACITY",
+  "physical_admission": false,
+  "runtime": 0,
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-region-rebuild-667/run-018-component-selector-intersections/attempt-019-current-fine-plc/run-002/current-fine-closed-material-boundaries-and-cut-collar.npz",
+  "input_sha256": "5e146cc9b8bb1b140c04c0faab5ffa9398c36ed7556fe2f1dc6484a198a7322d",
+  "source_sha256": "70025dea58312e4aea040f4a10cdf737d09ecb2a6b9c5292c127ae17c6ac0b30",
+  "materials": [
+    {
+      "label": "skin",
+      "boundary_vertices": 158782,
+      "boundary_edges": 476406,
+      "boundary_faces": 317604,
+      "boundary_euler_characteristic": -20,
+      "necessary_minimum_cells": 158812
+    },
+    {
+      "label": "fat",
+      "boundary_vertices": 231094,
+      "boundary_edges": 694728,
+      "boundary_faces": 463152,
+      "boundary_euler_characteristic": -482,
+      "necessary_minimum_cells": 231817
+    }
+  ],
+  "necessary_combined_cells": 390629,
+  "native_cell_capacity": 200000,
+  "limitations": [
+    "Retained diagnostic boundary; not current repaired O/I/D admission",
+    "Geometric/physical quality can only increase required cells above this necessary bound"
+  ],
+  "seconds": 0.8844970420468599
+}
