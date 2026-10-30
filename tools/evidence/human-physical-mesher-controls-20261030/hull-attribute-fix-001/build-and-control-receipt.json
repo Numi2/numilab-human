@@ -1,0 +1,87 @@
+{
+  "accepted_steps": 0,
+  "evidence_context": {
+    "fat_seed_preparation_receipt_sha256": "acec8eb39882c7957cff8ba526c732b156d1d9b28c3e3756c679eaf46c1fda36",
+    "fat_seeded_mesh_changed_from_unseeded_mesh": true,
+    "fat_seeded_rerun_physical_admission": false,
+    "fat_seeded_rerun_receipt_sha256": "0e7b08983c63ab5afd15ad8905909a199beb632b85f465b7d327e838e4d1ab81",
+    "instrumented_real_replay_receipt_sha256": "81264f2fc4a30ac0a5e00e9e64cacd78ae27e5560e6e820ad8202b81b7c3a00e"
+  },
+  "limitations": [
+    "The unseeded baseline outputs preserve geometry exactly but retain invalid Float32 orientation cells: Skin 8 negative; Fat 16 zero and 93 negative.",
+    "Six-component Fat seed completion assigns all cells to declared attribute 16 but changes tetra connectivity and Steiner coordinates; its outputs remain separate and unmapped to the unseeded mesh.",
+    "Seeded Fat output still has 16 Float32 zero and 89 negative cells, plus 105 boundary Steiner points / 210 extra boundary faces.",
+    "No 217 import, mass map, native install, or runtime admission."
+  ],
+  "physical_admission": false,
+  "real_input_replays": {
+    "fat_six_seed": {
+      "argv_options": "-pYq1.2/10AS512O0/0/0T5.0533497135862433e-11",
+      "poly_expected_sha256": "ca78e1f320e3d54c2f72d03ab03b10c775206ea9ce23fd95233fcfcbcd71239d",
+      "poly_sha256": "ca78e1f320e3d54c2f72d03ab03b10c775206ea9ce23fd95233fcfcbcd71239d",
+      "result": {
+        "attr_histogram": {
+          "16": 853314
+        },
+        "cell_count": 853314,
+        "ele_sha256": "168e639f558f5157adeb468424bd69ce61de791f11e4626e078b9e7851c3a489",
+        "f32_negative_cells": 89,
+        "f32_zero_cells": 16,
+        "geometry_and_labels_exact_to_instrumented_reference": true,
+        "node_count": 246508,
+        "node_sha256": "b8820d928b467f62823e68b506c2542577c17b8c66d59522061e8bea01aed29c"
+      },
+      "stderr_bytes": 0
+    },
+    "skin": {
+      "argv_options": "-pYq1.2/10AS512O0/0/0T1.2094522811226541e-09",
+      "poly_expected_sha256": "938e0c70fb871c9592598dd7bf8a095ce55680ddec5914fe6788a9595e828b49",
+      "poly_sha256": "938e0c70fb871c9592598dd7bf8a095ce55680ddec5914fe6788a9595e828b49",
+      "result": {
+        "attr_histogram": {
+          "15": 743609
+        },
+        "cell_count": 743609,
+        "ele_sha256": "f88786b50d18576f0f50deb0d6ea76e630459b1120513fffb8e3c929473cd137",
+        "f32_negative_cells": 8,
+        "f32_zero_cells": 0,
+        "geometry_and_labels_exact_to_instrumented_reference": true,
+        "node_count": 202549,
+        "node_sha256": "a0e16e9df0ecc6dcc2caed9554b137e64b0606e386637a92c57310316e9d4850"
+      },
+      "stderr_bytes": 0
+    }
+  },
+  "runtime": 0,
+  "source": {
+    "base_054_path": "tools/evidence/human-physical-mesher-controls-20261030/mesher-054/source/tetgen-explicit-no-improvement-validation.cxx",
+    "base_054_sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a",
+    "binary_sha256": "4a88541a0fd00e43463a95c0c18fcb701aacea3d48b7daec22bfab319f169af6",
+    "compile_flags": "clang++ -std=c++11 -O3; test: clang++ -std=c++11 -O2",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+    "control_header_sha256": "e8ff6d158450931107a955c4f0f80100925a9059e011ca32a84776b150e8ff0d",
+    "control_test_source_sha256": "279ec8fe98ab355ec27fc7e4769701f797e43dc2daadc8a68b17837d3e1a7b9a",
+    "dependencies": {
+      "native_domain_217_owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd",
+      "predicates_object_sha256": "d15c7e1a4dc798fa0b48204e346a9fe031070ccb7789d8b74b910dfafba26f4c",
+      "tetgen_054_header_sha256": "69b012da7c0b01e6327f5f281ac2d10fc3fb42503d22366c7bd0bc9181bd833b",
+      "tetgen_vendor_source_sha256": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc"
+    },
+    "focused_control_count": 6,
+    "focused_controls": [
+      "complete attribute tuple and variable-volume bound inherit from old real neighbor",
+      "missing or malformed owner fails closed without guessing",
+      "still-hull and real-to-real slots remain unchanged",
+      "mixed attributes across unprotected real interface trigger fail-closed condition",
+      "different region labels across protected interface remain intact",
+      "matching region labels across unprotected interface remain valid"
+    ],
+    "minimal_diff_lines": 253,
+    "minimal_diff_sha256": "e71598fe0af114a2dbd8b36b3257527e1c02a022fce1f69bd40ed3f990bf7c12",
+    "minimal_fixed_source_sha256": "c65c634acbc6ba455cbca60c63f1d727c697e2489cd1a460f6348345f9ec2938",
+    "test_output_sha256": "43d9172ab33720ca746d67c579646abc3b7454c04bb78674a95c12ac3ca16b15",
+    "tetgen_compile_warning_lines": 118,
+    "tetgen_compile_warning_summary": "13 warnings generated."
+  },
+  "status": "SOURCE_AND_TEST_CONTROL_PASS_GEOMETRY_NOT_ADMITTED"
+}

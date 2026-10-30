@@ -1,0 +1,111 @@
+{
+  "base_remote_commit": "95fc9b7f5c0d94be9af1f536c0c8b897ac91aa8e",
+  "excluded": [
+    "compiled executable and test binary",
+    "TetGen .node/.ele/.face/.edge mesh tables",
+    "runtime or physical admission artifacts"
+  ],
+  "external_pins": {
+    "base_054_source_sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a",
+    "evidence_gitattributes_sha256": "2f77ea34c5d4b16a12765e5885c88afafaf57943d64025cccd00f05e623528dc",
+    "native_domain_217_owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd",
+    "predicates_object_sha256": "d15c7e1a4dc798fa0b48204e346a9fe031070ccb7789d8b74b910dfafba26f4c",
+    "tetgen_header_sha256": "69b012da7c0b01e6327f5f281ac2d10fc3fb42503d22366c7bd0bc9181bd833b",
+    "tetgen_vendor_source_sha256": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc"
+  },
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "574cf21e6dd62b0454914b105a67d16485c5e79c7f592f13c384b079d5c00d13",
+      "size_bytes": 3583
+    },
+    {
+      "path": "build_controls_variant.sh",
+      "sha256": "7ddb6cf31fd3ba877632fb68feef48e83e6f084172451488deb1eae2a6293cf7",
+      "size_bytes": 1486
+    },
+    {
+      "path": "auto-region-to-material-certificate.json",
+      "sha256": "23096252a5ee2e7889b1658f947fd6f281c8932cbee030bf0267315a36104b8d",
+      "size_bytes": 3253
+    },
+    {
+      "path": "build-and-control-receipt.json",
+      "sha256": "afc720e9d5358937704f8ff2deada18eae00f0ab9a5ed96a3fb58c2320e79769",
+      "size_bytes": 4831
+    },
+    {
+      "path": "build-recipe-validation.json",
+      "sha256": "ab51b582662b91cb1e270f97fe11b76490253c0e04de49842a71460f53c15974",
+      "size_bytes": 1872
+    },
+    {
+      "path": "compiler-version.txt",
+      "sha256": "a856ec74c559401131ad608625ef252fb2db6c78bc0c480c1c4c782ee4896db1",
+      "size_bytes": 158
+    },
+    {
+      "path": "control-tests.stdout.txt",
+      "sha256": "43d9172ab33720ca746d67c579646abc3b7454c04bb78674a95c12ac3ca16b15",
+      "size_bytes": 285
+    },
+    {
+      "path": "control-test-compile.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "tetgen-compile.stderr.txt",
+      "sha256": "3ffb46370acb8ff8993f1120961a0eb332bc485b23020ede3428326a13688ad4",
+      "size_bytes": 15303
+    },
+    {
+      "path": "test_hull_region_attribute_controls.cpp",
+      "sha256": "279ec8fe98ab355ec27fc7e4769701f797e43dc2daadc8a68b17837d3e1a7b9a",
+      "size_bytes": 3651
+    },
+    {
+      "path": "tetgen_hull_region_attribute_controls.h",
+      "sha256": "e8ff6d158450931107a955c4f0f80100925a9059e011ca32a84776b150e8ff0d",
+      "size_bytes": 1364
+    },
+    {
+      "path": "tetgen-hull-attribute-fix-minimal.cxx",
+      "sha256": "c65c634acbc6ba455cbca60c63f1d727c697e2489cd1a460f6348345f9ec2938",
+      "size_bytes": 1292644
+    },
+    {
+      "path": "tetgen-hull-attribute-fix-minimal.patch",
+      "sha256": "e71598fe0af114a2dbd8b36b3257527e1c02a022fce1f69bd40ed3f990bf7c12",
+      "size_bytes": 8464
+    },
+    {
+      "path": "instrumented-fix-replay-report.json",
+      "sha256": "81264f2fc4a30ac0a5e00e9e64cacd78ae27e5560e6e820ad8202b81b7c3a00e",
+      "size_bytes": 7061
+    },
+    {
+      "path": "instrumented-fix-source-receipt.json",
+      "sha256": "669e9d35bcfaa4395a866390f56ab3af72f9fe93269603058c6365b144c55248",
+      "size_bytes": 862
+    },
+    {
+      "path": "fat-auto-region-seed-preparation-receipt.json",
+      "sha256": "acec8eb39882c7957cff8ba526c732b156d1d9b28c3e3756c679eaf46c1fda36",
+      "size_bytes": 5316
+    },
+    {
+      "path": "fat-six-seed-rerun-report.json",
+      "sha256": "0e7b08983c63ab5afd15ad8905909a199beb632b85f465b7d327e838e4d1ab81",
+      "size_bytes": 5544
+    },
+    {
+      "path": "freeze-receipt-output.json",
+      "sha256": "8041cbb34db65be8e8fb843dcc4995e60745d86e811fa986a97908b79d0690fe",
+      "size_bytes": 1300
+    }
+  ],
+  "physical_admission": false,
+  "schema": "numi.human.tetgen.hull-attribute-source-manifest.v1",
+  "status": "SOURCE_AND_TEST_CONTROL_ONLY"
+}

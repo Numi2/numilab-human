@@ -1,0 +1,253 @@
+--- a/tools/evidence/human-physical-mesher-controls-20261030/hull-attribute-fix-001/tetgen-hull-attribute-fix-minimal.cxx
++++ b/tools/evidence/human-physical-mesher-controls-20261030/hull-attribute-fix-001/tetgen-hull-attribute-fix-minimal.cxx
+@@ -46,6 +46,102 @@
+ //============================================================================//
+ 
+ #include "tetgen.h"
++#include <vector>
++#include "tetgen_hull_region_attribute_controls.h"
++
++// Hull-to-real flip attribute repair. Hull tetrahedra carry default attributes;
++// when a flip turns one into a real cell, inherit the complete tuple from the
++// real tet across its old face opposite dummypoint. If that owner is absent,
++// or a real output cell disagrees across an unprotected real face, emit an
++// invalid region marker instead of guessing.
++struct TetgenHullAttrSnapshot {
++  bool was_hull;
++  bool valid;
++  std::vector<REAL> attributes;
++  REAL volume;
++  TetgenHullAttrSnapshot() : was_hull(false), valid(false), volume(-1.0) {}
++};
++static long tetgen_hull_attr_invalid_count = 0;
++static bool tetgen_tet_has_dummy(tetgenmesh *m, tetgenmesh::triface t)
++{
++  for (int v = 0; v < 4; ++v) {
++    if ((tetgenmesh::point) t.tet[4 + v] == m->dummypoint) return true;
++  }
++  return false;
++}
++static void tetgen_capture_hull_attr(tetgenmesh *m, tetgenmesh::triface oldtet,
++                                    TetgenHullAttrSnapshot &snap)
++{
++  int dummy_index = -1;
++  for (int v = 0; v < 4; ++v) {
++    if ((tetgenmesh::point) oldtet.tet[4 + v] == m->dummypoint) {
++      dummy_index = v; break;
++    }
++  }
++  if (dummy_index < 0) return;
++  snap.was_hull = true;
++  if (m->numelemattrib <= 0) { snap.valid = true; return; }
++  tetgenmesh::triface face = oldtet, realtet;
++  face.ver = dummy_index;
++  m->fsym(face, realtet);
++  if (realtet.tet == NULL || tetgen_tet_has_dummy(m, realtet)) return;
++  snap.attributes.resize(m->numelemattrib);
++  for (int a = 0; a < m->numelemattrib; ++a) {
++    snap.attributes[a] = m->elemattribute(realtet.tet, a);
++  }
++  if (m->b->varvolume) snap.volume = m->volumebound(realtet.tet);
++  snap.valid = true;
++}
++static bool tetgen_restore_hull_attr(tetgenmesh *m, tetgenmesh::triface output,
++                                    const TetgenHullAttrSnapshot &snap)
++{
++  std::vector<REAL> output_attributes;
++  REAL output_volume = -1.0;
++  const tetgen_hull_region_attribute_controls::RestoreResult result =
++      tetgen_hull_region_attribute_controls::inherit_real_neighbor_tuple(
++          snap.was_hull, tetgen_tet_has_dummy(m, output), snap.valid,
++          (size_t) m->numelemattrib, snap.attributes, snap.volume,
++          output_attributes, output_volume);
++  if (result == tetgen_hull_region_attribute_controls::kNoHullToRealTransition) {
++    return false;
++  }
++  if (result == tetgen_hull_region_attribute_controls::kMissingOrMalformedRealOwner) {
++    if (m->b->regionattrib && m->numelemattrib > 0) {
++      m->setelemattribute(output.tet, m->numelemattrib - 1, -2.0);
++    }
++    ++tetgen_hull_attr_invalid_count;
++    return true;
++  }
++  for (int a = 0; a < m->numelemattrib; ++a) {
++    m->setelemattribute(output.tet, a, output_attributes[a]);
++  }
++  if (m->b->varvolume) m->setvolumebound(output.tet, output_volume);
++  return true;
++}
++static void tetgen_validate_hull_attr_interfaces(tetgenmesh *m,
++                                                tetgenmesh::triface *outputs,
++                                                int count)
++{
++  if (!m->b->regionattrib || m->numelemattrib <= 0) return;
++  int attrnum = m->numelemattrib - 1;
++  for (int i = 0; i < count; ++i) {
++    if (tetgen_tet_has_dummy(m, outputs[i])) continue;
++    REAL attr = m->elemattribute(outputs[i].tet, attrnum);
++    for (int f = 0; f < 4; ++f) {
++      tetgenmesh::triface face = outputs[i], neighbor;
++      face.ver = f;
++      if (issubface(face)) continue;
++      m->fsym(face, neighbor);
++      if (neighbor.tet == NULL || tetgen_tet_has_dummy(m, neighbor)) continue;
++      if (tetgen_hull_region_attribute_controls::unprotected_real_region_conflict(
++              false, attr, m->elemattribute(neighbor.tet, attrnum))) {
++        m->setelemattribute(outputs[i].tet, attrnum, -2.0);
++        ++tetgen_hull_attr_invalid_count;
++        attr = -2.0;
++      }
++    }
++  }
++}
+ 
+ //== io_cxx ==================================================================//
+ //                                                                            //
+@@ -7170,6 +7266,7 @@
+   REAL attrib, volume;
+   int dummyflag = 0;  // range = {-1, 0, 1, 2}.
+   int i;
++  TetgenHullAttrSnapshot hull_attr0, hull_attr1;
+ 
+   if (hullflag > 0) {
+     // Check if e is dummypoint.
+@@ -7213,6 +7310,10 @@
+     eprevself(fliptets[1]);
+   }
+ 
++  if (hullflag > 0) {
++    tetgen_capture_hull_attr(this, fliptets[0], hull_attr0);
++    tetgen_capture_hull_attr(this, fliptets[1], hull_attr1);
++  }
+   // Re-use fliptets[0] and fliptets[1].
+   fliptets[0].ver = 11;
+   fliptets[1].ver = 11;
+@@ -7285,6 +7386,12 @@
+     setvertices(fliptets[2], pe, pd, pc, pa); // [e,d,c,a] *
+   }
+ 
++  if (hullflag > 0) {
++    tetgen_restore_hull_attr(this, fliptets[0], hull_attr0);
++    tetgen_restore_hull_attr(this, fliptets[1], hull_attr1);
++    tetgen_restore_hull_attr(this, fliptets[2], hull_attr0);
++  }
++
+   if (fc->remove_ndelaunay_edge) { // calc_tetprism_vol
+     REAL volneg[2], volpos[3], vol_diff;
+     if (pd != dummypoint) {
+@@ -7327,6 +7434,7 @@
+     edestoppo(fliptets[i], newface); // At edges [a,b], [b,c], [c,a].
+     bond(newface, botcastets[i]);
+   }
++  if (hullflag > 0) tetgen_validate_hull_attr_interfaces(this, fliptets, 3);
+ 
+   if (checksubsegflag) {
+     // Bond subsegments if there are.
+@@ -7513,6 +7621,7 @@
+   int spivot = -1, scount = 0; // for flip22()
+   int t1ver; 
+   int i, j;
++  TetgenHullAttrSnapshot hull_attr0, hull_attr1, hull_attr2;
+ 
+   if (hullflag > 0) {
+     // Check if e is 'dummypoint'.
+@@ -7578,6 +7687,11 @@
+     }
+   }
+ 
++  if (hullflag > 0) {
++    tetgen_capture_hull_attr(this, fliptets[0], hull_attr0);
++    tetgen_capture_hull_attr(this, fliptets[1], hull_attr1);
++    tetgen_capture_hull_attr(this, fliptets[2], hull_attr2);
++  }
+   // Re-use fliptets[0] and fliptets[1].
+   fliptets[0].ver = 11;
+   fliptets[1].ver = 11;
+@@ -7655,6 +7769,11 @@
+   } else {
+     setvertices(fliptets[0], pa, pb, pc, pd);
+     setvertices(fliptets[1], pb, pa, pc, pe);
++  }
++
++  if (hullflag > 0) {
++    tetgen_restore_hull_attr(this, fliptets[0], hull_attr0);
++    tetgen_restore_hull_attr(this, fliptets[1], hull_attr1);
+   }
+ 
+   if (fc->remove_ndelaunay_edge) { // calc_tetprism_vol
+@@ -7698,6 +7817,7 @@
+     bond(newface, botcastets[i]);
+     eprevself(fliptets[1]);
+   }
++  if (hullflag > 0) tetgen_validate_hull_attr_interfaces(this, fliptets, 2);
+ 
+   if (checksubsegflag) {
+     // Bond 9 segments to new (flipped) tets.
+@@ -7913,6 +8033,7 @@
+   int spivot = -1, scount = 0;
+   int t1ver; 
+   int i;
++  TetgenHullAttrSnapshot hull_attr0;
+ 
+   pa =  org(fliptets[3]);
+   pb = dest(fliptets[3]);
+@@ -7961,6 +8082,8 @@
+   } // if (checksubfaceflag)
+ 
+ 
++  if (hullflag > 0) tetgen_capture_hull_attr(this, fliptets[0], hull_attr0);
++
+   // Re-use fliptets[0] for [a,b,c,d].
+   fliptets[0].ver = 11;
+   setelemmarker(fliptets[0].tet, 0); // Clean all flags.
+@@ -8031,6 +8154,8 @@
+     setvertices(fliptets[0], pa, pb, pc, pd);
+   }
+ 
++  if (hullflag > 0) tetgen_restore_hull_attr(this, fliptets[0], hull_attr0);
++
+   if (fc->remove_ndelaunay_edge) { // calc_tetprism_vol
+     REAL volneg[4], volpos[1], vol_diff;
+     if (dummyflag > 0) {
+@@ -8080,6 +8205,7 @@
+     enextself(fliptets[0]);
+   }
+   bond(fliptets[0], botcastet);
++  if (hullflag > 0) tetgen_validate_hull_attr_interfaces(this, fliptets, 1);
+ 
+   if (checksubsegflag) {
+     face checkseg;
+@@ -36205,7 +36331,6 @@
+     } else {
+       m.constraineddelaunay(ts[0]);
+     }
+-
+     ts[1] = clock();
+ 
+     if (!b->quiet) {
+@@ -36247,7 +36372,6 @@
+     }
+ 
+     m.carveholes();
+-
+     ts[2] = clock();
+ 
+     if (!b->quiet) {
+@@ -36264,7 +36388,6 @@
+         }
+       }
+     }
+-    
+     if ((b->nobisect > 1)) { // -YY
+       if ((m.st_segref_count > 0) || (m.st_facref_count > 0)) {
+         if (!b->nonodewritten) m.outnodes(out);
+@@ -36373,6 +36496,9 @@
+       checktet.tet = m.tetrahedrontraverse();
+     }
+   }
++  if (tetgen_hull_attr_invalid_count > 0) {
++    printf("HULL_REGION_ATTRIBUTE_INVALID count=%ld\n", tetgen_hull_attr_invalid_count);
++  }
+ 
+   tv[11] = clock();
+ 

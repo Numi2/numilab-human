@@ -1,0 +1,46 @@
+{
+  "schema": "numi.human.tetgen.auto-region-material-certificate.v1",
+  "status": "SCOPED_SEMANTIC_MAPPING_VERIFIED_FOR_PINNED_FAT_INPUT",
+  "physical_admission": false,
+  "runtime": 0,
+  "scope": {
+    "fat_poly_sha256": "c1e579aa0d57e5f2eccaa2bd6991d56b67b7b66fe21c80ed8c36fc08a99e3ae2",
+    "matching_closed_fat_shell_npz_sha256": "0d905075270d539c2493d2b3a626d2d88bfe04f594ae8b1e5fbc1f21e99078be",
+    "tetgen_v1_6_source_sha256": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc",
+    "source_assignment_location": "tetgen.cxx:23642 (carveholes); 24218-24336 (region spread and automatic connected-component labels)",
+    "source_assignment_rule": "After declared region points are spread, TetGen starts uninfected components at max declared region attribute + 1 and increments once per uninfected connected component. These are automatic region labels, not independently declared material IDs."
+  },
+  "declared_input_regions": {
+    "count": 84,
+    "attribute_histogram": {"16": 84},
+    "unique_material_attribute": 16
+  },
+  "automatic_regions": [
+    {"automatic_region_attribute": 17, "material_attribute": 16, "connected_component_cell_count": 10},
+    {"automatic_region_attribute": 18, "material_attribute": 16, "connected_component_cell_count": 15},
+    {"automatic_region_attribute": 19, "material_attribute": 16, "connected_component_cell_count": 1},
+    {"automatic_region_attribute": 20, "material_attribute": 16, "connected_component_cell_count": 1},
+    {"automatic_region_attribute": 21, "material_attribute": 16, "connected_component_cell_count": 1},
+    {"automatic_region_attribute": 22, "material_attribute": 16, "connected_component_cell_count": 3}
+  ],
+  "evidence": {
+    "seed_preparation_receipt_sha256": "acec8eb39882c7957cff8ba526c732b156d1d9b28c3e3756c679eaf46c1fda36",
+    "seeded_rerun_result_sha256": "0e7b08983c63ab5afd15ad8905909a199beb632b85f465b7d327e838e4d1ab81",
+    "all_31_automatic_cell_centroids_inside_matching_closed_fat": true,
+    "one_verified_declared_attribute_16_seed_per_component": true,
+    "all_seed_cells_have_nonzero_float32_oriented_volume": true,
+    "all_31_cells_have_nonzero_float32_oriented_volume_before_seed_completion": true,
+    "absolute_cell_volume_sum_m3": 0.011443639668010295,
+    "closed_shell_volume_m3": 0.011443639668402068,
+    "absolute_volume_difference_m3": 3.9177341926155407e-13,
+    "absolute_volume_tolerance_m3": 1.144363966840207e-11
+  },
+  "interpretation": "For this exact closed Fat input, attributes 17-22 identify six automatic connected region components wholly inside the one declared material domain (attribute 16). The verified interpretation is 17-22 -> material 16 for this input only.",
+  "not_proven": [
+    "No general mapping rule for other PLCs or material sets.",
+    "No tetrahedron-row mapping between the unseeded and six-seed rerun; the seed rerun changes connectivity and Steiner coordinates.",
+    "No valid Float32 cell orientation for the volume: the seeded rerun still has 16 zero and 89 negative cells.",
+    "No preservation of the 105 input boundary segments in the seeded rerun; it adds 210 output boundary faces.",
+    "No native import, conservative mass map, physical installation, or runtime admission."
+  ]
+}

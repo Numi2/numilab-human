@@ -1,0 +1,6 @@
+{
+  "fix": "For flip23/flip32/flip41, snapshot the exact real neighbor across each old hull tetrahedron face opposite dummypoint. When a reused/new result slot changes hull to real, restore its complete element attribute tuple and volume bound from that real owner. If the owner is absent or a real output cell disagrees across an unprotected real face, write invalid region marker -2 rather than guessing. Geometry coordinates, predicates, and flip acceptance are untouched.",
+  "instrumentation": "Counts region attributes after boundary recovery, carveholes, suppression, Delaunay recovery, refinement, smoothing, and improvement gate; includes cumulative flip counters.",
+  "parent_054_source_sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a",
+  "source_sha256": "98c7c993c8c8fb04211995be79ede5927027532185606a34c11a5141b27cc307"
+}
