@@ -1,0 +1,34 @@
+{
+  "base_remote_commit": "7558fe4f6a55265494c7d80fd3a2072efa0e4c20",
+  "exceptions": [
+    {
+      "exception": "blank-at-eof only",
+      "line": 828,
+      "observed_check": "blank line at EOF",
+      "path": "source/035/quality-star-dp-typed-metadata-tool-002/prepare_quality_star_typed_metadata.py",
+      "source_sha256": "61383e15f393f3240e57bb802bcc460efd576bb7ea78e7cd527b9e945911b718"
+    },
+    {
+      "exception": "blank-at-eof only",
+      "line": 237,
+      "observed_check": "blank line at EOF",
+      "path": "source/035/quality-star-dp-typed-metadata-tool-002/test_prepare_quality_star_typed_metadata.py",
+      "source_sha256": "ed5a5cb8c03669b2181ab1e561fafef410bba915ec7f60c18d00c3009c87bf26"
+    },
+    {
+      "exception": "blank-at-eof only",
+      "line": 86,
+      "observed_check": "blank line at EOF",
+      "path": "source/035/quality-star-dp-typed-metadata-tool-002/verify_quality_star_typed_metadata.py",
+      "source_sha256": "b596fbe397674085dbf2b1578e7b641ff4525145eab54874c727c5f33ca0170b"
+    }
+  ],
+  "gitattributes_path": ".gitattributes",
+  "gitattributes_sha256": "210a2d6e303e4b59b7b7b95303a5250f43f80c23bfd071e17e170aab9d304ec1",
+  "observed_command": "git diff --check 7558fe4f6a55265494c7d80fd3a2072efa0e4c20 f2ae6649fe3cd843652e0f2a4a4161d9d3f61a04",
+  "observed_findings": 3,
+  "preservation_reason": "These frozen source files are included with pinned hashes; editing trailing blank lines would change the exact published source bytes. Only blank-at-eof is waived for these three exact repository paths; no global whitespace rule is disabled.",
+  "schema": "h706-frozen-source-whitespace-exception.v1",
+  "source_files_modified": false,
+  "status": "PATH_SCOPED_EXCEPTION_ONLY"
+}

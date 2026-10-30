@@ -1,0 +1,196 @@
+{
+  "boundary_loop_input_point_rows": [
+    44922,
+    44926,
+    45137,
+    44925
+  ],
+  "center_vertex_input_row": 44930,
+  "chord_pruning": {
+    "aabb_candidates_visited": 325,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0021291670855134726,
+    "exact_segment_queries": 325,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 6,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.006266542011871934,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.5669996989545315,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 4,
+      "external_aabb_candidates": 244,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 4
+    },
+    "topology": {
+      "edges": 5,
+      "euler_characteristic": 1,
+      "faces": 2,
+      "vertices": 4
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      44922,
+      44926,
+      44925
+    ],
+    [
+      44926,
+      45137,
+      44925
+    ]
+  ],
+  "new_output_face_rows": [
+    154311,
+    154312
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 9.190226030903591e-09,
+    "minimum_angle_degrees": 0.000866970612621046,
+    "worst_bad_score": 0.45951130154517955
+  },
+  "patch_id": "O-star-044930",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          44922,
+          44926,
+          44925
+        ],
+        [
+          44926,
+          45137,
+          44925
+        ]
+      ],
+      "new_output_face_rows": [
+        154311,
+        154312
+      ],
+      "patch_id": "O-star-044930",
+      "retired_input_face_rows": [
+        60234,
+        60239,
+        60237,
+        60238
+      ],
+      "source_lineage": {
+        "complete_face_ancestry_union": [
+          [
+            1688,
+            60000001,
+            119314
+          ],
+          [
+            1689,
+            60000001,
+            119315
+          ],
+          [
+            1690,
+            60000001,
+            119316
+          ],
+          [
+            7283,
+            40068900,
+            106616
+          ]
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          0
+        ],
+        "face_source_original_id": [
+          40068900,
+          60000001
+        ],
+        "patch_face_rows": [
+          60234,
+          60239,
+          60237,
+          60238
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    60234,
+    60239,
+    60237,
+    60238
+  ],
+  "role": "O",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 1.3736701643347454e-05,
+    "minimum_angle_degrees": 1.0348378219633454
+  },
+  "source_lineage": {
+    "complete_face_ancestry_union": [
+      [
+        1688,
+        60000001,
+        119314
+      ],
+      [
+        1689,
+        60000001,
+        119315
+      ],
+      [
+        1690,
+        60000001,
+        119316
+      ],
+      [
+        7283,
+        40068900,
+        106616
+      ]
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      0
+    ],
+    "face_source_original_id": [
+      40068900,
+      60000001
+    ],
+    "patch_face_rows": [
+      60234,
+      60239,
+      60237,
+      60238
+    ]
+  }
+}

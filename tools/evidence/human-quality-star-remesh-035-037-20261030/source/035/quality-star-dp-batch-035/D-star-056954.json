@@ -1,0 +1,197 @@
+{
+  "boundary_loop_input_point_rows": [
+    56674,
+    57381,
+    57379
+  ],
+  "center_vertex_input_row": 56954,
+  "chord_pruning": {
+    "aabb_candidates_visited": 75,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0006827078759670258,
+    "exact_segment_queries": 75,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 3,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.009398709051311016,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.010774946952296867,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 1,
+      "external_aabb_candidates": 30,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 1
+    },
+    "topology": {
+      "edges": 3,
+      "euler_characteristic": 1,
+      "faces": 1,
+      "vertices": 3
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      56674,
+      57381,
+      57379
+    ]
+  ],
+  "new_output_face_rows": [
+    243613
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 2.1627245036822252e-10,
+    "minimum_angle_degrees": 3.181866202790595e-05,
+    "worst_bad_score": 0.010813622518411127
+  },
+  "patch_id": "D-star-056954",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          56674,
+          57381,
+          57379
+        ]
+      ],
+      "new_output_face_rows": [
+        243613
+      ],
+      "patch_id": "D-star-056954",
+      "retired_input_face_rows": [
+        81974,
+        81976,
+        81975
+      ],
+      "source_lineage": {
+        "candidate_face_ancestry_union": [
+          86499,
+          86500,
+          86501
+        ],
+        "face_source_body": [
+          23
+        ],
+        "face_source_bone": [
+          28
+        ],
+        "face_source_layer": [
+          3
+        ],
+        "face_source_original_id": [
+          100000060
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          83935,
+          83936,
+          83937
+        ],
+        "operational_output_face_parent_offsets_union": [
+          83954,
+          83955,
+          83956
+        ],
+        "patch_face_rows": [
+          81974,
+          81976,
+          81975
+        ],
+        "union_face_ancestry_tuples": [
+          [
+            100000060,
+            24548,
+            86500
+          ],
+          [
+            100000060,
+            24549,
+            86501
+          ],
+          [
+            100000060,
+            24550,
+            86499
+          ]
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    81974,
+    81976,
+    81975
+  ],
+  "role": "D",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 3.3397967659925983e-06,
+    "minimum_angle_degrees": 0.30542926741625437
+  },
+  "source_lineage": {
+    "candidate_face_ancestry_union": [
+      86499,
+      86500,
+      86501
+    ],
+    "face_source_body": [
+      23
+    ],
+    "face_source_bone": [
+      28
+    ],
+    "face_source_layer": [
+      3
+    ],
+    "face_source_original_id": [
+      100000060
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      83935,
+      83936,
+      83937
+    ],
+    "operational_output_face_parent_offsets_union": [
+      83954,
+      83955,
+      83956
+    ],
+    "patch_face_rows": [
+      81974,
+      81976,
+      81975
+    ],
+    "union_face_ancestry_tuples": [
+      [
+        100000060,
+        24548,
+        86500
+      ],
+      [
+        100000060,
+        24549,
+        86501
+      ],
+      [
+        100000060,
+        24550,
+        86499
+      ]
+    ]
+  }
+}

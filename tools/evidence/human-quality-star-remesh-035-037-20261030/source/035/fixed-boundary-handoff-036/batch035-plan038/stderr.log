@@ -1,0 +1,16 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/handoff-source004/prepare_tetgen_handoff_697_typedD.py", line 582, in <module>
+    if __name__=="__main__": raise SystemExit(main())
+                                              ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/handoff-source004/prepare_tetgen_handoff_697_typedD.py", line 452, in main
+    O = load_surface_217(module, a.outer, "O", collar)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/handoff-source004/prepare_tetgen_handoff_697_typedD.py", line 197, in load_surface_217
+    return load_direct_typed_surface_217(module,path,layer)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/handoff-source004/prepare_tetgen_handoff_697_typedD.py", line 171, in load_direct_typed_surface_217
+    return registered_surface_adapter().load_direct_typed_surface_217(module, path, layer)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/handoff-source004/registered_surface_handoff.py", line 119, in load_direct_typed_surface_217
+    return load_prepared_reduced_surface_217(module,path,layer,arrays=a)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/handoff-source004/registered_surface_handoff.py", line 71, in load_prepared_reduced_surface_217
+    raise ValueError("prepared reduced face ancestry CSR malformed")
+ValueError: prepared reduced face ancestry CSR malformed

@@ -1,0 +1,26 @@
+test_angle_floor_is_active (__main__.Tests.test_angle_floor_is_active) ... ok
+test_default_keeps_nonzero_sliver_but_optin_rejects (__main__.Tests.test_default_keeps_nonzero_sliver_but_optin_rejects) ... ok
+test_default_preserves_frozen616_result (__main__.Tests.test_default_preserves_frozen616_result) ... ok
+test_input_points_and_frozen_module_unchanged (__main__.Tests.test_input_points_and_frozen_module_unchanged) ... ok
+test_invalid_thresholds_fail_closed (__main__.Tests.test_invalid_thresholds_fail_closed) ... ok
+test_quality_filter_retains_good_polygon_solution (__main__.Tests.test_quality_filter_retains_good_polygon_solution) ... ERROR
+
+======================================================================
+ERROR: test_quality_filter_retains_good_polygon_solution (__main__.Tests.test_quality_filter_retains_good_polygon_solution)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-disk-eligibility-031/test_constraint_disk_quality.py", line 31, in test_quality_filter_retains_good_polygon_solution
+    self.assertTrue(all(alt(p,t)>=20e-9 for t in tri))
+                    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-disk-eligibility-031/test_constraint_disk_quality.py", line 31, in <genexpr>
+    self.assertTrue(all(alt(p,t)>=20e-9 for t in tri))
+                        ~~~^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-disk-eligibility-031/test_constraint_disk_quality.py", line 16, in alt
+    v=np.asarray(p,np.float32).astype(np.float64)[t];a=v[1]-v[0];b=v[2]-v[0]
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: too many indices for array: array is 2-dimensional, but 3 were indexed
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.002s
+
+FAILED (errors=1)

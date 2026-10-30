@@ -1,0 +1,72 @@
+{
+  "current_035_report_sha256": "7ba174b74a280126e56357a9d6123379e9668b9fff7d54303cfbd017b3d1cb74",
+  "current_035_verifier_sha256": "32dc1ef7b093615bc1f65d92de959f7d693882118a9ea1addd1a34b6a455b047",
+  "limit": {
+    "loop_vertices": 18,
+    "patch_faces": 160
+  },
+  "role_inputs": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-dp-batch-035/D-fixed-boundary-star-batch-proposal.npz",
+      "sha256": "2c46bd93599ead65e1ba55188a7196503e660a5bffd8e739035afa038f5ac786"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-dp-batch-035/I-fixed-boundary-star-batch-proposal.npz",
+      "sha256": "f2a985696cd0af72e2c9bfd0b76f4282e0af9b0ccc5b726dcdcaa8fedc6e6472"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-dp-batch-035/O-fixed-boundary-star-batch-proposal.npz",
+      "sha256": "e1f406aa14e0cdf8333c56fd0fa34df88f6db3a31c6ddf2d5907a4dd1cfa222d"
+    }
+  },
+  "roles": {
+    "D": {
+      "candidate_rejection_reasons": {
+        "boundary_over_loop_limit": 28,
+        "mixed_or_unknown_material_stratum": 1763,
+        "no_quality_feasible_disk": 17,
+        "not_single_disk_boundary": 79,
+        "patch_too_large": 4,
+        "protected_vertex_in_patch": 12,
+        "union_covers_fewer_than_two_bad_faces": 27
+      },
+      "quality_feasible_multi_star_disk_candidates": 133,
+      "remaining_bad_faces": 2063,
+      "selected_bad_face_coverage": 165,
+      "selected_disjoint_union_patches": 69,
+      "selected_patch_face_coverage": 878
+    },
+    "I": {
+      "candidate_rejection_reasons": {
+        "boundary_over_loop_limit": 8,
+        "mixed_or_unknown_material_stratum": 13,
+        "no_quality_feasible_disk": 2,
+        "not_single_disk_boundary": 4,
+        "union_covers_fewer_than_two_bad_faces": 46
+      },
+      "quality_feasible_multi_star_disk_candidates": 65,
+      "remaining_bad_faces": 138,
+      "selected_bad_face_coverage": 66,
+      "selected_disjoint_union_patches": 25,
+      "selected_patch_face_coverage": 335
+    },
+    "O": {
+      "candidate_rejection_reasons": {
+        "boundary_over_loop_limit": 3,
+        "mixed_or_unknown_material_stratum": 2,
+        "not_single_disk_boundary": 2,
+        "union_covers_fewer_than_two_bad_faces": 15
+      },
+      "quality_feasible_multi_star_disk_candidates": 20,
+      "remaining_bad_faces": 42,
+      "selected_bad_face_coverage": 21,
+      "selected_disjoint_union_patches": 7,
+      "selected_patch_face_coverage": 92
+    }
+  },
+  "schema": "numi.quality-star-connected-union-inventory.v1",
+  "thresholds": {
+    "minimum_altitude_m": 2e-08,
+    "minimum_angle_degrees": 0.0001
+  }
+}

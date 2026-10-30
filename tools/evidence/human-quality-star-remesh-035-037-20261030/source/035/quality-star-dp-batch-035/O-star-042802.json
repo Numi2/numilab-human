@@ -1,0 +1,264 @@
+{
+  "boundary_loop_input_point_rows": [
+    42748,
+    42801,
+    42811,
+    42749
+  ],
+  "center_vertex_input_row": 42802,
+  "chord_pruning": {
+    "aabb_candidates_visited": 87,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0019317499827593565,
+    "exact_segment_queries": 87,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 6,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0015134578570723534,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.20345996810608957,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 3,
+      "external_aabb_candidates": 50,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 1,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 3
+    },
+    "topology": {
+      "edges": 5,
+      "euler_characteristic": 1,
+      "faces": 2,
+      "vertices": 4
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      42748,
+      42801,
+      42749
+    ],
+    [
+      42801,
+      42811,
+      42749
+    ]
+  ],
+  "new_output_face_rows": [
+    154123,
+    154124
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 2,
+    "minimum_altitude_m": 1.950556963014196e-09,
+    "minimum_angle_degrees": 8.694188696670033e-05,
+    "worst_bad_score": 0.0975278481507098
+  },
+  "patch_id": "O-star-042802",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          42748,
+          42801,
+          42749
+        ],
+        [
+          42801,
+          42811,
+          42749
+        ]
+      ],
+      "new_output_face_rows": [
+        154123,
+        154124
+      ],
+      "patch_id": "O-star-042802",
+      "retired_input_face_rows": [
+        62755,
+        62756,
+        62752,
+        62751
+      ],
+      "source_lineage": {
+        "complete_face_ancestry_union": [
+          [
+            141,
+            40068900,
+            106816
+          ],
+          [
+            141,
+            40068900,
+            106817
+          ],
+          [
+            143,
+            40068900,
+            106812
+          ],
+          [
+            145,
+            40068900,
+            106748
+          ],
+          [
+            146,
+            40068900,
+            106806
+          ],
+          [
+            149,
+            40068900,
+            106749
+          ],
+          [
+            151,
+            40068900,
+            106807
+          ],
+          [
+            157,
+            40068900,
+            106810
+          ],
+          [
+            157,
+            40068900,
+            106811
+          ],
+          [
+            158,
+            40068900,
+            106814
+          ],
+          [
+            159,
+            40068900,
+            106815
+          ]
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          0
+        ],
+        "face_source_original_id": [
+          40068900
+        ],
+        "patch_face_rows": [
+          62755,
+          62756,
+          62752,
+          62751
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    62755,
+    62756,
+    62752,
+    62751
+  ],
+  "role": "O",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 0.0002848242396842505,
+    "minimum_angle_degrees": 15.767425896923909
+  },
+  "source_lineage": {
+    "complete_face_ancestry_union": [
+      [
+        141,
+        40068900,
+        106816
+      ],
+      [
+        141,
+        40068900,
+        106817
+      ],
+      [
+        143,
+        40068900,
+        106812
+      ],
+      [
+        145,
+        40068900,
+        106748
+      ],
+      [
+        146,
+        40068900,
+        106806
+      ],
+      [
+        149,
+        40068900,
+        106749
+      ],
+      [
+        151,
+        40068900,
+        106807
+      ],
+      [
+        157,
+        40068900,
+        106810
+      ],
+      [
+        157,
+        40068900,
+        106811
+      ],
+      [
+        158,
+        40068900,
+        106814
+      ],
+      [
+        159,
+        40068900,
+        106815
+      ]
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      0
+    ],
+    "face_source_original_id": [
+      40068900
+    ],
+    "patch_face_rows": [
+      62755,
+      62756,
+      62752,
+      62751
+    ]
+  }
+}

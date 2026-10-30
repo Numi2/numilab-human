@@ -1,0 +1,293 @@
+{
+  "boundary_loop_input_point_rows": [
+    81083,
+    81205,
+    81170,
+    81155,
+    81203
+  ],
+  "center_vertex_input_row": 81202,
+  "chord_pruning": {
+    "aabb_candidates_visited": 483,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 1,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.00410929205827415,
+    "exact_segment_queries": 483,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 10,
+    "witnesses": [
+      {
+        "slot_vertices": [
+          81083,
+          81155
+        ],
+        "witness": {
+          "physical_vertices": [
+            81083,
+            81155
+          ],
+          "point_lattice_rationals": [
+            "-117522671805420332754081905508645115146196530755316744192/26847646417121",
+            "-1876991976726357832301891105609077622677242808536504729600/26847646417121",
+            "732426578189340571799105780573661324448248997620796620800/26847646417121"
+          ],
+          "point_world_m": [
+            -0.00613403264351933,
+            -0.0979685866564202,
+            0.038228611301767274
+          ],
+          "reason": "exact_segment_surface_contact",
+          "retained_face_id": -267609,
+          "shared_vertex_ids": []
+        }
+      }
+    ]
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.11926966696046293,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.04416219651346566,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 7,
+      "external_aabb_candidates": 463,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 7
+    },
+    "topology": {
+      "edges": 7,
+      "euler_characteristic": 1,
+      "faces": 3,
+      "vertices": 5
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      81083,
+      81205,
+      81203
+    ],
+    [
+      81205,
+      81170,
+      81203
+    ],
+    [
+      81170,
+      81155,
+      81203
+    ]
+  ],
+  "new_output_face_rows": [
+    245277,
+    245278,
+    245279
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 1.9032403683601766e-08,
+    "minimum_angle_degrees": 0.0007591336742605998,
+    "worst_bad_score": 0.9516201841800883
+  },
+  "patch_id": "D-star-081202",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          81083,
+          81205,
+          81203
+        ],
+        [
+          81205,
+          81170,
+          81203
+        ],
+        [
+          81170,
+          81155,
+          81203
+        ]
+      ],
+      "new_output_face_rows": [
+        245277,
+        245278,
+        245279
+      ],
+      "patch_id": "D-star-081202",
+      "retired_input_face_rows": [
+        117307,
+        181773,
+        117306,
+        181732,
+        181771
+      ],
+      "source_lineage": {
+        "candidate_face_ancestry_union": [
+          124640,
+          124641,
+          194390,
+          194429,
+          194431
+        ],
+        "face_source_body": [
+          23
+        ],
+        "face_source_bone": [
+          29,
+          33
+        ],
+        "face_source_layer": [
+          3
+        ],
+        "face_source_original_id": [
+          100000061,
+          100000065
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          121089,
+          121090,
+          188978,
+          189017,
+          189019
+        ],
+        "operational_output_face_parent_offsets_union": [
+          121108,
+          121109,
+          188997,
+          189036,
+          189038
+        ],
+        "patch_face_rows": [
+          117307,
+          181773,
+          117306,
+          181732,
+          181771
+        ],
+        "union_face_ancestry_tuples": [
+          [
+            100000061,
+            812,
+            124640
+          ],
+          [
+            100000061,
+            813,
+            124641
+          ],
+          [
+            100000065,
+            22010,
+            194390
+          ],
+          [
+            100000065,
+            22010,
+            194429
+          ],
+          [
+            100000065,
+            22010,
+            194431
+          ]
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    117307,
+    181773,
+    117306,
+    181732,
+    181771
+  ],
+  "role": "D",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 1.1086583624477482e-06,
+    "minimum_angle_degrees": 0.06756089700666949
+  },
+  "source_lineage": {
+    "candidate_face_ancestry_union": [
+      124640,
+      124641,
+      194390,
+      194429,
+      194431
+    ],
+    "face_source_body": [
+      23
+    ],
+    "face_source_bone": [
+      29,
+      33
+    ],
+    "face_source_layer": [
+      3
+    ],
+    "face_source_original_id": [
+      100000061,
+      100000065
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      121089,
+      121090,
+      188978,
+      189017,
+      189019
+    ],
+    "operational_output_face_parent_offsets_union": [
+      121108,
+      121109,
+      188997,
+      189036,
+      189038
+    ],
+    "patch_face_rows": [
+      117307,
+      181773,
+      117306,
+      181732,
+      181771
+    ],
+    "union_face_ancestry_tuples": [
+      [
+        100000061,
+        812,
+        124640
+      ],
+      [
+        100000061,
+        813,
+        124641
+      ],
+      [
+        100000065,
+        22010,
+        194390
+      ],
+      [
+        100000065,
+        22010,
+        194429
+      ],
+      [
+        100000065,
+        22010,
+        194431
+      ]
+    ]
+  }
+}

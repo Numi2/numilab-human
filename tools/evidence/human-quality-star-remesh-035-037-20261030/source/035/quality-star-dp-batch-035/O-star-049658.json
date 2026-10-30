@@ -1,0 +1,198 @@
+{
+  "boundary_loop_input_point_rows": [
+    49043,
+    49624,
+    49712,
+    49709
+  ],
+  "center_vertex_input_row": 49658,
+  "chord_pruning": {
+    "aabb_candidates_visited": 134,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0011818751227110624,
+    "exact_segment_queries": 134,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 6,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.009294625138863921,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.1778547864913967,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 4,
+      "external_aabb_candidates": 120,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 4
+    },
+    "topology": {
+      "edges": 5,
+      "euler_characteristic": 1,
+      "faces": 2,
+      "vertices": 4
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      49043,
+      49624,
+      49709
+    ],
+    [
+      49624,
+      49712,
+      49709
+    ]
+  ],
+  "new_output_face_rows": [
+    154493,
+    154494
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 1.6380224325779824e-08,
+    "minimum_angle_degrees": 0.001568666089809769,
+    "worst_bad_score": 0.8190112162889912
+  },
+  "patch_id": "O-star-049658",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          49043,
+          49624,
+          49709
+        ],
+        [
+          49624,
+          49712,
+          49709
+        ]
+      ],
+      "new_output_face_rows": [
+        154493,
+        154494
+      ],
+      "patch_id": "O-star-049658",
+      "retired_input_face_rows": [
+        66467,
+        66455,
+        66461,
+        66466
+      ],
+      "source_lineage": {
+        "complete_face_ancestry_union": [
+          [
+            409,
+            60000004,
+            121860
+          ],
+          [
+            632,
+            40079102,
+            110617
+          ],
+          [
+            2697,
+            60000001,
+            120203
+          ],
+          [
+            2698,
+            60000001,
+            120204
+          ]
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          0
+        ],
+        "face_source_original_id": [
+          40079102,
+          60000001,
+          60000004
+        ],
+        "patch_face_rows": [
+          66467,
+          66455,
+          66461,
+          66466
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    66467,
+    66455,
+    66461,
+    66466
+  ],
+  "role": "O",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 4.517142508747678e-07,
+    "minimum_angle_degrees": 0.02060682349128784
+  },
+  "source_lineage": {
+    "complete_face_ancestry_union": [
+      [
+        409,
+        60000004,
+        121860
+      ],
+      [
+        632,
+        40079102,
+        110617
+      ],
+      [
+        2697,
+        60000001,
+        120203
+      ],
+      [
+        2698,
+        60000001,
+        120204
+      ]
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      0
+    ],
+    "face_source_original_id": [
+      40079102,
+      60000001,
+      60000004
+    ],
+    "patch_face_rows": [
+      66467,
+      66455,
+      66461,
+      66466
+    ]
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "boundary_loop_input_point_rows": [
+    36603,
+    36641,
+    36698,
+    36715
+  ],
+  "center_vertex_input_row": 36640,
+  "chord_pruning": {
+    "aabb_candidates_visited": 119,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0011957499664276838,
+    "exact_segment_queries": 119,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 6,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.01799995801411569,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.35628797096687725,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 4,
+      "external_aabb_candidates": 89,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 4
+    },
+    "topology": {
+      "edges": 5,
+      "euler_characteristic": 1,
+      "faces": 2,
+      "vertices": 4
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      36603,
+      36698,
+      36715
+    ],
+    [
+      36603,
+      36641,
+      36698
+    ]
+  ],
+  "new_output_face_rows": [
+    250491,
+    250492
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 6.29745347902932e-09,
+    "minimum_angle_degrees": 0.00035176419036369417,
+    "worst_bad_score": 0.314872673951466
+  },
+  "patch_id": "I-star-036640",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          36603,
+          36698,
+          36715
+        ],
+        [
+          36603,
+          36641,
+          36698
+        ]
+      ],
+      "new_output_face_rows": [
+        250491,
+        250492
+      ],
+      "patch_id": "I-star-036640",
+      "retired_input_face_rows": [
+        228013,
+        13938,
+        228011,
+        228012
+      ],
+      "source_lineage": {
+        "edge_flip_parent_offsets_union": [
+          14093,
+          179756,
+          179757,
+          179758
+        ],
+        "face_parent_offsets_union": [
+          14093,
+          179756,
+          179757,
+          179758
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          1
+        ],
+        "face_source_original_id": [
+          3,
+          40028552
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          14093,
+          231198,
+          231199,
+          231200
+        ],
+        "patch_face_rows": [
+          228013,
+          13938,
+          228011,
+          228012
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    228013,
+    13938,
+    228011,
+    228012
+  ],
+  "role": "I",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 0.0002354460641904855,
+    "minimum_angle_degrees": 15.093214514959191
+  },
+  "source_lineage": {
+    "edge_flip_parent_offsets_union": [
+      14093,
+      179756,
+      179757,
+      179758
+    ],
+    "face_parent_offsets_union": [
+      14093,
+      179756,
+      179757,
+      179758
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      1
+    ],
+    "face_source_original_id": [
+      3,
+      40028552
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      14093,
+      231198,
+      231199,
+      231200
+    ],
+    "patch_face_rows": [
+      228013,
+      13938,
+      228011,
+      228012
+    ]
+  }
+}

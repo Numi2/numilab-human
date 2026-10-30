@@ -1,0 +1,52 @@
+{
+  "schema": "numi.paired-fullbody-tetgen-readiness-697.v1",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "gates": {
+    "positive_core_seeds": "PASS"
+  },
+  "jobs": [
+    {
+      "role": "I",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/prepare_registered_cavity_cores.py",
+        "--surface",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/I-warning-local-connected-union-proposal.npz",
+        "--surface-sha256",
+        "36ab7242d8789b4b7459e6cd97d88cabc1b3ec60c69ddd80c63309c3e030aad7",
+        "--cap",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-I328-lineage-356/I-temporary-cap-source.npz",
+        "--cap-sha256",
+        "f28553281c2c86cc91c433aed944c7c1b4635da0caa109b0873717618355c977",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-handoff-036/warning037-cores/I"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 3.4280912918038666,
+      "report_sha256": "ff13f5e2f0e750c24ba8189df084d2828b78fd4de6996fa4c3593560aada604b"
+    },
+    {
+      "role": "D",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/prepare_registered_cavity_cores.py",
+        "--surface",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/D-warning-local-connected-union-proposal.npz",
+        "--surface-sha256",
+        "c9ef206daa0bf2323e44ee1321f2f29d23609182dbae1f1cf55e73932e2284dd",
+        "--cap",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/typed-D-62000100/run-002/D-temporary-cap-source-62000101.npz",
+        "--cap-sha256",
+        "5f5c622a67888243925ebfdc33c8f2c57109b0e4327a9386fcbc185ff72c1634",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-handoff-036/warning037-cores/D"
+      ],
+      "exit_code": 0,
+      "wall_seconds": 3.8129789158701897,
+      "report_sha256": "2212c30aeeb77c70255dece10226d4006618d1e67520d3c113c36e9cb43bf555"
+    }
+  ],
+  "status": "PASS_CONSTRUCTION_CORE_AND_OWNER_HOLE_EXTRACTION_ONLY"
+}

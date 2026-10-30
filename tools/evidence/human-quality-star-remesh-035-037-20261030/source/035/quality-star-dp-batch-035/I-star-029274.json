@@ -1,0 +1,388 @@
+{
+  "boundary_loop_input_point_rows": [
+    29096,
+    29275,
+    29427,
+    29524,
+    29369,
+    29220
+  ],
+  "center_vertex_input_row": 29274,
+  "chord_pruning": {
+    "aabb_candidates_visited": 345,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.002908166963607073,
+    "exact_segment_queries": 345,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 15,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.07677387492731214,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.45649709081069506,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 20,
+      "external_aabb_candidates": 711,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 20
+    },
+    "topology": {
+      "edges": 9,
+      "euler_characteristic": 1,
+      "faces": 4,
+      "vertices": 6
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      29096,
+      29275,
+      29220
+    ],
+    [
+      29275,
+      29369,
+      29220
+    ],
+    [
+      29275,
+      29427,
+      29369
+    ],
+    [
+      29427,
+      29524,
+      29369
+    ]
+  ],
+  "new_output_face_rows": [
+    250393,
+    250394,
+    250395,
+    250396
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 2,
+    "minimum_altitude_m": 4.892611158995172e-09,
+    "minimum_angle_degrees": 0.0002110740973813383,
+    "worst_bad_score": 0.2446305579497586
+  },
+  "patch_id": "I-star-029274",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          29096,
+          29275,
+          29220
+        ],
+        [
+          29275,
+          29369,
+          29220
+        ],
+        [
+          29275,
+          29427,
+          29369
+        ],
+        [
+          29427,
+          29524,
+          29369
+        ]
+      ],
+      "new_output_face_rows": [
+        250393,
+        250394,
+        250395,
+        250396
+      ],
+      "patch_id": "I-star-029274",
+      "retired_input_face_rows": [
+        226529,
+        226531,
+        226535,
+        226537,
+        226523,
+        226525
+      ],
+      "source_lineage": {
+        "edge_flip_parent_offsets_union": [
+          157647,
+          157648,
+          157649,
+          178206,
+          178208,
+          178211,
+          178212,
+          178214,
+          178215,
+          178216,
+          178217,
+          178218,
+          178219,
+          178221,
+          178222,
+          178223,
+          178224,
+          178225,
+          178226,
+          178227,
+          178228,
+          178229,
+          178230,
+          178231,
+          178232,
+          178233,
+          178284,
+          178285,
+          178286,
+          178287,
+          178289,
+          178290
+        ],
+        "face_parent_offsets_union": [
+          157647,
+          157648,
+          157649,
+          178206,
+          178208,
+          178211,
+          178212,
+          178214,
+          178215,
+          178216,
+          178217,
+          178218,
+          178219,
+          178221,
+          178222,
+          178223,
+          178224,
+          178225,
+          178226,
+          178227,
+          178228,
+          178229,
+          178230,
+          178231,
+          178232,
+          178233,
+          178284,
+          178285,
+          178286,
+          178287,
+          178289,
+          178290
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          1
+        ],
+        "face_source_original_id": [
+          40022384
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          209089,
+          209090,
+          209091,
+          229648,
+          229650,
+          229653,
+          229654,
+          229656,
+          229657,
+          229658,
+          229659,
+          229660,
+          229661,
+          229663,
+          229664,
+          229665,
+          229666,
+          229667,
+          229668,
+          229669,
+          229670,
+          229671,
+          229672,
+          229673,
+          229674,
+          229675,
+          229726,
+          229727,
+          229728,
+          229729,
+          229731,
+          229732
+        ],
+        "patch_face_rows": [
+          226529,
+          226531,
+          226535,
+          226537,
+          226523,
+          226525
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    226529,
+    226531,
+    226535,
+    226537,
+    226523,
+    226525
+  ],
+  "role": "I",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 0.0004898705265483875,
+    "minimum_angle_degrees": 23.00826724591221
+  },
+  "source_lineage": {
+    "edge_flip_parent_offsets_union": [
+      157647,
+      157648,
+      157649,
+      178206,
+      178208,
+      178211,
+      178212,
+      178214,
+      178215,
+      178216,
+      178217,
+      178218,
+      178219,
+      178221,
+      178222,
+      178223,
+      178224,
+      178225,
+      178226,
+      178227,
+      178228,
+      178229,
+      178230,
+      178231,
+      178232,
+      178233,
+      178284,
+      178285,
+      178286,
+      178287,
+      178289,
+      178290
+    ],
+    "face_parent_offsets_union": [
+      157647,
+      157648,
+      157649,
+      178206,
+      178208,
+      178211,
+      178212,
+      178214,
+      178215,
+      178216,
+      178217,
+      178218,
+      178219,
+      178221,
+      178222,
+      178223,
+      178224,
+      178225,
+      178226,
+      178227,
+      178228,
+      178229,
+      178230,
+      178231,
+      178232,
+      178233,
+      178284,
+      178285,
+      178286,
+      178287,
+      178289,
+      178290
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      1
+    ],
+    "face_source_original_id": [
+      40022384
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      209089,
+      209090,
+      209091,
+      229648,
+      229650,
+      229653,
+      229654,
+      229656,
+      229657,
+      229658,
+      229659,
+      229660,
+      229661,
+      229663,
+      229664,
+      229665,
+      229666,
+      229667,
+      229668,
+      229669,
+      229670,
+      229671,
+      229672,
+      229673,
+      229674,
+      229675,
+      229726,
+      229727,
+      229728,
+      229729,
+      229731,
+      229732
+    ],
+    "patch_face_rows": [
+      226529,
+      226531,
+      226535,
+      226537,
+      226523,
+      226525
+    ]
+  }
+}

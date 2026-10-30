@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "tests": 9,
+  "elapsed_reported_seconds": 0.001,
+  "execution": "SSH numi; root tool exec chunk9af9d8",
+  "files": {
+    "filtered_prepared_exact_owner.py": "c3f427432096719b9fe3b91cbd2fc1a6f779228c03456cef85dc8bbbae9da16d",
+    "test_filtered_prepared_exact_owner.py": "0836602b5a5ab6db5a80fa44235150c0c4c0ffc80e4b9a6f708a3f3c24739ff9"
+  },
+  "exact_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+  "critical_regression": "query face ID lower than baseline ID still receives full exact collision evaluation; baseline old ordering path would drop it",
+  "scope": "Task-local offline DP index reuse; no physical state or predicate changes",
+  "native_runtime": 0,
+  "accepted_steps": 0
+}

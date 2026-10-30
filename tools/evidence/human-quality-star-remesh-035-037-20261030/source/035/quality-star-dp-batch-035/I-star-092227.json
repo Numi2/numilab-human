@@ -1,0 +1,188 @@
+{
+  "boundary_loop_input_point_rows": [
+    92165,
+    92705,
+    92759,
+    92255
+  ],
+  "center_vertex_input_row": 92227,
+  "chord_pruning": {
+    "aabb_candidates_visited": 184,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.00235670804977417,
+    "exact_segment_queries": 184,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 6,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.026785209076479077,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.600527430616338,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 4,
+      "external_aabb_candidates": 154,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 4
+    },
+    "topology": {
+      "edges": 5,
+      "euler_characteristic": 1,
+      "faces": 2,
+      "vertices": 4
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      92165,
+      92759,
+      92255
+    ],
+    [
+      92165,
+      92705,
+      92759
+    ]
+  ],
+  "new_output_face_rows": [
+    250849,
+    250850
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 1.1987071333799107e-08,
+    "minimum_angle_degrees": 0.016836413602994524,
+    "worst_bad_score": 0.5993535666899553
+  },
+  "patch_id": "I-star-092227",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          92165,
+          92759,
+          92255
+        ],
+        [
+          92165,
+          92705,
+          92759
+        ]
+      ],
+      "new_output_face_rows": [
+        250849,
+        250850
+      ],
+      "patch_id": "I-star-092227",
+      "retired_input_face_rows": [
+        169300,
+        240878,
+        240883,
+        240884
+      ],
+      "source_lineage": {
+        "edge_flip_parent_offsets_union": [
+          119573,
+          193380,
+          193385,
+          193386
+        ],
+        "face_parent_offsets_union": [
+          119573,
+          193380,
+          193385,
+          193386
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          1
+        ],
+        "face_source_original_id": [
+          841487,
+          40086148
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          171015,
+          244822,
+          244827,
+          244828
+        ],
+        "patch_face_rows": [
+          169300,
+          240878,
+          240883,
+          240884
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    169300,
+    240878,
+    240883,
+    240884
+  ],
+  "role": "I",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 3.547728526428215e-05,
+    "minimum_angle_degrees": 6.032430117311006
+  },
+  "source_lineage": {
+    "edge_flip_parent_offsets_union": [
+      119573,
+      193380,
+      193385,
+      193386
+    ],
+    "face_parent_offsets_union": [
+      119573,
+      193380,
+      193385,
+      193386
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      1
+    ],
+    "face_source_original_id": [
+      841487,
+      40086148
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      171015,
+      244822,
+      244827,
+      244828
+    ],
+    "patch_face_rows": [
+      169300,
+      240878,
+      240883,
+      240884
+    ]
+  }
+}

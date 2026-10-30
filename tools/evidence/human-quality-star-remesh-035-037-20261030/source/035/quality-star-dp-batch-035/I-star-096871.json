@@ -1,0 +1,188 @@
+{
+  "boundary_loop_input_point_rows": [
+    96848,
+    96873,
+    96882,
+    96921
+  ],
+  "center_vertex_input_row": 96871,
+  "chord_pruning": {
+    "aabb_candidates_visited": 80,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0011023329570889473,
+    "exact_segment_queries": 80,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 6,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.013060250086709857,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.7367925542640097,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 4,
+      "external_aabb_candidates": 66,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 4
+    },
+    "topology": {
+      "edges": 5,
+      "euler_characteristic": 1,
+      "faces": 2,
+      "vertices": 4
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      96848,
+      96873,
+      96921
+    ],
+    [
+      96873,
+      96882,
+      96921
+    ]
+  ],
+  "new_output_face_rows": [
+    250275,
+    250276
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 3.342972289082329e-09,
+    "minimum_angle_degrees": 0.00041090083247644744,
+    "worst_bad_score": 0.16714861445411644
+  },
+  "patch_id": "I-star-096871",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          96848,
+          96873,
+          96921
+        ],
+        [
+          96873,
+          96882,
+          96921
+        ]
+      ],
+      "new_output_face_rows": [
+        250275,
+        250276
+      ],
+      "patch_id": "I-star-096871",
+      "retired_input_face_rows": [
+        164842,
+        239320,
+        239328,
+        239329
+      ],
+      "source_lineage": {
+        "edge_flip_parent_offsets_union": [
+          115010,
+          191761,
+          191769,
+          191770
+        ],
+        "face_parent_offsets_union": [
+          115010,
+          191761,
+          191769,
+          191770
+        ],
+        "face_source_body": [
+          -1
+        ],
+        "face_source_bone": [
+          -1
+        ],
+        "face_source_layer": [
+          1
+        ],
+        "face_source_original_id": [
+          841487,
+          40080367
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          166452,
+          243203,
+          243211,
+          243212
+        ],
+        "patch_face_rows": [
+          164842,
+          239320,
+          239328,
+          239329
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    164842,
+    239320,
+    239328,
+    239329
+  ],
+  "role": "I",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 0.0001482037190576681,
+    "minimum_angle_degrees": 16.23383800793272
+  },
+  "source_lineage": {
+    "edge_flip_parent_offsets_union": [
+      115010,
+      191761,
+      191769,
+      191770
+    ],
+    "face_parent_offsets_union": [
+      115010,
+      191761,
+      191769,
+      191770
+    ],
+    "face_source_body": [
+      -1
+    ],
+    "face_source_bone": [
+      -1
+    ],
+    "face_source_layer": [
+      1
+    ],
+    "face_source_original_id": [
+      841487,
+      40080367
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      166452,
+      243203,
+      243211,
+      243212
+    ],
+    "patch_face_rows": [
+      164842,
+      239320,
+      239328,
+      239329
+    ]
+  }
+}

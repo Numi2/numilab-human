@@ -1,0 +1,197 @@
+{
+  "boundary_loop_input_point_rows": [
+    12203,
+    12204,
+    12616
+  ],
+  "center_vertex_input_row": 12613,
+  "chord_pruning": {
+    "aabb_candidates_visited": 255,
+    "blocked_boundary_edges": [],
+    "blocked_chords": 0,
+    "cache_hits": 0,
+    "coordinate_changes": 0,
+    "elapsed_s": 0.0017141669522970915,
+    "exact_segment_queries": 255,
+    "method": "exact_segment_triangle_necessary_chord_constraints",
+    "slot_chords": 3,
+    "witnesses": []
+  },
+  "disk_dp": {
+    "conflict_samples": [],
+    "coordinate_changes": 0,
+    "elapsed_s": 0.018990916199982166,
+    "method": "exact_constraint_polygon_dp_with_3D_conflict_branching",
+    "selection_cost": 0.0036318903797174034,
+    "statistics": {
+      "branches_popped": 1,
+      "dp_solves": 1,
+      "eligible_triangles": 1,
+      "external_aabb_candidates": 108,
+      "external_exact_pairs": 0,
+      "minimum_altitude_m": 2e-08,
+      "minimum_angle_degrees": 0.0001,
+      "rejected_external_triangles": 0,
+      "rejected_quality_triangles": 0,
+      "self_pair_conflicts": 0,
+      "triangle_candidates": 1
+    },
+    "topology": {
+      "edges": 3,
+      "euler_characteristic": 1,
+      "faces": 1,
+      "vertices": 3
+    }
+  },
+  "lineage_semantics": "Each replacement triangle receives the full typed parent union of this retired connected one-ring patch; this is patch-level lineage, not a per-triangle overlap claim.",
+  "new_faces_input_point_rows": [
+    [
+      12203,
+      12204,
+      12616
+    ]
+  ],
+  "new_output_face_rows": [
+    245153
+  ],
+  "old_quality": {
+    "bad_faces_in_star": 1,
+    "minimum_altitude_m": 1.729411023383728e-08,
+    "minimum_angle_degrees": 0.00031805191552987307,
+    "worst_bad_score": 0.8647055116918639
+  },
+  "patch_id": "D-star-012613",
+  "patches": [
+    {
+      "new_faces_input_point_rows": [
+        [
+          12203,
+          12204,
+          12616
+        ]
+      ],
+      "new_output_face_rows": [
+        245153
+      ],
+      "patch_id": "D-star-012613",
+      "retired_input_face_rows": [
+        57989,
+        57981,
+        57991
+      ],
+      "source_lineage": {
+        "candidate_face_ancestry_union": [
+          60438,
+          60446,
+          60448
+        ],
+        "face_source_body": [
+          43
+        ],
+        "face_source_bone": [
+          16
+        ],
+        "face_source_layer": [
+          3
+        ],
+        "face_source_original_id": [
+          100000008
+        ],
+        "microedge_parent_input_face_offsets_union": [
+          58559,
+          58567,
+          58569
+        ],
+        "operational_output_face_parent_offsets_union": [
+          58578,
+          58586,
+          58588
+        ],
+        "patch_face_rows": [
+          57989,
+          57981,
+          57991
+        ],
+        "union_face_ancestry_tuples": [
+          [
+            100000008,
+            568,
+            60438
+          ],
+          [
+            100000008,
+            573,
+            60446
+          ],
+          [
+            100000008,
+            575,
+            60448
+          ]
+        ]
+      }
+    }
+  ],
+  "retired_input_face_rows": [
+    57989,
+    57981,
+    57991
+  ],
+  "role": "D",
+  "selected_quality": {
+    "bad_faces_after": 0,
+    "minimum_altitude_m": 3.749732060459487e-06,
+    "minimum_angle_degrees": 0.06875852922869335
+  },
+  "source_lineage": {
+    "candidate_face_ancestry_union": [
+      60438,
+      60446,
+      60448
+    ],
+    "face_source_body": [
+      43
+    ],
+    "face_source_bone": [
+      16
+    ],
+    "face_source_layer": [
+      3
+    ],
+    "face_source_original_id": [
+      100000008
+    ],
+    "microedge_parent_input_face_offsets_union": [
+      58559,
+      58567,
+      58569
+    ],
+    "operational_output_face_parent_offsets_union": [
+      58578,
+      58586,
+      58588
+    ],
+    "patch_face_rows": [
+      57989,
+      57981,
+      57991
+    ],
+    "union_face_ancestry_tuples": [
+      [
+        100000008,
+        568,
+        60438
+      ],
+      [
+        100000008,
+        573,
+        60446
+      ],
+      [
+        100000008,
+        575,
+        60448
+      ]
+    ]
+  }
+}

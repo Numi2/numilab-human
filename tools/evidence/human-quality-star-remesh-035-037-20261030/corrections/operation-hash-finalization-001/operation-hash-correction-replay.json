@@ -1,0 +1,1644 @@
+{
+  "canonical_reconstruction": "UTF-8 JSON with sort_keys=true, indent=2, and one final newline after removing exactly new_output_face_rows and patches.",
+  "limitations": [
+    "The reconstructed pre-finalization bytes are verified in memory against the report pins; existing operation files remain in their enriched form.",
+    "This corrects operation-hash provenance only. It does not alter or qualify geometry, volume, mass, TetGen, or native execution."
+  ],
+  "operation_count": 110,
+  "producer_source_evidence": {
+    "operation_finalization_rewrite": {
+      "lines": [
+        301,
+        302
+      ],
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/remesh_warning_union_037_reportfix.py",
+      "sha256": "163574c62f88f8fd035ea47f810c63019238645527179957846f01a94b6b319d"
+    },
+    "report_operation_hash_captured": {
+      "lines": [
+        262,
+        264
+      ],
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/remesh_warning_union_037_reportfix.py",
+      "sha256": "163574c62f88f8fd035ea47f810c63019238645527179957846f01a94b6b319d"
+    }
+  },
+  "schema": "h706-operation-hash-finalization-correction.v1",
+  "scope": "Read-only verification. Current enriched operation JSON files and original reports are not modified. The report hash refers to canonical operation JSON bytes before adding only new_output_face_rows and patches.",
+  "source_files_modified": false,
+  "stages": [
+    {
+      "operation_count": 99,
+      "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/report.json",
+      "report_sha256": "137f1f1ff571134d7ea290eca1dbf4cfc4907e4d57663205fa15696c1fec9873",
+      "roles": [
+        {
+          "operation_count": 7,
+          "operations": [
+            {
+              "current_finalized_sha256": "67cdeda81a78c0d1eb074ae20c993425f5015872f8af4f01817d193b334fb27d",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00000-seed63268.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-O-union-00000-seed63268",
+              "reconstructed_pre_finalization_sha256": "6559284b071ff57c799707ad15cc18fc6199c5bef520620b7e58841f05773f79",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "6559284b071ff57c799707ad15cc18fc6199c5bef520620b7e58841f05773f79",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "86f79eb54da40af7b7d4fca31630229c88bd10707030668ecff303fef5ce2e50",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00001-seed25306.json",
+              "output_face_row_count": 10,
+              "patch_id": "036-O-union-00001-seed25306",
+              "reconstructed_pre_finalization_sha256": "ff5db3d01beef6ebbf860fccaedbf37df03a8309d51042403fa777762118ea73",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "ff5db3d01beef6ebbf860fccaedbf37df03a8309d51042403fa777762118ea73",
+              "reported_retired_face_row_count": 16,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "933bf317735793b45b3d3edf198f2df3ce342e0472bd7aec109f5c24577be28f",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00002-seed64000.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-O-union-00002-seed64000",
+              "reconstructed_pre_finalization_sha256": "90c01807d132e706f9b93a30d7dcdcad4cf24d811a09ea95a0ff000ec72931b9",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "90c01807d132e706f9b93a30d7dcdcad4cf24d811a09ea95a0ff000ec72931b9",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "5974b1adbcf1d56fe95ef7b0ecfad317c35c5499b4678dc7df646825fc9eb67b",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00003-seed76597.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-O-union-00003-seed76597",
+              "reconstructed_pre_finalization_sha256": "1be9931c1a4ece8e73e602a9ceefebd6b51802f05f092a03968b06bb5f27f9fb",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "1be9931c1a4ece8e73e602a9ceefebd6b51802f05f092a03968b06bb5f27f9fb",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "fd5883e7dd315ed33f8d80d29edcd54f3b94285e5d190f066c24512d253e41b4",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00004-seed34286.json",
+              "output_face_row_count": 16,
+              "patch_id": "036-O-union-00004-seed34286",
+              "reconstructed_pre_finalization_sha256": "fe2b0b7038a0205ec32e1bea04a74e84ec316d39f0571b2c651c71bfa7cb6738",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "fe2b0b7038a0205ec32e1bea04a74e84ec316d39f0571b2c651c71bfa7cb6738",
+              "reported_retired_face_row_count": 22,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "126210af33d0934fa4bb3fffceb859987cb1f21c28d7422c32bdc0060494426c",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00005-seed29346.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-O-union-00005-seed29346",
+              "reconstructed_pre_finalization_sha256": "7b7c9d9e5b26645622e469450edfb64ea7ca50d75f0e6702e88f65fee9be4d9c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "7b7c9d9e5b26645622e469450edfb64ea7ca50d75f0e6702e88f65fee9be4d9c",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "3d2f7bc892f9bcd95f33e07ac769088c57807a8c7b99aace4e9186faea91f332",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-O-union-00006-seed120393.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-O-union-00006-seed120393",
+              "reconstructed_pre_finalization_sha256": "56618d1c731c6b188275bf7ee003e547a8b58fdb6c0e336c0e14eb33ce93bf79",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "56618d1c731c6b188275bf7ee003e547a8b58fdb6c0e336c0e14eb33ce93bf79",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            }
+          ],
+          "raw_proposal_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/O-connected-union-proposal.npz",
+          "raw_proposal_sha256": "52be7aa80711cebbcc67fa078f9f71100835671919758b555d89cca5b02c8ded",
+          "retired_face_union_count": 92,
+          "role": "O"
+        },
+        {
+          "operation_count": 25,
+          "operations": [
+            {
+              "current_finalized_sha256": "2050ce982db6e51849bfec58e7f89e0d94a977a950ea4d0733bee77553f550e9",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00007-seed143124.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-I-union-00007-seed143124",
+              "reconstructed_pre_finalization_sha256": "88c83a7ebfb953e0fb5a0ad9ee479321698894139657d46fa0faf0d2d80c5fde",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "88c83a7ebfb953e0fb5a0ad9ee479321698894139657d46fa0faf0d2d80c5fde",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "7649986fb8aa8494de9b10a03ce436b9878c0ac98cc2cf8ef922ce3885506d96",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00008-seed247221.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-I-union-00008-seed247221",
+              "reconstructed_pre_finalization_sha256": "188f6f3e3612329bf21825c742ac2f88154d973195420aa8a9cd65d849ab2bea",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "188f6f3e3612329bf21825c742ac2f88154d973195420aa8a9cd65d849ab2bea",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "89f74ba3d21c37d96d38d227676796df0b6ca0e115bef8645f6dfd5b27ed97df",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00009-seed231673.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-I-union-00009-seed231673",
+              "reconstructed_pre_finalization_sha256": "4535ef2d9a19a5b5e21ceb1009dfe73cbbd2c58260bc1e3fc2b65eee055f0668",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "4535ef2d9a19a5b5e21ceb1009dfe73cbbd2c58260bc1e3fc2b65eee055f0668",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "6674ffd223c3b8d3787042fc815454cf1bd88198d0296d58b0836e408262a1a4",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00010-seed250113.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-I-union-00010-seed250113",
+              "reconstructed_pre_finalization_sha256": "9c6ea88ca713577e5e9a4ee2703958614a13dcdc41902311a755cb2893fe9d36",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "9c6ea88ca713577e5e9a4ee2703958614a13dcdc41902311a755cb2893fe9d36",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "1eb086a75ac5baa67e4d695845c7d9966c5dab29c4f5e7a2b21d6a04c40ec749",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00011-seed237959.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-I-union-00011-seed237959",
+              "reconstructed_pre_finalization_sha256": "a9cafffb49e3ca05bcef90809a46d83ce62d7fdb04a15015047e30697e189525",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a9cafffb49e3ca05bcef90809a46d83ce62d7fdb04a15015047e30697e189525",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "36dd0fb6dbe72d68b3a538890c2f092e55ac907e0c93bf5223bd43c82b2e114c",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00012-seed249275.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-I-union-00012-seed249275",
+              "reconstructed_pre_finalization_sha256": "a81c3e5851d4fedb2358e7bd7b8834a226d1d031df5367ca6e0e0ec198d96122",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a81c3e5851d4fedb2358e7bd7b8834a226d1d031df5367ca6e0e0ec198d96122",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b769413b156500956c1cba41312c08d6785a33ba6a2de1a764c4ef07a5cee5ca",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00013-seed232739.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-I-union-00013-seed232739",
+              "reconstructed_pre_finalization_sha256": "351b22fecf74492062f3850d49794df8f403541b5fcb7081c6fbae60206b3cad",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "351b22fecf74492062f3850d49794df8f403541b5fcb7081c6fbae60206b3cad",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a0a962bf8f4223054dcbac149529ef54ffffb74c4515817ca1fa0f92dc8406de",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00014-seed245078.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-I-union-00014-seed245078",
+              "reconstructed_pre_finalization_sha256": "7c0a7569d3dcfc7ac25ad9b6257942572a4d0a501ad6b97335a2b179349ecfd3",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "7c0a7569d3dcfc7ac25ad9b6257942572a4d0a501ad6b97335a2b179349ecfd3",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "d9f63b2160153c7ac9cb74f123798d50ae298044d511c75738e6ad5149c51b3d",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00015-seed247127.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-I-union-00015-seed247127",
+              "reconstructed_pre_finalization_sha256": "444ab9eec7c2baab050383427900caf70e417431036cb8260bca9761c7dada67",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "444ab9eec7c2baab050383427900caf70e417431036cb8260bca9761c7dada67",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b36abca5ec5e31eb11632bcc882d4f4924e99bf7080d71fb198623c52e8c292b",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00016-seed249662.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-I-union-00016-seed249662",
+              "reconstructed_pre_finalization_sha256": "2284549f710209cdc1100f25a567b7cb4cdd575dfef3e80bca4bc0c2672ec7b4",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "2284549f710209cdc1100f25a567b7cb4cdd575dfef3e80bca4bc0c2672ec7b4",
+              "reported_retired_face_row_count": 16,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "3e2d5835f262b9004efa39ca22d7093dce86cb6318dc8091f20e4c24af4c408a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00017-seed221220.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-I-union-00017-seed221220",
+              "reconstructed_pre_finalization_sha256": "f2d59cb4614d017b3fcb4f40f4b27309e364c874697ff33d3057f3482d548ae6",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "f2d59cb4614d017b3fcb4f40f4b27309e364c874697ff33d3057f3482d548ae6",
+              "reported_retired_face_row_count": 17,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "f2d7460f0a5b38588ff54da96915ef4228fc8d5310af5c084fed604d531954e2",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00018-seed41540.json",
+              "output_face_row_count": 1,
+              "patch_id": "036-I-union-00018-seed41540",
+              "reconstructed_pre_finalization_sha256": "5c771da606f1a605d26872fac6a492ed30706596026d855cd735bcd613a1da40",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "5c771da606f1a605d26872fac6a492ed30706596026d855cd735bcd613a1da40",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "5cd353424850c75b9058b0f3d2c4e5a157459f8fb1a43d6c04b684a170c1150e",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00019-seed249539.json",
+              "output_face_row_count": 3,
+              "patch_id": "036-I-union-00019-seed249539",
+              "reconstructed_pre_finalization_sha256": "e6881fd4a15dc447f7b9c40257ba3f899d3a503cd3bff520d5c57f569cc7886e",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "e6881fd4a15dc447f7b9c40257ba3f899d3a503cd3bff520d5c57f569cc7886e",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "de61bb03a2f26ae6e8f6175060404b8c77ce509ee8e9f4f89a53c764bf178f9d",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00020-seed218706.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-I-union-00020-seed218706",
+              "reconstructed_pre_finalization_sha256": "bf7ccf154f88cfbbf5cc74bc5c3bde3d448dfdc114bb06ecc5d0ffdc02e90140",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "bf7ccf154f88cfbbf5cc74bc5c3bde3d448dfdc114bb06ecc5d0ffdc02e90140",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "47d306c3775d52492e0006fe2c43570f9ef58c969875d90ad9e1e3a347940cac",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00021-seed231166.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-I-union-00021-seed231166",
+              "reconstructed_pre_finalization_sha256": "332d6eb3fc2c6db50c42e55ca9c3c676086678b28bbe02d189cca464bbc3bc44",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "332d6eb3fc2c6db50c42e55ca9c3c676086678b28bbe02d189cca464bbc3bc44",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a3a66bb91a57dc251d056564ef908a5efe0f2653dc40d9a3afb6270329a3cd94",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00022-seed126587.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-I-union-00022-seed126587",
+              "reconstructed_pre_finalization_sha256": "d7e45955d4b0c8799039d1dd21b096bd732db789c0cd68934ea8be37729e59e8",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "d7e45955d4b0c8799039d1dd21b096bd732db789c0cd68934ea8be37729e59e8",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a2b52f7acadfe5f166691dfd0db1aa912cf31d18ec86b943061164a0c39fc280",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00023-seed220363.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-I-union-00023-seed220363",
+              "reconstructed_pre_finalization_sha256": "c2e2ba36444d4e7c873963ca37a0d7d6e0d80aeebe366c2042a78bb64b775ff5",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "c2e2ba36444d4e7c873963ca37a0d7d6e0d80aeebe366c2042a78bb64b775ff5",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "3b5434a19d160576a2aad37f7f35a1702a6ea3dafc62882ba7a0efd769477354",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00024-seed250105.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-I-union-00024-seed250105",
+              "reconstructed_pre_finalization_sha256": "8b841e8db3d0992f9e95112ee23f13ea2264e279fa70cbff83e7b718e9b864ac",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "8b841e8db3d0992f9e95112ee23f13ea2264e279fa70cbff83e7b718e9b864ac",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "7f5b9dedb050217e67f6248c2c74ebceff8f2c0317d9d387981b3ea4f06591ac",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00025-seed215352.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-I-union-00025-seed215352",
+              "reconstructed_pre_finalization_sha256": "e6c84009d11ad10e0a4f71cd119df7ec9370627114a0a533f2a67cf8bd11955f",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "e6c84009d11ad10e0a4f71cd119df7ec9370627114a0a533f2a67cf8bd11955f",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "dd8f8415f87c198eeff94d98ac75155218ee8dcc7faef343821e232264cd2203",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00026-seed247722.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-I-union-00026-seed247722",
+              "reconstructed_pre_finalization_sha256": "ddea9590e722cd5c6c9a06bb9fec454d42ad9620fbe66e37d17928643585c0c6",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "ddea9590e722cd5c6c9a06bb9fec454d42ad9620fbe66e37d17928643585c0c6",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "2961fa020dbc05b3028231b6d2cb304ae2f5dbc9c285be5c2fd5e058f2e7f1c5",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00027-seed236230.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-I-union-00027-seed236230",
+              "reconstructed_pre_finalization_sha256": "44febffde024c4aeb5bee590e68f9b7212f2c753e462b21175d92d8c7707434a",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "44febffde024c4aeb5bee590e68f9b7212f2c753e462b21175d92d8c7707434a",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "fc9ba60b0d5385c3f5b5447f9814438353d1aaa3e8f9711de6191f1d55dfcbf0",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00028-seed238532.json",
+              "output_face_row_count": 10,
+              "patch_id": "036-I-union-00028-seed238532",
+              "reconstructed_pre_finalization_sha256": "a34769b421955686ba2f45e075324908e568cd0f6b02a631728afb38ccb21fc1",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a34769b421955686ba2f45e075324908e568cd0f6b02a631728afb38ccb21fc1",
+              "reported_retired_face_row_count": 16,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "74d56e59c5e78db4dbace2afe999d4de5f8d58db9a894a2fc6d1bcac78864975",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00029-seed224321.json",
+              "output_face_row_count": 11,
+              "patch_id": "036-I-union-00029-seed224321",
+              "reconstructed_pre_finalization_sha256": "01a0eba2d46f5334c494d720d5b3fb95f0ae806f845022507bf767095f388b8f",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "01a0eba2d46f5334c494d720d5b3fb95f0ae806f845022507bf767095f388b8f",
+              "reported_retired_face_row_count": 17,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "82b8c420fd8a2156adfe01ddbb34cec39c0ef4d6e89afe3210234eeb2962ae20",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00030-seed225096.json",
+              "output_face_row_count": 12,
+              "patch_id": "036-I-union-00030-seed225096",
+              "reconstructed_pre_finalization_sha256": "701bd91ff15f9e0e2817b96040fc371c8d947eb0ecbe9c78d1d8016bbe328004",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "701bd91ff15f9e0e2817b96040fc371c8d947eb0ecbe9c78d1d8016bbe328004",
+              "reported_retired_face_row_count": 18,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "9eec8febd6f079e1bf5794545b4944bb3f4a25215f121ea7bcccbe5f98479bc6",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-I-union-00031-seed204406.json",
+              "output_face_row_count": 11,
+              "patch_id": "036-I-union-00031-seed204406",
+              "reconstructed_pre_finalization_sha256": "423b3c1cf94838b05ec19bcccfdf06d91ec097b59ef516c0b907834a3ee46203",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "423b3c1cf94838b05ec19bcccfdf06d91ec097b59ef516c0b907834a3ee46203",
+              "reported_retired_face_row_count": 19,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            }
+          ],
+          "raw_proposal_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/I-connected-union-proposal.npz",
+          "raw_proposal_sha256": "b85ac6a926ed454ab920618e56a467082a0cf14ff45e3019456e9380b246fe38",
+          "retired_face_union_count": 335,
+          "role": "I"
+        },
+        {
+          "operation_count": 67,
+          "operations": [
+            {
+              "current_finalized_sha256": "11d23e373057f05acc7a55138558ab9a1b058a4fbd4520e40e213a4d5a4e3cba",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00032-seed134613.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-D-union-00032-seed134613",
+              "reconstructed_pre_finalization_sha256": "5546e87429ffa372db025cf10a79062f2a71be8f912734a6ce0252816d116bf7",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "5546e87429ffa372db025cf10a79062f2a71be8f912734a6ce0252816d116bf7",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "75a76fb358b6868d1c74c39d10cb041c946078c1d9483f760853d7822761ccd8",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00033-seed119708.json",
+              "output_face_row_count": 3,
+              "patch_id": "036-D-union-00033-seed119708",
+              "reconstructed_pre_finalization_sha256": "17c3ce248be28f42bab8d7e86f8c4f277f9b353c2dc0b4ca1b9a6acfbb5b841c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "17c3ce248be28f42bab8d7e86f8c4f277f9b353c2dc0b4ca1b9a6acfbb5b841c",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b46f44990f4e5342a0033f4a6cf066a5ab66014cd3bfad33328823d4d1fbdb35",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00034-seed182769.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00034-seed182769",
+              "reconstructed_pre_finalization_sha256": "f385d5a725ca9836724afb2195117ec1951afc03e71893ce6f2059cb95d31bd4",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "f385d5a725ca9836724afb2195117ec1951afc03e71893ce6f2059cb95d31bd4",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "1049264ab70cbcd6e2e0aca4c8ed79e35f95284ccdc45aff8444570390d980a1",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00035-seed120800.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00035-seed120800",
+              "reconstructed_pre_finalization_sha256": "5a63b9fb328bcd7180e7b2c4ea4b8906f881cddf11f4893af3464d1ecf13514a",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "5a63b9fb328bcd7180e7b2c4ea4b8906f881cddf11f4893af3464d1ecf13514a",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "5db53d4563f2c18397964b4cfabb77458e4d81d020797435d7687cec28456b4a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00036-seed96655.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-D-union-00036-seed96655",
+              "reconstructed_pre_finalization_sha256": "8de662495551fb7e2f48b2fc1131af4552f59f71d22b36481a74728093106b5b",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "8de662495551fb7e2f48b2fc1131af4552f59f71d22b36481a74728093106b5b",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "900c5785138bc23c0d7c343266a98565c64ba68e2ed959a148647aeb45486248",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00037-seed181045.json",
+              "output_face_row_count": 10,
+              "patch_id": "036-D-union-00037-seed181045",
+              "reconstructed_pre_finalization_sha256": "113c9552591dc9a9317b6b952068416edb53b4758072f8c75032c81121f7e381",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "113c9552591dc9a9317b6b952068416edb53b4758072f8c75032c81121f7e381",
+              "reported_retired_face_row_count": 16,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b1024f653e46302fded8ebc07cf0a7cb34911b45e56ae14a1a0d5155f8e74749",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00039-seed101007.json",
+              "output_face_row_count": 2,
+              "patch_id": "036-D-union-00039-seed101007",
+              "reconstructed_pre_finalization_sha256": "ddf79e234677ff14c704de202ae2df380fda392e64148a9902e0bf057d9a2aae",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "ddf79e234677ff14c704de202ae2df380fda392e64148a9902e0bf057d9a2aae",
+              "reported_retired_face_row_count": 8,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "81f75670b90bc6206f7b6f2371abacf9531b9016a3f39b6dbca1c54d8fb15009",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00040-seed117874.json",
+              "output_face_row_count": 3,
+              "patch_id": "036-D-union-00040-seed117874",
+              "reconstructed_pre_finalization_sha256": "374be5b6fb41e06fc1084aac72e162190e46cd6c4c05510c9207ef52b50e3b7a",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "374be5b6fb41e06fc1084aac72e162190e46cd6c4c05510c9207ef52b50e3b7a",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "63ab7343947f8a5eb8c93b999dc3f27616c404e19f84be118e75f708d6a5cc41",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00041-seed109750.json",
+              "output_face_row_count": 2,
+              "patch_id": "036-D-union-00041-seed109750",
+              "reconstructed_pre_finalization_sha256": "2301ac6c7b051cc301e7ead3890342293abd4e3311dbe844374d075057743a6f",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "2301ac6c7b051cc301e7ead3890342293abd4e3311dbe844374d075057743a6f",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "0cebcd5a6c9ac405807d685a5526ff90661c3f5d5e1b224ee56ae76034b1beaa",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00042-seed175690.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00042-seed175690",
+              "reconstructed_pre_finalization_sha256": "2d82bf181f5949e00efa051bb1139e94c67f22e17185834daafe94c50ae04a50",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "2d82bf181f5949e00efa051bb1139e94c67f22e17185834daafe94c50ae04a50",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "ec7bdb90d689d343582dcdbce810d4e3de355c449329ba35ba15cca277dae54b",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00043-seed161641.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00043-seed161641",
+              "reconstructed_pre_finalization_sha256": "5f0dc0c0a794a1bff692bd41d7f364da1bdf9d9b4b574dea254392f51a162e99",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "5f0dc0c0a794a1bff692bd41d7f364da1bdf9d9b4b574dea254392f51a162e99",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "6991d224c4f95989a6c646519484015f47592ad89d837fa7f269294baa268591",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00044-seed185206.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00044-seed185206",
+              "reconstructed_pre_finalization_sha256": "a61a6f5e20c7d4bf38d05e6f466fd5c98a21aa0832cce7838c46b3e1d5da6667",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a61a6f5e20c7d4bf38d05e6f466fd5c98a21aa0832cce7838c46b3e1d5da6667",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "521d3d1f40b85247a032a24659cb114110c241c46ef4ce3f5f4275eb891ca592",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00045-seed131997.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-D-union-00045-seed131997",
+              "reconstructed_pre_finalization_sha256": "a78af09c3809e8546473c7550c685208935259a7b7483f360a9392b5ac436faf",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a78af09c3809e8546473c7550c685208935259a7b7483f360a9392b5ac436faf",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "4ebf68dbc3687d50f89a566810a62ab819ae65c7304886b429b2acbab7ff9c01",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00046-seed147282.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-D-union-00046-seed147282",
+              "reconstructed_pre_finalization_sha256": "818f77ff152ba380f48616e21c36b327541d1fa86fbdbe7871e92403f2e21038",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "818f77ff152ba380f48616e21c36b327541d1fa86fbdbe7871e92403f2e21038",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "cbffc698382893db07c3efb779660ee3af8c12e3c7aca3bd77882e700f7b979d",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00047-seed175813.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00047-seed175813",
+              "reconstructed_pre_finalization_sha256": "b06bcb978b08b9103ed10b0b3476c882fb359d94eeb4d274a0a06457fee7b61e",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "b06bcb978b08b9103ed10b0b3476c882fb359d94eeb4d274a0a06457fee7b61e",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "9797d94571e50ab941b202ae1bfa52bdfe66f4183e0f005e8e102258b867178f",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00048-seed242976.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00048-seed242976",
+              "reconstructed_pre_finalization_sha256": "9729b20de234bfe8caf5d072e163210cc08d39f91fd8ff3adce5733f5d682b9f",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "9729b20de234bfe8caf5d072e163210cc08d39f91fd8ff3adce5733f5d682b9f",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "179b0cbe936770e0ba8c78cab370e692a1a14e2207e155e1f7c1b0a664d7099b",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00049-seed160189.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-D-union-00049-seed160189",
+              "reconstructed_pre_finalization_sha256": "03e8974aa7ce938e3f6032fa939ccd1f012c038ff9f9d65ce85722a5b9ae1354",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "03e8974aa7ce938e3f6032fa939ccd1f012c038ff9f9d65ce85722a5b9ae1354",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a69ad80dade8c031611a5f96f372aaebeedff39acc5dd83c62044efaea4401e3",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00050-seed110905.json",
+              "output_face_row_count": 13,
+              "patch_id": "036-D-union-00050-seed110905",
+              "reconstructed_pre_finalization_sha256": "6cfd814e174bd8f3c9bef44ba6bcb855ed680e3ab0660cfa7f53f81e12b342b4",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "6cfd814e174bd8f3c9bef44ba6bcb855ed680e3ab0660cfa7f53f81e12b342b4",
+              "reported_retired_face_row_count": 19,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "be0202b07727460ba630fcfbd58c135893e5c2cb51a3012a8bef259d2c02a1ba",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00051-seed106949.json",
+              "output_face_row_count": 1,
+              "patch_id": "036-D-union-00051-seed106949",
+              "reconstructed_pre_finalization_sha256": "7d1653afcfab8bb7a2b1e23a1bdf60f91d529d6154035d786388f3b88fbc7888",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "7d1653afcfab8bb7a2b1e23a1bdf60f91d529d6154035d786388f3b88fbc7888",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "067769656ae111416491653beadd59dbf9d689d04d1463e3007171a2a9449969",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00052-seed99350.json",
+              "output_face_row_count": 3,
+              "patch_id": "036-D-union-00052-seed99350",
+              "reconstructed_pre_finalization_sha256": "a3b27d16cef0032b655480a2b30d07c44d6a09531442faafb9d3938574e4aec7",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a3b27d16cef0032b655480a2b30d07c44d6a09531442faafb9d3938574e4aec7",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "23676240633ca0923d9206e6989875bb46b2256742f0a5798d32870cdc2b9cdd",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00053-seed175975.json",
+              "output_face_row_count": 3,
+              "patch_id": "036-D-union-00053-seed175975",
+              "reconstructed_pre_finalization_sha256": "4ce19aa75bb360cdd3c440011b18ff5655e89ca6010c92f0c9b180936f9f7ecb",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "4ce19aa75bb360cdd3c440011b18ff5655e89ca6010c92f0c9b180936f9f7ecb",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "98b48a681d2c7012b8a173af90b145b2f412ddbbbba433742b2a732bbf936db4",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00054-seed70103.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00054-seed70103",
+              "reconstructed_pre_finalization_sha256": "25d72a80e74aa4af04cec28ae504791387496bf764ca13694d1720eef3cfac77",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "25d72a80e74aa4af04cec28ae504791387496bf764ca13694d1720eef3cfac77",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "91102ece4fdb01607f469e8aae2c9c155e76fe2131a79add9b24071d6fe5e65d",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00055-seed93597.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00055-seed93597",
+              "reconstructed_pre_finalization_sha256": "f61b0bf1b6506b8a773e64e6bc8197fd598347028593c1ce8f8aba4afa49fdfc",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "f61b0bf1b6506b8a773e64e6bc8197fd598347028593c1ce8f8aba4afa49fdfc",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "24e97bb84602a60f78493158c3a6d50267dc26c1600deeb747490d42b94748b0",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00056-seed93739.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00056-seed93739",
+              "reconstructed_pre_finalization_sha256": "9f1953159144d0d0f33e742a542d73cabea62f9affb0e6d105324e4eec643e93",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "9f1953159144d0d0f33e742a542d73cabea62f9affb0e6d105324e4eec643e93",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "e3591398553d4015ef61ec51ca52edee9ba863054b00f37e4ce33e60259e6c42",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00057-seed147900.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00057-seed147900",
+              "reconstructed_pre_finalization_sha256": "a044591aedabea66d0928be6c9f115913e6e0b6bf8f11fc51b246c46c5e323c6",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a044591aedabea66d0928be6c9f115913e6e0b6bf8f11fc51b246c46c5e323c6",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a6ffaa6fb11946ffc0b5ab31a56e7b8b4ffdd5bfd3ce6aefacdc46f8cc51cb9a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00058-seed166698.json",
+              "output_face_row_count": 4,
+              "patch_id": "036-D-union-00058-seed166698",
+              "reconstructed_pre_finalization_sha256": "ce8007bf7e3be0ee865686de193b33f5c1606fd6ea9e5bf427388e03d93c8a77",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "ce8007bf7e3be0ee865686de193b33f5c1606fd6ea9e5bf427388e03d93c8a77",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "f6e8fbd06df359c0e36b9c632d2357b8ffe025aecf63faf1794ad28d619dfb84",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00059-seed162670.json",
+              "output_face_row_count": 3,
+              "patch_id": "036-D-union-00059-seed162670",
+              "reconstructed_pre_finalization_sha256": "fbdff48f81c286dad1d8ccb2df8d7f051138bd019e3c17222fbfa5480153ff7b",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "fbdff48f81c286dad1d8ccb2df8d7f051138bd019e3c17222fbfa5480153ff7b",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "e159a09228473bb802e392a7f250f9de1c7aeb3bd0e0caef1fb1c338bc955be3",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00060-seed95166.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00060-seed95166",
+              "reconstructed_pre_finalization_sha256": "0792625b559181dc1e99d8484a56d88c342a42c00416a537667809dee806b3d4",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "0792625b559181dc1e99d8484a56d88c342a42c00416a537667809dee806b3d4",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "90c7b7cbec2046a9dcb10cb3c27ef8a660564da95f6c799270114b95b80551e4",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00061-seed106247.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00061-seed106247",
+              "reconstructed_pre_finalization_sha256": "356fc98770eebb0e638a185361fd74364fecc803df26b6b2ec241298f27f8c09",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "356fc98770eebb0e638a185361fd74364fecc803df26b6b2ec241298f27f8c09",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "340495356b30a246c7699e538c5d445885334256120aea4eace7a5a8ce65f97a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00062-seed117544.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00062-seed117544",
+              "reconstructed_pre_finalization_sha256": "8777d678e1592cdc2ec26871cdbd84b569497157a7e929160093dc589f3520c2",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "8777d678e1592cdc2ec26871cdbd84b569497157a7e929160093dc589f3520c2",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "bcd4e0513275375ad187744823e4e4104da02c3016f0151b6e60f03ac765131d",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00063-seed121078.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00063-seed121078",
+              "reconstructed_pre_finalization_sha256": "93dc357b59182e4e1583184dbec9ccf93c7f43e45c287158bbe5a0805e6ddb6c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "93dc357b59182e4e1583184dbec9ccf93c7f43e45c287158bbe5a0805e6ddb6c",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "417913ae5ff309373655b3bd60fcc5a7511479fb6150478ce3a082b597354b15",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00064-seed129349.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00064-seed129349",
+              "reconstructed_pre_finalization_sha256": "1467d50f0da207a2302f769bab3aa8f61649c445389c3baed92eec0b9a117a04",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "1467d50f0da207a2302f769bab3aa8f61649c445389c3baed92eec0b9a117a04",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "ec75133ea3c0be81018a69b0cf47416caf5ba3bf8f5f913f11414d161c39d0b0",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00065-seed137494.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00065-seed137494",
+              "reconstructed_pre_finalization_sha256": "15b5e9ee673dee487c213b28516bf995ac55ea0ce16dc1fad697ffcd2dcec122",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "15b5e9ee673dee487c213b28516bf995ac55ea0ce16dc1fad697ffcd2dcec122",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "512c5accd122a9c48f41916bc96b45c07854eba2f7f2fd2ae3c6d01fc2f2e3d9",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00066-seed154677.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00066-seed154677",
+              "reconstructed_pre_finalization_sha256": "736be5efffd2711ebc4f4b35dc548d5fd283ca54825893d73130a1a8e8032752",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "736be5efffd2711ebc4f4b35dc548d5fd283ca54825893d73130a1a8e8032752",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "e35004497e8574c2644c52dc392d631445d5e4e6ced3fa72f426dfdfc222a8dd",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00067-seed179117.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00067-seed179117",
+              "reconstructed_pre_finalization_sha256": "f5364acb3441c630ed7b13dbd5284b3e8599d670b9ef6c422934da0b0068a2ad",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "f5364acb3441c630ed7b13dbd5284b3e8599d670b9ef6c422934da0b0068a2ad",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "1ef894019c17014765d1812827b02119937d8e6f80bb5e1f20361a9adfd29d07",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00068-seed179790.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00068-seed179790",
+              "reconstructed_pre_finalization_sha256": "d7a0643a96c66a08b52736bc806e567640513f620c68e1de8ae10406a80cef07",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "d7a0643a96c66a08b52736bc806e567640513f620c68e1de8ae10406a80cef07",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "83d3172f47ca20b51d6ffe4fb1c729b398d0dfd672615fa97a2c7dd659a369ef",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00069-seed180599.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00069-seed180599",
+              "reconstructed_pre_finalization_sha256": "6c65d3ece41b369e3dd109852e435b2c8c9f8a807e55a211c4a6f014cd5a1e65",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "6c65d3ece41b369e3dd109852e435b2c8c9f8a807e55a211c4a6f014cd5a1e65",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "c10162f49eaffda253d493d7f67c8646de69e12cc24dd2feeae0713def75667a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00070-seed183677.json",
+              "output_face_row_count": 5,
+              "patch_id": "036-D-union-00070-seed183677",
+              "reconstructed_pre_finalization_sha256": "a6651cc328701244f5f3374dea221b4af55c0eb98dcc88dd3c30fd72902dc15a",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "a6651cc328701244f5f3374dea221b4af55c0eb98dcc88dd3c30fd72902dc15a",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "8965f019fe55bbac660f583f3a60738552735b1af4b1fe1c982b288ea54112e7",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00071-seed93056.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-D-union-00071-seed93056",
+              "reconstructed_pre_finalization_sha256": "62fb651bd0b36c349630bf8ad65b8e3fdffe92bb35e7dabf3fa331c089a2faf1",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "62fb651bd0b36c349630bf8ad65b8e3fdffe92bb35e7dabf3fa331c089a2faf1",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "40015a7d3375d1467541c94805ecdccda7ab01d7916c27033c1de71a6f936c1a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00073-seed149272.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-D-union-00073-seed149272",
+              "reconstructed_pre_finalization_sha256": "8a84163c37732cfeac1ef39546d6ecf96774ef2021535371bbe6ae015416125f",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "8a84163c37732cfeac1ef39546d6ecf96774ef2021535371bbe6ae015416125f",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a9bfbbeb5726960be64962dd96c8876a8a7d2be2a10b9a7c4ef0238620eb0408",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00074-seed242513.json",
+              "output_face_row_count": 6,
+              "patch_id": "036-D-union-00074-seed242513",
+              "reconstructed_pre_finalization_sha256": "cc6892fdb13d4ee2abbdf170d07167dce0015d11895c7d9e208cff6176fc563c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "cc6892fdb13d4ee2abbdf170d07167dce0015d11895c7d9e208cff6176fc563c",
+              "reported_retired_face_row_count": 12,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b512a5ccfb8dc417f6438ca36590202ee4afae24594d57e6634c5d7b25ea6b3c",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00075-seed107234.json",
+              "output_face_row_count": 1,
+              "patch_id": "036-D-union-00075-seed107234",
+              "reconstructed_pre_finalization_sha256": "7236551e1dc47f3b6dab716ffb801fc011b19976ffae1c768e100a58defcef0b",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "7236551e1dc47f3b6dab716ffb801fc011b19976ffae1c768e100a58defcef0b",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "f7126451cee7c266b883646cd5b97cef5c13448659e2666554fb92a70121a974",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00076-seed74474.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00076-seed74474",
+              "reconstructed_pre_finalization_sha256": "fcc057051ad34beb93bbe2e12f45696568f771446c85a0e25824e4f7d2e2f2cd",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "fcc057051ad34beb93bbe2e12f45696568f771446c85a0e25824e4f7d2e2f2cd",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "d4e537b463bb0dca38831eff645922af5cd69edcb136cfdbe665ff8161ecef55",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00077-seed81788.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00077-seed81788",
+              "reconstructed_pre_finalization_sha256": "cc5c840608e3ccd7e6e67a66b9de10f37903eba5ce7523e8c878e744b9cec1ce",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "cc5c840608e3ccd7e6e67a66b9de10f37903eba5ce7523e8c878e744b9cec1ce",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "3251398a28794eeae81656dfc663960308250c309777fa4fddab57dc00685394",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00078-seed98210.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00078-seed98210",
+              "reconstructed_pre_finalization_sha256": "460431ad198b86d6b5ecbe38278e11cda8045412133c8fb0a28865a555e6ece2",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "460431ad198b86d6b5ecbe38278e11cda8045412133c8fb0a28865a555e6ece2",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "5d2069a2167347ec56b3642ff70869d3abf17eeb8edd97bb32a530cf92942cc9",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00079-seed106339.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00079-seed106339",
+              "reconstructed_pre_finalization_sha256": "c5e578d18705ac8ac8f8e3d2ba23c670d147a7ea82502fad3f1a67fbc0063007",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "c5e578d18705ac8ac8f8e3d2ba23c670d147a7ea82502fad3f1a67fbc0063007",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "d4f01582a3d5a862a48cd0a8f375982fe7c01650515edef4f7ea30c15f30746e",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00080-seed112948.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00080-seed112948",
+              "reconstructed_pre_finalization_sha256": "3486f260bba7efa3424163f1d0f154c4abc4a3290f160604a88b2a1e27a82144",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "3486f260bba7efa3424163f1d0f154c4abc4a3290f160604a88b2a1e27a82144",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "88f77330178efcd2610d9ebab2aff72eee0c86ebcd0f4fb4f8aff7a4e637c4b5",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00081-seed149089.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00081-seed149089",
+              "reconstructed_pre_finalization_sha256": "8a43ad78a8aaca05d51c9a0ddfc0c83695ea2fb9125adfd3cf7642ecf8003070",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "8a43ad78a8aaca05d51c9a0ddfc0c83695ea2fb9125adfd3cf7642ecf8003070",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "ac2b426baa650a932fe016052cfe516c58d3358bf05d66f54baf0d350d35ad47",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00082-seed154582.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00082-seed154582",
+              "reconstructed_pre_finalization_sha256": "bdbc82d051e878999f6f088140c4b3f774f7229b7437001bbf2542f442a84e48",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "bdbc82d051e878999f6f088140c4b3f774f7229b7437001bbf2542f442a84e48",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "119c4f200e73bc4939cff03e808d64dc10ad2acbe0e3137b901573b353f90ac1",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00083-seed155981.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00083-seed155981",
+              "reconstructed_pre_finalization_sha256": "0aa89319824adb7dd338b2a6040265492b9b3e3ad06e7d56abf287eaaf7e10c1",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "0aa89319824adb7dd338b2a6040265492b9b3e3ad06e7d56abf287eaaf7e10c1",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "845e346fbbf39f915b4b011d755f635468af2d0311364066121141ad708906ab",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00084-seed166679.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00084-seed166679",
+              "reconstructed_pre_finalization_sha256": "aa5ee03e03c0691c80f2efd29345361e4d5e54f3c68f25b8d4089e28cf06199c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "aa5ee03e03c0691c80f2efd29345361e4d5e54f3c68f25b8d4089e28cf06199c",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "18814bbd6e313fbfa9350fab77aa9ad2219cb96e64f3f17e4faf0c38ddd67987",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00085-seed177867.json",
+              "output_face_row_count": 7,
+              "patch_id": "036-D-union-00085-seed177867",
+              "reconstructed_pre_finalization_sha256": "55d380b3d711a4076c782403544474b2486a0057b199a00c0244d67ffcb3a664",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "55d380b3d711a4076c782403544474b2486a0057b199a00c0244d67ffcb3a664",
+              "reported_retired_face_row_count": 13,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "2ff99f780fc438fc2655fa5ffefbde0cb0612fcd34415b70a98eacaddf31d92e",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00086-seed74068.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00086-seed74068",
+              "reconstructed_pre_finalization_sha256": "48513023e764a6dc5f9f81dfb5e5480e9c7b7afaa1d52a1053b9c7cc48533965",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "48513023e764a6dc5f9f81dfb5e5480e9c7b7afaa1d52a1053b9c7cc48533965",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "f51c6a15191d8d8a9de2f907ab7493396462ca607ddd27174c68ca8afb151d1e",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00087-seed95814.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00087-seed95814",
+              "reconstructed_pre_finalization_sha256": "457ac95b81636437f9b7482844b89adb1ef44ed2eb30cb7cb80301a336fa6ebf",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "457ac95b81636437f9b7482844b89adb1ef44ed2eb30cb7cb80301a336fa6ebf",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "ad5a8601245dd433a89cf47d9930ce6268db3d1416e6489ee6a6130bb63a21d5",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00088-seed137748.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00088-seed137748",
+              "reconstructed_pre_finalization_sha256": "2abb8a2a274440968327ab4e2c92a07c18e40a4fda424d92a857be7c7c7fe4e2",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "2abb8a2a274440968327ab4e2c92a07c18e40a4fda424d92a857be7c7c7fe4e2",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "a557c8f2d89409065daa1de9e660f68d550f296ee78a0477c23c0d6f5c933f25",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00089-seed163006.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00089-seed163006",
+              "reconstructed_pre_finalization_sha256": "b913da045eed737f1d0f0fc85d439a40bbd1c5bf2927181360c309eeea1009e2",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "b913da045eed737f1d0f0fc85d439a40bbd1c5bf2927181360c309eeea1009e2",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b9e5372cec7c93a892f69481c14d5fb126114477aa5da26e4c6f32abe53ef976",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00090-seed182283.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00090-seed182283",
+              "reconstructed_pre_finalization_sha256": "7c02e8f1b7187fadbaba6dd7a4fff9a03d11338c6790e7a46390693cfb5c8d4e",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "7c02e8f1b7187fadbaba6dd7a4fff9a03d11338c6790e7a46390693cfb5c8d4e",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "d882d05f2c4f8bd3e4c6bc257a75150ae51b111008aeae1594cfcfa0ba141fca",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00091-seed230206.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00091-seed230206",
+              "reconstructed_pre_finalization_sha256": "ba587c1424427744b1b6aa7d8e480e5418eaa1875f58b9fc5f2b43c0c908f41c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "ba587c1424427744b1b6aa7d8e480e5418eaa1875f58b9fc5f2b43c0c908f41c",
+              "reported_retired_face_row_count": 14,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "ab3295057ba73745901a4283a32cbf2a01b81658d61fe6d5486cfb1b2ea3d8d2",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00092-seed80141.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-D-union-00092-seed80141",
+              "reconstructed_pre_finalization_sha256": "37d5fa10915227e36614913b36b0173906ca009d3d91f952cd3ade6675c53986",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "37d5fa10915227e36614913b36b0173906ca009d3d91f952cd3ade6675c53986",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "1d273287a06287eb72051a258e870e15a97972a665c1026883295a5050094380",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00093-seed179717.json",
+              "output_face_row_count": 9,
+              "patch_id": "036-D-union-00093-seed179717",
+              "reconstructed_pre_finalization_sha256": "f2c8f5b28a6eabaa9cbee8768ea509203ae7d438bbddaa725839bf8328dc179b",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "f2c8f5b28a6eabaa9cbee8768ea509203ae7d438bbddaa725839bf8328dc179b",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "85e6c0a6796b69f37cd74e3734a8b5f8e6e33ca3b7a09d7d7a9b6ae7462a919f",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00094-seed99987.json",
+              "output_face_row_count": 10,
+              "patch_id": "036-D-union-00094-seed99987",
+              "reconstructed_pre_finalization_sha256": "0452f9b777d69134280c2a9fefba1ea39d3a64292dd079bae0ab9019f190607b",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "0452f9b777d69134280c2a9fefba1ea39d3a64292dd079bae0ab9019f190607b",
+              "reported_retired_face_row_count": 16,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "634a1b67baafe2f43701f084441c732e2c6cffdf1cb4386bec991baed931af9a",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00095-seed154812.json",
+              "output_face_row_count": 10,
+              "patch_id": "036-D-union-00095-seed154812",
+              "reconstructed_pre_finalization_sha256": "20b5830cccccbe200c5d939d68ef5646c950e400d43eb5d6cae5e8c36c6240ad",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "20b5830cccccbe200c5d939d68ef5646c950e400d43eb5d6cae5e8c36c6240ad",
+              "reported_retired_face_row_count": 16,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "419537c8558a33da0a364565847d7705ddd8c0be5412ec39c461a29b0647e2e0",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00096-seed113562.json",
+              "output_face_row_count": 11,
+              "patch_id": "036-D-union-00096-seed113562",
+              "reconstructed_pre_finalization_sha256": "683861e00eee29dcf80d8becc829b46e8d2bc756acdcb096a6caf3b31ccf3e2e",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "683861e00eee29dcf80d8becc829b46e8d2bc756acdcb096a6caf3b31ccf3e2e",
+              "reported_retired_face_row_count": 17,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "0a11d8b670b3fd91402fdee328bd84e31ddecce56454abc5c89bfa664583d1ac",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00097-seed81520.json",
+              "output_face_row_count": 12,
+              "patch_id": "036-D-union-00097-seed81520",
+              "reconstructed_pre_finalization_sha256": "3649defe1ce1e5d979b50cdb28e58bfff5c4e7e56cbad91c7592938288460306",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "3649defe1ce1e5d979b50cdb28e58bfff5c4e7e56cbad91c7592938288460306",
+              "reported_retired_face_row_count": 18,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "f72e486cc5235c8f7408ffc70893be54841a331b48de2fa99927c43689c5dd78",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00098-seed150215.json",
+              "output_face_row_count": 8,
+              "patch_id": "036-D-union-00098-seed150215",
+              "reconstructed_pre_finalization_sha256": "d849c413cf9f75029e7cbf7696babb119660ba5bd9847fb936095a4f27ffd5f7",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "d849c413cf9f75029e7cbf7696babb119660ba5bd9847fb936095a4f27ffd5f7",
+              "reported_retired_face_row_count": 20,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "f780a793ff697194cd0fe2ff2d106292baa3bfe6fa22473383bc1b97c5fc8149",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00099-seed123618.json",
+              "output_face_row_count": 14,
+              "patch_id": "036-D-union-00099-seed123618",
+              "reconstructed_pre_finalization_sha256": "3fe7c633bf7578187507c899013e7e022df6eb40b8fc89f56d4818b41a63089c",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "3fe7c633bf7578187507c899013e7e022df6eb40b8fc89f56d4818b41a63089c",
+              "reported_retired_face_row_count": 20,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "cb2744348f1a50a6496e6fc14bcf8004d96c0872385621dba7993e57a632f401",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/036-D-union-00100-seed128161.json",
+              "output_face_row_count": 16,
+              "patch_id": "036-D-union-00100-seed128161",
+              "reconstructed_pre_finalization_sha256": "95d086ab42365db2a73bd3d76bf678f130266eb91902b76f95c957e3ab9eac86",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "95d086ab42365db2a73bd3d76bf678f130266eb91902b76f95c957e3ab9eac86",
+              "reported_retired_face_row_count": 22,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            }
+          ],
+          "raw_proposal_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-star-connected-union-036-run002/D-connected-union-proposal.npz",
+          "raw_proposal_sha256": "7985a3c3b61b2b8480fbaee05ee3018c355373907fdbab1b661220c78caecbfb",
+          "retired_face_union_count": 849,
+          "role": "D"
+        }
+      ],
+      "stage": "036",
+      "status": "PASS_REPORT_HASH_RECONSTRUCTION_AND_OPERATION_ROW_MAPS"
+    },
+    {
+      "operation_count": 11,
+      "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/report.json",
+      "report_sha256": "6ca0f691f5dab1cb20323ca2e5213dae5d35d2fdd7b371545ebbd4a09f77da18",
+      "roles": [
+        {
+          "operation_count": 1,
+          "operations": [
+            {
+              "current_finalized_sha256": "838e7cd323e3b11c8db63f764be6769cb26111eaeedda8f7d1a6e0d8da772e3c",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-O-warning-000.json",
+              "output_face_row_count": 13,
+              "patch_id": "037-O-warning-000",
+              "reconstructed_pre_finalization_sha256": "cbef070752d53693ab3f2b23ec51793e48db450cc2616ea481de86853b674e47",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "cbef070752d53693ab3f2b23ec51793e48db450cc2616ea481de86853b674e47",
+              "reported_retired_face_row_count": 21,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            }
+          ],
+          "raw_proposal_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/O-warning-local-connected-union-proposal.npz",
+          "raw_proposal_sha256": "ac7e5e874765a9febd33908ca58df97c455f1da8893b0bdbe75cb7c5ce30bcf0",
+          "retired_face_union_count": 948,
+          "role": "O"
+        },
+        {
+          "operation_count": 2,
+          "operations": [
+            {
+              "current_finalized_sha256": "fff1db406071e6a7e6b838edcee922c796c35b36fb453da0006dbaa088d41a20",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-I-warning-001.json",
+              "output_face_row_count": 9,
+              "patch_id": "037-I-warning-001",
+              "reconstructed_pre_finalization_sha256": "ca551eaa216906f3f152a29d7ab516f3196c1929969baa3e94245ad4d43d7dc5",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "ca551eaa216906f3f152a29d7ab516f3196c1929969baa3e94245ad4d43d7dc5",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "2ef5fdd7a8b1a4aa9b9ad2fa312d847cf13f5e9272d513e4abee015b552b9408",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-I-warning-002.json",
+              "output_face_row_count": 14,
+              "patch_id": "037-I-warning-002",
+              "reconstructed_pre_finalization_sha256": "c7fd6e8d93ab41699c115da19f3fbf4799963ea656bf51f201e9404adc4eb991",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "c7fd6e8d93ab41699c115da19f3fbf4799963ea656bf51f201e9404adc4eb991",
+              "reported_retired_face_row_count": 22,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            }
+          ],
+          "raw_proposal_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/I-warning-local-connected-union-proposal.npz",
+          "raw_proposal_sha256": "36ab7242d8789b4b7459e6cd97d88cabc1b3ec60c69ddd80c63309c3e030aad7",
+          "retired_face_union_count": 2233,
+          "role": "I"
+        },
+        {
+          "operation_count": 8,
+          "operations": [
+            {
+              "current_finalized_sha256": "2b34464b5a999577356181b36d63c123d4e95ad76560f63a1860c1708d8a3cb9",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-003.json",
+              "output_face_row_count": 2,
+              "patch_id": "037-D-warning-003",
+              "reconstructed_pre_finalization_sha256": "7955985ae82e1b9d280b31c7b69a153bcb133d212976208a4a36a714ed8d2c03",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "7955985ae82e1b9d280b31c7b69a153bcb133d212976208a4a36a714ed8d2c03",
+              "reported_retired_face_row_count": 8,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "585f2ceca3649efdf0ba237c35a9d2889a884a2d8ebd94861c47bc473f0b4b62",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-004.json",
+              "output_face_row_count": 5,
+              "patch_id": "037-D-warning-004",
+              "reconstructed_pre_finalization_sha256": "6474ff985744ca594a1db899e527e21f75e1019434e63b7eba0f64977ae1752e",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "6474ff985744ca594a1db899e527e21f75e1019434e63b7eba0f64977ae1752e",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "b27a053fe2ca6f05bdbc6ce208292707dc4a8af2e5e896f945a35242ff5007ef",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-005.json",
+              "output_face_row_count": 4,
+              "patch_id": "037-D-warning-005",
+              "reconstructed_pre_finalization_sha256": "fb511a7c9497534b9b114cbf159830c05ac9623a53f562dbd85b0a16ba3427d5",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "fb511a7c9497534b9b114cbf159830c05ac9623a53f562dbd85b0a16ba3427d5",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "2fcaec4ed0d9ee2f145c9e44912f99290e5ef32cfc5966351e4b355e7ce01e10",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-006.json",
+              "output_face_row_count": 9,
+              "patch_id": "037-D-warning-006",
+              "reconstructed_pre_finalization_sha256": "dbb282abafe8f9168141a76a218ff0122a2025897142ec583f86305795cd2b5a",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "dbb282abafe8f9168141a76a218ff0122a2025897142ec583f86305795cd2b5a",
+              "reported_retired_face_row_count": 15,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "87988dcd45afbdc2e811491b8fa9bb7c794b9ef4969c30cc94dbb84e990930e0",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-007.json",
+              "output_face_row_count": 5,
+              "patch_id": "037-D-warning-007",
+              "reconstructed_pre_finalization_sha256": "c06984fcd8e6c85513b72f5125c967e1e3722ba00bad70d732cd5388e995663f",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "c06984fcd8e6c85513b72f5125c967e1e3722ba00bad70d732cd5388e995663f",
+              "reported_retired_face_row_count": 9,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "bddea34544d42bc9dc8b9a790f2576aec8987434300e737edf20157cb451872c",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-008.json",
+              "output_face_row_count": 4,
+              "patch_id": "037-D-warning-008",
+              "reconstructed_pre_finalization_sha256": "c1fd7d5f7a12566e8379863f5c3b655d28b953374c8027dba0a712a8616b24f3",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "c1fd7d5f7a12566e8379863f5c3b655d28b953374c8027dba0a712a8616b24f3",
+              "reported_retired_face_row_count": 10,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "740b30ae270108315ce57f274b987fed892c3ea06b1d45f2a70f0b4da72dcf9e",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-009.json",
+              "output_face_row_count": 10,
+              "patch_id": "037-D-warning-009",
+              "reconstructed_pre_finalization_sha256": "cd6dedf64c9738c5c31f3b2aea49429dcb62e4282273d1d8eda820380d19903d",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "cd6dedf64c9738c5c31f3b2aea49429dcb62e4282273d1d8eda820380d19903d",
+              "reported_retired_face_row_count": 18,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            },
+            {
+              "current_finalized_sha256": "4f862f9a90960b06bea4227dbb698f5cb259179bc7f665da6543e90ac878de8e",
+              "operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/037-D-warning-010.json",
+              "output_face_row_count": 7,
+              "patch_id": "037-D-warning-010",
+              "reconstructed_pre_finalization_sha256": "f370624ce986dbb0821c52cec0c067811c37509d34b38fa17b5249aca5e3ad0b",
+              "removed_finalization_fields": [
+                "new_output_face_rows",
+                "patches"
+              ],
+              "report_pinned_pre_finalization_sha256": "f370624ce986dbb0821c52cec0c067811c37509d34b38fa17b5249aca5e3ad0b",
+              "reported_retired_face_row_count": 11,
+              "status": "PASS_HASH_AND_ROW_MAPS"
+            }
+          ],
+          "raw_proposal_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-037/run-002/D-warning-local-connected-union-proposal.npz",
+          "raw_proposal_sha256": "c9ef206daa0bf2323e44ee1321f2f29d23609182dbae1f1cf55e73932e2284dd",
+          "retired_face_union_count": 4065,
+          "role": "D"
+        }
+      ],
+      "stage": "037",
+      "status": "PASS_REPORT_HASH_RECONSTRUCTION_AND_OPERATION_ROW_MAPS"
+    }
+  ],
+  "status": "PASS_110_OF_110_PRE_FINALIZATION_REPORT_HASHES_RECONSTRUCTED"
+}
