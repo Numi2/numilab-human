@@ -1,0 +1,46 @@
+{
+  "final_candidate_full_exact_orientation_rerun": false,
+  "findings": [
+    {
+      "area": "061",
+      "finding": "The exact binary-rational audit reports 16 exact F32 zero and 93 exact F32 negative cells among 853727 source fat cells. The float64-on-F32 nonpositive rows agree with exact signs in that baseline audit.",
+      "severity": "information"
+    },
+    {
+      "area": "062",
+      "finding": "The star-kernel construction and verifier qualify six local patches only. The emitted whole candidate still has 16 F32-zero and 86 F32-negative cells; the verifier does not claim full-boundary restoration or physical admission.",
+      "severity": "information"
+    },
+    {
+      "area": "063-064",
+      "finding": "The fixed-boundary attempts preserve coordinates and exact local volume, but remain partial. The 064 result used by 065 has 16 zero and 70 negative cells; its added cells are locally certified. PLC restoration remains incomplete.",
+      "severity": "information"
+    },
+    {
+      "area": "065",
+      "finding": "The original contraction script computes and logs the simplicial link condition but does not reject when false. The new nontrivial fixture reproduces a failed link yielding an exact-nonzero duplicate tet; the guarded derivative rejects before changing the input cell array.",
+      "severity": "correctness"
+    },
+    {
+      "area": "063-064",
+      "finding": "Face adjacency keys pack three node rows into 20-bit fields. The current maximum source row is 246516, below 2^20, so this dataset fits; the generic helper has no explicit overflow guard.",
+      "severity": "bounded-genericity"
+    },
+    {
+      "area": "065",
+      "finding": "The guarded output is a partial construction: 70 F32-negative cells remain, 196 original PLC facets remain missing, and 400 boundary facets were added. No physical admission, full source mass mapping, native import, or runtime claim is supported.",
+      "severity": "limit"
+    }
+  ],
+  "physical_admission": false,
+  "reviewed_source_files": [
+    "source/exact-cell-orientation-061/audit_exact_orientation.py",
+    "source/run_fat_star_kernel_062.py",
+    "source/verify_fat_star_kernel_062_v2.py",
+    "source/repair_star_kernel_regions_063.py",
+    "source/repair_boundary_vertex_regions_064.py",
+    "source/collapse_exact_construction_edges_065.py",
+    "source/guarded/collapse_exact_construction_edges_065_guarded.py"
+  ],
+  "schema": "human-fat-star-061-065-source-review-v1"
+}

@@ -1,0 +1,485 @@
+{
+  "status": "BOUNDED_STAR_KERNEL_CONSTRUCTION_PROPOSALS",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "accepted_constructions": 6,
+  "patches": 52,
+  "replaced_cells": 25,
+  "new_cells": 46,
+  "remaining_required_gates": [
+    "exact boundary self/nonadjacent intersections",
+    "restore original PLC facets including boundary Steiner removal",
+    "full consistent F32 mesh",
+    "original labels and source330 mass"
+  ],
+  "patches_detail": [
+    {
+      "patch": 0,
+      "cells": 14,
+      "boundary_faces": 16,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 1,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 2,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 3,
+      "cells": 11,
+      "boundary_faces": 20,
+      "status": "REJECT_BOUNDARY_TOPOLOGY_OR_AREA"
+    },
+    {
+      "patch": 4,
+      "cells": 22,
+      "boundary_faces": 36,
+      "status": "REJECT_BOUNDARY_TOPOLOGY_OR_AREA"
+    },
+    {
+      "patch": 5,
+      "cells": 13,
+      "boundary_faces": 18,
+      "status": "REJECT_BOUNDARY_TOPOLOGY_OR_AREA"
+    },
+    {
+      "patch": 6,
+      "cells": 5,
+      "boundary_faces": 12,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 7,
+      "cells": 11,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 8,
+      "cells": 11,
+      "boundary_faces": 18,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 9,
+      "cells": 5,
+      "boundary_faces": 12,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 10,
+      "cells": 9,
+      "boundary_faces": 18,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 11,
+      "cells": 14,
+      "boundary_faces": 22,
+      "status": "REJECT_BOUNDARY_TOPOLOGY_OR_AREA"
+    },
+    {
+      "patch": 12,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 13,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 14,
+      "cells": 16,
+      "boundary_faces": 26,
+      "status": "REJECT_BOUNDARY_TOPOLOGY_OR_AREA"
+    },
+    {
+      "patch": 15,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 16,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 17,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 18,
+      "cells": 10,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 19,
+      "cells": 8,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 20,
+      "cells": 5,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 21,
+      "cells": 8,
+      "boundary_faces": 14,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 22,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 23,
+      "cells": 4,
+      "boundary_faces": 8,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 7.439601103261975e-07,
+      "best_F32_margin_m": 7.427507760868665e-07,
+      "center": [
+        0.06337142735719681,
+        -1.6000707149505615,
+        0.12674427032470703
+      ],
+      "exact_signed_cavity_volume_conserved": true,
+      "status": "PASS_STAR_KERNEL_CONSTRUCTION_PENDING_EXACT_SURFACE_GATES",
+      "wall_s": 0.0008700410835444927
+    },
+    {
+      "patch": 24,
+      "cells": 5,
+      "boundary_faces": 12,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 25,
+      "cells": 13,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 26,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 27,
+      "cells": 4,
+      "boundary_faces": 8,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 8.867785317377625e-10,
+      "best_F32_margin_m": 3.48058172354341e-10,
+      "center": [
+        -0.08681247383356094,
+        -0.14229297637939453,
+        0.12312647700309753
+      ],
+      "exact_signed_cavity_volume_conserved": true,
+      "status": "PASS_STAR_KERNEL_CONSTRUCTION_PENDING_EXACT_SURFACE_GATES",
+      "wall_s": 0.0009559169411659241
+    },
+    {
+      "patch": 28,
+      "cells": 7,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 29,
+      "cells": 4,
+      "boundary_faces": 8,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 4.6365261018161e-09,
+      "best_F32_margin_m": 4.2844827792396416e-09,
+      "center": [
+        0.043220050632953644,
+        -0.13423508405685425,
+        0.1182701364159584
+      ],
+      "exact_signed_cavity_volume_conserved": true,
+      "status": "PASS_STAR_KERNEL_CONSTRUCTION_PENDING_EXACT_SURFACE_GATES",
+      "wall_s": 0.0007956249173730612
+    },
+    {
+      "patch": 30,
+      "cells": 6,
+      "boundary_faces": 12,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 31,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 32,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 33,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 34,
+      "cells": 5,
+      "boundary_faces": 8,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 1.57357989192111e-07,
+      "best_F32_margin_m": 1.5694327353253916e-07,
+      "center": [
+        0.04305185005068779,
+        -0.12042272835969925,
+        0.1350904405117035
+      ],
+      "exact_signed_cavity_volume_conserved": true,
+      "status": "PASS_STAR_KERNEL_CONSTRUCTION_PENDING_EXACT_SURFACE_GATES",
+      "wall_s": 0.000732499873265624
+    },
+    {
+      "patch": 35,
+      "cells": 9,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 36,
+      "cells": 5,
+      "boundary_faces": 8,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 3.539625668637469e-05,
+      "best_F32_margin_m": 3.539371220007728e-05,
+      "center": [
+        -0.02868141606450081,
+        -0.02909132093191147,
+        0.13549400866031647
+      ],
+      "exact_signed_cavity_volume_conserved": true,
+      "status": "PASS_STAR_KERNEL_CONSTRUCTION_PENDING_EXACT_SURFACE_GATES",
+      "wall_s": 0.0007302919402718544
+    },
+    {
+      "patch": 37,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 38,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 39,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 40,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 41,
+      "cells": 9,
+      "boundary_faces": 16,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 42,
+      "cells": 5,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 43,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 44,
+      "cells": 4,
+      "boundary_faces": 8,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 2.703760088935348e-09,
+      "best_F32_margin_m": 0.0,
+      "center": [
+        -0.13207072019577026,
+        -1.73001229763031,
+        0.2740288972854614
+      ],
+      "status": "REJECT_NO_F32_INTERIOR_POINT"
+    },
+    {
+      "patch": 45,
+      "cells": 3,
+      "boundary_faces": 8,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 46,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 47,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 48,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 49,
+      "cells": 3,
+      "boundary_faces": 6,
+      "lp_status": 0,
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "kernel_inradius_m": 1.143599239821592e-05,
+      "best_F32_margin_m": 1.1435094618502052e-05,
+      "center": [
+        -0.04675201326608658,
+        -0.039071109145879745,
+        0.15910734236240387
+      ],
+      "exact_signed_cavity_volume_conserved": true,
+      "status": "PASS_STAR_KERNEL_CONSTRUCTION_PENDING_EXACT_SURFACE_GATES",
+      "wall_s": 0.0006930411327630281
+    },
+    {
+      "patch": 50,
+      "cells": 5,
+      "boundary_faces": 12,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    },
+    {
+      "patch": 51,
+      "cells": 4,
+      "boundary_faces": 10,
+      "lp_status": 2,
+      "lp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+      "status": "REJECT_NO_STRICT_STAR_KERNEL"
+    }
+  ]
+}

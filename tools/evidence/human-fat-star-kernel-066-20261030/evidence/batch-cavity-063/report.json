@@ -1,0 +1,1612 @@
+{
+  "status": "BATCHED_FIXED_CURRENT_BOUNDARY_REPAIR_PARTIAL_NOT_PHYSICAL_ADMISSION",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "source_cells": 853727,
+  "candidate_cells": 853753,
+  "source_F32_zero": 16,
+  "source_F32_negative": 93,
+  "remaining_F32_zero": 16,
+  "remaining_F32_negative": 71,
+  "new_cells_F32_nonpositive": 0,
+  "accepted": [
+    {
+      "patch": 18,
+      "radius": 1,
+      "replaced_cells": 14,
+      "new_cells": 14,
+      "covered_bad_cells": 4
+    },
+    {
+      "patch": 16,
+      "radius": 4,
+      "replaced_cells": 38,
+      "new_cells": 28,
+      "covered_bad_cells": 3
+    },
+    {
+      "patch": 30,
+      "radius": 3,
+      "replaced_cells": 23,
+      "new_cells": 26,
+      "covered_bad_cells": 2
+    },
+    {
+      "patch": 46,
+      "radius": 4,
+      "replaced_cells": 51,
+      "new_cells": 42,
+      "covered_bad_cells": 2
+    },
+    {
+      "patch": 49,
+      "radius": 0,
+      "replaced_cells": 3,
+      "new_cells": 6,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 23,
+      "radius": 0,
+      "replaced_cells": 4,
+      "new_cells": 8,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 27,
+      "radius": 0,
+      "replaced_cells": 4,
+      "new_cells": 8,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 29,
+      "radius": 0,
+      "replaced_cells": 4,
+      "new_cells": 8,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 36,
+      "radius": 0,
+      "replaced_cells": 5,
+      "new_cells": 8,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 40,
+      "radius": 1,
+      "replaced_cells": 7,
+      "new_cells": 12,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 6,
+      "radius": 1,
+      "replaced_cells": 10,
+      "new_cells": 16,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 39,
+      "radius": 1,
+      "replaced_cells": 12,
+      "new_cells": 20,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 22,
+      "radius": 2,
+      "replaced_cells": 13,
+      "new_cells": 20,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 38,
+      "radius": 3,
+      "replaced_cells": 25,
+      "new_cells": 24,
+      "covered_bad_cells": 1
+    },
+    {
+      "patch": 26,
+      "radius": 4,
+      "replaced_cells": 37,
+      "new_cells": 36,
+      "covered_bad_cells": 1
+    }
+  ],
+  "attempts": [
+    {
+      "cells": 14,
+      "status": "REJECT_NO_STAR",
+      "patch": 0,
+      "radius": 0
+    },
+    {
+      "cells": 24,
+      "status": "REJECT_NO_F32_KERNEL",
+      "margin_m": -2.1506473456602815e-10,
+      "patch": 0,
+      "radius": 1
+    },
+    {
+      "cells": 31,
+      "status": "REJECT_NO_STAR",
+      "patch": 0,
+      "radius": 2
+    },
+    {
+      "cells": 41,
+      "status": "REJECT_NO_STAR",
+      "patch": 0,
+      "radius": 3
+    },
+    {
+      "cells": 47,
+      "status": "REJECT_NO_STAR",
+      "patch": 0,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 1,
+      "radius": 0
+    },
+    {
+      "cells": 9,
+      "status": "REJECT_NO_STAR",
+      "patch": 1,
+      "radius": 1
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_NO_STAR",
+      "patch": 1,
+      "radius": 2
+    },
+    {
+      "cells": 31,
+      "status": "REJECT_NO_STAR",
+      "patch": 1,
+      "radius": 3
+    },
+    {
+      "cells": 52,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 1,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 2,
+      "radius": 0
+    },
+    {
+      "cells": 9,
+      "status": "REJECT_NO_F32_KERNEL",
+      "margin_m": 0.0,
+      "patch": 2,
+      "radius": 1
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_NO_STAR",
+      "patch": 2,
+      "radius": 2
+    },
+    {
+      "cells": 30,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 2,
+      "radius": 3
+    },
+    {
+      "cells": 46,
+      "status": "REJECT_NO_STAR",
+      "patch": 2,
+      "radius": 4
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 3,
+      "radius": 0
+    },
+    {
+      "cells": 20,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 3,
+      "radius": 1
+    },
+    {
+      "cells": 32,
+      "status": "REJECT_ZERO_AREA",
+      "patch": 3,
+      "radius": 2
+    },
+    {
+      "cells": 45,
+      "status": "REJECT_ZERO_AREA",
+      "patch": 3,
+      "radius": 3
+    },
+    {
+      "cells": 59,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 3,
+      "radius": 4
+    },
+    {
+      "cells": 22,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 4,
+      "radius": 0
+    },
+    {
+      "cells": 43,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 4,
+      "radius": 1
+    },
+    {
+      "cells": 69,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 4,
+      "radius": 2
+    },
+    {
+      "cells": 95,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 4,
+      "radius": 3
+    },
+    {
+      "cells": 118,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 4,
+      "radius": 4
+    },
+    {
+      "cells": 13,
+      "status": "REJECT_ZERO_AREA",
+      "patch": 5,
+      "radius": 0
+    },
+    {
+      "cells": 20,
+      "status": "REJECT_ZERO_AREA",
+      "patch": 5,
+      "radius": 1
+    },
+    {
+      "cells": 31,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 5,
+      "radius": 2
+    },
+    {
+      "cells": 50,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 5,
+      "radius": 3
+    },
+    {
+      "cells": 75,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 5,
+      "radius": 4
+    },
+    {
+      "cells": 5,
+      "status": "REJECT_NO_STAR",
+      "patch": 6,
+      "radius": 0
+    },
+    {
+      "cells": 10,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 16,
+      "margin_m": 7.3210645072673475e-06,
+      "material": 16,
+      "center": [
+        0.020319368690252304,
+        -0.15043067932128906,
+        0.06904514878988266
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 6,
+      "radius": 1
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 7,
+      "radius": 0
+    },
+    {
+      "cells": 22,
+      "status": "REJECT_NO_STAR",
+      "patch": 7,
+      "radius": 1
+    },
+    {
+      "cells": 34,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 7,
+      "radius": 2
+    },
+    {
+      "cells": 46,
+      "status": "REJECT_NO_STAR",
+      "patch": 7,
+      "radius": 3
+    },
+    {
+      "cells": 51,
+      "status": "REJECT_NO_STAR",
+      "patch": 7,
+      "radius": 4
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 8,
+      "radius": 0
+    },
+    {
+      "cells": 20,
+      "status": "REJECT_NO_STAR",
+      "patch": 8,
+      "radius": 1
+    },
+    {
+      "cells": 31,
+      "status": "REJECT_NO_STAR",
+      "patch": 8,
+      "radius": 2
+    },
+    {
+      "cells": 37,
+      "status": "REJECT_NO_STAR",
+      "patch": 8,
+      "radius": 3
+    },
+    {
+      "cells": 43,
+      "status": "REJECT_NO_STAR",
+      "patch": 8,
+      "radius": 4
+    },
+    {
+      "cells": 5,
+      "status": "REJECT_NO_STAR",
+      "patch": 9,
+      "radius": 0
+    },
+    {
+      "cells": 14,
+      "status": "REJECT_NO_STAR",
+      "patch": 9,
+      "radius": 1
+    },
+    {
+      "cells": 29,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 9,
+      "radius": 2
+    },
+    {
+      "cells": 50,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 9,
+      "radius": 3
+    },
+    {
+      "cells": 78,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 9,
+      "radius": 4
+    },
+    {
+      "cells": 9,
+      "status": "REJECT_NO_STAR",
+      "patch": 10,
+      "radius": 0
+    },
+    {
+      "cells": 18,
+      "status": "REJECT_NO_STAR",
+      "patch": 10,
+      "radius": 1
+    },
+    {
+      "cells": 34,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 10,
+      "radius": 2
+    },
+    {
+      "cells": 57,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 10,
+      "radius": 3
+    },
+    {
+      "cells": 94,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 10,
+      "radius": 4
+    },
+    {
+      "cells": 14,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 11,
+      "radius": 0
+    },
+    {
+      "cells": 27,
+      "status": "REJECT_NO_STAR",
+      "patch": 11,
+      "radius": 1
+    },
+    {
+      "cells": 42,
+      "status": "REJECT_NO_STAR",
+      "patch": 11,
+      "radius": 2
+    },
+    {
+      "cells": 51,
+      "status": "REJECT_NO_STAR",
+      "patch": 11,
+      "radius": 3
+    },
+    {
+      "cells": 62,
+      "status": "REJECT_NO_STAR",
+      "patch": 11,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 12,
+      "radius": 0
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 12,
+      "radius": 1
+    },
+    {
+      "cells": 23,
+      "status": "REJECT_NO_STAR",
+      "patch": 12,
+      "radius": 2
+    },
+    {
+      "cells": 37,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 12,
+      "radius": 3
+    },
+    {
+      "cells": 53,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 12,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 13,
+      "radius": 0
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 13,
+      "radius": 1
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 13,
+      "radius": 2
+    },
+    {
+      "cells": 28,
+      "status": "REJECT_NO_STAR",
+      "patch": 13,
+      "radius": 3
+    },
+    {
+      "cells": 38,
+      "status": "REJECT_NO_STAR",
+      "patch": 13,
+      "radius": 4
+    },
+    {
+      "cells": 16,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 14,
+      "radius": 0
+    },
+    {
+      "cells": 28,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 14,
+      "radius": 1
+    },
+    {
+      "cells": 49,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 14,
+      "radius": 2
+    },
+    {
+      "cells": 78,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 14,
+      "radius": 3
+    },
+    {
+      "cells": 119,
+      "status": "REJECT_NO_STAR",
+      "patch": 14,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 15,
+      "radius": 0
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 15,
+      "radius": 1
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 15,
+      "radius": 2
+    },
+    {
+      "cells": 27,
+      "status": "REJECT_NO_STAR",
+      "patch": 15,
+      "radius": 3
+    },
+    {
+      "cells": 38,
+      "status": "REJECT_NO_STAR",
+      "patch": 15,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 16,
+      "radius": 0
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 16,
+      "radius": 1
+    },
+    {
+      "cells": 22,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 16,
+      "radius": 2
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 16,
+      "radius": 3
+    },
+    {
+      "cells": 38,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 28,
+      "margin_m": 1.586182615872463e-05,
+      "material": 16,
+      "center": [
+        0.04300539568066597,
+        -0.12044357508420944,
+        0.135084867477417
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 16,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 17,
+      "radius": 0
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 17,
+      "radius": 1
+    },
+    {
+      "cells": 23,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 17,
+      "radius": 2
+    },
+    {
+      "cells": 42,
+      "status": "REJECT_NO_STAR",
+      "patch": 17,
+      "radius": 3
+    },
+    {
+      "cells": 66,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 17,
+      "radius": 4
+    },
+    {
+      "cells": 10,
+      "status": "REJECT_NO_STAR",
+      "patch": 18,
+      "radius": 0
+    },
+    {
+      "cells": 14,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 14,
+      "margin_m": 8.44222257559025e-07,
+      "material": 16,
+      "center": [
+        0.07083319127559662,
+        -1.6874513626098633,
+        0.10400296002626419
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 18,
+      "radius": 1
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 19,
+      "radius": 0
+    },
+    {
+      "cells": 15,
+      "status": "REJECT_NO_STAR",
+      "patch": 19,
+      "radius": 1
+    },
+    {
+      "cells": 23,
+      "status": "REJECT_NO_STAR",
+      "patch": 19,
+      "radius": 2
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_NO_STAR",
+      "patch": 19,
+      "radius": 3
+    },
+    {
+      "cells": 48,
+      "status": "REJECT_NO_STAR",
+      "patch": 19,
+      "radius": 4
+    },
+    {
+      "cells": 5,
+      "status": "REJECT_NO_STAR",
+      "patch": 20,
+      "radius": 0
+    },
+    {
+      "cells": 12,
+      "status": "REJECT_NO_STAR",
+      "patch": 20,
+      "radius": 1
+    },
+    {
+      "cells": 24,
+      "status": "REJECT_NO_STAR",
+      "patch": 20,
+      "radius": 2
+    },
+    {
+      "cells": 36,
+      "status": "REJECT_NO_STAR",
+      "patch": 20,
+      "radius": 3
+    },
+    {
+      "cells": 50,
+      "status": "REJECT_NO_STAR",
+      "patch": 20,
+      "radius": 4
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 21,
+      "radius": 0
+    },
+    {
+      "cells": 16,
+      "status": "REJECT_NO_STAR",
+      "patch": 21,
+      "radius": 1
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 21,
+      "radius": 2
+    },
+    {
+      "cells": 51,
+      "status": "REJECT_NO_STAR",
+      "patch": 21,
+      "radius": 3
+    },
+    {
+      "cells": 64,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 21,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 22,
+      "radius": 0
+    },
+    {
+      "cells": 7,
+      "status": "REJECT_NO_STAR",
+      "patch": 22,
+      "radius": 1
+    },
+    {
+      "cells": 13,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 20,
+      "margin_m": 5.261532406814922e-09,
+      "material": 16,
+      "center": [
+        -0.031494997441768646,
+        -0.08300867676734924,
+        0.04066937044262886
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 22,
+      "radius": 2
+    },
+    {
+      "cells": 4,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 8,
+      "margin_m": 7.427507760868665e-07,
+      "material": 16,
+      "center": [
+        0.06337142735719681,
+        -1.6000707149505615,
+        0.12674427032470703
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 23,
+      "radius": 0
+    },
+    {
+      "cells": 5,
+      "status": "REJECT_NO_STAR",
+      "patch": 24,
+      "radius": 0
+    },
+    {
+      "cells": 13,
+      "status": "REJECT_NO_STAR",
+      "patch": 24,
+      "radius": 1
+    },
+    {
+      "cells": 26,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 24,
+      "radius": 2
+    },
+    {
+      "cells": 49,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 24,
+      "radius": 3
+    },
+    {
+      "cells": 82,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 24,
+      "radius": 4
+    },
+    {
+      "cells": 13,
+      "status": "REJECT_NO_STAR",
+      "patch": 25,
+      "radius": 0
+    },
+    {
+      "cells": 21,
+      "status": "REJECT_NO_STAR",
+      "patch": 25,
+      "radius": 1
+    },
+    {
+      "cells": 28,
+      "status": "REJECT_NO_STAR",
+      "patch": 25,
+      "radius": 2
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_NO_STAR",
+      "patch": 25,
+      "radius": 3
+    },
+    {
+      "cells": 41,
+      "status": "REJECT_NO_STAR",
+      "patch": 25,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 26,
+      "radius": 0
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 26,
+      "radius": 1
+    },
+    {
+      "cells": 16,
+      "status": "REJECT_NO_STAR",
+      "patch": 26,
+      "radius": 2
+    },
+    {
+      "cells": 28,
+      "status": "REJECT_NO_STAR",
+      "patch": 26,
+      "radius": 3
+    },
+    {
+      "cells": 37,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 36,
+      "margin_m": 3.583842950891517e-07,
+      "material": 16,
+      "center": [
+        0.02234693057835102,
+        -0.118495874106884,
+        0.052875906229019165
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 26,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 8,
+      "margin_m": 3.48058172354341e-10,
+      "material": 16,
+      "center": [
+        -0.08681247383356094,
+        -0.14229297637939453,
+        0.12312647700309753
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 27,
+      "radius": 0
+    },
+    {
+      "cells": 7,
+      "status": "REJECT_NO_STAR",
+      "patch": 28,
+      "radius": 0
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_NO_STAR",
+      "patch": 28,
+      "radius": 1
+    },
+    {
+      "cells": 34,
+      "status": "REJECT_NO_STAR",
+      "patch": 28,
+      "radius": 2
+    },
+    {
+      "cells": 55,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 28,
+      "radius": 3
+    },
+    {
+      "cells": 82,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 28,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 8,
+      "margin_m": 4.2844827792396416e-09,
+      "material": 16,
+      "center": [
+        0.043220050632953644,
+        -0.13423508405685425,
+        0.1182701364159584
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 29,
+      "radius": 0
+    },
+    {
+      "cells": 6,
+      "status": "REJECT_NO_STAR",
+      "patch": 30,
+      "radius": 0
+    },
+    {
+      "cells": 12,
+      "status": "REJECT_NO_STAR",
+      "patch": 30,
+      "radius": 1
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_NO_STAR",
+      "patch": 30,
+      "radius": 2
+    },
+    {
+      "cells": 23,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 26,
+      "margin_m": 1.946360451605496e-06,
+      "material": 16,
+      "center": [
+        -0.022769682109355927,
+        -0.03699825331568718,
+        0.0861438512802124
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 30,
+      "radius": 3
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 31,
+      "radius": 0
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 31,
+      "radius": 1
+    },
+    {
+      "cells": 14,
+      "status": "REJECT_NO_STAR",
+      "patch": 31,
+      "radius": 2
+    },
+    {
+      "cells": 23,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 31,
+      "radius": 3
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 31,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 32,
+      "radius": 0
+    },
+    {
+      "cells": 7,
+      "status": "REJECT_NO_STAR",
+      "patch": 32,
+      "radius": 1
+    },
+    {
+      "cells": 13,
+      "status": "REJECT_MIXED_ATTR",
+      "attributes": [
+        0,
+        16
+      ],
+      "patch": 32,
+      "radius": 2
+    },
+    {
+      "cells": 21,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 32,
+      "radius": 3
+    },
+    {
+      "cells": 28,
+      "status": "REJECT_NO_STAR",
+      "patch": 32,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 33,
+      "radius": 0
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_STAR",
+      "patch": 33,
+      "radius": 1
+    },
+    {
+      "cells": 16,
+      "status": "REJECT_NO_STAR",
+      "patch": 33,
+      "radius": 2
+    },
+    {
+      "cells": 29,
+      "status": "REJECT_NO_STAR",
+      "patch": 33,
+      "radius": 3
+    },
+    {
+      "cells": 42,
+      "status": "REJECT_NO_STAR",
+      "patch": 33,
+      "radius": 4
+    },
+    {
+      "cells": 5,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 8,
+      "margin_m": 1.5694327353253916e-07,
+      "material": 16,
+      "center": [
+        0.04305185005068779,
+        -0.12042272835969925,
+        0.1350904405117035
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 34,
+      "radius": 0
+    },
+    {
+      "cells": 9,
+      "status": "REJECT_NO_STAR",
+      "patch": 35,
+      "radius": 0
+    },
+    {
+      "cells": 15,
+      "status": "REJECT_NO_STAR",
+      "patch": 35,
+      "radius": 1
+    },
+    {
+      "cells": 22,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 35,
+      "radius": 2
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_NO_STAR",
+      "patch": 35,
+      "radius": 3
+    },
+    {
+      "cells": 42,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 35,
+      "radius": 4
+    },
+    {
+      "cells": 5,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 8,
+      "margin_m": 3.539371220007728e-05,
+      "material": 16,
+      "center": [
+        -0.02868141606450081,
+        -0.02909132093191147,
+        0.13549400866031647
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 36,
+      "radius": 0
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 37,
+      "radius": 0
+    },
+    {
+      "cells": 10,
+      "status": "REJECT_NO_STAR",
+      "patch": 37,
+      "radius": 1
+    },
+    {
+      "cells": 20,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 37,
+      "radius": 2
+    },
+    {
+      "cells": 39,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 37,
+      "radius": 3
+    },
+    {
+      "cells": 67,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 37,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 38,
+      "radius": 0
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 38,
+      "radius": 1
+    },
+    {
+      "cells": 21,
+      "status": "REJECT_NO_STAR",
+      "patch": 38,
+      "radius": 2
+    },
+    {
+      "cells": 25,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 24,
+      "margin_m": 2.9083548050901855e-08,
+      "material": 16,
+      "center": [
+        -0.08703561127185822,
+        -0.08651456236839294,
+        0.17073234915733337
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 38,
+      "radius": 3
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 39,
+      "radius": 0
+    },
+    {
+      "cells": 12,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 20,
+      "margin_m": 6.090919348776551e-06,
+      "material": 16,
+      "center": [
+        -0.08053915202617645,
+        -0.11650711297988892,
+        0.16914604604244232
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 39,
+      "radius": 1
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 40,
+      "radius": 0
+    },
+    {
+      "cells": 7,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 12,
+      "margin_m": 1.6133263043491922e-05,
+      "material": 16,
+      "center": [
+        -0.05752699449658394,
+        -0.10351737588644028,
+        0.03792370483279228
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 40,
+      "radius": 1
+    },
+    {
+      "cells": 9,
+      "status": "REJECT_NO_STAR",
+      "patch": 41,
+      "radius": 0
+    },
+    {
+      "cells": 17,
+      "status": "REJECT_NO_STAR",
+      "patch": 41,
+      "radius": 1
+    },
+    {
+      "cells": 26,
+      "status": "REJECT_NO_STAR",
+      "patch": 41,
+      "radius": 2
+    },
+    {
+      "cells": 36,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 41,
+      "radius": 3
+    },
+    {
+      "cells": 47,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 41,
+      "radius": 4
+    },
+    {
+      "cells": 5,
+      "status": "REJECT_NO_STAR",
+      "patch": 42,
+      "radius": 0
+    },
+    {
+      "cells": 13,
+      "status": "REJECT_NO_STAR",
+      "patch": 42,
+      "radius": 1
+    },
+    {
+      "cells": 24,
+      "status": "REJECT_NO_STAR",
+      "patch": 42,
+      "radius": 2
+    },
+    {
+      "cells": 39,
+      "status": "REJECT_NO_STAR",
+      "patch": 42,
+      "radius": 3
+    },
+    {
+      "cells": 61,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 42,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 43,
+      "radius": 0
+    },
+    {
+      "cells": 6,
+      "status": "REJECT_NO_STAR",
+      "patch": 43,
+      "radius": 1
+    },
+    {
+      "cells": 12,
+      "status": "REJECT_NO_STAR",
+      "patch": 43,
+      "radius": 2
+    },
+    {
+      "cells": 24,
+      "status": "REJECT_NO_STAR",
+      "patch": 43,
+      "radius": 3
+    },
+    {
+      "cells": 45,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 43,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_F32_KERNEL",
+      "margin_m": -5.682424021422733e-20,
+      "patch": 44,
+      "radius": 0
+    },
+    {
+      "cells": 8,
+      "status": "REJECT_NO_F32_KERNEL",
+      "margin_m": -1.2436373543919892e-08,
+      "patch": 44,
+      "radius": 1
+    },
+    {
+      "cells": 14,
+      "status": "REJECT_NO_STAR",
+      "patch": 44,
+      "radius": 2
+    },
+    {
+      "cells": 24,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 44,
+      "radius": 3
+    },
+    {
+      "cells": 38,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 44,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "REJECT_NO_STAR",
+      "patch": 45,
+      "radius": 0
+    },
+    {
+      "cells": 7,
+      "status": "REJECT_NO_STAR",
+      "patch": 45,
+      "radius": 1
+    },
+    {
+      "cells": 13,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 45,
+      "radius": 2
+    },
+    {
+      "cells": 20,
+      "status": "REJECT_NO_STAR",
+      "patch": 45,
+      "radius": 3
+    },
+    {
+      "cells": 27,
+      "status": "REJECT_NO_STAR",
+      "patch": 45,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 46,
+      "radius": 0
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 46,
+      "radius": 1
+    },
+    {
+      "cells": 22,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 46,
+      "radius": 2
+    },
+    {
+      "cells": 37,
+      "status": "REJECT_NO_STAR",
+      "patch": 46,
+      "radius": 3
+    },
+    {
+      "cells": 51,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 42,
+      "margin_m": 1.3377142750263545e-05,
+      "material": 16,
+      "center": [
+        -0.026366746053099632,
+        -0.028623051941394806,
+        0.1247313842177391
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 46,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 47,
+      "radius": 0
+    },
+    {
+      "cells": 11,
+      "status": "REJECT_NO_STAR",
+      "patch": 47,
+      "radius": 1
+    },
+    {
+      "cells": 21,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 47,
+      "radius": 2
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_NO_STAR",
+      "patch": 47,
+      "radius": 3
+    },
+    {
+      "cells": 46,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 47,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 48,
+      "radius": 0
+    },
+    {
+      "cells": 12,
+      "status": "REJECT_NO_STAR",
+      "patch": 48,
+      "radius": 1
+    },
+    {
+      "cells": 25,
+      "status": "REJECT_NO_STAR",
+      "patch": 48,
+      "radius": 2
+    },
+    {
+      "cells": 47,
+      "status": "REJECT_NO_STAR",
+      "patch": 48,
+      "radius": 3
+    },
+    {
+      "cells": 77,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 48,
+      "radius": 4
+    },
+    {
+      "cells": 3,
+      "status": "PASS_FIXED_CURRENT_BOUNDARY_LOCAL_CAVITY",
+      "new_cells": 6,
+      "margin_m": 1.1435094618502056e-05,
+      "material": 16,
+      "center": [
+        -0.04675201326608658,
+        -0.039071109145879745,
+        0.15910734236240387
+      ],
+      "exact_volume_conserved": true,
+      "exact_crossing_count": 0,
+      "patch": 49,
+      "radius": 0
+    },
+    {
+      "cells": 5,
+      "status": "REJECT_NO_STAR",
+      "patch": 50,
+      "radius": 0
+    },
+    {
+      "cells": 15,
+      "status": "REJECT_NO_STAR",
+      "patch": 50,
+      "radius": 1
+    },
+    {
+      "cells": 25,
+      "status": "REJECT_NO_STAR",
+      "patch": 50,
+      "radius": 2
+    },
+    {
+      "cells": 37,
+      "status": "REJECT_NO_STAR",
+      "patch": 50,
+      "radius": 3
+    },
+    {
+      "cells": 50,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 50,
+      "radius": 4
+    },
+    {
+      "cells": 4,
+      "status": "REJECT_NO_STAR",
+      "patch": 51,
+      "radius": 0
+    },
+    {
+      "cells": 10,
+      "status": "REJECT_NO_STAR",
+      "patch": 51,
+      "radius": 1
+    },
+    {
+      "cells": 19,
+      "status": "REJECT_NO_STAR",
+      "patch": 51,
+      "radius": 2
+    },
+    {
+      "cells": 33,
+      "status": "REJECT_NO_STAR",
+      "patch": 51,
+      "radius": 3
+    },
+    {
+      "cells": 44,
+      "status": "REJECT_TOPOLOGY",
+      "patch": 51,
+      "radius": 4
+    }
+  ],
+  "original_PLC_facet_restoration": "PENDING_OTHER_CONNECTED_STEINER_CAVITIES",
+  "exact_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+}

@@ -1,0 +1,119 @@
+{
+  "status": "GUARDED_EXACT_CONSTRUCTION_EDGE_COLLAPSE_PARTIAL_NOT_PHYSICAL_ADMISSION",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "source_sha256": "e6388d0d035ea9fd4a695ca7ec892dfebf714fbcaeaa1c940b9c92e9978d6d29",
+  "source_cells": 853716,
+  "candidate_cells": 853700,
+  "removed_cells": 16,
+  "source_nodes": 246516,
+  "candidate_nodes": 246506,
+  "all_original_source_nodes_and_F32_bits_preserved": true,
+  "no_nonzero_cell_removed": true,
+  "exact_total_volume_preservation_basis": "Every retained tetrahedron has identical F32 corner coordinates; every removed simplex has repeated exact F32 corner positions, so its exact determinant is zero.",
+  "steps": [
+    {
+      "retained_node_row": 228365,
+      "contracted_construction_node_row": 246253,
+      "exact_F32_bit_identity": true,
+      "simplicial_link_condition": true,
+      "link_intersection_size": 10,
+      "edge_link_size": 10,
+      "removed_repeated_node_cell_rows": [
+        10178,
+        462145,
+        551158,
+        562474
+      ],
+      "removed_materials": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "removed_cells_all_exactly_zero_by_repeated_positions": true
+    },
+    {
+      "retained_node_row": 246318,
+      "contracted_construction_node_row": 246403,
+      "exact_F32_bit_identity": true,
+      "simplicial_link_condition": true,
+      "link_intersection_size": 13,
+      "edge_link_size": 13,
+      "removed_repeated_node_cell_rows": [
+        3094,
+        351163,
+        373079,
+        486313,
+        571668,
+        765360
+      ],
+      "removed_materials": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "removed_cells_all_exactly_zero_by_repeated_positions": true
+    },
+    {
+      "retained_node_row": 158931,
+      "contracted_construction_node_row": 246296,
+      "exact_F32_bit_identity": true,
+      "simplicial_link_condition": true,
+      "link_intersection_size": 6,
+      "edge_link_size": 6,
+      "removed_repeated_node_cell_rows": [
+        243027,
+        685020
+      ],
+      "removed_materials": [
+        16,
+        16
+      ],
+      "removed_cells_all_exactly_zero_by_repeated_positions": true
+    },
+    {
+      "retained_node_row": 158931,
+      "contracted_construction_node_row": 246321,
+      "exact_F32_bit_identity": true,
+      "simplicial_link_condition": true,
+      "link_intersection_size": 10,
+      "edge_link_size": 10,
+      "removed_repeated_node_cell_rows": [
+        55307,
+        430607,
+        444219,
+        476290
+      ],
+      "removed_materials": [
+        16,
+        16,
+        16,
+        16
+      ],
+      "removed_cells_all_exactly_zero_by_repeated_positions": true
+    }
+  ],
+  "all_link_conditions_pass": true,
+  "F32_zero_cells": 0,
+  "F32_negative_cells": 70,
+  "duplicate_cells": 0,
+  "nonmanifold_tet_faces": 0,
+  "boundary_edges_not_two_incident": 0,
+  "boundary_faces": 493160,
+  "original_PLC_facets": "PENDING_CONNECTED_RESTORATION",
+  "fail_closed_global_gates": {
+    "all_link_conditions_pass": true,
+    "all_original_source_nodes_and_F32_bits_preserved": true,
+    "no_nonzero_cell_removed": true,
+    "zero_F32_cells": true,
+    "no_duplicate_cells": true,
+    "manifold_tet_faces": true,
+    "closed_boundary_edges": true,
+    "cell_partition": true
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "frozen_065_source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/collapse_exact_construction_edges_065.py",
+  "frozen_065_source_sha256": "5e8251421799d64cdcfff9ff5d94e5b22c1013ffee0bf9e25d2c2d297aeb0ef7",
+  "guarded_derivative": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-construction-edge-controls-065-guarded/collapse_exact_construction_edges_065_guarded.py",
+  "guarded_derivative_sha256": "c7c1d9ee38f8b866458a1e0f9bf6d01d896c9bad70753614413cbe0653692709",
+  "physical_admission": false,
+  "schema": "construction-edge-collapse-controls-065-guarded-v1",
+  "status": "PASS",
+  "tests": [
+    {
+      "detail": {
+        "duplicate_group": [
+          [
+            0,
+            4
+          ]
+        ],
+        "exact_output_det6": "1",
+        "exact_parent_det6": "1",
+        "link_pass": true,
+        "original_prefix_identity": true,
+        "removed_zero_cells": [
+          1,
+          2,
+          3
+        ],
+        "retained_cells": [
+          [
+            0,
+            1,
+            2,
+            3
+          ]
+        ]
+      },
+      "name": "stellar_1_to_4_at_source_corner",
+      "pass": true
+    },
+    {
+      "detail": {
+        "construction_row": 4,
+        "groups": [],
+        "offset_f32": 1.401298464324817e-45,
+        "source_corner_row": 0,
+        "steps": 0
+      },
+      "name": "reject_false_near_coincidence",
+      "pass": true
+    },
+    {
+      "detail": {
+        "groups": [
+          [
+            0,
+            1,
+            4
+          ]
+        ],
+        "input_cells_unchanged": true,
+        "message": "original-row assertion"
+      },
+      "name": "reject_merge_of_two_original_source_rows",
+      "pass": true
+    },
+    {
+      "detail": {
+        "guarded_error": "refusing exact-coordinate contraction that fails the simplicial link condition",
+        "guarded_input_cells_unchanged": true,
+        "guarded_rejected": true,
+        "unguarded_all_duplicate_cells_exact_nonzero": true,
+        "unguarded_duplicate_cells": 1,
+        "unguarded_link": false
+      },
+      "name": "reject_nontrivial_failed_link",
+      "pass": true
+    }
+  ]
+}
