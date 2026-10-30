@@ -1,0 +1,1095 @@
+{
+  "all_Fat_domains_are_diagnostics_not_admitted": true,
+  "elapsed_s": 1.152389041846618,
+  "native_steps": 0,
+  "physical_admission": false,
+  "rows": [
+    {
+      "all_Fat_diagnostic_only_nearest_distances_source_vertices_then_centroid_m": [
+        0.02586610263577126,
+        0.020103291184229943,
+        0.01671224444752341,
+        0.013790668477016457,
+        0.020383249230010555
+      ],
+      "authenticated_onehop_nearest_distances_source_vertices_then_centroid_m": [
+        0.02586610263577126,
+        0.020103291184229943,
+        0.01671224444752341,
+        0.013790668477016457,
+        0.020383249230010555
+      ],
+      "global_parent": 19252,
+      "parent": 4936,
+      "region": 128,
+      "source_vertices_m": [
+        [
+          -0.12239775776769785,
+          -0.9802361925313463,
+          0.04240854682292866
+        ],
+        [
+          -0.16857831856650105,
+          -1.1669406786722234,
+          0.09939519702974228
+        ],
+        [
+          -0.12307498865240507,
+          -1.2017833515403669,
+          0.06740774307526032
+        ],
+        [
+          -0.12013864967669226,
+          -1.1987142997665157,
+          0.07435079350508667
+        ]
+      ],
+      "trials": [
+        {
+          "alpha": 0.0,
+          "barycentric": [
+            [
+              0.1464196368394003,
+              0.18619468745036447,
+              0.11717999504214749,
+              0.5502056806680877
+            ],
+            [
+              0.0062438128418956795,
+              0.46633106666219504,
+              0.03640770096624646,
+              0.4910174195296628
+            ],
+            [
+              0.390176240283296,
+              0.21986327790160518,
+              0.3307699378899116,
+              0.05919054392518719
+            ],
+            [
+              0.0,
+              0.2534516850871741,
+              0.7465483149128259,
+              0.0
+            ]
+          ],
+          "bbox_candidates": 43,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 24,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0,
+          "min_weight": 0.0471004166137973,
+          "moment_error": 1.942890293094024e-16,
+          "success": true,
+          "target_distances_m": [
+            1.3877787807814457e-17,
+            0.0,
+            1.3877787807814457e-17,
+            0.013535062247287101
+          ],
+          "target_rows": [
+            11715,
+            25560,
+            199409,
+            549191
+          ],
+          "weights": [
+            0.26103010392539977,
+            0.15151355063011368,
+            0.5403559288306888,
+            0.0471004166137973
+          ]
+        },
+        {
+          "alpha": 0.05,
+          "barycentric": [
+            [
+              0.15159865499743028,
+              0.18938495307784625,
+              0.1238209952900401,
+              0.5351953966346833
+            ],
+            [
+              0.018431622199800896,
+              0.45551451332908527,
+              0.047087315917934136,
+              0.47896654855317966
+            ],
+            [
+              0.3831674282691312,
+              0.22137011400652493,
+              0.326731440995416,
+              0.06873101672892783
+            ],
+            [
+              0.0125,
+              0.25327910083281535,
+              0.7217208991671845,
+              0.0125
+            ]
+          ],
+          "bbox_candidates": 43,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 23,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0125,
+          "min_weight": 0.04710041661379746,
+          "moment_error": 1.1102230246251565e-16,
+          "success": true,
+          "target_distances_m": [
+            0.0012336737987694811,
+            0.0024459703166394607,
+            0.0014999308832051351,
+            0.01605097015248374
+          ],
+          "target_rows": [
+            11715,
+            25560,
+            199409,
+            549191
+          ],
+          "weights": [
+            0.2610301039254006,
+            0.1515135506301134,
+            0.5403559288306888,
+            0.04710041661379746
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "barycentric": [
+            [
+              0.15677767315546026,
+              0.192575218705328,
+              0.13046199553793275,
+              0.520185112601279
+            ],
+            [
+              0.37615861625496644,
+              0.22287695011144465,
+              0.3226929441009205,
+              0.07827148953266846
+            ],
+            [
+              0.15677773330139239,
+              0.4175752506661917,
+              0.13046181967686504,
+              0.2951851963555509
+            ],
+            [
+              0.025,
+              0.2531065165784567,
+              0.6968934834215433,
+              0.025
+            ]
+          ],
+          "bbox_candidates": 43,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 20,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.025,
+          "min_weight": 0.055510519130728554,
+          "moment_error": 5.551115123125783e-17,
+          "success": true,
+          "target_distances_m": [
+            0.0024673475975387485,
+            0.0029998617664102703,
+            0.0020383249230010335,
+            0.018651564339550855
+          ],
+          "target_rows": [
+            11715,
+            199409,
+            235186,
+            549191
+          ],
+          "weights": [
+            0.30764281801803195,
+            0.45827755925651287,
+            0.17856910359472652,
+            0.055510519130728554
+          ]
+        },
+        {
+          "alpha": 0.2,
+          "bbox_candidates": 43,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 16,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.0,
+          "barycentric": [
+            [
+              0.1464196368394003,
+              0.18619468745036447,
+              0.11717999504214749,
+              0.5502056806680877
+            ],
+            [
+              0.0062438128418956795,
+              0.46633106666219504,
+              0.03640770096624646,
+              0.4910174195296628
+            ],
+            [
+              0.390176240283296,
+              0.21986327790160518,
+              0.3307699378899116,
+              0.05919054392518719
+            ],
+            [
+              0.0,
+              0.2534516850871741,
+              0.7465483149128259,
+              0.0
+            ]
+          ],
+          "bbox_candidates": 43,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 24,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0,
+          "min_weight": 0.0471004166137973,
+          "moment_error": 1.942890293094024e-16,
+          "success": true,
+          "target_distances_m": [
+            1.3877787807814457e-17,
+            0.0,
+            1.3877787807814457e-17,
+            0.013535062247287101
+          ],
+          "target_rows": [
+            11715,
+            25560,
+            199409,
+            549191
+          ],
+          "weights": [
+            0.26103010392539977,
+            0.15151355063011368,
+            0.5403559288306888,
+            0.0471004166137973
+          ]
+        },
+        {
+          "alpha": 0.05,
+          "barycentric": [
+            [
+              0.15159865499743028,
+              0.18938495307784625,
+              0.1238209952900401,
+              0.5351953966346833
+            ],
+            [
+              0.018431622199800896,
+              0.45551451332908527,
+              0.047087315917934136,
+              0.47896654855317966
+            ],
+            [
+              0.3831674282691312,
+              0.22137011400652493,
+              0.326731440995416,
+              0.06873101672892783
+            ],
+            [
+              0.0125,
+              0.25327910083281535,
+              0.7217208991671845,
+              0.0125
+            ]
+          ],
+          "bbox_candidates": 43,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 23,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0125,
+          "min_weight": 0.04710041661379746,
+          "moment_error": 1.1102230246251565e-16,
+          "success": true,
+          "target_distances_m": [
+            0.0012336737987694811,
+            0.0024459703166394607,
+            0.0014999308832051351,
+            0.01605097015248374
+          ],
+          "target_rows": [
+            11715,
+            25560,
+            199409,
+            549191
+          ],
+          "weights": [
+            0.2610301039254006,
+            0.1515135506301134,
+            0.5403559288306888,
+            0.04710041661379746
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "barycentric": [
+            [
+              0.15677767315546026,
+              0.192575218705328,
+              0.13046199553793275,
+              0.520185112601279
+            ],
+            [
+              0.37615861625496644,
+              0.22287695011144465,
+              0.3226929441009205,
+              0.07827148953266846
+            ],
+            [
+              0.15677773330139239,
+              0.4175752506661917,
+              0.13046181967686504,
+              0.2951851963555509
+            ],
+            [
+              0.025,
+              0.2531065165784567,
+              0.6968934834215433,
+              0.025
+            ]
+          ],
+          "bbox_candidates": 43,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 20,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.025,
+          "min_weight": 0.055510519130728554,
+          "moment_error": 5.551115123125783e-17,
+          "success": true,
+          "target_distances_m": [
+            0.0024673475975387485,
+            0.0029998617664102703,
+            0.0020383249230010335,
+            0.018651564339550855
+          ],
+          "target_rows": [
+            11715,
+            199409,
+            235186,
+            549191
+          ],
+          "weights": [
+            0.30764281801803195,
+            0.45827755925651287,
+            0.17856910359472652,
+            0.055510519130728554
+          ]
+        },
+        {
+          "alpha": 0.2,
+          "bbox_candidates": 43,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 16,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        }
+      ]
+    },
+    {
+      "all_Fat_diagnostic_only_nearest_distances_source_vertices_then_centroid_m": [
+        0.021543407508415144,
+        0.020103291184229943,
+        0.022595173476649612,
+        0.013790668477016457,
+        0.022007745477079815
+      ],
+      "authenticated_onehop_nearest_distances_source_vertices_then_centroid_m": [
+        0.021543407508415144,
+        0.020103291184229943,
+        0.022595173476649612,
+        0.013790668477016457,
+        0.022007745477079815
+      ],
+      "global_parent": 19254,
+      "parent": 4938,
+      "region": 128,
+      "source_vertices_m": [
+        [
+          -0.15960247558021184,
+          -1.1631414755089273,
+          0.10115651337619128
+        ],
+        [
+          -0.16857831856650105,
+          -1.1669406786722234,
+          0.09939519702974228
+        ],
+        [
+          -0.11612918360018136,
+          -0.9771881042061743,
+          0.04944744982832619
+        ],
+        [
+          -0.12013864967669226,
+          -1.1987142997665157,
+          0.07435079350508667
+        ]
+      ],
+      "trials": [
+        {
+          "alpha": 0.0,
+          "bbox_candidates": 49,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 27,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.05,
+          "bbox_candidates": 49,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 24,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.1,
+          "bbox_candidates": 49,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 21,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.2,
+          "bbox_candidates": 49,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 15,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.0,
+          "bbox_candidates": 49,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 27,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.05,
+          "bbox_candidates": 49,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 24,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.1,
+          "bbox_candidates": 49,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 21,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.2,
+          "bbox_candidates": 49,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 15,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        }
+      ]
+    },
+    {
+      "all_Fat_diagnostic_only_nearest_distances_source_vertices_then_centroid_m": [
+        0.010198261370696257,
+        0.018405906163664137,
+        0.003822470527211577,
+        0.022595173476649612,
+        0.021633288928782305
+      ],
+      "authenticated_onehop_nearest_distances_source_vertices_then_centroid_m": [
+        0.010198261370696257,
+        0.018405906163664137,
+        0.003822470527211577,
+        0.022595173476649612,
+        0.021633288928782305
+      ],
+      "global_parent": 18976,
+      "parent": 4660,
+      "region": 131,
+      "source_vertices_m": [
+        [
+          -0.1897516575392329,
+          -1.1460174698808383,
+          0.11302678514803782
+        ],
+        [
+          -0.1977403790454046,
+          -1.0595121538585939,
+          0.11059054845158231
+        ],
+        [
+          -0.18101294919009678,
+          -1.1417910654828913,
+          0.11498632868126102
+        ],
+        [
+          -0.11612918360018136,
+          -0.9771881042061743,
+          0.04944744982832619
+        ]
+      ],
+      "trials": [
+        {
+          "alpha": 0.0,
+          "barycentric": [
+            [
+              0.6657893945265743,
+              0.0,
+              0.10246460789241768,
+              0.23174599758100814
+            ],
+            [
+              0.10681491110750746,
+              0.03181075552524942,
+              0.8613743333672431,
+              0.0
+            ],
+            [
+              0.08627227484247235,
+              0.22232278859520382,
+              0.17593748011114885,
+              0.515467456451175
+            ],
+            [
+              0.08627277967378877,
+              0.4723226689544125,
+              0.17593707981946805,
+              0.2654674715523306
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 19,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0,
+          "min_weight": 0.12191841554666503,
+          "moment_error": 3.3306690738754696e-16,
+          "success": true,
+          "target_distances_m": [
+            0.0013363345319645794,
+            0.002765937790589167,
+            2.7755575615628914e-17,
+            3.1031676915590914e-17
+          ],
+          "target_rows": [
+            772843,
+            777972,
+            790039,
+            799003
+          ],
+          "weights": [
+            0.27763884484946716,
+            0.1378122988249308,
+            0.12191841554666503,
+            0.46263044077893783
+          ]
+        },
+        {
+          "alpha": 0.05,
+          "barycentric": [
+            [
+              0.6449999248002455,
+              0.0125,
+              0.1098413774977968,
+              0.23265869770195774
+            ],
+            [
+              0.11397416555213208,
+              0.04272021774898695,
+              0.8308056166988809,
+              0.0125
+            ],
+            [
+              0.09445866110034873,
+              0.22370664916544364,
+              0.1796406061055914,
+              0.5021940836286162
+            ],
+            [
+              0.09445914069009932,
+              0.4612065355066919,
+              0.17964022582849465,
+              0.26469409797471405
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 19,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0125,
+          "min_weight": 0.12191841554666508,
+          "moment_error": 1.6653345369377348e-16,
+          "success": true,
+          "target_distances_m": [
+            0.0021915041681191518,
+            0.0047579294730636604,
+            0.0024629185239274424,
+            0.0010816644464389606
+          ],
+          "target_rows": [
+            772843,
+            777972,
+            790039,
+            799003
+          ],
+          "weights": [
+            0.27763884484946705,
+            0.13781229882493035,
+            0.12191841554666508,
+            0.46263044077893795
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "barycentric": [
+            [
+              0.6242104550739169,
+              0.025,
+              0.11721814710317591,
+              0.2335713978229073
+            ],
+            [
+              0.12113341999675672,
+              0.053629679972724484,
+              0.8002369000305188,
+              0.025
+            ],
+            [
+              0.10264504735822513,
+              0.22509050973568345,
+              0.18334373210003396,
+              0.48892071080605753
+            ],
+            [
+              0.1026455017064099,
+              0.4500904020589713,
+              0.18334337183752125,
+              0.2639207243970975
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 17,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.025,
+          "min_weight": 0.12191841554666487,
+          "moment_error": 2.7755575615628914e-17,
+          "success": true,
+          "target_distances_m": [
+            0.003322806750428853,
+            0.00754514629485017,
+            0.004925837047855095,
+            0.0021633288928781433
+          ],
+          "target_rows": [
+            772843,
+            777972,
+            790039,
+            799003
+          ],
+          "weights": [
+            0.2776388448494668,
+            0.1378122988249305,
+            0.12191841554666487,
+            0.4626304407789377
+          ]
+        },
+        {
+          "alpha": 0.2,
+          "barycentric": [
+            [
+              0.05,
+              0.05,
+              0.45935875309863045,
+              0.4406412469013696
+            ],
+            [
+              0.5826315156212595,
+              0.05,
+              0.13197168631393413,
+              0.2353967980648065
+            ],
+            [
+              0.135451928886006,
+              0.07544860442019954,
+              0.7390994666937946,
+              0.05
+            ],
+            [
+              0.11901822373903102,
+              0.42785813516353,
+              0.19074966385557446,
+              0.26237397724186445
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 14,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.05,
+          "min_weight": 0.08897170827776107,
+          "moment_error": 3.3306690738754696e-16,
+          "success": true,
+          "target_distances_m": [
+            0.012518186542831933,
+            0.005760391826696307,
+            0.013543392790700905,
+            0.004326657785756287
+          ],
+          "target_rows": [
+            285532,
+            772843,
+            777972,
+            799003
+          ],
+          "weights": [
+            0.08897170827776107,
+            0.2923728720711343,
+            0.09580893884157993,
+            0.5228464808095254
+          ]
+        },
+        {
+          "alpha": 0.0,
+          "barycentric": [
+            [
+              0.6657893945265743,
+              0.0,
+              0.10246460789241768,
+              0.23174599758100814
+            ],
+            [
+              0.10681491110750746,
+              0.03181075552524942,
+              0.8613743333672431,
+              0.0
+            ],
+            [
+              0.08627227484247235,
+              0.22232278859520382,
+              0.17593748011114885,
+              0.515467456451175
+            ],
+            [
+              0.08627277967378877,
+              0.4723226689544125,
+              0.17593707981946805,
+              0.2654674715523306
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 19,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0,
+          "min_weight": 0.12191841554666503,
+          "moment_error": 3.3306690738754696e-16,
+          "success": true,
+          "target_distances_m": [
+            0.0013363345319645794,
+            0.002765937790589167,
+            2.7755575615628914e-17,
+            3.1031676915590914e-17
+          ],
+          "target_rows": [
+            772843,
+            777972,
+            790039,
+            799003
+          ],
+          "weights": [
+            0.27763884484946716,
+            0.1378122988249308,
+            0.12191841554666503,
+            0.46263044077893783
+          ]
+        },
+        {
+          "alpha": 0.05,
+          "barycentric": [
+            [
+              0.6449999248002455,
+              0.0125,
+              0.1098413774977968,
+              0.23265869770195774
+            ],
+            [
+              0.11397416555213208,
+              0.04272021774898695,
+              0.8308056166988809,
+              0.0125
+            ],
+            [
+              0.09445866110034873,
+              0.22370664916544364,
+              0.1796406061055914,
+              0.5021940836286162
+            ],
+            [
+              0.09445914069009932,
+              0.4612065355066919,
+              0.17964022582849465,
+              0.26469409797471405
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 19,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.0125,
+          "min_weight": 0.12191841554666508,
+          "moment_error": 1.6653345369377348e-16,
+          "success": true,
+          "target_distances_m": [
+            0.0021915041681191518,
+            0.0047579294730636604,
+            0.0024629185239274424,
+            0.0010816644464389606
+          ],
+          "target_rows": [
+            772843,
+            777972,
+            790039,
+            799003
+          ],
+          "weights": [
+            0.27763884484946705,
+            0.13781229882493035,
+            0.12191841554666508,
+            0.46263044077893795
+          ]
+        },
+        {
+          "alpha": 0.1,
+          "barycentric": [
+            [
+              0.6242104550739169,
+              0.025,
+              0.11721814710317591,
+              0.2335713978229073
+            ],
+            [
+              0.12113341999675672,
+              0.053629679972724484,
+              0.8002369000305188,
+              0.025
+            ],
+            [
+              0.10264504735822513,
+              0.22509050973568345,
+              0.18334373210003396,
+              0.48892071080605753
+            ],
+            [
+              0.1026455017064099,
+              0.4500904020589713,
+              0.18334337183752125,
+              0.2639207243970975
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 17,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.025,
+          "min_weight": 0.12191841554666487,
+          "moment_error": 2.7755575615628914e-17,
+          "success": true,
+          "target_distances_m": [
+            0.003322806750428853,
+            0.00754514629485017,
+            0.004925837047855095,
+            0.0021633288928781433
+          ],
+          "target_rows": [
+            772843,
+            777972,
+            790039,
+            799003
+          ],
+          "weights": [
+            0.2776388448494668,
+            0.1378122988249305,
+            0.12191841554666487,
+            0.4626304407789377
+          ]
+        },
+        {
+          "alpha": 0.2,
+          "barycentric": [
+            [
+              0.05,
+              0.05,
+              0.45935875309863045,
+              0.4406412469013696
+            ],
+            [
+              0.5826315156212595,
+              0.05,
+              0.13197168631393413,
+              0.2353967980648065
+            ],
+            [
+              0.135451928886006,
+              0.07544860442019954,
+              0.7390994666937946,
+              0.05
+            ],
+            [
+              0.11901822373903102,
+              0.42785813516353,
+              0.19074966385557446,
+              0.26237397724186445
+            ]
+          ],
+          "bbox_candidates": 45,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 14,
+          "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "min_barycentric": 0.05,
+          "min_weight": 0.08897170827776107,
+          "moment_error": 3.3306690738754696e-16,
+          "success": true,
+          "target_distances_m": [
+            0.012518186542831933,
+            0.005760391826696307,
+            0.013543392790700905,
+            0.004326657785756287
+          ],
+          "target_rows": [
+            285532,
+            772843,
+            777972,
+            799003
+          ],
+          "weights": [
+            0.08897170827776107,
+            0.2923728720711343,
+            0.09580893884157993,
+            0.5228464808095254
+          ]
+        }
+      ]
+    },
+    {
+      "all_Fat_diagnostic_only_nearest_distances_source_vertices_then_centroid_m": [
+        0.009888906617833941,
+        0.017610643698639763,
+        0.019906181142710144,
+        0.018838650344551046,
+        0.020498869875377163
+      ],
+      "authenticated_onehop_nearest_distances_source_vertices_then_centroid_m": [
+        0.009888906617833941,
+        0.017610643698639763,
+        0.019906181142710144,
+        0.018838650344551046,
+        0.020498869875377163
+      ],
+      "global_parent": 24224,
+      "parent": 9908,
+      "region": 145,
+      "source_vertices_m": [
+        [
+          0.1254646119556569,
+          -1.0072144235957952,
+          0.1910281885530698
+        ],
+        [
+          0.14729585896822867,
+          -1.0717884005315963,
+          0.12809645791812818
+        ],
+        [
+          0.13558656552988163,
+          -1.0468770341101656,
+          0.16238812365218386
+        ],
+        [
+          0.12711766787958806,
+          -1.045664037108761,
+          0.15740375884902166
+        ]
+      ],
+      "trials": [
+        {
+          "alpha": 0.0,
+          "bbox_candidates": 50,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 16,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.05,
+          "bbox_candidates": 50,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 16,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.1,
+          "bbox_candidates": 50,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 13,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.2,
+          "bbox_candidates": 50,
+          "domain": "authenticated_onehop",
+          "eligible_carrier_sites": 9,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        },
+        {
+          "alpha": 0.0,
+          "bbox_candidates": 50,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 16,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.05,
+          "bbox_candidates": 50,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 16,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.1,
+          "bbox_candidates": 50,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 13,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+          "success": false
+        },
+        {
+          "alpha": 0.2,
+          "bbox_candidates": 50,
+          "domain": "all_Fat_diagnostic_only",
+          "eligible_carrier_sites": 9,
+          "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+          "success": false
+        }
+      ]
+    }
+  ],
+  "status": "SOURCE_ONLY_FAT_QUADRATURE_CONSTRUCTION_COUNTERFACTUALS"
+}
