@@ -1,0 +1,32 @@
+{
+  "status": "PASS_EXACT_AUTHENTICATED_POINT_DOMAINS_ONLY",
+  "test_count": 10,
+  "checks": [
+    "two authenticated source domains",
+    "reject:wrong_source_hash",
+    "reject:reversed_source_domains",
+    "reject:changed_F32_coordinate",
+    "reject:outside_source_row",
+    "reject:outside_source_asset",
+    "reject:float_row_mapping",
+    "reject:foreign_emitted_surface",
+    "reject:missing_maps",
+    "all113824_D071_rows_use_declared_D624_vertex_CSR"
+  ],
+  "actual_D071": {
+    "mode": "authenticated-source-coordinate-subset",
+    "point_count": 113824,
+    "source_domain_counts": [
+      113824,
+      0
+    ],
+    "source_point_map_sha256": "7ce4eb7165edea325954cc943aee15c4f8608fc5c011ae2dc683216945c6c62a",
+    "all_emitted_coordinates_source_exact": true
+  },
+  "owner_sha256": "177f005722cefd212eb4570cf18ffdd12d4fe25318ea30a29a779b7a6c348554",
+  "test_sha256": "5ca049822ec7bdd37189f2bf412542dd8ec865ec626e289ac9345705351c830e",
+  "D071_sha256": "af0fc516cfa4a5d638fc769496bf0533d97ac745977268f64d4dfe3a454eb970",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0
+}

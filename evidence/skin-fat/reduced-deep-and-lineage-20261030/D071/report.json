@@ -1,0 +1,144 @@
+{
+  "accepted_steps": 0,
+  "candidate": {
+    "added_source_faces": [
+      82732,
+      82734,
+      82735,
+      82736
+    ],
+    "faces": 228527,
+    "modified_point_coordinates": false,
+    "new_source_vertices": [],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-071-bone60-source-patch-apply-001/candidate-D023-bone60-source-patched.npz",
+    "points": 113824,
+    "removed_faces": 4,
+    "reopened_exact_arrays": true,
+    "sha256": "af0fc516cfa4a5d638fc769496bf0533d97ac745977268f64d4dfe3a454eb970"
+  },
+  "elapsed_s": 108.22479791590013,
+  "input_sha256": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/dnew-vs-i296-inventory-001/i328-cavity-audit-001/fill-003/I-f32-conditioning-367/condition-288-pair-connected-remesh-001-run-002/result/candidate-f32-typed.npz": "5d46ee99df2613e9f30a43075af95a6402beffe26392cd9f017d8c1a154bf410",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz": "e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-007-source-retype/pair-geometry-014-linked-remesh/fine-I-bone-barrier-run-024/full-native-self-028/current-collar-plan-032/engine-20-ops-one-sided624-run-006/candidate-f32-linked-remesh-typed.npz": "c17794a1012f76924dcd9e4e754bb026c774deb5a3d37e2f1c79635ccfe9dc83",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-066-D023-source-safe-splice-001/full-cross-gates-003/all185-pairs.npz": "4d092f0412559d736e32ffb4504910332d9f0c7bdbcfb0b9dbf82c4004374a95",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-066-D023-source-safe-splice-001/source-two-two-flip-002/candidate-D023-source-safe-flipped.npz": "d71ef0eff2f01836d4d9fd2efc9ef1a22c05ccbf1129e992d08d4780d5b6cdbc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-069-bone60-source-edge-plan-003/plan.json": "73808d6e06ae742228dc57e9bde625476a720e7ae6b9d793e2140bcb9b7be471",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-081-OI-local-topology-repair/candidate-O-self-and-OI-repaired.npz": "c9074b9f54bfad16193cfd14dc52fbdcda0fcca86f01a34f9552529fc6bb6b72",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run_joint_exact_audit_003.py": "b202f43adf921cea0faeb30f32d921f0979516ca2e5655d9da51c72856906d0a",
+    "/private/tmp/d023_vertex_link_checker_067.py": "1ae9dc846f485539854615d9c3097e429f56217281d74f9e35aa5d3308d111fe",
+    "/private/tmp/repair_D023_source_safe_patch_066.py": "4b9e136d3599301c92eaca2eb2919c5d807e4c48c7e43c52e3663600f31571e7"
+  },
+  "limitations": [
+    "Source-local D surface topology repair only; not D010 anchor incorporation, TetGen, source330 mass transfer, native admission, or runtime qualification."
+  ],
+  "physical_admission": false,
+  "runtime": 0,
+  "schema": "numi.D023.bone60-source-face-patch.v1",
+  "stages": [
+    {
+      "D624_source_faces": 4,
+      "candidate_patch_faces": 4,
+      "directed_boundary_edges": 6,
+      "exact_directed_boundary_match": true,
+      "name": "source_edge_patch_preflight",
+      "source_fill_tags": {
+        "(3, 23, 28, 100000060)": 4
+      },
+      "status": "PASS"
+    },
+    {
+      "barriers": {
+        "I328": {
+          "aabb_candidate_pairs": 0,
+          "exact_pairs": 0,
+          "status": "PASS"
+        },
+        "O081": {
+          "aabb_candidate_pairs": 0,
+          "exact_pairs": 0,
+          "status": "PASS"
+        },
+        "all185": {
+          "aabb_candidate_pairs": 36,
+          "exact_pairs": 0,
+          "status": "PASS",
+          "witnesses": []
+        }
+      },
+      "name": "local_four_face_patch_vs_static_I_O_native185",
+      "native_bank_count": 185,
+      "static_native185_faces": 469136,
+      "status": "PASS"
+    },
+    {
+      "aabb_candidate_pairs": 4596010,
+      "exact_pairs": 0,
+      "name": "D_self",
+      "source_seam_group_count": 2,
+      "status": "PASS",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-071-bone60-source-patch-apply-001/D-self-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    },
+    {
+      "aabb_candidate_pairs": 1895691,
+      "exact_pairs": 0,
+      "name": "D_vs_I328",
+      "status": "PASS",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-071-bone60-source-patch-apply-001/D_vs_I328-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    },
+    {
+      "aabb_candidate_pairs": 749806,
+      "exact_pairs": 0,
+      "name": "D_vs_O081",
+      "status": "PASS",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-071-bone60-source-patch-apply-001/D_vs_O081-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    },
+    {
+      "aabb_candidate_pairs": 2702841,
+      "banks_checked": 185,
+      "banks_with_pairs": [],
+      "exact_pairs": 0,
+      "name": "D_vs_all185",
+      "status": "PASS",
+      "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-046-fine-role-simplification/run-071-bone60-source-patch-apply-001/D_vs_all185-pairs.npz",
+      "witness_sha256": "c3d0eca3f982714ca138533c9359891e262ca062f24d64a6f3ccdbe939b05ca1"
+    }
+  ],
+  "status": "PASS_D_SELF_I_O_ALL185",
+  "structural": {
+    "added_D624_faces": 4,
+    "added_D624_vertices": 0,
+    "input_faces": 228527,
+    "input_points": 113824,
+    "output_faces": 228527,
+    "output_points": 113824,
+    "replaced_faces": 4,
+    "represented_source_rows": [],
+    "source_face_rows": [
+      82732,
+      82734,
+      82735,
+      82736
+    ],
+    "status": "PASS",
+    "structure": {
+      "boundary_edge_count": 45,
+      "corrected_invalid_vertex_link_count": 0,
+      "directed_source_boundary_unchanged": true,
+      "duplicate_face_count": 0,
+      "f32_zero_area_faces": [],
+      "nonmanifold_edge_count": 0,
+      "same_direction_edge_count": 0,
+      "vertex_link_check": {
+        "boundary_vertex_count": 45,
+        "invalid_link_vertex_count": 0,
+        "invalid_link_vertices": [],
+        "used_vertex_count": 113820
+      }
+    }
+  }
+}

@@ -32,6 +32,56 @@ def _array_from_csv(path,id_column,value_columns):
         result[i]=[float(row[c]) for c in value_columns]
     return result,rows
 
+# The supported assembly's authenticated construction sources. A reduction may
+# choose coordinates from these domains; this does not authorize arbitrary edits.
+POINT_SOURCE_SHA256={
+    "D624":"c17794a1012f76924dcd9e4e754bb026c774deb5a3d37e2f1c79635ccfe9dc83",
+    "D010":"7d8419bdc4ad1d3892a946c93ad7f0f9b2db2e4302f8f666480612166e25de2a",
+}
+
+def validate_point_preservation(packet,deep_path,points):
+    """Independently check every reduced point against its exact source row."""
+    if packet.get("mode")!="authenticated-source-coordinate-subset":
+        raise ValueError("unrecognized operational point preservation mode")
+    sources=packet.get("sources",[])
+    if len(sources)!=2 or [s.get("role") for s in sources]!=["D624","D010"]:
+        raise ValueError("point preservation requires ordered D624/D010 source domains")
+    source_points=[]
+    for source in sources:
+        path=Path(source["path"]);expected=POINT_SOURCE_SHA256[source["role"]]
+        if source.get("sha256")!=expected or sha(path)!=expected:
+            raise ValueError("point preservation authenticated source hash mismatch")
+        with np.load(path,allow_pickle=False) as z:
+            source_points.append(np.asarray(z["points_world_m"],np.float32))
+    with np.load(deep_path,allow_pickle=False) as z:
+        keys=("point_preservation_source_asset_index","point_preservation_source_vertex_row")
+        if any(k not in z.files for k in keys):
+            raise ValueError("point preservation lacks explicit candidate source-row maps")
+        asset=np.asarray(z[keys[0]]);rows=np.asarray(z[keys[1]])
+        emitted=np.asarray(z["points_world_m"],np.float32)
+    points=np.asarray(points,np.float32)
+    n=len(points)
+    if (asset.shape!=(n,) or rows.shape!=(n,) or
+        asset.dtype.kind not in "iu" or rows.dtype.kind not in "iu" or
+        np.any(asset>1) or np.any(asset<0) or np.any(rows<0)):
+        raise ValueError("point preservation source-row domain malformed")
+    if (emitted.shape!=points.shape or points.ndim!=2 or points.shape[1]!=3 or
+        not np.isfinite(points).all() or
+        not np.array_equal(emitted.view(np.uint32),points.view(np.uint32))):
+        raise ValueError("point preservation does not describe emitted Float32 points")
+    counts=[]
+    for domain,reference in enumerate(source_points):
+        selected=np.flatnonzero(asset==domain)
+        r=rows[selected]
+        if np.any(r>=len(reference)):
+            raise ValueError("point preservation source vertex row out of range")
+        if not np.array_equal(points[selected].view(np.uint32),reference[r].view(np.uint32)):
+            raise ValueError("point preservation changed an authenticated source coordinate")
+        counts.append(len(selected))
+    digest=hashlib.sha256(asset.astype("<i8").tobytes()+rows.astype("<i8").tobytes()).hexdigest()
+    return {"mode":packet["mode"],"point_count":n,"source_domain_counts":counts,
+            "source_point_map_sha256":digest,"all_emitted_coordinates_source_exact":True}
+
 def validate(proof_path,deep_path,surface,rows):
     proof=json.loads(Path(proof_path).read_text())
     if (proof.get("schema")!=SCHEMA or
@@ -95,8 +145,13 @@ def validate(proof_path,deep_path,surface,rows):
     if sha(old_candidate)!=proof["input_candidate_sha256"]: raise ValueError("operational parent D changed")
     with np.load(old_candidate,allow_pickle=False) as z:
         old_points=np.asarray(z["points_world_m"],dtype=np.float32)
-    if len(points)<len(old_points) or not np.array_equal(points[:len(old_points)],old_points):
-        raise ValueError("operational D changed an existing point coordinate")
+    point_packet=proof.get("point_preservation")
+    if point_packet is None:
+        if len(points)<len(old_points) or not np.array_equal(points[:len(old_points)],old_points):
+            raise ValueError("operational D changed an existing point coordinate")
+        point_preservation={"mode":"unchanged-input-point-prefix"}
+    else:
+        point_preservation=validate_point_preservation(point_packet,deep_path,points)
     hashes=m["source330_file_hashes"]
     for path,digest in hashes.items():
         if sha(path)!=digest: raise ValueError("immutable source330 table changed")
@@ -180,4 +235,5 @@ def validate(proof_path,deep_path,surface,rows):
             "source_kind":"canonical-D-operational-reference-proof",
             "historical_protected149_sha256":HISTORICAL_SHA,
             "preserves_immutable_historical_rows":True,
+            "point_preservation":point_preservation,
             "physical_admission":False,"runtime":0}
