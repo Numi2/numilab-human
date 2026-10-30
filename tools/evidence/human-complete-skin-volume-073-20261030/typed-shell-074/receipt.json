@@ -1,0 +1,171 @@
+{
+  "accepted_steps": 0,
+  "adapter_runner_sha256": "bbf557db0d637786feeccb754405ee4da9b709a4d1fdad1fc9df677fedeabfde",
+  "assembly": {
+    "fat_shell": {
+      "edge_report": {
+        "boundary_edges": 0,
+        "edges": 739434,
+        "incidence_histogram": {
+          "2": 739434
+        },
+        "nonmanifold_edges": 0,
+        "same_direction_twoface_edges": 0
+      },
+      "faces": 492956,
+      "signed_volume_m3": 0.011443639668402015,
+      "vertices": 245996
+    },
+    "marker_roles": {
+      "fat_inner_D": 5,
+      "fat_outer_I": 4,
+      "fat_wall_ID": 6,
+      "skin_inner_I": 2,
+      "skin_outer_O": 1,
+      "skin_wall_OI": 3
+    },
+    "orientation": {
+      "D_flipped_to_wall": true,
+      "I_fat_flipped_to_wall": false,
+      "I_skin_flipped_to_wall": true,
+      "O_flipped_to_wall": false,
+      "fat_global_positive_volume_flip": false,
+      "skin_global_positive_volume_flip": false
+    },
+    "skin_shell": {
+      "edge_report": {
+        "boundary_edges": 0,
+        "edges": 606171,
+        "incidence_histogram": {
+          "2": 606171
+        },
+        "nonmanifold_edges": 0,
+        "same_direction_twoface_edges": 0
+      },
+      "faces": 404114,
+      "signed_volume_m3": 0.003626316932451737,
+      "vertices": 202037
+    },
+    "wall_donor_I_ring_local_rows": [
+      49686,
+      49800,
+      49949,
+      49904,
+      50344,
+      49975,
+      49973,
+      50203,
+      50631,
+      51454,
+      51294,
+      50297,
+      51572,
+      51684,
+      51783,
+      51568,
+      51683,
+      51846,
+      51782,
+      51840,
+      51932,
+      51948,
+      52006,
+      55165,
+      55314,
+      55335,
+      55341,
+      55473,
+      55622,
+      55729,
+      55646,
+      55819,
+      56050,
+      56396,
+      56531,
+      56665,
+      56549,
+      56628,
+      56731,
+      56686,
+      51024,
+      55462,
+      55554,
+      56094,
+      56315
+    ]
+  },
+  "elapsed_s": 19.276091834064573,
+  "geometry_exact_to_meshed_PLC": {
+    "fat": {
+      "face_marker": true,
+      "faces": true,
+      "points_world_m": true
+    },
+    "skin": {
+      "face_marker": true,
+      "faces": true,
+      "points_world_m": true
+    }
+  },
+  "inputs": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-005-001/D-run-001/candidate-D-connected-union-typed.npz",
+      "sha256": "d0f6cda10552a55be2d6ac5a0740e0142293cdf55177f1ce853a3eb5624374da"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-005-001/I-run-002/candidate-I-connected-union-typed.npz",
+      "sha256": "a445e482f83616bd863e194377896d09d98327ff474683f5f687a4ac52d059f7"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-005-001/O-merged-run004-run005-001/typed-output/candidate-O-connected-union-typed.npz",
+      "sha256": "b35eb99aab790d861263b6dffa605f781287d81d682e3fb34dac8810d2c92b66"
+    },
+    "collar": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verified-volume-preparation-010-merged038005/rim/collar-current.npz",
+      "sha256": "ccbc772935ded2bffc841a4c3b024f9ef949f0c302c1ff8cd0e3c232357055d7"
+    },
+    "parent_cells": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    },
+    "parent_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "wall_csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verified-volume-preparation-010-merged038005/rim/wall-provenance-current.csv",
+      "sha256": "7efadaa02773ff36392da40bbe7d58957d84ddffa96cdc071988a680b828d2f4"
+    },
+    "wall_parent_cells": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-parent-cell-mass.csv.gz",
+      "sha256": "e9585cfb4d781847776478b11536c38cce57eeaff08507789d1bbd8ef926575f"
+    },
+    "wall_parent_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/volume-worker/baseline-compiled-parent-nodes.csv.gz",
+      "sha256": "ca55936b5f954f5b2e98111ac2f256c5b3ea7f0fa42a7d2fdf877ec9db12c878"
+    }
+  },
+  "outputs": {
+    "fat-face-ancestry.csv.gz": {
+      "sha256": "5be698cc32afd0038cb7f0ba5f5d79d3aff5f89c78161e4ecf90cb64e7acbbae",
+      "size_bytes": 3512346
+    },
+    "fat-shell.npz": {
+      "sha256": "4d06cb9d46bfcbe1486fc8b2fd80b9bf801d2e6570c178863d155810343c6ffd",
+      "size_bytes": 14859204
+    },
+    "skin-face-ancestry.csv.gz": {
+      "sha256": "ae72bca2aabc0aba7e0e148acde7572ada7459955cf90b6ff21ffe2a93f394e0",
+      "size_bytes": 2810241
+    },
+    "skin-shell.npz": {
+      "sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a",
+      "size_bytes": 12603486
+    }
+  },
+  "owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd",
+  "physical_admission": false,
+  "runtime": 0,
+  "shared_I_exact": true,
+  "status": "PASS_EXISTING_OWNER_FULL_TYPED_SHELL_ANCESTRY_GEOMETRY_PARITY"
+}

@@ -1,0 +1,597 @@
+{
+  "status": "BATCHED_RESTORED_SKIN_CAVITY_PARTIAL_NOT_PHYSICAL_ADMISSION",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "source_sha256": "f69a120bb2e68b8240aba7f1ff806c3ef62229bc0c395817a01d8f95471cd0f9",
+  "components": 20,
+  "accepted_components": 16,
+  "candidate_nodes": 202525,
+  "candidate_cells": 743498,
+  "F32_zero": 0,
+  "F32_negative": 7,
+  "missing_original_PLC_facets": 10,
+  "extra_boundary_facets": 20,
+  "nonmanifold_tet_faces": 0,
+  "material_histogram": {
+    "15": 743498
+  },
+  "details": [
+    {
+      "component": 0,
+      "source_cells": 24,
+      "parent_original_PLC_faces": [
+        68683,
+        68680,
+        68679,
+        68659,
+        68658,
+        68649,
+        63665
+      ],
+      "fan_gate": {
+        "cells": 24,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202095,
+        "new_cells": 15,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 15
+    },
+    {
+      "component": 1,
+      "source_cells": 12,
+      "parent_original_PLC_faces": [
+        23139,
+        23485,
+        23474
+      ],
+      "fan_gate": {
+        "cells": 12,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202115,
+        "new_cells": 9,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 9
+    },
+    {
+      "component": 2,
+      "source_cells": 101,
+      "parent_original_PLC_faces": [
+        145843,
+        145844,
+        145846,
+        145043,
+        145845,
+        145044,
+        145042,
+        144308,
+        144306,
+        144307,
+        145830,
+        145037,
+        145038,
+        238515,
+        238488,
+        238516,
+        238487,
+        238486,
+        238481
+      ],
+      "fan_gate": {
+        "cells": 101,
+        "status": "REJECT_NO_STAR"
+      },
+      "status": "FAN_REJECTED_LOCAL_TETGEN_PENDING"
+    },
+    {
+      "component": 3,
+      "source_cells": 22,
+      "parent_original_PLC_faces": [
+        309066,
+        309068,
+        309067,
+        309069,
+        309070,
+        404003,
+        404004,
+        404006,
+        404005,
+        404007,
+        399661
+      ],
+      "fan_gate": {
+        "cells": 22,
+        "status": "PASS_INTERIOR_KERNEL_FAN",
+        "new_cells": 24,
+        "margin_m": 2.746550592074839e-09,
+        "material": 15,
+        "center": [
+          0.24009311199188232,
+          -0.9733222126960754,
+          0.08727218955755234
+        ],
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 24
+    },
+    {
+      "component": 4,
+      "source_cells": 172,
+      "parent_original_PLC_faces": [
+        34176,
+        34177,
+        168221,
+        273782,
+        273778,
+        273785,
+        273784,
+        273786,
+        273810,
+        273848,
+        273845,
+        273847,
+        273853,
+        273849,
+        273854,
+        273812,
+        273844,
+        273855,
+        273811,
+        273809,
+        273846,
+        273868,
+        273850,
+        273851,
+        273852,
+        273874,
+        273871,
+        273869,
+        273875,
+        273873,
+        273870,
+        273872,
+        273876,
+        273877,
+        273878,
+        274109,
+        274126,
+        274134,
+        274136,
+        274127,
+        274122,
+        274141,
+        274074,
+        274108,
+        274103,
+        274072,
+        274070,
+        274125,
+        274135,
+        274123,
+        274175,
+        274174,
+        274071,
+        274075,
+        274124,
+        274121,
+        274102,
+        274110,
+        274105,
+        274104,
+        274082,
+        274107,
+        274084,
+        274083,
+        274078,
+        274106,
+        274182,
+        274077,
+        274063,
+        274054,
+        274055,
+        274073,
+        274081,
+        274181,
+        274176,
+        274060,
+        274056,
+        274058,
+        274057,
+        274061,
+        274045,
+        274059,
+        274080,
+        274044,
+        274053,
+        274050,
+        274043,
+        274137,
+        274046,
+        274049,
+        274052,
+        274048,
+        274086,
+        274145,
+        274144,
+        274116,
+        274112,
+        274093,
+        274085,
+        274088
+      ],
+      "fan_gate": {
+        "cells": 172,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202123,
+        "new_cells": 150,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 150
+    },
+    {
+      "component": 5,
+      "source_cells": 18,
+      "parent_original_PLC_faces": [
+        27901,
+        27904,
+        27910
+      ],
+      "fan_gate": {
+        "cells": 18,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202127,
+        "new_cells": 12,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 12
+    },
+    {
+      "component": 6,
+      "source_cells": 22,
+      "parent_original_PLC_faces": [
+        318358,
+        318357,
+        200494,
+        200488,
+        200487,
+        318351,
+        200493,
+        318356,
+        318359,
+        318352,
+        318353,
+        318354,
+        318360
+      ],
+      "fan_gate": {
+        "cells": 22,
+        "status": "PASS_INTERIOR_KERNEL_FAN",
+        "new_cells": 24,
+        "margin_m": 1.7692880694568955e-05,
+        "material": 15,
+        "center": [
+          0.25646892189979553,
+          -0.9429608583450317,
+          0.12615221738815308
+        ],
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 24
+    },
+    {
+      "component": 7,
+      "source_cells": 30,
+      "parent_original_PLC_faces": [
+        10023,
+        10027,
+        10069,
+        10068,
+        10067,
+        156941,
+        156985,
+        156940
+      ],
+      "fan_gate": {
+        "cells": 30,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202101,
+        "new_cells": 22,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 22
+    },
+    {
+      "component": 8,
+      "source_cells": 6,
+      "parent_original_PLC_faces": [
+        213036,
+        213108
+      ],
+      "fan_gate": {
+        "cells": 6,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 135575,
+        "new_cells": 3,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 3
+    },
+    {
+      "component": 9,
+      "source_cells": 28,
+      "parent_original_PLC_faces": [
+        403764,
+        403763,
+        403765,
+        403766,
+        403767,
+        403769
+      ],
+      "fan_gate": {
+        "cells": 28,
+        "status": "PASS_INTERIOR_KERNEL_FAN",
+        "new_cells": 30,
+        "margin_m": 2.628321052597013e-08,
+        "material": 15,
+        "center": [
+          -0.2920258641242981,
+          -0.9743753671646118,
+          0.13187798857688904
+        ],
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 30
+    },
+    {
+      "component": 10,
+      "source_cells": 22,
+      "parent_original_PLC_faces": [
+        55634,
+        56571,
+        56541,
+        56546
+      ],
+      "fan_gate": {
+        "cells": 22,
+        "status": "REJECT_NO_STAR"
+      },
+      "status": "FAN_REJECTED_LOCAL_TETGEN_PENDING"
+    },
+    {
+      "component": 11,
+      "source_cells": 20,
+      "parent_original_PLC_faces": [
+        3879,
+        3881,
+        3875
+      ],
+      "fan_gate": {
+        "cells": 20,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202110,
+        "new_cells": 13,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 13
+    },
+    {
+      "component": 12,
+      "source_cells": 10,
+      "parent_original_PLC_faces": [
+        66741,
+        66738,
+        66724
+      ],
+      "fan_gate": {
+        "cells": 10,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202103,
+        "new_cells": 8,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 8
+    },
+    {
+      "component": 13,
+      "source_cells": 24,
+      "parent_original_PLC_faces": [
+        203425,
+        203513,
+        203460,
+        203533,
+        203532,
+        203531,
+        203530,
+        326456,
+        203537,
+        326458,
+        326589,
+        326580,
+        326581
+      ],
+      "fan_gate": {
+        "cells": 24,
+        "status": "REJECT_NO_F32_KERNEL",
+        "margin_m": -4.365715067667503e-09
+      },
+      "status": "FAN_REJECTED_LOCAL_TETGEN_PENDING"
+    },
+    {
+      "component": 14,
+      "source_cells": 40,
+      "parent_original_PLC_faces": [
+        56837,
+        56697,
+        56933,
+        56787,
+        57273,
+        56937,
+        56936,
+        56935
+      ],
+      "fan_gate": {
+        "cells": 40,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202120,
+        "new_cells": 35,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 35
+    },
+    {
+      "component": 15,
+      "source_cells": 14,
+      "parent_original_PLC_faces": [
+        303935,
+        194188,
+        303931,
+        194189,
+        303932,
+        194190
+      ],
+      "fan_gate": {
+        "cells": 14,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202096,
+        "new_cells": 9,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 9
+    },
+    {
+      "component": 16,
+      "source_cells": 18,
+      "parent_original_PLC_faces": [
+        321614,
+        321613,
+        321612,
+        321502,
+        321503,
+        321623
+      ],
+      "fan_gate": {
+        "cells": 18,
+        "status": "REJECT_NO_F32_KERNEL",
+        "margin_m": -1.540305893759069e-08
+      },
+      "status": "FAN_REJECTED_LOCAL_TETGEN_PENDING"
+    },
+    {
+      "component": 17,
+      "source_cells": 16,
+      "parent_original_PLC_faces": [
+        381625,
+        381631,
+        381632,
+        161344,
+        161368,
+        161345,
+        381665,
+        381664,
+        381666,
+        161369
+      ],
+      "fan_gate": {
+        "cells": 16,
+        "status": "PASS_INTERIOR_KERNEL_FAN",
+        "new_cells": 18,
+        "margin_m": 1.8341780523051146e-08,
+        "material": 15,
+        "center": [
+          -0.300315260887146,
+          -0.9293506145477295,
+          0.1240193098783493
+        ],
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 18
+    },
+    {
+      "component": 18,
+      "source_cells": 10,
+      "parent_original_PLC_faces": [
+        173759,
+        166983,
+        167003,
+        166984,
+        167004
+      ],
+      "fan_gate": {
+        "cells": 10,
+        "status": "PASS_INTERIOR_KERNEL_FAN",
+        "new_cells": 12,
+        "margin_m": 7.179725610372521e-09,
+        "material": 15,
+        "center": [
+          -0.27949318289756775,
+          -0.8771204352378845,
+          0.1440192312002182
+        ],
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 12
+    },
+    {
+      "component": 19,
+      "source_cells": 10,
+      "parent_original_PLC_faces": [
+        37869,
+        37868,
+        38341
+      ],
+      "fan_gate": {
+        "cells": 10,
+        "status": "PASS_BOUNDARY_VERTEX_FAN",
+        "anchor_node_row": 202100,
+        "new_cells": 7,
+        "material": 15,
+        "exact_volume_conserved": true,
+        "exact_crossing_count": 0
+      },
+      "status": "PASS_RESTORED_BOUNDARY_EXACT_FAN",
+      "new_cells": 7
+    }
+  ]
+}
