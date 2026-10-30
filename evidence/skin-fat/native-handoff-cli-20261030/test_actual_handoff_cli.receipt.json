@@ -1,0 +1,74 @@
+{
+  "status": "PASS_CLI_ROUTING_AND_CAPACITY_REJECTION_ONLY",
+  "checks": [
+    "actual CLI routes prepared O, direct typed I and typed D",
+    "all149 current routes retained",
+    "paired90/90 rims reused",
+    "explicit plan-capacity failure status",
+    "execution refused before TetGen/allocation"
+  ],
+  "surface_counts": {
+    "D": {
+      "faces": 257469,
+      "points": 128295
+    },
+    "I": {
+      "faces": 205239,
+      "points": 102622
+    },
+    "O": {
+      "faces": 76937,
+      "points": 38509
+    }
+  },
+  "native_capacity_preflight": {
+    "failures": [
+      "necessary cell count exceeds native capacity"
+    ],
+    "limitations": [
+      "Steiner nodes, quality constraints and disconnected interiors may require more cells",
+      "No shape, intersection, material or mass admission is implied"
+    ],
+    "materials": [
+      {
+        "boundary_edges": 423399,
+        "boundary_euler_characteristic": -2,
+        "boundary_faces": 282266,
+        "boundary_vertices": 141131,
+        "label": "skin",
+        "necessary_minimum_cells": 141134
+      },
+      {
+        "boundary_edges": 694197,
+        "boundary_euler_characteristic": -482,
+        "boundary_faces": 462798,
+        "boundary_vertices": 230917,
+        "label": "fat",
+        "necessary_minimum_cells": 231640
+      }
+    ],
+    "maximum_cells": 200000,
+    "maximum_nodes": 300000,
+    "native_runtime": false,
+    "necessary_combined_cells": 372774,
+    "necessary_combined_nodes": 269426,
+    "physical_admission": false,
+    "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-region-rebuild-667/tetgen-handoff-697/native_capacity_preflight.py",
+    "source_sha256": "70025dea58312e4aea040f4a10cdf737d09ecb2a6b9c5292c127ae17c6ac0b30",
+    "status": "FAIL_NATIVE_CAPACITY",
+    "used_boundary_nodes_by_role": {
+      "D": 128295,
+      "I": 102622,
+      "O": 38509
+    }
+  },
+  "handoff_sha256": "f8566421ac9b2dd2c20c940962970b094fdd6da8718a77b3d25f82f955d41276",
+  "runner_sha256": "5b0f8f2da74fbdf25f5f66df5e5db36bf117012c836ba6915ac9efc38562a70c",
+  "registered_surface_owner_sha256": "6b2282b420b70606962452df63b57040f741c79eab26e1bc4ec970525b1b49cf",
+  "collar_sha256": "8ffc5f4f2f838a25eb1ed3dcdff3b5bf18282462f25d6edddf163a3228dad969",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "tetgen_run": false,
+  "cavity_core_qualification": "NOT_RUN; deliberately unqualified fixture only hashed by plan mode"
+}
