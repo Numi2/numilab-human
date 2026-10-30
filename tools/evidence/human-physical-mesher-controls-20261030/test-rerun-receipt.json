@@ -1,0 +1,64 @@
+{
+  "accepted_steps": 0,
+  "all_exit_codes_zero": true,
+  "host": "numi",
+  "physical_admission": false,
+  "runs": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054",
+        "-p",
+        "test_capacity_gate.py"
+      ],
+      "exit_code": 0,
+      "name": "054 capacity gate",
+      "source_sha256": "236dfdd6ecc4e8fc664edfe38e9b765ddbef4937b523bacf33f87da00cd2dddc",
+      "test_sha256": "e0f4d8708a5850ae8ad2531377f50d02948f890c6e02f80d73e7727d0250dc44",
+      "tests": 6
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001",
+        "-p",
+        "test_adapter.py"
+      ],
+      "exit_code": 0,
+      "name": "217 role adapter",
+      "source_sha256": "806d46d4c42b7aae6308ccde20316d47e8fcefebd8342fb36e632b275521244f",
+      "test_sha256": "b150fe27cb7f31dfcc8d14f0137b38e8056033b2766d18d6dc551d13e40756df",
+      "tests": 19
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056",
+        "-p",
+        "test_complete_region_seeds.py"
+      ],
+      "exit_code": 0,
+      "name": "056 region seed helper",
+      "source_sha256": "0aea6dbf689705cfaae9b0ee72cf76f7459b7ebce665af97c84726509cab2d14",
+      "test_sha256": "cdbe36a828065dd8989db106867eec5939730523008c7ceb413b080490e4affd",
+      "tests": 8
+    }
+  ],
+  "runtime": 0,
+  "schema": "numi.human.physical-mesher-test-rerun.v1",
+  "status": "PASS_TESTS_ONLY",
+  "total_tests": 33,
+  "verified_at_utc": "2026-10-30T17:30:56.471675+00:00"
+}

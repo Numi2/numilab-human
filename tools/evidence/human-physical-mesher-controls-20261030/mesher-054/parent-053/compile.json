@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "/usr/bin/clang++",
+    "-O3",
+    "-I",
+    "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/tetgen-explicit-no-improvement.cxx",
+    "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/predicates.o",
+    "-lm",
+    "-o",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/tetgen"
+  ],
+  "exit_code": 0,
+  "wall_s": 2.5462571249809116,
+  "patch": {
+    "before": "if (b->plc || b->quality) {\n    m.improve_mesh();\n  }",
+    "after": "if ((b->plc || b->quality) &&\n      ((b->opt_max_flip_level > 0) || (b->opt_iterations > 0))) {\n    m.improve_mesh();\n  }"
+  },
+  "source_sha256": "bd0c21ee558ae8de2b9cb790e9b85fcb6224fe505e36bebfc902900cdc9777ac",
+  "original_sources": {
+    "tetgen.cxx": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc",
+    "tetgen.h": "69b012da7c0b01e6327f5f281ac2d10fc3fb42503d22366c7bd0bc9181bd833b",
+    "predicates.o": "d15c7e1a4dc798fa0b48204e346a9fe031070ccb7789d8b74b910dfafba26f4c",
+    "LICENSE": "f15e3301d0f40116aa2e3567963c3dcc8dd45453337dedf592caa73a5390549f"
+  },
+  "physical_admission": false,
+  "runtime": 0,
+  "binary_sha256": "0d28298edc96d672737e2a67771269c9d894d62e8a3dec604181c1256e4e055c",
+  "parser_patch": {
+    "before": "opt_iterations = (int) strtol(workstring, (char **) NULL, 0);\n            j++;",
+    "after": "opt_iterations = (int) strtol(workstring, (char **) NULL, 0);"
+  }
+}

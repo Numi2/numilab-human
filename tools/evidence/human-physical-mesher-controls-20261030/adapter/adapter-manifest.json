@@ -1,0 +1,80 @@
+{
+  "accepted_steps": 0,
+  "adapter_config": "adapter-config.json",
+  "adapter_config_sha256": "1e20cb90b301dfc648cab1be9772542e1cff3a8a7578bbe2f1105e84fefe35ef",
+  "adapter_source": "tetgen-217-role-adapter.py",
+  "adapter_source_sha256": "806d46d4c42b7aae6308ccde20316d47e8fcefebd8342fb36e632b275521244f",
+  "checks": {
+    "all_unowned_component_cells_checked_inside_by_helper_056": true,
+    "cell_labels_are_not_rewritten_by_adapter": true,
+    "completed_poly_preserves_points_facets_holes_and_existing_region_rows_literally": true,
+    "configuration_sha_hardcoded_in_adapter": true,
+    "first_node_ele_snapshots_are_byte_copies_not_hardlinks": true,
+    "first_pass_total_absolute_tet_volume_matches_signed_shell_volume": true,
+    "new_region_seeds_match_verified_unowned_component_points_and_role": true,
+    "second_pass_tables_copy_back_only_after_tetgen_success": true,
+    "signed_triangle_volume_matches_closed_manifold_volume": true,
+    "source004_revalidates_final_f32_positive_cells_material_attributes_and_capacity": true,
+    "source_and_completed_region_materials_match_requested_role": true,
+    "source_poly_exact_points_faces_and_facet_markers_match_shell_npz": true,
+    "source_poly_point_markers_are_source004_zero_domain": true,
+    "source_shell_signed_volume_must_be_positive": true
+  },
+  "defaults": {
+    "explicit_zero_improvement": true,
+    "region_seed_retry_enabled": false,
+    "region_seed_retry_opt_in_env": "NUMI_TETGEN_REGION_SEED_COMPLETION=1"
+  },
+  "launch_template": [
+    "python",
+    "native-domain-217-source-004/build_native_domain_217.py",
+    "--run-tetgen",
+    "--tetgen-binary",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/tetgen-217-role-adapter.py"
+  ],
+  "physical_admission": false,
+  "pins": {
+    "native217_source004": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py",
+      "sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+    },
+    "region_seed_helper_056": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/complete_region_seeds.py",
+      "sha256": "0aea6dbf689705cfaae9b0ee72cf76f7459b7ebce665af97c84726509cab2d14"
+    },
+    "tetgen054_binary": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen",
+      "sha256": "597b6025f1622bcaeb2a9bc9ac3b2813f520d6fb0a09a64acc6485a3474cffb1"
+    },
+    "tetgen054_compile_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/compile.json",
+      "sha256": "317afac360537f35f9ce5a8a4b1923214b3aed6c54d07267547f02718f26b322"
+    },
+    "tetgen054_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen-explicit-no-improvement-validation.cxx",
+      "sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a"
+    }
+  },
+  "producer": "native-domain-217-source-004 run_tetgen --tetgen-binary",
+  "required_role_options": {
+    "fat": "-pYq1.2/10AS512",
+    "skin": "-pYq1.2/10AS512"
+  },
+  "runtime": 0,
+  "schema": "numi.human.tetgen-source004-role-adapter-manifest.v1",
+  "seed_completion_opt_in_example": "NUMI_TETGEN_REGION_SEED_COMPLETION=1 <launch_template>",
+  "source004_timeout_constraint": {
+    "adapter_total_timeout_s": 54,
+    "maximum_region_seed_reruns_per_material": 1,
+    "owner_per_role_timeout_s": 60
+  },
+  "test_receipt": "adapter-tests.json",
+  "test_receipt_sha256": "5d64399f8d959fb733ad278cd387e2f78aa7cfff57e90d3397d1cf0aa0018775",
+  "test_source": "test_adapter.py",
+  "test_source_sha256": "b150fe27cb7f31dfcc8d14f0137b38e8056033b2766d18d6dc551d13e40756df",
+  "test_summary": {
+    "exit_code": 0,
+    "status": "PASS",
+    "tests": 19
+  }
+}

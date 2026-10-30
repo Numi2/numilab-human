@@ -1,0 +1,742 @@
+{
+  "accepted_steps": 0,
+  "adapter_behavior": {
+    "actual_full_candidate_run": "NOT_RUN",
+    "final_source004_checks": "positive F32 cells, material attributes, and capacity remain the parent owner responsibility and are not waived",
+    "maximum_retries_per_material": 1,
+    "opt_in_environment": "NUMI_TETGEN_REGION_SEED_COMPLETION=1",
+    "region_completion_default": "disabled"
+  },
+  "base_remote_main_commit": "02b62c7d24ea9b2d981f74e0d67421a36032323b",
+  "control_summary": {
+    "degenerate_quality_requested": "PASS_DEGENERATE_QUALITY_INPUT_REFUSED",
+    "degenerate_quality_unspecified": "INCONCLUSIVE_EXIT_ZERO",
+    "four_one_tet_controls_bitwise_equal": true,
+    "physical_admission": false,
+    "receipt": "mesher-054/controls/control-receipt.json",
+    "runtime": 0,
+    "status": "PASS_DEFAULT_PARITY_ZERO_OPTION_AND_PARSER_CONTROLS"
+  },
+  "external_not_staged": [
+    {
+      "bytes": 25348077,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/skin037-run-001/skin.poly",
+      "reason": "Historical 037 input PLC; omitted as bulky generated geometry input.",
+      "sha256": "b65e6a7dbf93ae5bad8dd83d1b386b52eaee5409cfa513926f66b7d5ffe3a653"
+    },
+    {
+      "bytes": 15915043,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/skin037-run-001/skin.1.node",
+      "reason": "Actual failed 037 node output; retained locally, hash-only here.",
+      "sha256": "b234766047f30e04cb4bae931aeaa993ee9dc05cec342be6735a8a7618eebfcb"
+    },
+    {
+      "bytes": 30381851,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/skin037-run-001/skin.1.ele",
+      "reason": "Actual failed 037 element output; retained locally, hash-only here.",
+      "sha256": "2f41ca78ebd77ac1095304c1f7c94620e225703ac0842a2b55ba07005f2c24bb"
+    },
+    {
+      "bytes": 14252900,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/skin037-run-001/skin.1.face",
+      "reason": "Actual failed 037 face output; retained locally, hash-only here.",
+      "sha256": "ca6b090788941bbb0f910ae420527f6bfc0f17325a6e0c8d71576f484165aecd"
+    },
+    {
+      "bytes": 16279381,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/skin037-run-001/skin.1.edge",
+      "reason": "Actual failed 037 edge output; retained locally, hash-only here.",
+      "sha256": "3a530a3f47d5a35d77e93816e94ea1cc06d5b77001cdbd6e3117a356957d2611"
+    },
+    {
+      "bytes": 25348932,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/skin037-preparation-001/skin.poly",
+      "reason": "Large 12-seed prepared PLC; metadata receipt included, poly omitted.",
+      "sha256": "dd123242d27d8539a30b684056ee91dbae73076a0ed8cda9122ff3a9f650c677"
+    }
+  ],
+  "historical_counterexample": {
+    "037_result": "failure/037/result.json",
+    "055_report": "failure/055/report.json",
+    "attribute_15_negative_f32_cells": 20,
+    "attribute_15_zero_f32_cells": 20,
+    "centroid_containment": "inside shell for all 31; diagnostic only, not cell ancestry",
+    "physical_admission": false,
+    "unowned_cell_report": "failure/055/unowned-cell-containment-001.json",
+    "unowned_cells": 31
+  },
+  "payloads": [
+    {
+      "bytes": 1287433,
+      "mode": "100644",
+      "path": "mesher-054/source/tetgen-explicit-no-improvement-validation.cxx",
+      "purpose": "Frozen 054 source variant; no-improvement path keeps all-cell quality checking.",
+      "sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen-explicit-no-improvement-validation.cxx"
+    },
+    {
+      "bytes": 1286513,
+      "mode": "100644",
+      "path": "mesher-054/source/tetgen.cxx",
+      "purpose": "Full TetGen 1.6.0 vendor source used as reference.",
+      "sha256": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc",
+      "source_path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen.cxx"
+    },
+    {
+      "bytes": 145931,
+      "mode": "100644",
+      "path": "mesher-054/source/tetgen.h",
+      "purpose": "Full TetGen 1.6.0 header used for compile.",
+      "sha256": "69b012da7c0b01e6327f5f281ac2d10fc3fb42503d22366c7bd0bc9181bd833b",
+      "source_path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/tetgen.h"
+    },
+    {
+      "bytes": 193035,
+      "mode": "100644",
+      "path": "mesher-054/source/predicates.cxx",
+      "purpose": "Exact predicates source whose compiled object is a pinned build input.",
+      "sha256": "5a050a2391e8dea44f6aba176372ba790667d553b98c7eea4bb351eabc81c050",
+      "source_path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/predicates.cxx"
+    },
+    {
+      "bytes": 208760,
+      "mode": "100644",
+      "path": "mesher-054/source/predicates.o",
+      "purpose": "Compiled exact-predicates object used by the frozen compile.",
+      "sha256": "d15c7e1a4dc798fa0b48204e346a9fe031070ccb7789d8b74b910dfafba26f4c",
+      "source_path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/predicates.o"
+    },
+    {
+      "bytes": 34790,
+      "mode": "100644",
+      "path": "mesher-054/LICENSE",
+      "purpose": "Upstream license.",
+      "sha256": "f15e3301d0f40116aa2e3567963c3dcc8dd45453337dedf592caa73a5390549f",
+      "source_path": "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/LICENSE"
+    },
+    {
+      "bytes": 789688,
+      "mode": "100755",
+      "path": "mesher-054/bin/tetgen",
+      "purpose": "Frozen compiled 054 executable.",
+      "sha256": "597b6025f1622bcaeb2a9bc9ac3b2813f520d6fb0a09a64acc6485a3474cffb1",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen"
+    },
+    {
+      "bytes": 2921,
+      "mode": "100644",
+      "path": "mesher-054/compile.json",
+      "purpose": "Compile command, source and input pins, and build result.",
+      "sha256": "317afac360537f35f9ce5a8a4b1923214b3aed6c54d07267547f02718f26b322",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/compile.json"
+    },
+    {
+      "bytes": 3443,
+      "mode": "100644",
+      "path": "mesher-054/compile_variant.py",
+      "purpose": "Compile wrapper source.",
+      "sha256": "51706af55f9690a7265f090aa179ee61d821faff3b6ce1d2d314339cd61439c4",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/compile_variant.py"
+    },
+    {
+      "bytes": 15160,
+      "mode": "100644",
+      "path": "mesher-054/compile.stderr.log",
+      "purpose": "Compiler diagnostic output retained.",
+      "sha256": "091d1ae78e7e7298c2f3cb1196f69ef5ca4aa3476c5931987019fc8a60ca4af2",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/compile.stderr.log"
+    },
+    {
+      "bytes": 1286564,
+      "mode": "100644",
+      "path": "mesher-054/parent-053/tetgen-explicit-no-improvement.cxx",
+      "purpose": "Immediate parent source named by the 054 compile receipt.",
+      "sha256": "bd0c21ee558ae8de2b9cb790e9b85fcb6224fe505e36bebfc902900cdc9777ac",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/tetgen-explicit-no-improvement.cxx"
+    },
+    {
+      "bytes": 2078,
+      "mode": "100644",
+      "path": "mesher-054/parent-053/compile.json",
+      "purpose": "Parent 053 compile receipt.",
+      "sha256": "c40622d9e1c82d09ea115a60e3f9300cd34831316dd38053bc4413851297e8c7",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/compile.json"
+    },
+    {
+      "bytes": 3409,
+      "mode": "100644",
+      "path": "mesher-054/controls/run_controls.py",
+      "purpose": "Control-run driver.",
+      "sha256": "429d8c3ffb68b8ae2e71074cb4b5e40c7bb7fdc15f6487f8fd92f9e66a27ef3e",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/run_controls.py"
+    },
+    {
+      "bytes": 2828,
+      "mode": "100644",
+      "path": "mesher-054/controls/control-receipt.json",
+      "purpose": "Four-control receipt; physical admission false.",
+      "sha256": "f2d81995b32e8338c8b50fc791b42e4401fd5ba6f7ba029c0fd33cb29af030a3",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/control-receipt.json"
+    },
+    {
+      "bytes": 234,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/control.poly",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "7e678c798e98f8724c191bdd61e0ec4ce18f4d51def2b4b5689df7558352b4e6",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/control.poly"
+    },
+    {
+      "bytes": 594,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/control.1.node",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "8e00e4dba06ad43190d514252825481cd52a2a04ebdaa68ca5f8ecb507c49a53",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/control.1.node"
+    },
+    {
+      "bytes": 545,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/control.1.ele",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "127a502a383059fb7b0a4feeadec7ddada977cce1467dd399a75c4808bc20fb2",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/control.1.ele"
+    },
+    {
+      "bytes": 624,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/control.1.face",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "15ec02ca93fa32c7febe6007ea5aac1d0e805a25f746a7f1abec2cf281732c17",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/control.1.face"
+    },
+    {
+      "bytes": 642,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/control.1.edge",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "ddff359c3946d34eebeebc475f676e2cb326a5e6e32f9647f1dd259ab307dfb7",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/control.1.edge"
+    },
+    {
+      "bytes": 1792,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/stdout.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "751ac429997d16856d08d10888f9c8698f78562d43d69e661ae71d405ee05f20",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/stdout.log"
+    },
+    {
+      "bytes": 0,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/stock-default/stderr.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/stock-default/stderr.log"
+    },
+    {
+      "bytes": 234,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/control.poly",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "7e678c798e98f8724c191bdd61e0ec4ce18f4d51def2b4b5689df7558352b4e6",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/control.poly"
+    },
+    {
+      "bytes": 490,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/control.1.node",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "7305e9b34c72fe36cec5780d8a065b10f32428c5f26a912733da03c54585f0d2",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/control.1.node"
+    },
+    {
+      "bytes": 441,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/control.1.ele",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "17261b3ad20f54f3ec403917ce13f38e88288b8b5a47cb7dab25938461bc57e7",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/control.1.ele"
+    },
+    {
+      "bytes": 520,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/control.1.face",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "a969087c091c988cb705d9ded04a66a4b45f85319556b62fc37c8a161ad8d9b9",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/control.1.face"
+    },
+    {
+      "bytes": 538,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/control.1.edge",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "83549bd6a13fc79f39563f559a2c36d76ca03bd5acca884f19277f9977fd2da7",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/control.1.edge"
+    },
+    {
+      "bytes": 1806,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/stdout.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "e174075ca569288677403a109ca54a804801b958ace71bc13bb6dbe10abc5e8a",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/stdout.log"
+    },
+    {
+      "bytes": 0,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-default/stderr.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-default/stderr.log"
+    },
+    {
+      "bytes": 234,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/control.poly",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "7e678c798e98f8724c191bdd61e0ec4ce18f4d51def2b4b5689df7558352b4e6",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/control.poly"
+    },
+    {
+      "bytes": 503,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/control.1.node",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "9319ff703b4084c42f4099dafa89e7c52f95ca6cb7df3969b972a127a095c062",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/control.1.node"
+    },
+    {
+      "bytes": 454,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/control.1.ele",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "d8c8daf78a8c294b57d870d242b0d04c52e2ce78da50504b234af5a538ee0cd9",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/control.1.ele"
+    },
+    {
+      "bytes": 533,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/control.1.face",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "678d615fa96953b0e915ca51d1b21e1cdf97e645e2cb9c8ed2a9315c349e9081",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/control.1.face"
+    },
+    {
+      "bytes": 551,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/control.1.edge",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "b8092db6df68c87747e9073aa79243d71840cf52a586cd86918392971e7b37a9",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/control.1.edge"
+    },
+    {
+      "bytes": 1819,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/stdout.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "420694da306fdac43a48c40430710db9f0867fd23652a095e4c79b3976b30f1a",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/stdout.log"
+    },
+    {
+      "bytes": 0,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement/stderr.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement/stderr.log"
+    },
+    {
+      "bytes": 234,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/control.poly",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "7e678c798e98f8724c191bdd61e0ec4ce18f4d51def2b4b5689df7558352b4e6",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/control.poly"
+    },
+    {
+      "bytes": 515,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/control.1.node",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "2bd5a5a139bc7a46c0dc82449323a200f46eca65bfa66274c8bbe740844b2f0b",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/control.1.node"
+    },
+    {
+      "bytes": 466,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/control.1.ele",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "f6766a1c5089ccabde7643441815803489af9c5bd9bf5e25457b206bc8b257f0",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/control.1.ele"
+    },
+    {
+      "bytes": 545,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/control.1.face",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "3fc7673c6bb3acd98f17e846e5e22771ee8850dbc41c0b4dabd8b724b5119d29",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/control.1.face"
+    },
+    {
+      "bytes": 563,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/control.1.edge",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "e1515c0c6519bc9b29276ac70f817b47c0d754527cda2afb0f6108c2a4d76cc6",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/control.1.edge"
+    },
+    {
+      "bytes": 226,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/stdout.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "fb12f49af3a9e3909e90df20596a68ee0c5e5881882099b29da60b1bdfee204d",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/stdout.log"
+    },
+    {
+      "bytes": 0,
+      "mode": "100644",
+      "path": "mesher-054/controls/fixtures/patched-no-improvement-trailing-Q/stderr.log",
+      "purpose": "Small one-tet control fixture or captured control output.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/controls-001/patched-no-improvement-trailing-Q/stderr.log"
+    },
+    {
+      "bytes": 2028,
+      "mode": "100644",
+      "path": "mesher-054/capacity/capacity_gate.py",
+      "purpose": "Capacity preflight implementation.",
+      "sha256": "236dfdd6ecc4e8fc664edfe38e9b765ddbef4937b523bacf33f87da00cd2dddc",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/capacity_gate.py"
+    },
+    {
+      "bytes": 1981,
+      "mode": "100644",
+      "path": "mesher-054/capacity/test_capacity_gate.py",
+      "purpose": "Capacity unit tests.",
+      "sha256": "e0f4d8708a5850ae8ad2531377f50d02948f890c6e02f80d73e7727d0250dc44",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/test_capacity_gate.py"
+    },
+    {
+      "bytes": 770,
+      "mode": "100644",
+      "path": "mesher-054/capacity/run_capacity_tests.py",
+      "purpose": "Capacity unit-test entry point.",
+      "sha256": "f9ac4b5c1e515b817b57e66a79bc3ef4e36e1699e4a6f75a868ef7098ced99d4",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/run_capacity_tests.py"
+    },
+    {
+      "bytes": 747,
+      "mode": "100644",
+      "path": "mesher-054/capacity/capacity-tests.json",
+      "purpose": "Frozen test receipt; six tests passed.",
+      "sha256": "8f3085625b6f24bb65e00ee4c07f9488715b2cdbd149f9fba3567d2867d7b91c",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/capacity-tests.json"
+    },
+    {
+      "bytes": 1539,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-request-refusal/run_control.py",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "4b0ded5b2da718168277483428c999354f7e76cb549c6739d0e94f098b3c2cc7",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-quality-control-001/run_control.py"
+    },
+    {
+      "bytes": 1765,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-request-refusal/result.json",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "85c34bc2a8a79ab9b512c9a0543c4596086f5ae7389004c4f274c0bcb5a7731b",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-quality-control-001/result.json"
+    },
+    {
+      "bytes": 40,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-request-refusal/degenerate.node",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "06e7f3423dba4bfa44252fd51aa80c31eebe2c7e7a1bb421ae6b589e291562e9",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-quality-control-001/degenerate.node"
+    },
+    {
+      "bytes": 16,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-request-refusal/degenerate.ele",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "e43f3ecf95be63533904c524738055a74673aae0f91c8601e364c0305151da47",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-quality-control-001/degenerate.ele"
+    },
+    {
+      "bytes": 1341,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-unspecified-inconclusive/run_degenerate_control.py",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "1ea4a2e3e135a8c9681e5f632461b4a70c81e8966f30c7aa8601306931183b00",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-control-001/run_degenerate_control.py"
+    },
+    {
+      "bytes": 2603,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-unspecified-inconclusive/result.json",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "b9f9fe78eda08353d5256188dac78060608725947fa9adf081c836d36af96dca",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-control-001/result.json"
+    },
+    {
+      "bytes": 40,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-unspecified-inconclusive/degenerate.node",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "06e7f3423dba4bfa44252fd51aa80c31eebe2c7e7a1bb421ae6b589e291562e9",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-control-001/degenerate.node"
+    },
+    {
+      "bytes": 16,
+      "mode": "100644",
+      "path": "mesher-054/degenerate/quality-unspecified-inconclusive/degenerate.ele",
+      "purpose": "Small degenerate control source/input/receipt; distinct options and outcomes retained.",
+      "sha256": "e43f3ecf95be63533904c524738055a74673aae0f91c8601e364c0305151da47",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/degenerate-control-001/degenerate.ele"
+    },
+    {
+      "bytes": 23169,
+      "mode": "100644",
+      "path": "adapter/tetgen-217-role-adapter.py",
+      "purpose": "Bounded owner adapter; no geometry mutation or relabeling.",
+      "sha256": "806d46d4c42b7aae6308ccde20316d47e8fcefebd8342fb36e632b275521244f",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/tetgen-217-role-adapter.py"
+    },
+    {
+      "bytes": 2905,
+      "mode": "100644",
+      "path": "adapter/adapter-config.json",
+      "purpose": "Adapter config; hash is hardcoded in wrapper.",
+      "sha256": "1e20cb90b301dfc648cab1be9772542e1cff3a8a7578bbe2f1105e84fefe35ef",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/adapter-config.json"
+    },
+    {
+      "bytes": 4332,
+      "mode": "100644",
+      "path": "adapter/adapter-manifest.json",
+      "purpose": "Frozen adapter owner manifest.",
+      "sha256": "69ba2279c733f78f7d9dd01d917270c811e77b52e1e4f99aef1c3868eff35b14",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/adapter-manifest.json"
+    },
+    {
+      "bytes": 11808,
+      "mode": "100644",
+      "path": "adapter/test_adapter.py",
+      "purpose": "Adapter fixture tests.",
+      "sha256": "b150fe27cb7f31dfcc8d14f0137b38e8056033b2766d18d6dc551d13e40756df",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/test_adapter.py"
+    },
+    {
+      "bytes": 1129,
+      "mode": "100644",
+      "path": "adapter/run_adapter_tests.py",
+      "purpose": "Adapter test entry point.",
+      "sha256": "2963c568d951b14ae08453b6184ef69511fc9a05c0f96a30f7eafe787e0fba87",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/run_adapter_tests.py"
+    },
+    {
+      "bytes": 1262,
+      "mode": "100644",
+      "path": "adapter/adapter-tests.json",
+      "purpose": "Frozen 19-test receipt; physical admission false.",
+      "sha256": "5d64399f8d959fb733ad278cd387e2f78aa7cfff57e90d3397d1cf0aa0018775",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/source004-adapter-001/adapter-tests.json"
+    },
+    {
+      "bytes": 4971,
+      "mode": "100644",
+      "path": "region-seeds/complete_region_seeds.py",
+      "purpose": "Verifies interior, disconnected, unowned cell components and prepares bounded region seeds.",
+      "sha256": "0aea6dbf689705cfaae9b0ee72cf76f7459b7ebce665af97c84726509cab2d14",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/complete_region_seeds.py"
+    },
+    {
+      "bytes": 3219,
+      "mode": "100644",
+      "path": "region-seeds/test_complete_region_seeds.py",
+      "purpose": "Eight seed-helper tests.",
+      "sha256": "cdbe36a828065dd8989db106867eec5939730523008c7ceb413b080490e4affd",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/test_complete_region_seeds.py"
+    },
+    {
+      "bytes": 277,
+      "mode": "100644",
+      "path": "region-seeds/test-receipt.json",
+      "purpose": "Frozen 8-test receipt.",
+      "sha256": "c71c08894a6d9a503a7a77c6eb53a32750e5f17111bbc358b39698a8edd17d56",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/test-receipt.json"
+    },
+    {
+      "bytes": 3812,
+      "mode": "100644",
+      "path": "region-seeds/skin037-preparation-001/receipt.json",
+      "purpose": "Prepared 12 interior seed metadata only; no TetGen rerun or admission.",
+      "sha256": "c98a042a980e97cdcf9885e5ea48839cb334120bd7bd5f45deff316fa3947ce5",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/skin037-preparation-001/receipt.json"
+    },
+    {
+      "bytes": 17047,
+      "mode": "100644",
+      "path": "failure/055/report.json",
+      "purpose": "Historical failed 037 material/volume diagnostics.",
+      "sha256": "4f31dcccd00abc9b4fa20bc6a460c21b1fec1aa1145747eb5368b43099941bf4",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/report.json"
+    },
+    {
+      "bytes": 113103,
+      "mode": "100644",
+      "path": "failure/055/cell-role-witnesses-001.json",
+      "purpose": "Diagnostic cell witness set; not geometric ancestry.",
+      "sha256": "4310f874bc5c636acf0e1f3def78c1a216e964e144f9d2527493b400203e7ca0",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/cell-role-witnesses-001.json"
+    },
+    {
+      "bytes": 8716,
+      "mode": "100644",
+      "path": "failure/055/unowned-cell-containment-001.json",
+      "purpose": "Centroid-containment diagnostic only.",
+      "sha256": "9d92506de76c6c1a90035d28370c3e53354aa9dd924aaf0d54f5bf807035031d",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/unowned-cell-containment-001.json"
+    },
+    {
+      "bytes": 5947,
+      "mode": "100644",
+      "path": "failure/055/nonpositive-boundary-membership-001.json",
+      "purpose": "Nonpositive-cell boundary-membership diagnostics.",
+      "sha256": "788c2a953b1f96629d644cd5cfb53bf461fadfa15cd245f8ae327504b237aa68",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/nonpositive-boundary-membership-001.json"
+    },
+    {
+      "bytes": 9529,
+      "mode": "100644",
+      "path": "failure/055/nonpositive-steiner-classes-001.json",
+      "purpose": "Nonpositive-cell Steiner classification diagnostics.",
+      "sha256": "09da6a84ac1c592244f60f6613d26e08ee3118b92ecf30c9a37073823a8eff0e",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/nonpositive-steiner-classes-001.json"
+    },
+    {
+      "bytes": 1946,
+      "mode": "100644",
+      "path": "failure/055/classify_unowned.py",
+      "purpose": "Unowned cell diagnostic script.",
+      "sha256": "8e068b8c6f03b7785d07706a732720cc419890bf5bd8d1ffd8fa72e29772e01e",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/classify_unowned.py"
+    },
+    {
+      "bytes": 2059,
+      "mode": "100644",
+      "path": "failure/055/diagnose_material.py",
+      "purpose": "Material/volume diagnostic script.",
+      "sha256": "609f6497f01e69d2f1ca2e6d66a13dd12cc002bb20f9e11c729c03eef45a5805",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/diagnose_material.py"
+    },
+    {
+      "bytes": 3844,
+      "mode": "100644",
+      "path": "failure/055/map_cell_witnesses.py",
+      "purpose": "Cell-witness mapping script.",
+      "sha256": "55976c0f94c46c4235e145ba44e6f6cfe16db54d5128472dd235c179de796894",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-material-ownership-diagnostic-055/map_cell_witnesses.py"
+    },
+    {
+      "bytes": 1985,
+      "mode": "100644",
+      "path": "failure/037/run_skin037.py",
+      "purpose": "Historical TetGen 037 launch driver.",
+      "sha256": "6cab211fc2a1b19f400cbcf594d4eb74e3bd765506b6853ff57fc2bcdec33947",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/run_skin037.py"
+    },
+    {
+      "bytes": 843,
+      "mode": "100644",
+      "path": "failure/037/result.json",
+      "purpose": "Actual 037 result: process exit 0, owner rejected material attribute; no admission.",
+      "sha256": "f6418ed3feca5c6ad5b9301ab93b3c5d3514c1fea30adf5894239c3b8428b73e",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-053/skin037-run-001/result.json"
+    },
+    {
+      "bytes": 5855,
+      "mode": "100644",
+      "path": "preparation/prepare_verified_plcs_058.py",
+      "purpose": "Preparation-only helper; same source004 owner, does not invoke TetGen.",
+      "sha256": "23051adccefb1ed775c761069a04893fc8e5cdcc2043f249545dd8c56a756269",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-handoff-036/prepare_verified_plcs_058.py"
+    },
+    {
+      "bytes": 5648,
+      "mode": "100644",
+      "path": "preparation/probe_existing_tetgen_047.py",
+      "purpose": "047 parent preparation source; exact hash recorded for provenance.",
+      "sha256": "659109a4f57102b1e7b399a928bdd4bb7ce793ec0e83d6c39aabc5a12f5f86a3",
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-handoff-036/probe_existing_tetgen_047.py"
+    },
+    {
+      "bytes": 3434,
+      "mode": "100644",
+      "path": "README.md",
+      "purpose": "Scope, methods, test counts, retained failure, and limits.",
+      "sha256": "dbc24fbb816c99da29c4b066e4860a40773369148e9fad9a0b1be0a8ef248c4a",
+      "source_path": "/private/tmp/human-physical-mesher-controls-20261030/README.md"
+    },
+    {
+      "bytes": 2245,
+      "mode": "100644",
+      "path": "test-rerun-receipt.json",
+      "purpose": "This-turn independent rerun: 6+19+8 unit tests passed; no geometry/native execution.",
+      "sha256": "58d006467750521d791e913499080617883058a79ff946977afd24a08fb26f10",
+      "source_path": "/private/tmp/human-physical-mesher-controls-20261030/test-rerun-receipt.json"
+    },
+    {
+      "bytes": 2494,
+      "mode": "100644",
+      "path": ".gitattributes",
+      "purpose": "Per-file whitespace exceptions preserve exact frozen vendor/generated bytes; no global whitespace waiver.",
+      "sha256": "e21f9c37662e8b7461a73494ecd4c42741d46cb22216ce8bb7112782cdc342f8",
+      "source_path": "/private/tmp/human-physical-mesher-controls-20261030/.gitattributes"
+    }
+  ],
+  "physical_admission": false,
+  "preparation": {
+    "helper": "preparation/prepare_verified_plcs_058.py",
+    "parent_047": "preparation/probe_existing_tetgen_047.py",
+    "parent_047_hash_is_not_a_physical_or_current-candidate_pass": true,
+    "tetgen_invoked_by_058": false
+  },
+  "repository": "Numi2/numilab-human",
+  "runtime": 0,
+  "schema": "numi.human.physical-mesher-controls-evidence.v1",
+  "source_relationships": {
+    "047_source_sha256": "659109a4f57102b1e7b399a928bdd4bb7ce793ec0e83d6c39aabc5a12f5f86a3",
+    "054_compile_receipt_sha256": "317afac360537f35f9ce5a8a4b1923214b3aed6c54d07267547f02718f26b322",
+    "054_parent_053_source_sha256": "bd0c21ee558ae8de2b9cb790e9b85fcb6224fe505e36bebfc902900cdc9777ac",
+    "058_source_sha256": "23051adccefb1ed775c761069a04893fc8e5cdcc2043f249545dd8c56a756269",
+    "source004_owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "status": "SOURCE_AND_FIXTURE_TEST_EVIDENCE_ONLY",
+  "test_rerun_receipt": "test-rerun-receipt.json",
+  "test_runs": [
+    {
+      "exit_code": 0,
+      "name": "054 capacity preflight",
+      "receipt": "mesher-054/capacity/capacity-tests.json",
+      "tests": 6
+    },
+    {
+      "exit_code": 0,
+      "name": "217 adapter",
+      "receipt": "adapter/adapter-tests.json",
+      "tests": 19
+    },
+    {
+      "exit_code": 0,
+      "name": "056 region-seed completion",
+      "receipt": "region-seeds/test-receipt.json",
+      "tests": 8
+    }
+  ],
+  "test_runs_total_this_turn": 33
+}

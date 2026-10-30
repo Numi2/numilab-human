@@ -1,0 +1,40 @@
+{
+  "accepted_steps": 0,
+  "argv": [
+    "/usr/bin/clang++",
+    "-O3",
+    "-I",
+    "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen-explicit-no-improvement-validation.cxx",
+    "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/arm-local-pocket-remesh-116/local-remesh-118/tetgen-v1.6.0/predicates.o",
+    "-lm",
+    "-o",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen"
+  ],
+  "binary_sha256": "597b6025f1622bcaeb2a9bc9ac3b2813f520d6fb0a09a64acc6485a3474cffb1",
+  "changes": {
+    "defaults": "Default flip/iteration settings are unchanged; default path still calls improve_mesh.",
+    "new_validation": "When PLC/quality work is requested but both improvement counts are zero, run improve_mesh's all-cell get_tetqual degeneracy scan without allocating queues or changing mesh cells. Preserve the -c exterior skip and initialize cos_large_dihed.",
+    "parent_053": "The parser fix and optional-improvement guard are inherited unchanged."
+  },
+  "exit_code": 0,
+  "input_pins": {
+    "license_sha256": "f15e3301d0f40116aa2e3567963c3dcc8dd45453337dedf592caa73a5390549f",
+    "parent_053_source_sha256": "bd0c21ee558ae8de2b9cb790e9b85fcb6224fe505e36bebfc902900cdc9777ac",
+    "predicates_o_sha256": "d15c7e1a4dc798fa0b48204e346a9fe031070ccb7789d8b74b910dfafba26f4c",
+    "vendor_tetgen_cxx_sha256": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc",
+    "vendor_tetgen_h_sha256": "69b012da7c0b01e6327f5f281ac2d10fc3fb42503d22366c7bd0bc9181bd833b"
+  },
+  "parent_053_compile_receipt_sha256": "c40622d9e1c82d09ea115a60e3f9300cd34831316dd38053bc4413851297e8c7",
+  "physical_admission": false,
+  "runtime": 0,
+  "source_sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a",
+  "verified_input_pins": {
+    "license_sha256": "f15e3301d0f40116aa2e3567963c3dcc8dd45453337dedf592caa73a5390549f",
+    "parent_053_source_sha256": "bd0c21ee558ae8de2b9cb790e9b85fcb6224fe505e36bebfc902900cdc9777ac",
+    "predicates_o_sha256": "d15c7e1a4dc798fa0b48204e346a9fe031070ccb7789d8b74b910dfafba26f4c",
+    "vendor_tetgen_cxx_sha256": "a10f5e74c3ec45ffda3d9609b1cb6e864f1a628b4c2e3e61cabd49ddfccc36bc",
+    "vendor_tetgen_h_sha256": "69b012da7c0b01e6327f5f281ac2d10fc3fb42503d22366c7bd0bc9181bd833b"
+  },
+  "wall_s": 2.4352370421402156
+}

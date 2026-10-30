@@ -1,0 +1,52 @@
+{
+  "accepted_steps": 0,
+  "adapter_total_timeout_s": 54,
+  "improvement_mode": "explicit-zero-with-nonmutating-get_tetqual-scan",
+  "outer_owner_timeout_s": 60,
+  "physical_admission": false,
+  "pins": {
+    "native217_source004": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py",
+      "sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+    },
+    "region_seed_helper_056": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-region-seed-completion-056/complete_region_seeds.py",
+      "sha256": "0aea6dbf689705cfaae9b0ee72cf76f7459b7ebce665af97c84726509cab2d14"
+    },
+    "tetgen054_binary": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen",
+      "sha256": "597b6025f1622bcaeb2a9bc9ac3b2813f520d6fb0a09a64acc6485a3474cffb1"
+    },
+    "tetgen054_compile_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/compile.json",
+      "sha256": "317afac360537f35f9ce5a8a4b1923214b3aed6c54d07267547f02718f26b322"
+    },
+    "tetgen054_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-054/tetgen-explicit-no-improvement-validation.cxx",
+      "sha256": "255bd025b7b7730ce81348c30df45fe5ad98b7160d5cea29c3bb03c91dae8b1a"
+    }
+  },
+  "producer": "native-domain-217-source-004 run_tetgen --tetgen-binary",
+  "region_seed_completion": {
+    "default": "disabled",
+    "does_not_relabel_cells": true,
+    "enabled_by_code": true,
+    "enabled_value": "1",
+    "environment_opt_in": "NUMI_TETGEN_REGION_SEED_COMPLETION",
+    "maximum_reruns_per_material": 1,
+    "preserves_existing_region_rows_literally": true,
+    "preserves_points_facets_holes_and_existing_regions": true,
+    "requires_all_cell_absolute_volume_sum_match_shell": true,
+    "requires_every_unowned_component_cell_centroid_inside_shell": true,
+    "requires_exact_poly_shell_point_face_marker_match": true,
+    "requires_existing_and_added_region_material_equal_role": true,
+    "requires_positive_signed_source_shell_volume": true,
+    "requires_signed_triangle_volume_matches_manifold_volume": true,
+    "source_shell_volume_abs_tolerance_m3": 1e-15,
+    "source_shell_volume_relative_tolerance": 1e-09
+  },
+  "required_parent_argv_option": "-pYq1.2/10AS512",
+  "runtime": 0,
+  "schema": "numi.human.tetgen-source004-role-adapter-config.v1",
+  "zero_improvement_suffix": "O0/0/0"
+}
