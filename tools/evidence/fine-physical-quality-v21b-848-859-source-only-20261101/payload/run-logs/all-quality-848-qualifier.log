@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/qualify_coupled_anchor_794_geometry_only_001.py", line 278, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/qualify_coupled_anchor_794_geometry_only_001.py", line 276, in main
+    result=replay_candidate(a.run_state,a.output_dir) if a.mode=='replay' else qualify(a.parent,a.run_state,a.audit805,a.output_dir)
+                                                                               ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/qualify_coupled_anchor_794_geometry_only_001.py", line 247, in qualify
+    proof=verifier.verify_current_source_evidence(pend)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_807_root.py", line 80, in verify_current_source_evidence
+    anchor=V._validate_current_context(path,current,pins)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_807_validation_root.py", line 470, in _validate_current_context
+    _validate_805_policy_summary(report, config, inner_roles)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_807_validation_root.py", line 184, in _validate_805_policy_summary
+    raise ValueError("805 audit requires the config's explicitly declared I/D inner back layer roles")
+ValueError: 805 audit requires the config's explicitly declared I/D inner back layer roles

@@ -1,0 +1,59 @@
+{
+  "accepted_operations": 1,
+  "actual_operation_record_keys": [
+    "anchor_f32",
+    "budget_m3",
+    "drop",
+    "exact_delta_integer",
+    "exact_delta_volume_m3",
+    "full_star_cells",
+    "full_star_points",
+    "keep",
+    "new_bad",
+    "old_bad",
+    "replacement_materials",
+    "replacement_parent_rows",
+    "replacement_tets",
+    "surface_parent_faces",
+    "surface_retired_faces",
+    "surface_star_vertices",
+    "volume_endpoints"
+  ],
+  "candidate_status_preserved": "CANDIDATE_PENDING_775_697_217",
+  "failed_replay_log": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-848-replay.log",
+    "sha256": "b7781292d032fc22129d5f6ed9278ba3e64970eabf764cc1051aa3c85f28876b"
+  },
+  "failure": {
+    "exception": "KeyError",
+    "missing_key": "surface_full_endpoint_face_rows",
+    "root_cause": "producer operation_records use surface_parent_faces/surface_retired_faces; source_output expects surface_full_endpoint_face_rows/surface_retired_face_rows; producer stores the movement cap in the pinned run config rather than each journal record",
+    "traceback_site": "independent_replay -> source_output at source line 599; run log also records source_output at line 445"
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_794_outer_role.py",
+    "sha256": "87711399d6a19be3f71a7338a0775c90baec192e95ac063639579500c072cf7a"
+  },
+  "repaired_original": false,
+  "replay_adapter_mapping": {
+    "run_config.move_cap_m": "fit.move_cap_m",
+    "surface_parent_faces": "surface_full_endpoint_face_rows",
+    "surface_retired_faces": "surface_retired_face_rows"
+  },
+  "run_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-848-root/proposal/state.json",
+    "sha256": "ab9b1c01ddf3ac486b296d74bf56cd923370a7892ba66732968abf677817a4a5"
+  },
+  "schema": "h706.coupled-anchor-794-replay-failure-incident.v1",
+  "source_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-848-root/proposal/candidate-O-typed-current.npz",
+    "sha256": "290b5a98be032de43abfe3b3dadb9e7907a698835a835dfd9b8089cb475d113c"
+  },
+  "status": "PRESERVED_REPLAY_FAILURE_INPUT_SCHEMA_MISMATCH",
+  "volume_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-848-root/proposal/skin-o-volume-proposal.npz",
+    "sha256": "5e5268938e9d775d273d06df9c7875565165acad38b90f86fe1eba0561c775d8"
+  }
+}

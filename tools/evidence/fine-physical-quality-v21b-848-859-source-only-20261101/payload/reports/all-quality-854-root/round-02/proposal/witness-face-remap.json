@@ -1,0 +1,4155 @@
+{
+  "current_state": {
+    "current_face_array_sha256": {
+      "D": "753a49d46930297f48278f1b68a070f35818886b9c0a9f74fe7cef819d8954d6",
+      "I": "d84d874d1784eddb0c40c07729e4143f758c428332183d2158f8443513a3e4e1",
+      "O": "542cde92fc2d810a4ebdbf24f5271bf05f5627568b28fd1f608e8a07a030a37b"
+    },
+    "input_state_pin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/verified-state.json",
+      "sha256": "cbdfe57dfdae92c3db4c7f3ed22fb97956cb42713126fbd4a0891ab9e6b9e44a"
+    },
+    "source_surface_pins": {
+      "D": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/proposal/candidate-D-typed-current.npz",
+        "sha256": "5a69a247fe8cdfee30d3fccdff8cb3886a294a65fb3191d24c74b0d70b6c6239"
+      },
+      "I": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-02/proposal/candidate-I-typed-current.npz",
+        "sha256": "ecdb605054cf906d84baa81852a74a756637ab350c3941855380afdb4c542a15"
+      },
+      "O": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/proposal/candidate-O-typed-current.npz",
+        "sha256": "2122de158fb45028837a7c77d84adff1145b3aebbf6ad695cb0b37973eda4b1a"
+      }
+    }
+  },
+  "dropped_pairs": [],
+  "halfspace_preparation": {
+    "baseline_constraint_violation_count_after_numeric_allowance": 0,
+    "freeze_source_nodes": [],
+    "linear_halfspace_rows": 381,
+    "rejected_pair_details": [],
+    "rejected_pair_details_omitted_by_owner_limit": 0,
+    "rejected_pairs": 0,
+    "source_fixed_pairs": 28,
+    "source_source_pairs": 33,
+    "usable_separating_pairs": 61,
+    "weak_shared_feature_max_numeric_allowance_m": 2.7105054312137617e-20,
+    "weak_shared_feature_numeric_ulp_adjustment_count": 6,
+    "weak_shared_feature_numeric_ulp_adjustments": [
+      {
+        "allowance_m": 5.082197683525803e-21,
+        "axis_name": "edge_cross_1_2",
+        "baseline_lhs_m": 5.082197683525802e-21,
+        "constraint_row": 176,
+        "emitted_upper_bound_m": 5.082197683525803e-21,
+        "face_pair": [
+          0,
+          0
+        ],
+        "original_upper_bound_m": 0.0,
+        "pair_id": 0,
+        "pair_identities": [
+          [
+            "source",
+            "O",
+            14390
+          ],
+          [
+            "source",
+            "O",
+            14405
+          ]
+        ],
+        "point_rows": [
+          4833,
+          5146
+        ],
+        "rule": "nextafter(max(old_upper, same immutable Float64 LHS), +inf)",
+        "shared_feature_rows": [
+          5146
+        ]
+      },
+      {
+        "allowance_m": 8.893845946170155e-21,
+        "axis_name": "edge_cross_2_0",
+        "baseline_lhs_m": 8.893845946170154e-21,
+        "constraint_row": 181,
+        "emitted_upper_bound_m": 8.893845946170155e-21,
+        "face_pair": [
+          10,
+          10
+        ],
+        "original_upper_bound_m": 0.0,
+        "pair_id": 10,
+        "pair_identities": [
+          [
+            "source",
+            "D",
+            55457
+          ],
+          [
+            "source",
+            "D",
+            55458
+          ]
+        ],
+        "point_rows": [
+          277107,
+          282892
+        ],
+        "rule": "nextafter(max(old_upper, same immutable Float64 LHS), +inf)",
+        "shared_feature_rows": [
+          277107
+        ]
+      },
+      {
+        "allowance_m": 2.1175823681357513e-22,
+        "axis_name": "normal_b_cross_edge_3",
+        "baseline_lhs_m": 2.117582368135751e-22,
+        "constraint_row": 195,
+        "emitted_upper_bound_m": 2.1175823681357513e-22,
+        "face_pair": [
+          12,
+          12
+        ],
+        "original_upper_bound_m": 0.0,
+        "pair_id": 12,
+        "pair_identities": [
+          [
+            "source",
+            "D",
+            55462
+          ],
+          [
+            "source",
+            "D",
+            55466
+          ]
+        ],
+        "point_rows": [
+          282892,
+          282640
+        ],
+        "rule": "nextafter(max(old_upper, same immutable Float64 LHS), +inf)",
+        "shared_feature_rows": [
+          282892
+        ]
+      },
+      {
+        "allowance_m": 4.817499887508834e-21,
+        "axis_name": "edge_cross_1_2",
+        "baseline_lhs_m": 4.817499887508833e-21,
+        "constraint_row": 204,
+        "emitted_upper_bound_m": 4.817499887508834e-21,
+        "face_pair": [
+          13,
+          13
+        ],
+        "original_upper_bound_m": 0.0,
+        "pair_id": 13,
+        "pair_identities": [
+          [
+            "source",
+            "O",
+            14389
+          ],
+          [
+            "source",
+            "O",
+            14459
+          ]
+        ],
+        "point_rows": [
+          4833,
+          4745
+        ],
+        "rule": "nextafter(max(old_upper, same immutable Float64 LHS), +inf)",
+        "shared_feature_rows": [
+          4745
+        ]
+      },
+      {
+        "allowance_m": 2.032879073410321e-20,
+        "axis_name": "edge_cross_2_0",
+        "baseline_lhs_m": 2.0328790734103208e-20,
+        "constraint_row": 270,
+        "emitted_upper_bound_m": 2.032879073410321e-20,
+        "face_pair": [
+          27,
+          27
+        ],
+        "original_upper_bound_m": 0.0,
+        "pair_id": 27,
+        "pair_identities": [
+          [
+            "source",
+            "O",
+            101314
+          ],
+          [
+            "source",
+            "O",
+            150707
+          ]
+        ],
+        "point_rows": [
+          59893,
+          59894
+        ],
+        "rule": "nextafter(max(old_upper, same immutable Float64 LHS), +inf)",
+        "shared_feature_rows": [
+          59894
+        ]
+      },
+      {
+        "allowance_m": 2.7105054312137617e-20,
+        "axis_name": "edge_cross_2_0",
+        "baseline_lhs_m": 2.710505431213761e-20,
+        "constraint_row": 271,
+        "emitted_upper_bound_m": 2.7105054312137617e-20,
+        "face_pair": [
+          27,
+          27
+        ],
+        "original_upper_bound_m": 0.0,
+        "pair_id": 27,
+        "pair_identities": [
+          [
+            "source",
+            "O",
+            101314
+          ],
+          [
+            "source",
+            "O",
+            150707
+          ]
+        ],
+        "point_rows": [
+          59893,
+          60043
+        ],
+        "rule": "nextafter(max(old_upper, same immutable Float64 LHS), +inf)",
+        "shared_feature_rows": [
+          59894
+        ]
+      }
+    ]
+  },
+  "inactive_fixed_pair_policy": {
+    "active_source_roles_still_mapped": [
+      "D",
+      "O"
+    ],
+    "enabled": false,
+    "outer_O_fixed_by_inner_back_layer_policy": false,
+    "skipped_pair_classes": [
+      "O/O",
+      "O/all185-bone"
+    ]
+  },
+  "native_steps": 0,
+  "pair_accounting": {
+    "duplicate_mapped_pairs_deduplicated": 0,
+    "identity": true,
+    "inactive_fixed_fixed_o_pairs_skipped": 0,
+    "raw_report_pairs": 61,
+    "retained_unique_pairs": 61,
+    "stale_source_triangle_pairs_dropped": 0
+  },
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_v24b_ordinary_outer_o_local.py",
+    "sha256": "493fbe1d0a849f7cac000d1019d0cc0643dc4adf329f9cb7772a0c66d3a1993d"
+  },
+  "reports": [
+    {
+      "active_roles_requiring_point_map": [
+        "D",
+        "O"
+      ],
+      "changed_face_total": 453,
+      "context_pairs": 38,
+      "duplicate_mapped_pairs_deduplicated": 0,
+      "frozen_namespace": {
+        "changed_end_exclusive": 1901542,
+        "changed_start_id": 1901089,
+        "face_base": {
+          "D": 0,
+          "I": 600000,
+          "O": 300000
+        },
+        "max_context_id": 901089,
+        "role_ranges": {
+          "D": {
+            "base": 0,
+            "end_exclusive": 207967,
+            "face_count": 207967
+          },
+          "I": {
+            "base": 600000,
+            "end_exclusive": 836417,
+            "face_count": 236417
+          },
+          "O": {
+            "base": 300000,
+            "end_exclusive": 452341,
+            "face_count": 152341
+          }
+        },
+        "wall_base": {
+          "Fat": 901000,
+          "Skin": 900000
+        },
+        "wall_face_count": 90
+      },
+      "inactive_fixed_fixed_pairs_skipped": 0,
+      "joint_self_pairs": 19,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+      "raw_pair_count": 57,
+      "retained_unique_pairs_from_this_report": 57,
+      "sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+      "source_roles": {
+        "D": {
+          "active_current_rows_mapped_to_report": 103541,
+          "active_current_rows_unmapped": 0,
+          "active_point_map_injective": true,
+          "baseline": {
+            "face_count": 207967,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-846-root/round-01/witness-component-rollback/candidate-D-typed-current.npz",
+            "sha256": "bb6fe02f6069b6b297e51e593118db910c9b1e56b6f2231134cb93a09c30f240"
+          },
+          "candidate": {
+            "face_count": 207967,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal/candidate-D-typed-current.npz",
+            "sha256": "c35be1ef35022efff739489e55b8f9eb0271e0a33de59c7185898808c50746f1"
+          },
+          "candidate_baseline_array_fingerprints": null,
+          "candidate_baseline_identity_archive": false,
+          "candidate_baseline_identity_basis": null,
+          "current_active_point_rows": 103541,
+          "current_face_array_sha256": "753a49d46930297f48278f1b68a070f35818886b9c0a9f74fe7cef819d8954d6",
+          "current_face_count": 207965,
+          "current_source_archive": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/proposal/candidate-D-typed-current.npz",
+            "sha256": "5a69a247fe8cdfee30d3fccdff8cb3886a294a65fb3191d24c74b0d70b6c6239"
+          },
+          "current_to_report_baseline_point_map_sha256": "5402b9e7b06f9c7c3ec20ece7b0f4e562fa5d85b797721a393750938f6304376",
+          "mapped_report_face_rows": 14,
+          "missing_report_face_rows": 0,
+          "oriented_face_key_semantics": "cyclic rotations equivalent; reverse winding distinct",
+          "point_lineage_status": "AUTHENTICATED_FOR_ACTIVE_WITNESS_ENDPOINTS",
+          "referenced_report_face_rows": 14,
+          "typed_point_lineage_depth": 5
+        },
+        "I": {
+          "active_current_rows_mapped_to_report": null,
+          "active_current_rows_unmapped": null,
+          "active_point_map_injective": null,
+          "baseline": {
+            "face_count": 236417,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-846-root/round-01/witness-component-rollback/candidate-I-typed-current.npz",
+            "sha256": "c5aa0d6faa37a00fdb4f5b4e75b1a25b8317a78e2abb93c3fc6e258c1686d8e6"
+          },
+          "candidate": {
+            "face_count": 236417,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal/candidate-I-typed-current.npz",
+            "sha256": "588ba24331cffd63daed89d961af2ed8f1f9ec29b864d6879f654261ff27598d"
+          },
+          "candidate_baseline_array_fingerprints": null,
+          "candidate_baseline_identity_archive": false,
+          "candidate_baseline_identity_basis": null,
+          "current_active_point_rows": 118211,
+          "current_face_array_sha256": "d84d874d1784eddb0c40c07729e4143f758c428332183d2158f8443513a3e4e1",
+          "current_face_count": 236417,
+          "current_source_archive": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-02/proposal/candidate-I-typed-current.npz",
+            "sha256": "ecdb605054cf906d84baa81852a74a756637ab350c3941855380afdb4c542a15"
+          },
+          "current_to_report_baseline_point_map_sha256": null,
+          "mapped_report_face_rows": 0,
+          "missing_report_face_rows": 0,
+          "oriented_face_key_semantics": "cyclic rotations equivalent; reverse winding distinct",
+          "point_lineage_status": "NOT_REQUIRED_NO_ACTIVE_WITNESS_ENDPOINTS",
+          "referenced_report_face_rows": 0,
+          "typed_point_lineage_depth": null
+        },
+        "O": {
+          "active_current_rows_mapped_to_report": 76193,
+          "active_current_rows_unmapped": 0,
+          "active_point_map_injective": true,
+          "baseline": {
+            "face_count": 152341,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-846-root/round-01/witness-component-rollback/candidate-O-typed-current.npz",
+            "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+          },
+          "candidate": {
+            "face_count": 152341,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal/candidate-O-typed-current.npz",
+            "sha256": "ed1a061471fad13eeaaf7c06c1caf10d1be4e49d480e7d726be641487a3a03cd"
+          },
+          "candidate_baseline_array_fingerprints": null,
+          "candidate_baseline_identity_archive": false,
+          "candidate_baseline_identity_basis": null,
+          "current_active_point_rows": 76193,
+          "current_face_array_sha256": "542cde92fc2d810a4ebdbf24f5271bf05f5627568b28fd1f608e8a07a030a37b",
+          "current_face_count": 152341,
+          "current_source_archive": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/proposal/candidate-O-typed-current.npz",
+            "sha256": "2122de158fb45028837a7c77d84adff1145b3aebbf6ad695cb0b37973eda4b1a"
+          },
+          "current_to_report_baseline_point_map_sha256": "1ac5f7dfbf4a79d72ae91a9550d5481bdeb099241747d936b028171fb81422a2",
+          "mapped_report_face_rows": 27,
+          "missing_report_face_rows": 0,
+          "oriented_face_key_semantics": "cyclic rotations equivalent; reverse winding distinct",
+          "point_lineage_status": "AUTHENTICATED_FOR_ACTIVE_WITNESS_ENDPOINTS",
+          "referenced_report_face_rows": 27,
+          "typed_point_lineage_depth": 4
+        }
+      },
+      "stale_source_triangle_pairs_dropped": 0,
+      "wall_receipts": [
+        {
+          "face_count": 90,
+          "marker": 3,
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+          "role": "Skin",
+          "sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a"
+        },
+        {
+          "face_count": 90,
+          "marker": 6,
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+          "role": "Fat",
+          "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a"
+        }
+      ]
+    },
+    {
+      "active_roles_requiring_point_map": [
+        "O"
+      ],
+      "changed_face_total": 311,
+      "context_pairs": 2,
+      "duplicate_mapped_pairs_deduplicated": 0,
+      "frozen_namespace": {
+        "changed_end_exclusive": 1901400,
+        "changed_start_id": 1901089,
+        "face_base": {
+          "D": 0,
+          "I": 600000,
+          "O": 300000
+        },
+        "max_context_id": 901089,
+        "role_ranges": {
+          "D": {
+            "base": 0,
+            "end_exclusive": 207967,
+            "face_count": 207967
+          },
+          "I": {
+            "base": 600000,
+            "end_exclusive": 836417,
+            "face_count": 236417
+          },
+          "O": {
+            "base": 300000,
+            "end_exclusive": 452341,
+            "face_count": 152341
+          }
+        },
+        "wall_base": {
+          "Fat": 901000,
+          "Skin": 900000
+        },
+        "wall_face_count": 90
+      },
+      "inactive_fixed_fixed_pairs_skipped": 0,
+      "joint_self_pairs": 2,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json",
+      "raw_pair_count": 4,
+      "retained_unique_pairs_from_this_report": 4,
+      "sha256": "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b",
+      "source_roles": {
+        "D": {
+          "active_current_rows_mapped_to_report": null,
+          "active_current_rows_unmapped": null,
+          "active_point_map_injective": null,
+          "baseline": {
+            "face_count": 207967,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/witness-component-rollback/candidate-D-typed-current.npz",
+            "sha256": "328e89c6f7f8744d7e6d751a3329c2045a84d55e9b131b4b8b72c26aaeaa0ec4"
+          },
+          "candidate": {
+            "face_count": 207967,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal/candidate-D-typed-current.npz",
+            "sha256": "c8b4564cbab1b9d5e5362dff47f4f61ca258429e5fc8826fc6d95981b97f807b"
+          },
+          "candidate_baseline_array_fingerprints": null,
+          "candidate_baseline_identity_archive": false,
+          "candidate_baseline_identity_basis": null,
+          "current_active_point_rows": 103541,
+          "current_face_array_sha256": "753a49d46930297f48278f1b68a070f35818886b9c0a9f74fe7cef819d8954d6",
+          "current_face_count": 207965,
+          "current_source_archive": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/proposal/candidate-D-typed-current.npz",
+            "sha256": "5a69a247fe8cdfee30d3fccdff8cb3886a294a65fb3191d24c74b0d70b6c6239"
+          },
+          "current_to_report_baseline_point_map_sha256": null,
+          "mapped_report_face_rows": 0,
+          "missing_report_face_rows": 0,
+          "oriented_face_key_semantics": "cyclic rotations equivalent; reverse winding distinct",
+          "point_lineage_status": "NOT_REQUIRED_NO_ACTIVE_WITNESS_ENDPOINTS",
+          "referenced_report_face_rows": 0,
+          "typed_point_lineage_depth": null
+        },
+        "I": {
+          "active_current_rows_mapped_to_report": null,
+          "active_current_rows_unmapped": null,
+          "active_point_map_injective": null,
+          "baseline": {
+            "face_count": 236417,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/witness-component-rollback/candidate-I-typed-current.npz",
+            "sha256": "588ba24331cffd63daed89d961af2ed8f1f9ec29b864d6879f654261ff27598d"
+          },
+          "candidate": {
+            "face_count": 236417,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal/candidate-I-typed-current.npz",
+            "sha256": "7f54923a707c0c297ef99c6a2a4651eb476d57f6c7a6fef48394863e0c4f9c58"
+          },
+          "candidate_baseline_array_fingerprints": null,
+          "candidate_baseline_identity_archive": false,
+          "candidate_baseline_identity_basis": null,
+          "current_active_point_rows": 118211,
+          "current_face_array_sha256": "d84d874d1784eddb0c40c07729e4143f758c428332183d2158f8443513a3e4e1",
+          "current_face_count": 236417,
+          "current_source_archive": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-02/proposal/candidate-I-typed-current.npz",
+            "sha256": "ecdb605054cf906d84baa81852a74a756637ab350c3941855380afdb4c542a15"
+          },
+          "current_to_report_baseline_point_map_sha256": null,
+          "mapped_report_face_rows": 0,
+          "missing_report_face_rows": 0,
+          "oriented_face_key_semantics": "cyclic rotations equivalent; reverse winding distinct",
+          "point_lineage_status": "NOT_REQUIRED_NO_ACTIVE_WITNESS_ENDPOINTS",
+          "referenced_report_face_rows": 0,
+          "typed_point_lineage_depth": null
+        },
+        "O": {
+          "active_current_rows_mapped_to_report": 76193,
+          "active_current_rows_unmapped": 0,
+          "active_point_map_injective": true,
+          "baseline": {
+            "face_count": 152341,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/witness-component-rollback/candidate-O-typed-current.npz",
+            "sha256": "b0091d351e03a09afb9eb1ae3d0d6503d17765660999e13ca99d6bb6b612180e"
+          },
+          "candidate": {
+            "face_count": 152341,
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal/candidate-O-typed-current.npz",
+            "sha256": "c81e3cc6e89d053ba9fdb3c1357f0a1391734607d5681de646f61e4be11231dc"
+          },
+          "candidate_baseline_array_fingerprints": null,
+          "candidate_baseline_identity_archive": false,
+          "candidate_baseline_identity_basis": null,
+          "current_active_point_rows": 76193,
+          "current_face_array_sha256": "542cde92fc2d810a4ebdbf24f5271bf05f5627568b28fd1f608e8a07a030a37b",
+          "current_face_count": 152341,
+          "current_source_archive": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-854-root/round-01/proposal/candidate-O-typed-current.npz",
+            "sha256": "2122de158fb45028837a7c77d84adff1145b3aebbf6ad695cb0b37973eda4b1a"
+          },
+          "current_to_report_baseline_point_map_sha256": "1ac5f7dfbf4a79d72ae91a9550d5481bdeb099241747d936b028171fb81422a2",
+          "mapped_report_face_rows": 4,
+          "missing_report_face_rows": 0,
+          "oriented_face_key_semantics": "cyclic rotations equivalent; reverse winding distinct",
+          "point_lineage_status": "AUTHENTICATED_FOR_ACTIVE_WITNESS_ENDPOINTS",
+          "referenced_report_face_rows": 4,
+          "typed_point_lineage_depth": 3
+        }
+      },
+      "stale_source_triangle_pairs_dropped": 0,
+      "wall_receipts": [
+        {
+          "face_count": 90,
+          "marker": 3,
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+          "role": "Skin",
+          "sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a"
+        },
+        {
+          "face_count": 90,
+          "marker": 6,
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+          "role": "Fat",
+          "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a"
+        }
+      ]
+    }
+  ],
+  "retained_pairs": [
+    {
+      "identities": [
+        [
+          "bone",
+          726460
+        ],
+        [
+          "source",
+          "D",
+          195219
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726460
+              ],
+              "report_identity": [
+                "bone",
+                726460
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                195219
+              ],
+              "mapped_current_oriented_triangle": [
+                68534,
+                69420,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                195221
+              ]
+            }
+          ],
+          "pair_index": 0,
+          "raw_face_ids": [
+            -726461,
+            1901275
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726460
+        ],
+        [
+          "source",
+          "D",
+          195220
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726460
+              ],
+              "report_identity": [
+                "bone",
+                726460
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                195220
+              ],
+              "mapped_current_oriented_triangle": [
+                68541,
+                69420,
+                69421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                195222
+              ]
+            }
+          ],
+          "pair_index": 1,
+          "raw_face_ids": [
+            -726461,
+            1901276
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726460
+        ],
+        [
+          "source",
+          "D",
+          196765
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726460
+              ],
+              "report_identity": [
+                "bone",
+                726460
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                196765
+              ],
+              "mapped_current_oriented_triangle": [
+                68542,
+                68541,
+                69421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                196767
+              ]
+            }
+          ],
+          "pair_index": 2,
+          "raw_face_ids": [
+            -726461,
+            1901278
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          55472
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55472
+              ],
+              "mapped_current_oriented_triangle": [
+                65411,
+                68541,
+                65412
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55472
+              ]
+            }
+          ],
+          "pair_index": 3,
+          "raw_face_ids": [
+            -726459,
+            1901214
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          55473
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55473
+              ],
+              "mapped_current_oriented_triangle": [
+                65421,
+                68541,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55473
+              ]
+            }
+          ],
+          "pair_index": 4,
+          "raw_face_ids": [
+            -726459,
+            1901215
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          55475
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55475
+              ],
+              "mapped_current_oriented_triangle": [
+                65412,
+                68541,
+                65592
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55475
+              ]
+            }
+          ],
+          "pair_index": 5,
+          "raw_face_ids": [
+            -726459,
+            1901216
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          72072
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                72072
+              ],
+              "mapped_current_oriented_triangle": [
+                68515,
+                68534,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                72072
+              ]
+            }
+          ],
+          "pair_index": 6,
+          "raw_face_ids": [
+            -726459,
+            1901217
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          72073
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                72073
+              ],
+              "mapped_current_oriented_triangle": [
+                65421,
+                68515,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                72073
+              ]
+            }
+          ],
+          "pair_index": 7,
+          "raw_face_ids": [
+            -726459,
+            1901218
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          72074
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                72074
+              ],
+              "mapped_current_oriented_triangle": [
+                65592,
+                68541,
+                68542
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                72074
+              ]
+            }
+          ],
+          "pair_index": 8,
+          "raw_face_ids": [
+            -726459,
+            1901219
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          195219
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                195219
+              ],
+              "mapped_current_oriented_triangle": [
+                68534,
+                69420,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                195221
+              ]
+            }
+          ],
+          "pair_index": 9,
+          "raw_face_ids": [
+            -726459,
+            1901275
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726458
+        ],
+        [
+          "source",
+          "D",
+          196765
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726458
+              ],
+              "report_identity": [
+                "bone",
+                726458
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                196765
+              ],
+              "mapped_current_oriented_triangle": [
+                68542,
+                68541,
+                69421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                196767
+              ]
+            }
+          ],
+          "pair_index": 10,
+          "raw_face_ids": [
+            -726459,
+            1901278
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726432
+        ],
+        [
+          "source",
+          "D",
+          55458
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726432
+              ],
+              "report_identity": [
+                "bone",
+                726432
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55458
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                65421,
+                65169
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55458
+              ]
+            }
+          ],
+          "pair_index": 11,
+          "raw_face_ids": [
+            -726433,
+            1901203
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726432
+        ],
+        [
+          "source",
+          "D",
+          55459
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726432
+              ],
+              "report_identity": [
+                "bone",
+                726432
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55459
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                65169,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55459
+              ]
+            }
+          ],
+          "pair_index": 12,
+          "raw_face_ids": [
+            -726433,
+            1901204
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          726432
+        ],
+        [
+          "source",
+          "D",
+          55466
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                726432
+              ],
+              "report_identity": [
+                "bone",
+                726432
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55466
+              ],
+              "mapped_current_oriented_triangle": [
+                65169,
+                65421,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55466
+              ]
+            }
+          ],
+          "pair_index": 13,
+          "raw_face_ids": [
+            -726433,
+            1901210
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          259511
+        ],
+        [
+          "source",
+          "D",
+          195219
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                259511
+              ],
+              "report_identity": [
+                "bone",
+                259511
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                195219
+              ],
+              "mapped_current_oriented_triangle": [
+                68534,
+                69420,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                195221
+              ]
+            }
+          ],
+          "pair_index": 14,
+          "raw_face_ids": [
+            -259512,
+            1901275
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          259511
+        ],
+        [
+          "source",
+          "D",
+          195220
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                259511
+              ],
+              "report_identity": [
+                "bone",
+                259511
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                195220
+              ],
+              "mapped_current_oriented_triangle": [
+                68541,
+                69420,
+                69421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                195222
+              ]
+            }
+          ],
+          "pair_index": 15,
+          "raw_face_ids": [
+            -259512,
+            1901276
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          259511
+        ],
+        [
+          "source",
+          "D",
+          196765
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                259511
+              ],
+              "report_identity": [
+                "bone",
+                259511
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                196765
+              ],
+              "mapped_current_oriented_triangle": [
+                68542,
+                68541,
+                69421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                196767
+              ]
+            }
+          ],
+          "pair_index": 16,
+          "raw_face_ids": [
+            -259512,
+            1901278
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          55472
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55472
+              ],
+              "mapped_current_oriented_triangle": [
+                65411,
+                68541,
+                65412
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55472
+              ]
+            }
+          ],
+          "pair_index": 17,
+          "raw_face_ids": [
+            -258073,
+            1901214
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          55473
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55473
+              ],
+              "mapped_current_oriented_triangle": [
+                65421,
+                68541,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55473
+              ]
+            }
+          ],
+          "pair_index": 18,
+          "raw_face_ids": [
+            -258073,
+            1901215
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          55475
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55475
+              ],
+              "mapped_current_oriented_triangle": [
+                65412,
+                68541,
+                65592
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55475
+              ]
+            }
+          ],
+          "pair_index": 19,
+          "raw_face_ids": [
+            -258073,
+            1901216
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          72072
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                72072
+              ],
+              "mapped_current_oriented_triangle": [
+                68515,
+                68534,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                72072
+              ]
+            }
+          ],
+          "pair_index": 20,
+          "raw_face_ids": [
+            -258073,
+            1901217
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          72073
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                72073
+              ],
+              "mapped_current_oriented_triangle": [
+                65421,
+                68515,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                72073
+              ]
+            }
+          ],
+          "pair_index": 21,
+          "raw_face_ids": [
+            -258073,
+            1901218
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          72074
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                72074
+              ],
+              "mapped_current_oriented_triangle": [
+                65592,
+                68541,
+                68542
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                72074
+              ]
+            }
+          ],
+          "pair_index": 22,
+          "raw_face_ids": [
+            -258073,
+            1901219
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          195219
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                195219
+              ],
+              "mapped_current_oriented_triangle": [
+                68534,
+                69420,
+                68541
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                195221
+              ]
+            }
+          ],
+          "pair_index": 23,
+          "raw_face_ids": [
+            -258073,
+            1901275
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258072
+        ],
+        [
+          "source",
+          "D",
+          196765
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258072
+              ],
+              "report_identity": [
+                "bone",
+                258072
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                196765
+              ],
+              "mapped_current_oriented_triangle": [
+                68542,
+                68541,
+                69421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                196767
+              ]
+            }
+          ],
+          "pair_index": 24,
+          "raw_face_ids": [
+            -258073,
+            1901278
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258067
+        ],
+        [
+          "source",
+          "D",
+          55458
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258067
+              ],
+              "report_identity": [
+                "bone",
+                258067
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55458
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                65421,
+                65169
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55458
+              ]
+            }
+          ],
+          "pair_index": 25,
+          "raw_face_ids": [
+            -258068,
+            1901203
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258067
+        ],
+        [
+          "source",
+          "D",
+          55459
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258067
+              ],
+              "report_identity": [
+                "bone",
+                258067
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55459
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                65169,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55459
+              ]
+            }
+          ],
+          "pair_index": 26,
+          "raw_face_ids": [
+            -258068,
+            1901204
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "bone",
+          258067
+        ],
+        [
+          "source",
+          "D",
+          55466
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "bone",
+                258067
+              ],
+              "report_identity": [
+                "bone",
+                258067
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55466
+              ],
+              "mapped_current_oriented_triangle": [
+                65169,
+                65421,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55466
+              ]
+            }
+          ],
+          "pair_index": 27,
+          "raw_face_ids": [
+            -258068,
+            1901210
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          14390
+        ],
+        [
+          "source",
+          "O",
+          14405
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14390
+              ],
+              "mapped_current_oriented_triangle": [
+                4844,
+                4833,
+                5146
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14390
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14405
+              ],
+              "mapped_current_oriented_triangle": [
+                4834,
+                5147,
+                5146
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14405
+              ]
+            }
+          ],
+          "pair_index": 28,
+          "raw_face_ids": [
+            314390,
+            1901314
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          14390
+        ],
+        [
+          "source",
+          "O",
+          14459
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14390
+              ],
+              "mapped_current_oriented_triangle": [
+                4844,
+                4833,
+                5146
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14390
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14459
+              ],
+              "mapped_current_oriented_triangle": [
+                4745,
+                11330,
+                4834
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14459
+              ]
+            }
+          ],
+          "pair_index": 29,
+          "raw_face_ids": [
+            314390,
+            1901317
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          14390
+        ],
+        [
+          "source",
+          "O",
+          15013
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14390
+              ],
+              "mapped_current_oriented_triangle": [
+                4844,
+                4833,
+                5146
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14390
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                15013
+              ],
+              "mapped_current_oriented_triangle": [
+                4834,
+                11330,
+                5147
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                15013
+              ]
+            }
+          ],
+          "pair_index": 30,
+          "raw_face_ids": [
+            314390,
+            1901319
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101076
+        ],
+        [
+          "source",
+          "O",
+          101105
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101076
+              ],
+              "mapped_current_oriented_triangle": [
+                59886,
+                59905,
+                59885
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101076
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101105
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59918,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101105
+              ]
+            }
+          ],
+          "pair_index": 31,
+          "raw_face_ids": [
+            401076,
+            1901430
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101076
+        ],
+        [
+          "source",
+          "O",
+          101110
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101076
+              ],
+              "mapped_current_oriented_triangle": [
+                59886,
+                59905,
+                59885
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101076
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101110
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59916,
+                59918
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101110
+              ]
+            }
+          ],
+          "pair_index": 32,
+          "raw_face_ids": [
+            401076,
+            1901435
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101105
+        ],
+        [
+          "source",
+          "O",
+          101309
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101309
+              ],
+              "mapped_current_oriented_triangle": [
+                60211,
+                59886,
+                59885
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101309
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101105
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59918,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101105
+              ]
+            }
+          ],
+          "pair_index": 33,
+          "raw_face_ids": [
+            401309,
+            1901430
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101110
+        ],
+        [
+          "source",
+          "O",
+          101309
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101309
+              ],
+              "mapped_current_oriented_triangle": [
+                60211,
+                59886,
+                59885
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101309
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101110
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59916,
+                59918
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101110
+              ]
+            }
+          ],
+          "pair_index": 34,
+          "raw_face_ids": [
+            401309,
+            1901435
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101101
+        ],
+        [
+          "source",
+          "O",
+          101333
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101333
+              ],
+              "mapped_current_oriented_triangle": [
+                60204,
+                60199,
+                59887
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101333
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101101
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59888,
+                59903
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101101
+              ]
+            }
+          ],
+          "pair_index": 35,
+          "raw_face_ids": [
+            401333,
+            1901426
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101101
+        ],
+        [
+          "source",
+          "O",
+          101334
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101334
+              ],
+              "mapped_current_oriented_triangle": [
+                59886,
+                60204,
+                59887
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101334
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101101
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59888,
+                59903
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101101
+              ]
+            }
+          ],
+          "pair_index": 36,
+          "raw_face_ids": [
+            401334,
+            1901426
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101111
+        ],
+        [
+          "source",
+          "O",
+          101334
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101334
+              ],
+              "mapped_current_oriented_triangle": [
+                59886,
+                60204,
+                59887
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101334
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101111
+              ],
+              "mapped_current_oriented_triangle": [
+                59916,
+                59904,
+                59903
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101111
+              ]
+            }
+          ],
+          "pair_index": 37,
+          "raw_face_ids": [
+            401334,
+            1901436
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "D",
+          55457
+        ],
+        [
+          "source",
+          "D",
+          55458
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55457
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                64505,
+                65404
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55457
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55458
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                65421,
+                65169
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55458
+              ]
+            }
+          ],
+          "pair_index": 0,
+          "raw_face_ids": [
+            1901202,
+            1901203
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "D",
+          55457
+        ],
+        [
+          "source",
+          "D",
+          55466
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55457
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                64505,
+                65404
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55457
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55466
+              ],
+              "mapped_current_oriented_triangle": [
+                65169,
+                65421,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55466
+              ]
+            }
+          ],
+          "pair_index": 1,
+          "raw_face_ids": [
+            1901202,
+            1901210
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "D",
+          55462
+        ],
+        [
+          "source",
+          "D",
+          55466
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55462
+              ],
+              "mapped_current_oriented_triangle": [
+                59636,
+                65404,
+                65421
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55462
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "D",
+                55466
+              ],
+              "mapped_current_oriented_triangle": [
+                65169,
+                65421,
+                65411
+              ],
+              "report_identity": [
+                "source",
+                "D",
+                55466
+              ]
+            }
+          ],
+          "pair_index": 2,
+          "raw_face_ids": [
+            1901206,
+            1901210
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          14389
+        ],
+        [
+          "source",
+          "O",
+          14459
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14389
+              ],
+              "mapped_current_oriented_triangle": [
+                4844,
+                4745,
+                4833
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14389
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                14459
+              ],
+              "mapped_current_oriented_triangle": [
+                4745,
+                11330,
+                4834
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                14459
+              ]
+            }
+          ],
+          "pair_index": 3,
+          "raw_face_ids": [
+            1901305,
+            1901317
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101071
+        ],
+        [
+          "source",
+          "O",
+          101177
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101071
+              ],
+              "mapped_current_oriented_triangle": [
+                59961,
+                59942,
+                59916
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101071
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101177
+              ],
+              "mapped_current_oriented_triangle": [
+                59951,
+                59968,
+                59961
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101177
+              ]
+            }
+          ],
+          "pair_index": 4,
+          "raw_face_ids": [
+            1901401,
+            1901465
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101071
+        ],
+        [
+          "source",
+          "O",
+          101190
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101071
+              ],
+              "mapped_current_oriented_triangle": [
+                59961,
+                59942,
+                59916
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101071
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101190
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59968,
+                59951
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101190
+              ]
+            }
+          ],
+          "pair_index": 5,
+          "raw_face_ids": [
+            1901401,
+            1901478
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101075
+        ],
+        [
+          "source",
+          "O",
+          101177
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101075
+              ],
+              "mapped_current_oriented_triangle": [
+                59916,
+                59942,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101075
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101177
+              ],
+              "mapped_current_oriented_triangle": [
+                59951,
+                59968,
+                59961
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101177
+              ]
+            }
+          ],
+          "pair_index": 6,
+          "raw_face_ids": [
+            1901405,
+            1901465
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101075
+        ],
+        [
+          "source",
+          "O",
+          101179
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101075
+              ],
+              "mapped_current_oriented_triangle": [
+                59916,
+                59942,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101075
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101179
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59951,
+                59961
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101179
+              ]
+            }
+          ],
+          "pair_index": 7,
+          "raw_face_ids": [
+            1901405,
+            1901467
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101075
+        ],
+        [
+          "source",
+          "O",
+          101190
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101075
+              ],
+              "mapped_current_oriented_triangle": [
+                59916,
+                59942,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101075
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101190
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59968,
+                59951
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101190
+              ]
+            }
+          ],
+          "pair_index": 8,
+          "raw_face_ids": [
+            1901405,
+            1901478
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101101
+        ],
+        [
+          "source",
+          "O",
+          101298
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101101
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59888,
+                59903
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101101
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101298
+              ],
+              "mapped_current_oriented_triangle": [
+                60199,
+                59888,
+                59887
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101298
+              ]
+            }
+          ],
+          "pair_index": 9,
+          "raw_face_ids": [
+            1901426,
+            1901482
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101102
+        ],
+        [
+          "source",
+          "O",
+          101111
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101102
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59886,
+                59887
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101102
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101111
+              ],
+              "mapped_current_oriented_triangle": [
+                59916,
+                59904,
+                59903
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101111
+              ]
+            }
+          ],
+          "pair_index": 10,
+          "raw_face_ids": [
+            1901427,
+            1901436
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101103
+        ],
+        [
+          "source",
+          "O",
+          101105
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101103
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59905,
+                59886
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101103
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101105
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59918,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101105
+              ]
+            }
+          ],
+          "pair_index": 11,
+          "raw_face_ids": [
+            1901428,
+            1901430
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101103
+        ],
+        [
+          "source",
+          "O",
+          101110
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101103
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59905,
+                59886
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101103
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101110
+              ],
+              "mapped_current_oriented_triangle": [
+                59904,
+                59916,
+                59918
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101110
+              ]
+            }
+          ],
+          "pair_index": 12,
+          "raw_face_ids": [
+            1901428,
+            1901435
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101117
+        ],
+        [
+          "source",
+          "O",
+          150708
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101117
+              ],
+              "mapped_current_oriented_triangle": [
+                59898,
+                59893,
+                59894
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101117
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                150708
+              ],
+              "mapped_current_oriented_triangle": [
+                60043,
+                59909,
+                59898
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                150708
+              ]
+            }
+          ],
+          "pair_index": 13,
+          "raw_face_ids": [
+            1901438,
+            1901522
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101178
+        ],
+        [
+          "source",
+          "O",
+          101190
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101178
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59961,
+                59916
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101178
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101190
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59968,
+                59951
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101190
+              ]
+            }
+          ],
+          "pair_index": 14,
+          "raw_face_ids": [
+            1901466,
+            1901478
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101179
+        ],
+        [
+          "source",
+          "O",
+          101180
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101179
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59951,
+                59961
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101179
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101180
+              ],
+              "mapped_current_oriented_triangle": [
+                59918,
+                59916,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101180
+              ]
+            }
+          ],
+          "pair_index": 15,
+          "raw_face_ids": [
+            1901467,
+            1901468
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101180
+        ],
+        [
+          "source",
+          "O",
+          101190
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101180
+              ],
+              "mapped_current_oriented_triangle": [
+                59918,
+                59916,
+                59919
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101180
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101190
+              ],
+              "mapped_current_oriented_triangle": [
+                59939,
+                59968,
+                59951
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101190
+              ]
+            }
+          ],
+          "pair_index": 16,
+          "raw_face_ids": [
+            1901468,
+            1901478
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101314
+        ],
+        [
+          "source",
+          "O",
+          150707
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101314
+              ],
+              "mapped_current_oriented_triangle": [
+                59893,
+                60094,
+                59894
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101314
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                150707
+              ],
+              "mapped_current_oriented_triangle": [
+                59894,
+                60043,
+                59898
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                150707
+              ]
+            }
+          ],
+          "pair_index": 17,
+          "raw_face_ids": [
+            1901487,
+            1901521
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          101314
+        ],
+        [
+          "source",
+          "O",
+          150708
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                101314
+              ],
+              "mapped_current_oriented_triangle": [
+                59893,
+                60094,
+                59894
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                101314
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                150708
+              ],
+              "mapped_current_oriented_triangle": [
+                60043,
+                59909,
+                59898
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                150708
+              ]
+            }
+          ],
+          "pair_index": 18,
+          "raw_face_ids": [
+            1901487,
+            1901522
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          53846
+        ],
+        [
+          "source",
+          "O",
+          150148
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                150148
+              ],
+              "mapped_current_oriented_triangle": [
+                44479,
+                44601,
+                44624
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                150148
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                53846
+              ],
+              "mapped_current_oriented_triangle": [
+                44596,
+                46538,
+                44605
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                53846
+              ]
+            }
+          ],
+          "pair_index": 0,
+          "raw_face_ids": [
+            450148,
+            1901315
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          53848
+        ],
+        [
+          "source",
+          "O",
+          150148
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                150148
+              ],
+              "mapped_current_oriented_triangle": [
+                44479,
+                44601,
+                44624
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                150148
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                53848
+              ],
+              "mapped_current_oriented_triangle": [
+                44605,
+                46538,
+                44623
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                53848
+              ]
+            }
+          ],
+          "pair_index": 1,
+          "raw_face_ids": [
+            450148,
+            1901317
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b",
+          "section": "changed_vs_complete_retained_OID_both_walls_all185"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          53759
+        ],
+        [
+          "source",
+          "O",
+          53846
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                53759
+              ],
+              "mapped_current_oriented_triangle": [
+                44601,
+                44605,
+                44624
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                53759
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                53846
+              ],
+              "mapped_current_oriented_triangle": [
+                44596,
+                46538,
+                44605
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                53846
+              ]
+            }
+          ],
+          "pair_index": 0,
+          "raw_face_ids": [
+            1901288,
+            1901315
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    },
+    {
+      "identities": [
+        [
+          "source",
+          "O",
+          53759
+        ],
+        [
+          "source",
+          "O",
+          53848
+        ]
+      ],
+      "origins": [
+        {
+          "endpoints": [
+            {
+              "current_identity": [
+                "source",
+                "O",
+                53759
+              ],
+              "mapped_current_oriented_triangle": [
+                44601,
+                44605,
+                44624
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                53759
+              ]
+            },
+            {
+              "current_identity": [
+                "source",
+                "O",
+                53848
+              ],
+              "mapped_current_oriented_triangle": [
+                44605,
+                46538,
+                44623
+              ],
+              "report_identity": [
+                "source",
+                "O",
+                53848
+              ]
+            }
+          ],
+          "pair_index": 1,
+          "raw_face_ids": [
+            1901288,
+            1901317
+          ],
+          "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json",
+          "report_sha256": "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b",
+          "section": "changed_OID_joint_self_pairs"
+        }
+      ]
+    }
+  ],
+  "schema": "h706.witness-face-rebase-v23c-fixed-fixed-o-skip.v1",
+  "skipped_fixed_fixed_o_pairs": [],
+  "status": "PASS_EXACT_ORIENTED_FACE_MAP_AND_PAIR_ACCOUNTING"
+}
