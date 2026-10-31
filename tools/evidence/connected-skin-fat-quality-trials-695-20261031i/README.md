@@ -15,7 +15,7 @@ Run the verifier to stream-decode every blob, compare every content hash and siz
     python3 restore_archive.py --archive quality695-trial01-failed-proposals-001-012.tar.zst
     python3 restore_archive.py --archive quality695-trial01-failed-proposals-001-012.tar.zst --restore-root /tmp/quality695-restore --restore-path /original/absolute/path/to/one.npz
 
-The original files were eligible for local retirement only after the GitHub release asset was independently downloaded, its SHA-256 was compared with both the local archive and GitHub asset digest, all content-addressed members were streamed and checked, and one selected NPZ was restored and rehashed. The retirement receipt lists each removed source path and restore mapping. JSON evidence, unselected inputs, current sources, and current DAG artifacts remain untouched.
+The selected original files were retired only after the GitHub release asset was independently downloaded, its SHA-256 was compared with both the local archive and GitHub asset digest, all content-addressed members were streamed and checked, and one selected NPZ was restored and rehashed. The retirement receipt and tombstone list each removed source path and restore mapping. JSON evidence, unselected inputs, current sources, and current DAG artifacts remain untouched.
 
 ## Claim limits
 

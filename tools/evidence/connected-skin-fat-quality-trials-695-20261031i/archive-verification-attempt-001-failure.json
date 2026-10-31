@@ -1,0 +1,8 @@
+{
+  "status": "FAIL_VERIFIER_RESTORE_PATH_BOOKKEEPING_BUG",
+  "attempt": "001",
+  "archive_sha256": "98b51cc00bf95509e8bddf5233a8f314487c03711ae9167a438e07659c469089",
+  "observed_error": "Selected-restore readback tried to stat the string form of an open BufferedWriter instead of its destination path. Full archive stream and blob hash checks completed before restore readback.",
+  "geometry_or_archive_rejection": false,
+  "fix": "Store the opened destination handle name as the restored path, then rerun the full stream and selected restore."
+}

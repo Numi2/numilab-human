@@ -51,7 +51,7 @@ def main():
     for original,dst in outs: dst.close()
     if actual!=h_expected or n!=member.size: raise RuntimeError('blob SHA/size mismatch '+member.name)
     if any(n!=row['size_bytes'] for row in rows): raise RuntimeError('indexed size mismatch '+member.name)
-    for original,dest in outs: restored[original]=str(dest)
+    for original,dest in outs: restored[original]=str(dest.name)
     total+=n; verified+=1
   if proc.wait()!=0: raise RuntimeError('zstd decoder failed')
   if index is None or verified!=index['unique_blob_count'] or total!=index['unique_blob_bytes'] or seen!={x['sha256'] for x in index['unique_blobs']}: raise RuntimeError('archive/index inventory mismatch')

@@ -3,8 +3,8 @@
     "archive_index": "archive-index.json",
     "archive_index_sha256": "76ffeb5a321fb2e4488c1fe122d5d60df4b0f038873dd4e858eb2c4b9a8b4a8b",
     "asset_filename": "quality695-trial01-failed-proposals-001-012.tar.zst",
-    "compression": "zstd -T1 -6; streamed tar, no uncompressed staging copy",
     "download_url": "https://github.com/Numi2/numilab-human/releases/download/human-connected-quality-trials-695-20261031/quality695-trial01-failed-proposals-001-012.tar.zst",
+    "external_download_verified": true,
     "file_reference_count": 40,
     "release_tag": "human-connected-quality-trials-695-20261031",
     "selection_plan": "selection-and-retirement.json",
@@ -15,13 +15,19 @@
     "unique_blob_count": 40
   },
   "archive_verification": {
+    "archive_sha256": "98b51cc00bf95509e8bddf5233a8f314487c03711ae9167a438e07659c469089",
+    "archive_size_bytes": 453442040,
     "native_steps": 0,
     "physical_admission": false,
+    "remote_receipt": "archive-remote-verification.json",
+    "remote_receipt_sha256": "9721f2c411e9042f07639a76f2ebec7e9bd2e762d713e0f1654b3a70ed794744",
     "run_through": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py",
     "run_through_sha256": "88ce1f98414e0125f0cb31a94354db40cfdaba2281f79a9040aa9872d19edf35",
-    "status": "PENDING_INDEPENDENT_RELEASE_DOWNLOAD_AND_RESTORE",
+    "status": "PASS_STREAMED_ARCHIVE_AND_SELECTED_RESTORE",
+    "verified_blob_bytes": 637509229,
+    "verified_blob_count": 40,
     "verifier": "restore_archive.py",
-    "verifier_sha256": "1575a8d4fa654cf62916b350b05eeffc099b50602f56ac13463d5922e3247674"
+    "verifier_sha256": "dc9d4ffedf40e6ce39a78b0aa17b7bb905d5e26ea8953a571c5a5cdbc8bee12e"
   },
   "claim_limits": [
     "The selected proposal outputs failed the exact joint changed OID vs retained walls audit.",
@@ -43,7 +49,7 @@
   "files": [
     {
       "path": "README.md",
-      "sha256": "88b613945f463f24277ead8d211e06ae67ce4d3f6bebc49a83ed2ac053c99279",
+      "sha256": "aebc70e3f41aa3dad2479eb1de941feb323910736c23e3adda000d4ca1566ce1",
       "size_bytes": 2388
     },
     {
@@ -57,6 +63,21 @@
       "size_bytes": 278663
     },
     {
+      "path": "archive-remote-verification.json",
+      "sha256": "9721f2c411e9042f07639a76f2ebec7e9bd2e762d713e0f1654b3a70ed794744",
+      "size_bytes": 1100
+    },
+    {
+      "path": "archive-verification-attempt-001-failure.json",
+      "sha256": "1d6eeb529764e8a15bf26241a99ffcc7341e56d3312a1e223583d80b09eb5990",
+      "size_bytes": 549
+    },
+    {
+      "path": "archive-verification.json",
+      "sha256": "f3d49abc840f989e979a9473d80e1f119715e54952b4a95d657af43eb4032d04",
+      "size_bytes": 1219
+    },
+    {
       "path": "build_failed_trials_archive.py",
       "sha256": "3fca831f66d63e9109de1c3402382faa82baeeb628ffa88b1ab1a67e2ce0bddc",
       "size_bytes": 11979
@@ -68,8 +89,28 @@
     },
     {
       "path": "restore_archive.py",
-      "sha256": "1575a8d4fa654cf62916b350b05eeffc099b50602f56ac13463d5922e3247674",
-      "size_bytes": 3868
+      "sha256": "dc9d4ffedf40e6ce39a78b0aa17b7bb905d5e26ea8953a571c5a5cdbc8bee12e",
+      "size_bytes": 3873
+    },
+    {
+      "path": "retire_selected_artifacts.py",
+      "sha256": "754bbc8f73ecc73024264411d2b2fd91e5db76e4c4089da136fa9ce36e558015",
+      "size_bytes": 7992
+    },
+    {
+      "path": "retirement-plan.json",
+      "sha256": "d6d610c997e4d7b1a3230d925b19b72f8262af37f03e9b53b9c6852734f05d42",
+      "size_bytes": 16665
+    },
+    {
+      "path": "retirement-receipt.json",
+      "sha256": "482f0f65637c6f7c6b87f57412961f538aeb092718ed3154c28abe11e737f06e",
+      "size_bytes": 17499
+    },
+    {
+      "path": "retirement-tombstone-001.json",
+      "sha256": "482f0f65637c6f7c6b87f57412961f538aeb092718ed3154c28abe11e737f06e",
+      "size_bytes": 17499
     },
     {
       "path": "selection-and-retirement.json",
@@ -125,6 +166,18 @@
     ]
   },
   "package": "connected-skin-fat-quality-trials-695-20261031i",
+  "retirement": {
+    "compact_trial01_json_files_retained": 48,
+    "measured_free_byte_delta": 1556791296,
+    "receipt": "retirement-receipt.json",
+    "receipt_sha256": "482f0f65637c6f7c6b87f57412961f538aeb092718ed3154c28abe11e737f06e",
+    "retired_count": 40,
+    "retired_logical_bytes": 637509229,
+    "status": "PASS_SELECTED_UNREFERENCED_NPZ_RETIREMENT",
+    "tombstone": "retirement-tombstone-001.json",
+    "tombstone_sha256": "482f0f65637c6f7c6b87f57412961f538aeb092718ed3154c28abe11e737f06e",
+    "unselected_trial01_npz_files_retained": 20
+  },
   "schema": "numi-human.evidence-payload.v1",
   "snapshot": {
     "native_steps": 0,
@@ -136,5 +189,5 @@
   },
   "source_host": "ssh numi",
   "source_revision_parent": "8c6af5a16a174e3caa3c1575b72458d9b7a5e54f",
-  "status": "ARCHIVE_BUILT_PENDING_REMOTE_VERIFICATION_AND_RETIREMENT"
+  "status": "PASS_ARCHIVED_AND_SELECTED_RETIREMENT"
 }
