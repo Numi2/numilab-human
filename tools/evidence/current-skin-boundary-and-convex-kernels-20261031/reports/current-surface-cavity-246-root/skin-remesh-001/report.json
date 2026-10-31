@@ -1,0 +1,216 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/skin245-current-target-input.npz",
+  "input_sha256": "27d9ae3daeec8ef5d3c6efc5dc17d2b4a373ee5429f1b02c01ea927656ffda6d",
+  "script_sha256": "a24983a662e6bdcf2bef4d5f475a97e36eba333056dee0a0c7c06d98b218916e",
+  "preparation": {
+    "selected_cells": 2566,
+    "dirty_nodes": 135,
+    "components": 4,
+    "rings": 1,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 1345,
+        "components": 4,
+        "unclosed_components": 4,
+        "bad_boundary_edges": 6
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 1683,
+        "components": 4,
+        "unclosed_components": 3,
+        "bad_boundary_edges": 8
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 1969,
+        "components": 4,
+        "unclosed_components": 3,
+        "bad_boundary_edges": 4
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 2164,
+        "components": 4,
+        "unclosed_components": 3,
+        "bad_boundary_edges": 6
+      },
+      {
+        "iteration": 4,
+        "selected_cells": 2341,
+        "components": 4,
+        "unclosed_components": 2,
+        "bad_boundary_edges": 2
+      },
+      {
+        "iteration": 5,
+        "selected_cells": 2465,
+        "components": 4,
+        "unclosed_components": 1,
+        "bad_boundary_edges": 3
+      },
+      {
+        "iteration": 6,
+        "selected_cells": 2504,
+        "components": 4,
+        "unclosed_components": 1,
+        "bad_boundary_edges": 1
+      },
+      {
+        "iteration": 7,
+        "selected_cells": 2566,
+        "components": 4,
+        "unclosed_components": 0,
+        "bad_boundary_edges": 0
+      }
+    ],
+    "additional_witness_seed_nodes": 68,
+    "cache_reused": true,
+    "cache_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/skin218-prepare-001/connected-cavity-shells.npz",
+    "cache_shell_sha256": "d0986b0f906b8e9d2de7c3d071f50ad45a052dfccf3219a2080bb81343c15c53",
+    "cache_report_sha256": "3407f80518618b557545bcb528819fc737bcd4faff8ce6044c38d855792f8b6a"
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 26,
+      "old_nonpositive": 0,
+      "old_cells": 1100,
+      "new_desired_faces": 23,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "e80594ef74f0b83c73eb1e780847dfe213a59d76ee28c8608e2e8e31c8462f59",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: native quality failure count increased"
+    },
+    {
+      "id": 1,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 7,
+      "old_nonpositive": 0,
+      "old_cells": 815,
+      "new_desired_faces": 14,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6aea1fb4fd94767936cd00448e5c23833e4c5d5d91c2f82ebe9a72865526d914",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "new_interior_points": 3,
+      "new_interior_global_rows": [
+        204335,
+        204336,
+        204337
+      ],
+      "new_cells": 821,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "e2daeb7b8bdd468b9968fc79258cac350856d45fbd19dc894a4c2be27872c72a"
+    },
+    {
+      "id": 2,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 341,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "7a5a7b0e18a2fa4e3ccee325d24dbd595ecd33ffbb3b7bd681e4be0d7684f215",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 328,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "4d2a5ec2d21edf31e20afd008464fa4ffbdfdaca63a16e0399c1ffbb3bbd686c"
+    },
+    {
+      "id": 3,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 9,
+      "old_nonpositive": 0,
+      "old_cells": 310,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "3c51fb68e8af079484d785078c0862911e80ab8a01e50b3294824fa0da87c926",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 283,
+      "new_bad": 9,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "570278acc18d1251de089290ddc1791eb41f4cf20d1366920818340d4ae0a340"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-surface-cavity-246-root/skin-remesh-001/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "0af56b68988224bb3ccfd3e49ee4e4aea7abc0fdc04850bb905a2ab5233aabc9",
+  "passing_components": 3,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 13211,
+  "complete_boundary_matches_desired": false,
+  "elapsed_s": 3.595086542190984
+}

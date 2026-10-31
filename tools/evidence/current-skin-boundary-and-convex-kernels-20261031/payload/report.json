@@ -1,0 +1,135 @@
+{
+  "status": "CONNECTED_CAVITY_PREPARATION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/skin245-current-target-input.npz",
+  "input_sha256": "27d9ae3daeec8ef5d3c6efc5dc17d2b4a373ee5429f1b02c01ea927656ffda6d",
+  "script_sha256": "81e1128ca6f92693039d9ce53bea62e90b1d99f72bd9b9d997826b7ee2877b9a",
+  "preparation": {
+    "selected_cells": 2566,
+    "dirty_nodes": 135,
+    "components": 4,
+    "rings": 1,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 1345,
+        "components": 4,
+        "unclosed_components": 4,
+        "bad_boundary_edges": 6
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 1683,
+        "components": 4,
+        "unclosed_components": 3,
+        "bad_boundary_edges": 8
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 1969,
+        "components": 4,
+        "unclosed_components": 3,
+        "bad_boundary_edges": 4
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 2164,
+        "components": 4,
+        "unclosed_components": 3,
+        "bad_boundary_edges": 6
+      },
+      {
+        "iteration": 4,
+        "selected_cells": 2341,
+        "components": 4,
+        "unclosed_components": 2,
+        "bad_boundary_edges": 2
+      },
+      {
+        "iteration": 5,
+        "selected_cells": 2465,
+        "components": 4,
+        "unclosed_components": 1,
+        "bad_boundary_edges": 3
+      },
+      {
+        "iteration": 6,
+        "selected_cells": 2504,
+        "components": 4,
+        "unclosed_components": 1,
+        "bad_boundary_edges": 1
+      },
+      {
+        "iteration": 7,
+        "selected_cells": 2566,
+        "components": 4,
+        "unclosed_components": 0,
+        "bad_boundary_edges": 0
+      }
+    ],
+    "additional_witness_seed_nodes": 68
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 26,
+      "old_nonpositive": 0,
+      "old_cells": 1100,
+      "new_desired_faces": 23,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      }
+    },
+    {
+      "id": 1,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 7,
+      "old_nonpositive": 0,
+      "old_cells": 815,
+      "new_desired_faces": 14,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      }
+    },
+    {
+      "id": 2,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 341,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      }
+    },
+    {
+      "id": 3,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 9,
+      "old_nonpositive": 0,
+      "old_cells": 310,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      }
+    }
+  ]
+}
