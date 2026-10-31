@@ -1,0 +1,15 @@
+# Connected skin/fat physical-volume preparation
+
+Source and compact execution evidence from SSH Numi. These are compiler and numerical geometry results. Physical admission is false and no native simulation steps were run for these candidates. Mesh payloads, material/source assets and heavy spatial indices remain at their hash-pinned workspace paths.
+
+The complete Skin volume was made exact-positive using a local native-quality-admissible MILP patch, then carried to the retained 009 endpoint map (225). That candidate has zero nonpositive cells and 22,853 cells below the existing native quality thresholds. The later 224 Skin patch reconstructs 11 desired boundary facets; its initial report incorrectly required unchanged volume despite a changed boundary. The separately retained correction audit verifies the exact cell-volume delta against the corresponding oriented boundary-flux delta. The complete desired Skin boundary remains unfinished.
+
+Fat endpoint and bounded-position proposals (223/226/227) reduce nonpositive cells from 92 to 19 without introducing failures in previously native-quality-admissible cells. The combined 227 proposal passes the exact changed-D versus complete O/I/D, layer-wall and all-185 structure audit: zero intersection pairs and zero replacement self pairs. Typed point ancestry and mass mapping are separate outstanding gates. Applying connected fixed-surface cavity repairs (229) reduces nonpositive Fat cells to 15, with 46,634 remaining native-quality failures; its complete desired boundary is also unfinished.
+
+The 230 pilot found no admissible progress within its fixed vertex cavities. The 231 method expands cavities across the exact internal faces that lack a native-quality-admissible candidate; material boundaries remain protected. Their reports include failed attempts rather than implying success from fixtures. Five 230 and seven 231 fixture controls cover boundary feasibility, native quality, exact Float32 cavity volume, actual internal intersection ownership and witness-driven cavity growth. These are software controls, not body motion qualification.
+
+The manifest pins original and packaged bytes separately. All copies match exactly except a terminal blank-line trim in the packaged 220 test source; executable logic is unchanged. Scripts use the existing 198 native quality owner, 209 boundary machinery, 349 exact geometry owner, TetGen and SciPy/HiGHS. No alternate runtime physics path is introduced. The snapshots retain their original workspace-relative or absolute owner imports; reproduction requires the hash-pinned existing source workspace. Use the prep Python, not the system Python:
+
+    /Users/numi/numi-human-prep-venv-20261005/bin/python <physical-transfer-209>/run_geometry_serial.py /Users/numi/numi-human-prep-venv-20261005/bin/python <script> <recorded arguments>
+
+Each proposal still requires a matching exact-zero complete surface, positive native-quality cells, typed ancestry, conservative source-parent mass/moments, regenerated registered transfer, and accepted native motion before physical admission. The unqualified candidates have not replaced the native scene.

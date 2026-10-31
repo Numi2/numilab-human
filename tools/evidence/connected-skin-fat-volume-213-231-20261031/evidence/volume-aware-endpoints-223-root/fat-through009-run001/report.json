@@ -1,0 +1,1941 @@
+{
+  "status": "NUMERICAL_ENDPOINT_ALTERNATIVES_REQUIRE_EXACT_GEOMETRY_AND_ANCESTRY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-surface-quotient-221-root/through009-run001/fat-complete-surface-quotient-remesh-input.npz",
+  "input_sha256": "49f2c5df17e2a7de33c6656fe0e41133da674b9e212f58e1bf3771ba03792b3c",
+  "script_sha256": "7f93e539039a429ef669248bdd10496f20a199743d4ae45b8aa09c2a058500f0",
+  "D_surface": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-009-from-008-002/candidate-D-short-edge-collapse-raw.npz",
+  "D_sha256": "af597bfc44bf4e8c3e3fbe557032b3e8308c9288b06e5b475c5daaaca0d8f310",
+  "I_surface": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-009-from-008-002/candidate-I-short-edge-collapse-raw.npz",
+  "I_sha256": "7f21bd4bb8bae176ef942bb0ce913e1de0afb40bd5cb24d453f99e898508cb67",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/volume-aware-endpoints-223-root/fat-through009-run001/alternate-endpoint-volume-and-boundary-proposal.npz",
+  "output_sha256": "59f6fc709f6c8e03f83398c3107d74b72ebd49b45c2abeee1d0e3207098b48fd",
+  "clusters_considered": 69,
+  "trials": 85,
+  "passing_operations": 44,
+  "nonpositive_before": 92,
+  "nonpositive_after": 38,
+  "quality_failures_before": 46752,
+  "quality_failures_after": 46748,
+  "rejections": {
+    "volume_quality_regression": 4,
+    "boundary_quality_regression": 2,
+    "nonpositive_not_reduced": 33
+  },
+  "elapsed_s": 4.193286375142634,
+  "operations": [
+    {
+      "retired_current_node": 127152,
+      "selected_original_node": 127151,
+      "affected_cell_rows": [
+        14701,
+        147464,
+        625920,
+        632884,
+        634812,
+        634813,
+        634814,
+        701891,
+        793729,
+        793730,
+        793731,
+        793732
+      ],
+      "affected_desired_face_rows": [
+        440914,
+        440916,
+        440918,
+        486819
+      ],
+      "old_nonpositive": 3,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        -0.3133612275123596,
+        -1.0098819732666016,
+        0.14600548148155212
+      ],
+      "new_coordinate_world_m": [
+        -0.3133612275123596,
+        -1.0098819732666016,
+        0.14600545167922974
+      ],
+      "displacement_m": 2.9802322387695312e-08
+    },
+    {
+      "retired_current_node": 136846,
+      "selected_original_node": 136845,
+      "affected_cell_rows": [
+        21023,
+        31466,
+        42737,
+        98174,
+        130888,
+        241978,
+        245156,
+        245179,
+        245188,
+        245190,
+        245218,
+        245222,
+        245225,
+        248393,
+        248394,
+        418395,
+        549611,
+        683333,
+        802455,
+        802456,
+        802457,
+        802458
+      ],
+      "affected_desired_face_rows": [
+        306317,
+        487112,
+        487113,
+        487114,
+        488051,
+        488052,
+        489138,
+        489139
+      ],
+      "old_nonpositive": 3,
+      "new_nonpositive": 2,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.2854774296283722,
+        -0.8700487017631531,
+        0.09645538032054901
+      ],
+      "new_coordinate_world_m": [
+        -0.28547751903533936,
+        -0.8700487613677979,
+        0.09645546972751617
+      ],
+      "displacement_m": 1.3978528260658472e-07
+    },
+    {
+      "retired_current_node": 148598,
+      "selected_original_node": 148597,
+      "affected_cell_rows": [
+        12817,
+        19263,
+        41213,
+        78778,
+        97226,
+        102767,
+        104074,
+        105236,
+        111012,
+        112886,
+        132104,
+        159312,
+        178882,
+        188355,
+        193190,
+        214064,
+        227454,
+        246566,
+        255076,
+        255621,
+        255713,
+        260345,
+        261460,
+        261630,
+        309705,
+        314949,
+        327077,
+        333442,
+        360477,
+        370535,
+        406274,
+        425511,
+        449258,
+        470959,
+        501383,
+        506720,
+        537148,
+        565266,
+        567944,
+        573664,
+        586193,
+        588681,
+        604223,
+        625492,
+        626614,
+        628691,
+        632636,
+        644891,
+        651261,
+        667989,
+        685581,
+        690120,
+        690398,
+        696294,
+        700444,
+        702255,
+        718291,
+        762825,
+        774999,
+        786680,
+        792150
+      ],
+      "affected_desired_face_rows": [
+        259883,
+        282652,
+        282681,
+        470016,
+        487932,
+        487933,
+        487934,
+        487935,
+        487936
+      ],
+      "old_nonpositive": 3,
+      "new_nonpositive": 0,
+      "old_quality_failures": 44,
+      "new_quality_failures": 44,
+      "old_coordinate_world_m": [
+        -0.1227719634771347,
+        -1.7291942834854126,
+        0.2745322287082672
+      ],
+      "new_coordinate_world_m": [
+        -0.12277204543352127,
+        -1.7291942834854126,
+        0.2745322585105896
+      ],
+      "displacement_m": 8.72068100476237e-08
+    },
+    {
+      "retired_current_node": 136531,
+      "selected_original_node": 136530,
+      "affected_cell_rows": [
+        28205,
+        42737,
+        130888,
+        163949,
+        305880,
+        459693,
+        549611,
+        666980,
+        683333,
+        719193,
+        762326,
+        802405,
+        802407
+      ],
+      "affected_desired_face_rows": [
+        260451,
+        260452,
+        489137,
+        489138,
+        489139
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 1,
+      "old_quality_failures": 4,
+      "new_quality_failures": 4,
+      "old_coordinate_world_m": [
+        -0.286455363035202,
+        -0.8691497445106506,
+        0.09762600809335709
+      ],
+      "new_coordinate_world_m": [
+        -0.28646019101142883,
+        -0.8691399693489075,
+        0.09763083606958389
+      ],
+      "displacement_m": 1.1923610862412378e-05
+    },
+    {
+      "retired_current_node": 143664,
+      "selected_original_node": 143663,
+      "affected_cell_rows": [
+        352840,
+        586341,
+        621819,
+        720289,
+        796550,
+        796551,
+        796552,
+        796553
+      ],
+      "affected_desired_face_rows": [
+        284555,
+        432398,
+        432400,
+        489842,
+        489843,
+        489844
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 0,
+      "old_quality_failures": 4,
+      "new_quality_failures": 4,
+      "old_coordinate_world_m": [
+        -0.184007927775383,
+        -0.6026120185852051,
+        0.08216294646263123
+      ],
+      "new_coordinate_world_m": [
+        -0.18400800228118896,
+        -0.602612316608429,
+        0.08216294646263123
+      ],
+      "displacement_m": 3.0719530773294425e-07
+    },
+    {
+      "retired_current_node": 157373,
+      "selected_original_node": 157372,
+      "affected_cell_rows": [
+        207762,
+        207971,
+        611548,
+        629668,
+        642107,
+        677013,
+        680218,
+        689172,
+        689173,
+        726233,
+        789444
+      ],
+      "affected_desired_face_rows": [
+        263168,
+        285410,
+        285411,
+        384959,
+        487665,
+        487666,
+        487667
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 0,
+      "old_quality_failures": 7,
+      "new_quality_failures": 7,
+      "old_coordinate_world_m": [
+        -0.08637063205242157,
+        -0.1428574174642563,
+        0.10519661009311676
+      ],
+      "new_coordinate_world_m": [
+        -0.08637064695358276,
+        -0.14285743236541748,
+        0.10519663989543915
+      ],
+      "displacement_m": 3.650024149988857e-08
+    },
+    {
+      "retired_current_node": 196672,
+      "selected_original_node": 196671,
+      "affected_cell_rows": [
+        117509,
+        134692,
+        165402,
+        292455,
+        370829,
+        423513,
+        526489,
+        616783,
+        723590,
+        724503,
+        735960,
+        766395,
+        766396,
+        777318
+      ],
+      "affected_desired_face_rows": [
+        285238,
+        297473,
+        297474,
+        364640,
+        487659,
+        487660,
+        487661,
+        487662
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 0,
+      "old_quality_failures": 6,
+      "new_quality_failures": 6,
+      "old_coordinate_world_m": [
+        -0.02353118360042572,
+        -0.06046923249959946,
+        0.05700061470270157
+      ],
+      "new_coordinate_world_m": [
+        -0.02353118360042572,
+        -0.060469262301921844,
+        0.057000599801540375
+      ],
+      "displacement_m": 3.332000937312528e-08
+    },
+    {
+      "retired_current_node": 218428,
+      "selected_original_node": 218427,
+      "affected_cell_rows": [
+        41551,
+        75867,
+        367166,
+        367395,
+        367416,
+        367444
+      ],
+      "affected_desired_face_rows": [
+        293731,
+        476336,
+        476337,
+        487840
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        0.03295164555311203,
+        -1.700276255607605,
+        0.17715021967887878
+      ],
+      "new_coordinate_world_m": [
+        0.03295162320137024,
+        -1.700276255607605,
+        0.177150160074234
+      ],
+      "displacement_m": 6.365778852490731e-08
+    },
+    {
+      "retired_current_node": 221575,
+      "selected_original_node": 221574,
+      "affected_cell_rows": [
+        6127,
+        55683,
+        162843,
+        212237,
+        228447,
+        297433,
+        335616,
+        363572,
+        442740,
+        450148,
+        492430,
+        504637,
+        536605,
+        603122,
+        653130,
+        660241,
+        711091,
+        723829,
+        727664,
+        741460,
+        768371,
+        778518
+      ],
+      "affected_desired_face_rows": [
+        298204,
+        298215,
+        298216,
+        390587,
+        489615,
+        489616,
+        489617,
+        489618
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 0,
+      "old_quality_failures": 20,
+      "new_quality_failures": 20,
+      "old_coordinate_world_m": [
+        0.03827572241425514,
+        -0.1363561600446701,
+        0.13142766058444977
+      ],
+      "new_coordinate_world_m": [
+        0.03827563673257828,
+        -0.13635630905628204,
+        0.13142749667167664
+      ],
+      "displacement_m": 2.3751464678786815e-07
+    },
+    {
+      "retired_current_node": 225572,
+      "selected_original_node": 225571,
+      "affected_cell_rows": [
+        41055,
+        76288,
+        134882,
+        329850,
+        344745,
+        375990,
+        408242,
+        610032,
+        749060,
+        768600,
+        784571,
+        784572,
+        784573,
+        784574,
+        788012,
+        788013
+      ],
+      "affected_desired_face_rows": [
+        286808,
+        286809,
+        286810,
+        286897,
+        474562,
+        488923,
+        488924,
+        488925
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 0,
+      "old_quality_failures": 8,
+      "new_quality_failures": 8,
+      "old_coordinate_world_m": [
+        0.06735879927873611,
+        -1.6455506086349487,
+        0.11682993173599243
+      ],
+      "new_coordinate_world_m": [
+        0.06735876947641373,
+        -1.6455508470535278,
+        0.11682987958192825
+      ],
+      "displacement_m": 2.4586915969848633e-07
+    },
+    {
+      "retired_current_node": 130026,
+      "selected_original_node": 130025,
+      "affected_cell_rows": [
+        46691,
+        106948,
+        110203,
+        118681,
+        143744,
+        167018,
+        168093,
+        373020,
+        411092,
+        581342,
+        694911,
+        695537,
+        705543,
+        739108,
+        754146,
+        794453,
+        794455
+      ],
+      "affected_desired_face_rows": [
+        442270,
+        442274,
+        487404
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 1,
+      "new_quality_failures": 1,
+      "old_coordinate_world_m": [
+        -0.3040875196456909,
+        -0.9452489614486694,
+        0.11051613092422485
+      ],
+      "new_coordinate_world_m": [
+        -0.3040875196456909,
+        -0.9452489614486694,
+        0.11051612347364426
+      ],
+      "displacement_m": 7.450580596923828e-09
+    },
+    {
+      "retired_current_node": 130358,
+      "selected_original_node": 130359,
+      "affected_cell_rows": [
+        69720,
+        84625,
+        151945,
+        165922,
+        209308,
+        209385,
+        214393,
+        317556,
+        337261,
+        354164,
+        358458,
+        451465,
+        478279,
+        506197,
+        510500,
+        520986,
+        531628,
+        545956,
+        549425,
+        555322,
+        564494,
+        596832,
+        614286,
+        632136,
+        647488,
+        653651,
+        660558,
+        669566,
+        678586,
+        678625,
+        683814,
+        697889,
+        726091,
+        728392,
+        746241,
+        770237,
+        802164,
+        802165
+      ],
+      "affected_desired_face_rows": [
+        305908,
+        444196,
+        486873,
+        486874
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.3033934533596039,
+        -1.0115351676940918,
+        0.09237135946750641
+      ],
+      "new_coordinate_world_m": [
+        -0.3033934235572815,
+        -1.0115351676940918,
+        0.0923713743686676
+      ],
+      "displacement_m": 3.332000937312528e-08
+    },
+    {
+      "retired_current_node": 130427,
+      "selected_original_node": 130426,
+      "affected_cell_rows": [
+        19402,
+        151941,
+        152023,
+        328984,
+        527683,
+        596969,
+        736198,
+        750897,
+        750902,
+        794432,
+        824056,
+        824058
+      ],
+      "affected_desired_face_rows": [
+        251155,
+        444165,
+        487610,
+        487611
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.30321478843688965,
+        -1.0029332637786865,
+        0.09120575338602066
+      ],
+      "new_coordinate_world_m": [
+        -0.30321478843688965,
+        -1.0029332637786865,
+        0.09120572358369827
+      ],
+      "displacement_m": 2.9802322387695312e-08
+    },
+    {
+      "retired_current_node": 136059,
+      "selected_original_node": 136058,
+      "affected_cell_rows": [
+        74349,
+        80695,
+        166074,
+        240678,
+        310763,
+        519477,
+        581731,
+        587860,
+        698051,
+        714626,
+        747157,
+        802432,
+        814403,
+        814405
+      ],
+      "affected_desired_face_rows": [
+        487591,
+        487592,
+        487593,
+        487594,
+        488589,
+        488591
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 5,
+      "new_quality_failures": 5,
+      "old_coordinate_world_m": [
+        -0.28810927271842957,
+        -0.8519884347915649,
+        0.12720619142055511
+      ],
+      "new_coordinate_world_m": [
+        -0.28810930252075195,
+        -0.8519884347915649,
+        0.12720619142055511
+      ],
+      "displacement_m": 2.9802322387695312e-08
+    },
+    {
+      "retired_current_node": 142288,
+      "selected_original_node": 142287,
+      "affected_cell_rows": [
+        238713,
+        635120,
+        802649,
+        802650,
+        824103,
+        824104,
+        826826,
+        826828,
+        826830
+      ],
+      "affected_desired_face_rows": [
+        284443,
+        434478,
+        434485,
+        488313,
+        488314
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 4,
+      "new_quality_failures": 4,
+      "old_coordinate_world_m": [
+        -0.2412063032388687,
+        -0.7232816219329834,
+        0.08550172299146652
+      ],
+      "new_coordinate_world_m": [
+        -0.2412065863609314,
+        -0.7232829332351685,
+        0.08550208806991577
+      ],
+      "displacement_m": 1.390307087309717e-06
+    },
+    {
+      "retired_current_node": 142748,
+      "selected_original_node": 142749,
+      "affected_cell_rows": [
+        16615,
+        237241,
+        239818,
+        239819,
+        239851,
+        239852,
+        239856,
+        607877,
+        679223
+      ],
+      "affected_desired_face_rows": [
+        260341,
+        432286,
+        432302,
+        487076,
+        487077,
+        487078,
+        487079
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 4,
+      "new_quality_failures": 4,
+      "old_coordinate_world_m": [
+        -0.2237279713153839,
+        -0.57509845495224,
+        0.07825347036123276
+      ],
+      "new_coordinate_world_m": [
+        -0.22372795641422272,
+        -0.5750985741615295,
+        0.07825347781181335
+      ],
+      "displacement_m": 1.2036781326982014e-07
+    },
+    {
+      "retired_current_node": 145037,
+      "selected_original_node": 145036,
+      "affected_cell_rows": [
+        64224,
+        329388,
+        351977,
+        400555,
+        457959,
+        550439,
+        550838,
+        639372,
+        647300,
+        647424,
+        712265,
+        725162,
+        788604,
+        796618,
+        796619
+      ],
+      "affected_desired_face_rows": [
+        301431,
+        488119,
+        489050,
+        489051,
+        489052
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 5,
+      "new_quality_failures": 5,
+      "old_coordinate_world_m": [
+        -0.15321427583694458,
+        -1.7282308340072632,
+        0.22217035293579102
+      ],
+      "new_coordinate_world_m": [
+        -0.15321457386016846,
+        -1.7282307147979736,
+        0.2221713662147522
+      ],
+      "displacement_m": 1.0629030764178638e-06
+    },
+    {
+      "retired_current_node": 146402,
+      "selected_original_node": 146401,
+      "affected_cell_rows": [
+        333049,
+        632575,
+        645099,
+        703237,
+        715081,
+        791020
+      ],
+      "affected_desired_face_rows": [
+        282215,
+        489472,
+        489473,
+        489474
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        -0.14480367302894592,
+        -1.725337266921997,
+        0.25479856133461
+      ],
+      "new_coordinate_world_m": [
+        -0.14480462670326233,
+        -1.7253367900848389,
+        0.25479456782341003
+      ],
+      "displacement_m": 4.133400546928837e-06
+    },
+    {
+      "retired_current_node": 150099,
+      "selected_original_node": 150100,
+      "affected_cell_rows": [
+        85962,
+        112622,
+        135550,
+        228150,
+        277298,
+        378865,
+        492244,
+        666234,
+        679459,
+        706614,
+        774966
+      ],
+      "affected_desired_face_rows": [
+        259956,
+        469043,
+        487841,
+        489829,
+        489831
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 9,
+      "new_quality_failures": 9,
+      "old_coordinate_world_m": [
+        -0.10809984058141708,
+        -1.7350033521652222,
+        0.280499666929245
+      ],
+      "new_coordinate_world_m": [
+        -0.10809981822967529,
+        -1.7350033521652222,
+        0.2804996073246002
+      ],
+      "displacement_m": 6.365778852490731e-08
+    },
+    {
+      "retired_current_node": 152939,
+      "selected_original_node": 152938,
+      "affected_cell_rows": [
+        9740,
+        14399,
+        42932,
+        60709,
+        96888,
+        336986,
+        340040,
+        350994,
+        411875,
+        585467,
+        610809,
+        624467,
+        632415,
+        655415,
+        695893,
+        696114,
+        697139,
+        726832,
+        726833,
+        727488,
+        775103,
+        782388,
+        789383
+      ],
+      "affected_desired_face_rows": [
+        282752,
+        466848,
+        487481,
+        487482,
+        487483,
+        487484,
+        487485
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 20,
+      "new_quality_failures": 20,
+      "old_coordinate_world_m": [
+        -0.09499043971300125,
+        -1.7291728258132935,
+        0.23068934679031372
+      ],
+      "new_coordinate_world_m": [
+        -0.09499045461416245,
+        -1.7291728258132935,
+        0.23068934679031372
+      ],
+      "displacement_m": 1.4901161193847656e-08
+    },
+    {
+      "retired_current_node": 157715,
+      "selected_original_node": 157714,
+      "affected_cell_rows": [
+        751347,
+        751486,
+        751524,
+        751538,
+        751539,
+        763456,
+        775390
+      ],
+      "affected_desired_face_rows": [
+        263440,
+        263441,
+        385552,
+        488344,
+        488345,
+        488346,
+        488347
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.08604186773300171,
+        -0.14260295033454895,
+        0.12654155492782593
+      ],
+      "new_coordinate_world_m": [
+        -0.08604220300912857,
+        -0.142603799700737,
+        0.12653882801532745
+      ],
+      "displacement_m": 2.875740735354823e-06
+    },
+    {
+      "retired_current_node": 163248,
+      "selected_original_node": 163246,
+      "affected_cell_rows": [
+        31022,
+        36336,
+        407973,
+        555212,
+        650660,
+        752790,
+        752794,
+        752807,
+        752808,
+        752809,
+        752810,
+        752811,
+        752812,
+        752813,
+        775381,
+        782725,
+        817932,
+        817933
+      ],
+      "affected_desired_face_rows": [
+        286015,
+        286040,
+        286041,
+        286042,
+        333711,
+        489976,
+        489977,
+        489978,
+        489979,
+        489980,
+        489981,
+        489982,
+        489983,
+        489984
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 5,
+      "new_quality_failures": 5,
+      "old_coordinate_world_m": [
+        -0.08055049180984497,
+        -0.11656201630830765,
+        0.16907382011413574
+      ],
+      "new_coordinate_world_m": [
+        -0.08055053651332855,
+        -0.11656209826469421,
+        0.16907362639904022
+      ],
+      "displacement_m": 2.1503671541306096e-07
+    },
+    {
+      "retired_current_node": 163985,
+      "selected_original_node": 163984,
+      "affected_cell_rows": [
+        126283,
+        237676,
+        237828,
+        238171,
+        369094,
+        438716,
+        450548,
+        721891
+      ],
+      "affected_desired_face_rows": [
+        385696,
+        487244,
+        487245,
+        487246
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 4,
+      "new_quality_failures": 4,
+      "old_coordinate_world_m": [
+        -0.07993730902671814,
+        -0.16703273355960846,
+        0.13093142211437225
+      ],
+      "new_coordinate_world_m": [
+        -0.07993730902671814,
+        -0.16703306138515472,
+        0.13093170523643494
+      ],
+      "displacement_m": 4.3316012185062867e-07
+    },
+    {
+      "retired_current_node": 164325,
+      "selected_original_node": 164318,
+      "affected_cell_rows": [
+        280757,
+        280758,
+        280762,
+        280883,
+        280886,
+        280900,
+        280993,
+        280998,
+        281031,
+        281081,
+        281082,
+        281083,
+        281890,
+        656939,
+        763859,
+        803635,
+        803636
+      ],
+      "affected_desired_face_rows": [
+        395994,
+        488464,
+        488465,
+        488466,
+        488467,
+        488468,
+        488469,
+        488470,
+        488471
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 1,
+      "new_quality_failures": 0,
+      "old_coordinate_world_m": [
+        -0.07955929636955261,
+        -0.07430749386548996,
+        0.16751664876937866
+      ],
+      "new_coordinate_world_m": [
+        -0.07956895977258682,
+        -0.07433471828699112,
+        0.1675279438495636
+      ],
+      "displacement_m": 3.1018209501170976e-05
+    },
+    {
+      "retired_current_node": 172158,
+      "selected_original_node": 172157,
+      "affected_cell_rows": [
+        147098,
+        296245,
+        296254,
+        296370,
+        297084,
+        298079,
+        298517,
+        298525,
+        298535,
+        331790,
+        545861,
+        624133,
+        670067,
+        683173,
+        700044
+      ],
+      "affected_desired_face_rows": [
+        401028,
+        401029,
+        488267,
+        488268,
+        488269,
+        488270,
+        488271,
+        488272,
+        488273
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 5,
+      "new_quality_failures": 5,
+      "old_coordinate_world_m": [
+        -0.05923466384410858,
+        -0.10237465798854828,
+        0.21653862297534943
+      ],
+      "new_coordinate_world_m": [
+        -0.059234872460365295,
+        -0.10237541794776917,
+        0.2165384590625763
+      ],
+      "displacement_m": 8.049386045974198e-07
+    },
+    {
+      "retired_current_node": 176855,
+      "selected_original_node": 176854,
+      "affected_cell_rows": [
+        4976,
+        38129,
+        307734,
+        388512,
+        480528,
+        771704,
+        780531,
+        780532,
+        826049,
+        826050,
+        826052
+      ],
+      "affected_desired_face_rows": [
+        264625,
+        308624,
+        308625,
+        488623,
+        488624
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 7,
+      "new_quality_failures": 7,
+      "old_coordinate_world_m": [
+        -0.03778376057744026,
+        -0.381191223859787,
+        0.22488468885421753
+      ],
+      "new_coordinate_world_m": [
+        -0.037783801555633545,
+        -0.3811911940574646,
+        0.22488467395305634
+      ],
+      "displacement_m": 5.281510531439567e-08
+    },
+    {
+      "retired_current_node": 178218,
+      "selected_original_node": 178219,
+      "affected_cell_rows": [
+        20448,
+        125636,
+        305654,
+        648382,
+        692307
+      ],
+      "affected_desired_face_rows": [
+        264608,
+        308683,
+        308705,
+        487211,
+        487212
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        -0.03413844108581543,
+        -0.3801053464412689,
+        0.22403943538665771
+      ],
+      "new_coordinate_world_m": [
+        -0.03413814306259155,
+        -0.38010528683662415,
+        0.22403939068317413
+      ],
+      "displacement_m": 3.0719530773294425e-07
+    },
+    {
+      "retired_current_node": 191389,
+      "selected_original_node": 191390,
+      "affected_cell_rows": [
+        66743,
+        269573,
+        389750,
+        419198,
+        438945,
+        439171,
+        503243
+      ],
+      "affected_desired_face_rows": [
+        429823,
+        488565,
+        488566,
+        488567,
+        489245,
+        489246,
+        489247
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.02566065639257431,
+        -0.24282045662403107,
+        0.21022358536720276
+      ],
+      "new_coordinate_world_m": [
+        -0.025660637766122818,
+        -0.24282045662403107,
+        0.21022360026836395
+      ],
+      "displacement_m": 2.3853496601554932e-08
+    },
+    {
+      "retired_current_node": 191806,
+      "selected_original_node": 191807,
+      "affected_cell_rows": [
+        7454,
+        218834,
+        370629,
+        486366,
+        664669,
+        676701,
+        683355,
+        722046,
+        722047
+      ],
+      "affected_desired_face_rows": [
+        324877,
+        486680,
+        486681,
+        486682,
+        486849
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 1,
+      "new_quality_failures": 1,
+      "old_coordinate_world_m": [
+        -0.02555764652788639,
+        -0.03309933841228485,
+        0.09248524904251099
+      ],
+      "new_coordinate_world_m": [
+        -0.02555764652788639,
+        -0.03309933468699455,
+        0.09248524904251099
+      ],
+      "displacement_m": 3.725290298461914e-09
+    },
+    {
+      "retired_current_node": 196277,
+      "selected_original_node": 196276,
+      "affected_cell_rows": [
+        6909,
+        24203,
+        40868,
+        93907,
+        135054,
+        147930,
+        265624,
+        334068,
+        440232,
+        646328,
+        646752,
+        696737,
+        706503,
+        743379
+      ],
+      "affected_desired_face_rows": [
+        263692,
+        430815,
+        486886,
+        486887
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.0237586610019207,
+        -0.2433321326971054,
+        0.21039634943008423
+      ],
+      "new_coordinate_world_m": [
+        -0.023758698254823685,
+        -0.2433321326971054,
+        0.21039634943008423
+      ],
+      "displacement_m": 3.725290298461914e-08
+    },
+    {
+      "retired_current_node": 199562,
+      "selected_original_node": 199561,
+      "affected_cell_rows": [
+        46671,
+        208336,
+        212772,
+        310581,
+        347284,
+        481800,
+        502002,
+        514986,
+        595460,
+        723511,
+        723593,
+        793134,
+        827111,
+        827112,
+        827113
+      ],
+      "affected_desired_face_rows": [
+        271937,
+        300882,
+        300883,
+        300884,
+        300885,
+        364503,
+        488171,
+        489518,
+        489519,
+        489520,
+        489521,
+        489522,
+        489523
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 10,
+      "new_quality_failures": 10,
+      "old_coordinate_world_m": [
+        -0.021435294300317764,
+        -0.0626639649271965,
+        0.056192368268966675
+      ],
+      "new_coordinate_world_m": [
+        -0.021435318514704704,
+        -0.0626639574766159,
+        0.056192364543676376
+      ],
+      "displacement_m": 2.5607137167579532e-08
+    },
+    {
+      "retired_current_node": 202527,
+      "selected_original_node": 202526,
+      "affected_cell_rows": [
+        384775,
+        384784,
+        557816,
+        707072,
+        719724
+      ],
+      "affected_desired_face_rows": [
+        299807,
+        308297,
+        489175,
+        489176,
+        489177
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        -0.013286839239299297,
+        -0.4851873517036438,
+        0.2571696937084198
+      ],
+      "new_coordinate_world_m": [
+        -0.013286858797073364,
+        -0.4851873517036438,
+        0.2571696937084198
+      ],
+      "displacement_m": 1.955777406692505e-08
+    },
+    {
+      "retired_current_node": 219199,
+      "selected_original_node": 219197,
+      "affected_cell_rows": [
+        58448,
+        79392,
+        100111,
+        291777,
+        336979,
+        448312,
+        460201,
+        461741,
+        461897,
+        461932,
+        461994,
+        492844,
+        504050,
+        642234,
+        651150,
+        670629,
+        679777,
+        696081,
+        711501,
+        737615,
+        741865,
+        742517,
+        768049,
+        784324,
+        787850,
+        790001,
+        792417,
+        793180,
+        793181,
+        821201,
+        821203
+      ],
+      "affected_desired_face_rows": [
+        298183,
+        390576,
+        390578,
+        490012,
+        490013
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 14,
+      "new_quality_failures": 14,
+      "old_coordinate_world_m": [
+        0.03437626361846924,
+        -0.15411338210105896,
+        0.13354916870594025
+      ],
+      "new_coordinate_world_m": [
+        0.03437613695859909,
+        -0.1541135162115097,
+        0.13354885578155518
+      ],
+      "displacement_m": 3.632492346539767e-07
+    },
+    {
+      "retired_current_node": 220471,
+      "selected_original_node": 220470,
+      "affected_cell_rows": [
+        24103,
+        42851,
+        191524,
+        479344,
+        653418,
+        700941,
+        768310,
+        778493,
+        784466,
+        784467,
+        821227,
+        821228,
+        821229
+      ],
+      "affected_desired_face_rows": [
+        389708,
+        389709,
+        489009,
+        489010,
+        489011
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 2,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        0.036091696470975876,
+        -0.14435125887393951,
+        0.11080020666122437
+      ],
+      "new_coordinate_world_m": [
+        0.03609168156981468,
+        -0.1443515121936798,
+        0.11080068349838257
+      ],
+      "displacement_m": 5.401542472956138e-07
+    },
+    {
+      "retired_current_node": 221034,
+      "selected_original_node": 221032,
+      "affected_cell_rows": [
+        58667,
+        270752,
+        460164,
+        463096,
+        698598,
+        768346
+      ],
+      "affected_desired_face_rows": [
+        390114,
+        482559,
+        489634,
+        489635
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 2,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        0.03694600239396095,
+        -0.14060619473457336,
+        0.11660617589950562
+      ],
+      "new_coordinate_world_m": [
+        0.03694596886634827,
+        -0.1406063288450241,
+        0.11660643666982651
+      ],
+      "displacement_m": 2.9514551338221517e-07
+    },
+    {
+      "retired_current_node": 221056,
+      "selected_original_node": 221055,
+      "affected_cell_rows": [
+        54523,
+        58443,
+        58530,
+        136297,
+        156130,
+        205856,
+        236035,
+        277687,
+        293306,
+        337096,
+        459961,
+        462369,
+        462397,
+        462407,
+        464750,
+        480635,
+        546914,
+        573952,
+        605295,
+        611829,
+        627478,
+        649182,
+        649194,
+        679118,
+        732094,
+        740561,
+        768347,
+        778513,
+        778514,
+        790049,
+        792445,
+        793205
+      ],
+      "affected_desired_face_rows": [
+        390131,
+        487959,
+        487960,
+        488883,
+        488884,
+        488885
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 24,
+      "new_quality_failures": 24,
+      "old_coordinate_world_m": [
+        0.036995891481637955,
+        -0.1398772895336151,
+        0.12589618563652039
+      ],
+      "new_coordinate_world_m": [
+        0.036995869129896164,
+        -0.13987739384174347,
+        0.12589602172374725
+      ],
+      "displacement_m": 1.9556887072930765e-07
+    },
+    {
+      "retired_current_node": 222672,
+      "selected_original_node": 222671,
+      "affected_cell_rows": [
+        63068,
+        213087,
+        368612,
+        373324,
+        438190,
+        616821,
+        622943
+      ],
+      "affected_desired_face_rows": [
+        300009,
+        486968,
+        487437,
+        487438,
+        487439
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        0.042059559375047684,
+        -0.131425678730011,
+        0.1397574245929718
+      ],
+      "new_coordinate_world_m": [
+        0.042059559375047684,
+        -0.13142569363117218,
+        0.1397574245929718
+      ],
+      "displacement_m": 1.4901161193847656e-08
+    },
+    {
+      "retired_current_node": 225305,
+      "selected_original_node": 225304,
+      "affected_cell_rows": [
+        75447,
+        82118,
+        367311,
+        615459,
+        780684,
+        785857,
+        785858,
+        788770,
+        788771
+      ],
+      "affected_desired_face_rows": [
+        286982,
+        474871,
+        489725,
+        489726,
+        489727
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 2,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        0.0615634061396122,
+        -1.5158268213272095,
+        0.14174696803092957
+      ],
+      "new_coordinate_world_m": [
+        0.06156335771083832,
+        -1.515824556350708,
+        0.1417473405599594
+      ],
+      "displacement_m": 2.29591850386846e-06
+    },
+    {
+      "retired_current_node": 226942,
+      "selected_original_node": 226941,
+      "affected_cell_rows": [
+        36494,
+        42798,
+        62125,
+        238058,
+        402613,
+        408023,
+        569307,
+        578774,
+        590928,
+        594238,
+        608323,
+        666714,
+        679349,
+        700704,
+        710773,
+        722113,
+        724380,
+        744328,
+        745854,
+        758251,
+        791893,
+        798489,
+        798490
+      ],
+      "affected_desired_face_rows": [
+        487853,
+        487854,
+        487855,
+        489638,
+        489639
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 7,
+      "new_quality_failures": 7,
+      "old_coordinate_world_m": [
+        0.08013036102056503,
+        -1.5194350481033325,
+        0.09834972023963928
+      ],
+      "new_coordinate_world_m": [
+        0.0801302045583725,
+        -1.5194348096847534,
+        0.09834957122802734
+      ],
+      "displacement_m": 3.217581343902526e-07
+    },
+    {
+      "retired_current_node": 227639,
+      "selected_original_node": 227638,
+      "affected_cell_rows": [
+        5671,
+        52610,
+        157927,
+        332799,
+        352983,
+        363179,
+        366827,
+        366892,
+        370222,
+        624302,
+        645661,
+        723138,
+        731643,
+        791543
+      ],
+      "affected_desired_face_rows": [
+        476931,
+        489014,
+        489015,
+        489460,
+        489461,
+        489462
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 7,
+      "new_quality_failures": 7,
+      "old_coordinate_world_m": [
+        0.09169663488864899,
+        -1.7290396690368652,
+        0.21103636920452118
+      ],
+      "new_coordinate_world_m": [
+        0.0916963666677475,
+        -1.7290399074554443,
+        0.2110392153263092
+      ],
+      "displacement_m": 2.8686573694198103e-06
+    },
+    {
+      "retired_current_node": 228205,
+      "selected_original_node": 228206,
+      "affected_cell_rows": [
+        46461,
+        366536,
+        366958,
+        367011,
+        367023,
+        367045,
+        695208,
+        758405,
+        758406
+      ],
+      "affected_desired_face_rows": [
+        293848,
+        476951,
+        486997,
+        486998,
+        486999
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        0.10069598257541656,
+        -1.7277613878250122,
+        0.19384253025054932
+      ],
+      "new_coordinate_world_m": [
+        0.10069598257541656,
+        -1.7277613878250122,
+        0.19384260475635529
+      ],
+      "displacement_m": 7.450580596923828e-08
+    },
+    {
+      "retired_current_node": 228454,
+      "selected_original_node": 228453,
+      "affected_cell_rows": [
+        385135,
+        458907,
+        458952,
+        458963,
+        458965,
+        458973,
+        459630
+      ],
+      "affected_desired_face_rows": [
+        298315,
+        446300,
+        488083,
+        488084,
+        488085
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 3,
+      "old_coordinate_world_m": [
+        0.10236714035272598,
+        -0.30977368354797363,
+        0.11406797170639038
+      ],
+      "new_coordinate_world_m": [
+        0.10236701369285583,
+        -0.30977368354797363,
+        0.11406806856393814
+      ],
+      "displacement_m": 1.594493877815656e-07
+    },
+    {
+      "retired_current_node": 231395,
+      "selected_original_node": 231394,
+      "affected_cell_rows": [
+        19542,
+        247552,
+        433841,
+        723810
+      ],
+      "affected_desired_face_rows": [
+        299678,
+        449780,
+        489632,
+        489633
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 2,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        0.1594688892364502,
+        -0.3206089735031128,
+        0.1105828732252121
+      ],
+      "new_coordinate_world_m": [
+        0.1594686657190323,
+        -0.32060882449150085,
+        0.11058279871940613
+      ],
+      "displacement_m": 2.7877519926234645e-07
+    },
+    {
+      "retired_current_node": 234419,
+      "selected_original_node": 234418,
+      "affected_cell_rows": [
+        78228,
+        208614,
+        451700,
+        455372,
+        455633,
+        671550,
+        717584,
+        788122,
+        790218,
+        791600
+      ],
+      "affected_desired_face_rows": [
+        272800,
+        451959,
+        451969,
+        487398,
+        487399,
+        487400
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 2,
+      "new_quality_failures": 2,
+      "old_coordinate_world_m": [
+        0.2312520146369934,
+        -0.8681284189224243,
+        0.09913255274295807
+      ],
+      "new_coordinate_world_m": [
+        0.2312520146369934,
+        -0.8681284189224243,
+        0.09913254529237747
+      ],
+      "displacement_m": 7.450580596923828e-09
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "node": 124351,
+  "old_cell_rows": [
+    153552,
+    179263,
+    181494,
+    187122,
+    187260,
+    196258,
+    196260,
+    196303,
+    196312,
+    197769,
+    197810,
+    197891,
+    198011,
+    320425,
+    402457,
+    570622,
+    642752,
+    695465,
+    695466
+  ],
+  "vertices": 13,
+  "old_native_failures": 19,
+  "growth": [
+    {
+      "round": 0,
+      "cells": 15,
+      "points": 12,
+      "missing_faces": 4
+    },
+    {
+      "round": 1,
+      "cells": 19,
+      "points": 13,
+      "missing_faces": 0
+    }
+  ],
+  "coverage": {
+    "candidate_count": 353,
+    "missing_faces": 0,
+    "first_missing_faces": []
+  },
+  "solve": {
+    "milp_status": 2,
+    "milp_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+    "generated_candidate_tetrahedra": 713,
+    "native_quality_rejected_candidates": 360,
+    "native_quality_admissible_candidates": 353,
+    "candidate_tetrahedra": 353,
+    "constraint_faces": 286,
+    "material_index": 15,
+    "native_quality_owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_flip_198_root.py",
+    "native_quality_owner_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+    "native_quality_filter": "fixed_boundary_volume_flip_198.measurements + passes; applied before MILP",
+    "milp_wall_s": 0.0008127910550683737,
+    "physical_admission": false,
+    "runtime": 0,
+    "status": "NO_FEASIBLE_CONNECTIVITY_WITHIN_BOUND"
+  }
+}

@@ -1,0 +1,379 @@
+{
+  "status": "SEGMENT_POSITION_PROPOSAL_REQUIRES_EXACT_GEOMETRY_AND_ANCESTRY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/volume-aware-endpoints-223-root/fat-through009-run001/alternate-endpoint-volume-and-boundary-proposal.npz",
+  "input_sha256": "59f6fc709f6c8e03f83398c3107d74b72ebd49b45c2abeee1d0e3207098b48fd",
+  "script_sha256": "0c0d555bb5851aac30e238e2a83e501b8f5ba736d499fe7bdd4fc65aad73aac3",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cluster-segment-positions-226-root/fat-through009-run001/cluster-segment-volume-and-boundary-proposal.npz",
+  "output_sha256": "8faca0be4d57d543b397908bb7dbbc905be587c67e29ecee0b12f5e4e4ac47aa",
+  "clusters": 22,
+  "trials": 310,
+  "passing_operations": 5,
+  "nonpositive_before": 38,
+  "nonpositive_after": 26,
+  "quality_failures_before": 46748,
+  "quality_failures_after": 46746,
+  "rejections": {
+    "empty_positive_segment_interval": 28,
+    "nonpositive_not_reduced": 55,
+    "volume_quality_regression": 21,
+    "boundary_shape_regression": 38
+  },
+  "elapsed_s": 2.276411874918267,
+  "operations": [
+    {
+      "current_node": 148340,
+      "position_before_world_m": [
+        -0.1253654509782791,
+        -1.623382329940796,
+        0.10970303416252136
+      ],
+      "position_after_world_m": [
+        -0.1253654658794403,
+        -1.623382568359375,
+        0.10970308631658554
+      ],
+      "source_segment_original_nodes": [
+        148339,
+        148340
+      ],
+      "source_segment_alpha": 0.17765559654521199,
+      "planned_double_point_world_m": [
+        -0.12536546323216563,
+        -1.6233827220651642,
+        0.10970307705112414
+      ],
+      "F32_rounding_m": 1.5400755330199115e-07,
+      "displacement_m": 2.445107561561754e-07,
+      "affected_cell_rows": [
+        17828,
+        97023,
+        118700,
+        126978,
+        216782,
+        254396,
+        255509,
+        267117,
+        288436,
+        460225,
+        478735,
+        481681,
+        485255,
+        616774,
+        627832,
+        635731,
+        680887,
+        686167,
+        762872,
+        775007,
+        775008,
+        812295,
+        812296,
+        820872,
+        820874
+      ],
+      "affected_desired_face_rows": [
+        257127,
+        257128,
+        257129,
+        257130,
+        257144,
+        463819,
+        488231,
+        488232,
+        488233
+      ],
+      "old_nonpositive": 6,
+      "new_nonpositive": 0,
+      "old_quality_failures": 15,
+      "new_quality_failures": 14
+    },
+    {
+      "current_node": 149148,
+      "position_before_world_m": [
+        -0.11857359856367111,
+        -1.7281274795532227,
+        0.2539750635623932
+      ],
+      "position_after_world_m": [
+        -0.11857359856367111,
+        -1.7281274795532227,
+        0.2539750933647156
+      ],
+      "source_segment_original_nodes": [
+        149147,
+        149148
+      ],
+      "source_segment_alpha": 0.3161729641203378,
+      "planned_double_point_world_m": [
+        -0.11857360875348799,
+        -1.7281274795532227,
+        0.25397510432166076
+      ],
+      "F32_rounding_m": 1.4962854534044565e-08,
+      "displacement_m": 2.9802322387695312e-08,
+      "affected_cell_rows": [
+        41758,
+        42432,
+        94034,
+        124380,
+        179536,
+        278081,
+        293862,
+        333739,
+        333823,
+        333959,
+        333982,
+        333995,
+        334413,
+        345609,
+        414037,
+        461491,
+        472635,
+        485984,
+        522947,
+        541990,
+        572240,
+        600041,
+        632538,
+        653217,
+        654809,
+        676010,
+        684504,
+        703233,
+        703234,
+        704993,
+        717260,
+        721265,
+        727320,
+        729464,
+        737413,
+        742786,
+        762852,
+        762853,
+        774980,
+        774981,
+        782265,
+        782266,
+        786685,
+        789333,
+        789334,
+        791035,
+        791036,
+        792153,
+        792154,
+        792984,
+        792985,
+        802832,
+        802834,
+        814691,
+        814693,
+        822413,
+        822415,
+        822417
+      ],
+      "affected_desired_face_rows": [
+        282388,
+        282389,
+        282392,
+        282393,
+        282398,
+        302249,
+        487831,
+        487832,
+        487833,
+        487834
+      ],
+      "old_nonpositive": 2,
+      "new_nonpositive": 1,
+      "old_quality_failures": 29,
+      "new_quality_failures": 29
+    },
+    {
+      "current_node": 178099,
+      "position_before_world_m": [
+        -0.034476034343242645,
+        -0.4090690612792969,
+        0.23677879571914673
+      ],
+      "position_after_world_m": [
+        -0.034476086497306824,
+        -0.40906909108161926,
+        0.2367788553237915
+      ],
+      "source_segment_original_nodes": [
+        178098,
+        178099
+      ],
+      "source_segment_alpha": 0.38477774021178157,
+      "planned_double_point_world_m": [
+        -0.03447609164028054,
+        -0.4090691346195054,
+        0.23677884155677703
+      ],
+      "F32_rounding_m": 4.595136988984198e-08,
+      "displacement_m": 8.462232866585662e-08,
+      "affected_cell_rows": [
+        28038,
+        94062,
+        125636,
+        240976,
+        275141,
+        282263,
+        307879,
+        476073,
+        509466,
+        587974,
+        593179,
+        638025,
+        648382,
+        678807,
+        688006,
+        692307,
+        701201,
+        705680,
+        771885,
+        783133,
+        783156,
+        783157,
+        785740,
+        785741
+      ],
+      "affected_desired_face_rows": [
+        264608,
+        286365,
+        286370,
+        487211,
+        488105,
+        488106,
+        488107,
+        488108,
+        490022,
+        490023
+      ],
+      "old_nonpositive": 3,
+      "new_nonpositive": 0,
+      "old_quality_failures": 16,
+      "new_quality_failures": 16
+    },
+    {
+      "current_node": 233531,
+      "position_before_world_m": [
+        0.2207718789577484,
+        -0.8511365652084351,
+        0.12877784669399261
+      ],
+      "position_after_world_m": [
+        0.22077004611492157,
+        -0.8511464595794678,
+        0.1287737935781479
+      ],
+      "source_segment_original_nodes": [
+        233529,
+        233531
+      ],
+      "source_segment_alpha": 0.43009678240639226,
+      "planned_double_point_world_m": [
+        0.22077003614607127,
+        -0.8511464161832989,
+        0.1287737789207514
+      ],
+      "F32_rounding_m": 4.6876910326167766e-08,
+      "displacement_m": 1.0848301203954052e-05,
+      "affected_cell_rows": [
+        133629,
+        147157,
+        161436,
+        222705,
+        301524,
+        319951,
+        357133,
+        440572,
+        447274,
+        447514,
+        461380,
+        486918,
+        515903,
+        647233,
+        667416,
+        670728,
+        703489
+      ],
+      "affected_desired_face_rows": [
+        299116,
+        489145,
+        489146,
+        489147,
+        489148
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 3,
+      "new_quality_failures": 2
+    },
+    {
+      "current_node": 238254,
+      "position_before_world_m": [
+        0.24852727353572845,
+        -0.9320659041404724,
+        0.13127265870571136
+      ],
+      "position_after_world_m": [
+        0.24852731823921204,
+        -0.9320659041404724,
+        0.13127264380455017
+      ],
+      "source_segment_original_nodes": [
+        238254,
+        238256
+      ],
+      "source_segment_alpha": 0.8354904814817944,
+      "planned_double_point_world_m": [
+        0.2485273233348418,
+        -0.9320659041404724,
+        0.13127264625593302
+      ],
+      "F32_rounding_m": 5.654619388196304e-09,
+      "displacement_m": 4.712160915387242e-08,
+      "affected_cell_rows": [
+        11232,
+        52945,
+        65921,
+        66962,
+        218211,
+        339333,
+        417923,
+        460182,
+        551693,
+        592006,
+        626321,
+        683918,
+        690238,
+        724065,
+        732230,
+        734818,
+        769084,
+        778986,
+        790247,
+        792544,
+        793298,
+        793299
+      ],
+      "affected_desired_face_rows": [
+        292505,
+        454013,
+        486817,
+        489540,
+        489541,
+        489542,
+        489543,
+        489544
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 10,
+      "new_quality_failures": 10
+    }
+  ]
+}
