@@ -1,0 +1,9 @@
+# Exact physical skin/fat active domains
+
+Retired source points from topology repair must remain traceable without becoming unreferenced physical nodes. The compiler now derives compact O/I/D authoring namespaces, preserves the complete source-row crosswalk, retains every incident volume point, and merges only the registered shared I boundary. The O boundary becomes the direct mechanical prefix used by the existing native renderer. It neither moves coordinates nor changes tetrahedra, cell order, mass, materials, forces or constraints.
+
+Four controls cover independently reordered meshes, retired I points that still support Skin interior cells, invalid/incomplete maps, and distinct node identities with identical coordinates. The live current564 replay preserves every emitted cell corner bit and every face's order/source identity: 317,493 joint nodes, 1,521,674 cells. It removes 26,867 unreferenced volume rows; all original rows remain recoverable from the crosswalk. Current geometry inputs and their full source/provenance chain remain pinned and retained on SSH Numi; this small package does not duplicate those large inputs.
+
+This is native emission preparation, not native import or physical admission. The source surfaces have zero unexplained reference-pose crossings in their retained exact context proof. The current volume still has 928 Skin and 11,933 Fat native-quality defects, unchanged by reindexing. Complete current conservative mass mapping and motion qualification remain outstanding. Accepted native steps are zero.
+
+The historical tools/build_native_domain_217.py writer still carries its 300,000-node/200,000-cell limits. Use the existing capacity-qualified native route with its pinned source overlay for the eventual full import; this change does not bypass legacy writer limits or any physical acceptance test.
