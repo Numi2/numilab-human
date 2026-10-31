@@ -1,0 +1,128 @@
+{
+  "candidate_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/finalized/state.json",
+    "sha256": "1aebc0ce051322078dd59d7ddf62ed03d83a73db6549753c0bb57820af9be1f9"
+  },
+  "mass_reconciliation": {
+    "mass_conservation_claimed": false,
+    "note": "Per-material geometric volume changes are measured; material mass reconciliation remains pending.",
+    "per_material_volume_changes_reported": true,
+    "status": "PENDING_VOLUME_CHANGE_RECONCILIATION"
+  },
+  "native_steps": 0,
+  "parent_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/verified-state.json",
+    "sha256": "d960d66f8e2076d41e3188f679cce68620f13348c807f1ab8cb181fecc43ef4a"
+  },
+  "physical_admission": false,
+  "quality_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_flip_198_root.py",
+    "sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0"
+  },
+  "schema": "h706.coupled-quality-708-independent-point-replay.v1",
+  "source_roles": {
+    "D": {
+      "active_point_count": 103542,
+      "active_source_coordinates_unique": true,
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/candidate-D-typed-current.npz",
+        "sha256": "0cbfbeca7b871e3af098eb500dfb8f7ef75c4ad0c9c243d3a51d7ba2a64cb309"
+      },
+      "maximum_L1_displacement_m": 9.065144695341587e-06,
+      "moved_point_count": 27,
+      "parent": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/witness-component-rollback/candidate-D-typed-current.npz",
+        "sha256": "a32e4d93ce2ef61d5134446d5e7e57bbc95ec7e309214ec0310f327650870bd8"
+      },
+      "source_topology_unchanged": true
+    },
+    "I": {
+      "active_point_count": 118230,
+      "active_source_coordinates_unique": true,
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/candidate-I-typed-current.npz",
+        "sha256": "adbcafc3882d14a12dfb35dd14f03590628a6c80a2381e1fe7ad311234cdd80f"
+      },
+      "maximum_L1_displacement_m": 3.129243850708008e-07,
+      "moved_point_count": 13,
+      "parent": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/witness-component-rollback/candidate-I-typed-current.npz",
+        "sha256": "7b45abf2d267ac81d6dd2da4992a4532f7fe8012e56cc6f6fba8790571b0ffd4"
+      },
+      "source_topology_unchanged": true
+    },
+    "O": {
+      "active_point_count": 76193,
+      "active_source_coordinates_unique": true,
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/candidate-O-typed-current.npz",
+        "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+      },
+      "maximum_L1_displacement_m": 0.0,
+      "moved_point_count": 0,
+      "parent": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/witness-component-rollback/candidate-O-typed-current.npz",
+        "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+      },
+      "source_topology_unchanged": true
+    }
+  },
+  "status": "PASS_INDEPENDENT_POINT_F32_MAP_BOUNDARY_DUPLICATE_NATIVE_QUALITY_REPLAY",
+  "volumes": {
+    "Fat": {
+      "all_F32_cell_determinants_positive": true,
+      "baseline_good_regressions": 0,
+      "baseline_native_failures": 212,
+      "boundary_faces": 444512,
+      "candidate_native_failures": 212,
+      "cells": 770520,
+      "oriented_actual_equals_desired": true,
+      "per_material": {
+        "16": {
+          "baseline_signed_volume_m3": 0.011453127974615894,
+          "candidate_signed_volume_m3": 0.011453127972527174,
+          "cells": 770520,
+          "delta_signed_volume_m3": -2.0887198221020142e-12,
+          "mass_kg_claim": null,
+          "mass_status": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+          "relative_delta": -1.8237112400484323e-10
+        }
+      },
+      "points": 253836,
+      "unique_volume_F32_points": true
+    },
+    "Skin": {
+      "all_F32_cell_determinants_positive": true,
+      "baseline_good_regressions": 0,
+      "baseline_native_failures": 52,
+      "boundary_faces": 388886,
+      "candidate_native_failures": 52,
+      "cells": 724895,
+      "oriented_actual_equals_desired": true,
+      "per_material": {
+        "15": {
+          "baseline_signed_volume_m3": 0.0036249915449686047,
+          "candidate_signed_volume_m3": 0.003624991544836348,
+          "cells": 724895,
+          "delta_signed_volume_m3": -1.3225661885107876e-13,
+          "mass_kg_claim": null,
+          "mass_status": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+          "relative_delta": -3.648466960830503e-11
+        }
+      },
+      "points": 210301,
+      "unique_volume_F32_points": true
+    }
+  },
+  "witness_component_rollback": {
+    "Fat_rollback_volume_points": 29,
+    "Skin_rollback_volume_points": 0,
+    "all_role_witness_component_rows_restored": true,
+    "all_safe_source_rows_preserved": true,
+    "both_volume_layers_restored_as_one_coupled_component": true,
+    "rollback_plan": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/rollback-plan.json",
+      "sha256": "8d39a791407e4f23c204fdb49bd575578bddee438eabf2322bdee877abd0fa71"
+    }
+  }
+}

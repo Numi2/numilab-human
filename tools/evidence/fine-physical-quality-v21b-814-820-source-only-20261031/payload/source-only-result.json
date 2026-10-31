@@ -1,0 +1,61 @@
+{
+  "endpoint": {
+    "fat_native_quality_failures": 210,
+    "skin_native_quality_failures": 52,
+    "status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+    "surface_crossings": 0
+  },
+  "endpoint_sha256": "121926b5aa7bd16f74ecb143d16947bf514ed0a2504f737569f66ad13f23e95e",
+  "inner_back_policy": {
+    "classification": "explicit inner layer reconstruction; not unchanged geometry",
+    "maximum_displacement_m": 5e-05,
+    "outer_back_O_points_fixed": true,
+    "roles": [
+      "D",
+      "I"
+    ],
+    "routes_fixed": 149,
+    "source_rims_fixed": true
+  },
+  "later_runs_included": false,
+  "mass_mapping": "NOT_RUN",
+  "mass_reconciliation": "PENDING_PER_MATERIAL_VOLUME_CHANGE",
+  "native_steps": 0,
+  "physical_admission": false,
+  "promotion817": {
+    "Fat": {
+      "native_bad_after": 210,
+      "native_bad_before": 210,
+      "new_steiner_points": 2,
+      "strict_quality_lexicographic_progress": true
+    },
+    "Skin": {
+      "native_bad_after": 52,
+      "native_bad_before": 52,
+      "new_steiner_points": 5,
+      "strict_quality_lexicographic_progress": true
+    },
+    "status": "PASS_EXTERNAL_INDEPENDENT_REPLAY"
+  },
+  "round_814": {
+    "rounds": [
+      {
+        "fat_native_quality_failures": 212,
+        "proposal_805": "FAIL",
+        "rollback_805": "PASS",
+        "round": 1,
+        "skin_native_quality_failures": 52,
+        "surface_crossings": 0
+      },
+      {
+        "fat_native_quality_failures": 210,
+        "proposal_805": "FAIL",
+        "rollback_805": "PASS",
+        "round": 2,
+        "skin_native_quality_failures": 52,
+        "surface_crossings": 0
+      }
+    ]
+  },
+  "schema": "numi.coupled-quality-source-only-publication.v1"
+}

@@ -1,0 +1,1762 @@
+{
+  "all_cells_positive": true,
+  "balanced_per_role_deadlines": false,
+  "cavity_selection_methods": [
+    "replayed_saved_current_point_f32_operations"
+  ],
+  "elapsed_s": 22.91366666695103,
+  "exact_quality_loader": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/solve_partial_oriented_cavity_milp_684.py",
+    "sha256": "5bca7a54c4bb1642be5153d6553a2ab009bbdd37186b208cc2c57083050a301d"
+  },
+  "kernel_cone_helper": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-kernel-cone-partial-794-root/interior_kernel_cone_partial_quality_794.py",
+    "sha256": "aa223d2b1b85d4ddefa1699deaee26be8cea96001b55f662df7388ac7a160495"
+  },
+  "mass_mapping": "NOT_RUN",
+  "maximum_vertex_star_cells": 0,
+  "native_admission": false,
+  "native_steps": 0,
+  "native_thresholds_unchanged": true,
+  "output_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/state.json",
+    "sha256": "482be12e1b5d07f0171ec0a72fb478c52610ed75186b3a029d07748ea5cb4670"
+  },
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/batch_interior_steiner_partial_quality_795_root.py",
+    "sha256": "4e35df53981c2fedc0f03b268138ebf74378a09e0c55d1f7a64b8e09c813f3bf"
+  },
+  "rebase_manifest": {
+    "current_coordinates_used": true,
+    "current_state": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/verified-state.json",
+      "sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811"
+    },
+    "current_state_sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811",
+    "failed_operations_pruned": true,
+    "independent_promoter": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/independent_promoter_796_795_root.py",
+      "sha256": "320fcbb6f1eb8147c67a27474c4b23100e92bca060122b3dffc37aa851bbcfec"
+    },
+    "mass_mapping": "NOT_RUN",
+    "native_steps": 0,
+    "old_input_state_sha256": "6ff110ecb9e938d5f86aa4e864d1a7ebf20ab5b0dfb3b4773dcbf0ac6ddb5d28",
+    "operation_reoptimization": "NOT_RUN",
+    "physical_admission": false,
+    "rebase_builder": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-rebase-809-root/rebase_saved_partial_ops_onto_current_f32_809.py",
+      "sha256": "f81a7bdd6b0b26b7c2a8546b7e879c36774d94f08e09691fbb40de5977fa82a5"
+    },
+    "rebase_source": "authenticated_806_saved_operations",
+    "role_rebases": [
+      {
+        "current_parent": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/fat-volume-current-source-prefix.npz",
+          "sha256": "4585bfa39a49e3f8f930f7ae29903697a6474009faec67b65f2fbd69f6c09086"
+        },
+        "independent_readback": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/fat/fat-independent-rebase-readback.json",
+          "sha256": "848c49cc1d091b15d717e1312b1a71ffc90401158d8cfacccc16a03d15079cb0"
+        },
+        "old_806_operation_count": 51,
+        "rebased_output": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/fat/fat-rebased-partial-quality.npz",
+          "sha256": "20ac5518165b6fcdfbf4d1cb215aba944fc3790c6bc4931eae2152f0dc5602e3"
+        },
+        "rejected_operation_count": 49,
+        "replayed_operation_count": 2,
+        "role": "Fat",
+        "source_806_output": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/fat-interior-steiner-quality-proposal.npz",
+          "sha256": "9d3552baffc89ef6443f44cf9fa30c56afd7246774ffcbd72ff70a23c3bbe032"
+        },
+        "source_806_result": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/report.json",
+          "sha256": "2d6b25746661c9b98b29b5ebc930f1c1262892bca320829d1ec4a9af8133e44c"
+        },
+        "status": "PASS_REBASED_ON_CURRENT_F32",
+        "topology_compatibility": {
+          "cell_count": 770520,
+          "changed_f32_point_rows": 404,
+          "current_point_count": 253836,
+          "material_rows_equal": true,
+          "old_point_count": 253836,
+          "target_boundary_equal": true,
+          "tetrahedron_rows_equal": true
+        }
+      },
+      {
+        "current_parent": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/skin-volume-current-source-prefix.npz",
+          "sha256": "2fbde224d94d08475dd24c457b83e72eca512553e3622283aef5bc503a0855a6"
+        },
+        "independent_readback": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/skin/skin-independent-rebase-readback.json",
+          "sha256": "624d9620166c12837f13fee60389ca13942dc11c02d6e559ce00e88893974fa2"
+        },
+        "old_806_operation_count": 9,
+        "rebased_output": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/skin/skin-rebased-partial-quality.npz",
+          "sha256": "8fdd4128d13a9567a330c17c43c4bef0749cd78628d485cbba2a8c5273a04c11"
+        },
+        "rejected_operation_count": 4,
+        "replayed_operation_count": 5,
+        "role": "Skin",
+        "source_806_output": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/skin-interior-steiner-quality-proposal.npz",
+          "sha256": "7fca222cd69d5eb501fd705851b1b7d2aecd4865f2c7af5ba05a4fa3d4c9c6af"
+        },
+        "source_806_result": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/report.json",
+          "sha256": "2d6b25746661c9b98b29b5ebc930f1c1262892bca320829d1ec4a9af8133e44c"
+        },
+        "status": "PASS_REBASED_ON_CURRENT_F32",
+        "topology_compatibility": {
+          "cell_count": 724895,
+          "changed_f32_point_rows": 342,
+          "current_point_count": 210301,
+          "material_rows_equal": true,
+          "old_point_count": 210301,
+          "target_boundary_equal": true,
+          "tetrahedron_rows_equal": true
+        }
+      }
+    ],
+    "saved_journal": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/report.json",
+      "sha256": "2d6b25746661c9b98b29b5ebc930f1c1262892bca320829d1ec4a9af8133e44c"
+    },
+    "saved_journal_source_state": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-799-root/round002/trial01/verified-state.json",
+      "sha256": "6ff110ecb9e938d5f86aa4e864d1a7ebf20ab5b0dfb3b4773dcbf0ac6ddb5d28"
+    },
+    "schema": "h706.partial-quality-steiner-current-point-rebase.v1",
+    "source_ancestry_chain": [
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/verified-state.json",
+        "sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/verified-state.json",
+        "sha256": "04d131a82a12ea161abf57b7213a2973488dd1cb87c2df4ad0d3cb5205fd1518"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/verified-state.json",
+        "sha256": "54ae12ebcb62cb6f65313c1fd46e62ab82a88e8fe3c6d35fba946bd6b7075b65"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/verified-state.json",
+        "sha256": "d960d66f8e2076d41e3188f679cce68620f13348c807f1ab8cb181fecc43ef4a"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-808-root/round-02/verified-state.json",
+        "sha256": "2eac410dbed41b7d705b3b93d76a2373e47ac0dacb600d3d7aec25587b91ebc6"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-808-root/round-01/verified-state.json",
+        "sha256": "4562abf26556d62eb43157127c0b443a0827f478b47b33148dae82315d1ed65e"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-02/verified-state.json",
+        "sha256": "05f4c00d60a4e00b6ba847fb20eaf20116f2d9f4c184c2f4c74012ec6b932349"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-01/verified-state.json",
+        "sha256": "553255522ac1b28bc5f0eb06b536bed9b5cbb25d662b3ae653794010885ba1c6"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-799-root/round002/trial01/verified-state.json",
+        "sha256": "6ff110ecb9e938d5f86aa4e864d1a7ebf20ab5b0dfb3b4773dcbf0ac6ddb5d28"
+      }
+    ],
+    "status": "PASS_REBASE_VERIFIED_TO_CURRENT_F32",
+    "topology_policy": "EXACT_TETRAHEDRA_MATERIAL_AND_TARGET_BOUNDARY_ROW_EQUALITY"
+  },
+  "role_results": [
+    {
+      "accepted_operations": [
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            -0.07578185945749283,
+            -0.1602531373500824,
+            0.0884464830160141
+          ],
+          "apex_point_output_row": 253836,
+          "bad_after": 3,
+          "bad_before": 3,
+          "candidate_selection_method": "complete_vertex_star_node_167096",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            695421,
+            695423,
+            695486,
+            695498,
+            695504,
+            695521,
+            695598,
+            695612,
+            695618,
+            763033,
+            765221,
+            765223,
+            765225,
+            765227
+          ],
+          "log_deficit_after": 3.4857961290737007,
+          "log_deficit_before": 31.29339782981448,
+          "material_index": 16,
+          "new_cell_count": 20,
+          "new_tetrahedra": [
+            [
+              253836,
+              165265,
+              165844,
+              166489
+            ],
+            [
+              253836,
+              165265,
+              167278,
+              165844
+            ],
+            [
+              253836,
+              165265,
+              166489,
+              169456
+            ],
+            [
+              253836,
+              165265,
+              169456,
+              167278
+            ],
+            [
+              253836,
+              165813,
+              166489,
+              165844
+            ],
+            [
+              253836,
+              165844,
+              167278,
+              165813
+            ],
+            [
+              253836,
+              166225,
+              166489,
+              165813
+            ],
+            [
+              253836,
+              165813,
+              167278,
+              166225
+            ],
+            [
+              253836,
+              166225,
+              167096,
+              166489
+            ],
+            [
+              253836,
+              166225,
+              166648,
+              167096
+            ],
+            [
+              253836,
+              167278,
+              166648,
+              166225
+            ],
+            [
+              253836,
+              167096,
+              169456,
+              166489
+            ],
+            [
+              253836,
+              166650,
+              167096,
+              166648
+            ],
+            [
+              253836,
+              166650,
+              166648,
+              167278
+            ],
+            [
+              253836,
+              167097,
+              167096,
+              166650
+            ],
+            [
+              253836,
+              167097,
+              166650,
+              167098
+            ],
+            [
+              253836,
+              166650,
+              167278,
+              167098
+            ],
+            [
+              253836,
+              169456,
+              167096,
+              167097
+            ],
+            [
+              253836,
+              167098,
+              169456,
+              167097
+            ],
+            [
+              253836,
+              167278,
+              169456,
+              167098
+            ]
+          ],
+          "old_cell_count": 14,
+          "old_cell_rows": [
+            695421,
+            695423,
+            695486,
+            695498,
+            695504,
+            695521,
+            695598,
+            695612,
+            695618,
+            763033,
+            765221,
+            765223,
+            765225,
+            765227
+          ],
+          "old_vertex_rows": [
+            165265,
+            165813,
+            165844,
+            166225,
+            166489,
+            166648,
+            166650,
+            167096,
+            167097,
+            167098,
+            167278,
+            169456
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 0,
+          "replacement_tet_range": [
+            0,
+            20
+          ],
+          "seed_cell_row": 695612
+        },
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            0.037710968405008316,
+            -0.1585475355386734,
+            0.16949038207530975
+          ],
+          "apex_point_output_row": 253837,
+          "bad_after": 1,
+          "bad_before": 1,
+          "candidate_selection_method": "complete_vertex_star_node_221145",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            724345,
+            738168,
+            770276,
+            770277,
+            770278,
+            770279
+          ],
+          "log_deficit_after": 4.832106737624089,
+          "log_deficit_before": 12.306505083299761,
+          "material_index": 16,
+          "new_cell_count": 10,
+          "new_tetrahedra": [
+            [
+              253837,
+              221056,
+              221145,
+              221364
+            ],
+            [
+              253837,
+              221145,
+              221056,
+              222482
+            ],
+            [
+              253837,
+              221056,
+              221364,
+              221509
+            ],
+            [
+              253837,
+              222482,
+              221056,
+              221509
+            ],
+            [
+              253837,
+              221364,
+              221145,
+              221146
+            ],
+            [
+              253837,
+              221145,
+              222482,
+              221146
+            ],
+            [
+              253837,
+              221364,
+              221146,
+              221329
+            ],
+            [
+              253837,
+              221329,
+              221146,
+              222482
+            ],
+            [
+              253837,
+              221364,
+              221329,
+              221509
+            ],
+            [
+              253837,
+              221329,
+              222482,
+              221509
+            ]
+          ],
+          "old_cell_count": 6,
+          "old_cell_rows": [
+            724345,
+            738168,
+            770276,
+            770277,
+            770278,
+            770279
+          ],
+          "old_vertex_rows": [
+            221056,
+            221145,
+            221146,
+            221329,
+            221364,
+            221509,
+            222482
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 1,
+          "replacement_tet_range": [
+            20,
+            30
+          ],
+          "seed_cell_row": 770278
+        }
+      ],
+      "all_new_cells_native_pass": false,
+      "all_new_cells_same_material_as_cavity": true,
+      "all_output_measured_positive": true,
+      "all_replacement_cells_exact_positive": true,
+      "complete_replacement_parent_union_csr": true,
+      "complete_steiner_point_parent_union_csr": true,
+      "exact_nonpositive_new_cells": 0,
+      "exact_volume_conserved_per_cavity": true,
+      "historical_parent_point_csr_archived": true,
+      "immediate_old_point_parent_csr_empty": true,
+      "independent_readback": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/fat/fat-independent-rebase-readback.json",
+        "sha256": "848c49cc1d091b15d717e1312b1a71ffc90401158d8cfacccc16a03d15079cb0"
+      },
+      "input": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/fat-volume-current-source-prefix.npz",
+        "sha256": "4585bfa39a49e3f8f930f7ae29903697a6474009faec67b65f2fbd69f6c09086"
+      },
+      "input_cells": 770520,
+      "input_points": 253836,
+      "log_deficit_after": 493.74414722120775,
+      "log_deficit_before": 529.0261472676241,
+      "mass_mapping": "NOT_RUN",
+      "native_admission": false,
+      "native_bad_after": 210,
+      "native_bad_before": 210,
+      "native_steps": 0,
+      "native_thresholds_unchanged": true,
+      "new_steiner_points": 2,
+      "oriented_target_boundary_unchanged": true,
+      "output": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/fat/fat-rebased-partial-quality.npz",
+        "sha256": "20ac5518165b6fcdfbf4d1cb215aba944fc3790c6bc4931eae2152f0dc5602e3"
+      },
+      "output_cells": 770530,
+      "output_points": 253838,
+      "parent_declared_nonpositive": 0,
+      "physical_admission": false,
+      "rebase_rejections": [
+        {
+          "current_bad_after": 3,
+          "current_bad_before": 2,
+          "current_log_deficit_after": 9.629846788778565,
+          "current_log_deficit_before": 21.86485383027653,
+          "operation": 2,
+          "reason": "current_coordinates_no_local_lexicographic_progress"
+        },
+        {
+          "operation": 3,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 4,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 5,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 6,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 7,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 8,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 9,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 10,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 11,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 12,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 13,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 14,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 15,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 16,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 17,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 18,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 19,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 20,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 21,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 22,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 23,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 24,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 25,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 26,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 27,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 28,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 29,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 30,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 31,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 32,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 33,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 34,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 35,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 36,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 37,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 38,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 39,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 40,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 41,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 42,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 43,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 44,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 45,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 46,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 47,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 48,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 49,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 50,
+          "reason": "current_rebased_cells_not_exact_positive"
+        }
+      ],
+      "rebase_source_input": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-799-root/round002/trial01/fat-connected-quality-volume-proposal.npz",
+        "sha256": "d4e1c4cb1c3f94e3520f309714770e29930c903a289960e1ae412aec5423298a"
+      },
+      "rebase_source_journal": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/report.json",
+        "sha256": "2d6b25746661c9b98b29b5ebc930f1c1262892bca320829d1ec4a9af8133e44c"
+      },
+      "rebase_source_operations": 51,
+      "rebase_source_output": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/fat-interior-steiner-quality-proposal.npz",
+        "sha256": "9d3552baffc89ef6443f44cf9fa30c56afd7246774ffcbd72ff70a23c3bbe032"
+      },
+      "role": "Fat",
+      "state_input_sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811",
+      "status": "PASS_INTERIOR_STEINER_PARTIAL_QUALITY_CONE_BATCH",
+      "strict_native_bad_count_drop": false,
+      "target_boundary_key": "desired_boundary_faces",
+      "topology_compatibility": {
+        "cell_count": 770520,
+        "changed_f32_point_rows": 404,
+        "current_point_count": 253836,
+        "material_rows_equal": true,
+        "old_point_count": 253836,
+        "target_boundary_equal": true,
+        "tetrahedron_rows_equal": true
+      }
+    },
+    {
+      "accepted_operations": [
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            0.04019385203719139,
+            -0.1603933572769165,
+            0.11964878439903259
+          ],
+          "apex_point_output_row": 210301,
+          "bad_after": 1,
+          "bad_before": 1,
+          "candidate_selection_method": "complete_vertex_star_node_135464",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            103881,
+            121991,
+            304037,
+            322186,
+            322232,
+            488392,
+            532300,
+            532302,
+            723032,
+            723033
+          ],
+          "log_deficit_after": 3.962795171496138,
+          "log_deficit_before": 5.181477029885433,
+          "material_index": 15,
+          "new_cell_count": 16,
+          "new_tetrahedra": [
+            [
+              210301,
+              26924,
+              135453,
+              26851
+            ],
+            [
+              210301,
+              26851,
+              135478,
+              26924
+            ],
+            [
+              210301,
+              135453,
+              134151,
+              26851
+            ],
+            [
+              210301,
+              134151,
+              135478,
+              26851
+            ],
+            [
+              210301,
+              135453,
+              26924,
+              135465
+            ],
+            [
+              210301,
+              26924,
+              135480,
+              135465
+            ],
+            [
+              210301,
+              135480,
+              26924,
+              135478
+            ],
+            [
+              210301,
+              134151,
+              135451,
+              135340
+            ],
+            [
+              210301,
+              135340,
+              135478,
+              134151
+            ],
+            [
+              210301,
+              134151,
+              135453,
+              135451
+            ],
+            [
+              210301,
+              135340,
+              135451,
+              135464
+            ],
+            [
+              210301,
+              135340,
+              135464,
+              135478
+            ],
+            [
+              210301,
+              135464,
+              135451,
+              135453
+            ],
+            [
+              210301,
+              135453,
+              135465,
+              135464
+            ],
+            [
+              210301,
+              135465,
+              135480,
+              135464
+            ],
+            [
+              210301,
+              135464,
+              135480,
+              135478
+            ]
+          ],
+          "old_cell_count": 10,
+          "old_cell_rows": [
+            103881,
+            121991,
+            304037,
+            322186,
+            322232,
+            488392,
+            532300,
+            532302,
+            723032,
+            723033
+          ],
+          "old_vertex_rows": [
+            26851,
+            26924,
+            134151,
+            135340,
+            135451,
+            135453,
+            135464,
+            135465,
+            135478,
+            135480
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 0,
+          "replacement_tet_range": [
+            0,
+            16
+          ],
+          "seed_cell_row": 723033
+        },
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            0.045848265290260315,
+            -0.14310693740844727,
+            0.1135542094707489
+          ],
+          "apex_point_output_row": 210302,
+          "bad_after": 1,
+          "bad_before": 1,
+          "candidate_selection_method": "complete_vertex_star_node_136603",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            256140,
+            402042,
+            419556,
+            424318,
+            444964,
+            634359,
+            634361,
+            724828,
+            724831,
+            724832
+          ],
+          "log_deficit_after": 2.240621562124184,
+          "log_deficit_before": 4.246738300170816,
+          "material_index": 15,
+          "new_cell_count": 14,
+          "new_tetrahedra": [
+            [
+              210302,
+              27031,
+              136587,
+              26924
+            ],
+            [
+              210302,
+              27031,
+              26924,
+              136815
+            ],
+            [
+              210302,
+              26924,
+              136587,
+              134151
+            ],
+            [
+              210302,
+              205370,
+              26924,
+              134151
+            ],
+            [
+              210302,
+              205370,
+              136815,
+              26924
+            ],
+            [
+              210302,
+              136587,
+              27031,
+              136605
+            ],
+            [
+              210302,
+              27031,
+              136815,
+              136605
+            ],
+            [
+              210302,
+              136603,
+              134151,
+              136587
+            ],
+            [
+              210302,
+              136603,
+              136606,
+              134151
+            ],
+            [
+              210302,
+              134151,
+              136606,
+              205370
+            ],
+            [
+              210302,
+              136587,
+              136605,
+              136603
+            ],
+            [
+              210302,
+              136605,
+              136606,
+              136603
+            ],
+            [
+              210302,
+              136605,
+              136815,
+              136606
+            ],
+            [
+              210302,
+              136606,
+              136815,
+              205370
+            ]
+          ],
+          "old_cell_count": 10,
+          "old_cell_rows": [
+            256140,
+            402042,
+            419556,
+            424318,
+            444964,
+            634359,
+            634361,
+            724828,
+            724831,
+            724832
+          ],
+          "old_vertex_rows": [
+            26924,
+            27031,
+            134151,
+            136587,
+            136603,
+            136605,
+            136606,
+            136815,
+            205370
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 1,
+          "replacement_tet_range": [
+            16,
+            30
+          ],
+          "seed_cell_row": 724828
+        },
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            0.03635561466217041,
+            -0.17742964625358582,
+            0.13575324416160583
+          ],
+          "apex_point_output_row": 210303,
+          "bad_after": 2,
+          "bad_before": 2,
+          "candidate_selection_method": "complete_vertex_star_node_26677",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            42290,
+            146029,
+            155481,
+            297464,
+            299370,
+            299380,
+            321970,
+            321980,
+            453678,
+            528100,
+            528101,
+            535323,
+            535324,
+            535325,
+            535326,
+            557262,
+            557263,
+            647917,
+            647918,
+            647919,
+            647920,
+            670406,
+            670407,
+            670408,
+            670409,
+            690833,
+            690834,
+            690835,
+            705260,
+            723165,
+            723166,
+            723167,
+            723168,
+            723169,
+            723170
+          ],
+          "log_deficit_after": 3.4849361363068736,
+          "log_deficit_before": 3.7938079644033156,
+          "material_index": 15,
+          "new_cell_count": 42,
+          "new_tetrahedra": [
+            [
+              210303,
+              26551,
+              26673,
+              26600
+            ],
+            [
+              210303,
+              26677,
+              26551,
+              26600
+            ],
+            [
+              210303,
+              26551,
+              26677,
+              26655
+            ],
+            [
+              210303,
+              135150,
+              26551,
+              26655
+            ],
+            [
+              210303,
+              133871,
+              26673,
+              26551
+            ],
+            [
+              210303,
+              134151,
+              133871,
+              26551
+            ],
+            [
+              210303,
+              134151,
+              26551,
+              135150
+            ],
+            [
+              210303,
+              26677,
+              26600,
+              26673
+            ],
+            [
+              210303,
+              26655,
+              26677,
+              26843
+            ],
+            [
+              210303,
+              26655,
+              26843,
+              135150
+            ],
+            [
+              210303,
+              26718,
+              26677,
+              26673
+            ],
+            [
+              210303,
+              26718,
+              26673,
+              134151
+            ],
+            [
+              210303,
+              134151,
+              26673,
+              133871
+            ],
+            [
+              210303,
+              27086,
+              26677,
+              26718
+            ],
+            [
+              210303,
+              27086,
+              26843,
+              26677
+            ],
+            [
+              210303,
+              206173,
+              27086,
+              26718
+            ],
+            [
+              210303,
+              26718,
+              134151,
+              136352
+            ],
+            [
+              210303,
+              26718,
+              136352,
+              136355
+            ],
+            [
+              210303,
+              26718,
+              136355,
+              136360
+            ],
+            [
+              210303,
+              208742,
+              26718,
+              136360
+            ],
+            [
+              210303,
+              207439,
+              26718,
+              136413
+            ],
+            [
+              210303,
+              208742,
+              136413,
+              26718
+            ],
+            [
+              210303,
+              26718,
+              136492,
+              136568
+            ],
+            [
+              210303,
+              207439,
+              136492,
+              26718
+            ],
+            [
+              210303,
+              206173,
+              26718,
+              136568
+            ],
+            [
+              210303,
+              206173,
+              26843,
+              27086
+            ],
+            [
+              210303,
+              26843,
+              136413,
+              135150
+            ],
+            [
+              210303,
+              207439,
+              136413,
+              26843
+            ],
+            [
+              210303,
+              26843,
+              136568,
+              136492
+            ],
+            [
+              210303,
+              207439,
+              26843,
+              136492
+            ],
+            [
+              210303,
+              206173,
+              136568,
+              26843
+            ],
+            [
+              210303,
+              136352,
+              134151,
+              135150
+            ],
+            [
+              210303,
+              136352,
+              135150,
+              136355
+            ],
+            [
+              210303,
+              136355,
+              135150,
+              136360
+            ],
+            [
+              210303,
+              135150,
+              136362,
+              136360
+            ],
+            [
+              210303,
+              135150,
+              136373,
+              136362
+            ],
+            [
+              210303,
+              135150,
+              209408,
+              136373
+            ],
+            [
+              210303,
+              208742,
+              135150,
+              136413
+            ],
+            [
+              210303,
+              209408,
+              135150,
+              208742
+            ],
+            [
+              210303,
+              136362,
+              208742,
+              136360
+            ],
+            [
+              210303,
+              136373,
+              208742,
+              136362
+            ],
+            [
+              210303,
+              136373,
+              209408,
+              208742
+            ]
+          ],
+          "old_cell_count": 35,
+          "old_cell_rows": [
+            42290,
+            146029,
+            155481,
+            297464,
+            299370,
+            299380,
+            321970,
+            321980,
+            453678,
+            528100,
+            528101,
+            535323,
+            535324,
+            535325,
+            535326,
+            557262,
+            557263,
+            647917,
+            647918,
+            647919,
+            647920,
+            670406,
+            670407,
+            670408,
+            670409,
+            690833,
+            690834,
+            690835,
+            705260,
+            723165,
+            723166,
+            723167,
+            723168,
+            723169,
+            723170
+          ],
+          "old_vertex_rows": [
+            26551,
+            26600,
+            26655,
+            26673,
+            26677,
+            26718,
+            26843,
+            27086,
+            133871,
+            134151,
+            135150,
+            136352,
+            136355,
+            136360,
+            136362,
+            136373,
+            136413,
+            136492,
+            136568,
+            206173,
+            207439,
+            208742,
+            209408
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 2,
+          "replacement_tet_range": [
+            30,
+            72
+          ],
+          "seed_cell_row": 723166
+        },
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            0.0509062297642231,
+            -0.11375515908002853,
+            0.1313394457101822
+          ],
+          "apex_point_output_row": 210304,
+          "bad_after": 1,
+          "bad_before": 1,
+          "candidate_selection_method": "complete_vertex_star_node_205730",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            639190,
+            639191,
+            639192,
+            639193,
+            639194,
+            639195,
+            639196,
+            639197
+          ],
+          "log_deficit_after": 1.7135453492051205,
+          "log_deficit_before": 2.131829818360595,
+          "material_index": 15,
+          "new_cell_count": 8,
+          "new_tetrahedra": [
+            [
+              210304,
+              27086,
+              135150,
+              136922
+            ],
+            [
+              210304,
+              27086,
+              137128,
+              135150
+            ],
+            [
+              210304,
+              136922,
+              136944,
+              27086
+            ],
+            [
+              210304,
+              136944,
+              137128,
+              27086
+            ],
+            [
+              210304,
+              136922,
+              135150,
+              136924
+            ],
+            [
+              210304,
+              135150,
+              137128,
+              136924
+            ],
+            [
+              210304,
+              136922,
+              136924,
+              136944
+            ],
+            [
+              210304,
+              136944,
+              136924,
+              137128
+            ]
+          ],
+          "old_cell_count": 8,
+          "old_cell_rows": [
+            639190,
+            639191,
+            639192,
+            639193,
+            639194,
+            639195,
+            639196,
+            639197
+          ],
+          "old_vertex_rows": [
+            27086,
+            135150,
+            136922,
+            136924,
+            136944,
+            137128,
+            205730
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 3,
+          "replacement_tet_range": [
+            72,
+            80
+          ],
+          "seed_cell_row": 639194
+        },
+        {
+          "all_new_cells_native_pass": false,
+          "apex_point_f32": [
+            0.043281447142362595,
+            -0.14986857771873474,
+            0.1423509418964386
+          ],
+          "apex_point_output_row": 210305,
+          "bad_after": 1,
+          "bad_before": 1,
+          "candidate_selection_method": "face_ball_2",
+          "exact_cavity_certificate": "PASS",
+          "exact_cavity_certificate_on_current_parent": true,
+          "exact_positive_new_cells": true,
+          "exact_volume_conserved": true,
+          "full_cavity_parent_rows": [
+            705261,
+            705269
+          ],
+          "log_deficit_after": 1.2976670084181945,
+          "log_deficit_before": 2.009383044058941,
+          "material_index": 15,
+          "new_cell_count": 6,
+          "new_tetrahedra": [
+            [
+              210305,
+              26843,
+              136429,
+              135150
+            ],
+            [
+              210305,
+              209408,
+              26843,
+              135150
+            ],
+            [
+              210305,
+              209408,
+              136429,
+              26843
+            ],
+            [
+              210305,
+              136427,
+              135150,
+              136429
+            ],
+            [
+              210305,
+              209408,
+              135150,
+              136427
+            ],
+            [
+              210305,
+              209408,
+              136427,
+              136429
+            ]
+          ],
+          "old_cell_count": 2,
+          "old_cell_rows": [
+            705261,
+            705269
+          ],
+          "old_vertex_rows": [
+            26843,
+            135150,
+            136427,
+            136429,
+            209408
+          ],
+          "oriented_chain_matches_input": true,
+          "proposal_method": "interior_steiner_kernel_cone",
+          "rebased_from_saved_operation_index": 4,
+          "replacement_tet_range": [
+            80,
+            86
+          ],
+          "seed_cell_row": 705269
+        }
+      ],
+      "all_new_cells_native_pass": false,
+      "all_new_cells_same_material_as_cavity": true,
+      "all_output_measured_positive": true,
+      "all_replacement_cells_exact_positive": true,
+      "complete_replacement_parent_union_csr": true,
+      "complete_steiner_point_parent_union_csr": true,
+      "exact_nonpositive_new_cells": 0,
+      "exact_volume_conserved_per_cavity": true,
+      "historical_parent_point_csr_archived": true,
+      "immediate_old_point_parent_csr_empty": true,
+      "independent_readback": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/skin/skin-independent-rebase-readback.json",
+        "sha256": "624d9620166c12837f13fee60389ca13942dc11c02d6e559ce00e88893974fa2"
+      },
+      "input": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/skin-volume-current-source-prefix.npz",
+        "sha256": "2fbde224d94d08475dd24c457b83e72eca512553e3622283aef5bc503a0855a6"
+      },
+      "input_cells": 724895,
+      "input_points": 210301,
+      "log_deficit_after": 145.5433914037825,
+      "log_deficit_before": 150.20706233311108,
+      "mass_mapping": "NOT_RUN",
+      "native_admission": false,
+      "native_bad_after": 52,
+      "native_bad_before": 52,
+      "native_steps": 0,
+      "native_thresholds_unchanged": true,
+      "new_steiner_points": 5,
+      "oriented_target_boundary_unchanged": true,
+      "output": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/skin/skin-rebased-partial-quality.npz",
+        "sha256": "8fdd4128d13a9567a330c17c43c4bef0749cd78628d485cbba2a8c5273a04c11"
+      },
+      "output_cells": 724916,
+      "output_points": 210306,
+      "parent_declared_nonpositive": 0,
+      "physical_admission": false,
+      "rebase_rejections": [
+        {
+          "current_bad_after": 1,
+          "current_bad_before": 1,
+          "current_log_deficit_after": 1.3731993408283347,
+          "current_log_deficit_before": 1.3730958309930157,
+          "operation": 5,
+          "reason": "current_coordinates_no_local_lexicographic_progress"
+        },
+        {
+          "operation": 6,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 7,
+          "reason": "current_rebased_cells_not_exact_positive"
+        },
+        {
+          "operation": 8,
+          "reason": "current_rebased_cells_not_exact_positive"
+        }
+      ],
+      "rebase_source_input": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-799-root/round002/trial01/skin-connected-quality-volume-proposal.npz",
+        "sha256": "fb4044b61fbc80dea920f34e71cbc3118abe805cd43e1e286a167dd82abca97e"
+      },
+      "rebase_source_journal": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/report.json",
+        "sha256": "2d6b25746661c9b98b29b5ebc930f1c1262892bca320829d1ec4a9af8133e44c"
+      },
+      "rebase_source_operations": 9,
+      "rebase_source_output": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-806-root/proposal/skin-interior-steiner-quality-proposal.npz",
+        "sha256": "7fca222cd69d5eb501fd705851b1b7d2aecd4865f2c7af5ba05a4fa3d4c9c6af"
+      },
+      "role": "Skin",
+      "state_input_sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811",
+      "status": "PASS_INTERIOR_STEINER_PARTIAL_QUALITY_CONE_BATCH",
+      "strict_native_bad_count_drop": false,
+      "target_boundary_key": "desired_boundary_faces",
+      "topology_compatibility": {
+        "cell_count": 724895,
+        "changed_f32_point_rows": 342,
+        "current_point_count": 210301,
+        "material_rows_equal": true,
+        "old_point_count": 210301,
+        "target_boundary_equal": true,
+        "tetrahedron_rows_equal": true
+      }
+    }
+  ],
+  "role_schedule": [
+    {
+      "budget_policy": "SAVED_OPERATION_REBASE_NO_SOLVER",
+      "budget_seconds": 0.0,
+      "role": "Fat"
+    },
+    {
+      "budget_policy": "SAVED_OPERATION_REBASE_NO_SOLVER",
+      "budget_seconds": 0.0,
+      "role": "Skin"
+    }
+  ],
+  "roles_sorted_by_measured_source_bad_descending": false,
+  "schema": "h706.interior-steiner-adaptive-partial-quality-cone-batch.v1",
+  "source_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/verified-state.json",
+    "sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811"
+  },
+  "status": "PASS_WITH_PARTIAL_NATIVE_DEFECTS",
+  "time_budget_s": 0.0,
+  "topology_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_complete_surface_cavities_218_root.py",
+    "sha256": "81e1128ca6f92693039d9ce53bea62e90b1d99f72bd9b9d997826b7ee2877b9a"
+  }
+}

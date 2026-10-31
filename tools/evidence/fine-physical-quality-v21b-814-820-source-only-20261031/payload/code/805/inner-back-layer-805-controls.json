@@ -1,0 +1,98 @@
+{
+  "status": "PASS_POLICY_CONTROLS",
+  "audit": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_inner_layer_surface_diff_805_root.py",
+    "sha256": "0f41e4114eeb56032d4bb6a6c39484d2e8dd0de52ff977c7211a800273101234"
+  },
+  "tests": [
+    {
+      "case": "I_new_identity",
+      "accepted": true
+    },
+    {
+      "case": "I_old_rejects_core_movement",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "I_new_bounded_core_movement",
+      "accepted": true
+    },
+    {
+      "case": "I_missing_flag_preserves_old_protection",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "I_over_policy_cap_rejected",
+      "accepted": false,
+      "reason": "inner back repair is I/D only with a 50 micrometre maximum"
+    },
+    {
+      "case": "I_nonboolean_flag_rejected",
+      "accepted": false,
+      "reason": "inner back layer flag must be boolean"
+    },
+    {
+      "case": "I_rim_or_route_stays_fixed",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "D_new_identity",
+      "accepted": true
+    },
+    {
+      "case": "D_old_rejects_core_movement",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "D_new_bounded_core_movement",
+      "accepted": true
+    },
+    {
+      "case": "D_missing_flag_preserves_old_protection",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "D_over_policy_cap_rejected",
+      "accepted": false,
+      "reason": "inner back repair is I/D only with a 50 micrometre maximum"
+    },
+    {
+      "case": "D_nonboolean_flag_rejected",
+      "accepted": false,
+      "reason": "inner back layer flag must be boolean"
+    },
+    {
+      "case": "D_rim_or_route_stays_fixed",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "O_new_identity",
+      "accepted": false,
+      "reason": "inner back repair is I/D only with a 50 micrometre maximum"
+    },
+    {
+      "case": "O_old_rejects_core_movement",
+      "accepted": false,
+      "reason": "bounded repair moved back/rim/route"
+    },
+    {
+      "case": "O_new_bounded_core_movement",
+      "accepted": false,
+      "reason": "inner back repair is I/D only with a 50 micrometre maximum"
+    },
+    {
+      "case": "O_rim_or_route_stays_fixed",
+      "accepted": false,
+      "reason": "inner back repair is I/D only with a 50 micrometre maximum"
+    }
+  ],
+  "scope": "point-policy checks only; not geometric or physical qualification",
+  "physical_admission": false,
+  "native_steps": 0
+}

@@ -1,0 +1,923 @@
+{
+  "branch_relationships": [
+    {
+      "name": "v21b-814",
+      "relationship": "two-round source-only exact audit/replay; proposals fail and rollbacks pass",
+      "rounds": 2
+    },
+    {
+      "name": "818-volume-prefix",
+      "relationship": "metadata-only current-source prefix; geometry_changed=false"
+    },
+    {
+      "name": "809-current-source-rebase",
+      "relationship": "rebases saved partial operations onto 818; independently read back"
+    },
+    {
+      "name": "817-external-independent-replay",
+      "relationship": "source-only promotion; score improves without lowering native-bad counts"
+    }
+  ],
+  "external_npz_reference_manifest": {
+    "anatomy_volume_npz_included": false,
+    "geometry_arrays_rehashed": false,
+    "relative_path": "payload/external-npz-pins.json",
+    "sha256": "5f15461066f3bbf7f4e8a5a7faa4c62126efb056ed5f38c34e381382be5a8263",
+    "small_synthetic_fixture_npz_included": false
+  },
+  "failure_classifications": {
+    "810_raw_bone_146": "Exact 805 proposal audit failed; following exact rollback passed; not promoted.",
+    "812_reader": "v21 lineage reader failed; v21b same-role-identity preflight completed successfully.",
+    "814_proposal_rounds": "Both exact proposal audits failed; each rollback passed and is retained.",
+    "819_ancestry_serialization": "IndexError during ancestry serialization before output; retained as failed/no-output."
+  },
+  "files": [
+    {
+      "categories": [
+        "publication_metadata"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/README.md",
+      "sha256": "3a1272a85f653e4fb61e5b98879cd48d0b669ef9322e340e7f0cf5d4a3da7fc0",
+      "size_bytes": 3114
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/805/audit_combined_bounded_inner_layer_surface_diff_805_root.py",
+      "sha256": "0f41e4114eeb56032d4bb6a6c39484d2e8dd0de52ff977c7211a800273101234",
+      "size_bytes": 47582,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_inner_layer_surface_diff_805_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/805/finalize_v7_rollback_805.py",
+      "sha256": "562c778b73d90ddbcf7d7aa511f6f8bbc6d79cd19773bd19151685a499010813",
+      "size_bytes": 10580,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/finalize_v7_rollback_805.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/805/inner-back-layer-805-controls.json",
+      "sha256": "c0eec33342343f430f18094bf151053370879d9b55b4433486910a18f551f1bd",
+      "size_bytes": 2855,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/inner-back-layer-805-controls.json"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/805/prepare_bounded_rollback_625_inner805.py",
+      "sha256": "fe99ede9eff7449e558b7f935d791dee1c3384c5159b2e9d8ef2b10e509ab1d7",
+      "size_bytes": 13364,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/prepare_bounded_rollback_625_inner805.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/805/test_inner_back_layer_805_root.py",
+      "sha256": "79808f608b78bcf0a6a97975cf8f7e889f29325c918bb2479c402450ab458c99",
+      "size_bytes": 3263,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/test_inner_back_layer_805_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/807/audit_combined_bounded_point_surface_diff_775_root.py",
+      "sha256": "82627919f81528c47e8269b37dee25099f6c2d29f3d2d8858000c50a14956a85",
+      "size_bytes": 46642,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_point_surface_diff_775_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/807/finalize_v7_rollback.py",
+      "sha256": "d6e67fae205c52277324a714cf6f80b264e5bdde21adc50d0a018b13085abd7b",
+      "size_bytes": 10580,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/finalize_v7_rollback.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/807/prepare_bounded_rollback_625.py",
+      "sha256": "7833ee7b08f1956f331ca6481bb87a081f062026bb0ef6c46e0ef654be471f7f",
+      "size_bytes": 13364,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/prepare_bounded_rollback_625.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/807/repair_coupled_quality_points_722_witness_v17_rowscaled.py",
+      "sha256": "1ade1a680f93a7fc0b5592e68c50aa44d76d648e2c31f7abd568d38e6feca94a",
+      "size_bytes": 52941,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_witness_v17_rowscaled.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/807/verify_current_source_evidence_807_root.py",
+      "sha256": "9a539227c072936a95b3a9457405521998fb40e5df6139f08d7877fbb49c3f62",
+      "size_bytes": 5676,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_807_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/807/verify_current_source_evidence_807_validation_root.py",
+      "sha256": "4769a77867e10fd86bedfe70b077b5c12eb5b0cf7bde6cec9fbbc84a6bbdb2d1",
+      "size_bytes": 36208,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_807_validation_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/818/finalize_677_target_metadata_625_v2.py",
+      "sha256": "af0333a7832cc136d15c5a24a169d69d041bc1e4bbf6813fd6b31f7740189756",
+      "size_bytes": 25254,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/finalize_677_target_metadata_625_v2.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/818/finalize_709_current_source_volume_metadata.py",
+      "sha256": "02cba640738c0f67bf08fc711c16ddf2f21ecd32a3ed1777507de670eb87005f",
+      "size_bytes": 26119,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/finalize_709_current_source_volume_metadata.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/818/finalize_818_volume_only_current_source_prefix.py",
+      "sha256": "f1b9bd190e93ea97390284eef4595ddc161e93ad3455bb89a75a3fdb2f4216f2",
+      "size_bytes": 27252,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/finalize_818_volume_only_current_source_prefix.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/quality-lp/controls.json",
+      "sha256": "618893a61649bb171159196f132bf5660f06931f53396727d435dec8f05d61e9",
+      "size_bytes": 2441,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/629-quality-lp/controls.json"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/quality-lp/quality_lp_629_v17b_rowscaled_shared_feature_numeric_ulp.py",
+      "sha256": "0f1fb4dd6b3b8a02bf2fdeed16f081cd59285b42106f5daec56b3dd78d43845b",
+      "size_bytes": 66667,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/629-quality-lp/quality_lp_629_v17b_rowscaled_shared_feature_numeric_ulp.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/quality-lp/test_quality_lp_629.py",
+      "sha256": "816336679bf8dcf5799c2512e2c7d6fc0934bb93536da295206feff7a2f7808d",
+      "size_bytes": 2805,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/629-quality-lp/test_quality_lp_629.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/quality-lp/test_quality_lp_629_v15_rowscaled_controls.py",
+      "sha256": "771c6933236fd05eea43e306e1c1aa50d28891e14fe14dbdba790afc3fd7de5b",
+      "size_bytes": 5689,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/629-quality-lp/test_quality_lp_629_v15_rowscaled_controls.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/batch_interior_steiner_partial_quality_795_root.py",
+      "sha256": "4e35df53981c2fedc0f03b268138ebf74378a09e0c55d1f7a64b8e09c813f3bf",
+      "size_bytes": 75062,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/batch_interior_steiner_partial_quality_795_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/independent_promoter_796_795_root.py",
+      "sha256": "320fcbb6f1eb8147c67a27474c4b23100e92bca060122b3dffc37aa851bbcfec",
+      "size_bytes": 41294,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/independent_promoter_796_795_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/independent_promoter_796_807.py",
+      "sha256": "5a6e2df084a097448172171cca05e1b0f6e281d64302c5592987ca9630c1a7ce",
+      "size_bytes": 42194,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-rebase-809-root/independent_promoter_796_807.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/independent_rebase_promoter_817_root.py",
+      "sha256": "ca063bb1f439700fa1288ed8b2f0ee3e018948ecd117c2e27ca2457df90fc9fe",
+      "size_bytes": 15136,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-rebase-809-root/independent_rebase_promoter_817_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/interior_kernel_cone_partial_quality_794.py",
+      "sha256": "aa223d2b1b85d4ddefa1699deaee26be8cea96001b55f662df7388ac7a160495",
+      "size_bytes": 14909,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-kernel-cone-partial-794-root/interior_kernel_cone_partial_quality_794.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/rebase_saved_partial_ops_onto_current_f32_809.py",
+      "sha256": "f81a7bdd6b0b26b7c2a8546b7e879c36774d94f08e09691fbb40de5977fa82a5",
+      "size_bytes": 33705,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-rebase-809-root/rebase_saved_partial_ops_onto_current_f32_809.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/rebase-809/solve_partial_oriented_cavity_milp_684.py",
+      "sha256": "5bca7a54c4bb1642be5153d6553a2ab009bbdd37186b208cc2c57083050a301d",
+      "size_bytes": 10368,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/solve_partial_oriented_cavity_milp_684.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/shared/bounded_point_component_rollback_625.py",
+      "sha256": "6a731dba8635d0129ab08602ba8706aa466924dbfa6ac3a8e60239c14388327f",
+      "size_bytes": 32153,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/bounded_point_component_rollback_625.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/shared/fixed_boundary_volume_flip_198_root.py",
+      "sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+      "size_bytes": 7925,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_flip_198_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/shared/remesh_complete_surface_cavities_218_root.py",
+      "sha256": "81e1128ca6f92693039d9ce53bea62e90b1d99f72bd9b9d997826b7ee2877b9a",
+      "size_bytes": 16531,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_complete_surface_cavities_218_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/shared/run_fixed_boundary_dp_batch_197.py",
+      "sha256": "d4fcc4a2693201f7ad3934b62b277a65e6f021a6662182f4ab67e85db4d96c15",
+      "size_bytes": 30661,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/run_fixed_boundary_dp_batch_197.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/shared/transfer_surface_contractions_cross_tissue_470_root.py",
+      "sha256": "e0c0b5ff0f70966431b920f2cb3e469c0bf1d54518068d7ce6e561e5ba16b2e3",
+      "size_bytes": 8966,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/transfer_surface_contractions_cross_tissue_470_root.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/v21b/continue_coupled_quality_inner_back_v21b_same_role_identity.py",
+      "sha256": "a18494ec2daf9568dc857ec9ff125aea2cae09092be4db7e077e33e5dcc805f8",
+      "size_bytes": 46120,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_inner_back_v21b_same_role_identity.py"
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/code/v21b/repair_coupled_quality_points_722_inner_back_v21b_same_role_identity.py",
+      "sha256": "65d51b5dbd5d77d4f9eccd45aedc9a9e5cf5ef97cafb7f71a5b67e429aec78ee",
+      "size_bytes": 65761,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_inner_back_v21b_same_role_identity.py"
+    },
+    {
+      "categories": [
+        "publication_metadata"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/external-npz-pins.json",
+      "sha256": "5f15461066f3bbf7f4e8a5a7faa4c62126efb056ed5f38c34e381382be5a8263",
+      "size_bytes": 101503
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/722-receipt.json",
+      "sha256": "25b2467c37efcaf6acabb8196e215448c4e16e0f810208a357c8ed4d980b1eea",
+      "size_bytes": 20302,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/722-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-01/independent-point-replay.json",
+      "sha256": "7068553c72a9212d3718236e59bd25bb244464443456c20e7637de6e5f620cd6",
+      "size_bytes": 5626,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-01/independent-point-replay.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-01/proposal-exact-630/report.json",
+      "sha256": "4c1f675fb020e06e4ac9411fc21e3657b4d02434533039263900777f3809d6f8",
+      "size_bytes": 132410,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-01/proposal-exact-630/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-01/round-receipt.json",
+      "sha256": "7095b9a0333d2a5556e967aeff475b45cba5e492ba858caa172f6927c386397f",
+      "size_bytes": 5683,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-01/round-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-01/verified-state.json",
+      "sha256": "553255522ac1b28bc5f0eb06b536bed9b5cbb25d662b3ae653794010885ba1c6",
+      "size_bytes": 117342,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-01/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-02/independent-point-replay.json",
+      "sha256": "3ca8292209650931532d1e075c72352bb5887df138e02eab4115f5b8b994554e",
+      "size_bytes": 5623,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-02/independent-point-replay.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-02/proposal-exact-630/report.json",
+      "sha256": "37b0559186e8acbe4ef564425899b4bdef87646245837b9aa4fc9fe6a22a16bd",
+      "size_bytes": 113330,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-02/proposal-exact-630/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-02/round-receipt.json",
+      "sha256": "e65b8b08a1df169f89b54bda1f8506c7099964212b7170f2fc93aab6a13778a6",
+      "size_bytes": 5675,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-02/round-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/807/round-02/verified-state.json",
+      "sha256": "05f4c00d60a4e00b6ba847fb20eaf20116f2d9f4c184c2f4c74012ec6b932349",
+      "size_bytes": 117349,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-807-root/round-02/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/809/fat-independent-readback.json",
+      "sha256": "848c49cc1d091b15d717e1312b1a71ffc90401158d8cfacccc16a03d15079cb0",
+      "size_bytes": 1466,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/fat/fat-independent-rebase-readback.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/809/rebase-report.json",
+      "sha256": "4259106a3fe19cffbc057b14799763a4c95805f086a889b35edcadd8e2bc971e",
+      "size_bytes": 52717,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/809/rebase-state.json",
+      "sha256": "482be12e1b5d07f0171ec0a72fb478c52610ed75186b3a029d07748ea5cb4670",
+      "size_bytes": 170653,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/809/skin-independent-readback.json",
+      "sha256": "624d9620166c12837f13fee60389ca13942dc11c02d6e559ce00e88893974fa2",
+      "size_bytes": 2620,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/rebase-809/skin/skin-independent-rebase-readback.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/proposal-audit.command.json",
+      "sha256": "7e870d4f7f0180d8f4e31f1f71481e1cb86167c2f4b89ae4667de24df01b67e7",
+      "size_bytes": 738,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/proposal-audit-logs/audit805.command.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/proposal-audit.stdout.log",
+      "sha256": "d58347d3af99edc4af4d03063eb7b462a7b19fac8bdcff0abe009122ca6f1d3e",
+      "size_bytes": 2101,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/proposal-audit-logs/audit805.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/proposal-exact-805/report.json",
+      "sha256": "e9c8b9816a4072d4d9e3f5fe414044d872a55efe9f5f7f0004183cc2450d3884",
+      "size_bytes": 106755,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/proposal-exact-805/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/rollback-audit.command.json",
+      "sha256": "918471387c42566da75db98043aa8bcf5f99c95f3cefe4ed13e1fddf3b3776a5",
+      "size_bytes": 756,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/rollback-audit-logs/audit805.command.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/rollback-audit.stdout.log",
+      "sha256": "4b7d55f00e6945766be44a88da1657839e5cdc40047260d4d092a587daf548ca",
+      "size_bytes": 2116,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/rollback-audit-logs/audit805.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/rollback-exact-805/report.json",
+      "sha256": "a19f460ee599bb4e400d71f2075e402bf09d57c2fca0a52995d55830d93388d6",
+      "size_bytes": 96874,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/rollback-exact-805/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/round-receipt.json",
+      "sha256": "e1b9df7aaf4b2c01a1af79f677bae126a1a832428c3254da1dba01a300a49491",
+      "size_bytes": 6662,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/round-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/810/round-01/verified-state.json",
+      "sha256": "d960d66f8e2076d41e3188f679cce68620f13348c807f1ab8cb181fecc43ef4a",
+      "size_bytes": 125101,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-810-root/round-01/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/812/v21-reader-failure.stderr.log",
+      "sha256": "79a11747e41ea8f2d633833f78bfa41e6d17a4e75de5b5694ded7788c53dec60",
+      "size_bytes": 2326,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-812-root/v21-identity-reader-preflight-001.stderr.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/812/v21b-reader-success.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-812-root/v21b-identity-reader-preflight-001.stderr.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/812/v21b-reader-success.stdout.log",
+      "sha256": "c824009c38f4c06bb53a6d2ff6af658f14548af94b90afcb565f315735b266f1",
+      "size_bytes": 95174,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-812-root/v21b-identity-reader-preflight-001.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/722-receipt.json",
+      "sha256": "417f1e197e8a58dddbb25999f90e8d113b849b0175b58bce432da2cf0e56bd48",
+      "size_bytes": 24255,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/722-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/independent-point-replay.json",
+      "sha256": "ed1ad80f3cafdbf6c0cd4df61830701afc27077dfa2d82c7a22b5835260354cf",
+      "size_bytes": 6283,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/independent-point-replay.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/proposal-audit.command.json",
+      "sha256": "1068d2ccff8db18ab44ff98bbe14f43b19288acae0151f873dd95919939fe771",
+      "size_bytes": 738,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/proposal-audit-logs/audit805.command.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/proposal-audit.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/proposal-audit-logs/audit805.stderr.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/proposal-audit.stdout.log",
+      "sha256": "33891492adf0d49d33d3b8b997ee69290f2c36140990375b09f828d26190a599",
+      "size_bytes": 2099,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/proposal-audit-logs/audit805.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/proposal-exact-805/report.json",
+      "sha256": "315d5f313ec2ef8c271dd8c1af06ed0dc2390ec606525b4e47de37f7e0cc5fe3",
+      "size_bytes": 92453,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/proposal-exact-805/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback-audit.command.json",
+      "sha256": "3e43aab6300cf261159e1985b0c1faac80ac2a4f275c3d321482b092f451bbcb",
+      "size_bytes": 756,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/rollback-audit-logs/audit805.command.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback-audit.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/rollback-audit-logs/audit805.stderr.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback-audit.stdout.log",
+      "sha256": "bb5a4c2171f89cc218c4b5721444b481051b274a1dd45f834af480389468853d",
+      "size_bytes": 2116,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/rollback-audit-logs/audit805.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback-exact-805/report.json",
+      "sha256": "37e2d124a6e47924ed6d65ab536e3329ab7b6ba7f9aadd16ae7556902d3a10c7",
+      "size_bytes": 85004,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/rollback-exact-805/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback/preparation-receipt.json",
+      "sha256": "c6c2c0c2f732869bb939b41bfae618e2d983473d1121cd2923fe2e4a20d788d3",
+      "size_bytes": 5961,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/rollback-preparation-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback/rollback-plan.json",
+      "sha256": "8d39a791407e4f23c204fdb49bd575578bddee438eabf2322bdee877abd0fa71",
+      "size_bytes": 25411,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/rollback-plan.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/rollback/state.json",
+      "sha256": "ec6c4b80532415a16dfe5af90bc7af3b0a3ee8a17520da2a0bd083942a758754",
+      "size_bytes": 145913,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/witness-component-rollback/state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/round-receipt.json",
+      "sha256": "73728b62ac5af51dcb3769499f774e6114424aea2b994d6bccdcee4f9af0493f",
+      "size_bytes": 6958,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/round-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-01/verified-state.json",
+      "sha256": "54ae12ebcb62cb6f65313c1fd46e62ab82a88e8fe3c6d35fba946bd6b7075b65",
+      "size_bytes": 146143,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-01/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/independent-point-replay.json",
+      "sha256": "8ed8213d1645e0428540e6a548cd5703ff4432ff2a3776cf736ef90f7af16295",
+      "size_bytes": 6278,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/independent-point-replay.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/proposal-audit.command.json",
+      "sha256": "342a20d9e7dbbcccbd415db4d48cd73815f242ace7cf9abecffa3a331f8f5184",
+      "size_bytes": 738,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/proposal-audit-logs/audit805.command.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/proposal-audit.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/proposal-audit-logs/audit805.stderr.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/proposal-audit.stdout.log",
+      "sha256": "74d0578a632dcc9ea42668ff1f66122c34fd8a9a65c82d8cb7a0edee38646a3b",
+      "size_bytes": 2098,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/proposal-audit-logs/audit805.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/proposal-exact-805/report.json",
+      "sha256": "f7de13f725d4ccd8e912095b1d36e0a57cf3f926b44740f0a277950e60e1fe23",
+      "size_bytes": 88356,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/proposal-exact-805/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback-audit.command.json",
+      "sha256": "74e386f4d6c7d7fe63d19753ac432f3b4f1b8d39b31418e0b189382ef49343fb",
+      "size_bytes": 756,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/rollback-audit-logs/audit805.command.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback-audit.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/rollback-audit-logs/audit805.stderr.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback-audit.stdout.log",
+      "sha256": "a0f16f37ccef749c4b9710ea60c1af052ce0e95d9840f03080cfcdda9ce2d5f6",
+      "size_bytes": 2116,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/rollback-audit-logs/audit805.stdout.log"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback-exact-805/report.json",
+      "sha256": "b3428c78e3f8614b92886ab94e80af6c94ee4d2557f76c6ca47657d69f18810a",
+      "size_bytes": 86468,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/rollback-exact-805/report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback/preparation-receipt.json",
+      "sha256": "2cfedb65f35cb48f07207cc8d557c64018740f0ce6c979a23e8c38d8e45b8a1a",
+      "size_bytes": 5960,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/rollback-preparation-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback/rollback-plan.json",
+      "sha256": "289f4f4ac54aa267d56dc61c77a5e19a517ba94c8761da4699fbfe56a96b84bd",
+      "size_bytes": 6635,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/rollback-plan.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/rollback/state.json",
+      "sha256": "3a5e70101c03f35c39434741dcca01fa457d37b3ff7a249690236d52b60de1c7",
+      "size_bytes": 154738,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/round-receipt.json",
+      "sha256": "4e0bdd15e8b5f110833a509126754e9499605a5f9ef3fb31145c991543a63765",
+      "size_bytes": 7252,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/round-receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/814/round-02/verified-state.json",
+      "sha256": "04d131a82a12ea161abf57b7213a2973488dd1cb87c2df4ad0d3cb5205fd1518",
+      "size_bytes": 154968,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/817/promotion-receipt.json",
+      "sha256": "7800872d95336ef587401a1f7528f9cdcfafe248fd7f98105afb216f59edf337",
+      "size_bytes": 18035,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/promoted-817/receipt.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/817/verified-state.json",
+      "sha256": "121926b5aa7bd16f74ecb143d16947bf514ed0a2504f737569f66ad13f23e95e",
+      "size_bytes": 188001,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/promoted-817/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/818/verified-state.json",
+      "sha256": "26881e0554484452f9d6f0cbcde65551950ff2288aefc77af8015179d766e811",
+      "size_bytes": 170568,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/verified-state.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/818/volume-prefix-818-report.json",
+      "sha256": "940676138f3485df4767c58d69e44c4d352a2377c88924db4945bcb9e48d03b8",
+      "size_bytes": 14461,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-820-root/volume-prefix-818/volume-prefix-818-report.json"
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/reports/819/serialization-failure.log",
+      "sha256": "4b989c85bb19142f1f9224c1a8eb257b76a4ba2e92f5ca16c148aefbb1231b5f",
+      "size_bytes": 2607,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-819-root.log"
+    },
+    {
+      "categories": [
+        "publication_metadata"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/payload/source-only-result.json",
+      "sha256": "3515e3e3a4d25aed3e035f8679cb1ce4d55cf04b47d814c404824a3d6d0e7a51",
+      "size_bytes": 1704
+    }
+  ],
+  "mass_mapping": "NOT_RUN; per-material volume reconciliation pending",
+  "native_steps": 0,
+  "physical_admission": false,
+  "publication_checks": {
+    "endpoint_status_assertions": "PASS",
+    "listed_files": 93,
+    "manifest_file_sha256_and_size_verified": 93,
+    "npz_geometry_payloads_included": 0,
+    "python_source_compile_check": "PASS_WITHOUT_IMPORT_OR_EXECUTION",
+    "python_source_count": 30
+  },
+  "qualification_scope": "Source-only exact surface/volume evidence and independent replay. Not physical qualification; no native steps; mass reconciliation pending. Inner-back D/I geometry is reconstructed up to 50 micrometres; outer-back O points remain fixed.",
+  "quality_summary": {
+    "814_round_1": {
+      "fat_native_quality_failures": 212,
+      "proposal_805": "FAIL_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "rollback_805": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "skin_native_quality_failures": 52,
+      "surface_crossings": 0
+    },
+    "814_round_2": {
+      "fat_native_quality_failures": 210,
+      "proposal_805": "FAIL_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "rollback_805": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "skin_native_quality_failures": 52,
+      "surface_crossings": 0
+    },
+    "817_promotion": {
+      "fat_native_quality_failures_after": 210,
+      "fat_native_quality_failures_before": 210,
+      "fat_new_steiner_points": 2,
+      "skin_native_quality_failures_after": 52,
+      "skin_native_quality_failures_before": 52,
+      "skin_new_steiner_points": 5,
+      "status": "PASS_EXTERNAL_INDEPENDENT_REPLAY",
+      "strict_quality_lexicographic_progress": true,
+      "surface_crossings": 0
+    },
+    "820_endpoint": {
+      "fat_native_quality_failures": 210,
+      "native_steps": 0,
+      "physical_admission": false,
+      "skin_native_quality_failures": 52,
+      "status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+      "surface_crossings": 0
+    }
+  },
+  "status": "SOURCE_ONLY_NOT_QUALIFIED",
+  "upstream_publication": {
+    "manifest_path": "tools/evidence/fine-physical-quality-v17-795-799-806-source-only-20261031/manifest.json",
+    "manifest_sha256": "a22909bbeec0b09a82afd47482d9ab4b0dce7df65d5ba9302ec6c4b7ca034142",
+    "note": "Shared prior v17 source and solver dependencies remain in the previously published increment; no prior evidence is rewritten."
+  }
+}

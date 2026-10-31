@@ -1,0 +1,78 @@
+{
+  "controls": [
+    "analytic_det6_gradient_finite_difference",
+    "thin_bad_cell_repaired_Float32",
+    "good_cell_inequality_prevents_regression",
+    "shared_material_point_uses_one_global_variable",
+    "protected_rows_bitwise_unchanged",
+    "topology_and_material_rows_unchanged",
+    "exact_Float32_positive_determinants",
+    "empty_free_mask_fails_closed"
+  ],
+  "determinants_after": [
+    2.831255458966668e-11,
+    2.6999725376518563e-05
+  ],
+  "determinants_before": [
+    9.999999492190461e-13,
+    2.6999971189510333e-05
+  ],
+  "materials": [
+    15,
+    16
+  ],
+  "native_steps": 0,
+  "normalized_determinants_after": [
+    1.0010000342756623e-05,
+    0.35354981822422865
+  ],
+  "normalized_determinants_before": [
+    3.535533963470975e-07,
+    0.3535530370398775
+  ],
+  "physical_admission": false,
+  "proposal": {
+    "accepted_backtrack_alpha": 1.0,
+    "affected_cells": 2,
+    "all_affected_good_and_bad_rows_constrained": true,
+    "analytic_lp_reference_sha256": "5d6e7a22c49ec907a881e01d76118877f67cc95f2bb7c5302a09ee2e26469687",
+    "bad_after": 0,
+    "bad_before": 1,
+    "bad_score_after": 0.0,
+    "bad_score_before": 0.9646446603652903,
+    "candidate_is_construction_proposal_only": true,
+    "exact_F32_positive_cells": 2,
+    "free_nodes_used": 1,
+    "frozen_input_longest_edge_target": true,
+    "good_after": 2,
+    "good_before": 1,
+    "good_cell_regressions": 0,
+    "linear_bad_slack_sum": 0.0,
+    "linear_constraint_nnz": 22,
+    "linear_constraint_rows": 9,
+    "linear_margin": 0.001,
+    "material_cell_counts": {
+      "15": 1,
+      "16": 1
+    },
+    "max_free_node_l1_displacement_bound_m": 2e-05,
+    "max_free_node_l1_displacement_m": 2.731255586141401e-07,
+    "native_steps": 0,
+    "physical_admission": false,
+    "point_rows_changed": [
+      3
+    ],
+    "quality_owner_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+    "shared_global_point_rows_are_single_variables": true,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "solver_objective": 0.01365627744597595,
+    "solver_status": 0,
+    "status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+    "strict_quality_progress": true,
+    "topology_unchanged": true,
+    "trust_cap_m": 2e-05,
+    "trust_norm": "per-node L1 displacement"
+  },
+  "schema": "numi.human.coupled-quality-lp-629-controls.v1",
+  "status": "PASS_SMALL_COUPLED_FIXED_TOPOLOGY_CONTROLS"
+}

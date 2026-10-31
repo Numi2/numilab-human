@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py", line 244, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py", line 230, in main
+    result = G.run_verified_state(a.state, a.output, move_cap_m=a.move_cap_m,
+        max_operations=a.max_operations, time_limit_s=a.seconds,
+        max_edge_length_m=a.max_edge_length_m, max_edges=a.max_edges)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_782.py", line 320, in run_verified_state
+    report = M.run_from_config(cfgpath, proposal)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py", line 88, in _run_from_config_783
+    report = _BASE_RUN_FROM_CONFIG(config_path, out_dir, edges_override=edges_override,
+                                   prune_receipt=prune_receipt)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py", line 506, in run_from_config
+    report=run_batch(x["surface"],x["volumes"],use_edges,
+        protected_surface_rows=x["protected"],route_anchor_rows=x["routes"],
+        move_cap_m=float(x["cfg"].get("move_cap_m",.0005)),
+        max_operations=int(x["cfg"].get("max_operations",32)),
+        time_limit_s=float(x["cfg"].get("time_limit_s",90)),output_dir=out)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py", line 362, in run_batch
+    typed=typed_source_output(surface,accepted,sp,sfout,fparents)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py", line 325, in typed_source_output
+    for j,k in enumerate(A.T):data[k]=np.asarray([u[j] for u in unions],np.int64)
+                                                  ~^^^
+IndexError: list index out of range
