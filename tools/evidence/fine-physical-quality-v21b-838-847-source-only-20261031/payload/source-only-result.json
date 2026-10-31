@@ -1,0 +1,50 @@
+{
+  "arrays_included": 0,
+  "checks": {
+    "exact_805_rollback": "PASS_EXISTING_805_ROLLBACK_AND_INDEPENDENT_REPLAY",
+    "independent_point_replay": "PASS_INDEPENDENT_POINT_F32_MAP_BOUNDARY_DUPLICATE_NATIVE_QUALITY_REPLAY",
+    "source_audit": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY"
+  },
+  "endpoint": "all-quality-847-root/round-01/v24d-preflight-only/verified-state.json",
+  "endpoint_sha256": "e24ecae28ba963fa6135273f8c95a3badcea4440cb43b66c6854fc9426f6d7cf",
+  "external_npz_reference_count": 1921,
+  "failure_classifications": {
+    "840": "NO_VALID_BOUNDED_PROGRESS; no candidate advanced the verified state.",
+    "845": "NO_VALID_COUPLED_ANCHOR_COLLAPSE with accepted_operations=0 (I_NO_OP).",
+    "846_round_01": "source audit and independent point replay passed at 38/177; not the endpoint.",
+    "846_round_02": "retained builder failure from scalar NPZ indexing; the v23d scalar control is separate and passing.",
+    "847_source_getter": "retained v24 source-getter failure, KeyError points_world_m.",
+    "847_v24c": "retained missing-helper failure: rollback preparation receipt is missing helper.",
+    "848_replay": "retained failure: KeyError surface_full_endpoint_face_rows.",
+    "849_prepare": "retained failure: 806 source proof does not show a fixed outer O surface."
+  },
+  "follow_up_not_in_endpoint": [
+    "848 candidate: independent replay failed with KeyError surface_full_endpoint_face_rows; source audit does not establish admission.",
+    "849 preparation rejected the old fixed-O source proof; it is not a promoted state.",
+    "Later work is outside this frozen publication."
+  ],
+  "origin_revision": "285d23c7002f817723054dd46ba9fd1544229d88",
+  "python_source_compile": "PASS_BUILTIN_COMPILE_NO_IMPORT_OR_EXECUTION",
+  "python_source_count": 10,
+  "qualification_limits": {
+    "boundary_source_binding": "PENDING_CANONICAL_REBIND",
+    "mass_mapping": "PENDING",
+    "mass_reconciliation": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+    "native_steps": 0,
+    "per_material_canonical_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+    "physical_admission": false,
+    "typed_217_admission": "PENDING_EXPLICIT_ADAPTER"
+  },
+  "quality_summary": {
+    "fat_source_quality_failures": 176,
+    "nonpositive_cells": {
+      "fat": 0,
+      "skin": 0
+    },
+    "skin_source_quality_failures": 38,
+    "surface_crossings": 0
+  },
+  "schema": "numi.fine-physical-quality-source-only-publication.v1",
+  "status": "SOURCE_ONLY_NOT_QUALIFIED",
+  "transparent_folder_label_note": "The independent replay is present and passing in the v24d-preflight-only directory; the directory label is retained verbatim. This remains source-only."
+}

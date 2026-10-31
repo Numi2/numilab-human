@@ -1,0 +1,150 @@
+{
+  "acceptance_contract": {
+    "149_routes_fixed": true,
+    "775_not_used_as_final_source_audit": true,
+    "805_audit_required": true,
+    "D_source_unchanged_in_this_increment": true,
+    "I_rim_fixed": true,
+    "O_source_unchanged": true,
+    "all_native_and_exact_positive": true,
+    "all_other_I_anchor_step_cap_m": 5e-05,
+    "anchor_step_cap_m": 5e-05,
+    "cumulative_back_I_anchor_cap_from_current_state_m": 5e-05,
+    "exact_paired_volume_delta_integer": "0",
+    "full_keep_and_drop_stars": true,
+    "local_volume_budget_fraction": 0.01,
+    "regional_volume_budget_fraction": 0.0001
+  },
+  "candidate_solver": "NOT_STARTED",
+  "current_inner_back_policy": {
+    "authenticated_I_rows": 790,
+    "candidate_I_anchor_step_cap_from_current_state_m": 5e-05,
+    "current_D_max_back_displacement_m": 0.0,
+    "current_I_max_back_displacement_m": 0.0,
+    "eligible_as_collapse_endpoints": true,
+    "endpoint_policy": "eligible except true current rim, registered route, complete-star/link, paired-volume, and exact-context guards",
+    "reference": "exact current verified-state source arrays; no historical movement cap reused",
+    "rows_candidate_eligible": true
+  },
+  "current_surface_pins": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-D-typed-current.npz",
+      "sha256": "e8ff5a9bc07eb08eb59efca2ecc7d56bacd38b637970a7219be85763aa4dfa02"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/candidate-I-typed-current.npz",
+      "sha256": "e2c6bc1a724d35b31eb05408aa2ee146f499e16dfe47c2655185c595cc9e93dd"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-O-typed-current.npz",
+      "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+    }
+  },
+  "current_volume_inputs": {
+    "Fat": {
+      "cells": 770657,
+      "face_referenced_surface_rows": 118216,
+      "native_bad": 182,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+      "sha256": "7d5323cd01bf10ac00c22bcb5f66e38aff19e09f165eac356bacbb3d719231e8"
+    },
+    "Skin": {
+      "cells": 724910,
+      "face_referenced_surface_rows": 118216,
+      "native_bad": 40,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+      "sha256": "251cb1d30437dcdc4cc66daea160f794b1c7900a0bfddfefb84e80bf1866c95e"
+    }
+  },
+  "edge_roster": {
+    "bad_incident_before_length_and_star_protection": 64,
+    "edge_length_cap_m": 0.005,
+    "edge_path": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/candidate-I-edges.npz",
+      "sha256": "9edd60677bc5bf8866617e974071b6bc810aeb44ffd90733a5ac5c0e0b6acc9e"
+    },
+    "eligible_after_route_rim_fullstar_protection": 64,
+    "eligible_edges_touching_inner_back_rows": 39,
+    "eligible_orientations": 128,
+    "inner_back_keep_orientation_mean_remaining_headroom_m": 5.000000000000002e-05,
+    "inner_back_orientations": 78,
+    "interior_edges": 354618
+  },
+  "inner_layer_topology_repair": {
+    "149_routes_fixed": true,
+    "D_unchanged_this_increment": true,
+    "actual_I_rim_fixed": true,
+    "all_other_I_anchor_step_cap_m": 5e-05,
+    "authenticated_805_source_audit_required": true,
+    "back_rows_candidate_eligible": true,
+    "back_rows_count": 790,
+    "enabled": true,
+    "maximum_cumulative_back_displacement_from_current_state_m": 5e-05,
+    "maximum_step_displacement_m": 5e-05,
+    "outer_O_fixed": true,
+    "role": "I"
+  },
+  "mass_reconciliation": "PENDING",
+  "native_steps": 0,
+  "physical_admission": false,
+  "prior_current_exact_context": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-837-root/proposal-exact-805/report.json",
+    "sha256": "40ee5d38236303cf1506a8f3ff097ea05b750731c9122a3f32a89d9ef2527b4f",
+    "status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185"
+  },
+  "producer_787": {
+    "parent_786": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+      "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+    "preflight_helper_784": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_784.py",
+      "sha256": "09c12fc697c7fe2151fe02d24abf07dc469426a67a9e8a2e11827bdcb47da5fc"
+    },
+    "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a",
+    "source_transform": "remove prior-all-I 805-cap check; retain current-back-row cumulative check"
+  },
+  "protected_surface_rows": {
+    "back_rows_in_protected_union": 0,
+    "route_anchors": 45,
+    "source_rim_vertices": 45,
+    "union_count": 45
+  },
+  "protection_input": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/protected-I-rows.npz",
+    "sha256": "e81b164436be17ddc2145fadcec9fd591d37015332c6a814c7d66c58bbe1e6c0"
+  },
+  "read_only_config_load": {
+    "Fat_cell_count": 770657,
+    "Skin_cell_count": 724910,
+    "candidate_orientation_count": 128,
+    "config_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/run-config.json",
+    "config_sha256": "7b659bed99a8e7445b8c30d37cdd66a7fa25ee0f99a4f9cae90abeca92b71fb9",
+    "solver_invoked": false,
+    "status": "PASS_READ_ONLY_781_CONFIG_LOAD",
+    "surface_I_face_count": 236427,
+    "surface_I_point_count": 125368
+  },
+  "required_independent_replay_789": {
+    "complete_typed_union_and_face_ancestry_checks": true,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_replay_789_root.py",
+    "required_before_candidate_acceptance": true,
+    "sha256": "5fcefd6745b09754e6414bfd1d86a364b76fcfd8946fb077d8636ac5c1663052"
+  },
+  "run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/run-config.json",
+    "sha256": "7b659bed99a8e7445b8c30d37cdd66a7fa25ee0f99a4f9cae90abeca92b71fb9"
+  },
+  "schema": "h706.coupled-anchor-collapse-inner-layer-preparation.v2",
+  "source_807": {
+    "mode": "AUDITED_BOUNDED_INNER_BACK_LAYER_MOVEMENT_630_805",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-837-root/quality-working-state.json",
+    "sha256": "49340792748c5f18c34373be9252faa477e60520b99d8bdf2264f7da2aca4533"
+  },
+  "state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-837-root/quality-working-state.json",
+    "sha256": "49340792748c5f18c34373be9252faa477e60520b99d8bdf2264f7da2aca4533"
+  },
+  "status": "PASS_PREFLIGHT_ONLY_NO_SOLVER"
+}

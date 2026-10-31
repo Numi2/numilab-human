@@ -1,0 +1,132 @@
+{
+  "accepted_operations": 0,
+  "base_operation_engine": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb"
+  },
+  "candidate_edge_count": 110,
+  "current_typed_parent_owner": {
+    "base": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+      "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_791_current_parent_root.py",
+    "policy": "only immediate typed-parent path/hash rebound to hash-authenticated actual run input; complete source CSR and geometry unchanged",
+    "sha256": "5d8b00a3ca57bbcb0c53ad1b92c78c97cb3ade5da441d3b5d71a7c3dfdb6fd76"
+  },
+  "effective_candidate_edges": {
+    "count": 110,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-845-root/proposal/effective-candidate-edges.npy",
+    "sha256": "9331aa68675abf06c39695c3e791b85f84af1e9c4baf4de4b915b48ee4267363"
+  },
+  "inner_layer_topology_repair": {
+    "149_routes_fixed": true,
+    "D_unchanged_this_increment": true,
+    "actual_I_rim_fixed": true,
+    "all_other_I_anchor_step_cap_m": 5e-05,
+    "authenticated_805_source_audit_required": true,
+    "back_rows_candidate_eligible": true,
+    "back_rows_count": 790,
+    "enabled": true,
+    "maximum_cumulative_back_displacement_from_current_state_m": 5e-05,
+    "maximum_step_displacement_m": 5e-05,
+    "outer_O_fixed": true,
+    "role": "I"
+  },
+  "operation_prepare_override": {
+    "final_gates": [
+      "F32 positive",
+      "native q and minimum volume",
+      "exact positive",
+      "exact paired volume",
+      "source normal/apex",
+      "complete boundary",
+      "775 all185",
+      "actual 697/217"
+    ],
+    "frozen_engine_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "frozen_engine_sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb",
+    "frozen_wrapper_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_782.py",
+    "frozen_wrapper_sha256": "f23abf417b9fd1ce017837c32912e7d17a3a485cf941f0230d403faf67524b23",
+    "native_steps": 0,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py",
+    "physical_admission": false,
+    "removed_source_line": "if np.any(measurements(v[\"p\"],ordered)[0]<=0):return {\"status\":\"REJECT_ORIENTATION\",\"role\":role}",
+    "sha256": "b78358fccf208a12a24b229608c10c231817a8f8c15e4e4c0da45f9352585841",
+    "source_guard_occurrences": 1,
+    "source_transform": "defer_only_pre_fit_endpoint_orientation_rejection",
+    "tet_order_policy": "unchanged signed order; no swaps or absolute determinants"
+  },
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "producer_787": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+    "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a"
+  },
+  "protected_surface_row_count": 45,
+  "rejections": {
+    "REJECT_ANCHOR_FIT": 81,
+    "REJECT_SOURCE_NORMAL": 9,
+    "REJECT_SURFACE_LINK": 6,
+    "REJECT_VOLUME_LINK": 14
+  },
+  "route_anchor_row_count": 45,
+  "run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-845-root/inputs/run-config.json",
+    "sha256": "c21ce18d12c3b85214c2d23e879eaf123b4e111529dce7727202750847e0d2ac"
+  },
+  "serialization_fix_785": {
+    "after": "for j,k in enumerate(A.T):data[k]=np.asarray([u[0][j] for u in unions],np.int64)",
+    "before": "for j,k in enumerate(A.T):data[k]=np.asarray([u[j] for u in unions],np.int64)",
+    "journal": null,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "representative_rule": "first tuple of sorted complete 7-lane face union; all union/ancestry CSR retained",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "source_inputs": {
+    "baseline_surfaces": {
+      "D": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-D-typed-current.npz",
+        "sha256": "e8ff5a9bc07eb08eb59efca2ecc7d56bacd38b637970a7219be85763aa4dfa02"
+      },
+      "I": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-843-root/proposal/candidate-I-typed-current.npz",
+        "sha256": "b1e8fe5631a312cd1e4f6a64de646bc839780427e6f0ac4ac69de13e89a03353"
+      },
+      "O": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-O-typed-current.npz",
+        "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+      }
+    },
+    "candidate_edges": {
+      "key": "candidate_edges",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-845-root/inputs/candidate-I-edges.npz",
+      "sha256": "23863c50863bd5053ed29469922491b2660b1c33d126ddfa6a62fd4dda487404"
+    },
+    "surface_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-843-root/proposal/candidate-I-typed-current.npz",
+      "sha256": "b1e8fe5631a312cd1e4f6a64de646bc839780427e6f0ac4ac69de13e89a03353"
+    },
+    "volumes": {
+      "Fat": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 770606,
+        "native_quality_failures": 177,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-843-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+        "sha256": "93b1f3818a3867062f0aed24b5c37e7484d36d3c30a31f3ab188bc4c6289af54"
+      },
+      "Skin": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 724892,
+        "native_quality_failures": 38,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-843-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+        "sha256": "ed7e95d34562d2907652480077f91634177ff373210e325372543c43095afd9d"
+      }
+    }
+  },
+  "status": "NO_VALID_COUPLED_ANCHOR_COLLAPSE"
+}

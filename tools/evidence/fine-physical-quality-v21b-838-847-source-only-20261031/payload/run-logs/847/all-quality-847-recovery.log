@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24c_ordinary_outer_o_local.py", line 1163, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24c_ordinary_outer_o_local.py", line 986, in main
+    replay_existing_rollback(args.state,args.replay_existing_proposal_state,
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.replay_existing_proposal_config,args.replay_existing_proposal_audit,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.replay_existing_rollback_state,args.replay_existing_rollback_config,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.replay_existing_rollback_plan,args.replay_existing_rollback_receipt,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.replay_existing_rollback_audit,args.output)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24c_ordinary_outer_o_local.py", line 907, in replay_existing_rollback
+    _require_receipt_pin(prep["inputs"] if key in ("source_baseline_state","state","config","failed_805_audit") else prep,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         key,path)
+                         ^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24c_ordinary_outer_o_local.py", line 845, in _require_receipt_pin
+    raise ValueError("rollback preparation receipt is missing "+key)
+ValueError: rollback preparation receipt is missing helper

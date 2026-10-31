@@ -1,0 +1,307 @@
+{
+  "journal_npz": {
+    "array_count": 39,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/accepted-operations-pre-serialization.npz",
+    "sha256": "373982214456729eb740ec1e19dd742076f6850b16cd2725a781a631d2c963f6"
+  },
+  "native_steps": 0,
+  "operation_count": 2,
+  "operations": [
+    {
+      "anchor_f32": [
+        0.11539729684591293,
+        -0.3115784525871277,
+        0.12392962723970413
+      ],
+      "drop": 66729,
+      "exact_paired_delta": "0",
+      "fit": {
+        "all185_775": "REQUIRED_NOT_RUN",
+        "anchor_displacement_m": 1.4371692956445902e-05,
+        "anchor_point_f32": [
+          0.11539729684591293,
+          -0.3115784525871277,
+          0.12392962723970413
+        ],
+        "anchor_point_world_m": [
+          0.11539729684591293,
+          -0.3115784525871277,
+          0.12392962723970413
+        ],
+        "construction_q_margin_multiplier": 1.01,
+        "continuous_anchor_world_m": [
+          0.11539731057381213,
+          -0.31157840094668876,
+          0.12392963888482862
+        ],
+        "continuous_common_slack_m": 8.621889349720531e-05,
+        "exact_paired_volume_delta_integer": "0",
+        "exact_volume_by_role": {
+          "Fat": {
+            "delta_volume_m3": 1.3405445622477813e-12,
+            "exact_det_delta_integer": "2923079098456770508430522570053849659554065360044770919872397009537152311585018236850860552072242943424291119682899952009216",
+            "minimum_native_q": 1.785756321922771e-05,
+            "new_cells": 8
+          },
+          "Skin": {
+            "delta_volume_m3": -1.3405445622477813e-12,
+            "exact_det_delta_integer": "-2923079098456770508430522570053849659554065360044770919872397009537152311585018236850860552072242943424291119682899952009216",
+            "minimum_native_q": 2.7295884703552085e-05,
+            "new_cells": 6
+          }
+        },
+        "min_cell_volume_gate_m3_unchanged": 1e-18,
+        "minimum_new_native_q": 1.785756321922771e-05,
+        "move_cap_m": 5e-05,
+        "native_q_gate_unchanged": 1e-05,
+        "solver_message": "Optimization terminated successfully",
+        "solver_success": true,
+        "status": "PASS",
+        "tested_f32_candidates": 125
+      },
+      "index": 0,
+      "keep": 66726,
+      "native_bad_gain_by_role": {
+        "Fat": 1,
+        "Skin": 0
+      },
+      "source_min_face_apex_bound": 0.0011146011447703782,
+      "surface_changed_output_face_rows_key": "op0000_surface_changed_output_face_rows",
+      "surface_full_endpoint_face_rows_key": "op0000_surface_full_endpoint_face_rows",
+      "surface_retired_face_rows_key": "op0000_surface_retired_face_rows",
+      "surface_star_vertices_key": "op0000_surface_star_vertices",
+      "volume_data": {
+        "Fat": {
+          "delta_m3": 1.3405445622477813e-12,
+          "drop_volume_node": 66729,
+          "exact_delta": 2923079098456770508430522570053849659554065360044770919872397009537152311585018236850860552072242943424291119682899952009216,
+          "keep_volume_node": 66726,
+          "materials_dtype": "int32",
+          "materials_key": "op0000_Fat_materials",
+          "materials_shape": [
+            8
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0000_Fat_new_tets",
+          "new_tets_shape": [
+            8,
+            4
+          ],
+          "old_bad": 1,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0000_Fat_old_rows",
+          "old_rows_shape": [
+            12
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0000_Fat_parent_rows",
+          "parent_rows_shape": [
+            8
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0000_Fat_point_rows",
+          "point_rows_shape": [
+            9
+          ]
+        },
+        "Skin": {
+          "delta_m3": -1.3405445622477813e-12,
+          "drop_volume_node": 143398,
+          "exact_delta": -2923079098456770508430522570053849659554065360044770919872397009537152311585018236850860552072242943424291119682899952009216,
+          "keep_volume_node": 143395,
+          "materials_dtype": "int32",
+          "materials_key": "op0000_Skin_materials",
+          "materials_shape": [
+            6
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0000_Skin_new_tets",
+          "new_tets_shape": [
+            6,
+            4
+          ],
+          "old_bad": 0,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0000_Skin_old_rows",
+          "old_rows_shape": [
+            9
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0000_Skin_parent_rows",
+          "parent_rows_shape": [
+            6
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0000_Skin_point_rows",
+          "point_rows_shape": [
+            8
+          ]
+        }
+      },
+      "volume_star_cells_Fat_key": "op0000_Fat_volume_star_cells",
+      "volume_star_cells_Skin_key": "op0000_Skin_volume_star_cells",
+      "volume_star_points_Fat_key": "op0000_Fat_volume_star_points",
+      "volume_star_points_Skin_key": "op0000_Skin_volume_star_points"
+    },
+    {
+      "anchor_f32": [
+        0.04903874546289444,
+        -0.11735089868307114,
+        0.1310698688030243
+      ],
+      "drop": 60467,
+      "exact_paired_delta": "0",
+      "fit": {
+        "all185_775": "REQUIRED_NOT_RUN",
+        "anchor_displacement_m": 4.9998872958991015e-05,
+        "anchor_point_f32": [
+          0.04903874546289444,
+          -0.11735089868307114,
+          0.1310698688030243
+        ],
+        "anchor_point_world_m": [
+          0.04903874546289444,
+          -0.11735089868307114,
+          0.1310698688030243
+        ],
+        "construction_q_margin_multiplier": 1.01,
+        "continuous_anchor_world_m": [
+          0.04903873855673111,
+          -0.11735088395944382,
+          0.13106989908694275
+        ],
+        "continuous_common_slack_m": 0.00013513151699902256,
+        "exact_paired_volume_delta_integer": "0",
+        "exact_volume_by_role": {
+          "Fat": {
+            "delta_volume_m3": 1.2030024901341193e-10,
+            "exact_det_delta_integer": "262316638576056501874197989513085225556842201296500174988278447321579884942454717220340178228032296200255497362108474713964544",
+            "minimum_native_q": 1.9558977837249013e-05,
+            "new_cells": 70
+          },
+          "Skin": {
+            "delta_volume_m3": -1.2030024901341193e-10,
+            "exact_det_delta_integer": "-262316638576056501874197989513085225556842201296500174988278447321579884942454717220340178228032296200255497362108474713964544",
+            "minimum_native_q": 1.7312088187184964e-05,
+            "new_cells": 10
+          }
+        },
+        "min_cell_volume_gate_m3_unchanged": 1e-18,
+        "minimum_new_native_q": 1.7312088187184964e-05,
+        "move_cap_m": 5e-05,
+        "native_q_gate_unchanged": 1e-05,
+        "solver_message": "Optimization terminated successfully",
+        "solver_success": true,
+        "status": "PASS",
+        "tested_f32_candidates": 125
+      },
+      "index": 1,
+      "keep": 60459,
+      "native_bad_gain_by_role": {
+        "Fat": 0,
+        "Skin": 1
+      },
+      "source_min_face_apex_bound": 0.0007453254697294725,
+      "surface_changed_output_face_rows_key": "op0001_surface_changed_output_face_rows",
+      "surface_full_endpoint_face_rows_key": "op0001_surface_full_endpoint_face_rows",
+      "surface_retired_face_rows_key": "op0001_surface_retired_face_rows",
+      "surface_star_vertices_key": "op0001_surface_star_vertices",
+      "volume_data": {
+        "Fat": {
+          "delta_m3": 1.2030024901341193e-10,
+          "drop_volume_node": 60467,
+          "exact_delta": 262316638576056501874197989513085225556842201296500174988278447321579884942454717220340178228032296200255497362108474713964544,
+          "keep_volume_node": 60459,
+          "materials_dtype": "int32",
+          "materials_key": "op0001_Fat_materials",
+          "materials_shape": [
+            70
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0001_Fat_new_tets",
+          "new_tets_shape": [
+            70,
+            4
+          ],
+          "old_bad": 0,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0001_Fat_old_rows",
+          "old_rows_shape": [
+            89
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0001_Fat_parent_rows",
+          "parent_rows_shape": [
+            70
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0001_Fat_point_rows",
+          "point_rows_shape": [
+            41
+          ]
+        },
+        "Skin": {
+          "delta_m3": -1.2030024901341193e-10,
+          "drop_volume_node": 137136,
+          "exact_delta": -262316638576056501874197989513085225556842201296500174988278447321579884942454717220340178228032296200255497362108474713964544,
+          "keep_volume_node": 137128,
+          "materials_dtype": "int32",
+          "materials_key": "op0001_Skin_materials",
+          "materials_shape": [
+            10
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0001_Skin_new_tets",
+          "new_tets_shape": [
+            10,
+            4
+          ],
+          "old_bad": 1,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0001_Skin_old_rows",
+          "old_rows_shape": [
+            12
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0001_Skin_parent_rows",
+          "parent_rows_shape": [
+            10
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0001_Skin_point_rows",
+          "point_rows_shape": [
+            11
+          ]
+        }
+      },
+      "volume_star_cells_Fat_key": "op0001_Fat_volume_star_cells",
+      "volume_star_cells_Skin_key": "op0001_Skin_volume_star_cells",
+      "volume_star_points_Fat_key": "op0001_Fat_volume_star_points",
+      "volume_star_points_Skin_key": "op0001_Skin_volume_star_points"
+    }
+  ],
+  "parent_surface": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/candidate-I-typed-current.npz",
+    "sha256": "e2c6bc1a724d35b31eb05408aa2ee146f499e16dfe47c2655185c595cc9e93dd"
+  },
+  "physical_admission": false,
+  "schema": "h706.coupled-anchor-collapse-pre-serialization-journal.v1",
+  "scope": "replay payload only; no independent geometry/source qualification",
+  "source_781": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb"
+  },
+  "source_783": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py",
+    "sha256": "b78358fccf208a12a24b229608c10c231817a8f8c15e4e4c0da45f9352585841"
+  },
+  "source_785": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "source_run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/run-config.json",
+    "sha256": "7b659bed99a8e7445b8c30d37cdd66a7fa25ee0f99a4f9cae90abeca92b71fb9"
+  },
+  "status": "PASS_ACCEPTED_OPERATIONS_PERSISTED_BEFORE_TYPED_SERIALIZATION"
+}

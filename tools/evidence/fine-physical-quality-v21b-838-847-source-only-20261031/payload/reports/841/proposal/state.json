@@ -1,0 +1,653 @@
+{
+  "775_context_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/775-context-config.json",
+    "sha256": "95e205ed5a0386dc37f79299b70bc34604114a4789dd3576be9d64991ef06906"
+  },
+  "accepted_operations": 2,
+  "all185_775": "REQUIRED_NOT_RUN",
+  "all_new_cells_pass_native": true,
+  "base_operation_engine": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb"
+  },
+  "candidate_edge_count": 122,
+  "complete_typed_parent_face_unions": true,
+  "current_typed_parent_owner": {
+    "base": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+      "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_791_current_parent_root.py",
+    "policy": "only immediate typed-parent path/hash rebound to hash-authenticated actual run input; complete source CSR and geometry unchanged",
+    "sha256": "5d8b00a3ca57bbcb0c53ad1b92c78c97cb3ade5da441d3b5d71a7c3dfdb6fd76"
+  },
+  "effective_candidate_edges": {
+    "count": 122,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/effective-candidate-edges.npy",
+    "sha256": "114ac0fe7f22c01fa9b901d158fdf31cba9c0dc30131d7a134abd5baa73929cd"
+  },
+  "exact_complete_target_boundary": true,
+  "exact_paired_volume_delta_integer": "0",
+  "exact_positive_f32": true,
+  "inner_layer_topology_repair": {
+    "149_routes_fixed": true,
+    "D_unchanged_this_increment": true,
+    "actual_I_rim_fixed": true,
+    "all_other_I_anchor_step_cap_m": 5e-05,
+    "authenticated_805_source_audit_required": true,
+    "back_rows_candidate_eligible": true,
+    "back_rows_count": 790,
+    "enabled": true,
+    "maximum_cumulative_back_displacement_from_current_state_m": 5e-05,
+    "maximum_step_displacement_m": 5e-05,
+    "outer_O_fixed": true,
+    "role": "I"
+  },
+  "mass_reconciliation": "PENDING",
+  "minimum_cell_volume_gate_m3_unchanged": 1e-18,
+  "move_cap_m": 5e-05,
+  "native_q_gate_unchanged": 1e-05,
+  "native_steps": 0,
+  "operation_prepare_override": {
+    "final_gates": [
+      "F32 positive",
+      "native q and minimum volume",
+      "exact positive",
+      "exact paired volume",
+      "source normal/apex",
+      "complete boundary",
+      "775 all185",
+      "actual 697/217"
+    ],
+    "frozen_engine_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "frozen_engine_sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb",
+    "frozen_wrapper_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_782.py",
+    "frozen_wrapper_sha256": "f23abf417b9fd1ce017837c32912e7d17a3a485cf941f0230d403faf67524b23",
+    "native_steps": 0,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py",
+    "physical_admission": false,
+    "removed_source_line": "if np.any(measurements(v[\"p\"],ordered)[0]<=0):return {\"status\":\"REJECT_ORIENTATION\",\"role\":role}",
+    "sha256": "b78358fccf208a12a24b229608c10c231817a8f8c15e4e4c0da45f9352585841",
+    "source_guard_occurrences": 1,
+    "source_transform": "defer_only_pre_fit_endpoint_orientation_rejection",
+    "tet_order_policy": "unchanged signed order; no swaps or absolute determinants"
+  },
+  "operation_records": [
+    {
+      "anchor_f32": [
+        0.13560254871845245,
+        -0.3057840168476105,
+        0.10108555108308792
+      ],
+      "displacement_m": 4.999964901635555e-05,
+      "drop": 67515,
+      "exact_delta_by_role": {
+        "Fat": "-25449786237459582502921804712479782080733507880299584651493329454364526246376044533218612178575631895604530818083890244091904",
+        "Skin": "25449786237459582502921804712479782080733507880299584651493329454364526246376044533218612178575631895604530818083890244091904"
+      },
+      "full_star_cells": {
+        "Fat": [
+          346051,
+          346114,
+          346115,
+          346134,
+          474319,
+          715221,
+          715235,
+          715750,
+          715798,
+          715906,
+          717099,
+          717323,
+          718293,
+          718637,
+          721443,
+          721482,
+          721777,
+          721786,
+          721788,
+          721793,
+          721796,
+          721797,
+          721798,
+          721802,
+          721814,
+          721815,
+          721967,
+          722678,
+          722792,
+          723233,
+          723664,
+          724171,
+          724278,
+          724971,
+          725833,
+          725834,
+          725938,
+          725939,
+          726016,
+          726018
+        ],
+        "Skin": [
+          3037,
+          126740,
+          171260,
+          220557,
+          252591,
+          311432,
+          336533,
+          336537,
+          336538,
+          336539,
+          336540,
+          336545,
+          336546,
+          408319,
+          433666,
+          503314
+        ]
+      },
+      "keep": 67513,
+      "native_bad_gain_by_role": {
+        "Fat": 2,
+        "Skin": 0
+      },
+      "replacement_output_cell_rows": {
+        "Fat": [
+          770560,
+          770561,
+          770562,
+          770563,
+          770564,
+          770565,
+          770566,
+          770567,
+          770568,
+          770569,
+          770570,
+          770571,
+          770572,
+          770573,
+          770574,
+          770575,
+          770576,
+          770577,
+          770578,
+          770579,
+          770580,
+          770581,
+          770582,
+          770583,
+          770584,
+          770585,
+          770586,
+          770587,
+          770588
+        ],
+        "Skin": [
+          724883,
+          724884,
+          724885,
+          724886,
+          724887,
+          724888,
+          724889,
+          724890,
+          724891,
+          724892,
+          724893
+        ]
+      },
+      "replacement_parent_rows": {
+        "Fat": [
+          346051,
+          346114,
+          346115,
+          474319,
+          715221,
+          715235,
+          715750,
+          715906,
+          717323,
+          718293,
+          718637,
+          721443,
+          721482,
+          721777,
+          721788,
+          721793,
+          721797,
+          721798,
+          721802,
+          721815,
+          722678,
+          723233,
+          723664,
+          724171,
+          724278,
+          725833,
+          725834,
+          726016,
+          726018
+        ],
+        "Skin": [
+          171260,
+          220557,
+          252591,
+          311432,
+          336533,
+          336538,
+          336539,
+          336540,
+          336546,
+          433666,
+          503314
+        ]
+      },
+      "retired_source_cell_rows": {
+        "Fat": [
+          346051,
+          346114,
+          346115,
+          346134,
+          474319,
+          715221,
+          715235,
+          715750,
+          715798,
+          715906,
+          717099,
+          717323,
+          718293,
+          718637,
+          721443,
+          721482,
+          721777,
+          721786,
+          721788,
+          721793,
+          721796,
+          721797,
+          721798,
+          721802,
+          721814,
+          721815,
+          721967,
+          722678,
+          722792,
+          723233,
+          723664,
+          724171,
+          724278,
+          724971,
+          725833,
+          725834,
+          725938,
+          725939,
+          726016,
+          726018
+        ],
+        "Skin": [
+          3037,
+          126740,
+          171260,
+          220557,
+          252591,
+          311432,
+          336533,
+          336537,
+          336538,
+          336539,
+          336540,
+          336545,
+          336546,
+          408319,
+          433666,
+          503314
+        ]
+      },
+      "retired_surface_faces": [
+        52602,
+        183322
+      ],
+      "surface_changed_output_face_rows": [
+        52601,
+        52602,
+        183306,
+        183317,
+        183320
+      ],
+      "surface_parent_faces": [
+        52601,
+        52602,
+        52603,
+        183307,
+        183318,
+        183321,
+        183322
+      ],
+      "volume_endpoints": {
+        "Fat": [
+          67513,
+          67515
+        ],
+        "Skin": [
+          144182,
+          144184
+        ]
+      }
+    },
+    {
+      "anchor_f32": [
+        0.03838507831096649,
+        -0.09894505888223648,
+        0.17852219939231873
+      ],
+      "displacement_m": 2.4116333920754543e-05,
+      "drop": 58408,
+      "exact_delta_by_role": {
+        "Fat": "39704663440243527146365857974489214442786646954387603518402807633602701772789508536022230120190365053911199601190147645767680",
+        "Skin": "-39704663440243527146365857974489214442786646954387603518402807633602701772789508536022230120190365053911199601190147645767680"
+      },
+      "full_star_cells": {
+        "Fat": [
+          1474,
+          109814,
+          141091,
+          180190,
+          296800,
+          305090,
+          305111,
+          305112,
+          306428,
+          393776,
+          444982,
+          446823,
+          492157,
+          513621,
+          526013,
+          666056,
+          666057,
+          666058,
+          666059,
+          666060,
+          666061,
+          666062,
+          717262,
+          717520,
+          718140,
+          718455,
+          721009,
+          724068,
+          767654,
+          767655,
+          767656,
+          767657,
+          767658,
+          767659
+        ],
+        "Skin": [
+          702931,
+          702932,
+          723185,
+          723186,
+          723187,
+          723188
+        ]
+      },
+      "keep": 58406,
+      "native_bad_gain_by_role": {
+        "Fat": 0,
+        "Skin": 1
+      },
+      "replacement_output_cell_rows": {
+        "Fat": [
+          770589,
+          770590,
+          770591,
+          770592,
+          770593,
+          770594,
+          770595,
+          770596,
+          770597,
+          770598,
+          770599,
+          770600,
+          770601,
+          770602,
+          770603,
+          770604,
+          770605,
+          770606,
+          770607,
+          770608,
+          770609,
+          770610
+        ],
+        "Skin": [
+          724894,
+          724895,
+          724896,
+          724897
+        ]
+      },
+      "replacement_parent_rows": {
+        "Fat": [
+          1474,
+          141091,
+          180190,
+          305090,
+          305111,
+          393776,
+          444982,
+          492157,
+          513621,
+          666056,
+          666057,
+          666060,
+          666061,
+          666062,
+          717262,
+          717520,
+          718140,
+          724068,
+          767654,
+          767655,
+          767658,
+          767659
+        ],
+        "Skin": [
+          702931,
+          702932,
+          723186,
+          723188
+        ]
+      },
+      "retired_source_cell_rows": {
+        "Fat": [
+          1474,
+          109814,
+          141091,
+          180190,
+          296800,
+          305090,
+          305111,
+          305112,
+          306428,
+          393776,
+          444982,
+          446823,
+          492157,
+          513621,
+          526013,
+          666056,
+          666057,
+          666058,
+          666059,
+          666060,
+          666061,
+          666062,
+          717262,
+          717520,
+          718140,
+          718455,
+          721009,
+          724068,
+          767654,
+          767655,
+          767656,
+          767657,
+          767658,
+          767659
+        ],
+        "Skin": [
+          702931,
+          702932,
+          723185,
+          723186,
+          723187,
+          723188
+        ]
+      },
+      "retired_surface_faces": [
+        236305,
+        236306
+      ],
+      "surface_changed_output_face_rows": [
+        57451,
+        57452,
+        88506,
+        88507
+      ],
+      "surface_parent_faces": [
+        57451,
+        57452,
+        88506,
+        88507,
+        236305,
+        236306
+      ],
+      "volume_endpoints": {
+        "Fat": [
+          58406,
+          58408
+        ],
+        "Skin": [
+          135075,
+          135077
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "candidate-I-typed-current.npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/candidate-I-typed-current.npz",
+      "sha256": "88f393f1eb1a43d41949edfb45d1ac06b19d9f5577c5b0d6476f5e7f1b22f4e0"
+    },
+    "fat-coupled-anchor-volume-proposal.npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+      "sha256": "625ee00c523c9ae599399de8645ef85b336e5aca04db8e5b6b10cc6d073907b4"
+    },
+    "skin-coupled-anchor-volume-proposal.npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+      "sha256": "bacdf328d74675b6ae86af3c7620cf990c7126d9724b144d5a28da7c43bc1884"
+    }
+  },
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "producer_787": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+    "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a"
+  },
+  "protected_surface_row_count": 45,
+  "quality": {
+    "Fat": {
+      "cells": 770611,
+      "native_bad_after": 179,
+      "native_bad_before": 181,
+      "native_bad_removed": 2,
+      "nonpositive": 0
+    },
+    "Skin": {
+      "cells": 724898,
+      "native_bad_after": 38,
+      "native_bad_before": 39,
+      "native_bad_removed": 1,
+      "nonpositive": 0
+    }
+  },
+  "rejections": {
+    "REJECT_ANCHOR_FIT": 82,
+    "REJECT_SOURCE_NORMAL": 10,
+    "REJECT_SURFACE_LINK": 6,
+    "REJECT_VOLUME_LINK": 14,
+    "overlapping_complete_endpoint_stars": 8
+  },
+  "route_anchor_row_count": 45,
+  "run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/inputs/run-config.json",
+    "sha256": "ec175d330c70081ec7b58a0cf44f5c82b85aeb67643fc8618b3cf4a9912618e5"
+  },
+  "schema": "h706.coupled-anchor-collapse-batch.v1",
+  "serialization_fix_785": {
+    "after": "for j,k in enumerate(A.T):data[k]=np.asarray([u[0][j] for u in unions],np.int64)",
+    "before": "for j,k in enumerate(A.T):data[k]=np.asarray([u[j] for u in unions],np.int64)",
+    "journal": {
+      "npz_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/accepted-operations-pre-serialization.npz",
+      "npz_sha256": "b3324bffa95496e5a0ebb0d802e146d7b9e5c03536172415f101bd4adb669a78",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/proposal/accepted-operations-pre-serialization.json",
+      "sha256": "9802980fcedacc251d9aa92563b1ca4ee66185d8e92a403754e8211466733ba4"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "representative_rule": "first tuple of sorted complete 7-lane face union; all union/ancestry CSR retained",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "source_inputs": {
+    "baseline_surfaces": {
+      "D": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-D-typed-current.npz",
+        "sha256": "e8ff5a9bc07eb08eb59efca2ecc7d56bacd38b637970a7219be85763aa4dfa02"
+      },
+      "I": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/candidate-I-typed-current.npz",
+        "sha256": "c8966b1d1573fdd66b2a1b99d7132130602a2b8a4940f55e34d91163d954a035"
+      },
+      "O": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-O-typed-current.npz",
+        "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+      }
+    },
+    "candidate_edges": {
+      "key": "candidate_edges",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-841-root/inputs/candidate-I-edges.npz",
+      "sha256": "c92b1ec4d98188a792abc8e10a1729a6d2e8390cb0599d1d559577bdae31a7f4"
+    },
+    "surface_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/candidate-I-typed-current.npz",
+      "sha256": "c8966b1d1573fdd66b2a1b99d7132130602a2b8a4940f55e34d91163d954a035"
+    },
+    "volumes": {
+      "Fat": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 770634,
+        "native_quality_failures": 181,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+        "sha256": "7f95048e7e496cf35dc0ef82e6e1392df0bcddb0e1c95c2d540196d56a31c27d"
+      },
+      "Skin": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 724905,
+        "native_quality_failures": 39,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+        "sha256": "42d7fa00ac58472c12128f7172d3b8a268d7979065b5de1463184b279047b34c"
+      }
+    }
+  },
+  "status": "CANDIDATE_PENDING_775_ALL185"
+}

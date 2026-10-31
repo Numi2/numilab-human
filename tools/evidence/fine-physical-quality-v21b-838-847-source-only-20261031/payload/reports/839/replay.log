@@ -1,0 +1,57 @@
+{
+  "schema": "h706.coupled-anchor-collapse-independent-replay.v1",
+  "status": "PASS_INDEPENDENT_SOURCE_REPLAY",
+  "run_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/state.json",
+    "sha256": "e1fe089f4f996ec8acbb4e7aa576ba0517a3f2cb3eed46f1208db463e2e44c10"
+  },
+  "run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/run-config.json",
+    "sha256": "7b659bed99a8e7445b8c30d37cdd66a7fa25ee0f99a4f9cae90abeca92b71fb9"
+  },
+  "source_I": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/candidate-I-typed-current.npz",
+    "sha256": "e2c6bc1a724d35b31eb05408aa2ee146f499e16dfe47c2655185c595cc9e93dd"
+  },
+  "surface_output": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/candidate-I-typed-current.npz",
+    "sha256": "c8966b1d1573fdd66b2a1b99d7132130602a2b8a4940f55e34d91163d954a035"
+  },
+  "volume_outputs": {
+    "Skin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+      "sha256": "42d7fa00ac58472c12128f7172d3b8a268d7979065b5de1463184b279047b34c"
+    },
+    "Fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+      "sha256": "7f95048e7e496cf35dc0ef82e6e1392df0bcddb0e1c95c2d540196d56a31c27d"
+    }
+  },
+  "accepted_operations": 2,
+  "quality": {
+    "Skin": {
+      "cells": 724905,
+      "native_bad_before": 40,
+      "native_bad_after": 39,
+      "native_bad_removed": 1,
+      "exact_det_delta_integer": "-265239717674513272382628512083139075216396266656544945908150844331117037254039735457191038780104539143679788481791374665973760",
+      "replacement_cells": 16
+    },
+    "Fat": {
+      "cells": 770634,
+      "native_bad_before": 182,
+      "native_bad_after": 181,
+      "native_bad_removed": 1,
+      "exact_det_delta_integer": "265239717674513272382628512083139075216396266656544945908150844331117037254039735457191038780104539143679788481791374665973760",
+      "replacement_cells": 78
+    }
+  },
+  "exact_complete_oriented_volume_boundary": "PASS",
+  "complete_typed_face_unions_and_ancestry": "PASS",
+  "native_q_gate_unchanged": 1e-05,
+  "minimum_cell_volume_gate_m3_unchanged": 1e-18,
+  "all185_775": "REQUIRED_NOT_RUN",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_reconciliation": "PENDING"
+}

@@ -1,0 +1,763 @@
+{
+  "775_context_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/775-context-config.json",
+    "sha256": "993d887f3955f3d2c5ec3c29ed929f2cd524fc86da92bb0758e01190eabeb99c"
+  },
+  "accepted_operations": 2,
+  "all185_775": "REQUIRED_NOT_RUN",
+  "all_new_cells_pass_native": true,
+  "base_operation_engine": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb"
+  },
+  "candidate_edge_count": 128,
+  "complete_typed_parent_face_unions": true,
+  "current_typed_parent_owner": {
+    "base": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+      "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_791_current_parent_root.py",
+    "policy": "only immediate typed-parent path/hash rebound to hash-authenticated actual run input; complete source CSR and geometry unchanged",
+    "sha256": "5d8b00a3ca57bbcb0c53ad1b92c78c97cb3ade5da441d3b5d71a7c3dfdb6fd76"
+  },
+  "effective_candidate_edges": {
+    "count": 128,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/effective-candidate-edges.npy",
+    "sha256": "44c533d6e787c4facc8c432ea5070512aa1dc5caba0e6771e240fdd621b2c2fb"
+  },
+  "exact_complete_target_boundary": true,
+  "exact_paired_volume_delta_integer": "0",
+  "exact_positive_f32": true,
+  "inner_layer_topology_repair": {
+    "149_routes_fixed": true,
+    "D_unchanged_this_increment": true,
+    "actual_I_rim_fixed": true,
+    "all_other_I_anchor_step_cap_m": 5e-05,
+    "authenticated_805_source_audit_required": true,
+    "back_rows_candidate_eligible": true,
+    "back_rows_count": 790,
+    "enabled": true,
+    "maximum_cumulative_back_displacement_from_current_state_m": 5e-05,
+    "maximum_step_displacement_m": 5e-05,
+    "outer_O_fixed": true,
+    "role": "I"
+  },
+  "mass_reconciliation": "PENDING",
+  "minimum_cell_volume_gate_m3_unchanged": 1e-18,
+  "move_cap_m": 5e-05,
+  "native_q_gate_unchanged": 1e-05,
+  "native_steps": 0,
+  "operation_prepare_override": {
+    "final_gates": [
+      "F32 positive",
+      "native q and minimum volume",
+      "exact positive",
+      "exact paired volume",
+      "source normal/apex",
+      "complete boundary",
+      "775 all185",
+      "actual 697/217"
+    ],
+    "frozen_engine_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "frozen_engine_sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb",
+    "frozen_wrapper_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_782.py",
+    "frozen_wrapper_sha256": "f23abf417b9fd1ce017837c32912e7d17a3a485cf941f0230d403faf67524b23",
+    "native_steps": 0,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py",
+    "physical_admission": false,
+    "removed_source_line": "if np.any(measurements(v[\"p\"],ordered)[0]<=0):return {\"status\":\"REJECT_ORIENTATION\",\"role\":role}",
+    "sha256": "b78358fccf208a12a24b229608c10c231817a8f8c15e4e4c0da45f9352585841",
+    "source_guard_occurrences": 1,
+    "source_transform": "defer_only_pre_fit_endpoint_orientation_rejection",
+    "tet_order_policy": "unchanged signed order; no swaps or absolute determinants"
+  },
+  "operation_records": [
+    {
+      "anchor_f32": [
+        0.11539729684591293,
+        -0.3115784525871277,
+        0.12392962723970413
+      ],
+      "displacement_m": 1.4371692956445902e-05,
+      "drop": 66729,
+      "exact_delta_by_role": {
+        "Fat": "2923079098456770508430522570053849659554065360044770919872397009537152311585018236850860552072242943424291119682899952009216",
+        "Skin": "-2923079098456770508430522570053849659554065360044770919872397009537152311585018236850860552072242943424291119682899952009216"
+      },
+      "full_star_cells": {
+        "Fat": [
+          195082,
+          561958,
+          561959,
+          719495,
+          721484,
+          724196,
+          725169,
+          726068,
+          726069,
+          726070,
+          762324,
+          762325
+        ],
+        "Skin": [
+          321775,
+          338644,
+          445805,
+          595302,
+          595303,
+          595305,
+          595321,
+          595322,
+          595325
+        ]
+      },
+      "keep": 66726,
+      "native_bad_gain_by_role": {
+        "Fat": 1,
+        "Skin": 0
+      },
+      "replacement_output_cell_rows": {
+        "Fat": [
+          770556,
+          770557,
+          770558,
+          770559,
+          770560,
+          770561,
+          770562,
+          770563
+        ],
+        "Skin": [
+          724889,
+          724890,
+          724891,
+          724892,
+          724893,
+          724894
+        ]
+      },
+      "replacement_parent_rows": {
+        "Fat": [
+          195082,
+          561958,
+          721484,
+          724196,
+          725169,
+          726068,
+          726069,
+          762325
+        ],
+        "Skin": [
+          321775,
+          338644,
+          595302,
+          595305,
+          595321,
+          595325
+        ]
+      },
+      "retired_source_cell_rows": {
+        "Fat": [
+          195082,
+          561958,
+          561959,
+          719495,
+          721484,
+          724196,
+          725169,
+          726068,
+          726069,
+          726070,
+          762324,
+          762325
+        ],
+        "Skin": [
+          321775,
+          338644,
+          445805,
+          595302,
+          595303,
+          595305,
+          595321,
+          595322,
+          595325
+        ]
+      },
+      "retired_surface_faces": [
+        52624,
+        178822
+      ],
+      "surface_changed_output_face_rows": [
+        52615,
+        52623,
+        178817,
+        178824
+      ],
+      "surface_parent_faces": [
+        52615,
+        52623,
+        52624,
+        178818,
+        178822,
+        178826
+      ],
+      "volume_endpoints": {
+        "Fat": [
+          66726,
+          66729
+        ],
+        "Skin": [
+          143395,
+          143398
+        ]
+      }
+    },
+    {
+      "anchor_f32": [
+        0.04903874546289444,
+        -0.11735089868307114,
+        0.1310698688030243
+      ],
+      "displacement_m": 4.9998872958991015e-05,
+      "drop": 60467,
+      "exact_delta_by_role": {
+        "Fat": "262316638576056501874197989513085225556842201296500174988278447321579884942454717220340178228032296200255497362108474713964544",
+        "Skin": "-262316638576056501874197989513085225556842201296500174988278447321579884942454717220340178228032296200255497362108474713964544"
+      },
+      "full_star_cells": {
+        "Fat": [
+          22076,
+          38792,
+          42011,
+          42298,
+          43593,
+          64983,
+          71976,
+          116866,
+          167530,
+          191126,
+          193179,
+          196238,
+          253198,
+          256068,
+          309632,
+          326089,
+          326662,
+          326696,
+          328210,
+          328222,
+          328255,
+          328273,
+          328294,
+          328491,
+          328547,
+          328578,
+          331184,
+          338610,
+          342506,
+          342507,
+          342525,
+          342551,
+          342553,
+          342557,
+          342576,
+          342577,
+          379868,
+          380496,
+          408554,
+          409421,
+          413844,
+          424163,
+          436459,
+          440003,
+          440286,
+          458278,
+          461533,
+          466132,
+          476239,
+          479276,
+          486896,
+          487115,
+          505352,
+          509024,
+          510465,
+          512419,
+          513015,
+          515756,
+          526152,
+          526153,
+          535498,
+          535499,
+          685157,
+          685158,
+          685159,
+          685160,
+          685161,
+          685162,
+          735412,
+          735564,
+          737070,
+          737079,
+          737098,
+          737310,
+          737311,
+          737361,
+          770594,
+          770596,
+          770597,
+          770599,
+          770601,
+          770607,
+          770608,
+          770610,
+          770613,
+          770616,
+          770620,
+          770626,
+          770629
+        ],
+        "Skin": [
+          334737,
+          334827,
+          617539,
+          617541,
+          617545,
+          617547,
+          722674,
+          722675,
+          724568,
+          724569,
+          724893,
+          724894
+        ]
+      },
+      "keep": 60459,
+      "native_bad_gain_by_role": {
+        "Fat": 0,
+        "Skin": 1
+      },
+      "replacement_output_cell_rows": {
+        "Fat": [
+          770564,
+          770565,
+          770566,
+          770567,
+          770568,
+          770569,
+          770570,
+          770571,
+          770572,
+          770573,
+          770574,
+          770575,
+          770576,
+          770577,
+          770578,
+          770579,
+          770580,
+          770581,
+          770582,
+          770583,
+          770584,
+          770585,
+          770586,
+          770587,
+          770588,
+          770589,
+          770590,
+          770591,
+          770592,
+          770593,
+          770594,
+          770595,
+          770596,
+          770597,
+          770598,
+          770599,
+          770600,
+          770601,
+          770602,
+          770603,
+          770604,
+          770605,
+          770606,
+          770607,
+          770608,
+          770609,
+          770610,
+          770611,
+          770612,
+          770613,
+          770614,
+          770615,
+          770616,
+          770617,
+          770618,
+          770619,
+          770620,
+          770621,
+          770622,
+          770623,
+          770624,
+          770625,
+          770626,
+          770627,
+          770628,
+          770629,
+          770630,
+          770631,
+          770632,
+          770633
+        ],
+        "Skin": [
+          724895,
+          724896,
+          724897,
+          724898,
+          724899,
+          724900,
+          724901,
+          724902,
+          724903,
+          724904
+        ]
+      },
+      "replacement_parent_rows": {
+        "Fat": [
+          38792,
+          42011,
+          42298,
+          43593,
+          64983,
+          71976,
+          116866,
+          191126,
+          193179,
+          196238,
+          309632,
+          326089,
+          326662,
+          326696,
+          328210,
+          328255,
+          328294,
+          328491,
+          328547,
+          338610,
+          342506,
+          342551,
+          342553,
+          342576,
+          342577,
+          379868,
+          380496,
+          408554,
+          409421,
+          413844,
+          424163,
+          436459,
+          440003,
+          458278,
+          461533,
+          466132,
+          476239,
+          479276,
+          486896,
+          487115,
+          505352,
+          509024,
+          510465,
+          512419,
+          513015,
+          515756,
+          526153,
+          535498,
+          535499,
+          685159,
+          685160,
+          685161,
+          685162,
+          735412,
+          737079,
+          737310,
+          737361,
+          770594,
+          770596,
+          770597,
+          770599,
+          770601,
+          770607,
+          770608,
+          770610,
+          770613,
+          770616,
+          770620,
+          770626,
+          770629
+        ],
+        "Skin": [
+          334737,
+          617539,
+          617541,
+          617545,
+          617547,
+          722675,
+          724568,
+          724569,
+          724893,
+          724894
+        ]
+      },
+      "retired_source_cell_rows": {
+        "Fat": [
+          22076,
+          38792,
+          42011,
+          42298,
+          43593,
+          64983,
+          71976,
+          116866,
+          167530,
+          191126,
+          193179,
+          196238,
+          253198,
+          256068,
+          309632,
+          326089,
+          326662,
+          326696,
+          328210,
+          328222,
+          328255,
+          328273,
+          328294,
+          328491,
+          328547,
+          328578,
+          331184,
+          338610,
+          342506,
+          342507,
+          342525,
+          342551,
+          342553,
+          342557,
+          342576,
+          342577,
+          379868,
+          380496,
+          408554,
+          409421,
+          413844,
+          424163,
+          436459,
+          440003,
+          440286,
+          458278,
+          461533,
+          466132,
+          476239,
+          479276,
+          486896,
+          487115,
+          505352,
+          509024,
+          510465,
+          512419,
+          513015,
+          515756,
+          526152,
+          526153,
+          535498,
+          535499,
+          685157,
+          685158,
+          685159,
+          685160,
+          685161,
+          685162,
+          735412,
+          735564,
+          737070,
+          737079,
+          737098,
+          737310,
+          737311,
+          737361,
+          770594,
+          770596,
+          770597,
+          770599,
+          770601,
+          770607,
+          770608,
+          770610,
+          770613,
+          770616,
+          770620,
+          770626,
+          770629
+        ],
+        "Skin": [
+          334737,
+          334827,
+          617539,
+          617541,
+          617545,
+          617547,
+          722674,
+          722675,
+          724568,
+          724569,
+          724893,
+          724894
+        ]
+      },
+      "retired_surface_faces": [
+        52416,
+        178696
+      ],
+      "surface_changed_output_face_rows": [
+        52415,
+        52416,
+        178692,
+        178694,
+        178695,
+        178738
+      ],
+      "surface_parent_faces": [
+        52415,
+        52416,
+        52417,
+        178693,
+        178695,
+        178696,
+        178697,
+        178740
+      ],
+      "volume_endpoints": {
+        "Fat": [
+          60459,
+          60467
+        ],
+        "Skin": [
+          137128,
+          137136
+        ]
+      }
+    }
+  ],
+  "outputs": {
+    "candidate-I-typed-current.npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/candidate-I-typed-current.npz",
+      "sha256": "c8966b1d1573fdd66b2a1b99d7132130602a2b8a4940f55e34d91163d954a035"
+    },
+    "fat-coupled-anchor-volume-proposal.npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+      "sha256": "7f95048e7e496cf35dc0ef82e6e1392df0bcddb0e1c95c2d540196d56a31c27d"
+    },
+    "skin-coupled-anchor-volume-proposal.npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+      "sha256": "42d7fa00ac58472c12128f7172d3b8a268d7979065b5de1463184b279047b34c"
+    }
+  },
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "producer_787": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_790_inner_layer_root.py",
+    "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a"
+  },
+  "protected_surface_row_count": 45,
+  "quality": {
+    "Fat": {
+      "cells": 770634,
+      "native_bad_after": 181,
+      "native_bad_before": 182,
+      "native_bad_removed": 1,
+      "nonpositive": 0
+    },
+    "Skin": {
+      "cells": 724905,
+      "native_bad_after": 39,
+      "native_bad_before": 40,
+      "native_bad_removed": 1,
+      "nonpositive": 0
+    }
+  },
+  "rejections": {
+    "REJECT_ANCHOR_FIT": 82,
+    "REJECT_SOURCE_NORMAL": 10,
+    "REJECT_SURFACE_LINK": 6,
+    "REJECT_VOLUME_LINK": 14,
+    "overlapping_complete_endpoint_stars": 14
+  },
+  "route_anchor_row_count": 45,
+  "run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/run-config.json",
+    "sha256": "7b659bed99a8e7445b8c30d37cdd66a7fa25ee0f99a4f9cae90abeca92b71fb9"
+  },
+  "schema": "h706.coupled-anchor-collapse-batch.v1",
+  "serialization_fix_785": {
+    "after": "for j,k in enumerate(A.T):data[k]=np.asarray([u[0][j] for u in unions],np.int64)",
+    "before": "for j,k in enumerate(A.T):data[k]=np.asarray([u[j] for u in unions],np.int64)",
+    "journal": {
+      "npz_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/accepted-operations-pre-serialization.npz",
+      "npz_sha256": "373982214456729eb740ec1e19dd742076f6850b16cd2725a781a631d2c963f6",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/proposal/accepted-operations-pre-serialization.json",
+      "sha256": "89868be9c686973ac184466b614bbfd8c20f572af1a3a829936fafa3d7d9e7b3"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "representative_rule": "first tuple of sorted complete 7-lane face union; all union/ancestry CSR retained",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "source_inputs": {
+    "baseline_surfaces": {
+      "D": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-D-typed-current.npz",
+        "sha256": "e8ff5a9bc07eb08eb59efca2ecc7d56bacd38b637970a7219be85763aa4dfa02"
+      },
+      "I": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/candidate-I-typed-current.npz",
+        "sha256": "e2c6bc1a724d35b31eb05408aa2ee146f499e16dfe47c2655185c595cc9e93dd"
+      },
+      "O": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-O-typed-current.npz",
+        "sha256": "8ee5dca70c083c99ec7539929e89afcac1a72ebcfcafae9ff580b824805d3a7f"
+      }
+    },
+    "candidate_edges": {
+      "key": "candidate_edges",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-838-root/inputs/candidate-I-edges.npz",
+      "sha256": "9edd60677bc5bf8866617e974071b6bc810aeb44ffd90733a5ac5c0e0b6acc9e"
+    },
+    "surface_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/candidate-I-typed-current.npz",
+      "sha256": "e2c6bc1a724d35b31eb05408aa2ee146f499e16dfe47c2655185c595cc9e93dd"
+    },
+    "volumes": {
+      "Fat": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 770657,
+        "native_quality_failures": 182,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/fat-coupled-anchor-volume-proposal.npz",
+        "sha256": "7d5323cd01bf10ac00c22bcb5f66e38aff19e09f165eac356bacbb3d719231e8"
+      },
+      "Skin": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 724910,
+        "native_quality_failures": 40,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-836-root/proposal/skin-coupled-anchor-volume-proposal.npz",
+        "sha256": "251cb1d30437dcdc4cc66daea160f794b1c7900a0bfddfefb84e80bf1866c95e"
+      }
+    }
+  },
+  "status": "CANDIDATE_PENDING_775_ALL185"
+}

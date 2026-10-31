@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_794_outer_role.py", line 703, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_794_outer_role.py", line 701, in main
+    r=independent_replay(a.config,a.run_dir,a.output);print(json.dumps(r,indent=2));return
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_794_outer_role.py", line 599, in independent_replay
+    expected_source=source_output(surf,ops,sp,fout,fparents,role,cfg['surface'])
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_794_outer_role.py", line 445, in source_output
+    for r in map(int,op['surface_full_endpoint_face_rows']):
+                     ~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'surface_full_endpoint_face_rows'

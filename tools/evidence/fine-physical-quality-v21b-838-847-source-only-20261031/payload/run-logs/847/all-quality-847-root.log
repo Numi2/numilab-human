@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24_ordinary_outer_o_local.py", line 937, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24_ordinary_outer_o_local.py", line 884, in main
+    replay = independent_replay(final_state_input, current_state_path, replay_report,
+                                proposal_state_path=proposal_state if rollback_plan else None,
+                                rollback_plan_path=rollback_plan)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24_ordinary_outer_o_local.py", line 319, in independent_replay
+    allowed_o_rows, protected_o_rows, o_scope_receipt = ordinary_o_allowed_source_rows(parent_state_path, owner)
+                                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24_ordinary_outer_o_local.py", line 133, in ordinary_o_allowed_source_rows
+    pp = f32points(surfaces[role], role + " O-mask baseline")
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24_ordinary_outer_o_local.py", line 103, in f32points
+    view = np.asarray(archive["points_world_m"])
+                      ~~~~~~~^^^^^^^^^^^^^^^^^^
+KeyError: 'points_world_m'
