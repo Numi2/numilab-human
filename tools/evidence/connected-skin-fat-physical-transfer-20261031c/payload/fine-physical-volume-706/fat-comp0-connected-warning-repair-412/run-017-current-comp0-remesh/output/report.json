@@ -1,0 +1,215 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-015-remesh-input/fat-current-target-remesh-input.npz",
+  "input_sha256": "a10206f3fe37aaa2a7935e7cca86b0d8228f1d6008b201a776ada173edd9f3b9",
+  "script_sha256": "7f7d834c8a8cb8e78f685a55be444fb92809c8626113e5fbba5845c36e75e13c",
+  "maximum_extra_construction_defects_per_cavity": 24,
+  "strict_native_admission_thresholds_unchanged": true,
+  "exact_retained_tet_SAT_required": true,
+  "exact_sat_aabb_pair_work_budget": 2000000,
+  "selected_component_ids": null,
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "all_target_components_admissible": true,
+    "closure_history": [
+      {
+        "blocked_witnesses": 0,
+        "components": 2,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 7,
+        "iteration": 0,
+        "new_cells": 6564,
+        "selected_cells": 3437,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 2
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 3,
+        "iteration": 1,
+        "new_cells": 1464,
+        "selected_cells": 10001,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 2,
+        "new_cells": 835,
+        "selected_cells": 11465,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 3,
+        "new_cells": 426,
+        "selected_cells": 12300,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 4,
+        "new_cells": 370,
+        "selected_cells": 12726,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 5,
+        "new_cells": 79,
+        "selected_cells": 13096,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 6,
+        "new_cells": 86,
+        "selected_cells": 13175,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 7,
+        "new_cells": 7,
+        "selected_cells": 13261,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 1
+      },
+      {
+        "blocked_witnesses": 0,
+        "components": 1,
+        "exact_shell_self_pairs": 0,
+        "internal_joint_cut_witnesses": 0,
+        "iteration": 8,
+        "new_cells": 0,
+        "selected_cells": 13268,
+        "self_cut_witness_faces": 0,
+        "unclosed_components": 0
+      }
+    ],
+    "edge_star_grouping": {
+      "components": 1,
+      "selected_cells": 13269,
+      "unanchored_missing_faces": 0
+    },
+    "forced_edge_star_rows_added": 1,
+    "forced_full_old_cut_edge_star": true,
+    "full_oriented_boundary_reconstruction_after_edge_star": {
+      "extra_face_keys": 0,
+      "matches_exact_oriented_target": true,
+      "missing_face_keys": 0,
+      "reconstructed_face_keys": 473554,
+      "retained_boundary_faces": 469970,
+      "reversed_or_multiplicity_mismatch_keys": 0,
+      "target_face_keys": 473554
+    },
+    "maximum_cells": 50000,
+    "maximum_rounds": 128,
+    "maximum_seed_cells": 10000,
+    "retired_boundary_nodes": 37,
+    "selected_cells": 13268,
+    "selected_seed_vertices": 214,
+    "selection": "all current tet stars at retired-boundary, missing-target, and extra-actual vertices; missing target faces anchor through live vertices; shared target-only vertices join anchored fans",
+    "cache_reused": true,
+    "cache_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-014-current-comp0-edge-star-cavity/current-cavity-shells.npz",
+    "cache_shell_sha256": "ec5de4831f13f23b0cf0f758f87b9f301652faeda893a5af9ff4b8707a653e63",
+    "cache_report_sha256": "43a76d7c05b5884912d48a1f22601345fbf51585c49c51ba8d8359c3aabb4903",
+    "full_target_reconstruction": {
+      "matches_exact_oriented_target": true,
+      "retained_boundary_faces": 469970,
+      "reconstructed_face_keys": 473554,
+      "target_face_keys": 473554,
+      "missing_face_keys": 0,
+      "extra_face_keys": 0,
+      "reversed_or_multiplicity_mismatch_keys": 0
+    }
+  },
+  "components": [
+    {
+      "closed": true,
+      "edge_failures": 0,
+      "empty_shell_retirement": false,
+      "id": 0,
+      "joint_no_native_apex_faces": [],
+      "new_desired_faces": 123,
+      "old_bad": 1184,
+      "old_cells": 13269,
+      "old_nonpositive": 0,
+      "signed_shell_det6_lattice": 341735464804295355453800656054576726156356999282440877364972052578609992339692056770864901405618380367412816339577375489601491173376,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": -16,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "tetgen_coordinate_frame": {
+        "schema": "h706.tetgen-exact-binary-local-frame.v1",
+        "origin_world_m_f32": [
+          -0.314767450094223,
+          -0.8437597155570984,
+          0.11901526898145676
+        ],
+        "origin_world_m_f32_bits": [
+          3198232883,
+          3210215587,
+          1039384135
+        ],
+        "scale_power_of_two_exponent": 2,
+        "scale": 4.0,
+        "source_frame_points_sha256": "37b45b9af8e5a888a70586b36fce5b76a21e5bfa950f0efff7110ebd44072bb6",
+        "source_world_roundtrip_f64_exact": true,
+        "source_f32_roundtrip_bitwise_exact": true,
+        "all_final_geometry_checks_in_world_f32": true
+      },
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS128O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "da42982e9326ac651906b6bd88f3f939997357f72bc1f131324abc5a0b4497ab",
+      "status": "REJECT",
+      "return_code": 200,
+      "error": "ValueError: TetGen failed"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-017-current-comp0-remesh/output/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "614653d95dd7f71adc666f5c229488d93c4088c0407d9b795c71a7dc43e3ada4",
+  "passing_components": 0,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 24174,
+  "complete_boundary_matches_desired": false,
+  "elapsed_s": 12.45233487477526
+}

@@ -1,0 +1,92 @@
+{
+  "checks": {
+    "143_onehop_region": true,
+    "actual_volume_positive_and_pinned_hybrid_parity": true,
+    "candidate_rows_and_barycentric_exact": true,
+    "centroid_partial_independent_base_pass": true,
+    "complete_allocation": false,
+    "current_centroid_radius": true,
+    "lower_density_complete": false,
+    "merged_child_mass_replay": true,
+    "merged_flow_prefix_suffix_lineage": true,
+    "merged_parent_corner_replay": true,
+    "new_mass_positive_and_site_cap": true,
+    "receiver_low_and_high_caps": true,
+    "same_material": true,
+    "source_M4_corner_caps_and_residual": true,
+    "source_coordinate_owner_and_rest_lane_pinned": true,
+    "source_point_reconstruction": true,
+    "source_tet_material_donor_role_map": true,
+    "source_total_plus_residual": true,
+    "upper_density": true
+  },
+  "complete_allocation": false,
+  "counts": {
+    "base_merged_flow_rows": 764081,
+    "distinct_added_children": 5878,
+    "distinct_added_source_parents": 1628,
+    "merged_flow_rows": 770434,
+    "new_noncentroid_flow_rows": 6353,
+    "new_sites_by_positive_barycentric_corner_count": {
+      "1": 649,
+      "2": 1988,
+      "3": 2508,
+      "4": 1208
+    },
+    "touched_children_below_850_direct_volume": 1300
+  },
+  "elapsed_seconds": 0.7735369205474854,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/rebased-held-flow-ledger.npz": "0ee4e4909740e0029a10cb0019a531652b90c882226a0212f6d688f0bbf405fc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-report.json": "d5abd6f7d3c9b44d7a474127436284d2213549156afa4e92a462088abd299767",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/independent-replay-002-corrected.json": "535241a4aab0d9bb9a098c50503f010a0345bd0f1ba403ae196de47f6cc70c5e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/partial-centroid-additions.npz": "be4f6f634b1fd0beb99265708df90163a1f2804167755d8a083d2e4ee0555d32",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/partial-merged-held-plus-additions.npz": "112e669b9ae080a11d9be06eb569dc4cbc9604f23cf2493eba1931c120c4a059",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/producer-report.json": "01946c3f29b74a3f22a0be83b86ecea7802d153c0c5ac0ab970ff868684913c7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-014-noncentroid-partial-batch/partial-merged-held-centroid-noncentroid.npz": "9dabd0e81ada103b9c900c574fb7706d12325222d06db195bd858f11a693d1f0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-014-noncentroid-partial-batch/partial-noncentroid-additions.npz": "da134faf8f980393a142f87a78ed40548cbbd0b38193ae2cb1fc91050214ecf7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-014-noncentroid-partial-batch/producer-report.json": "5ae12ea126a8603a8701327ad391b39c63b7b5e0a9cbf29b7a29f176d04e0c15",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-014-noncentroid-partial-batch/source-freeze/verify_noncentroid_batch_002.py": "198133fe5e012057d17c9028312071f617e6d237bc9e334374071fe8dd1303f9",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/launch-manifest.json": "c4b4654d7836e680292f89c8351e5d821b2099171685aece618a38a26da43306",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/source/NumiHumanPhysicalSkinChildMassMapping.hpp.gz": "a6e26dd70101bb5d62ce924147c66f9025671997637f9e4ceb3de5b3beb8d069"
+  },
+  "mass_kg": {
+    "added_noncentroid": 0.09305549547128,
+    "base_receiver_lower_deficit": 0.14758193364835884,
+    "base_source_corner_residual": 0.7914688349493348,
+    "merged_transferred": 9.788695178508451,
+    "receiver_lower_deficit_after": 0.05452643817707884,
+    "receiver_upper_headroom_after": 1.090632869638442,
+    "source_corner_residual_after": 0.698413339478055,
+    "source_parent_total": 10.487108517986506,
+    "total_with_residual": 10.487108517986506
+  },
+  "metrics": {
+    "max_candidate_graph_distance_delta_m": 0.0,
+    "max_direct_volume_relative_error": 8.987321393650919e-11,
+    "max_radius_m": 0.019352999999999836,
+    "max_source_corner_residual_error_kg": 1.734723475976807e-18,
+    "max_touched_density_kg_m3": 850.0000000590626,
+    "min_touched_density_kg_m3": 7.023946478094693e-30
+  },
+  "native_steps": 0,
+  "peak_rss_bytes": 694960128,
+  "physical_admission": false,
+  "schema": "numi.human.current406-fat-noncentroid-batch-independent-replay.v1",
+  "source_coordinate_contract": {
+    "coordinate_lane": "source330 referenceWorldPoints reconstructed from compiled-parent-cell-mass.csv.nodes.csv rest_x_m/rest_y_m/rest_z_m columns",
+    "max_centroid_rebuild_error_m": 0.0,
+    "owner": "NumiHumanPhysicalSkinChildMassMapping.hpp",
+    "owner_pin_in_compiler_manifest": "2919510900c11631ce6ec99f409208582c0ccabf71186472df7548f51ce6d9ae",
+    "owner_uncompressed_sha256": "2919510900c11631ce6ec99f409208582c0ccabf71186472df7548f51ce6d9ae",
+    "parent_reference_centroids_bitwise_replayed": true
+  },
+  "status": "PASS_INDEPENDENT_PARTIAL_CURRENT406_NONCENTROID_BATCH_REPLAY"
+}

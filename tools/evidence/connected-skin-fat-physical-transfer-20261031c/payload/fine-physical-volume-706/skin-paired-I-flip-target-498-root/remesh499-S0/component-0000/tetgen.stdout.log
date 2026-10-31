@@ -1,0 +1,42 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  3.6e-05
+Creating surface mesh ...
+Surface mesh seconds:  1.4e-05
+Recovering boundaries...
+ATTR_CENSUS stage=after_boundary_before_carve total=2 zero=2 expected15=0 other=0 flip23=0 flip32=0 flip41=0 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  4.5e-05
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=2 zero=0 expected15=2 other=0 flip23=0 flip32=0 flip41=0 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  2.7e-05
+ATTR_CENSUS stage=after_suppresssteinerpoints total=2 zero=0 expected15=2 other=0 flip23=0 flip32=0 flip41=0 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=2 zero=0 expected15=2 other=0 flip23=0 flip32=0 flip41=0 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  9e-06
+ATTR_CENSUS stage=after_improvement_gate total=2 zero=0 expected15=2 other=0 flip23=0 flip32=0 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  9e-06
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000288
+Total running seconds:  0.000468
+
+Statistics:
+
+  Input points: 5
+  Input facets: 6
+  Input segments: 9
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 5
+  Mesh tetrahedra: 2
+  Mesh faces: 7
+  Mesh faces on exterior boundary: 6
+  Mesh faces on input facets: 6
+  Mesh edges on input segments: 9
+

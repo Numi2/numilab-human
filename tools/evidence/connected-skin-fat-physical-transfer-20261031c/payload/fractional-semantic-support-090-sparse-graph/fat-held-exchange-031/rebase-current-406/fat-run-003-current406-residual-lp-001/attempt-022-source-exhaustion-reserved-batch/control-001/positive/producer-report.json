@@ -1,0 +1,47 @@
+{
+  "complete_allocation": false,
+  "counts": {
+    "centroid_stage_rows": 2,
+    "flow_rows": 4,
+    "global_parent_ids": [
+      4274,
+      6006
+    ],
+    "merged_origin1_rows": 2,
+    "merged_origin2_rows": 2,
+    "merged_origin3_rows": 2,
+    "noncentroid_stage_rows": 2,
+    "phase2_rejected_below_floor": true,
+    "phase2_source_rows": 2,
+    "positive_allocator_rows": 4,
+    "site_cap_rows": 6,
+    "source_exhaustion_stage_rows": 2,
+    "tamper_rejection": "PASS"
+  },
+  "mass_kg": {
+    "flow_total": 0.005999999999999999,
+    "parent_corner_residual_after": 0.066,
+    "prior_centroid": 0.15000000000000002,
+    "prior_noncentroid": 0.35,
+    "prior_source_exhaustion": 0.2,
+    "prior_total_counted_once": 0.7,
+    "receiver_lower_deficit_after": 6.505213034913027e-19,
+    "receiver_upper_headroom_after": 0.08399999999999999,
+    "remaining_site_capacity": 2.6
+  },
+  "native_steps": 0,
+  "outputs": {
+    "merged-control.npz": {
+      "sha256": "b3c1f31b7f2afd11940fabd58f709572a7ffe073d72a6de7399bd505f585a6fa",
+      "size_bytes": 446
+    },
+    "proposal.npz": {
+      "sha256": "cdc055524c20bd1ea4c20073ff06086508cd4c520b1011ffce9b995483d0f7f6",
+      "size_bytes": 2164
+    }
+  },
+  "physical_admission": false,
+  "schema": "numi.human.current406-source-exhaustion-entrypoint-control.v1",
+  "scope": "Three-stage exact-once held-ledger/site-cap join and reserved phase controls, plus positive/zero final serializer. Synthetic only.",
+  "status": "PASS_CONTROL_THREE_STAGE_LEDGER_AND_RESERVED_PHASES"
+}

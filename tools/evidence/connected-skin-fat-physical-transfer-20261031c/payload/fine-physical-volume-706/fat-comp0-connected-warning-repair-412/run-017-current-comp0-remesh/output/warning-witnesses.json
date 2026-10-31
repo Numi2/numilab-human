@@ -1,0 +1,573 @@
+{
+  "base406_799862_maps_to_414_row": 790948,
+  "component_full_oriented_boundary_reconstruction": true,
+  "failure": "Boundary contains Steiner points (-YY option). Program stopped.",
+  "geometry_changed": false,
+  "inputs": {
+    "cavity_preparation_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-014-current-comp0-edge-star-cavity/report.json",
+      "sha256": "43a76d7c05b5884912d48a1f22601345fbf51585c49c51ba8d8359c3aabb4903"
+    },
+    "cavity_shell": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-014-current-comp0-edge-star-cavity/current-cavity-shells.npz",
+      "sha256": "ec5de4831f13f23b0cf0f758f87b9f301652faeda893a5af9ff4b8707a653e63"
+    },
+    "failed_remesh_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-017-current-comp0-remesh/output/report.json",
+      "sha256": "8e1c8bb6a8d65c7e0c158458b51728de45966c9773120f9f9bf39ce155b82b3e"
+    },
+    "input_freeze": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-015-remesh-input/input-freeze.json",
+      "sha256": "df682ddfdbdb75609a1561dc0d5c63e736ef22f888e6b0a69a91fd6557affeda"
+    },
+    "remesh_input": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-015-remesh-input/fat-current-target-remesh-input.npz",
+      "sha256": "a10206f3fe37aaa2a7935e7cca86b0d8228f1d6008b201a776ada173edd9f3b9"
+    },
+    "tetgen_stderr": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-017-current-comp0-remesh/output/component-0000/tetgen.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "tetgen_stdout": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-017-current-comp0-remesh/output/component-0000/tetgen.stdout.log",
+      "sha256": "8a04366fc46b656058795ec8f5e5281cbe6706312710654c629aaf365619d273"
+    },
+    "typed_D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-007-final-D411-comp1-flips/candidate-D-three-warning-flips-typed.npz",
+      "sha256": "5bcbe4c42618b84399edd9e878c192598efaa0c7c213b84b22ea85be1e40fd40"
+    },
+    "typed_D_context_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-009-final-D411-comp1-flips-exact-adapter/exact-audit/report.json",
+      "sha256": "44962483a961203a14c52b03eb954e87b2d4827e066f38567074e3d4b75c1a28"
+    },
+    "typed_I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-399-root/iteration002/typed365/candidate-I-typed-current.npz",
+      "sha256": "fec15d6b59e9094952845cbeaaf418b91a4b2f5d0405d1c58b7e3e2e752ec406"
+    }
+  },
+  "interpretation": "The first two clusters are D target-target; cluster two is I target plus old internal cut; cluster three is D target plus old internal cut. No surface/volume mutation was accepted from this run.",
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "old_cut_edge_star_rows": [
+    790947,
+    790948,
+    790949,
+    790950
+  ],
+  "physical_admission": false,
+  "row_domain": "TetGen local .poly node IDs are 1-based in the fixed cavity point array; the global volume rows use the frozen 414 output point domain.",
+  "schema": "numi.fat-comp0-tetgen-warning-witnesses.v1",
+  "selected_cells": 13269,
+  "selected_points": 4569,
+  "status": "FAIL_TETGEN_BOUNDARY_RECOVERY_DIAGNOSTIC",
+  "tetgen_argv": [
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+    "-pMYYAS128O0/0/0T9.9999999999999998e-17",
+    "cavity.poly"
+  ],
+  "tetgen_exit_code": 200,
+  "warning_clusters": [
+    {
+      "classification": "target-target",
+      "segments": [
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": [
+                10121,
+                10184,
+                10150
+              ],
+              "source_face_point_rows": [
+                10184,
+                10121,
+                10150
+              ],
+              "source_face_row": 171822,
+              "source_group": 1,
+              "target_face_row": 411953,
+              "volume_face_point_rows": [
+                135489,
+                135552,
+                135518
+              ]
+            },
+            {
+              "D_point_rows_in_volume_order": [
+                10121,
+                10463,
+                10184
+              ],
+              "source_face_point_rows": [
+                10184,
+                10463,
+                10121
+              ],
+              "source_face_row": 171849,
+              "source_group": 1,
+              "target_face_row": 411980,
+              "volume_face_point_rows": [
+                135489,
+                135831,
+                135552
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            3379,
+            3392
+          ],
+          "volume_point_rows": [
+            135489,
+            135552
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.28945204615592957,
+              -0.8433962464332581,
+              0.09705400466918945
+            ],
+            [
+              -0.28926903009414673,
+              -0.8461504578590393,
+              0.09771932661533356
+            ]
+          ]
+        },
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": [
+                10117,
+                10121,
+                10150
+              ],
+              "source_face_point_rows": [
+                10150,
+                10121,
+                10117
+              ],
+              "source_face_row": 171819,
+              "source_group": 1,
+              "target_face_row": 411950,
+              "volume_face_point_rows": [
+                135485,
+                135489,
+                135518
+              ]
+            },
+            {
+              "D_point_rows_in_volume_order": [
+                10121,
+                10184,
+                10150
+              ],
+              "source_face_point_rows": [
+                10184,
+                10121,
+                10150
+              ],
+              "source_face_row": 171822,
+              "source_group": 1,
+              "target_face_row": 411953,
+              "volume_face_point_rows": [
+                135489,
+                135552,
+                135518
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            3379,
+            3387
+          ],
+          "volume_point_rows": [
+            135489,
+            135518
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.28945204615592957,
+              -0.8433962464332581,
+              0.09705400466918945
+            ],
+            [
+              -0.28936055302619934,
+              -0.844775378704071,
+              0.0973866656422615
+            ]
+          ]
+        }
+      ],
+      "warning_group": 0
+    },
+    {
+      "classification": "target-target",
+      "segments": [
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": [
+                10465,
+                11148,
+                10818
+              ],
+              "source_face_point_rows": [
+                10465,
+                10818,
+                11148
+              ],
+              "source_face_row": 171809,
+              "source_group": 1,
+              "target_face_row": 411940,
+              "volume_face_point_rows": [
+                135833,
+                136516,
+                136186
+              ]
+            },
+            {
+              "D_point_rows_in_volume_order": [
+                10465,
+                10888,
+                11148
+              ],
+              "source_face_point_rows": [
+                10465,
+                11148,
+                10888
+              ],
+              "source_face_row": 171807,
+              "source_group": 1,
+              "target_face_row": 411938,
+              "volume_face_point_rows": [
+                135833,
+                136256,
+                136516
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            3461,
+            3566
+          ],
+          "volume_point_rows": [
+            135833,
+            136516
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.2886689603328705,
+              -0.8455127477645874,
+              0.0952993631362915
+            ],
+            [
+              -0.2864852845668793,
+              -0.8396797776222229,
+              0.09377351403236389
+            ]
+          ]
+        },
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": [
+                10464,
+                10888,
+                10465
+              ],
+              "source_face_point_rows": [
+                10464,
+                10465,
+                10888
+              ],
+              "source_face_row": 171801,
+              "source_group": 1,
+              "target_face_row": 411932,
+              "volume_face_point_rows": [
+                135832,
+                136256,
+                135833
+              ]
+            },
+            {
+              "D_point_rows_in_volume_order": [
+                10465,
+                10888,
+                11148
+              ],
+              "source_face_point_rows": [
+                10465,
+                11148,
+                10888
+              ],
+              "source_face_row": 171807,
+              "source_group": 1,
+              "target_face_row": 411938,
+              "volume_face_point_rows": [
+                135833,
+                136256,
+                136516
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            3461,
+            3528
+          ],
+          "volume_point_rows": [
+            135833,
+            136256
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.2886689603328705,
+              -0.8455127477645874,
+              0.0952993631362915
+            ],
+            [
+              -0.2875771224498749,
+              -0.8425983190536499,
+              0.0945364385843277
+            ]
+          ]
+        }
+      ],
+      "warning_group": 1
+    },
+    {
+      "classification": "target plus old internal cut",
+      "segments": [
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": null,
+              "source_face_point_rows": [
+                32895,
+                33206,
+                32869
+              ],
+              "source_face_row": 16642,
+              "source_group": 0,
+              "target_face_row": 16642,
+              "volume_face_point_rows": [
+                32869,
+                32895,
+                33206
+              ]
+            },
+            {
+              "D_point_rows_in_volume_order": null,
+              "source_face_point_rows": [
+                33270,
+                32869,
+                33206
+              ],
+              "source_face_row": 16641,
+              "source_group": 0,
+              "target_face_row": 16641,
+              "volume_face_point_rows": [
+                32869,
+                33206,
+                33270
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            1737,
+            1608
+          ],
+          "volume_point_rows": [
+            33206,
+            32869
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.2744813859462738,
+              -0.8722813725471497,
+              0.12107061594724655
+            ],
+            [
+              -0.2764298915863037,
+              -0.8693236708641052,
+              0.1209070011973381
+            ]
+          ]
+        },
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": null,
+              "source_face_point_rows": [
+                32895,
+                33206,
+                32869
+              ],
+              "source_face_row": 16642,
+              "source_group": 0,
+              "target_face_row": 16642,
+              "volume_face_point_rows": [
+                32869,
+                32895,
+                33206
+              ]
+            },
+            {
+              "classification": "old internal cut",
+              "target_face_row": null,
+              "volume_face_point_rows": [
+                32895,
+                138741,
+                33206
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            1737,
+            1614
+          ],
+          "volume_point_rows": [
+            33206,
+            32895
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.2744813859462738,
+              -0.8722813725471497,
+              0.12107061594724655
+            ],
+            [
+              -0.27624017000198364,
+              -0.8696116805076599,
+              0.1209230124950409
+            ]
+          ]
+        }
+      ],
+      "warning_group": 2
+    },
+    {
+      "classification": "target plus old internal cut",
+      "segments": [
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": [
+                13204,
+                13205,
+                13868
+              ],
+              "source_face_point_rows": [
+                13205,
+                13204,
+                13868
+              ],
+              "source_face_row": 171925,
+              "source_group": 1,
+              "target_face_row": 412056,
+              "volume_face_point_rows": [
+                138572,
+                138573,
+                139236
+              ]
+            },
+            {
+              "D_point_rows_in_volume_order": [
+                13204,
+                13868,
+                13866
+              ],
+              "source_face_point_rows": [
+                13204,
+                13866,
+                13868
+              ],
+              "source_face_row": 172023,
+              "source_group": 1,
+              "target_face_row": 412154,
+              "volume_face_point_rows": [
+                138572,
+                139236,
+                139234
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            4008,
+            3843
+          ],
+          "volume_point_rows": [
+            139236,
+            138572
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.2731449007987976,
+              -0.8274415731430054,
+              0.08807355910539627
+            ],
+            [
+              -0.2782054543495178,
+              -0.8465849161148071,
+              0.08779098093509674
+            ]
+          ]
+        },
+        {
+          "surface_faces": [
+            {
+              "D_point_rows_in_volume_order": [
+                13205,
+                13206,
+                13868
+              ],
+              "source_face_point_rows": [
+                13205,
+                13868,
+                13206
+              ],
+              "source_face_row": 224260,
+              "source_group": 1,
+              "target_face_row": 464391,
+              "volume_face_point_rows": [
+                138573,
+                138574,
+                139236
+              ]
+            },
+            {
+              "classification": "old internal cut",
+              "target_face_row": null,
+              "volume_face_point_rows": [
+                138574,
+                248584,
+                139236
+              ]
+            }
+          ],
+          "tetgen_local_segment_ids": [
+            3845,
+            4008
+          ],
+          "volume_point_rows": [
+            138574,
+            139236
+          ],
+          "world_endpoints_f32": [
+            [
+              -0.27820146083831787,
+              -0.8465889692306519,
+              0.08779098093509674
+            ],
+            [
+              -0.2731449007987976,
+              -0.8274415731430054,
+              0.08807355910539627
+            ]
+          ]
+        }
+      ],
+      "warning_group": 3
+    }
+  ]
+}

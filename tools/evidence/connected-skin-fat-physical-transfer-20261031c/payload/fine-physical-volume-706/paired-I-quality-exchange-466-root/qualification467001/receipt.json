@@ -1,0 +1,59 @@
+{
+  "status": "PASS_PAIRED_I_EXCHANGE_TYPED_COMPLETE_CONTEXT_AND_CURRENT_TARGETS",
+  "physical_admission": false,
+  "native_steps": 0,
+  "typed_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/typed463001/receipt.json",
+    "sha256": "129b3059aa35b58530edee5830c1badf6f61a88c6273660875db53b65428900d"
+  },
+  "complete_context": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/audit354/report.json",
+    "sha256": "ea5ae766057ba6c81bd8096e634181e6016e302e143fcab170f5fcca2e965e2c"
+  },
+  "Skin_target": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/skin-target369/receipt.json",
+    "sha256": "0b35059da4ee0ea95bcd1d365357f09ff77a5d899d74a4ceb5c3e662c26aeb0c"
+  },
+  "Fat_target": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/fat-target397/report.json",
+    "sha256": "8aad901e403944282845c34067ebda983b020395c69d743931751bad2da50a7a"
+  },
+  "native_quality": {
+    "Skin": 1135,
+    "Fat": 23997
+  },
+  "construction_new_retained_quality_failures": 12,
+  "source330_mass": "IMMUTABLE_COMPLETE_CURRENT_M_OVER_4_REBIND_REQUIRED",
+  "commands": [
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_declared_surface_diff_354.py",
+      "--config",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/config354.json",
+      "--out",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/audit354"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bind_paired_I_skin_target_generic_369_root.py",
+      "--report",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/exchange462/report.json",
+      "--typed-receipt",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/typed463001/receipt.json",
+      "--context",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/audit354/report.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/skin-target369"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/rebind_current_fat_target_397_root.py",
+      "--config",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/config397.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/qualification467001/fat-target397"
+    ]
+  ],
+  "elapsed_s": 44.45556374988519,
+  "producer_sha256": "af19f75579db72c75e92d8a746649610e5dd7e638be6758e4be045e66fbb56e4"
+}

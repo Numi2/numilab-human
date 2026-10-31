@@ -1,0 +1,9 @@
+{
+  "elapsed_s": 0.832355041988194,
+  "error": "ValueError('operands could not be broadcast together with shapes (17166,) (11533,) ')",
+  "schema": "h706.d475-independent-indexed379-replay.v1",
+  "script_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-475-next-001-preflight-100um/volume-transfer-001/independent-replay-001/verify_D475_volume_transfer_independent.py",
+  "script_sha256": "42c599041439654190a62a0c8a38af34dad330666e2245933b42cfde81dbe7e5",
+  "status": "FAIL_INDEPENDENT_D475_VOLUME_REPLAY",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-475-next-001-preflight-100um/volume-transfer-001/independent-replay-001/verify_D475_volume_transfer_independent.py\", line 61, in <module>\n    im=metrics(inp['points_world_m_f32'],inp['tetrahedra']);om=metrics(out['points_world_m_f32'],out_tets);om_old=metrics(inp['points_world_m_f32'],old);om_new=metrics(out['points_world_m_f32'],out_tets[newout]);regress=int(np.count_nonzero((~om_old['bad'])&om_new['bad']));improve=int(np.count_nonzero(om_old['bad']&(~om_new['bad'])))\n                                                                                                                                                                                                                                                 ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~\nValueError: operands could not be broadcast together with shapes (17166,) (11533,) \n"
+}

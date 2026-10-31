@@ -1,0 +1,93 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-paired-I-flip-target-498-root/skin-current-I-flip-target-bound.npz",
+  "input_sha256": "f38971ae5a2d492b2947a1f0a7b6463a2d33e35f99d1cfb1b5aac84ff03750c7",
+  "script_sha256": "5a801e7af48bf228992828bb9dc49a4ea1bb095db13daef6c6453e012d22c25d",
+  "maximum_extra_construction_defects_per_cavity": 0,
+  "strict_native_admission_thresholds_unchanged": true,
+  "exact_retained_tet_SAT_required": true,
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "selected_cells": 2,
+    "retired_boundary_nodes": 0,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 2,
+        "components": 1,
+        "unclosed_components": 0,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 0
+      }
+    ],
+    "maximum_cells": 4000,
+    "selection": "extra-face owners plus retired-boundary-node stars; exact internal joint-witness growth",
+    "all_target_components_admissible": true,
+    "cache_reused": true,
+    "cache_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-paired-I-flip-target-498-root/preparation304/connected-cavity-shells.npz",
+    "cache_shell_sha256": "16f5ae307f38b7044e0aaf65c00a191a641b2eeb10e3704c8c82f42f3326eb71",
+    "cache_report_sha256": "ec0f18406046a368627cec0b495d3b6ec65f10b3ade7cdf79486b06fc681dc1c"
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 0,
+      "old_nonpositive": 0,
+      "old_cells": 2,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "22d1be2c1a04db752e0fec1e0f98e2bd809b9e188aa811b96642c59f7bcdf33c",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 0,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 196,
+        "exact_point_cache_rows": 69
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 2,
+      "new_bad": 0,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "42080f97d3df9c75c089cc0903336aa4ed1f301e8e7097a77d276a0f60e07b5d"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-paired-I-flip-target-498-root/remesh499-S0/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "469a36543d9de898330366d109de1557446efeadf5b0e6b9ef27371f77416274",
+  "passing_components": 1,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 1111,
+  "complete_boundary_matches_desired": true,
+  "elapsed_s": 4.005959583912045
+}

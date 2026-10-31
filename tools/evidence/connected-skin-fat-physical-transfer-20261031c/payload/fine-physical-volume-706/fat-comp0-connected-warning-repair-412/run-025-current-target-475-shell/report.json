@@ -1,0 +1,187 @@
+{
+  "added_fullstar_cells": 230,
+  "base_selected_cells": 13269,
+  "component": {
+    "closed": true,
+    "edge_failures": 0,
+    "empty_shell_retirement": false,
+    "id": 0,
+    "joint_no_native_apex_faces": [],
+    "new_desired_faces": 127,
+    "old_bad": 1193,
+    "old_cells": 13499,
+    "old_nonpositive": 0,
+    "signed_shell_det6_lattice": 341876026968189345463375793104725056546287908298013064973635575884762609723313725239836493805341557173284540090859994171734409347072,
+    "topology": {
+      "bad_vertex_links": [],
+      "boundary_components": 1,
+      "euler_characteristic": -16,
+      "witness_nodes": []
+    }
+  },
+  "component_count": 1,
+  "current_boundary_faces": 468590,
+  "elapsed_s": 14.883721249876544,
+  "expanded_material_counts": {
+    "16": 13499
+  },
+  "expanded_selected_cells": 13499,
+  "exposed_warning_cut_faces": [],
+  "extra_oriented_faces": 191,
+  "full_boundary_reconstruction": {
+    "extra_face_keys": 0,
+    "matches_exact_oriented_target": true,
+    "missing_face_keys": 0,
+    "reconstructed_face_keys": 468526,
+    "retained_boundary_faces": 464878,
+    "reversed_or_multiplicity_mismatch_keys": 0,
+    "target_face_keys": 468526
+  },
+  "geometry_changed": false,
+  "inputs": {
+    "base_shell": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-014-current-comp0-edge-star-cavity/current-cavity-shells.npz",
+      "sha256": "ec5de4831f13f23b0cf0f758f87b9f301652faeda893a5af9ff4b8707a653e63"
+    },
+    "base_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-015-remesh-input/fat-current-target-remesh-input.npz",
+      "sha256": "a10206f3fe37aaa2a7935e7cca86b0d8228f1d6008b201a776ada173edd9f3b9"
+    },
+    "cavity_helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/prepare_rebound_fat_cavities_020.py",
+      "sha256": "97f6b03816091610ae46de55204bd18c28a83769d39c15ea395009c7a5b4545e"
+    },
+    "current_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-D414-I466-target-475-root/fat-target397/fat-current-typed-target-rebound.npz",
+      "sha256": "c1903e60b03aeb3a53592c8ecab020abae59eb8829899dece614d4a946f6fb04"
+    },
+    "typed_target": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-D414-I466-target-475-root/fat-target397/fat-current-typed-target-rebound.npz",
+      "sha256": "c1903e60b03aeb3a53592c8ecab020abae59eb8829899dece614d4a946f6fb04"
+    }
+  },
+  "limitations": [
+    "Preparation only. No TetGen remesh, full-context geometry admission, mass mapping, or native qualification."
+  ],
+  "mass_mapping": "NOT_RUN",
+  "missing_oriented_faces": 127,
+  "mixed_warning_cut_faces_absorbed": true,
+  "native_steps": 0,
+  "output_maps": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-025-current-target-475-shell/base-to-current-cell-map.npz",
+    "sha256": "34b1c8695d883fff1a5397c9887cddde3df36a14d7fe2574363e8b153147bd94",
+    "size_bytes": 838288
+  },
+  "output_shell": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-025-current-target-475-shell/connected-cavity-shells.npz",
+    "sha256": "1e2054ff6d12971977f25e9460ba5a87820ddd39dc0fe12afd364a733e527f93",
+    "size_bytes": 70536
+  },
+  "physical_admission": false,
+  "producer_script_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/prepare_cut_warning_link_closure_420.py",
+  "producer_script_sha256": "f06dbe2b223640a1666ff3093a0b900b4b1f52b2fede9c81a81e276d19204c6a",
+  "row_mapping": "Exact ordered F32 corner coordinates plus material for selected cells; F32 bit exact coordinate map for points",
+  "schema": "numi.fat-comp0-mixed-warning-fullstar-shell.v1",
+  "status": "PASS_EXPANDED_CAVITY_SHELL_SOURCE_ONLY",
+  "target_boundary_faces": 468526,
+  "vertex_link_closure_rounds": [
+    {
+      "bad_links_on_full_target": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "bad_vertex_link_count": 8,
+      "bad_vertex_link_rows": [
+        32709,
+        32704,
+        32958,
+        138692,
+        138852,
+        138853,
+        138854,
+        32885
+      ],
+      "closed": false,
+      "edge_failures": 4,
+      "round": 0,
+      "selected_cells": 13455,
+      "signed_shell_det6_lattice": 341874283106997034461166843322638407184994216726025367619555318264345384273327055819519489129024003889692145791317967559603603374080
+    },
+    {
+      "bad_links_on_full_target": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "bad_vertex_link_count": 4,
+      "bad_vertex_link_rows": [
+        32832,
+        32837,
+        32848,
+        32931
+      ],
+      "closed": false,
+      "edge_failures": 3,
+      "round": 1,
+      "selected_cells": 13491,
+      "signed_shell_det6_lattice": 341875999361035777775592757613263798081171844417920033486028664029124461700842777777426730276879076377072593166000155188636826992640
+    },
+    {
+      "bad_links_on_full_target": [],
+      "bad_vertex_link_count": 0,
+      "bad_vertex_link_rows": [],
+      "closed": true,
+      "edge_failures": 0,
+      "round": 2,
+      "selected_cells": 13499,
+      "signed_shell_det6_lattice": 341876026968189345463375793104725056546287908298013064973635575884762609723313725239836493805341557173284540090859994171734409347072
+    }
+  ],
+  "warning_star_counts": {
+    "D_target_plus_internal_cut": {
+      "current_point_rows": [
+        138572,
+        138573,
+        139236,
+        139234,
+        138574,
+        248584
+      ],
+      "new_vs_selected_count": 123,
+      "source_point_rows": [
+        138572,
+        138573,
+        139236,
+        139234,
+        138574,
+        248584
+      ],
+      "star_cell_count": 178
+    },
+    "I_target_plus_internal_cut": {
+      "current_point_rows": [
+        32869,
+        32895,
+        33206,
+        33270,
+        138741
+      ],
+      "new_vs_selected_count": 63,
+      "source_point_rows": [
+        32869,
+        32895,
+        33206,
+        33270,
+        138741
+      ],
+      "star_cell_count": 118
+    }
+  }
+}

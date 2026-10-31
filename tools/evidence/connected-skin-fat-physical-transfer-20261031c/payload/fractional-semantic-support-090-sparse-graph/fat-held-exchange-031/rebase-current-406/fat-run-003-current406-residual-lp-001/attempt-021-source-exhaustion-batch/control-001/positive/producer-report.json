@@ -1,0 +1,42 @@
+{
+  "complete_allocation": false,
+  "counts": {
+    "centroid_stage_rows": 2,
+    "flow_rows": 4,
+    "global_parent_ids": [
+      4274,
+      6006
+    ],
+    "merged_origin1_rows": 2,
+    "merged_origin2_rows": 2,
+    "noncentroid_stage_rows": 2,
+    "positive_allocator_rows": 4,
+    "site_cap_rows": 4,
+    "tamper_rejection": "PASS"
+  },
+  "mass_kg": {
+    "flow_total": 0.027,
+    "parent_corner_residual_after": 0.045,
+    "prior_centroid": 0.15000000000000002,
+    "prior_noncentroid": 0.35,
+    "prior_total_counted_once": 0.5,
+    "receiver_lower_deficit_after": 0.0,
+    "receiver_upper_headroom_after": 0.063,
+    "remaining_site_capacity": 1.3
+  },
+  "native_steps": 0,
+  "outputs": {
+    "merged-control.npz": {
+      "sha256": "c8c32f455c94d6d7ddcc151f609c3e321f9c61e98940edcd76f085072c3d4427",
+      "size_bytes": 448
+    },
+    "proposal.npz": {
+      "sha256": "3a1af5d748f600e3e24d785067d40f06ea1bf0b54615e1095cb9fc98d6716f65",
+      "size_bytes": 2157
+    }
+  },
+  "physical_admission": false,
+  "schema": "numi.human.current406-source-exhaustion-entrypoint-control.v1",
+  "scope": "Two-stage exact-once ledger/site-cap join plus positive and zero-flow production serializer controls. Synthetic only.",
+  "status": "PASS_CONTROL_TWO_STAGE_LEDGER_CAPS_AND_SERIALIZATION"
+}

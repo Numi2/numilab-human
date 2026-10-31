@@ -1,0 +1,359 @@
+{
+  "affected_parent_face_rows": [
+    30526,
+    30528,
+    30529,
+    30543,
+    206428,
+    206644,
+    206645,
+    206650,
+    206658
+  ],
+  "back412_aabb_overlap_surface_ids": [],
+  "back412_overlap_interpretation": "informational conservative AABB overlap only; not an exact muscle-surface intersection or a claim that back tissue changed",
+  "changed_parent_face_rows": [
+    30526,
+    30543,
+    206428,
+    206644
+  ],
+  "collapsed_input_point_row": 21877,
+  "complete_typed_parent_union": [
+    [
+      2,
+      -1,
+      -1,
+      5077,
+      62000201,
+      5077,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      8998,
+      62000202,
+      8998,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      9002,
+      62000202,
+      9002,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      9003,
+      62000202,
+      9003,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      9019,
+      62000202,
+      9019,
+      -1
+    ],
+    [
+      3,
+      139,
+      137,
+      152,
+      100000149,
+      152,
+      -1
+    ],
+    [
+      3,
+      139,
+      137,
+      153,
+      100000149,
+      153,
+      -1
+    ]
+  ],
+  "coordinates_changed": false,
+  "edge_length_m": 1.3657139822709083e-06,
+  "edge_rows": [
+    30529,
+    206650
+  ],
+  "exact_aabb_candidates": null,
+  "exact_changed_vs_complete_surface_walls_all185_pairs": null,
+  "exact_context_mode": "deferred_to_batch_final",
+  "exact_replacement_self_pairs": 0,
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-414-next-001-preflight-attempt004/identity-seed-D.npz",
+  "input_sha256": "fba94572f52f51e58902063da181d24fcdf47473d0b322d68370277d9ab32c03",
+  "lineage_semantics": "complete deduplicated typed and face ancestry union over the entire affected edge star, including retained faces; not per-triangle overlap",
+  "link_common_vertices": [
+    21490,
+    21945
+  ],
+  "link_condition": "link(u) intersect link(v) equals link(edge); two incident faces",
+  "local_replacement_bad_face_count": 0,
+  "local_replacement_bad_face_minimum_bound_ratio": null,
+  "local_retired_bad_face_count": 0,
+  "local_retired_bad_face_minimum_bound_ratio": null,
+  "native_steps": 0,
+  "new_face_minimum_altitude_m": 0.0001572844538405576,
+  "new_face_minimum_angle_degrees": 3.111771783565779,
+  "new_face_minimum_bound_ratio": 0.05083148407789023,
+  "new_faces": [
+    [
+      21910,
+      21878,
+      21857
+    ],
+    [
+      21910,
+      21945,
+      21878
+    ],
+    [
+      21505,
+      21878,
+      21490
+    ],
+    [
+      21505,
+      21857,
+      21878
+    ]
+  ],
+  "new_faces_current_point_rows": [
+    [
+      21910,
+      21878,
+      21857
+    ],
+    [
+      21910,
+      21945,
+      21878
+    ],
+    [
+      21505,
+      21878,
+      21490
+    ],
+    [
+      21505,
+      21857,
+      21878
+    ]
+  ],
+  "new_faces_source015_point_rows": [
+    [
+      21910,
+      21878,
+      21857
+    ],
+    [
+      21910,
+      21945,
+      21878
+    ],
+    [
+      21505,
+      21878,
+      21490
+    ],
+    [
+      21505,
+      21857,
+      21878
+    ]
+  ],
+  "new_output_face_rows": [
+    222003,
+    222004,
+    222005,
+    222006
+  ],
+  "operation": "fixed_coordinate_interior_surface_edge_contraction",
+  "operation_json_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-414-batch001-surface-proposal/D-shortedge-414-D411-comp1-flips-current-10um-batch-001-D-short-edge-collapse-0486-edge21877-21878-keep21878.json",
+  "operation_json_sha256": "bd0e58f6e0ef4bab7b8ccbe42832ea997caa67a56f45ca98d2aa6d86543e9afc",
+  "patch_bbox_max_world_m": [
+    -0.1346459984779358,
+    -1.7286059856414795,
+    0.27300795912742615
+  ],
+  "patch_bbox_min_world_m": [
+    -0.13780800998210907,
+    -1.7303619384765625,
+    0.2711952030658722
+  ],
+  "patch_id": "D-shortedge-414-D411-comp1-flips-current-10um-batch-001-D-short-edge-collapse-0486-edge21877-21878-keep21878",
+  "physical_admission": false,
+  "qbound_policy": "all_new_faces_pass",
+  "removed_edge_face_rows": [
+    30529,
+    206650
+  ],
+  "replacement_minq_nondecreasing_vs_old_bad_patch": true,
+  "retained_input_point_row": 21878,
+  "retired_parent_face_rows": [
+    30526,
+    30529,
+    30543,
+    206428,
+    206644,
+    206650
+  ],
+  "retired_source015_face_rows": [
+    30526,
+    30529,
+    30543,
+    206428,
+    206644,
+    206650
+  ],
+  "role": "D",
+  "schema": "h706.fixed-boundary-short-edge-contraction-operation.v1",
+  "seed_bad_face_row": 30529,
+  "seed_bound_ratio": 0.0010532733068345723,
+  "source_body_ids": [
+    -1,
+    139
+  ],
+  "source_bone_ids": [
+    -1,
+    137
+  ],
+  "source_face_ancestry_union": [
+    [
+      34535,
+      62000202,
+      34535
+    ],
+    [
+      34539,
+      62000202,
+      34539
+    ],
+    [
+      34540,
+      62000202,
+      34540
+    ],
+    [
+      34556,
+      62000202,
+      34556
+    ],
+    [
+      233743,
+      100000149,
+      233743
+    ],
+    [
+      234008,
+      100000149,
+      234008
+    ],
+    [
+      234009,
+      100000149,
+      234009
+    ],
+    [
+      234014,
+      100000149,
+      234014
+    ],
+    [
+      234022,
+      62000201,
+      234022
+    ]
+  ],
+  "source_layer_ids": [
+    2,
+    3
+  ],
+  "source_original_ids": [
+    62000201,
+    62000202,
+    100000149
+  ],
+  "typed_current_adapter_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-414-next-001-preflight-attempt004/identity-seed-D.npz",
+  "typed_current_adapter_sha256": "fba94572f52f51e58902063da181d24fcdf47473d0b322d68370277d9ab32c03",
+  "typed_parent_union": [
+    [
+      2,
+      -1,
+      -1,
+      5077,
+      62000201,
+      5077,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      8998,
+      62000202,
+      8998,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      9002,
+      62000202,
+      9002,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      9003,
+      62000202,
+      9003,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      9019,
+      62000202,
+      9019,
+      -1
+    ],
+    [
+      3,
+      139,
+      137,
+      152,
+      100000149,
+      152,
+      -1
+    ],
+    [
+      3,
+      139,
+      137,
+      153,
+      100000149,
+      153,
+      -1
+    ]
+  ],
+  "typed_parent_union_sha256": "b21f43cc5f5a9de1273d9ffb309d097f57b47d88fff96f6e3104a6e3931a35df"
+}

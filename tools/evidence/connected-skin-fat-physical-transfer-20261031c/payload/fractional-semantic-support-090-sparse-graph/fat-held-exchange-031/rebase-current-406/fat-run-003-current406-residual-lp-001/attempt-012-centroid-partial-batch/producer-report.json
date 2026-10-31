@@ -1,0 +1,91 @@
+{
+  "accepted_complete_allocation": false,
+  "checks": {
+    "independent_onehop_region_check": "PASS",
+    "max_distance_m": 0.019352991683353866,
+    "max_graph_vs_direct_distance_error_m": 0.0,
+    "max_hybrid_vs_direct_volume_relative_error": 5.2497067969811915e-11,
+    "max_parent_corner_delta_over_q_kg": 1.0842021724855044e-19,
+    "max_receiver_addition_over_high_kg": 0.0,
+    "max_receiver_addition_over_low_kg": 0.0,
+    "max_result_density_kg_m3_touched": 850.0000000000002,
+    "min_direct_receiver_volume_m3": 2.8420916686923332e-18,
+    "min_result_density_kg_m3_touched": 1.174527974349235e-14,
+    "parent_corner_max_abs_error_to_M4_kg": 0.0022252939213480887
+  },
+  "cost_optimality_certified": false,
+  "counts": {
+    "added_flow_rows": 9240,
+    "candidate_centroid_rows_positive_initial_cap": 824013,
+    "current_child_rows": 826737,
+    "current_parent_rows": 14316,
+    "distinct_child_rows": 8470,
+    "distinct_parent_rows": 3009,
+    "touched_children_filled_to_850_bound": 7763,
+    "touched_children_still_underfloor": 709
+  },
+  "elapsed_seconds": 2.948812961578369,
+  "held_scale": {
+    "minimum_scale": 0.9999999999926803,
+    "parents_scaled": 473,
+    "released_mass_kg": 3.552713678800501e-15
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/report.json": "fc2d2e23a00b530e5074abd06e1549516e1364fb73bb713b23a05ae3ae4555c7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/rebased-held-flow-ledger.npz": "0ee4e4909740e0029a10cb0019a531652b90c882226a0212f6d688f0bbf405fc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-report.json": "d5abd6f7d3c9b44d7a474127436284d2213549156afa4e92a462088abd299767",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/source-freeze/greedy_centroid_partial_v5.py": "75a5f3e8edc9429db95bc75bda8e73547cc28b86ae88e2fe48c8f95bfe710ca5",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "mass_kg": {
+    "added": 0.38778949461766593,
+    "explicit_held_scale_release_kg": 3.552713678800501e-15,
+    "held_receiver_mass_after": 9.69563968303717,
+    "held_receiver_mass_before": 9.307850188419504,
+    "merged_retained_plus_additions_kg": 9.695639683037172,
+    "receiver_lower_deficit_after": 0.14758193364835884,
+    "receiver_lower_deficit_before": 0.5353714282660248,
+    "receiver_upper_headroom_after": 1.183688365109722,
+    "receiver_upper_headroom_before": 1.5714778597273877,
+    "scaled_held_receiver_mass_before": 9.307850188419504,
+    "source_residual_after": 0.7914688349493348,
+    "source_residual_before": 1.1792583295670007,
+    "unscaled_held_receiver_mass_before": 9.307850188419508,
+    "whole_source_parent_mass_unchanged": 10.487108517986506
+  },
+  "mass_transport": "PARTIAL_SOURCE_ONLY_NOT_COMPLETE_ALLOCATION",
+  "native_steps": 0,
+  "outputs": {
+    "partial-centroid-additions.npz": {
+      "sha256": "be4f6f634b1fd0beb99265708df90163a1f2804167755d8a083d2e4ee0555d32",
+      "size_bytes": 8530041
+    },
+    "partial-merged-held-plus-additions.npz": {
+      "sha256": "112e669b9ae080a11d9be06eb569dc4cbc9604f23cf2493eba1931c120c4a059",
+      "size_bytes": 27187811
+    }
+  },
+  "peak_rss_bytes": 965984256,
+  "physical_admission": false,
+  "policy": {
+    "hard_radius_m": 0.019353,
+    "material": "source and current recipient material must match",
+    "maximum_flow_rows": 15000,
+    "maximum_flows_per_parent": 5,
+    "no_mass_clipping": true,
+    "parent_corner_usage": "each flow delta consumes exactly one quarter from each residual parent corner after the already recorded per-parent held-flow scale",
+    "receiver_bounds": "addition capped by current low deficit and current 950 kg/m3 headroom",
+    "region": "source region must be listed in verified current 143 one-hop admissible regions",
+    "selection_order": "descending child lower deficit, then descending initial feasible chunk, ascending candidate distance, parent row, child row",
+    "site_type": "exact barycentric centroid [0.25,0.25,0.25,0.25] only"
+  },
+  "schema": "numi.human.current406-fat-centroid-site-partial-allocation.v1",
+  "scope": "Bounded greedy partial transfer over already pinned centroid candidate sites. All current source/child constraints are checked for these additions only; remaining source residual and receiver lower deficits are retained. Candidate graph is incomplete and this is not global allocation feasibility or physical admission.",
+  "status": "PASS_SOURCE_ONLY_PARTIAL_CENTROID_SITE_ALLOCATION"
+}

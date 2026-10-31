@@ -1,0 +1,61 @@
+0.67s pinned source sites with remaining mass capacity=5188599; run lower-first then source-exhaustion batch
+{
+  "status": "PASS_SOURCE_ONLY_PARTIAL_SOURCE_EXHAUSTION_BATCH",
+  "counts": {
+    "remaining_site_rows_before": 5188599,
+    "prior_centroid_stage_rows": 9240,
+    "prior_noncentroid_stage_rows": 6353,
+    "prior_source_exhaustion_stage_rows": 100000,
+    "merged_origin1_rows": 9240,
+    "merged_origin2_rows": 6353,
+    "merged_origin3_rows": 100000,
+    "prior_site_usage_counted_once": true,
+    "invalid_direct_sites_rejected": 0,
+    "new_flow_rows": 100000,
+    "distinct_source_parents": 2270,
+    "distinct_children": 20038,
+    "new_flows_by_stage": {
+      "lower_priority_mass_kg": 5.995757934825426e-05,
+      "source_exhaustion_mass_kg": 0.4110347332961919,
+      "lower_priority_rows": 50000,
+      "source_exhaustion_rows": 50000
+    },
+    "touched_children_below850_direct_volume": 2638,
+    "flow_rows": 100000
+  },
+  "mass_kg": {
+    "added_total": 0.4110946908755408,
+    "used_to_satisfy_prior_lower_need": 5.995757934825461e-05,
+    "above_prior_lower_need": 0.41103473329619256,
+    "source_corner_residual_before": 0.6829291874328007,
+    "source_corner_residual_after": 0.27183449655726,
+    "receiver_lower_deficit_before": 0.03904228613182474,
+    "receiver_lower_deficit_after": 0.03898232855247649,
+    "receiver_upper_headroom_before": 1.075148717593188,
+    "receiver_upper_headroom_after": 0.6640540267176471,
+    "source_mass_total_unchanged": 10.487108517986506,
+    "merged_transferred_mass": 10.215274021429245,
+    "source_total_plus_residual": 10.487108517986504,
+    "flow_total": 0.4110946908755408,
+    "parent_corner_residual_after": 0.27183449655726
+  },
+  "metrics": {
+    "max_direct_distance_m": 0.019353,
+    "max_selected_graph_distance_error_m": 3.469446951953614e-18,
+    "max_corner_residual_replay_error_kg": 1.883801274693564e-18,
+    "min_touched_density_kg_m3": 1.2837634125974e-311,
+    "max_touched_density_kg_m3": 950.0000000000084,
+    "max_volume_relative_error": 4.2958914760677494e-11
+  },
+  "outputs": {
+    "proposal.npz": {
+      "sha256": "fc4280fb824eb2903d107a8c447d395e0fddcaf74d32343dbd80f5086b49eda3",
+      "size_bytes": 9812425
+    },
+    "merged-held-centroid-noncentroid-source-exhaustion.npz": {
+      "sha256": "69c212a0a11395a7c0584b99fc4cc00fd543754baec4c542266b8a4226957623",
+      "size_bytes": 35602396
+    }
+  },
+  "report_sha256": "c747f08a59ef5db761fc95b1b11c6a5e3faa4e0a6144119e06133fe3f98f2454"
+}

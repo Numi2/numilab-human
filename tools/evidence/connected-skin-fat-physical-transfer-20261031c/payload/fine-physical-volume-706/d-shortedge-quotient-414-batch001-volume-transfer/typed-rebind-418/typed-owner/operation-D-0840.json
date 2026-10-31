@@ -1,0 +1,382 @@
+{
+  "affected_parent_face_rows": [
+    60907,
+    60908,
+    154348,
+    154349,
+    154350,
+    154361,
+    154362,
+    224955,
+    224956,
+    224957,
+    224958
+  ],
+  "back412_aabb_overlap_surface_ids": [],
+  "back412_overlap_interpretation": "informational conservative AABB overlap only; not an exact muscle-surface intersection or a claim that back tissue changed",
+  "changed_parent_face_rows": [
+    60907,
+    154349,
+    154361,
+    154362
+  ],
+  "collapsed_input_point_row": 41277,
+  "complete_typed_parent_union": [
+    [
+      2,
+      -1,
+      -1,
+      1140,
+      62000201,
+      1140,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      2723,
+      62000201,
+      2723,
+      -1
+    ],
+    [
+      3,
+      23,
+      28,
+      2112,
+      100000060,
+      2112,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7768,
+      100000065,
+      7768,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7769,
+      100000065,
+      7769,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7770,
+      100000065,
+      7770,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7782,
+      100000065,
+      7782,
+      -1
+    ]
+  ],
+  "coordinates_changed": false,
+  "edge_length_m": 8.363255977870393e-08,
+  "edge_rows": [
+    60908,
+    154348
+  ],
+  "exact_aabb_candidates": null,
+  "exact_changed_vs_complete_surface_walls_all185_pairs": null,
+  "exact_context_mode": "deferred_to_batch_final",
+  "exact_replacement_self_pairs": 0,
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-414-next-001-preflight-attempt004/identity-seed-D.npz",
+  "input_sha256": "fba94572f52f51e58902063da181d24fcdf47473d0b322d68370277d9ab32c03",
+  "lineage_semantics": "complete deduplicated typed and face ancestry union over the entire affected edge star, including retained faces; not per-triangle overlap",
+  "link_common_vertices": [
+    41024,
+    41057
+  ],
+  "link_condition": "link(u) intersect link(v) equals link(edge); two incident faces",
+  "local_replacement_bad_face_count": 0,
+  "local_replacement_bad_face_minimum_bound_ratio": null,
+  "local_retired_bad_face_count": 0,
+  "local_retired_bad_face_minimum_bound_ratio": null,
+  "native_steps": 0,
+  "new_face_minimum_altitude_m": 4.277691492871174e-08,
+  "new_face_minimum_angle_degrees": 0.0061966436047517495,
+  "new_face_minimum_bound_ratio": 0.00010812295574034024,
+  "new_faces": [
+    [
+      41057,
+      41278,
+      41273
+    ],
+    [
+      41278,
+      41024,
+      41240
+    ],
+    [
+      41278,
+      41240,
+      41241
+    ],
+    [
+      41278,
+      41241,
+      41273
+    ]
+  ],
+  "new_faces_current_point_rows": [
+    [
+      41057,
+      41278,
+      41273
+    ],
+    [
+      41278,
+      41024,
+      41240
+    ],
+    [
+      41278,
+      41240,
+      41241
+    ],
+    [
+      41278,
+      41241,
+      41273
+    ]
+  ],
+  "new_faces_source015_point_rows": [
+    [
+      41057,
+      41278,
+      41273
+    ],
+    [
+      41278,
+      41024,
+      41240
+    ],
+    [
+      41278,
+      41240,
+      41241
+    ],
+    [
+      41278,
+      41241,
+      41273
+    ]
+  ],
+  "new_output_face_rows": [
+    223314,
+    223315,
+    223316,
+    223317
+  ],
+  "operation": "fixed_coordinate_interior_surface_edge_contraction",
+  "operation_json_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-414-batch001-surface-proposal/D-shortedge-414-D411-comp1-flips-current-10um-batch-001-D-short-edge-collapse-0844-edge41277-41278-keep41278.json",
+  "operation_json_sha256": "d94b9e88371b06f35f32e3205dc395a82c11235adf990d7b6f6de10772193560",
+  "patch_bbox_max_world_m": [
+    -0.07498081773519516,
+    -0.11845657974481583,
+    0.051322098821401596
+  ],
+  "patch_bbox_min_world_m": [
+    -0.07611329108476639,
+    -0.11942336708307266,
+    0.04970446601510048
+  ],
+  "patch_id": "D-shortedge-414-D411-comp1-flips-current-10um-batch-001-D-short-edge-collapse-0844-edge41277-41278-keep41278",
+  "physical_admission": false,
+  "qbound_policy": "all_new_faces_pass",
+  "removed_edge_face_rows": [
+    60908,
+    154348
+  ],
+  "replacement_minq_nondecreasing_vs_old_bad_patch": true,
+  "retained_input_point_row": 41278,
+  "retired_parent_face_rows": [
+    60907,
+    60908,
+    154348,
+    154349,
+    154361,
+    154362
+  ],
+  "retired_source015_face_rows": [
+    60907,
+    60908,
+    154348,
+    154349,
+    154361,
+    154362
+  ],
+  "role": "D",
+  "schema": "h706.fixed-boundary-short-edge-contraction-operation.v1",
+  "seed_bad_face_row": 60908,
+  "seed_bound_ratio": 0.000148959046788264,
+  "source_body_ids": [
+    -1,
+    23
+  ],
+  "source_bone_ids": [
+    -1,
+    28,
+    33
+  ],
+  "source_face_ancestry_union": [
+    [
+      69756,
+      100000060,
+      69756
+    ],
+    [
+      69757,
+      62000201,
+      69757
+    ],
+    [
+      69758,
+      100000060,
+      69758
+    ],
+    [
+      69759,
+      100000060,
+      69759
+    ],
+    [
+      174846,
+      100000065,
+      174846
+    ],
+    [
+      174847,
+      100000065,
+      174847
+    ],
+    [
+      174860,
+      100000065,
+      174860
+    ],
+    [
+      174861,
+      100000065,
+      174861
+    ],
+    [
+      174862,
+      100000065,
+      174862
+    ],
+    [
+      174863,
+      100000065,
+      174863
+    ],
+    [
+      174864,
+      100000065,
+      174864
+    ],
+    [
+      174875,
+      100000065,
+      174875
+    ],
+    [
+      174876,
+      62000201,
+      174876
+    ]
+  ],
+  "source_layer_ids": [
+    2,
+    3
+  ],
+  "source_original_ids": [
+    62000201,
+    100000060,
+    100000065
+  ],
+  "typed_current_adapter_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-414-next-001-preflight-attempt004/identity-seed-D.npz",
+  "typed_current_adapter_sha256": "fba94572f52f51e58902063da181d24fcdf47473d0b322d68370277d9ab32c03",
+  "typed_parent_union": [
+    [
+      2,
+      -1,
+      -1,
+      1140,
+      62000201,
+      1140,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      2723,
+      62000201,
+      2723,
+      -1
+    ],
+    [
+      3,
+      23,
+      28,
+      2112,
+      100000060,
+      2112,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7768,
+      100000065,
+      7768,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7769,
+      100000065,
+      7769,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7770,
+      100000065,
+      7770,
+      -1
+    ],
+    [
+      3,
+      23,
+      33,
+      7782,
+      100000065,
+      7782,
+      -1
+    ]
+  ],
+  "typed_parent_union_sha256": "815f1d03cdc83fcf894f817a08a82b898c62e53ad12d1071fa03b95dffb68e30"
+}

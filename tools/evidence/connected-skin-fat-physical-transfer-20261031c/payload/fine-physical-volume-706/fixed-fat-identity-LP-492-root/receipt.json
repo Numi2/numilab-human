@@ -1,0 +1,59 @@
+{
+  "status": "PASS_FIXED_ACTUAL_FAT_BOUNDARY_LP_AND_INDEPENDENT_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/run001/report.json",
+  "report_sha256": "e2c93d62022aecae161c6351f89b9c94ac14732932793b148df311c9152172b2",
+  "proof": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/independent487001/receipt.json",
+  "proof_sha256": "b247c0151f9df3572d2b848040b010e083e4ee96cb23a1f50965ca6c02af373c",
+  "bad_before": 18012,
+  "bad_after": 17640,
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/run001/conditioned-volume-proposal.npz",
+  "candidate_sha256": "a0eb62490b5f24a9cab6bead6cafc8a1dc1eda0b3b4e2e1f239ad5b5ca475269",
+  "complete_target_boundary": false,
+  "inherited_target_mismatch_unchanged": true,
+  "mass_mapping": "CURRENT_SOURCE330_REBIND_REQUIRED",
+  "commands": [
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/condition_fixed_fat_identity_LP_490_root.py",
+      "--fixture",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/controls001"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/condition_fixed_fat_identity_LP_490_root.py",
+      "--input",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-475-next-001-preflight-100um/volume-transfer-001/run001/fat-D475-surface-quotient-volume-proposal.npz",
+      "--input-sha256",
+      "703011aba8e8bbc5590dc1cef61140eed5abe7f2eb92727f416608d1b521067d",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/run001",
+      "--seconds",
+      "45",
+      "--maximum-operations",
+      "10000",
+      "--protected-reference-volume",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-D414-I466-target-475-root/fat-target397/fat-current-typed-target-rebound.npz",
+      "--protected-reference-sha256",
+      "c1903e60b03aeb3a53592c8ecab020abae59eb8829899dece614d4a946f6fb04",
+      "--protected-cell-map",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-475-next-001-preflight-100um/transfer-inputs-001/comp0-current-protection.npz",
+      "f5c5dd7b123b471a8b0f1d096944d21ea9ea8ff4312bd3da5560493de208fa15",
+      "--protected-cell-map",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-475-next-001-preflight-100um/transfer-inputs-001/comp1-current-protection.npz",
+      "faed6ff45827e5e6496ec10bd0d8bb750204dfc149ac947878839e39e0afaac0"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_fixed_fat_identity_LP_491_root.py",
+      "--report",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/run001/report.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-fat-identity-LP-492-root/independent487001"
+    ]
+  ],
+  "producer_sha256": "054639fb74718fac067c12ab7aeb6fb28e3d44fcdb2a4381795ec8262e64eca7",
+  "elapsed_s": 16.64393625012599
+}

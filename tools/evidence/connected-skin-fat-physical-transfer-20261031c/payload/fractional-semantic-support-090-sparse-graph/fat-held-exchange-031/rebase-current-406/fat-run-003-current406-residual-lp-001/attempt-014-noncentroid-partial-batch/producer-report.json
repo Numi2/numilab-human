@@ -1,0 +1,99 @@
+{
+  "checks": {
+    "actual_source_point_reconstruction": "PASS",
+    "current143_onehop_region": "PASS",
+    "direct_current_recipient_centroid_distance": "PASS",
+    "exact_volume_positive_and_hybrid_parity": "PASS",
+    "hard_radius": "PASS",
+    "lower_density_complete": false,
+    "material": "PASS",
+    "merged_child_and_corner_ledger": "PASS",
+    "parent_role_global_source_map": "PASS",
+    "physical_admission": false,
+    "receiver_lower_and_upper_caps": "PASS",
+    "source_barycentric_sites_inside_tetrahedra": "PASS",
+    "source_corner_residual_after": "PASS",
+    "source_parent_tet_material_and_donor_crosswalk": "PASS",
+    "source_total_plus_residual": "PASS",
+    "upper_density_all_touched": "PASS"
+  },
+  "complete_allocation": false,
+  "counts": {
+    "added_flow_rows": 6353,
+    "candidate_noncentroid_rows_positive_capacity": 985778,
+    "distinct_child_rows": 5878,
+    "distinct_parent_rows": 1628,
+    "positive_barycentric_support_1": 649,
+    "positive_barycentric_support_2": 1988,
+    "positive_barycentric_support_3": 2508,
+    "positive_barycentric_support_4": 1208,
+    "touched_children_still_below_850": 1300
+  },
+  "elapsed_seconds": 4.859124183654785,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/report.json": "fc2d2e23a00b530e5074abd06e1549516e1364fb73bb713b23a05ae3ae4555c7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/rebased-held-flow-ledger.npz": "0ee4e4909740e0029a10cb0019a531652b90c882226a0212f6d688f0bbf405fc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-report.json": "d5abd6f7d3c9b44d7a474127436284d2213549156afa4e92a462088abd299767",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/independent-replay-002-corrected.json": "535241a4aab0d9bb9a098c50503f010a0345bd0f1ba403ae196de47f6cc70c5e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/partial-centroid-additions.npz": "be4f6f634b1fd0beb99265708df90163a1f2804167755d8a083d2e4ee0555d32",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/partial-merged-held-plus-additions.npz": "112e669b9ae080a11d9be06eb569dc4cbc9604f23cf2493eba1931c120c4a059",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/producer-report.json": "01946c3f29b74a3f22a0be83b86ecea7802d153c0c5ac0ab970ff868684913c7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-014-noncentroid-partial-batch/source-freeze/greedy_noncentroid_partial_003.py": "eea50e925c66a3c53cf7c5159aa82472dc4ad10f0bdaa56ceec3d9ee90170cd6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "mass_kg": {
+    "added": 0.09305549547128,
+    "lower_density_deficit_after": 0.05452643817707884,
+    "lower_density_deficit_before": 0.14758193364835884,
+    "merged_transferred_mass": 9.788695178508451,
+    "residual_corner_mass_after": 0.698413339478055,
+    "residual_corner_mass_before": 0.7914688349493348,
+    "source_parent_mass_total_unchanged": 10.487108517986506,
+    "upper_headroom_after": 1.090632869638442,
+    "upper_headroom_before": 1.183688365109722
+  },
+  "metrics": {
+    "max_corner_residual_replay_error_kg": 1.3150900133977192e-18,
+    "max_direct_distance_m": 0.019352999999999836,
+    "max_graph_distance_error_m": 3.469446951953614e-18,
+    "max_source_centroid_reconstruction_error_m": 0.0,
+    "max_touched_density_kg_m3": 850.0000000590626,
+    "max_volume_relative_error": 8.987321393650919e-11,
+    "min_touched_density_kg_m3": 7.023946478094693e-30
+  },
+  "native_steps": 0,
+  "outputs": {
+    "partial-merged-held-centroid-noncentroid.npz": {
+      "sha256": "9dabd0e81ada103b9c900c574fb7706d12325222d06db195bd858f11a693d1f0",
+      "size_bytes": 27627909
+    },
+    "partial-noncentroid-additions.npz": {
+      "sha256": "da134faf8f980393a142f87a78ed40548cbbd0b38193ae2cb1fc91050214ecf7",
+      "size_bytes": 8599342
+    }
+  },
+  "peak_rss_bytes": 1182285824,
+  "physical_admission": false,
+  "policy": {
+    "candidate_rows": "non-centroid rows already present in pinned attempt005 graph",
+    "mass_clipping": false,
+    "material": "source and receiver material equal",
+    "max_added_rows": 20000,
+    "max_rows_per_parent": 5,
+    "priority": "larger current child lower deficit; then larger feasible per-site mass; then shorter distance; then stable parent/child/site ordering",
+    "radius_m": 0.019353,
+    "receiver_caps": "both remaining lower deficit and upper headroom",
+    "region": "authenticated current143 one-hop admissibility",
+    "source_cap": "min residual corner q_j/barycentric_j over strictly positive barycentric coordinates",
+    "source_point": "barycentric combination of four pinned source330 tet vertex coordinates"
+  },
+  "schema": "numi.human.current406-fat-noncentroid-site-partial-allocation.v1",
+  "scope": "Bounded greedy additions from existing pinned non-centroid barycentric candidate sites on the current406 Fat mesh. No sites are generated or coordinates moved. Source corner moments, current receiver bounds, material, 143 one-hop regions, and original radius remain enforced for additions. Residual source mass and lower-density cells remain; this is not complete allocation or physical admission.",
+  "status": "PASS_SOURCE_ONLY_PARTIAL_NONCENTROID_SITE_ALLOCATION"
+}
