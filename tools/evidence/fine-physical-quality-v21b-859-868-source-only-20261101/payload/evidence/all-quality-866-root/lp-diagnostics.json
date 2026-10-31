@@ -1,0 +1,1897 @@
+{
+  "schema": "h706.target-remainder-block-local-slp.v1",
+  "status": "PASS_F32_BLOCK_LOCAL_TARGET_QUALITY_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "bad_before": 208,
+  "bad_after": 185,
+  "bad_score_before": 451.9241557565191,
+  "bad_score_after": 326.69818082398535,
+  "strict_quality_count_progress": true,
+  "strict_bad_score_progress": false,
+  "accepted_components": 19,
+  "accepted_log_deficit_components": 0,
+  "local_patch_count": 26,
+  "local_patch_attempts": [
+    {
+      "patch": 0,
+      "bad_component": 3,
+      "seed_bad_cells": 4,
+      "bad_cluster_cells": 4,
+      "free_rows": 61,
+      "affected_cells_initial": 2081,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 4,
+      "local_bad_after": 4,
+      "global_bad_before": 208,
+      "global_bad_after": 208,
+      "global_score_after": 449.527091507883,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2736622919328511,
+      "moved_rows": 13,
+      "maximum_cumulative_path_L1_m": 5.058944225311279e-06,
+      "max_step_L1_m": 5.058944225311279e-06,
+      "local_native_bad_after": 4,
+      "single_node_fallback": {
+        "attempt_count": 6,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 131968,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (18,) (18,6) ')"
+          },
+          {
+            "node": 132261,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (146,) (146,6) ')"
+          },
+          {
+            "node": 131960,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 131966,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 131972,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (18,) (18,6) ')"
+          },
+          {
+            "node": 131640,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (238,) (238,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 1,
+      "bad_component": 5,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 13,
+      "free_rows": 34,
+      "affected_cells_initial": 1635,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 58,
+      "local_bad_after": 58,
+      "global_bad_before": 208,
+      "global_bad_after": 208,
+      "global_score_after": 438.1662881939906,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.24080804199911654,
+      "moved_rows": 21,
+      "maximum_cumulative_path_L1_m": 8.922070264816284e-06,
+      "max_step_L1_m": 8.922070264816284e-06,
+      "local_native_bad_after": 58,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 136406,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136427,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          },
+          {
+            "node": 136556,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (66,) (66,6) ')"
+          },
+          {
+            "node": 136422,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (16,) (16,6) ')"
+          },
+          {
+            "node": 135278,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (240,) (240,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 2,
+      "bad_component": 9,
+      "seed_bad_cells": 5,
+      "bad_cluster_cells": 5,
+      "free_rows": 74,
+      "affected_cells_initial": 1784,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 57,
+      "local_bad_after": 56,
+      "global_bad_before": 208,
+      "global_bad_after": 207,
+      "global_score_after": 428.4775444460455,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.3246649589855224,
+      "moved_rows": 26,
+      "maximum_cumulative_path_L1_m": 1.1380761861801147e-05,
+      "max_step_L1_m": 2.4884939193725586e-06,
+      "local_native_bad_after": 56,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 135453,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 136610,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 136747,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136843,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (82,) (82,6) ')"
+          },
+          {
+            "node": 136807,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136606,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (24,) (24,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 3,
+      "bad_component": 14,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 4,
+      "free_rows": 62,
+      "affected_cells_initial": 1607,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 56,
+      "local_bad_after": 54,
+      "global_bad_before": 207,
+      "global_bad_after": 205,
+      "global_score_after": 422.8118821978894,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.27727004094049335,
+      "moved_rows": 28,
+      "maximum_cumulative_path_L1_m": 1.8753111362457275e-05,
+      "max_step_L1_m": 7.405877113342285e-06,
+      "local_native_bad_after": 54,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 135453,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 136610,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 136747,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136843,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (82,) (82,6) ')"
+          },
+          {
+            "node": 136807,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136606,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (24,) (24,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 4,
+      "bad_component": 15,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 2,
+      "free_rows": 65,
+      "affected_cells_initial": 1656,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 54,
+      "local_bad_after": 53,
+      "global_bad_before": 205,
+      "global_bad_after": 204,
+      "global_score_after": 416.4283536415872,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.31002091709524393,
+      "moved_rows": 23,
+      "maximum_cumulative_path_L1_m": 2.576783299446106e-05,
+      "max_step_L1_m": 7.051974534988403e-06,
+      "local_native_bad_after": 53,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 136610,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 135453,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 136747,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136843,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (82,) (82,6) ')"
+          },
+          {
+            "node": 136807,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136606,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (24,) (24,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 5,
+      "bad_component": 18,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 2,
+      "free_rows": 80,
+      "affected_cells_initial": 1533,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 28,
+      "local_bad_after": 28,
+      "global_bad_before": 204,
+      "global_bad_candidate": 204,
+      "global_score_before": 416.4283536415872,
+      "global_score_candidate": 416.4283536415872,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 264411,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (95,) (95,6) ')"
+          },
+          {
+            "node": 262448,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (51,) (51,6) ')"
+          },
+          {
+            "node": 268670,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 255271,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (12,) (12,6) ')"
+          },
+          {
+            "node": 255270,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (13,) (13,6) ')"
+          },
+          {
+            "node": 254550,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 260018,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (5,) (5,6) ')"
+          },
+          {
+            "node": 126914,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (186,) (186,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 6,
+      "bad_component": 20,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 8,
+      "affected_cells_initial": 29,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 204,
+      "global_bad_candidate": 204,
+      "global_score_before": 416.4283536415872,
+      "global_score_candidate": 416.4283536415872,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 300657,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 5,
+            "optimizer_point": [
+              0.007496286183595657,
+              -0.16324546933174133,
+              0.06582879275083542
+            ],
+            "objective_before": -2.00010398631828,
+            "objective_after": -2.00010398631828
+          },
+          {
+            "node": 300831,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (7,) (7,6) ')"
+          },
+          {
+            "node": 301044,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 301049,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (5,) (5,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 7,
+      "bad_component": 30,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 99,
+      "affected_cells_initial": 956,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 16,
+      "local_bad_after": 14,
+      "global_bad_before": 204,
+      "global_bad_after": 202,
+      "global_score_after": 407.5886876503019,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.19837641716003418,
+      "moved_rows": 20,
+      "maximum_cumulative_path_L1_m": 2.576783299446106e-05,
+      "max_step_L1_m": 6.288290023803711e-06,
+      "local_native_bad_after": 14,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 321224,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (139,) (139,6) ')"
+          },
+          {
+            "node": 320205,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320206,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320204,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320203,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320111,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320831,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (15,) (15,6) ')"
+          },
+          {
+            "node": 320808,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 8,
+      "bad_component": 31,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 99,
+      "affected_cells_initial": 956,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 14,
+      "local_bad_after": 14,
+      "global_bad_before": 202,
+      "global_bad_after": 202,
+      "global_score_after": 407.5415105381383,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.06250558397732675,
+      "moved_rows": 15,
+      "maximum_cumulative_path_L1_m": 2.576783299446106e-05,
+      "max_step_L1_m": 3.203749656677246e-07,
+      "local_native_bad_after": 14,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 321224,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (139,) (139,6) ')"
+          },
+          {
+            "node": 320205,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320206,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320204,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320203,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320111,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320831,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (15,) (15,6) ')"
+          },
+          {
+            "node": 320808,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 9,
+      "bad_component": 32,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 99,
+      "affected_cells_initial": 938,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 14,
+      "local_bad_after": 14,
+      "global_bad_before": 202,
+      "global_bad_after": 202,
+      "global_score_after": 406.77763692301636,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2126785828731954,
+      "moved_rows": 16,
+      "maximum_cumulative_path_L1_m": 2.576783299446106e-05,
+      "max_step_L1_m": 4.544854164123535e-06,
+      "local_native_bad_after": 14,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 321224,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (139,) (139,6) ')"
+          },
+          {
+            "node": 320205,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320206,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320204,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320203,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320111,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320831,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (15,) (15,6) ')"
+          },
+          {
+            "node": 320808,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 10,
+      "bad_component": 33,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 99,
+      "affected_cells_initial": 938,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 14,
+      "local_bad_after": 14,
+      "global_bad_before": 202,
+      "global_bad_after": 202,
+      "global_score_after": 406.55363283429756,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2004287091549486,
+      "moved_rows": 16,
+      "maximum_cumulative_path_L1_m": 2.576783299446106e-05,
+      "max_step_L1_m": 1.4677643775939941e-06,
+      "local_native_bad_after": 14,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 321224,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (139,) (139,6) ')"
+          },
+          {
+            "node": 320205,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320206,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320204,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320203,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320111,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 320831,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (15,) (15,6) ')"
+          },
+          {
+            "node": 320808,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 11,
+      "bad_component": 36,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 3,
+      "free_rows": 51,
+      "affected_cells_initial": 1739,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 84,
+      "local_bad_after": 83,
+      "global_bad_before": 202,
+      "global_bad_after": 201,
+      "global_score_after": 394.928113641777,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2527745410334319,
+      "moved_rows": 35,
+      "maximum_cumulative_path_L1_m": 3.293529152870178e-05,
+      "max_step_L1_m": 7.212162017822266e-06,
+      "local_native_bad_after": 83,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 314585,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (61,) (61,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 314813,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (26,) (26,6) ')"
+          },
+          {
+            "node": 136406,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136427,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 12,
+      "bad_component": 38,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 76,
+      "affected_cells_initial": 852,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 69,
+      "local_bad_after": 67,
+      "global_bad_before": 201,
+      "global_bad_after": 199,
+      "global_score_after": 364.49236569709797,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.100725666154176,
+      "moved_rows": 31,
+      "maximum_cumulative_path_L1_m": 3.505498170852661e-05,
+      "max_step_L1_m": 2.16066837310791e-06,
+      "local_native_bad_after": 67,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 313519,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (27,) (27,6) ')"
+          },
+          {
+            "node": 313522,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (19,) (19,6) ')"
+          },
+          {
+            "node": 313372,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (10,) (10,6) ')"
+          },
+          {
+            "node": 136556,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (66,) (66,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 13,
+      "bad_component": 39,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 3,
+      "free_rows": 103,
+      "affected_cells_initial": 1849,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 79,
+      "local_bad_after": 79,
+      "global_bad_before": 199,
+      "global_bad_candidate": 199,
+      "global_score_before": 364.49236569709797,
+      "global_score_candidate": 364.49236569709797,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 314813,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (26,) (26,6) ')"
+          },
+          {
+            "node": 136406,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136427,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 14,
+      "bad_component": 41,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 101,
+      "affected_cells_initial": 1832,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 73,
+      "local_bad_after": 73,
+      "global_bad_before": 199,
+      "global_bad_candidate": 199,
+      "global_score_before": 364.49236569709797,
+      "global_score_candidate": 364.49236569709797,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 136406,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136427,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          },
+          {
+            "node": 313519,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (27,) (27,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 15,
+      "bad_component": 42,
+      "seed_bad_cells": 5,
+      "bad_cluster_cells": 6,
+      "free_rows": 155,
+      "affected_cells_initial": 2872,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 79,
+      "local_bad_after": 79,
+      "global_bad_before": 199,
+      "global_bad_candidate": 199,
+      "global_score_before": 364.49236569709797,
+      "global_score_candidate": 364.49236569709797,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 136406,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136610,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 135453,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 136427,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 16,
+      "bad_component": 43,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 102,
+      "affected_cells_initial": 1832,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 73,
+      "local_bad_after": 73,
+      "global_bad_before": 199,
+      "global_bad_candidate": 199,
+      "global_score_before": 364.49236569709797,
+      "global_score_candidate": 364.49236569709797,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 136406,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136427,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          },
+          {
+            "node": 313519,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (27,) (27,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 17,
+      "bad_component": 45,
+      "seed_bad_cells": 5,
+      "bad_cluster_cells": 5,
+      "free_rows": 46,
+      "affected_cells_initial": 1079,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 24,
+      "local_bad_after": 23,
+      "global_bad_before": 199,
+      "global_bad_after": 198,
+      "global_score_after": 362.1934398217601,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.18128329212777317,
+      "moved_rows": 23,
+      "maximum_cumulative_path_L1_m": 3.6191195249557495e-05,
+      "max_step_L1_m": 1.1473894119262695e-06,
+      "local_native_bad_after": 23,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 136610,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 136747,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136843,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (82,) (82,6) ')"
+          },
+          {
+            "node": 135453,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 136807,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (20,) (20,6) ')"
+          },
+          {
+            "node": 136740,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (18,) (18,6) ')"
+          },
+          {
+            "node": 136736,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (22,) (22,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 18,
+      "bad_component": 46,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 24,
+      "affected_cells_initial": 209,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 18,
+      "local_bad_after": 14,
+      "global_bad_before": 198,
+      "global_bad_after": 194,
+      "global_score_after": 352.1572157501089,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.11803716700524092,
+      "moved_rows": 11,
+      "maximum_cumulative_path_L1_m": 3.6191195249557495e-05,
+      "max_step_L1_m": 5.939975380897522e-06,
+      "local_native_bad_after": 14,
+      "single_node_fallback": {
+        "attempt_count": 7,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 310830,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          },
+          {
+            "node": 309372,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (5,) (5,6) ')"
+          },
+          {
+            "node": 309542,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (23,) (23,6) ')"
+          },
+          {
+            "node": 309546,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (18,) (18,6) ')"
+          },
+          {
+            "node": 310756,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (7,) (7,6) ')"
+          },
+          {
+            "node": 310893,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 19,
+      "bad_component": 47,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 19,
+      "affected_cells_initial": 425,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 19,
+      "local_bad_after": 19,
+      "global_bad_before": 194,
+      "global_bad_after": 194,
+      "global_score_after": 349.6897367726372,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.13780520809814334,
+      "moved_rows": 8,
+      "maximum_cumulative_path_L1_m": 3.979727625846863e-05,
+      "max_step_L1_m": 3.6284327507019043e-06,
+      "local_native_bad_after": 19,
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 134963,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (52,) (52,6) ')"
+          },
+          {
+            "node": 135224,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (10,) (10,6) ')"
+          },
+          {
+            "node": 135225,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          },
+          {
+            "node": 135229,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (28,) (28,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 20,
+      "bad_component": 48,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 70,
+      "affected_cells_initial": 730,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 27,
+      "local_bad_after": 27,
+      "global_bad_before": 194,
+      "global_bad_candidate": 194,
+      "global_score_before": 349.6897367726372,
+      "global_score_candidate": 349.6897367726372,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 264411,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (95,) (95,6) ')"
+          },
+          {
+            "node": 262448,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (51,) (51,6) ')"
+          },
+          {
+            "node": 268670,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (68,) (68,6) ')"
+          },
+          {
+            "node": 255271,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (12,) (12,6) ')"
+          },
+          {
+            "node": 255270,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (13,) (13,6) ')"
+          },
+          {
+            "node": 254550,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 260018,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (5,) (5,6) ')"
+          },
+          {
+            "node": 126914,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (186,) (186,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 21,
+      "bad_component": 58,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 3,
+      "free_rows": 20,
+      "affected_cells_initial": 505,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 40,
+      "local_bad_after": 38,
+      "global_bad_before": 194,
+      "global_bad_after": 192,
+      "global_score_after": 345.3212714987591,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.149609292158857,
+      "moved_rows": 16,
+      "maximum_cumulative_path_L1_m": 3.979727625846863e-05,
+      "max_step_L1_m": 4.209578037261963e-06,
+      "local_native_bad_after": 38,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 136374,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (12,) (12,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          },
+          {
+            "node": 136362,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 136472,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (36,) (36,6) ')"
+          },
+          {
+            "node": 136473,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (36,) (36,6) ')"
+          },
+          {
+            "node": 313519,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (27,) (27,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 22,
+      "bad_component": 59,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 22,
+      "affected_cells_initial": 544,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 38,
+      "local_bad_after": 38,
+      "global_bad_before": 192,
+      "global_bad_after": 192,
+      "global_score_after": 342.8275962360318,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.15032833395525813,
+      "moved_rows": 15,
+      "maximum_cumulative_path_L1_m": 4.126504063606262e-05,
+      "max_step_L1_m": 4.26173210144043e-06,
+      "local_native_bad_after": 38,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          },
+          {
+            "node": 136362,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (42,) (42,6) ')"
+          },
+          {
+            "node": 136429,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (30,) (30,6) ')"
+          },
+          {
+            "node": 136472,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (36,) (36,6) ')"
+          },
+          {
+            "node": 136473,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (36,) (36,6) ')"
+          },
+          {
+            "node": 313519,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (27,) (27,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 23,
+      "bad_component": 60,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 81,
+      "affected_cells_initial": 895,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 67,
+      "local_bad_after": 63,
+      "global_bad_before": 192,
+      "global_bad_after": 188,
+      "global_score_after": 339.6424708845982,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.20658554206602275,
+      "moved_rows": 32,
+      "maximum_cumulative_path_L1_m": 4.286319017410278e-05,
+      "max_step_L1_m": 1.650303602218628e-06,
+      "local_native_bad_after": 63,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 313372,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (10,) (10,6) ')"
+          },
+          {
+            "node": 136373,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (40,) (40,6) ')"
+          },
+          {
+            "node": 314760,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (9,) (9,6) ')"
+          },
+          {
+            "node": 136472,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (36,) (36,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 24,
+      "bad_component": 62,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 3,
+      "free_rows": 61,
+      "affected_cells_initial": 834,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 42,
+      "local_bad_after": 42,
+      "global_bad_before": 188,
+      "global_bad_after": 188,
+      "global_score_after": 327.98092406896103,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.18467337498441339,
+      "moved_rows": 27,
+      "maximum_cumulative_path_L1_m": 4.427507519721985e-05,
+      "max_step_L1_m": 2.8386712074279785e-06,
+      "local_native_bad_after": 42,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 308808,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 308746,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (4,) (4,6) ')"
+          },
+          {
+            "node": 310830,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (14,) (14,6) ')"
+          },
+          {
+            "node": 308632,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (11,) (11,6) ')"
+          },
+          {
+            "node": 308633,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (9,) (9,6) ')"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 25,
+      "bad_component": 63,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 92,
+      "affected_cells_initial": 999,
+      "status": "ACCEPT_COUNT_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 63,
+      "local_bad_after": 60,
+      "global_bad_before": 188,
+      "global_bad_after": 185,
+      "global_score_after": 326.6981808239854,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.20310791581869125,
+      "moved_rows": 29,
+      "maximum_cumulative_path_L1_m": 4.5027583837509155e-05,
+      "max_step_L1_m": 7.748603820800781e-07,
+      "local_native_bad_after": 60,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (204,) (204,6) ')"
+          },
+          {
+            "node": 134151,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (218,) (218,6) ')"
+          },
+          {
+            "node": 312924,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (91,) (91,6) ')"
+          },
+          {
+            "node": 307688,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (77,) (77,6) ')"
+          },
+          {
+            "node": 313372,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (10,) (10,6) ')"
+          },
+          {
+            "node": 314760,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (9,) (9,6) ')"
+          },
+          {
+            "node": 313374,
+            "status": "NODE_FALLBACK_EXCEPTION",
+            "exception": "IndexError('shape mismatch: indexing arrays could not be broadcast together with shapes (32,) (32,6) ')"
+          },
+          {
+            "node": 314803,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 185,
+            "global_bad_candidate": 185,
+            "score_before": 326.6981808239854,
+            "score_candidate": 329.4092486442148
+          }
+        ]
+      }
+    }
+  ],
+  "accepted_local_patches": 19,
+  "accepted_single_node_fallbacks": 0,
+  "skipped_local_patches": 7,
+  "local_bad_face_components": 26,
+  "affected_cell_sets_are_point_incident_only": true,
+  "current_passed_cells_and_immutable_baseline_good_cells_never_regress": true,
+  "cumulative_per_point_path_L1_cap_m": 5e-05,
+  "maximum_cumulative_path_L1_m": 4.5027583837509155e-05,
+  "final_full_domain_native_replay": true,
+  "full_domain_cells": 1495495,
+  "changed_point_rows": [
+    131634,
+    131640,
+    131960,
+    131963,
+    131966,
+    131968,
+    131970,
+    131972,
+    131973,
+    131974,
+    131975,
+    132261,
+    132806,
+    134151,
+    134961,
+    134963,
+    135150,
+    135224,
+    135225,
+    135229,
+    135278,
+    135304,
+    135320,
+    135336,
+    135340,
+    135451,
+    135453,
+    135457,
+    135464,
+    135478,
+    136260,
+    136261,
+    136274,
+    136277,
+    136352,
+    136355,
+    136360,
+    136362,
+    136372,
+    136373,
+    136374,
+    136406,
+    136407,
+    136410,
+    136416,
+    136422,
+    136426,
+    136427,
+    136429,
+    136472,
+    136473,
+    136476,
+    136556,
+    136566,
+    136584,
+    136586,
+    136587,
+    136603,
+    136605,
+    136606,
+    136610,
+    136618,
+    136630,
+    136681,
+    136728,
+    136736,
+    136740,
+    136747,
+    136755,
+    136780,
+    136805,
+    136807,
+    136816,
+    136827,
+    136843,
+    136935,
+    143571,
+    307688,
+    308149,
+    308150,
+    308567,
+    308630,
+    308632,
+    308633,
+    308634,
+    308745,
+    308746,
+    308747,
+    308776,
+    308777,
+    308807,
+    308808,
+    308809,
+    308810,
+    309036,
+    309183,
+    309372,
+    309542,
+    309546,
+    309826,
+    310676,
+    310756,
+    310757,
+    310786,
+    310830,
+    310832,
+    310893,
+    311293,
+    311298,
+    312080,
+    312083,
+    312924,
+    313142,
+    313371,
+    313372,
+    313374,
+    313519,
+    313522,
+    313542,
+    313544,
+    313593,
+    313594,
+    313738,
+    313777,
+    313778,
+    313779,
+    313780,
+    313781,
+    313782,
+    313789,
+    313791,
+    313904,
+    314585,
+    314661,
+    314662,
+    314738,
+    314740,
+    314754,
+    314760,
+    314769,
+    314771,
+    314773,
+    314787,
+    314800,
+    314803,
+    314813,
+    314814,
+    314860,
+    319891,
+    319931,
+    320110,
+    320111,
+    320118,
+    320202,
+    320203,
+    320204,
+    320205,
+    320206,
+    320207,
+    320409,
+    320430,
+    320478,
+    320496,
+    320794,
+    320808,
+    320821,
+    320872,
+    321224
+  ],
+  "max_free_node_l1_displacement_bound_m": 4.5027583837509155e-05,
+  "total_trust_cap_m": 5e-05,
+  "objective_mode": "role_equal_nearpass",
+  "trust_policy": "bounded local patches; per-point cumulative L1 measured from immutable baseline across all accepted patches",
+  "elapsed_s": 4.4099365409929305
+}

@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25c/verify_targeted_inner_back_remainder_v25c.py", line 469, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25c/verify_targeted_inner_back_remainder_v25c.py", line 427, in main
+    V.replay_existing_rollback(parent_path,proposal_path,args.proposal_config.resolve(),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.proposal_audit.resolve(),args.rollback_state.resolve(),args.rollback_config.resolve(),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.rollback_plan.resolve(),args.rollback_preparation_receipt.resolve(),
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        args.rollback_audit.resolve(),stage)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24c_ordinary_outer_o_local.py", line 907, in replay_existing_rollback
+    _require_receipt_pin(prep["inputs"] if key in ("source_baseline_state","state","config","failed_805_audit") else prep,
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                         key,path)
+                         ^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_coupled_quality_points_v24c_ordinary_outer_o_local.py", line 845, in _require_receipt_pin
+    raise ValueError("rollback preparation receipt is missing "+key)
+ValueError: rollback preparation receipt is missing helper

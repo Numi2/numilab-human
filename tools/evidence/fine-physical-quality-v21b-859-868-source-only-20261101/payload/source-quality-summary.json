@@ -1,0 +1,89 @@
+{
+  "attempt_history": [
+    {
+      "candidate_Fat_failures": 149,
+      "candidate_Skin_failures": 36,
+      "exact_805_status": "FAIL_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "exact_changed_vs_retained_pairs": 174,
+      "id": 866,
+      "rollback_Fat_failures": 172,
+      "rollback_Skin_failures": 36,
+      "status": "REJECTED_AND_ROLLED_BACK"
+    },
+    {
+      "candidate_Fat_failures": 158,
+      "candidate_Skin_failures": 35,
+      "exact_805_status": "FAIL_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "exact_changed_vs_retained_pairs": 44,
+      "id": 867,
+      "status": "REJECTED"
+    },
+    {
+      "candidate_Fat_failures": 161,
+      "candidate_Skin_failures": 35,
+      "exact_805_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "exact_changed_vs_retained_pairs": 0,
+      "first_v25d_replay": "FAILED_HISTORICAL_REPORT_RESTRICTION; retained command and stderr",
+      "id": 868,
+      "status": "SOURCE_QUALIFIED",
+      "surface_crossings": 0,
+      "versioned_witness_aware_replay": "PASS_TARGETED_REMAINDER_805_807_625_AND_INDEPENDENT_REPLAY",
+      "versioned_witness_report_count": 5
+    }
+  ],
+  "baseline_859": {
+    "Fat_native_quality_failures": 172,
+    "Skin_native_quality_failures": 36,
+    "independent_v25_replay_sha256": "912870afa79a3ec20b294b1804096b4abb56f07f5fee646be3dd84c1dae49154",
+    "source_audit_status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+    "source_proof_sha256": "2cd131c6bccb55bc4a10189e7782341f4fa5e60f12b982e6bab44c2b984257f2",
+    "state_sha256": "8f6338c7449867a801c6e023b358c3e8767960750763c4aa9bbdc5ff471e04fd",
+    "surface_crossings": 0
+  },
+  "best_endpoint": {
+    "Fat_native_quality_failures": 161,
+    "Skin_native_quality_failures": 35,
+    "id": 868,
+    "source_audit_status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+    "state_sha256": "ef4735001c7e19656cf62aacab881359fe830f2169571475a683b3b68fcb1943",
+    "surface_crossings": 0,
+    "target_805_context_pairs": 0,
+    "target_805_joint_self_pairs": 0,
+    "target_805_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+    "target_807_changed_self_count": 0,
+    "target_807_changed_vs_all185_count": 0,
+    "target_replay_status": "PASS_TARGETED_REMAINDER_805_807_625_AND_INDEPENDENT_REPLAY",
+    "witness_aware_historical_report_count": 5,
+    "witness_aware_historical_report_sha256s": [
+      "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207",
+      "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b",
+      "0ad5c2ea1ec3a3bb495722d230947a83128c405d373829ca61128427ded5c611",
+      "162c23373f64626860229d6b8cc11d67485c031d0a927f04e9797d683e211dc0",
+      "ddb895f6216a7225eb6bf8642d10a6d57e55366244d4ad80f9ee7f75de1727a0"
+    ]
+  },
+  "evidence_scope": [
+    "Frozen v25b, v25c, v25d helper and focused-control sources included.",
+    "Receipt compatibility correction and versioned witness-aware replay included with retained reports/logs.",
+    "Atlas864/865 and topology852/863/864 source/fixture artifacts included as source context.",
+    "Every NPZ/NPY remains external; array SHA values are taken from copied source JSON and were not rehashed by this publication.",
+    "Scene869 is incomplete and excluded."
+  ],
+  "limitations": [
+    "This endpoint is source-quality qualified only.",
+    "Physical admission is false; native steps are zero.",
+    "Mass reconciliation, typed-217 admission, and canonical boundary source binding remain pending.",
+    "No physics, production, or clinical qualification is claimed."
+  ],
+  "package": "fine-physical-quality-v21b-859-868-source-only-20261101",
+  "schema": "numi-human.fine-physical-quality-source-evidence.v1",
+  "source_and_physics_limits": {
+    "boundary_source_binding_status": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+    "mass_reconciliation": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+    "native_steps": 0,
+    "physical_admission": false,
+    "scene_869_included": false,
+    "typed_217_admission": "PENDING_EXPLICIT_697_217_ADAPTER"
+  },
+  "status": "SOURCE_QUALITY_EVIDENCE_ONLY; PHYSICAL_ADMISSION_FALSE"
+}

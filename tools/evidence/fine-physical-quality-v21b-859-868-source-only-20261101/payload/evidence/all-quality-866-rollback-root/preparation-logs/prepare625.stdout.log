@@ -1,0 +1,121 @@
+{
+  "status": "PASS_WITNESS_COMPONENT_ROLLBACK_PREPARED_FOR_EXACT_AUDIT",
+  "inputs": {
+    "state": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-root/state.json",
+      "sha256": "b2bc3178dcd0394fb91ffd1cad7784114910be9ba7baeafe9bc5009f2ac0cdf3"
+    },
+    "config": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-root/context-config.json",
+      "sha256": "f7a0dc49e4ce3bd9cbcbd014a8ebd60bb3d4ef4158cb1a7c32f54eb12b4151aa"
+    },
+    "failed_805_audit": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-audit805b-root/proposal-exact-805/report.json",
+      "sha256": "162c23373f64626860229d6b8cc11d67485c031d0a927f04e9797d683e211dc0"
+    },
+    "source_baseline_state": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-859-qualified-root/quality-working-state.json",
+      "sha256": "8f6338c7449867a801c6e023b358c3e8767960750763c4aa9bbdc5ff471e04fd"
+    },
+    "helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/bounded_point_component_rollback_625.py",
+      "sha256": "6a731dba8635d0129ab08602ba8706aa466924dbfa6ac3a8e60239c14388327f"
+    },
+    "quality_owner_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0"
+  },
+  "output_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/state.json",
+    "sha256": "7e69fdc996ea54e13d62bf9e020773f9d7b030921311a0dc33e27985ff8010fe"
+  },
+  "output_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/context-config.json",
+    "sha256": "bffbe67babb9ccc291cd5cd067d9cbc8091dd2b5d2ae7e5197cefa9f74d0157f"
+  },
+  "rollback_plan": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/rollback-plan.json",
+    "sha256": "0d306159a911c14abefa880263eb4303897e5928434ff693a212542c29a25689"
+  },
+  "candidate_surfaces": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/candidate-D-typed-current.npz",
+      "sha256": "6776d786c53c9a382c97cf3136b3be90c2f83133b22291d3b4fb7d70f6acbb44"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/candidate-O-typed-current.npz",
+      "sha256": "f17ba90c6e7500308c778d4ccb428336940935aa58f92b6b5c4e3fe512fd5d16"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/candidate-I-typed-current.npz",
+      "sha256": "0eecf06dcfdde8703a9b994d42d8265403ded6b647b1fa440aaaa57ad006edf0"
+    }
+  },
+  "candidate_volumes": {
+    "Skin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/skin-coupled-quality-point-rollback-proposal.npz",
+      "sha256": "69522aeb5ed1b144d8a57a4b3259dd4f5aceecff1c87e5e413c3290029123e19"
+    },
+    "Fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-rollback-root/witness-component-rollback/fat-coupled-quality-point-rollback-proposal.npz",
+      "sha256": "0b3e616dcd6a22b9b2ca13409b938175ad546bc2eeaf50442c7e7d9ac8960e0a"
+    }
+  },
+  "witness_count": 174,
+  "surface_rollback_point_counts": {
+    "D": 91,
+    "O": 0,
+    "I": 64
+  },
+  "surface_safe_point_counts": {
+    "D": 0,
+    "O": 0,
+    "I": 13
+  },
+  "volume_rollback_point_counts": {
+    "Skin": 64,
+    "Fat": 155
+  },
+  "quality": {
+    "Skin": {
+      "baseline_native_failures": 36,
+      "final_native_failures": 36,
+      "baseline_native_good_regressions": 0,
+      "positive_F32_all_cells": true,
+      "native_quality_thresholds_unchanged": true,
+      "baseline_failures": 36,
+      "trial_648_failures": 36,
+      "rollback_final_failures": 36,
+      "rollback_quality_failures_added_vs_trial": 0,
+      "per_material": {
+        "15": {
+          "cells": 724892,
+          "baseline_failures": 36,
+          "trial_648_failures": 36,
+          "final_failures": 36,
+          "baseline_good_regressions": 0
+        }
+      }
+    },
+    "Fat": {
+      "baseline_native_failures": 172,
+      "final_native_failures": 172,
+      "baseline_native_good_regressions": 0,
+      "positive_F32_all_cells": true,
+      "native_quality_thresholds_unchanged": true,
+      "baseline_failures": 172,
+      "trial_648_failures": 149,
+      "rollback_final_failures": 172,
+      "rollback_quality_failures_added_vs_trial": 23,
+      "per_material": {
+        "16": {
+          "cells": 770603,
+          "baseline_failures": 172,
+          "trial_648_failures": 149,
+          "final_failures": 172,
+          "baseline_good_regressions": 0
+        }
+      }
+    }
+  },
+  "physical_admission": false,
+  "native_steps": 0
+}
