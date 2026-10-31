@@ -1,0 +1,5069 @@
+{
+  "status": "NO_COMPONENT_COUNT_REDUCTION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "quality_owner_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "analytic_lp_reference_sha256": "5d6e7a22c49ec907a881e01d76118877f67cc95f2bb7c5302a09ee2e26469687",
+  "affected_cells": 1401,
+  "free_nodes_used": 37,
+  "bad_before": 73,
+  "good_before": 1328,
+  "linear_margin": 0.001,
+  "trust_cap_m": 0.0002,
+  "trust_norm": "per-node L1 displacement",
+  "all_affected_good_and_bad_rows_constrained": true,
+  "frozen_input_longest_edge_target": true,
+  "shared_global_point_rows_are_single_variables": true,
+  "material_cell_counts": {
+    "15": 403,
+    "16": 998
+  },
+  "solver_status": 0,
+  "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "solver_objective": 0.3574269127750175,
+  "objective_policy": "bad-slack-dominant weighted L1 motion",
+  "per_abs_displacement_objective_weight": 2.7027027027027024e-08,
+  "quality_bad_slack_objective_weight": 0.00684931506849315,
+  "volume_bad_slack_objective_weight": 0.5,
+  "linear_bad_slack_sum": 52.184257573662464,
+  "linear_constraint_rows": 3061,
+  "linear_constraint_nnz": 9508,
+  "matrix_diagnostics": {
+    "all_finite": true,
+    "stored_nnz": 9508,
+    "explicit_zero_count": 61,
+    "coefficient_abs_min_nonzero": 1.3428579948515109e-05,
+    "coefficient_abs_max": 811.3964223797299,
+    "coefficient_abs_quantiles": [
+      0.0,
+      0.00019725118125964777,
+      0.07588592573348041,
+      1.0,
+      811.3964223797299
+    ],
+    "coefficient_abs_lt_1e_12": 0,
+    "rhs_min": -0.998936449302702,
+    "rhs_max": 1.0,
+    "rhs_abs_min_nonzero": 3.4666798872779503e-07,
+    "zero_constraint_rows": 0,
+    "good_cell_rows": 1328,
+    "bad_cells": 73,
+    "quality_passing_rows": 1328,
+    "quality_slack_rows": 73,
+    "volume_passing_rows": 1401,
+    "volume_slack_rows": 0,
+    "quality_good_rows_preserved_at_current_ratio": 38,
+    "quality_good_rows_receiving_margin": 1290,
+    "volume_good_rows_preserved_at_current_ratio": 0,
+    "volume_good_rows_receiving_margin": 1401,
+    "longest_edge_gradient": "first lexicographic longest edge; normalized q=det6/(1e-5*L^3)",
+    "longest_edge_tie_cell_count": 0,
+    "zero_displacement_baseline_feasible": true,
+    "zero_displacement_max_cell_violation": 0.0,
+    "quality_bad_rows_unit_slack": true,
+    "volume_bad_rows_unit_slack": true
+  },
+  "solver_method": "highs-ds",
+  "component_count": 28,
+  "accepted_components": 0,
+  "bad_after": 73,
+  "good_cell_regressions": 0,
+  "exact_F32_positive_cells": 1401,
+  "bad_score_before": 52.98926687883217,
+  "bad_score_after": 52.98926687883217,
+  "strict_quality_count_progress": false,
+  "full_step_independent_component_bad_sum": 96,
+  "full_step_good_regression_count": 24,
+  "full_step_nonpositive_count": 0,
+  "full_step_trust_overshoot_node_count": 11,
+  "full_step_max_node_l1_displacement_m": 0.00020001083612442017,
+  "max_free_node_l1_displacement_m": 0.0,
+  "component_attempts": [
+    {
+      "component": 0,
+      "nodes": 1,
+      "affected_cells": 56,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.952292561531067e-07,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              26223,
+              508651,
+              508668
+            ],
+            "first_good_regressions": [
+              26223,
+              508668
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            26223,
+            508668
+          ],
+          "witness_tet_node_rows": {
+            "26223": [
+              202068,
+              74370,
+              199718,
+              202081
+            ],
+            "508668": [
+              74299,
+              202521,
+              202081,
+              74229
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.4016404747962952e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.753260433673859e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.6100467443466187e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.5599653124809265e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.656612873077393e-10,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.3283064365386963e-10,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 1,
+      "nodes": 1,
+      "affected_cells": 18,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 8.940696716308594e-08,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              582827,
+              582831,
+              582834
+            ],
+            "first_good_regressions": [
+              582827,
+              582831
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            582827,
+            582831
+          ],
+          "witness_tet_node_rows": {
+            "582827": [
+              202718,
+              29692,
+              29748,
+              144448
+            ],
+            "582831": [
+              202718,
+              29788,
+              144453,
+              144448
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.725290298461914e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            582831
+          ],
+          "witness_tet_node_rows": {
+            "582831": [
+              202718,
+              29788,
+              144453,
+              144448
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.450580596923828e-09,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.450580596923828e-09,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 2,
+      "nodes": 1,
+      "affected_cells": 36,
+      "bad_before": 4,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 5,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.1175870895385742e-08,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              634394,
+              634410,
+              723164,
+              723167,
+              724602
+            ],
+            "first_good_regressions": [
+              634410
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            634410
+          ],
+          "witness_tet_node_rows": {
+            "634410": [
+              205370,
+              204150,
+              136996,
+              136860
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 3,
+      "nodes": 1,
+      "affected_cells": 16,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              636121
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 4,
+      "nodes": 1,
+      "affected_cells": 80,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              724767
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 5,
+      "nodes": 1,
+      "affected_cells": 8,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.0002000071108341217,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              639237
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              205730
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            205730
+          ],
+          "witness_node_rows": [
+            205730
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000541806221008,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.999339580535889e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            639235
+          ],
+          "witness_tet_node_rows": {
+            "639235": [
+              205730,
+              136922,
+              136944,
+              27086
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.5000423192977905e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            639235
+          ],
+          "witness_tet_node_rows": {
+            "639235": [
+              205730,
+              136922,
+              136944,
+              27086
+            ]
+          }
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.24731183052063e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            639235
+          ],
+          "witness_tet_node_rows": {
+            "639235": [
+              205730,
+              136922,
+              136944,
+              27086
+            ]
+          }
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.121793270111084e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            639235
+          ],
+          "witness_tet_node_rows": {
+            "639235": [
+              205730,
+              136922,
+              136944,
+              27086
+            ]
+          }
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.5683472156524658e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.860362529754639e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.948807716369629e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9744038581848145e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 8.940696716308594e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            639235
+          ],
+          "witness_tet_node_rows": {
+            "639235": [
+              205730,
+              136922,
+              136944,
+              27086
+            ]
+          }
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.0978193283081055e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            639235
+          ],
+          "witness_tet_node_rows": {
+            "639235": [
+              205730,
+              136922,
+              136944,
+              27086
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "component": 6,
+      "nodes": 3,
+      "affected_cells": 79,
+      "bad_before": 10,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 12,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.0002000071108341217,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              690929,
+              705332,
+              705333,
+              705334,
+              705335,
+              705336,
+              705337,
+              705341
+            ],
+            "first_good_regressions": [
+              690929,
+              705341
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              209408
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            209408
+          ],
+          "witness_tet_rows_full": [
+            690929,
+            705341
+          ],
+          "witness_tet_node_rows": {
+            "690929": [
+              208742,
+              136413,
+              136437,
+              136482
+            ],
+            "705341": [
+              209408,
+              136426,
+              136406,
+              136410
+            ]
+          },
+          "witness_node_rows": [
+            209408
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 12,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000169277191162,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            690916,
+            705341
+          ],
+          "witness_tet_node_rows": {
+            "690916": [
+              208742,
+              136362,
+              136372,
+              136360
+            ],
+            "705341": [
+              209408,
+              136426,
+              136406,
+              136410
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 12,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000084638595581e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            690929,
+            705331
+          ],
+          "witness_tet_node_rows": {
+            "690929": [
+              208742,
+              136413,
+              136437,
+              136482
+            ],
+            "705331": [
+              209408,
+              208742,
+              136429,
+              26843
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 11,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.5004148483276367e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            690929
+          ],
+          "witness_tet_node_rows": {
+            "690929": [
+              208742,
+              136413,
+              136437,
+              136482
+            ]
+          }
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.258487701416016e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 11,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.129243850708008e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            705331
+          ],
+          "witness_tet_node_rows": {
+            "705331": [
+              209408,
+              208742,
+              136429,
+              26843
+            ]
+          }
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.564621925354004e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.860362529754639e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.91155481338501e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.0116567611694336e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 11,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.0803341865539551e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            705331
+          ],
+          "witness_tet_node_rows": {
+            "705331": [
+              209408,
+              208742,
+              136429,
+              26843
+            ]
+          }
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 10,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 7,
+      "nodes": 1,
+      "affected_cells": 16,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              710743
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 8,
+      "nodes": 1,
+      "affected_cells": 40,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00019999966025352478,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              723686,
+              723691
+            ],
+            "first_good_regressions": [
+              723691
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            723691
+          ],
+          "witness_tet_node_rows": {
+            "723691": [
+              135125,
+              209288,
+              204648,
+              135119
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.999796748161316e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000457167625427e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.4996697902679443e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2498348951339722e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.129243850708008e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.564621925354004e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.82310962677002e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.8743019104003906e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9744038581848145e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.313225746154785e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 9,
+      "nodes": 1,
+      "affected_cells": 42,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              714072
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 10,
+      "nodes": 1,
+      "affected_cells": 12,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.1830590665340424e-05,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              718710,
+              724625,
+              724633
+            ],
+            "first_good_regressions": [
+              718710,
+              724633
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            718710,
+            724633
+          ],
+          "witness_tet_node_rows": {
+            "718710": [
+              210081,
+              210048,
+              132063,
+              132076
+            ],
+            "724633": [
+              208486,
+              132076,
+              208695,
+              210081
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.914829671382904e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            718710,
+            724633
+          ],
+          "witness_tet_node_rows": {
+            "718710": [
+              210081,
+              210048,
+              132063,
+              132076
+            ],
+            "724633": [
+              208486,
+              132076,
+              208695,
+              210081
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.950429916381836e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.4845281839370728e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.348135113716125e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.6694109439849854e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.909211277961731e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            718710,
+            724633
+          ],
+          "witness_tet_node_rows": {
+            "718710": [
+              210081,
+              210048,
+              132063,
+              132076
+            ],
+            "724633": [
+              208486,
+              132076,
+              208695,
+              210081
+            ]
+          }
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 8.66129994392395e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            724633
+          ],
+          "witness_tet_node_rows": {
+            "724633": [
+              208486,
+              132076,
+              208695,
+              210081
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.421438694000244e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            718710,
+            724633
+          ],
+          "witness_tet_node_rows": {
+            "718710": [
+              210081,
+              210048,
+              132063,
+              132076
+            ],
+            "724633": [
+              208486,
+              132076,
+              208695,
+              210081
+            ]
+          }
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.51925802230835e-09,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.862645149230957e-09,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.313225746154785e-10,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 11,
+      "nodes": 2,
+      "affected_cells": 95,
+      "bad_before": 5,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 7,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.5622004866600037e-05,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1297350,
+              1370808,
+              1461557,
+              1488380,
+              1488385,
+              1488386,
+              1489969
+            ],
+            "first_good_regressions": [
+              1297350,
+              1370808
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1297350,
+            1370808
+          ],
+          "witness_tet_node_rows": {
+            "1297350": [
+              338749,
+              308876,
+              309237,
+              308535
+            ],
+            "1370808": [
+              342518,
+              309230,
+              308601,
+              309369
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.806345820426941e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 6,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.907829523086548e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1370813
+          ],
+          "witness_tet_node_rows": {
+            "1370813": [
+              342518,
+              309369,
+              308675,
+              308906
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.950189471244812e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.741634130477905e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.880130290985107e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.477318048477173e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2293457984924316e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.146728992462158e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.421438694000244e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.450580596923828e-09,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.450580596923828e-09,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 5,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 12,
+      "nodes": 1,
+      "affected_cells": 16,
+      "bad_before": 2,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.0002000071108341217,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1300812,
+              1492748
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              338906
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            338906
+          ],
+          "witness_node_rows": [
+            338906
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.99942421913147e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000457167625427e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.5004148483276367e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.118067979812622e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.55717134475708e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.860362529754639e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.948807716369629e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9744038581848145e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 8.940696716308594e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.470348358154297e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 13,
+      "nodes": 1,
+      "affected_cells": 198,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1308723
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 14,
+      "nodes": 3,
+      "affected_cells": 126,
+      "bad_before": 7,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 10,
+          "good_regression_count": 3,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.00020000338554382324,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1317084,
+              1337233,
+              1359984,
+              1359986,
+              1359987,
+              1360006,
+              1360030,
+              1395896
+            ],
+            "first_good_regressions": [
+              1360006,
+              1395896,
+              1493138
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              341995
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            341995
+          ],
+          "witness_tet_rows_full": [
+            1360006,
+            1395896,
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1360006": [
+              341995,
+              252993,
+              252500,
+              252974
+            ],
+            "1395896": [
+              343618,
+              339788,
+              257479,
+              257478
+            ],
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          },
+          "witness_node_rows": [
+            341995
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000169277191162,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1360006,
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1360006": [
+              341995,
+              252993,
+              252500,
+              252974
+            ],
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.0008296966552734e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1360006,
+            1389941
+          ],
+          "witness_tet_node_rows": {
+            "1360006": [
+              341995,
+              252993,
+              252500,
+              252974
+            ],
+            "1389941": [
+              343386,
+              339788,
+              253402,
+              339353
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.5004148483276367e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          }
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1389941
+          ],
+          "witness_tet_node_rows": {
+            "1389941": [
+              343386,
+              339788,
+              253402,
+              339353
+            ]
+          }
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 7,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.1366944313049316e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1389941,
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1389941": [
+              343386,
+              339788,
+              253402,
+              339353
+            ],
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          }
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.55717134475708e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          }
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.897615432739258e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1360006,
+            1389941
+          ],
+          "witness_tet_node_rows": {
+            "1360006": [
+              341995,
+              252993,
+              252500,
+              252974
+            ],
+            "1389941": [
+              343386,
+              339788,
+              253402,
+              339353
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.948807716369629e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1389941,
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1389941": [
+              343386,
+              339788,
+              253402,
+              339353
+            ],
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          }
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.0116567611694336e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1360006
+          ],
+          "witness_tet_node_rows": {
+            "1360006": [
+              341995,
+              252993,
+              252500,
+              252974
+            ]
+          }
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 7,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.685754776000977e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1493138
+          ],
+          "witness_tet_node_rows": {
+            "1493138": [
+              345801,
+              340838,
+              255237,
+              255228
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "component": 15,
+      "nodes": 1,
+      "affected_cells": 18,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.00020000338554382324,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1317544
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              339815
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            339815
+          ],
+          "witness_node_rows": [
+            339815
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000169277191162,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.0008296966552734e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1489114,
+            1493436
+          ],
+          "witness_tet_node_rows": {
+            "1489114": [
+              236199,
+              117777,
+              339815,
+              116497
+            ],
+            "1493436": [
+              345815,
+              117777,
+              339815,
+              236199
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.4996697902679443e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2516975402832031e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1489114
+          ],
+          "witness_tet_node_rows": {
+            "1489114": [
+              236199,
+              117777,
+              339815,
+              116497
+            ]
+          }
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.236135959625244e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.121793270111084e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.55717134475708e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.897615432739258e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1489114
+          ],
+          "witness_tet_node_rows": {
+            "1489114": [
+              236199,
+              117777,
+              339815,
+              116497
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.8743019104003906e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.862645149230957e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.1175870895385742e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1489114
+          ],
+          "witness_tet_node_rows": {
+            "1489114": [
+              236199,
+              117777,
+              339815,
+              116497
+            ]
+          }
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.725290298461914e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 16,
+      "nodes": 3,
+      "affected_cells": 152,
+      "bad_before": 11,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 12,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 3,
+          "max_node_l1_displacement_m": 0.00020000524818897247,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1461132,
+              1461154,
+              1462832,
+              1463032,
+              1463135,
+              1463238,
+              1463240,
+              1463293
+            ],
+            "first_good_regressions": [
+              1489988
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              339873,
+              340107,
+              342303
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            339873,
+            340107,
+            342303
+          ],
+          "witness_tet_rows_full": [
+            1489988
+          ],
+          "witness_tet_node_rows": {
+            "1489988": [
+              307220,
+              307436,
+              339873,
+              307219
+            ]
+          },
+          "witness_node_rows": [
+            339873,
+            340107,
+            342303
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 12,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000355541706085,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1489988
+          ],
+          "witness_tet_node_rows": {
+            "1489988": [
+              307220,
+              307436,
+              339873,
+              307219
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.999712109565735e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.5006011128425598e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2503936886787415e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.243586540222168e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.129243850708008e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.564621925354004e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.860362529754639e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 12,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.9674341678619385e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1462051
+          ],
+          "witness_tet_node_rows": {
+            "1462051": [
+              307366,
+              340107,
+              341440,
+              307337
+            ]
+          }
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9185245037078857e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 11,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.043081283569336e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 12,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1462051
+          ],
+          "witness_tet_node_rows": {
+            "1462051": [
+              307366,
+              340107,
+              341440,
+              307337
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "component": 17,
+      "nodes": 1,
+      "affected_cells": 24,
+      "bad_before": 2,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.00020001083612442017,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1327654,
+              1327657,
+              1327661
+            ],
+            "first_good_regressions": [
+              1327654
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              340323
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            340323
+          ],
+          "witness_tet_rows_full": [
+            1327654
+          ],
+          "witness_tet_node_rows": {
+            "1327654": [
+              340323,
+              235951,
+              237424,
+              235667
+            ]
+          },
+          "witness_node_rows": [
+            340323
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.99942421913147e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327654
+          ],
+          "witness_tet_node_rows": {
+            "1327654": [
+              340323,
+              235951,
+              237424,
+              235667
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.0008296966552734e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.4981796741485596e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327645
+          ],
+          "witness_tet_node_rows": {
+            "1327645": [
+              340323,
+              339389,
+              115917,
+              115932
+            ]
+          }
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2509524822235107e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327654
+          ],
+          "witness_tet_node_rows": {
+            "1327654": [
+              340323,
+              235951,
+              237424,
+              235667
+            ]
+          }
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.243586540222168e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327645
+          ],
+          "witness_tet_node_rows": {
+            "1327645": [
+              340323,
+              339389,
+              115917,
+              115932
+            ]
+          }
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.11434268951416e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327645
+          ],
+          "witness_tet_node_rows": {
+            "1327645": [
+              340323,
+              339389,
+              115917,
+              115932
+            ]
+          }
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.55717134475708e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327645
+          ],
+          "witness_tet_node_rows": {
+            "1327645": [
+              340323,
+              339389,
+              115917,
+              115932
+            ]
+          }
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.972121238708496e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327654
+          ],
+          "witness_tet_node_rows": {
+            "1327654": [
+              340323,
+              235951,
+              237424,
+              235667
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.7997961044311523e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327645
+          ],
+          "witness_tet_node_rows": {
+            "1327645": [
+              340323,
+              339389,
+              115917,
+              115932
+            ]
+          }
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.086162567138672e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327654
+          ],
+          "witness_tet_node_rows": {
+            "1327654": [
+              340323,
+              235951,
+              237424,
+              235667
+            ]
+          }
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.685754776000977e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327654
+          ],
+          "witness_tet_node_rows": {
+            "1327654": [
+              340323,
+              235951,
+              237424,
+              235667
+            ]
+          }
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.725290298461914e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1327645
+          ],
+          "witness_tet_node_rows": {
+            "1327645": [
+              340323,
+              339389,
+              115917,
+              115932
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "component": 18,
+      "nodes": 1,
+      "affected_cells": 14,
+      "bad_before": 2,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 3,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.2351741790771484e-08,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1362936,
+              1362937,
+              1395910
+            ],
+            "first_good_regressions": [
+              1395910
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1395910
+          ],
+          "witness_tet_node_rows": {
+            "1395910": [
+              343618,
+              342116,
+              259288,
+              259982
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 19,
+      "nodes": 1,
+      "affected_cells": 14,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.862645149230957e-08,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1372427,
+              1372428
+            ],
+            "first_good_regressions": [
+              1372427
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1372427
+          ],
+          "witness_tet_node_rows": {
+            "1372427": [
+              342599,
+              132261,
+              296338,
+              288403
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 20,
+      "nodes": 3,
+      "affected_cells": 181,
+      "bad_before": 7,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 10,
+          "good_regression_count": 3,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.291534423828125e-06,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1376178,
+              1376283,
+              1399527,
+              1399537,
+              1399538,
+              1487982,
+              1492710,
+              1492712
+            ],
+            "first_good_regressions": [
+              1376178,
+              1399527,
+              1493055
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1376178,
+            1399527,
+            1493055
+          ],
+          "witness_tet_node_rows": {
+            "1376178": [
+              342792,
+              122081,
+              121243,
+              121001
+            ],
+            "1399527": [
+              343752,
+              342792,
+              254391,
+              125699
+            ],
+            "1493055": [
+              345797,
+              343734,
+              253334,
+              255375
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.1457672119140625e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1398838,
+            1399527
+          ],
+          "witness_tet_node_rows": {
+            "1398838": [
+              343734,
+              342792,
+              254427,
+              125699
+            ],
+            "1399527": [
+              343752,
+              342792,
+              254391,
+              125699
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.0728836059570312e-06,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1376178,
+            1398838
+          ],
+          "witness_tet_node_rows": {
+            "1376178": [
+              342792,
+              122081,
+              121243,
+              121001
+            ],
+            "1398838": [
+              343734,
+              342792,
+              254427,
+              125699
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.289912223815918e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1399525
+          ],
+          "witness_tet_node_rows": {
+            "1399525": [
+              343752,
+              253617,
+              125699,
+              254391
+            ]
+          }
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.60770320892334e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1399527
+          ],
+          "witness_tet_node_rows": {
+            "1399527": [
+              343752,
+              342792,
+              254391,
+              125699
+            ]
+          }
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 10,
+          "good_regression_count": 3,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.341104507446289e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1376178,
+            1376191,
+            1399525
+          ],
+          "witness_tet_node_rows": {
+            "1376178": [
+              342792,
+              122081,
+              121243,
+              121001
+            ],
+            "1376191": [
+              342792,
+              122081,
+              125699,
+              121243
+            ],
+            "1399525": [
+              343752,
+              253617,
+              125699,
+              254391
+            ]
+          }
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 9,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.705522537231445e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1376178,
+            1376191
+          ],
+          "witness_tet_node_rows": {
+            "1376178": [
+              342792,
+              122081,
+              121243,
+              121001
+            ],
+            "1376191": [
+              342792,
+              122081,
+              125699,
+              121243
+            ]
+          }
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.725290298461914e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1399527
+          ],
+          "witness_tet_node_rows": {
+            "1399527": [
+              343752,
+              342792,
+              254391,
+              125699
+            ]
+          }
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 8,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.2351741790771484e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1399527
+          ],
+          "witness_tet_node_rows": {
+            "1399527": [
+              343752,
+              342792,
+              254391,
+              125699
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 7,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 7,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 7,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 7,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 21,
+      "nodes": 1,
+      "affected_cells": 12,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00019999593496322632,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1451984
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000914335250854,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000084638595581e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.498924732208252e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.129243850708008e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.5497207641601562e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.897615432739258e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.8743019104003906e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9371509552001953e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.685754776000977e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.470348358154297e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 22,
+      "nodes": 1,
+      "affected_cells": 14,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0001999884843826294,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1398314,
+              1488737
+            ],
+            "first_good_regressions": [
+              1398314
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1398314
+          ],
+          "witness_tet_node_rows": {
+            "1398314": [
+              343712,
+              237424,
+              116497,
+              235885
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 3,
+          "good_regression_count": 2,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010001659393310547,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1398313,
+            1398314
+          ],
+          "witness_tet_node_rows": {
+            "1398313": [
+              343712,
+              343343,
+              235826,
+              116497
+            ],
+            "1398314": [
+              343712,
+              237424,
+              116497,
+              235885
+            ]
+          }
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000084638595581e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1398313
+          ],
+          "witness_tet_node_rows": {
+            "1398313": [
+              343712,
+              343343,
+              235826,
+              116497
+            ]
+          }
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.501159906387329e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.249462366104126e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.1068921089172363e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.5795230865478516e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.82310962677002e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1398313
+          ],
+          "witness_tet_node_rows": {
+            "1398313": [
+              343712,
+              343343,
+              235826,
+              116497
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.8743019104003906e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.7881393432617188e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.685754776000977e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.705522537231445e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1398313
+          ],
+          "witness_tet_node_rows": {
+            "1398313": [
+              343712,
+              343343,
+              235826,
+              116497
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "component": 23,
+      "nodes": 1,
+      "affected_cells": 56,
+      "bad_before": 4,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1419964,
+              1419983,
+              1420460,
+              1420474
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 4,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 24,
+      "nodes": 1,
+      "affected_cells": 40,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.1920928955078125e-07,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1468148
+            ],
+            "first_good_regressions": [
+              1468148
+            ],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1468148
+          ],
+          "witness_tet_node_rows": {
+            "1468148": [
+              242248,
+              240888,
+              345197,
+              345281
+            ]
+          }
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.0,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 25,
+      "nodes": 1,
+      "affected_cells": 10,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00019999966025352478,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1492549
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": []
+          },
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.999796748161316e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000084638595581e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.499297261238098e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1488382
+          ],
+          "witness_tet_node_rows": {
+            "1488382": [
+              345783,
+              136473,
+              313490,
+              135150
+            ]
+          }
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.249462366104126e-05,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1488382
+          ],
+          "witness_tet_node_rows": {
+            "1488382": [
+              345783,
+              136473,
+              313490,
+              135150
+            ]
+          }
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.2622129917144775e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.118067979812622e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.564621925354004e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.897615432739258e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1488382
+          ],
+          "witness_tet_node_rows": {
+            "1488382": [
+              345783,
+              136473,
+              313490,
+              135150
+            ]
+          }
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.7997961044311523e-07,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1488382
+          ],
+          "witness_tet_node_rows": {
+            "1488382": [
+              345783,
+              136473,
+              313490,
+              135150
+            ]
+          }
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.8998980522155762e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.1175870895385742e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 2,
+          "good_regression_count": 1,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 4.842877388000488e-08,
+          "reason": "GOOD_CELL_REGRESSION",
+          "witness_tet_rows_full": [
+            1488382
+          ],
+          "witness_tet_node_rows": {
+            "1488382": [
+              345783,
+              136473,
+              313490,
+              135150
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "component": 26,
+      "nodes": 1,
+      "affected_cells": 10,
+      "bad_before": 2,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.00020000338554382324,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1495398,
+              1495417
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              345884
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            345884
+          ],
+          "witness_node_rows": [
+            345884
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000169277191162,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000084638595581e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.4996697902679443e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.121793270111084e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.564621925354004e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.82310962677002e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.8743019104003906e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9371509552001953e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.685754776000977e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 2,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    },
+    {
+      "component": 27,
+      "nodes": 1,
+      "affected_cells": 18,
+      "bad_before": 1,
+      "accepted_alpha": null,
+      "status": "UNCHANGED",
+      "attempts": [
+        {
+          "alpha": 1.0,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 1,
+          "max_node_l1_displacement_m": 0.00020000338554382324,
+          "witness_tet_rows": {
+            "first_bad_after": [
+              1495422
+            ],
+            "first_good_regressions": [],
+            "first_nonpositive": [],
+            "first_trust_overshoot_nodes": [
+              345900
+            ]
+          },
+          "reason": "F32_TRUST_BOUND",
+          "trust_overshoot_node_rows": [
+            345900
+          ],
+          "witness_node_rows": [
+            345900
+          ]
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 0.00010000169277191162,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.000084638595581e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 2.4996697902679443e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.2502074241638184e-05,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 6.251037120819092e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.121793270111084e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.564621925354004e-06,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 7.82310962677002e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 3.8743019104003906e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 1.9371509552001953e-07,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.00048828125,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 9.685754776000977e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        },
+        {
+          "alpha": 0.000244140625,
+          "bad_after": 1,
+          "good_regression_count": 0,
+          "nonpositive_count": 0,
+          "trust_overshoot_count": 0,
+          "max_node_l1_displacement_m": 5.21540641784668e-08,
+          "reason": "NO_BAD_COUNT_REDUCTION"
+        }
+      ]
+    }
+  ],
+  "point_rows_changed": [],
+  "topology_unchanged": true,
+  "candidate_is_construction_proposal_only": true,
+  "componentwise_recovery": true
+}

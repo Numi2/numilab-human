@@ -1,0 +1,37 @@
+{
+  "dependency_pins": {
+    "producer": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/batch_interior_steiner_kernel_cone_quality_767_root.py",
+      "sha256": "c9d11fbcc2403755f283a9773053dd8e91c4d81dde8f3594c3f29be208a7da75"
+    },
+    "promoter": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/independent_promoter_782_791_root.py",
+      "sha256": "8904c4d9832abdde9a717d7457c8e067870aaedda365e0ec85d8667742cf3658"
+    },
+    "source_verifier": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_791_root.py",
+      "sha256": "b4da6ac3509767e11f3df6bd712a9908adf6b9bd0c1efc2122b16ec15df04ed9"
+    }
+  },
+  "driver": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/continue_adaptive_fixed_boundary_cones_772_v782_791_root.py",
+    "sha256": "3af7794ce5c5e98adfa12d88f7e9249a551b419332fdb3494a5854ed56729301"
+  },
+  "schema": "numi.h706.continuation-772-782-791-controls.v1",
+  "status": "PASS_IMPORT_PINS_TAMPER_REJECTION_AND_ZERO_ROUND_FIXTURE",
+  "tamper_control": {
+    "error": "pinned continuation dependency SHA mismatch: /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/independent_promoter_782_791_root.py",
+    "status": "PASS_REJECTED"
+  },
+  "zero_round_fixture": {
+    "completion": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixture-772-791-root/zero-round-control/completion.json",
+      "sha256": "76b038b1519634d6c69d10aff6c7f2b98308dd9efaa20bf993311ced5d995342",
+      "status": "ZERO_NATIVE_QUALITY_FAILURES"
+    },
+    "geometry_rounds": 0,
+    "native_steps": 0,
+    "physical_admission": false,
+    "synthetic_state": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixture-772-791-root/synthetic-zero-quality-state.json"
+  }
+}

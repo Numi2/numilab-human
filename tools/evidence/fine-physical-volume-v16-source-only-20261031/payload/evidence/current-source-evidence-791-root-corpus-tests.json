@@ -1,0 +1,78 @@
+{
+  "schema": "numi.h706.current-source-evidence-791-corpus-controls.v1",
+  "status": "PASS_9_STATES_AND_EXPECTED_LEGACY_776_REJECTION",
+  "helper": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_791_root.py",
+    "sha256": "b4da6ac3509767e11f3df6bd712a9908adf6b9bd0c1efc2122b16ec15df04ed9"
+  },
+  "base": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_791_validation_root.py",
+    "sha256": "ce6a200772e3ee135d4cfc3844026cf5cdcdce9a67af8e909651a7b7e33ee861"
+  },
+  "states": {
+    "757": {
+      "status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+      "mode": "UNCHANGED_COORDINATES",
+      "state_sha256": "07898b8b3fff94f7f976cf2e65b5555b49cdaca8772e63fbbd676902860c160e"
+    },
+    "763": {
+      "status": "PASS_INHERITED_CURRENT_SOURCE_EVIDENCE",
+      "mode": "INHERITED_AUDITED_SOURCE_EVIDENCE_SAME_SOURCE_SURFACE_ANCESTRY",
+      "state_sha256": "cd4542fe0ee6a871ff41996719166e19a52670b003fbd89f7ad428eb62d5c9e5"
+    },
+    "767": {
+      "status": "PASS_INHERITED_CURRENT_SOURCE_EVIDENCE",
+      "mode": "INHERITED_AUDITED_SOURCE_EVIDENCE_SAME_SOURCE_SURFACE_ANCESTRY",
+      "state_sha256": "41ed085b14b4a39ef07acc5fc54fba4fce9c532f95eedc6a62de2345120cc730"
+    },
+    "772": {
+      "status": "PASS_INHERITED_CURRENT_SOURCE_EVIDENCE",
+      "mode": "INHERITED_AUDITED_SOURCE_EVIDENCE_SAME_SOURCE_SURFACE_ANCESTRY",
+      "state_sha256": "a6914b209d046aa49cee8e1e71717bb2a784b9e06d1e310cfe4ea83a8c81b0c3"
+    },
+    "773": {
+      "status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+      "mode": "UNCHANGED_COORDINATES",
+      "state_sha256": "d7ded2fe102a3b6178faf31fe2c9b582c8d254b1596b2bdc8d02db4b91f5b557"
+    },
+    "776": {
+      "status": "EXPECTED_LEGACY_REJECTION",
+      "reason": "ValueError: bounded movement lacks its recorded 775 audit invocation",
+      "state_sha256": "e7e53921df5487c9dca596165861402c0469d119b99714372d6e7d5cd84a670d"
+    },
+    "777": {
+      "status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+      "mode": "AUDITED_BOUNDED_POINT_MOVEMENT_630_775",
+      "state_sha256": "1d1268042e679bf4540c22ac46865275304f7eb710c6c4f4e862ded072264380"
+    },
+    "780": {
+      "status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+      "mode": "UNCHANGED_COORDINATES",
+      "state_sha256": "f31e425d2d5ed558c0b48563c3e746095e4db879b1c487862e13bab8f0e90cfe"
+    },
+    "783": {
+      "status": "PASS_INHERITED_CURRENT_SOURCE_EVIDENCE",
+      "mode": "INHERITED_AUDITED_SOURCE_EVIDENCE_SAME_SOURCE_SURFACE_ANCESTRY",
+      "state_sha256": "06d4c99111a5726c5ee1debd16ce9813f16a817d5bff51d3cf59cee63b9ad0ea"
+    },
+    "latest789": {
+      "status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+      "mode": "AUDITED_BOUNDED_POINT_MOVEMENT_630_775",
+      "state_sha256": "859643d99b00d35dd86c1a87f29a0ba6d0409726ee42b43d12eb018da31089a6"
+    },
+    "missing-count-zero-measured": {
+      "status": "PASS",
+      "reported": 0
+    },
+    "missing-count-changed-measured": {
+      "status": "PASS_REJECTED",
+      "measured_moved": 1,
+      "error": "reported moved-point count differs from exact F32 arrays: fixture-changed"
+    }
+  },
+  "npz_unique_paths_loaded": 26,
+  "npz_load_calls": 60,
+  "elapsed_s": 1.0268649170175195,
+  "physical_admission": false,
+  "native_steps": 0
+}

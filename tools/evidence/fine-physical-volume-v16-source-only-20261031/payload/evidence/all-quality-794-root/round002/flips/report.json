@@ -1,0 +1,104 @@
+{
+  "status": "PASS_INCREMENTAL_LEXICOGRAPHIC_QUALITY_SEARCH",
+  "roles": [
+    {
+      "role": "Skin",
+      "input": {
+        "absolute_geometric_volume_change_m3": 6.0756162154156805e-12,
+        "cells": 724893,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 1,
+        "missing_target_faces": 0,
+        "native_quality_failures": 57,
+        "nodes": 210301,
+        "nonpositive": 0,
+        "operations": 1,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/flips/skin-fixed-boundary-quality-queue.npz",
+        "sha256": "d4d263b930745196dc257bc0f866bbed494caf320ef5ed47e39746c96e7b00db"
+      },
+      "candidate": {
+        "absolute_geometric_volume_change_m3": 6.0756162154156805e-12,
+        "cells": 724893,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 1,
+        "missing_target_faces": 0,
+        "native_quality_failures": 57,
+        "nodes": 210301,
+        "nonpositive": 0,
+        "operations": 1,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round002/flips/skin-fixed-boundary-quality-queue.npz",
+        "sha256": "f2647eebca9aa4ddbbccdf17254d872baa898f0f3fd76dbc8af7599c70582a49"
+      },
+      "bad_before": 57,
+      "bad_after": 57,
+      "operations": [],
+      "tests": 274,
+      "rejections": {
+        "edge link is not a simple ring": 99,
+        "no_certified_quality_gain": 274,
+        "invalid bounded polygon ring": 13
+      },
+      "queue_exhausted": true,
+      "queue_remaining": 0,
+      "elapsed_s": 3.978534292196855,
+      "initial_cells": 724893,
+      "active_cell_ids": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round002/flips/skin-active-cell-ids.npz"
+    },
+    {
+      "role": "Fat",
+      "input": {
+        "absolute_geometric_volume_change_m3": 6.0756162154156805e-12,
+        "cells": 770531,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 0,
+        "missing_target_faces": 0,
+        "native_quality_failures": 223,
+        "nodes": 253836,
+        "nonpositive": 0,
+        "operations": 1,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/flips/fat-fixed-boundary-quality-queue.npz",
+        "sha256": "f27d54275356ce8e718e91db62e957ea067b64280f86e32aa7b7c41cd069319b",
+        "target_boundary_match": true
+      },
+      "candidate": {
+        "absolute_geometric_volume_change_m3": 6.0756162154156805e-12,
+        "cells": 770531,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 0,
+        "missing_target_faces": 0,
+        "native_quality_failures": 223,
+        "nodes": 253836,
+        "nonpositive": 0,
+        "operations": 1,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round002/flips/fat-fixed-boundary-quality-queue.npz",
+        "sha256": "99224b13ad7d6b45be80f9c2cf075b817186b2a8cebf3d41a6fe956dcd5bacd9",
+        "target_boundary_match": true
+      },
+      "bad_before": 223,
+      "bad_after": 223,
+      "operations": [],
+      "tests": 1126,
+      "rejections": {
+        "no_certified_quality_gain": 1126,
+        "invalid bounded polygon ring": 118,
+        "edge link is not a simple ring": 235
+      },
+      "queue_exhausted": true,
+      "queue_remaining": 0,
+      "elapsed_s": 5.323294916888699,
+      "initial_cells": 770531,
+      "active_cell_ids": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round002/flips/fat-active-cell-ids.npz"
+    }
+  ],
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental_fixed_boundary_polygon_search_657_root.py",
+    "sha256": "6e351b3b4983458a5316985d6fdfaf4309c3b263c64b7fb649fe0d95a640e4bd"
+  },
+  "elapsed_s": 9.742060916032642,
+  "physical_admission": false,
+  "native_steps": 0
+}
