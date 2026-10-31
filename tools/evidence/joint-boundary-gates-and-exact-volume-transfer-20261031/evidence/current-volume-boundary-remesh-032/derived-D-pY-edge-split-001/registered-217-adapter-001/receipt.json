@@ -1,0 +1,70 @@
+{
+  "schema": "numi.D-pY-registered-217-adapter.001.v1",
+  "status": "PASS_ACTUAL_697_LOAD_SURFACE_217_D_TYPED_METADATA_ADAPTER",
+  "physical_admission": false,
+  "native_steps": 0,
+  "source_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/candidate-D-pY-boundary-split.npz",
+    "sha256": "c157370a5389bdd54552abaffc991325b12bfafd2fed9772a639df3ac5d38487"
+  },
+  "source_operation": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/D-pY-edge-split-3c585-001.json",
+    "sha256": "341b6a607de45a0285a80e7b32eb0f66515d3d704a5d63656d8cac72e0fb5f21",
+    "schema_addition_id": 100000187,
+    "union_sha256": "d6a2cff91d0eda8c04e39e879dfc7f8b114cb049f484fb54e1f6be461f0cc881",
+    "union_count": 2
+  },
+  "registry_base": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038-typed-metadata-005-001/D-run-001/candidate-D-connected-union-typed.npz",
+    "sha256": "d0f6cda10552a55be2d6ac5a0740e0142293cdf55177f1ce853a3eb5624374da",
+    "entry_count_before": 1909,
+    "copied_unchanged": true,
+    "added_keys": [
+      "100000187"
+    ]
+  },
+  "output_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/registered-217-adapter-001/candidate-D-pY-boundary-split-registered.npz",
+    "sha256": "03a017eb723ac5a6f72435d3a5369c2693724d3dc349f1078c39002f2d799f98",
+    "point_count": 120637,
+    "face_count": 239045
+  },
+  "actual_697_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/handoff/prepare_tetgen_handoff_697_typedD.py",
+    "sha256": "027423d413ea72e0efec3c1642020f54973118e7d56f7a8bcbf87fe9193d2622",
+    "owner_build_script": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/build_native_domain_217.py",
+    "owner_build_script_sha256": "d7f411c18f91905c6e1d91ab75592ec5782a8852892ac8a1fdb566ee2206df09",
+    "load_surface": "PASS"
+  },
+  "loader_semantics": {
+    "ancestry_kind_unique": [
+      6
+    ],
+    "exact_historical_face_rows_all_invalid": true,
+    "full_face_ancestry_rows_replayed": true,
+    "full_quality_star_union_members_byte_identical": true,
+    "source_current_face_group_identity_only": true
+  },
+  "controls": [
+    {
+      "control": "missing_declared_schema_addition_rejected",
+      "error": "prepared reduced identity schema incomplete"
+    },
+    {
+      "control": "false_exact_face_identity_rejected",
+      "error": "prepared reduction may not invent an exact source face"
+    },
+    {
+      "control": "incomplete_face_ancestry_rejected",
+      "error": "prepared reduced face ancestry CSR malformed"
+    }
+  ],
+  "geometry_identity": {
+    "source_points_float32_bitwise_equal": true,
+    "source_faces_bitwise_equal": true,
+    "all_original_typed_and_ancestry_arrays_bitwise_equal": true,
+    "only_adapter_fields_plus_schema_registry_added": true
+  },
+  "schema_registry_semantics": "The prior registry was copied as a dictionary and the operation JSON's single declared addition was appended. No complete-registry replacement or historical exact-face claim is made.",
+  "elapsed_seconds": 2.425326749915257
+}

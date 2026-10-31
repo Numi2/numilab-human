@@ -1,0 +1,1142 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-skin-target-265-root/prepare-001/skin-native-apex-current-target-input.npz",
+  "input_sha256": "c9fc3f627083b07015a4cfa36c048c8e60f8997b7b7528f03645272cd98802a3",
+  "script_sha256": "bc192ca816d7dd4443dcfd959beb6aa9ba3472cb3919e0f36e7d10fc60348a15",
+  "maximum_extra_construction_defects_per_cavity": 4,
+  "strict_native_admission_thresholds_unchanged": true,
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "selected_cells": 3642,
+    "dirty_nodes": 248,
+    "components": 36,
+    "rings": 0,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 2825,
+        "components": 37,
+        "unclosed_components": 12,
+        "bad_boundary_edges": 13
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 3422,
+        "components": 36,
+        "unclosed_components": 4,
+        "bad_boundary_edges": 10
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 3566,
+        "components": 36,
+        "unclosed_components": 1,
+        "bad_boundary_edges": 1
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 3642,
+        "components": 36,
+        "unclosed_components": 0,
+        "bad_boundary_edges": 0
+      }
+    ],
+    "additional_witness_seed_nodes": 71
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 107,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "192ace519fe0be4af52e1ab5a88b432269a0a8527760f0a1fa76d6923daca780",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 2,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 117,
+      "new_bad": 5,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "621f650e8161610b3a35538875c6b7233743d029702af5dbf9da6ca5ea129254"
+    },
+    {
+      "id": 1,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 106,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "e68c0069628944b17cba9670471ee167e0bd8fddf613c0806f20a468e5304299",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 2,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 68,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "92e18da9854099609ce70a7b330c35b515808c94c5ec800246d2b0684bd72334",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 3,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 13,
+      "old_nonpositive": 0,
+      "old_cells": 309,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "8d1f6d271f2cc32e49f749eb88e6404412e1ae286a16ba3036ba705a2c7d99bc",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 4,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 48,
+      "old_nonpositive": 0,
+      "old_cells": 331,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "192c612f288af23ef244273964410b74fb70ed22fcb174d6910d3f644a85ab35",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 5,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 52,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "919a29c0c29b8738589c3f96973aa4509a8fdd2f3732533a804ad3a9e6d50d2f",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -2,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 49,
+      "new_bad": 0,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "7e14bf241a726a4b9f0c220f1d328c1b354c6921923af298b5afee23e4d28f8c"
+    },
+    {
+      "id": 6,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 48,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "467b5d105e7bc0612b66725989e561c856f0908a4509fcc9a25a8164f76c053f",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 1,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 53,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "2163db5dce1057876207870eb67c35a654c60633af8c23b4b62f9a96066db6f3"
+    },
+    {
+      "id": 7,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 58,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "998461b05884bc88813fcb1a60082168f0ff7cc8b179651c8ce3035d3f869144",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 3,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 66,
+      "new_bad": 7,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "0d89d0268acf4084bd140b88b4b184b8774d913584e1bc222f3aad739da62a96"
+    },
+    {
+      "id": 8,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 52,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "bae1b10c35862c764ff7124471b22481d83014f4338e915a6933b437f674c394",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 3,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 57,
+      "new_bad": 8,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "ce3e9c8e281cfa7ead0b90a56fb740b677f2a45e0da1a3ded7e2d95c5af169e1"
+    },
+    {
+      "id": 9,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 64,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "808451d94f3d2cae144ae22de3c41d3db9a92278953c77a229f4b973332eb0c1",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 10,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 21,
+      "old_nonpositive": 0,
+      "old_cells": 155,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "35ef75c8595789c3948c2c18331b26ef9ecd562a7623749d3907ac77b0de148f",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 11,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 45,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "aebb6c965c17c60a93c1c8e66695337b4f16d3a7560500c1e127a7c6d0a8b6ef",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 0,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 45,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "3e29be503fec566baf5746fc440999ea4b6930d3b93ce9275582abb3b54e9552"
+    },
+    {
+      "id": 12,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 133,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "4cfe7c9bb147711c821f0fb3443c7c9034c207e1dc0f4b9344afa5a854c818b2",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 13,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 179,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6438a9cc569ba38801d348c25c756ecdf48edef362d8611b3063b0a515ffc9ec",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 14,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 68,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ac4d08fe3b0fd35d0ad38839a84bb500b96e9e2d7f843e36e2b52f165d9abb32",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 1,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 71,
+      "new_bad": 3,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "af6abce2bf07211052c6cdd22fa556294e8925cd7c15bed85f0821f36438b414"
+    },
+    {
+      "id": 15,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 111,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "23c673396bb6ecffb681b82a03353cd3b88c3dabb0df9241bcc466161fb620af",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 16,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 105,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "af7d2025e2da29540e5175e3363b07c6dcd0e69abb36d027e05ad74d96579d96",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 17,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 71,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "99855d89f166101d7a368075dfa86c6c875648c1b440fbee1b0d3f2ee23a4e90",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 4,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 79,
+      "new_bad": 8,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "2cec89b5cf27653d08d6b6c6cdb292c2f179a5cfe7462f7ebc7f042a021597ee"
+    },
+    {
+      "id": 18,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 27,
+      "old_nonpositive": 0,
+      "old_cells": 390,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ab1a4515b1c6567fa9cd1abdabfde9b3ff80eac48555aab8b47e018dee02d687",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 367,
+      "new_bad": 26,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "3b2d53809a10c8d316b5eb7d1172fd0bfbc2db0df5ea99f2d2111e911520f3d2"
+    },
+    {
+      "id": 19,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 0,
+      "old_nonpositive": 0,
+      "old_cells": 55,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "0652d20ba44bd51d13758a76d51efc9fb48b742d9e8969f1551d01fe49264d9c",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 1,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 59,
+      "new_bad": 1,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "1fc2b5e15eaf0ba267d00629dc345bf291a233d0a07bacf05076d241fae2ff46"
+    },
+    {
+      "id": 20,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 34,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "d27788857658c215bc485dd8a3c6a05e3486e3d3a77448d31882311be9fa70ef",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 1,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 34,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "bf7e2adc02abd3e68cbd99c8e80005dc57a69045f935465d0f51c3628b91e770"
+    },
+    {
+      "id": 21,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 65,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "8870e1fe6a8d679e6b5697041b79bbf7971edd24a3e34b7b2ad968835284f6b5",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 3,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 68,
+      "new_bad": 4,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "a26a571be872ad09b15fdb6a51eaf3183a0dd5dfe77d16ab6d8bb650fdacc0c7"
+    },
+    {
+      "id": 22,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 53,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "fe5e92532295c58793a4d6eeaad589de3775a2944bdd89caf0ca2ef09f703208",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 4,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 59,
+      "new_bad": 8,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "ac6eb2943560d349426e18699bd68c4b1cab302e16ce701d09f111d9c6ba87c9"
+    },
+    {
+      "id": 23,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 22,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "64839be999b68eb4d336f7f92c5d96472196b26dbbe6088915ba33a9ffed18d9",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 2,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 24,
+      "new_bad": 4,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "26fd4ca01b1f06d99a1f710f22dbce01da513cf535f1f0bea32d105a1910fd66"
+    },
+    {
+      "id": 24,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 65,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6161140c9e8bad38f6b7f1cab369317bdcbb59630ec6705c30f0aa40532d8344",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 25,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 66,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a3580b7ce5c5cd6e32c0ee2a7b821254b4766a87063bed6b9d23997eb7fdae9d",
+      "status": "REJECT",
+      "return_code": 2,
+      "error": "ValueError: TetGen failed"
+    },
+    {
+      "id": 26,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 57,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "59a05ba6e8ab8c75ec92292f5f4fcab2b64137be0e4690e41bb52dfe6d813228",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 27,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 39,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "c0f2d3b99728663e51d9a63e01ddac9fb08219d77ffe222f9d30a17d8523a3a0",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 0,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 39,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "8c008c927cd10505c1849a1fff00b8f13c9574b3edef6fc033d9c0449bcfb7f3"
+    },
+    {
+      "id": 28,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 78,
+      "new_desired_faces": 1,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "4d693a1900dbcfc5fac37af77a419b95c07ac52453a93117b3d788be3adc0288",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 29,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 53,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "cede640dcdc268734de8cbd995f457fdae29dce1c1dc129ed019b2b45b5d1640",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 2,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 55,
+      "new_bad": 3,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "103fd7fbe3a18bdbc1df911a8713d7b77f6f3584389a0308275d1d194a11998b"
+    },
+    {
+      "id": 30,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 10,
+      "old_nonpositive": 0,
+      "old_cells": 87,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a99706b13c4d9e7b4abbec0feb13d9be3c422af37a8a0e79781069536063f672",
+      "status": "REJECT",
+      "return_code": 2,
+      "error": "ValueError: TetGen failed"
+    },
+    {
+      "id": 31,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 19,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "4c3e428ca32f6d57b6a1d75e2306ecbcf759c68126b5980107ee43963b250291",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 1,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 19,
+      "new_bad": 3,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "21ae6b5ba91cd93ad289d7faabc33e3f1c353b775a4e17073d1f69843b73a9a9"
+    },
+    {
+      "id": 32,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 355,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6d98e2b2bd8f35d733b2f230d48836ed3ccb107e49e3f8ee65f83d82f5173261",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: construction native-defect budget exceeded"
+    },
+    {
+      "id": 33,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 58,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "14ca7d9d7107fb693e2fe1ba6b7ae38205c582157e4b1bd5e7431d1a8626af4e",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 2,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 65,
+      "new_bad": 3,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "3f7c92b55a82f18b43732532b78b902ab4b0bb89e43da2eb9df2bc13cde66bf7"
+    },
+    {
+      "id": 34,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 65,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "f33db14814bbe6850d37e6a3aeb683da4c35f05f136cf7072b0821fcd0d55910",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 4,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 72,
+      "new_bad": 5,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "c52e812f6f5cb7419b740f4cb80b91422dde9d86069dc354766c2a1b6ee04490"
+    },
+    {
+      "id": 35,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 19,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "8b4bb19665b2652115769032da5d27484ac4c5cf94fd5b64d6803dff50f63342",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 2,
+      "exact_internal_face_pairs": 0,
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 22,
+      "new_bad": 3,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "bf6e62d04c5015dba8ca4ee5313db68b636e8a02a98c98c09313a73efe7d23b3"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-skin-target-265-root/cavities-247-001/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "123742b4de77d3b33824a935ae8b3dd6946bee6a74276c1eae46c2d2f284d868",
+  "passing_components": 20,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 5141,
+  "complete_boundary_matches_desired": false,
+  "elapsed_s": 10.715419916203246
+}

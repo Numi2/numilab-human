@@ -1,0 +1,187 @@
+{
+  "schema": "numi.fat-partial-volume-composition.001.v1",
+  "status": "PASS_ROW_DISJOINT_PARTIAL_COMPOSITION_DIAGNOSTIC",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping_run": false,
+  "input_hashes": {
+    "base": "ee63458bda14096afc74f4314d047a2c876ccbcaac309767e00cc7e789a75bb9",
+    "fan": "247c84efb4431a1118cc176835967c0c821a7761081653e99708a30362342a18",
+    "fanmap": "27821e819c3ed220f4d890f80075b1f693d389fa0f03d749bb7ce53d3f2e1fd8",
+    "cavity33": "c8dfc1d1de7104fb0756324eb6c4652f380d0a23b7251669220b4a7ff8940e94",
+    "comp0_chain": "ce1c482706394d8b19d485b10783e3b6e360b5b826989cd51ecaf2adfb48cb1a",
+    "pY_packet": "16033ae3b6c734fb8aefe8c5321d08c9b1f5805af0f74fa6a98241a645462b79",
+    "pY_node": "e2f82705474afd38ee246a7f2d91f13ce6d304c507167d22a5566790f384b1e3",
+    "pY_ele": "6ad89e49b9d7047628ee746f8826458233c1be230740be3a0bc2180025de7fe4",
+    "pY_face": "ba084bf50ce8fab17d47238e0ab94830c97cfe6921ba704973c20db296117ee7",
+    "D_split": "c157370a5389bdd54552abaffc991325b12bfafd2fed9772a639df3ac5d38487",
+    "D_source": "b8c276fa6c99ed6b24703a2cdf03ce142b42c31a53527cefedcef1c8946bc39d",
+    "desired031": "96a37802391af69e6979eef327c002e915d179dcb8160be770c708d8743f55d0"
+  },
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-partial-composition-001/fat-partial-composed-candidate.npz",
+  "candidate_sha256": "e28f09e1ddacf0a2d735d9f76941ca47113c3d500a9a85a4eaa2e1a4d2f9c02f",
+  "candidate_point_count": 253191,
+  "candidate_tetrahedron_count": 855668,
+  "fan_remainder_tetrahedra": 784316,
+  "33_cavity_replacement_tetrahedra": 18190,
+  "comp0_replacement_tetrahedra": 17286,
+  "pY_replacement_tetrahedra": 8329,
+  "unresolved_original_tetrahedra_retained": 27547,
+  "unresolved_targetsets": {
+    "cc8545822de82307a18b693889ec13bf81cc46e42dbfaf0804174771ace2a6ae": 17206,
+    "2333b1a23b8ce08a8716bff6fe27f1d475fe7fc93850b31a4c6bd6437b9aeb4e": 8853,
+    "1a70616487e965dbe5696ee90b853fc7757f885de59ce111d532b0d71263135b": 1488
+  },
+  "composed_patch_source_cells": {
+    "33_cavity": 18429,
+    "comp0": 12617,
+    "pY": 8238,
+    "union": 39284,
+    "unresolved_union": 27547,
+    "fan_excluded_total": 66831
+  },
+  "point_map": {
+    "base026_points_preserved_exactly": true,
+    "pY_D_boundary_split_node_output_row": 253189,
+    "pY_D_boundary_split_node_exact_F32": true,
+    "appended_patch_points": 915,
+    "comp0_appended_points": 910,
+    "33_cavity_appended_points": 3,
+    "pY_added_nodes": 2
+  },
+  "boundary_diagnostic_against_old024_I_plus_pY_D": {
+    "expected_target_faces": 489692,
+    "actual_boundary_faces": 489818,
+    "missing_faces": 329,
+    "extra_faces": 455,
+    "missing_by_expected_role": {
+      "4": 306,
+      "2": 23
+    },
+    "closed_oriented_edge_manifold": true,
+    "bad_boundary_edge_count": 0,
+    "old_D_parent_faces_removed": [
+      223804,
+      223810
+    ],
+    "new_D_child_faces_added": [
+      [
+        228091,
+        253189,
+        228183
+      ],
+      [
+        228564,
+        253189,
+        228485
+      ],
+      [
+        228091,
+        228485,
+        253189
+      ],
+      [
+        228564,
+        228183,
+        253189
+      ]
+    ],
+    "D_target_orientation_multiplier": -1,
+    "note": "O/I face target is the prior 031 map and is diagnostic; current 260 O/I/D typed surfaces must be rebound before final current-target admission."
+  },
+  "volume_diagnostic": {
+    "all_composed_F32_determinants_positive_in_float64_scan": true,
+    "nonpositive_float64_determinant_count": 0,
+    "native_quality_defect_count": 36455,
+    "minimum_determinant_m3": 2.757268708510092e-25,
+    "minimum_normalized_determinant": 7.553724406590747e-16,
+    "signed_volume_delta_vs_fat026_input_m3_float64_scan": 8.351335664296319e-06,
+    "all source patch local exact positivity and shell checks": "inherited from pinned fan run006, 33-cavity reports, comp0 root249 receipt, and pY run002 report; global exact replay and intersections remain pending."
+  },
+  "lineage": {
+    "fan operation source CSR retained verbatim and output rows remain in prefix domain": true,
+    "appended replacements use patch-level complete source-cell row unions; no per-tet overlap claim": true,
+    "retained unresolved cells preserve original base026 cell row identity": true,
+    "patch_ids": [
+      32,
+      36,
+      37,
+      35,
+      28,
+      8,
+      24,
+      29,
+      23,
+      18,
+      26,
+      14,
+      21,
+      19,
+      17,
+      13,
+      27,
+      15,
+      30,
+      12,
+      11,
+      5,
+      6,
+      22,
+      3,
+      4,
+      7,
+      9,
+      20,
+      25,
+      31,
+      33,
+      34,
+      0,
+      16
+    ],
+    "patch_kinds": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      3
+    ]
+  },
+  "physical_gates_not_run": [
+    "full exact global self/cross intersection",
+    "current full O/I/D/wall boundary map after native apex changes",
+    "complete changed-region tet quality/apex gate",
+    "native recorded-flow/mass owner"
+  ],
+  "elapsed_seconds": 5.512770249973983
+}

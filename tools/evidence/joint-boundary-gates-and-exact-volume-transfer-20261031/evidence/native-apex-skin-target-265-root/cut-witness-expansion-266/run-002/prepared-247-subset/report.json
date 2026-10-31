@@ -1,0 +1,108 @@
+{
+  "status": "CONNECTED_CAVITY_PREPARATION_TARGETED_EXPANSION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-skin-target-265-root/prepare-001/skin-native-apex-current-target-input.npz",
+  "input_sha256": "c9fc3f627083b07015a4cfa36c048c8e60f8997b7b7528f03645272cd98802a3",
+  "script_sha256": "bc192ca816d7dd4443dcfd959beb6aa9ba3472cb3919e0f36e7d10fc60348a15",
+  "maximum_extra_construction_defects_per_cavity": 0,
+  "strict_native_admission_thresholds_unchanged": true,
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "selected_cells": 302,
+    "dirty_nodes": 84,
+    "components": 2,
+    "rings": 0,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 2882,
+        "components": 37,
+        "unclosed_components": 12,
+        "bad_boundary_edges": 13,
+        "seed_count": 4
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 3476,
+        "components": 36,
+        "unclosed_components": 5,
+        "bad_boundary_edges": 11,
+        "seed_count": 57
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 3661,
+        "components": 36,
+        "unclosed_components": 2,
+        "bad_boundary_edges": 2,
+        "seed_count": 75
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 3769,
+        "components": 36,
+        "unclosed_components": 1,
+        "bad_boundary_edges": 2,
+        "seed_count": 80
+      },
+      {
+        "iteration": 4,
+        "selected_cells": 3791,
+        "components": 36,
+        "unclosed_components": 0,
+        "bad_boundary_edges": 0,
+        "seed_count": 84
+      }
+    ],
+    "additional_witness_seed_nodes": 84,
+    "targeted_only_failed_components": [
+      25,
+      30
+    ]
+  },
+  "components": [
+    {
+      "id": 10,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 206,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "source_failed_components_overlap": [
+        25
+      ],
+      "expanded_source_cell_rows_added": 140,
+      "overlap_with_frozen268_pass_parent_rows": 0
+    },
+    {
+      "id": 30,
+      "closed": true,
+      "edge_failures": 0,
+      "old_bad": 10,
+      "old_nonpositive": 0,
+      "old_cells": 96,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "source_failed_components_overlap": [
+        30
+      ],
+      "expanded_source_cell_rows_added": 9,
+      "overlap_with_frozen268_pass_parent_rows": 0
+    }
+  ],
+  "cached_source_shell_sha256": "20ae88886fb90f3d81f4a29e3f5fc00e20db7f842baff55e9e67e70607f6eb47",
+  "producer_script_sha256": "1daad9a889c596731766ba85ad5be53edd9cedb352c0dfbf6f7592266efb84b2"
+}

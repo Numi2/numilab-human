@@ -1,0 +1,139 @@
+{
+  "D_faces_before_after": [
+    239043,
+    239045
+  ],
+  "D_points_before_after": [
+    120636,
+    120637
+  ],
+  "all_other_face_rows_unchanged_except_two_retired_faces_and_two_appended_faces": true,
+  "all_other_point_coordinates_bitwise_unchanged": true,
+  "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/candidate-D-pY-boundary-split.npz",
+  "candidate_sha256": "c157370a5389bdd54552abaffc991325b12bfafd2fed9772a639df3ac5d38487",
+  "directed_boundary_edges_before_after": [
+    45,
+    45
+  ],
+  "directed_boundary_signature_unchanged": true,
+  "full_D_self_and_D_vs_I/O/all185_exact_gates": "NOT RUN",
+  "input_D_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/coordinate-six-short-edge-repair-030-run001/join-current-D030-plus-227-coordinates-001/candidate-D-current030-plus-227-coordinates-typed-raw.npz",
+  "input_D_sha256": "f51ecedbd5b1435cc3fbb9fb580c986f2afbd82512e6005774c9654bb93a09f8",
+  "local_directed_surface_edges_bad": 45,
+  "local_duplicate_faces": 0,
+  "local_new_face_parent_normal_positive": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "local_new_face_quality": [
+    {
+      "double_area_m2": 1.9111856722050853e-05,
+      "face_row": 223804,
+      "max_edge_m": 0.00946261199487954,
+      "normalized_surface_bound": 0.21344245901396774,
+      "parent_normal_dot": 9.366409631634934e-10
+    },
+    {
+      "double_area_m2": 2.156615955166626e-05,
+      "face_row": 223810,
+      "max_edge_m": 0.012112446335334072,
+      "normalized_surface_bound": 0.1469972066674496,
+      "parent_normal_dot": 1.0920107701188034e-09
+    },
+    {
+      "double_area_m2": 1.417870251777093e-05,
+      "face_row": 239043,
+      "max_edge_m": 0.00917677998592499,
+      "normalized_surface_bound": 0.16836656499876665,
+      "parent_normal_dot": 6.948750207107862e-10
+    },
+    {
+      "double_area_m2": 2.906940970225716e-05,
+      "face_row": 239044,
+      "max_edge_m": 0.00946261199487954,
+      "normalized_surface_bound": 0.32464905839187624,
+      "parent_normal_dot": 1.4719407226777413e-09
+    }
+  ],
+  "native_steps": 0,
+  "new_output_D_face_rows": [
+    223804,
+    223810,
+    239043,
+    239044
+  ],
+  "new_point_D_row": 120636,
+  "operation_json_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/D-pY-edge-split-3c585-001.json",
+  "operation_json_sha256": "341b6a607de45a0285a80e7b32eb0f66515d3d704a5d63656d8cac72e0fb5f21",
+  "pY_boundary_Steiner_distance_m": 4.584741661368078e-08,
+  "pY_exact_target_face_rows": [
+    474361,
+    474367
+  ],
+  "pY_fat_boundary_orientation_is_opposite_D": true,
+  "parent_D_face_rows": [
+    223804,
+    223810
+  ],
+  "physical_admission": false,
+  "point_anatomical_clearance_after_move": "NOT RUN",
+  "schema": "numi.D-current-pY-boundary-split-preparation.v1",
+  "scope": "A local current-D boundary-split proposal conforming to the captured pY TetGen diagnostic. Not a volume composition or physical admission.",
+  "source_identity_schema_addition": {
+    "complete_typed_parent_union": [
+      [
+        3,
+        150,
+        21,
+        1018,
+        100000158,
+        1018,
+        -1
+      ],
+      [
+        3,
+        150,
+        21,
+        1019,
+        100000158,
+        1019,
+        -1
+      ]
+    ],
+    "derived_operation": "pY_boundary_Steiner_edge_split",
+    "derived_patch_id": "D-pY-edge-split-3c585-001",
+    "derived_patch_ordinal": 0,
+    "face_count": 4,
+    "identity_face_id_key": "face_source_face_id",
+    "identity_keys": [
+      "face_source_identity0",
+      "face_source_identity1"
+    ],
+    "key": "100000187",
+    "parent_face_row_domain": "current_D030_face_rows",
+    "parent_support_semantics": "Patch-level union; no per-triangle overlap claim.",
+    "parent_union_tuple_count": 2,
+    "parent_union_tuple_sha256": "d6a2cff91d0eda8c04e39e879dfc7f8b114cb049f484fb54e1f6be461f0cc881",
+    "role": "DERIVED_PATCH",
+    "source_lineage": {
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/coordinate-six-short-edge-repair-030-run001/join-current-D030-plus-227-coordinates-001/candidate-D-current030-plus-227-coordinates-typed-raw.npz",
+      "parent_candidate_sha256": "f51ecedbd5b1435cc3fbb9fb580c986f2afbd82512e6005774c9654bb93a09f8",
+      "parent_face_rows": [
+        223804,
+        223810
+      ],
+      "source_global_volume_point_rows": [
+        226145,
+        226442
+      ]
+    }
+  },
+  "status": "PASS_LOCAL_D_BOUNDARY_SPLIT_CONSTRUCTION_ONLY",
+  "surface_quality_gate": "Local metrics only; no global qualification",
+  "target_map_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-preflight-031/fat-current-desired-boundary-map.npz",
+  "target_map_sha256": "96a37802391af69e6979eef327c002e915d179dcb8160be770c708d8743f55d0",
+  "volume_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat026-current-target-input.npz",
+  "volume_input_sha256": "ee63458bda14096afc74f4314d047a2c876ccbcaac309767e00cc7e789a75bb9"
+}

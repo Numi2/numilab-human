@@ -1,0 +1,228 @@
+{
+  "schema": "h706.current-fat-target-map.v1",
+  "status": "PASS_CURRENT_TARGET_MAPPED_DIAGNOSTIC_ONLY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "source_inputs": {
+    "volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-partial-composition-001/fat-partial-composed-candidate.npz",
+      "sha256": "e28f09e1ddacf0a2d735d9f76941ca47113c3d500a9a85a4eaa2e1a4d2f9c02f"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-connected-262-root/I-batch001/typed-264-001/candidate-I-typed-current.npz",
+      "sha256": "645999a1226b15eb3c3edf1222d246e0df4155dbf2f517f4125146de48be66d6"
+    },
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-connected-ears-264-root/run-002/typed-001/candidate-D-typed-current.npz",
+      "sha256": "b975948ea2a8186bdd05fc0c61f5244b096073c930f3bba87bc49eaee1772856"
+    },
+    "D024": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/current-typed-adapter-024-run001/candidate-D-typed-current-024.npz",
+      "sha256": "b429b59080c61b9c660cd13b96f98ef9ecd68ddc0dc4222e46ef6c1dbe734a83"
+    },
+    "DpY": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/candidate-D-pY-boundary-split.npz",
+      "sha256": "c157370a5389bdd54552abaffc991325b12bfafd2fed9772a639df3ac5d38487"
+    },
+    "D261": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-surface-floor-261-root/run-001/typed-001/candidate-D-typed-current.npz",
+      "sha256": "b8e30815d66f4d1073557d26830929a892af8c20cc687976cf03800c61ff1a4b"
+    },
+    "wall": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+      "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a"
+    }
+  },
+  "volume_surface_point_mappings": {
+    "I": {
+      "all_points_exact_F32": true,
+      "count": 125368
+    },
+    "D": {
+      "all_points_exact_F32": true,
+      "count": 120637,
+      "pY_appended_surface_point_row": 120636,
+      "pY_volume_node_row": 253189,
+      "pY_f32_exact": true,
+      "D024_identity_prefix_exact": true,
+      "typed_D261_and_pY_candidate_points_and_map_exact": true
+    }
+  },
+  "registered_wall_crosswalk": {
+    "I": {
+      "registered_vertex_rows": 125368,
+      "source_row_domain_max": 125367,
+      "shell_node_rows_unique": true,
+      "source_rows_unique": true,
+      "wall_point_f32_parity": "current I candidate",
+      "current_volume_mapping": "exact F32 node identity"
+    },
+    "D": {
+      "registered_vertex_rows": 120636,
+      "source_row_domain_max": 120635,
+      "shell_node_rows_unique": true,
+      "source_rows_unique": true,
+      "wall_point_f32_parity": "D024 registered baseline",
+      "current_volume_mapping": "exact F32 node identity"
+    }
+  },
+  "current_D_coordinate_changes_vs_D024": {
+    "row_count": 19,
+    "surface_rows": [
+      4421,
+      10706,
+      11162,
+      14453,
+      19718,
+      22972,
+      23237,
+      23780,
+      24420,
+      39548,
+      51988,
+      52731,
+      76599,
+      81975,
+      100880,
+      102686,
+      108163,
+      112886,
+      119128
+    ],
+    "volume_rows": [
+      129789,
+      136074,
+      136530,
+      139821,
+      145086,
+      148340,
+      148605,
+      149148,
+      149788,
+      164916,
+      177356,
+      178099,
+      201967,
+      207343,
+      226248,
+      228054,
+      233531,
+      238254,
+      244496
+    ],
+    "appended_pY_point_separate": true
+  },
+  "boundary": {
+    "target_faces": 489486,
+    "target_face_duplicate_count": 0,
+    "desired_edge_closure": {
+      "unique_edges": 734229,
+      "edge_incidence_not_two": 0,
+      "same_direction_edge_pairs": 0,
+      "maximum_edge_incidence": 2,
+      "bad_edge_samples": [],
+      "same_direction_edge_samples": []
+    },
+    "volume_boundary_faces": 489818,
+    "missing_target_faces": 936,
+    "extra_current_faces": 1268,
+    "common_faces_directed_same": 488550,
+    "common_faces_directed_opposite": 0,
+    "missing_target_face_rows_sample": [
+      16907,
+      16908,
+      46264,
+      46265,
+      49110,
+      49111,
+      100375,
+      100376,
+      108164,
+      108166,
+      168508,
+      168509,
+      168955,
+      168956,
+      215126,
+      218582,
+      223860,
+      223878,
+      224904,
+      224905,
+      225054,
+      225060,
+      225291,
+      225292,
+      227469,
+      227495,
+      230861,
+      231073,
+      231076,
+      231549,
+      233016,
+      234344,
+      234347,
+      237450,
+      237482,
+      238031,
+      238032,
+      238367,
+      238369,
+      239007
+    ],
+    "extra_current_face_rows_sample": [
+      18639,
+      18640,
+      31221,
+      31222,
+      31641,
+      31642,
+      40261,
+      40263,
+      41649,
+      42513,
+      44016,
+      44017,
+      44083,
+      44197,
+      44362,
+      44703,
+      45010,
+      45022,
+      45023,
+      45463,
+      45464,
+      45465,
+      45466,
+      45467,
+      45468,
+      45469,
+      45470,
+      45471,
+      45557,
+      45558,
+      45585,
+      46103,
+      46159,
+      46160,
+      46395,
+      46396,
+      46822,
+      46839,
+      48016,
+      48045
+    ]
+  },
+  "boundary_map_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-current-target-map-264-002/fat-current-desired-boundary-map.npz",
+  "boundary_map_npz_sha256": "7fcdb90287cd3f451eff492b7a9cccf78bd0f33ecb252cc6001c49e62c668b60",
+  "remesh_input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-current-target-map-264-002/fat-current-target-remesh-input.npz",
+  "remesh_input_npz_sha256": "6d11485752787ceade9aabeabd5434e5290ff460610494cd883598fb4ae907a0",
+  "unchanged_volume_geometry_arrays": {
+    "points_world_m_sha256": "02c38893fb9e7c0c482ab337dd2d3a858a568fc5471de9039a11d282cc35b73d",
+    "tetrahedra_sha256": "fa969c20f107f515a35d13de29a803b9b8ab726f6922854e659a9b28df2dd6a0",
+    "material_indices_sha256": "f5f896d6fc13e297c49a8fd3bf37ab3330ab17fce82be11cc7a0ddd0bd5b360e"
+  },
+  "elapsed_s": 4.9236560829449445,
+  "producer_script_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/build_fat_current_target_map_264_001.py",
+  "producer_script_sha256": "a9c2c957210b30b94f83bfba92aff31ffb6531072c7bcee72deca64fa47eb2a0"
+}
