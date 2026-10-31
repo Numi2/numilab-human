@@ -1,0 +1,52 @@
+{
+  "status": "PASS_NATIVE_QUALITY_KERNEL_FAN_BATCH",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-297-root/skin-batch003/kernel-fan-volume-proposal.npz",
+  "input_sha256": "74afaa9bdd2d4890792835ce1868309f28bb598bca410363b6c0274ad7e8d4e9",
+  "source_sha256": "f1b9f76cc2621fc5bc60d217486cfe511023c5c893cec3d97f332992074036e1",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-fan-continuation-344-root/skin-run001/pass-000/kernel-fan-volume-proposal.npz",
+  "output_sha256": "e1d8ec60d42990bb04038ed9d3a642e3022e3ecb072e749d9de87e70fca15165",
+  "bad_before": 2838,
+  "bad_after": 2658,
+  "nonpositive": 0,
+  "input_cells": 749140,
+  "output_cells": 749601,
+  "new_inferred_interior_points": 128,
+  "enumeration": "face_connected_joint_volume_shape_witness_growth",
+  "growth_statistics": {
+    "yielded_domains": 13043,
+    "added_face_neighbors": 103011,
+    "joint_bound_joint_volume_and_shape": 666,
+    "absorbed_internal_no_apex_faces": 1280,
+    "joint_bound_normalized_shape": 666
+  },
+  "identical_cavity_algorithm_source_sha256": "89cb1ba952b41c35f53ab621e897f03fb12700a75e968cdbdf5c27aa721a650f",
+  "adaptive_kernel": {
+    "adaptive_attempts": 2323,
+    "adaptive_native_centers": 64,
+    "adaptive_passing_fans": 64
+  },
+  "cell_disjoint_cavities": true,
+  "shared_boundary_vertex_reuse_operations": 30,
+  "prior_negative_cache_sources": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-297-root/skin-batch003/kernel-fan-volume-proposal.npz",
+      "sha256": "74afaa9bdd2d4890792835ce1868309f28bb598bca410363b6c0274ad7e8d4e9"
+    }
+  ],
+  "cache_entries_before": 89729,
+  "cache_entries_after": 92764,
+  "cache_hits": 7017,
+  "attempts": 3163,
+  "passing_operations": 128,
+  "rejections": {
+    "no_positive_kernel": 393,
+    "nonclosed": 306,
+    "nonmanifold": 77,
+    "adaptive_no_positive_kernel": 2259
+  },
+  "oriented_boundary_bit_identical": true,
+  "original_points_bit_identical": true,
+  "elapsed_s": 28.618546958081424
+}

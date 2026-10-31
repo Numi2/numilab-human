@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_cached_joint_witness_fans_297_root.py", line 229, in <module>
+    ap=argparse.ArgumentParser();ap.add_argument("--fixture",action="store_true");ap.add_argument("--prior-cache",type=Path,action="append",default=[]);ap.add_argument("--prior-cache-sha256",action="append",default=[]);ap.add_argument("--input",type=Path);ap.add_argument("--output",type=Path,required=True);ap.add_argument("--seconds",type=float,default=60);ap.add_argument("--maximum-attempts",type=int,default=1000);ap.add_argument("--maximum-points",type=int,default=150);a=ap.parse_args();growth_fixture(a.output) if a.fixture else run(a)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ~~~^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_cached_joint_witness_fans_297_root.py", line 192, in run
+    imported=prior_cache(a.prior_cache,a.prior_cache_sha256)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_cached_joint_witness_fans_297_root.py", line 178, in prior_cache
+    with np.load(path,allow_pickle=False) as z:part=z['kernel_fan_no_progress_sha256']
+                                                    ~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/numi-human-prep-venv-20261005/lib/python3.13/site-packages/numpy/lib/_npyio_impl.py", line 243, in __getitem__
+    raise KeyError(f"{key} is not a file in the archive") from None
+KeyError: 'kernel_fan_no_progress_sha256 is not a file in the archive'

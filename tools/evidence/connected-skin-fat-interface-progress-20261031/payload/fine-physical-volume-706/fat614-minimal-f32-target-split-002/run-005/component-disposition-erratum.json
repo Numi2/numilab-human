@@ -1,0 +1,97 @@
+{
+  "candidate_report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/report.json",
+  "candidate_report_sha256": "3fef3f823f952afc67b9c481d9ce452414a8c4d7aa3c2420fca5f0f461da9e9c",
+  "components": [
+    {
+      "component_id": 0,
+      "disposition": "rejected_TetGen_return_code_3; not used",
+      "source_status": "REJECT",
+      "tetgen_return_code": 3
+    },
+    {
+      "component_id": 1,
+      "disposition": "rejected_TetGen_return_code_3; not used",
+      "source_status": "REJECT",
+      "tetgen_return_code": 3
+    },
+    {
+      "component_id": 2,
+      "disposition": "handled_in_prior_602036_surface_candidate; volume replay requires rebind to current batch candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 3,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 4,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 5,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 6,
+      "disposition": "handled_in_prior_602036_surface_candidate; volume replay requires rebind to current batch candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 7,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 8,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 9,
+      "disposition": "accepted_TetGen_output_but_no_current_D_target_edge_match; separate cut-shell mapping remains unresolved",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 10,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 11,
+      "disposition": "target_edge_split_in_run005_candidate",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 12,
+      "disposition": "accepted_TetGen_output_but_no_current_D_target_edge_match; separate cut-shell mapping remains unresolved",
+      "source_status": "REJECT",
+      "tetgen_return_code": 200
+    },
+    {
+      "component_id": 13,
+      "disposition": "PASS_CONNECTED_FIXED_SURFACE_CAVITY; already incorporated in pinned source volume output",
+      "source_status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "tetgen_return_code": 0
+    }
+  ],
+  "correction": "The candidate report lists component 13 under return_code_not_200_not_used. The pinned source report shows component 13 status PASS_CONNECTED_FIXED_SURFACE_CAVITY, return_code 0, and replacement incorporated into the source output c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b. Components 0 and 1 returned code 3; components 9 and 12 returned 200 but have no authenticated current-D target-edge support.",
+  "schema": "h706.fat614.yy-component-disposition-erratum.v1",
+  "source_report_output_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-steiner-001/connected-fixed-surface-volume-proposal.npz",
+  "source_report_output_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+  "source_report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-steiner-001/report.json",
+  "source_report_sha256": "8ec4ab2193693e60ec4c898e84607daf8333bceec5019352685cc0ea07da7b3f",
+  "status": "CORRECTED_COMPONENT_DISPOSITION"
+}

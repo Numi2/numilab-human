@@ -1,0 +1,77 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_POLYGON_EDGE_FLIP_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-340-root/skin-run001/cycle-00-edge/pass-006/fixed-boundary-volume-proposal.npz",
+  "input_npz_sha256": "fd73e76a9b9dd0eaca30a5d01f5b59b912ea3105119f8ac744727e5200d939a3",
+  "script_sha256": "acf252585d427214b2c93b78a28fc9d27e3096b33080855b570458296ca2bff3",
+  "cavity_predicate_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "nodes_bit_identical": true,
+  "oriented_boundary_exactly_unchanged": true,
+  "exact_F32_volume_unchanged": true,
+  "material_preserved": true,
+  "eligible_stars": 8978,
+  "tested_stars": 8978,
+  "passing_operations": 2,
+  "rejections": {
+    "open_or_non_simple_edge_link": 3799,
+    "quality_no_progress": 1753,
+    "no_positive_polygon_triangulation": 3304,
+    "conflict": 86,
+    "oriented_boundary": 28,
+    "new_diagonal_exists_outside": 6
+  },
+  "input_cells": 748784,
+  "output_cells": 748784,
+  "bad_cells_before": 3042,
+  "bad_cells_after": 3040,
+  "minimum_normalized_det_before": 5.418069994163561e-12,
+  "minimum_normalized_det_after": 5.418069994163561e-12,
+  "minimum_volume_before_m3": 8.05122462884947e-22,
+  "minimum_volume_after_m3": 8.05122462884947e-22,
+  "elapsed_s": 3.404241707874462,
+  "operations": [
+    {
+      "old_rows": [
+        740018,
+        747063,
+        748782
+      ],
+      "removed_edge": [
+        60441,
+        60515
+      ],
+      "ring": [
+        60507,
+        60508,
+        209395
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        23009,
+        341043,
+        563984,
+        747517,
+        747528
+      ],
+      "removed_edge": [
+        60421,
+        60430
+      ],
+      "ring": [
+        60424,
+        60425,
+        136626,
+        60434,
+        60429
+      ],
+      "new_cell_count": 6,
+      "before_bad": 3,
+      "after_bad": 2
+    }
+  ]
+}

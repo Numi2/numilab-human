@@ -1,0 +1,50 @@
+{
+  "construction_margin_m": 1.9353000001165466e-08,
+  "construction_radius_m": 0.019352980646999998,
+  "density_bounds_kg_m3": [
+    850.0,
+    950.0
+  ],
+  "driver_sha256": "0c13d82fcf08b43c64a3e710a6b4cf91a3fb1dc260b6b210ef2b49a42043146d",
+  "equality_rows": 1072,
+  "geometry_status": "baseline142_only_not_final_mesh",
+  "hard_radius_m": 0.019353,
+  "inequality_rows": 4794,
+  "infeasibility_certificate_sha256": "bd3ea507f0c905724e70c16e8005ffd7c0bc922c4d678a47dec72c998d529e0b",
+  "infeasibility_certificate_status": "INFEASIBLE_FINITE_SITE_SET_CERTIFICATE_CAPTURED",
+  "input_hashes": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-050-radius-separation-continuation-049-cuts/continuation-seed.json": "935110bcf00eb8f31b59998f67e967f9894d60a37882e7f50e09d05ec1388635",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-050-radius-separation-continuation-049-cuts/full-tet-input.npz": "40edbe027acf9a04e6c5e920164efea0457ca9c8346e63a93b14c5989f64178b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-050-radius-separation-continuation-049-cuts/iteration-19.npz": "79ff3c4ad99628371a081fe84b099ffd6c961b7ab7da37f2cb0d1af223a12150",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-050-radius-separation-continuation-049-cuts/report.json": "d3ea3faddc6775a2a51a24fa68254351a3bfa15cff577386527a8ee1a19ff5ba",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-050-radius-separation-continuation-049-cuts/source-freeze.json": "ccfb120c3415f78003a777bf314c265ce7e189480de68e68e4ebdbad150e755c"
+  },
+  "mass_transport": "NOT_ADMITTED",
+  "method": "Finite hard-radius-valid sites derived only from the pinned final continuous primal, exact full-tet nearest points, corner-to-nearest inward intersections, edge projections, face projections and source corners that pass the same radius. A bounded linear feasibility/cost solve reassigns nonnegative masses over these validated sites; original M/4, receiver bounds, density, source identity, region and radius policies remain explicit.",
+  "native_steps": 0,
+  "original_pair_count": 27016,
+  "physical_admission": false,
+  "recipient_count": 2397,
+  "recovery_site_census_sha256": "f9ac179aa9a4295119f00f615aca717c1f194080fe46cc4a03cfeaef6949511a",
+  "recovery_site_count": 186472,
+  "schema": "numi.human.fat-radius-primal-recovery.v1",
+  "selected_parent_count": 268,
+  "site_kind_counts": {
+    "continuous_clipped": 230,
+    "continuous_kept": 2601,
+    "corner": 16742,
+    "corner_clipped": 85102,
+    "edge_nearest": 45379,
+    "face_nearest": 9402,
+    "nearest": 27016
+  },
+  "solver_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is Infeasible)",
+  "solver_seconds": 0.16516900062561035,
+  "solver_status": 2,
+  "solver_success": false,
+  "source_run050_iteration_sha256": "79ff3c4ad99628371a081fe84b099ffd6c961b7ab7da37f2cb0d1af223a12150",
+  "source_run050_report_sha256": "d3ea3faddc6775a2a51a24fa68254351a3bfa15cff577386527a8ee1a19ff5ba",
+  "status": "LP_INFEASIBLE_FINITE_RECOVERY_SITE_SET_DIAGNOSTIC",
+  "variable_count": 186472
+}

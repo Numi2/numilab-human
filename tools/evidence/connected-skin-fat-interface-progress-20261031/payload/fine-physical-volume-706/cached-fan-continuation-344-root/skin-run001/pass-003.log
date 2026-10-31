@@ -1,0 +1,53 @@
+{
+  "status": "PASS_NATIVE_QUALITY_KERNEL_FAN_BATCH",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-fan-continuation-344-root/skin-run001/pass-002/kernel-fan-volume-proposal.npz",
+  "input_sha256": "36901ff451edcedcbef530562299c7433cd68e9b9986f4f015129bdeaa8b3426",
+  "source_sha256": "f1b9f76cc2621fc5bc60d217486cfe511023c5c893cec3d97f332992074036e1",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-fan-continuation-344-root/skin-run001/pass-003/kernel-fan-volume-proposal.npz",
+  "output_sha256": "c94316d73e3539be5bd4fd998f518060f1a586a3466c00994ca2a99f9c5db13f",
+  "bad_before": 2404,
+  "bad_after": 2331,
+  "nonpositive": 0,
+  "input_cells": 750397,
+  "output_cells": 750700,
+  "new_inferred_interior_points": 63,
+  "enumeration": "face_connected_joint_volume_shape_witness_growth",
+  "growth_statistics": {
+    "yielded_domains": 16892,
+    "added_face_neighbors": 135558,
+    "joint_bound_joint_volume_and_shape": 722,
+    "absorbed_internal_no_apex_faces": 1397,
+    "joint_bound_normalized_shape": 737
+  },
+  "identical_cavity_algorithm_source_sha256": "89cb1ba952b41c35f53ab621e897f03fb12700a75e968cdbdf5c27aa721a650f",
+  "adaptive_kernel": {
+    "adaptive_attempts": 932,
+    "adaptive_native_centers": 21,
+    "adaptive_passing_fans": 20
+  },
+  "cell_disjoint_cavities": true,
+  "shared_boundary_vertex_reuse_operations": 14,
+  "prior_negative_cache_sources": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-fan-continuation-344-root/skin-run001/pass-002/kernel-fan-volume-proposal.npz",
+      "sha256": "36901ff451edcedcbef530562299c7433cd68e9b9986f4f015129bdeaa8b3426"
+    }
+  ],
+  "cache_entries_before": 96987,
+  "cache_entries_after": 98299,
+  "cache_hits": 11596,
+  "attempts": 1375,
+  "passing_operations": 63,
+  "rejections": {
+    "nonclosed": 135,
+    "no_positive_kernel": 207,
+    "nonmanifold": 58,
+    "adaptive_no_positive_kernel": 911,
+    "adaptive_no_F32_native_defect_descent": 1
+  },
+  "oriented_boundary_bit_identical": true,
+  "original_points_bit_identical": true,
+  "elapsed_s": 28.830040500033647
+}

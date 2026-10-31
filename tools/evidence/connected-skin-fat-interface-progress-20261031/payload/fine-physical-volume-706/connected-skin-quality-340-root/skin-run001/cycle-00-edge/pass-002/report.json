@@ -1,0 +1,165 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_POLYGON_EDGE_FLIP_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-340-root/skin-run001/cycle-00-edge/pass-001/fixed-boundary-volume-proposal.npz",
+  "input_npz_sha256": "8aed48c7a6184d8eff3b4b1a8a078813beecabcce9cb798e6722a4803592678d",
+  "script_sha256": "acf252585d427214b2c93b78a28fc9d27e3096b33080855b570458296ca2bff3",
+  "cavity_predicate_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "nodes_bit_identical": true,
+  "oriented_boundary_exactly_unchanged": true,
+  "exact_F32_volume_unchanged": true,
+  "material_preserved": true,
+  "eligible_stars": 9016,
+  "tested_stars": 9016,
+  "passing_operations": 6,
+  "rejections": {
+    "open_or_non_simple_edge_link": 3750,
+    "quality_no_progress": 1737,
+    "no_positive_polygon_triangulation": 3252,
+    "oriented_boundary": 27,
+    "conflict": 238,
+    "new_diagonal_exists_outside": 6
+  },
+  "input_cells": 748784,
+  "output_cells": 748786,
+  "bad_cells_before": 3061,
+  "bad_cells_after": 3054,
+  "minimum_normalized_det_before": 5.418069994163561e-12,
+  "minimum_normalized_det_after": 5.418069994163561e-12,
+  "minimum_volume_before_m3": 8.05122462884947e-22,
+  "minimum_volume_after_m3": 8.05122462884947e-22,
+  "elapsed_s": 3.3908362921793014,
+  "operations": [
+    {
+      "old_rows": [
+        746621,
+        748267,
+        748269,
+        748287
+      ],
+      "removed_edge": [
+        59125,
+        209626
+      ],
+      "ring": [
+        59124,
+        136403,
+        209544,
+        209193
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        745922,
+        747130,
+        748751,
+        748753
+      ],
+      "removed_edge": [
+        59637,
+        209612
+      ],
+      "ring": [
+        59638,
+        59659,
+        209624,
+        208827
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        605742,
+        747076,
+        748758,
+        748760
+      ],
+      "removed_edge": [
+        60411,
+        60525
+      ],
+      "ring": [
+        60518,
+        60524,
+        209281,
+        136626
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        747488,
+        748427,
+        748507,
+        748749
+      ],
+      "removed_edge": [
+        209056,
+        209095
+      ],
+      "ring": [
+        59049,
+        59050,
+        208710,
+        209646
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        748090,
+        748340,
+        748341,
+        748544,
+        748545
+      ],
+      "removed_edge": [
+        59666,
+        59668
+      ],
+      "ring": [
+        59667,
+        59688,
+        209642,
+        209341,
+        209648
+      ],
+      "new_cell_count": 6,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        747635,
+        747638,
+        747655,
+        748662,
+        748727
+      ],
+      "removed_edge": [
+        209098,
+        209194
+      ],
+      "ring": [
+        59682,
+        59683,
+        59684,
+        209338,
+        206641
+      ],
+      "new_cell_count": 6,
+      "before_bad": 2,
+      "after_bad": 1
+    }
+  ]
+}

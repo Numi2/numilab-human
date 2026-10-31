@@ -1,0 +1,194 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_POLYGON_EDGE_FLIP_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-340-root/skin-run001/cycle-00-edge/pass-000/fixed-boundary-volume-proposal.npz",
+  "input_npz_sha256": "8657a43584b783a9b81fd1d39ba88d26d1cce7a89ea7b11dd72925e51f786db0",
+  "script_sha256": "acf252585d427214b2c93b78a28fc9d27e3096b33080855b570458296ca2bff3",
+  "cavity_predicate_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "nodes_bit_identical": true,
+  "oriented_boundary_exactly_unchanged": true,
+  "exact_F32_volume_unchanged": true,
+  "material_preserved": true,
+  "eligible_stars": 9041,
+  "tested_stars": 9041,
+  "passing_operations": 7,
+  "rejections": {
+    "open_or_non_simple_edge_link": 3779,
+    "quality_no_progress": 1725,
+    "no_positive_polygon_triangulation": 3229,
+    "oriented_boundary": 26,
+    "conflict": 269,
+    "new_diagonal_exists_outside": 6
+  },
+  "input_cells": 748778,
+  "output_cells": 748784,
+  "bad_cells_before": 3073,
+  "bad_cells_after": 3061,
+  "minimum_normalized_det_before": 5.418069994163561e-12,
+  "minimum_normalized_det_after": 5.418069994163561e-12,
+  "minimum_volume_before_m3": 8.05122462884947e-22,
+  "minimum_volume_after_m3": 8.05122462884947e-22,
+  "elapsed_s": 3.385101791936904,
+  "operations": [
+    {
+      "old_rows": [
+        746154,
+        746164,
+        748310
+      ],
+      "removed_edge": [
+        59163,
+        209626
+      ],
+      "ring": [
+        59124,
+        59162,
+        209193
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        747572,
+        748422,
+        748538,
+        748549
+      ],
+      "removed_edge": [
+        59048,
+        209095
+      ],
+      "ring": [
+        59049,
+        209056,
+        209646,
+        209318
+      ],
+      "new_cell_count": 4,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        745934,
+        747178,
+        748589,
+        748735
+      ],
+      "removed_edge": [
+        59636,
+        209612
+      ],
+      "ring": [
+        59637,
+        59659,
+        209624,
+        208827
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        732839,
+        748254,
+        748370,
+        748371
+      ],
+      "removed_edge": [
+        59668,
+        209098
+      ],
+      "ring": [
+        59688,
+        59689,
+        208634,
+        209642
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        605748,
+        746996,
+        748269,
+        748270
+      ],
+      "removed_edge": [
+        60411,
+        60531
+      ],
+      "ring": [
+        60524,
+        60525,
+        136626,
+        209281
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        740624,
+        740625,
+        746639,
+        746640,
+        748490,
+        748744
+      ],
+      "removed_edge": [
+        59646,
+        59648
+      ],
+      "ring": [
+        59647,
+        59669,
+        209648,
+        202886,
+        209426,
+        208829
+      ],
+      "new_cell_count": 8,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        180682,
+        472698,
+        472699,
+        472710,
+        472711,
+        710443,
+        710448,
+        741699,
+        747605
+      ],
+      "removed_edge": [
+        121016,
+        123873
+      ],
+      "ring": [
+        24334,
+        207970,
+        123898,
+        123909,
+        123916,
+        123918,
+        123930,
+        123935,
+        209479
+      ],
+      "new_cell_count": 14,
+      "before_bad": 5,
+      "after_bad": 1
+    }
+  ]
+}

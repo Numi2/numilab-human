@@ -1,0 +1,9 @@
+{
+  "status": "BATCH_GUARD_FALSE_POSITIVE_RETAINED",
+  "physical_admission": false,
+  "native_steps": 0,
+  "reason": "The final individual edge pass had zero operations after earlier passing passes. The batch driver compared the final mesh with the whole-batch input instead of replaying the full sequence. The completed 3035-defect candidate remains retained.",
+  "source_sha256": "ed951ae6fdb8106e363fed1c04ca90f7d7280f3a1faf41cd07951c2a753437d9",
+  "last_candidate": "cycle-00-edge/pass-011/fixed-boundary-volume-proposal.npz",
+  "next_change": "independently replay every edge batch, then use the verified full fixed-boundary composition as the conditioning parent"
+}

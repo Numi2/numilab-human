@@ -1,0 +1,155 @@
+{
+  "audit": {
+    "all185_records": 938272,
+    "changed_D_faces_vs_complete_current_OID_both_walls_all185": 0,
+    "changed_D_self_pairs": 0,
+    "joint_native_apex_all_terms_pass": true,
+    "joint_native_apex_minimum": 0.008433861068620726,
+    "limitation": "Only changed D faces were collision-tested against complete retained current O/I/D, both wall assets, and all185; no volume remesh/positive-cell/mass/native admission is established.",
+    "retained_D_point_prefix_exact": true,
+    "status": "PASS_EXACT_CHANGED_D_VS_COMPLETE_OID_WALLS_ALL185_AND_APEX"
+  },
+  "followup_gates": {
+    "actual_697_D_load": "pending, prepared-view fields required",
+    "mass_mapping": "not run",
+    "native_steps": 0,
+    "paired_volume_replay": "comp6 pass; comp2 pending",
+    "physical_admission": false
+  },
+  "inputs": {
+    "parent_D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz",
+      "sha256": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca",
+      "size_bytes": 7063552
+    },
+    "target_input": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "size_bytes": 26710325
+    },
+    "volume_base": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "size_bytes": 14899836
+    },
+    "witness_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-candidate-structural-audit-001/yy-witness-map.json",
+      "sha256": "a1bab8f1f0d58673d2c65947767582c11772d04c59a1b46b343a8faf8aa00ee2",
+      "size_bytes": 150990
+    }
+  },
+  "mass_mapping_status": "NOT_RUN",
+  "native_steps": 0,
+  "operation_summary": {
+    "appended_D_point_rows": [
+      120633,
+      120634
+    ],
+    "changed_output_face_rows": [
+      238319,
+      238320,
+      238357,
+      238358,
+      238567,
+      238568,
+      238569,
+      238570
+    ],
+    "edges": [
+      {
+        "D_endpoint_rows": [
+          63164,
+          73155
+        ],
+        "component": 6,
+        "edge_parameter": 0.6074448642572737,
+        "f32_bits": [
+          "0xbcc4a410",
+          "0xbec4b857",
+          "0x3e650942"
+        ],
+        "global_volume_point_rows": [
+          188532,
+          198523
+        ],
+        "new_point_row": 120633,
+        "parent_D_face_rows": [
+          238319,
+          238320
+        ],
+        "support_residual_m": 3.354085047512702e-09
+      },
+      {
+        "D_endpoint_rows": [
+          91914,
+          95649
+        ],
+        "component": 2,
+        "edge_parameter": 0.5602618310621628,
+        "f32_bits": [
+          "0x3d0c6ec5",
+          "0xbe0e6887",
+          "0x3e3d7c4c"
+        ],
+        "global_volume_point_rows": [
+          217282,
+          221017
+        ],
+        "new_point_row": 120634,
+        "parent_D_face_rows": [
+          238357,
+          238358
+        ],
+        "support_residual_m": 4.340136622314672e-09
+      }
+    ],
+    "retired_D_parent_face_rows": [
+      238319,
+      238320,
+      238357,
+      238358
+    ],
+    "source_face_patch_count": 4
+  },
+  "outputs": {
+    "builder": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/build_minimal_f32_target_split.py",
+      "sha256": "64bf64c2473d3ea378746333b955dc4b6c059b32ccced5580e446b378e0069bd",
+      "size_bytes": 22037
+    },
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "size_bytes": 7613536
+    },
+    "edge_operation_0": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/edge-split-operation-00.json",
+      "sha256": "b03db3f99b30d068f680170bd384f1d4bad34905dc8ee3c423ce0491a19a5576",
+      "size_bytes": 4362
+    },
+    "edge_operation_1": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/edge-split-operation-01.json",
+      "sha256": "82b8f3dc18929b6499e83591bada61c99b87a9f0607db9dfdfe538ec7cd7f9e8",
+      "size_bytes": 16003
+    },
+    "exact_audit": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/exact-audit-001/result-001/report.json",
+      "sha256": "79533b3f38c4a202463c90c0b426a561641500c1465c6558406cde6077971bb2",
+      "size_bytes": 75435
+    },
+    "local_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/report.json",
+      "sha256": "d1461cf8fcc5770ce18e8222c9bef536760121e2ad27ec2a874b9e64578b0030",
+      "size_bytes": 31706
+    },
+    "registry_additions": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/face-source-identity-schema-additions.json",
+      "sha256": "4c2f78a4cd48ed80906446de9e0bd13f55eca3b2041d83d8b0a10d60809081b2",
+      "size_bytes": 15989
+    }
+  },
+  "physical_admission": false,
+  "schema": "numi.fat614.minimal-f32-target-split-pinned-manifest.v1",
+  "scope": "Two TetGen -YY surface Steiner witnesses were rounded to nearest F32 and appended as explicitly derived D target edge points. Each split retains the complete typed parent-face union; no per-child measured-face identity is claimed.",
+  "status": "PASS_EXACT_SURFACE_CONTEXT; VOLUME_REPLAY_PARTIAL; 697_LOAD_PENDING"
+}

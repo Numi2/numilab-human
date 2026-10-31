@@ -1,0 +1,54 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_POLYGON_EDGE_FLIP_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-342-root/skin-run001/cycle-00-edge/pass-000/fixed-boundary-volume-proposal.npz",
+  "input_npz_sha256": "829ac2fc6b66eaa542da1c83e5afc5dca31b23c9c5d2e7855a526b620068598e",
+  "script_sha256": "acf252585d427214b2c93b78a28fc9d27e3096b33080855b570458296ca2bff3",
+  "cavity_predicate_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "nodes_bit_identical": true,
+  "oriented_boundary_exactly_unchanged": true,
+  "exact_F32_volume_unchanged": true,
+  "material_preserved": true,
+  "eligible_stars": 8936,
+  "tested_stars": 8936,
+  "passing_operations": 1,
+  "rejections": {
+    "open_or_non_simple_edge_link": 3791,
+    "quality_no_progress": 1732,
+    "no_positive_polygon_triangulation": 3278,
+    "conflict": 99,
+    "oriented_boundary": 29,
+    "new_diagonal_exists_outside": 6
+  },
+  "input_cells": 748764,
+  "output_cells": 748763,
+  "bad_cells_before": 3022,
+  "bad_cells_after": 3021,
+  "minimum_normalized_det_before": 5.418069994163561e-12,
+  "minimum_normalized_det_after": 5.418069994163561e-12,
+  "minimum_volume_before_m3": 8.05122462884947e-22,
+  "minimum_volume_after_m3": 8.05122462884947e-22,
+  "elapsed_s": 3.210861957864836,
+  "operations": [
+    {
+      "old_rows": [
+        746921,
+        748010,
+        748763
+      ],
+      "removed_edge": [
+        60392,
+        60399
+      ],
+      "ring": [
+        60393,
+        60398,
+        209209
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    }
+  ]
+}

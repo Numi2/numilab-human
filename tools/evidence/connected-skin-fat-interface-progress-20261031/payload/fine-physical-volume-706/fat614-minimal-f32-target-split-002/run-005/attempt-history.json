@@ -1,0 +1,36 @@
+{
+  "attempts": [
+    {
+      "reason": "Initial local-to-volume point-row assumption was incorrect; the source D point rows require an exact Float32 coordinate crosswalk to global volume rows.",
+      "run": "run-001",
+      "status": "FAILED_BEFORE_CANDIDATE"
+    },
+    {
+      "reason": "Producer incorrectly demanded a singleton layer/body ancestry tuple. Corrected producer preserves the existing scalar descriptor and complete typed union.",
+      "run": "run-002",
+      "status": "FAILED_BEFORE_CANDIDATE"
+    },
+    {
+      "reason": "Local edge validator incorrectly required the D role surface to be closed. Parent D carries 45 intentional directed open-rim edges; corrected validator requires exact preservation of that boundary signature.",
+      "run": "run-003",
+      "status": "FAILED_BEFORE_CANDIDATE"
+    },
+    {
+      "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-004/candidate-D-remaining-yy-target-edge-splits.npz",
+      "candidate_sha256": "016ad9068d33fe8843d76caf42e199a94e7f028a1e97599c3ff81dcd6f930635",
+      "reason": "Geometry and local boundary checks passed, but report serialization raised KeyError while reading operation digest key. This attempt is not the selected frozen output; run-005 repeats the same inputs with corrected report serialization.",
+      "run": "run-004",
+      "status": "CANDIDATE_WRITTEN_REPORT_FAILED"
+    },
+    {
+      "candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/candidate-D-remaining-yy-target-edge-splits.npz",
+      "candidate_sha256": "4ce01a4bd397e7cf2b3c469ee33a3937d9173ff7d585a2687a1a09cf98377ab2",
+      "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/report.json",
+      "report_sha256": "3fef3f823f952afc67b9c481d9ce452414a8c4d7aa3c2420fca5f0f461da9e9c",
+      "run": "run-005",
+      "status": "SELECTED"
+    }
+  ],
+  "schema": "h706.fat614.yy-target-split-attempt-history.v1",
+  "status": "RETAINED_DIAGNOSTIC_ATTEMPTS"
+}

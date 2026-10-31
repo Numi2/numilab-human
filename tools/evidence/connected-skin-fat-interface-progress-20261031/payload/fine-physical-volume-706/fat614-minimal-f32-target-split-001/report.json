@@ -1,0 +1,1450 @@
+{
+  "candidate": {
+    "changed_output_face_rows": [
+      238319,
+      238320,
+      238357,
+      238358,
+      238567,
+      238568,
+      238569,
+      238570
+    ],
+    "faces_before_after": [
+      238567,
+      238571
+    ],
+    "new_point_rows": [
+      120633,
+      120634
+    ],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+    "points_before_after": [
+      120633,
+      120635
+    ],
+    "retired_parent_face_rows": [
+      238319,
+      238320,
+      238357,
+      238358
+    ],
+    "sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+    "source_face_patch_count": 4
+  },
+  "changed_faces_local": {
+    "joint_native_apex_bound_max": 0.44527614746304345,
+    "joint_native_apex_bound_min": 0.008433861068620726,
+    "orientation_preserved": true,
+    "rows": [
+      {
+        "face_row": 238319,
+        "normalized_face_q": 0.5139646618407374,
+        "orientation_dot": 9.570581802110891e-11,
+        "parent_face_row": 238319
+      },
+      {
+        "face_row": 238320,
+        "normalized_face_q": 0.14475471914887264,
+        "orientation_dot": 1.4820926201363527e-10,
+        "parent_face_row": 238320
+      },
+      {
+        "face_row": 238357,
+        "normalized_face_q": 0.009738583916552163,
+        "orientation_dot": 8.025999800509351e-10,
+        "parent_face_row": 238357
+      },
+      {
+        "face_row": 238358,
+        "normalized_face_q": 0.038632733188288165,
+        "orientation_dot": 6.320933566383195e-10,
+        "parent_face_row": 238358
+      },
+      {
+        "face_row": 238567,
+        "normalized_face_q": 0.1446897860278665,
+        "orientation_dot": 1.4809631927744006e-10,
+        "parent_face_row": 238319
+      },
+      {
+        "face_row": 238568,
+        "normalized_face_q": 0.5141606072030154,
+        "orientation_dot": 9.577880624305671e-11,
+        "parent_face_row": 238320
+      },
+      {
+        "face_row": 238569,
+        "normalized_face_q": 0.03856713349680065,
+        "orientation_dot": 6.299485472216674e-10,
+        "parent_face_row": 238357
+      },
+      {
+        "face_row": 238570,
+        "normalized_face_q": 0.009755329215866622,
+        "orientation_dot": 8.053326250172918e-10,
+        "parent_face_row": 238358
+      }
+    ]
+  },
+  "exact_float32_segment_search": {
+    "edge_proofs": [
+      {
+        "edge": [
+          188532,
+          198523
+        ],
+        "endpoint_lattice_integer_rows": [
+          [
+            -14242251,
+            -13032586,
+            15155470
+          ],
+          [
+            -12011275,
+            -12801554,
+            14916179
+          ]
+        ],
+        "exact_interior_f32_parameters": [],
+        "finest_grid_exponents": [
+          -6,
+          -2,
+          -3
+        ],
+        "gcd": 1,
+        "lattice_delta": [
+          2230976,
+          231032,
+          -239291
+        ]
+      },
+      {
+        "edge": [
+          217282,
+          221017
+        ],
+        "endpoint_lattice_integer_rows": [
+          [
+            16597880,
+            -15344264,
+            13006104
+          ],
+          [
+            19826574,
+            -21272702,
+            11956630
+          ]
+        ],
+        "exact_interior_f32_parameters": [],
+        "finest_grid_exponents": [
+          -6,
+          -4,
+          -3
+        ],
+        "gcd": 2,
+        "lattice_delta": [
+          3228694,
+          -5928438,
+          -1049474
+        ]
+      }
+    ],
+    "method": "exact integer lattice from binary32 endpoint dyadics on each monotone coordinate interval; any exact point parameter must make each coordinate lattice index integral"
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-candidate-structural-audit-001/yy-witness-map.json": {
+      "sha256": "a1bab8f1f0d58673d2c65947767582c11772d04c59a1b46b343a8faf8aa00ee2"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz": {
+      "sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz": {
+      "sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz": {
+      "sha256": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca"
+    }
+  },
+  "native_steps": 0,
+  "operations": [
+    {
+      "candidate_D_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz",
+      "candidate_D_parent_sha256": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca",
+      "component_id": 6,
+      "current_target_role": "typed-current-D-reversed-for-Fat",
+      "edge_global_volume_point_rows": [
+        188532,
+        198523
+      ],
+      "endpoint_D_point_rows": [
+        63164,
+        73155
+      ],
+      "endpoint_lattice_integer_rows": [
+        [
+          -14242251,
+          -13032586,
+          15155470
+        ],
+        [
+          -12011275,
+          -12801554,
+          14916179
+        ]
+      ],
+      "exact_f32_interior_parameters": [],
+      "finest_grid_exponents": [
+        -6,
+        -2,
+        -3
+      ],
+      "lattice_delta": [
+        2230976,
+        231032,
+        -239291
+      ],
+      "lattice_delta_gcd": 1,
+      "nearest_round_displacement_from_witness_m": 6.163047750383049e-09,
+      "new_output_D_face_rows": [
+        238319,
+        238567,
+        238320,
+        238568
+      ],
+      "new_output_D_faces": [
+        [
+          73155,
+          120633,
+          69866
+        ],
+        [
+          63164,
+          120633,
+          69864
+        ],
+        [
+          120633,
+          63164,
+          69866
+        ],
+        [
+          120633,
+          73155,
+          69864
+        ]
+      ],
+      "new_point_D_row": 120633,
+      "new_point_f32_bits": [
+        "0xbcc4a410",
+        "0xbec4b857",
+        "0x3e650942"
+      ],
+      "new_point_f32_m": [
+        -0.0240040123462677,
+        -0.38421890139579773,
+        0.22366812825202942
+      ],
+      "operation_json_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/edge-split-operation-00.json",
+      "operation_json_sha256": "b03db3f99b30d068f680170bd384f1d4bad34905dc8ee3c423ce0491a19a5576",
+      "parent_D_face_rows": [
+        238319,
+        238320
+      ],
+      "parent_global_faces": [
+        [
+          188532,
+          198523,
+          195234
+        ],
+        [
+          188532,
+          195232,
+          198523
+        ]
+      ],
+      "parent_target_face_rows": [
+        488750,
+        488751
+      ],
+      "perpendicular_support_residual_m": 3.354085047512702e-09,
+      "source_face_patch_ordinals": [
+        0,
+        1
+      ],
+      "tetgen_edge_parameter": 0.6074448642572737,
+      "tetgen_node_id": 21,
+      "tetgen_witness_f64_m": [
+        -0.024004012507421443,
+        -0.3842188953793321,
+        0.22366812692563254
+      ],
+      "typed_role": "D",
+      "typed_source_identity_schema_additions": [
+        {
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              369,
+              62000201,
+              369,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              13418,
+              62000202,
+              13418,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              29104,
+              62000202,
+              29104,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              29107,
+              62000202,
+              29107,
+              -1
+            ],
+            [
+              3,
+              20,
+              27,
+              3095,
+              100000023,
+              3095,
+              -1
+            ]
+          ],
+          "derived_operation": "nearest_float32_projection_of_TetGen_boundary_witness_to_D_target_edge",
+          "identity0": "output face row",
+          "identity1": "face patch ordinal",
+          "parent_union_tuple_count": 5,
+          "parent_union_tuple_sha256": "1f6a4b022f4cf400250334e474c52068a5ad3ac8b5a940df3d62e89ff7b43297",
+          "role": "DERIVED_PATCH",
+          "synthetic_original_id": 100000187
+        },
+        {
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              369,
+              62000201,
+              369,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              13418,
+              62000202,
+              13418,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              29104,
+              62000202,
+              29104,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              29107,
+              62000202,
+              29107,
+              -1
+            ],
+            [
+              3,
+              20,
+              27,
+              3095,
+              100000023,
+              3095,
+              -1
+            ]
+          ],
+          "derived_operation": "nearest_float32_projection_of_TetGen_boundary_witness_to_D_target_edge",
+          "identity0": "output face row",
+          "identity1": "face patch ordinal",
+          "parent_union_tuple_count": 5,
+          "parent_union_tuple_sha256": "1f6a4b022f4cf400250334e474c52068a5ad3ac8b5a940df3d62e89ff7b43297",
+          "role": "DERIVED_PATCH",
+          "synthetic_original_id": 100000188
+        }
+      ],
+      "witness_projection_parameter": 0.6074448642572737
+    },
+    {
+      "candidate_D_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz",
+      "candidate_D_parent_sha256": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca",
+      "component_id": 2,
+      "current_target_role": "typed-current-D-reversed-for-Fat",
+      "edge_global_volume_point_rows": [
+        217282,
+        221017
+      ],
+      "endpoint_D_point_rows": [
+        91914,
+        95649
+      ],
+      "endpoint_lattice_integer_rows": [
+        [
+          16597880,
+          -15344264,
+          13006104
+        ],
+        [
+          19826574,
+          -21272702,
+          11956630
+        ]
+      ],
+      "exact_f32_interior_parameters": [],
+      "finest_grid_exponents": [
+        -6,
+        -4,
+        -3
+      ],
+      "lattice_delta": [
+        3228694,
+        -5928438,
+        -1049474
+      ],
+      "lattice_delta_gcd": 2,
+      "nearest_round_displacement_from_witness_m": 4.8511844080025695e-09,
+      "new_output_D_face_rows": [
+        238357,
+        238569,
+        238358,
+        238570
+      ],
+      "new_output_D_faces": [
+        [
+          91914,
+          120634,
+          95248
+        ],
+        [
+          95649,
+          120634,
+          95239
+        ],
+        [
+          120634,
+          95649,
+          95248
+        ],
+        [
+          120634,
+          91914,
+          95239
+        ]
+      ],
+      "new_point_D_row": 120634,
+      "new_point_f32_bits": [
+        "0x3d0c6ec5",
+        "0xbe0e6887",
+        "0x3e3d7c4c"
+      ],
+      "new_point_f32_m": [
+        0.034285325556993484,
+        -0.13907061517238617,
+        0.18504446744918823
+      ],
+      "operation_json_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/edge-split-operation-01.json",
+      "operation_json_sha256": "82b8f3dc18929b6499e83591bada61c99b87a9f0607db9dfdfe538ec7cd7f9e8",
+      "parent_D_face_rows": [
+        238357,
+        238358
+      ],
+      "parent_global_faces": [
+        [
+          221017,
+          217282,
+          220616
+        ],
+        [
+          220607,
+          217282,
+          221017
+        ]
+      ],
+      "parent_target_face_rows": [
+        488788,
+        488789
+      ],
+      "perpendicular_support_residual_m": 4.340136622314672e-09,
+      "source_face_patch_ordinals": [
+        2,
+        3
+      ],
+      "tetgen_edge_parameter": 0.5602618310621628,
+      "tetgen_node_id": 1393,
+      "tetgen_witness_f64_m": [
+        0.03428532558005195,
+        -0.1390706116647907,
+        0.18504446409803432
+      ],
+      "typed_role": "D",
+      "typed_source_identity_schema_additions": [
+        {
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              28542,
+              62000202,
+              28542,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28543,
+              62000202,
+              28543,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28544,
+              62000202,
+              28544,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28545,
+              62000202,
+              28545,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28551,
+              62000202,
+              28551,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28552,
+              62000202,
+              28552,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28890,
+              62000202,
+              28890,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28891,
+              62000202,
+              28891,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28892,
+              62000202,
+              28892,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28893,
+              62000202,
+              28893,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28894,
+              62000202,
+              28894,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28895,
+              62000202,
+              28895,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28961,
+              62000202,
+              28961,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28962,
+              62000202,
+              28962,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28963,
+              62000202,
+              28963,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28964,
+              62000202,
+              28964,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28965,
+              62000202,
+              28965,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28966,
+              62000202,
+              28966,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28967,
+              62000202,
+              28967,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28968,
+              62000202,
+              28968,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28969,
+              62000202,
+              28969,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28970,
+              62000202,
+              28970,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28971,
+              62000202,
+              28971,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28972,
+              62000202,
+              28972,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28973,
+              62000202,
+              28973,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28974,
+              62000202,
+              28974,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28975,
+              62000202,
+              28975,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28976,
+              62000202,
+              28976,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28977,
+              62000202,
+              28977,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28978,
+              62000202,
+              28978,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28979,
+              62000202,
+              28979,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28980,
+              62000202,
+              28980,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28981,
+              62000202,
+              28981,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28982,
+              62000202,
+              28982,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28983,
+              62000202,
+              28983,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28984,
+              62000202,
+              28984,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28985,
+              62000202,
+              28985,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28986,
+              62000202,
+              28986,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28987,
+              62000202,
+              28987,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28988,
+              62000202,
+              28988,
+              -1
+            ],
+            [
+              3,
+              23,
+              31,
+              8141,
+              100000063,
+              8141,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20902,
+              100000064,
+              20902,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20903,
+              100000064,
+              20903,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20904,
+              100000064,
+              20904,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20908,
+              100000064,
+              20908,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20910,
+              100000064,
+              20910,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20911,
+              100000064,
+              20911,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              26481,
+              100000064,
+              26481,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              26490,
+              100000064,
+              26490,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              26491,
+              100000064,
+              26491,
+              -1
+            ]
+          ],
+          "derived_operation": "nearest_float32_projection_of_TetGen_boundary_witness_to_D_target_edge",
+          "identity0": "output face row",
+          "identity1": "face patch ordinal",
+          "parent_union_tuple_count": 50,
+          "parent_union_tuple_sha256": "d9e4538aab48226d8ed4341e5024c11d336e04af454bfae93df03af4d4bddae6",
+          "role": "DERIVED_PATCH",
+          "synthetic_original_id": 100000189
+        },
+        {
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              28542,
+              62000202,
+              28542,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28543,
+              62000202,
+              28543,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28544,
+              62000202,
+              28544,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28545,
+              62000202,
+              28545,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28551,
+              62000202,
+              28551,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28552,
+              62000202,
+              28552,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28890,
+              62000202,
+              28890,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28891,
+              62000202,
+              28891,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28892,
+              62000202,
+              28892,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28893,
+              62000202,
+              28893,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28894,
+              62000202,
+              28894,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28895,
+              62000202,
+              28895,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28961,
+              62000202,
+              28961,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28962,
+              62000202,
+              28962,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28963,
+              62000202,
+              28963,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28964,
+              62000202,
+              28964,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28965,
+              62000202,
+              28965,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28966,
+              62000202,
+              28966,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28967,
+              62000202,
+              28967,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28968,
+              62000202,
+              28968,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28969,
+              62000202,
+              28969,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28970,
+              62000202,
+              28970,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28971,
+              62000202,
+              28971,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28972,
+              62000202,
+              28972,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28973,
+              62000202,
+              28973,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28974,
+              62000202,
+              28974,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28975,
+              62000202,
+              28975,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28976,
+              62000202,
+              28976,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28977,
+              62000202,
+              28977,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28978,
+              62000202,
+              28978,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28979,
+              62000202,
+              28979,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28980,
+              62000202,
+              28980,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28981,
+              62000202,
+              28981,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28982,
+              62000202,
+              28982,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28983,
+              62000202,
+              28983,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28984,
+              62000202,
+              28984,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28985,
+              62000202,
+              28985,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28986,
+              62000202,
+              28986,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28987,
+              62000202,
+              28987,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28988,
+              62000202,
+              28988,
+              -1
+            ],
+            [
+              3,
+              23,
+              31,
+              8141,
+              100000063,
+              8141,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20902,
+              100000064,
+              20902,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20903,
+              100000064,
+              20903,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20904,
+              100000064,
+              20904,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20908,
+              100000064,
+              20908,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20910,
+              100000064,
+              20910,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              20911,
+              100000064,
+              20911,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              26481,
+              100000064,
+              26481,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              26490,
+              100000064,
+              26490,
+              -1
+            ],
+            [
+              3,
+              23,
+              32,
+              26491,
+              100000064,
+              26491,
+              -1
+            ]
+          ],
+          "derived_operation": "nearest_float32_projection_of_TetGen_boundary_witness_to_D_target_edge",
+          "identity0": "output face row",
+          "identity1": "face patch ordinal",
+          "parent_union_tuple_count": 50,
+          "parent_union_tuple_sha256": "d9e4538aab48226d8ed4341e5024c11d336e04af454bfae93df03af4d4bddae6",
+          "role": "DERIVED_PATCH",
+          "synthetic_original_id": 100000190
+        }
+      ],
+      "witness_projection_parameter": 0.5602618310621628
+    }
+  ],
+  "physical_admission": false,
+  "schema": "numi.fat614.minimally-rounded-d-boundary-edge-split.v1",
+  "scope": "Nearest-Float32 rounded TetGen edge witnesses. Each appended point is nanometers off the prior target edge, so target support changes slightly; complete O/I/D, wall, all185 exact context audit and volume remesh/replay are required before promotion. No physical admission.",
+  "status": "PASS_TYPED_D_LOCAL_SPLIT_CONSTRUCTION_GLOBAL_AUDIT_PENDING",
+  "topology": {
+    "bad_directed_edges_before_after": [
+      45,
+      45
+    ],
+    "closed_signature_unchanged": true,
+    "duplicate_unoriented_faces": 0
+  }
+}

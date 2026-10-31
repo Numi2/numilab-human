@@ -1,0 +1,2308 @@
+{
+  "candidate_geometry": {
+    "bad_directed_edges": 45,
+    "boundary_edge_delta_equal": true,
+    "changed_output_face_rows": [
+      34265,
+      48514,
+      48587,
+      235268,
+      238196,
+      238197,
+      238241,
+      238242,
+      238247,
+      238248,
+      238280,
+      238281,
+      238498,
+      238499,
+      238571,
+      238572,
+      238573,
+      238574,
+      238575,
+      238576,
+      238577,
+      238578,
+      238579,
+      238580,
+      238581,
+      238582,
+      238583,
+      238584,
+      238585,
+      238586,
+      238587,
+      238588
+    ],
+    "duplicate_faces": 0,
+    "face_level_patch_count": 14,
+    "faces_before_after": [
+      238571,
+      238589
+    ],
+    "inherited_open_boundary_edges": 45,
+    "new_face_count": 18,
+    "new_point_count": 9,
+    "new_point_rows": [
+      120635,
+      120636,
+      120637,
+      120638,
+      120639,
+      120640,
+      120641,
+      120642,
+      120643
+    ],
+    "parent_face_orientation_preserved": true,
+    "point_prefix_f32_exact": true,
+    "point_prefix_f64_exact": true,
+    "points_before_after": [
+      120635,
+      120644
+    ],
+    "retired_parent_face_rows": [
+      34265,
+      48514,
+      48587,
+      235268,
+      238196,
+      238197,
+      238241,
+      238242,
+      238247,
+      238248,
+      238280,
+      238281,
+      238498,
+      238499
+    ]
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz": {
+      "sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "size_bytes": 7613536
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/face-source-identity-schema-additions.json": {
+      "sha256": "4c2f78a4cd48ed80906446de9e0bd13f55eca3b2041d83d8b0a10d60809081b2",
+      "size_bytes": 15989
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/remaining-component-census-001/identified-target-edges.json": {
+      "sha256": "f396afb6a1e9f6316fe08561951598f6737b6d3ef016bda17307cd4b6d26a56e",
+      "size_bytes": 23417
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz": {
+      "sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "size_bytes": 14899836
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz": {
+      "sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "size_bytes": 26710325
+    }
+  },
+  "limitations": "Only target-edge Steiner points exactly lying on an authenticated current D edge (before componentwise F32 rounding) are included. Components 9 and 12 are cut-boundary additions, not current target-edge inserts. Components 0/1 have return code 3 and are not accepted TetGen results. This candidate still requires full O/I/D + both walls + all185 exact context audit, actual 697 loader, and paired volume replay; it is non-admitting.",
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "operations": [
+    {
+      "component_id": 3,
+      "edge_global_volume_point_rows": [
+        148817,
+        150091
+      ],
+      "edge_parameter_after_f32_rounding": 0.517618116243287,
+      "edge_parameter_f64": 0.5176181376779873,
+      "endpoint_D_point_rows": [
+        23449,
+        24723
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              24723,
+              120635,
+              23557
+            ],
+            [
+              120635,
+              23449,
+              23557
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              9868,
+              5,
+              9868
+            ],
+            [
+              34661,
+              62000202,
+              34661
+            ],
+            [
+              34672,
+              62000202,
+              34672
+            ],
+            [
+              233095,
+              100000148,
+              233095
+            ],
+            [
+              233098,
+              100000148,
+              233098
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              7630,
+              5,
+              1563,
+              18997
+            ],
+            [
+              2,
+              -1,
+              -1,
+              9128,
+              62000202,
+              9128,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              9145,
+              62000202,
+              9145,
+              -1
+            ],
+            [
+              3,
+              139,
+              135,
+              414,
+              100000148,
+              414,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a6b03a03d15db1285ccbc252c3f022bfb61bb02c3a3e74b5f8f1062c99f7fa95",
+          "output_face_rows": [
+            238241,
+            238571
+          ],
+          "parent_face_row": 238241,
+          "parent_union_tuple_sha256": "4f4201c2c76a0d3533607601d0a2c2ca1701f64e7aa497ee6ff8b341bd9dfcde",
+          "synthetic_original_id": 100000191,
+          "target_edge_global_volume_rows": [
+            148817,
+            150091
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              23449,
+              120635,
+              23559
+            ],
+            [
+              120635,
+              24723,
+              23559
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              9868,
+              5,
+              9868
+            ],
+            [
+              34661,
+              62000202,
+              34661
+            ],
+            [
+              34672,
+              62000202,
+              34672
+            ],
+            [
+              233095,
+              100000148,
+              233095
+            ],
+            [
+              233098,
+              100000148,
+              233098
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              7630,
+              5,
+              1563,
+              18997
+            ],
+            [
+              2,
+              -1,
+              -1,
+              9128,
+              62000202,
+              9128,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              9145,
+              62000202,
+              9145,
+              -1
+            ],
+            [
+              3,
+              139,
+              135,
+              414,
+              100000148,
+              414,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a6b03a03d15db1285ccbc252c3f022bfb61bb02c3a3e74b5f8f1062c99f7fa95",
+          "output_face_rows": [
+            238242,
+            238572
+          ],
+          "parent_face_row": 238242,
+          "parent_union_tuple_sha256": "4f4201c2c76a0d3533607601d0a2c2ca1701f64e7aa497ee6ff8b341bd9dfcde",
+          "synthetic_original_id": 100000192,
+          "target_edge_global_volume_rows": [
+            148817,
+            150091
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120635,
+      "parent_D_face_rows": [
+        238241,
+        238242
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488672,
+        488673
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbdea51fe",
+        "0xbfde184e",
+        "0x3e8f112c"
+      ],
+      "rounded_f32_point_m": [
+        -0.11441420018672943,
+        -1.735116720199585,
+        0.2794278860092163
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 1.599412008264919e-08,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 3383,
+      "tetgen_witness_f64_m": [
+        -0.11441419743413768,
+        -1.735116733517192,
+        0.27942787758555465
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 1.5996671332777075e-08
+    },
+    {
+      "component_id": 4,
+      "edge_global_volume_point_rows": [
+        180520,
+        196668
+      ],
+      "edge_parameter_after_f32_rounding": 0.902874106296295,
+      "edge_parameter_f64": 0.902874037210038,
+      "endpoint_D_point_rows": [
+        55152,
+        71300
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              71300,
+              120636,
+              70283
+            ],
+            [
+              120636,
+              55152,
+              70283
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              37518,
+              62000202,
+              37518
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              12031,
+              62000202,
+              12031,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "ae65d3df226af837f49ec17ff9680d47a749128ece7967e5b8f9e0ecefb10dae",
+          "output_face_rows": [
+            34265,
+            238577
+          ],
+          "parent_face_row": 34265,
+          "parent_union_tuple_sha256": "a585101c2b583608b51a7ac0861521d5f2ad0044d0a6b18850ec5e913a8da5a1",
+          "synthetic_original_id": 100000197,
+          "target_edge_global_volume_rows": [
+            180520,
+            196668
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              55152,
+              120636,
+              55125
+            ],
+            [
+              120636,
+              71300,
+              55125
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              37452,
+              62000202,
+              37452
+            ],
+            [
+              37453,
+              62000202,
+              37453
+            ],
+            [
+              37474,
+              62000202,
+              37474
+            ],
+            [
+              37475,
+              62000202,
+              37475
+            ],
+            [
+              37476,
+              62000202,
+              37476
+            ],
+            [
+              37477,
+              62000202,
+              37477
+            ],
+            [
+              37500,
+              62000202,
+              37500
+            ],
+            [
+              37516,
+              62000202,
+              37516
+            ],
+            [
+              37518,
+              62000202,
+              37518
+            ],
+            [
+              50673,
+              62000202,
+              50673
+            ],
+            [
+              50674,
+              62000202,
+              50674
+            ],
+            [
+              74072,
+              100000060,
+              74072
+            ],
+            [
+              74076,
+              100000060,
+              74076
+            ],
+            [
+              121650,
+              100000061,
+              121650
+            ],
+            [
+              121651,
+              100000061,
+              121651
+            ],
+            [
+              121652,
+              100000061,
+              121652
+            ],
+            [
+              121653,
+              100000061,
+              121653
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              11959,
+              62000202,
+              11959,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              11961,
+              62000202,
+              11961,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              11983,
+              62000202,
+              11983,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              11984,
+              62000202,
+              11984,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              11985,
+              62000202,
+              11985,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              11986,
+              62000202,
+              11986,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              12012,
+              62000202,
+              12012,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              12028,
+              62000202,
+              12028,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              12031,
+              62000202,
+              12031,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25413,
+              62000202,
+              25413,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25414,
+              62000202,
+              25414,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              14325,
+              100000060,
+              14325,
+              -1
+            ],
+            [
+              3,
+              23,
+              29,
+              4486,
+              100000061,
+              4486,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "256734b89a84eded8ca511ab9c9146dd127e5f284f1e07a94beb4f9a65f00008",
+          "output_face_rows": [
+            235268,
+            238578
+          ],
+          "parent_face_row": 235268,
+          "parent_union_tuple_sha256": "cb3408a04e506d29951ed291a09057303c112da59a0124d22d84edd11810ede9",
+          "synthetic_original_id": 100000198,
+          "target_edge_global_volume_rows": [
+            180520,
+            196668
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120636,
+      "parent_D_face_rows": [
+        34265,
+        235268
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        284696,
+        485699
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbcc5b1c4",
+        "0xbd76f030",
+        "0x3d6ad324"
+      ],
+      "rounded_f32_point_m": [
+        -0.024132616817951202,
+        -0.060287654399871826,
+        0.05733026564121246
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 2.726459316460942e-10,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 455,
+      "tetgen_witness_f64_m": [
+        -0.02413261710715372,
+        -0.060287654095626,
+        0.057330266032123774
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 5.735985256380477e-10
+    },
+    {
+      "component_id": 5,
+      "edge_global_volume_point_rows": [
+        200394,
+        201618
+      ],
+      "edge_parameter_after_f32_rounding": 0.020667419856183592,
+      "edge_parameter_f64": 0.0206671155672429,
+      "endpoint_D_point_rows": [
+        75026,
+        76250
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              76250,
+              120637,
+              74943
+            ],
+            [
+              120637,
+              120638,
+              74943
+            ],
+            [
+              120638,
+              75026,
+              74943
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              53339,
+              62000202,
+              53339
+            ],
+            [
+              53340,
+              62000202,
+              53340
+            ],
+            [
+              62481,
+              100000022,
+              62481
+            ],
+            [
+              62483,
+              100000022,
+              62483
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              28136,
+              62000202,
+              28136,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28137,
+              62000202,
+              28137,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7367,
+              100000022,
+              7367,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7368,
+              100000022,
+              7368,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a8d620c00c0d8526494d725f832fc957c452800c8841bd18294b24da4f0cf2b0",
+          "output_face_rows": [
+            238196,
+            238583,
+            238584
+          ],
+          "parent_face_row": 238196,
+          "parent_union_tuple_sha256": "6fc9cf171077ec48ffdfa2a32bfe789e4a59ab579b8235c972931c9e11926300",
+          "synthetic_original_id": 100000201,
+          "target_edge_global_volume_rows": [
+            200394,
+            201618
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              75026,
+              120638,
+              74945
+            ],
+            [
+              120638,
+              120637,
+              74945
+            ],
+            [
+              120637,
+              76250,
+              74945
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              53339,
+              62000202,
+              53339
+            ],
+            [
+              53340,
+              62000202,
+              53340
+            ],
+            [
+              62481,
+              100000022,
+              62481
+            ],
+            [
+              62483,
+              100000022,
+              62483
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              28136,
+              62000202,
+              28136,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28137,
+              62000202,
+              28137,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7367,
+              100000022,
+              7367,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7368,
+              100000022,
+              7368,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a8d620c00c0d8526494d725f832fc957c452800c8841bd18294b24da4f0cf2b0",
+          "output_face_rows": [
+            238197,
+            238585,
+            238586
+          ],
+          "parent_face_row": 238197,
+          "parent_union_tuple_sha256": "6fc9cf171077ec48ffdfa2a32bfe789e4a59ab579b8235c972931c9e11926300",
+          "synthetic_original_id": 100000202,
+          "target_edge_global_volume_rows": [
+            200394,
+            201618
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120637,
+      "parent_D_face_rows": [
+        238196,
+        238197
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488627,
+        488628
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbca2c35e",
+        "0xbef87f9f",
+        "0x3e82d657"
+      ],
+      "rounded_f32_point_m": [
+        -0.019868548959493637,
+        -0.4853486716747284,
+        0.25554153323173523
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 3.38082099095132e-09,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 173,
+      "tetgen_witness_f64_m": [
+        -0.019868548897041646,
+        -0.4853486634184298,
+        0.25554152928203294
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 9.15262338379479e-09
+    },
+    {
+      "component_id": 5,
+      "edge_global_volume_point_rows": [
+        200394,
+        201618
+      ],
+      "edge_parameter_after_f32_rounding": 0.017945701612293814,
+      "edge_parameter_f64": 0.0179457591076097,
+      "endpoint_D_point_rows": [
+        75026,
+        76250
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              76250,
+              120637,
+              74943
+            ],
+            [
+              120637,
+              120638,
+              74943
+            ],
+            [
+              120638,
+              75026,
+              74943
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              53339,
+              62000202,
+              53339
+            ],
+            [
+              53340,
+              62000202,
+              53340
+            ],
+            [
+              62481,
+              100000022,
+              62481
+            ],
+            [
+              62483,
+              100000022,
+              62483
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              28136,
+              62000202,
+              28136,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28137,
+              62000202,
+              28137,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7367,
+              100000022,
+              7367,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7368,
+              100000022,
+              7368,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a8d620c00c0d8526494d725f832fc957c452800c8841bd18294b24da4f0cf2b0",
+          "output_face_rows": [
+            238196,
+            238583,
+            238584
+          ],
+          "parent_face_row": 238196,
+          "parent_union_tuple_sha256": "6fc9cf171077ec48ffdfa2a32bfe789e4a59ab579b8235c972931c9e11926300",
+          "synthetic_original_id": 100000201,
+          "target_edge_global_volume_rows": [
+            200394,
+            201618
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              75026,
+              120638,
+              74945
+            ],
+            [
+              120638,
+              120637,
+              74945
+            ],
+            [
+              120637,
+              76250,
+              74945
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              53339,
+              62000202,
+              53339
+            ],
+            [
+              53340,
+              62000202,
+              53340
+            ],
+            [
+              62481,
+              100000022,
+              62481
+            ],
+            [
+              62483,
+              100000022,
+              62483
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              28136,
+              62000202,
+              28136,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              28137,
+              62000202,
+              28137,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7367,
+              100000022,
+              7367,
+              -1
+            ],
+            [
+              3,
+              20,
+              26,
+              7368,
+              100000022,
+              7368,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a8d620c00c0d8526494d725f832fc957c452800c8841bd18294b24da4f0cf2b0",
+          "output_face_rows": [
+            238197,
+            238585,
+            238586
+          ],
+          "parent_face_row": 238197,
+          "parent_union_tuple_sha256": "6fc9cf171077ec48ffdfa2a32bfe789e4a59ab579b8235c972931c9e11926300",
+          "synthetic_original_id": 100000202,
+          "target_edge_global_volume_rows": [
+            200394,
+            201618
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120638,
+      "parent_D_face_rows": [
+        238196,
+        238197
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488627,
+        488628
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbca2d9a2",
+        "0xbef875cb",
+        "0x3e82d564"
+      ],
+      "rounded_f32_point_m": [
+        -0.019879166036844254,
+        -0.48527368903160095,
+        0.255534291267395
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 1.3679397245486664e-08,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 174,
+      "tetgen_witness_f64_m": [
+        -0.019879165448797222,
+        -0.48527369188101865,
+        0.25553427780471955
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 1.3773474923913874e-08
+    },
+    {
+      "component_id": 7,
+      "edge_global_volume_point_rows": [
+        231459,
+        231478
+      ],
+      "edge_parameter_after_f32_rounding": 0.0001973180495765632,
+      "edge_parameter_f64": 0.00019732664300292855,
+      "endpoint_D_point_rows": [
+        106091,
+        106110
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              106110,
+              120639,
+              106086
+            ],
+            [
+              120639,
+              106091,
+              106086
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              53073,
+              62000201,
+              53073
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              471,
+              62000201,
+              471,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "56b9d79347e358321850757bf5b345ae531cbd788f8001c689ed1411f1339a13",
+          "output_face_rows": [
+            48514,
+            238587
+          ],
+          "parent_face_row": 48514,
+          "parent_union_tuple_sha256": "2e569ac044a0ff20840c31f366a6a6bee06abbbde0274ae76fd4756f04f3a851",
+          "synthetic_original_id": 100000203,
+          "target_edge_global_volume_rows": [
+            231459,
+            231478
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              106091,
+              120639,
+              106094
+            ],
+            [
+              120639,
+              106110,
+              106094
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              53155,
+              62000202,
+              53155
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              27956,
+              62000202,
+              27956,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "14e199691dc8561760a4b050a3dd4d69492c813ba8b7c368bc58db200eb549ce",
+          "output_face_rows": [
+            48587,
+            238588
+          ],
+          "parent_face_row": 48587,
+          "parent_union_tuple_sha256": "8c7e1188ffe1b467b2888db8331965db35e65ab54c19745bb13bf00e1be31558",
+          "synthetic_original_id": 100000204,
+          "target_edge_global_volume_rows": [
+            231459,
+            231478
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120639,
+      "parent_D_face_rows": [
+        48514,
+        48587
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        298945,
+        299018
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0x3e26198b",
+        "0xbea68798",
+        "0x3ddfdbe8"
+      ],
+      "rounded_f32_point_m": [
+        0.16220681369304657,
+        -0.3252532482147217,
+        0.10930615663528442
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 4.975994008398006e-09,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 135,
+      "tetgen_witness_f64_m": [
+        0.16220681679682197,
+        -0.32525324488124324,
+        0.10930615864552455
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 4.9786108120673784e-09
+    },
+    {
+      "component_id": 8,
+      "edge_global_volume_point_rows": [
+        180583,
+        200784
+      ],
+      "edge_parameter_after_f32_rounding": 0.42819089746945527,
+      "edge_parameter_f64": 0.4281907429139653,
+      "endpoint_D_point_rows": [
+        55215,
+        75416
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              55215,
+              120641,
+              76196
+            ],
+            [
+              120641,
+              120640,
+              76196
+            ],
+            [
+              120640,
+              75416,
+              76196
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              50812,
+              62000202,
+              50812
+            ],
+            [
+              50827,
+              62000202,
+              50827
+            ],
+            [
+              50828,
+              62000202,
+              50828
+            ],
+            [
+              123932,
+              100000061,
+              123932
+            ],
+            [
+              123933,
+              100000061,
+              123933
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              25552,
+              62000202,
+              25552,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25567,
+              62000202,
+              25567,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25568,
+              62000202,
+              25568,
+              -1
+            ],
+            [
+              3,
+              23,
+              29,
+              12638,
+              100000061,
+              12638,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a682bd496c50a099e522f1e2dd9af872c78ddd2e97d8509d3bd56e814ebfc3e6",
+          "output_face_rows": [
+            238280,
+            238579,
+            238580
+          ],
+          "parent_face_row": 238280,
+          "parent_union_tuple_sha256": "ea858441c67c1823c605bb7ac2ce021bd0fbe1ff792802635c944372c8dfd10a",
+          "synthetic_original_id": 100000199,
+          "target_edge_global_volume_rows": [
+            180583,
+            200784
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              75416,
+              120640,
+              76199
+            ],
+            [
+              120640,
+              120641,
+              76199
+            ],
+            [
+              120641,
+              55215,
+              76199
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              50812,
+              62000202,
+              50812
+            ],
+            [
+              50827,
+              62000202,
+              50827
+            ],
+            [
+              50828,
+              62000202,
+              50828
+            ],
+            [
+              123932,
+              100000061,
+              123932
+            ],
+            [
+              123933,
+              100000061,
+              123933
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              25552,
+              62000202,
+              25552,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25567,
+              62000202,
+              25567,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25568,
+              62000202,
+              25568,
+              -1
+            ],
+            [
+              3,
+              23,
+              29,
+              12638,
+              100000061,
+              12638,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a682bd496c50a099e522f1e2dd9af872c78ddd2e97d8509d3bd56e814ebfc3e6",
+          "output_face_rows": [
+            238281,
+            238581,
+            238582
+          ],
+          "parent_face_row": 238281,
+          "parent_union_tuple_sha256": "ea858441c67c1823c605bb7ac2ce021bd0fbe1ff792802635c944372c8dfd10a",
+          "synthetic_original_id": 100000200,
+          "target_edge_global_volume_rows": [
+            180583,
+            200784
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120640,
+      "parent_D_face_rows": [
+        238280,
+        238281
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488711,
+        488712
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbccd07bb",
+        "0xbd5d85cd",
+        "0x3d8651f7"
+      ],
+      "rounded_f32_point_m": [
+        -0.025028100237250328,
+        -0.054082680493593216,
+        0.06558602303266525
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 2.557966446858939e-09,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 44,
+      "tetgen_witness_f64_m": [
+        -0.025028100047732187,
+        -0.054082682078830116,
+        0.06558601969327793
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 3.70140525245047e-09
+    },
+    {
+      "component_id": 8,
+      "edge_global_volume_point_rows": [
+        180583,
+        200784
+      ],
+      "edge_parameter_after_f32_rounding": 0.2800766176776808,
+      "edge_parameter_f64": 0.2800765747651342,
+      "endpoint_D_point_rows": [
+        55215,
+        75416
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              55215,
+              120641,
+              76196
+            ],
+            [
+              120641,
+              120640,
+              76196
+            ],
+            [
+              120640,
+              75416,
+              76196
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              50812,
+              62000202,
+              50812
+            ],
+            [
+              50827,
+              62000202,
+              50827
+            ],
+            [
+              50828,
+              62000202,
+              50828
+            ],
+            [
+              123932,
+              100000061,
+              123932
+            ],
+            [
+              123933,
+              100000061,
+              123933
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              25552,
+              62000202,
+              25552,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25567,
+              62000202,
+              25567,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25568,
+              62000202,
+              25568,
+              -1
+            ],
+            [
+              3,
+              23,
+              29,
+              12638,
+              100000061,
+              12638,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a682bd496c50a099e522f1e2dd9af872c78ddd2e97d8509d3bd56e814ebfc3e6",
+          "output_face_rows": [
+            238280,
+            238579,
+            238580
+          ],
+          "parent_face_row": 238280,
+          "parent_union_tuple_sha256": "ea858441c67c1823c605bb7ac2ce021bd0fbe1ff792802635c944372c8dfd10a",
+          "synthetic_original_id": 100000199,
+          "target_edge_global_volume_rows": [
+            180583,
+            200784
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              75416,
+              120640,
+              76199
+            ],
+            [
+              120640,
+              120641,
+              76199
+            ],
+            [
+              120641,
+              55215,
+              76199
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              50812,
+              62000202,
+              50812
+            ],
+            [
+              50827,
+              62000202,
+              50827
+            ],
+            [
+              50828,
+              62000202,
+              50828
+            ],
+            [
+              123932,
+              100000061,
+              123932
+            ],
+            [
+              123933,
+              100000061,
+              123933
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              25552,
+              62000202,
+              25552,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25567,
+              62000202,
+              25567,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              25568,
+              62000202,
+              25568,
+              -1
+            ],
+            [
+              3,
+              23,
+              29,
+              12638,
+              100000061,
+              12638,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "a682bd496c50a099e522f1e2dd9af872c78ddd2e97d8509d3bd56e814ebfc3e6",
+          "output_face_rows": [
+            238281,
+            238581,
+            238582
+          ],
+          "parent_face_row": 238281,
+          "parent_union_tuple_sha256": "ea858441c67c1823c605bb7ac2ce021bd0fbe1ff792802635c944372c8dfd10a",
+          "synthetic_original_id": 100000200,
+          "target_edge_global_volume_rows": [
+            180583,
+            200784
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120641,
+      "parent_D_face_rows": [
+        238280,
+        238281
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488711,
+        488712
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbcda2547",
+        "0xbd62cc0b",
+        "0x3d832df4"
+      ],
+      "rounded_f32_point_m": [
+        -0.02662910334765911,
+        -0.05537037178874016,
+        0.06405249238014221
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 1.600797055893799e-09,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 45,
+      "tetgen_witness_f64_m": [
+        -0.026629102869971923,
+        -0.05537037183927481,
+        0.06405249068203629
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 1.7647386537004847e-09
+    },
+    {
+      "component_id": 10,
+      "edge_global_volume_point_rows": [
+        154556,
+        154755
+      ],
+      "edge_parameter_after_f32_rounding": 0.19127486077349196,
+      "edge_parameter_f64": 0.19127518090292742,
+      "endpoint_D_point_rows": [
+        29188,
+        29387
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              29188,
+              120642,
+              31519
+            ],
+            [
+              120642,
+              29387,
+              31519
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              13690,
+              5,
+              13690
+            ],
+            [
+              13691,
+              5,
+              13691
+            ],
+            [
+              143239,
+              100000062,
+              143239
+            ],
+            [
+              143247,
+              100000062,
+              143247
+            ],
+            [
+              143248,
+              100000062,
+              143248
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              10026,
+              5,
+              4051,
+              26456
+            ],
+            [
+              3,
+              23,
+              30,
+              4774,
+              100000062,
+              4774,
+              -1
+            ],
+            [
+              3,
+              23,
+              30,
+              4775,
+              100000062,
+              4775,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "aad8e3c8b1b9cca78bd74f9b1fe07b7cacc3206fdde6cfd48f0afda43d1655da",
+          "output_face_rows": [
+            238247,
+            238575
+          ],
+          "parent_face_row": 238247,
+          "parent_union_tuple_sha256": "dfe8f4c9d43a632159ed15564c62d012742f9a1469e206bd1aa4fb9d02d50745",
+          "synthetic_original_id": 100000195,
+          "target_edge_global_volume_rows": [
+            154556,
+            154755
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              29387,
+              120642,
+              31517
+            ],
+            [
+              120642,
+              29188,
+              31517
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              13690,
+              5,
+              13690
+            ],
+            [
+              13691,
+              5,
+              13691
+            ],
+            [
+              143239,
+              100000062,
+              143239
+            ],
+            [
+              143247,
+              100000062,
+              143247
+            ],
+            [
+              143248,
+              100000062,
+              143248
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              10026,
+              5,
+              4051,
+              26456
+            ],
+            [
+              3,
+              23,
+              30,
+              4774,
+              100000062,
+              4774,
+              -1
+            ],
+            [
+              3,
+              23,
+              30,
+              4775,
+              100000062,
+              4775,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "aad8e3c8b1b9cca78bd74f9b1fe07b7cacc3206fdde6cfd48f0afda43d1655da",
+          "output_face_rows": [
+            238248,
+            238576
+          ],
+          "parent_face_row": 238248,
+          "parent_union_tuple_sha256": "dfe8f4c9d43a632159ed15564c62d012742f9a1469e206bd1aa4fb9d02d50745",
+          "synthetic_original_id": 100000196,
+          "target_edge_global_volume_rows": [
+            154556,
+            154755
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120642,
+      "parent_D_face_rows": [
+        238247,
+        238248
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488678,
+        488679
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbdb83f06",
+        "0xbe0c726f",
+        "0x3de59401"
+      ],
+      "rounded_f32_point_m": [
+        -0.08996395766735077,
+        -0.13715527951717377,
+        0.11209870129823685
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 3.920146837040943e-09,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 54,
+      "tetgen_witness_f64_m": [
+        -0.08996395536034184,
+        -0.13715528347077033,
+        0.11209870132881479
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 4.5775704241359806e-09
+    },
+    {
+      "component_id": 11,
+      "edge_global_volume_point_rows": [
+        151851,
+        152084
+      ],
+      "edge_parameter_after_f32_rounding": 0.508399580612993,
+      "edge_parameter_f64": 0.5083998298236577,
+      "endpoint_D_point_rows": [
+        26483,
+        26716
+      ],
+      "face_patches": [
+        {
+          "child_faces_D_rows": [
+            [
+              26716,
+              120643,
+              26544
+            ],
+            [
+              120643,
+              26483,
+              26544
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              78202,
+              62000201,
+              78202
+            ],
+            [
+              78203,
+              100000060,
+              78203
+            ],
+            [
+              78205,
+              100000060,
+              78205
+            ],
+            [
+              82698,
+              100000060,
+              82698
+            ],
+            [
+              82699,
+              62000201,
+              82699
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              1236,
+              62000201,
+              1236,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              1279,
+              62000201,
+              1279,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              4690,
+              100000060,
+              4690,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              5982,
+              100000060,
+              5982,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              6049,
+              100000060,
+              6049,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "8aeddf920597fb1d9a4347cad06a708a5e3efacf77ba6b2701418edc7670b11e",
+          "output_face_rows": [
+            238498,
+            238573
+          ],
+          "parent_face_row": 238498,
+          "parent_union_tuple_sha256": "ce5717d2e7f22b5cd924a9e95bda7310098c9696f708d40c04e14e172374f022",
+          "synthetic_original_id": 100000193,
+          "target_edge_global_volume_rows": [
+            151851,
+            152084
+          ]
+        },
+        {
+          "child_faces_D_rows": [
+            [
+              26483,
+              120643,
+              26547
+            ],
+            [
+              120643,
+              26716,
+              26547
+            ]
+          ],
+          "complete_face_ancestry_union": [
+            [
+              78202,
+              62000201,
+              78202
+            ],
+            [
+              78203,
+              100000060,
+              78203
+            ],
+            [
+              78205,
+              100000060,
+              78205
+            ],
+            [
+              82698,
+              100000060,
+              82698
+            ],
+            [
+              82699,
+              62000201,
+              82699
+            ]
+          ],
+          "complete_typed_parent_union": [
+            [
+              2,
+              -1,
+              -1,
+              1236,
+              62000201,
+              1236,
+              -1
+            ],
+            [
+              2,
+              -1,
+              -1,
+              1279,
+              62000201,
+              1279,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              4690,
+              100000060,
+              4690,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              5982,
+              100000060,
+              5982,
+              -1
+            ],
+            [
+              3,
+              23,
+              28,
+              6049,
+              100000060,
+              6049,
+              -1
+            ]
+          ],
+          "face_ancestry_union_sha256": "8aeddf920597fb1d9a4347cad06a708a5e3efacf77ba6b2701418edc7670b11e",
+          "output_face_rows": [
+            238499,
+            238574
+          ],
+          "parent_face_row": 238499,
+          "parent_union_tuple_sha256": "ce5717d2e7f22b5cd924a9e95bda7310098c9696f708d40c04e14e172374f022",
+          "synthetic_original_id": 100000194,
+          "target_edge_global_volume_rows": [
+            151851,
+            152084
+          ]
+        }
+      ],
+      "native_steps": 0,
+      "new_output_D_point_row": 120643,
+      "parent_D_face_rows": [
+        238498,
+        238499
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-001/candidate-D-minimally-rounded-yy-edge-split.npz",
+      "parent_candidate_sha256": "602036c9b164bd1eec83b344675b8cabf453665920e45b558b50fe8115c67493",
+      "parent_target_face_rows": [
+        488929,
+        488930
+      ],
+      "physical_admission": false,
+      "rounded_f32_bits": [
+        "0xbdc8119e",
+        "0xbdeda332",
+        "0x3dec596e"
+      ],
+      "rounded_f32_point_m": [
+        -0.09768985211849213,
+        -0.11603392660617828,
+        0.11540494859218597
+      ],
+      "schema": "numi.fat614.yy-derived-target-edge-split-operation.v1",
+      "status": "DERIVED_TARGET_SUPPORT_REPAIR_ROUNDING_OFF_EXACT_EDGE; FULL_CONTEXT_AND_VOLUME_REPLAY_REQUIRED",
+      "support_residual_m": 2.6148300567295405e-09,
+      "target_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-typed-target-001/fat-current-typed-target-input.npz",
+      "target_input_sha256": "5fa7a5149a2380151023d332e68e40dfca69340ab8dcb6abcd444d64ae1c3464",
+      "tetgen_output_node_id": 20,
+      "tetgen_witness_f64_m": [
+        -0.09768985352586979,
+        -0.11603392898535983,
+        0.11540495089721992
+      ],
+      "volume_parent_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-residual-pass-001/remeshed/connected-fixed-surface-volume-proposal.npz",
+      "volume_parent_sha256": "c21b708fa591476b1c5ab5f33329362ac8086c6429c73a117e63100555984e8b",
+      "witness_round_displacement_m": 3.599221884792942e-09
+    }
+  ],
+  "outputs": {
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/candidate-D-remaining-yy-target-edge-splits.npz",
+      "sha256": "4ce01a4bd397e7cf2b3c469ee33a3937d9173ff7d585a2687a1a09cf98377ab2",
+      "size_bytes": 7620996
+    },
+    "identity_additions": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/face-source-identity-schema-additions.json",
+      "sha256": "eb0b33e7c0d7e4503cf858ae6dce13bdff705b350b5b2d82680fcb23e9c37932",
+      "size_bytes": 41539
+    },
+    "operations": [
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-02.json",
+        "sha256": "6590ec9a481befd496bd43e376d56f939217bf0e5bfd02d57c4fe576f2203749"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-03.json",
+        "sha256": "28fe659e45686ca3276f6d395a23f21b8ea3874c8fe7a52335d38772c549e1d2"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-04.json",
+        "sha256": "135ec24116a2c34155dee087f693f211b2c9552599b8ec13fe98d6b34cc42b47"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-05.json",
+        "sha256": "bc24c04e5455325508dbac32a5aea5eff6b6c3d0aad0eedb60ddf21c324a5b3a"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-06.json",
+        "sha256": "b149fbcc76c65620aac0b07d089e979f9a5f723e6377acb122bbe6b64baaa4ae"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-07.json",
+        "sha256": "5139f794603990b507d25bfd63ef1ed3263051d0ee009d2ebba1e1e923ac3f21"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-08.json",
+        "sha256": "4829fbcb8fe37a3b7be5d7fe92e365cc2c78b6235bff62a23cf0f3210274332c"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-09.json",
+        "sha256": "5ea5ea53b0ca7e50dd54862e67aebb168a05b3b6ad380a82f00bc8ef6c9f5243"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-minimal-f32-target-split-002/run-005/edge-split-operation-10.json",
+        "sha256": "816c9db9eb24a6ef06cdd3724bc5a8f83d58d3663dde4a3836dccf681cbbca24"
+      }
+    ]
+  },
+  "physical_admission": false,
+  "schema": "numi.fat614.remaining-yy-target-edge-splits.v1",
+  "status": "PASS_TYPED_D_LOCAL_BATCH_AWAITING_FULL_CONTEXT_AUDIT",
+  "untouched_components": {
+    "return_code_200_with_no_exact_current_D_target_edge_support": [
+      9,
+      12
+    ],
+    "return_code_not_200_not_used": [
+      0,
+      1,
+      13
+    ]
+  }
+}

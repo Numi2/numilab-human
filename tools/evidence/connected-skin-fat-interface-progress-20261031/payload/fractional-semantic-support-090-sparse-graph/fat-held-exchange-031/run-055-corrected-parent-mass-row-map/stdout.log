@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-055-corrected-parent-mass-row-map/fat_recover_corrected_055.py", line 92, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-055-corrected-parent-mass-row-map/fat_recover_corrected_055.py", line 85, in main
+    np.savez_compressed(proposal,site_rows=np.flatnonzero(pos).astype(np.int32),pair_rows=sitePair[pos],parent_role_rows=siteParent[pos],global_source330_tet_rows=globalRows[siteParent[pos]],child_rows=siteChild[pos],mass_kg=mass,barycentric=bary,source_point_world_m=sourcexyz,child_centroid_world_m=C[sitePair[pos]],distance_m=distances,site_kind=siteKind[pos],parent_corner_mass_kg=mass[:,None]*bary,recipient_child_rows=recipients,recipient_final_mass_kg=final,recipient_density_kg_m3=density,parent_rows=parents,parent_corner_mass_total_kg=cm)
+                                                                                                                                                                   ~~~~~~~~~~^^^^^^^^^^^^^^^^^
+IndexError: index 4274 is out of bounds for axis 0 with size 268
