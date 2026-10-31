@@ -1,0 +1,18 @@
+{"command": ["/Users/numi/numi-human-prep-venv-20261005/bin/python", "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_865_adaptive_edge_hausdorff_root.py", "--state", "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-871-confirmation-root/verified-state.json", "--role", "D", "--output", "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-872-root", "--maximum-edge-m", ".1", "--batch-seconds", "120", "--solve-seconds", "3", "--max-patches", "32", "--maximum-old-cells", "64", "--maximum-points", "24", "--inner-back-topology-only"]}
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_865_adaptive_edge_hausdorff_root.py", line 1257, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_865_adaptive_edge_hausdorff_root.py", line 1255, in main
+    run_batch_state(args,fixture=False)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_865_adaptive_edge_hausdorff_root.py", line 827, in run_batch_state
+    if args.inner_back_topology_only:inner_allowed=allow_inner_back_only(args.role,protections,fixture_sources,volumes)
+                                                   ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_865_adaptive_edge_hausdorff_root.py", line 177, in allow_inner_back_only
+    mp=B.exact_point_map(surf["points_world_m_f32"],cache["points"],"inner-back protection "+vr+"/"+r,
+           active_rows=active,required_rows=keep,volume_index=cache["coordinate_index"])
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_856_oriented_active_rows_root.py", line 126, in exact_point_map
+    required=np.asarray(required_rows,np.int64).reshape(-1)
+             ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'set'

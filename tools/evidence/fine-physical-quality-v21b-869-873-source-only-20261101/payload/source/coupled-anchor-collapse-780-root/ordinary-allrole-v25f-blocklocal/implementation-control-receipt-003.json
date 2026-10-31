@@ -1,0 +1,134 @@
+{
+  "controls": [
+    {
+      "name": "v25f_and_v4_compile",
+      "scope": "static syntax only",
+      "status": "PASS"
+    },
+    {
+      "assertions": [
+        "bad-face components remain separate when sharing a free point",
+        "overlapping complete point stars remain separate sequential patches",
+        "O/I/D rings map into the ordinary free mask",
+        "ordinary .5mm cap is accepted; inner-back 50um cap remains unchanged"
+      ],
+      "name": "v25f_roster_and_cap_control",
+      "status": "PASS"
+    },
+    {
+      "name": "v25f_verifier_cli_import",
+      "scope": "imports the exact v25f producer and parses CLI only",
+      "status": "PASS"
+    },
+    {
+      "name": "v4_cli",
+      "scope": "CLI parse only; block mode selects v25f producer/verifier",
+      "status": "PASS"
+    },
+    {
+      "assertion": "a fresh failed 775 report is always carried to the next round; no-progress early stop is bypassed for that transition",
+      "name": "runner_cumulative_witness_early_stop_guard",
+      "status": "PASS"
+    }
+  ],
+  "implementations": {
+    "cumulative_witness_runner_v4": {
+      "bytes": 15400,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25/run_ordinary_allrole_v25_v4_cumulative.py",
+      "sha256": "4a15f7c1df26b3a31b48354b5a960c30fb9ecbc3bb287ce4ea257524fc16b637"
+    },
+    "independent_replay_v2_parent": {
+      "bytes": 18093,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25/verify_ordinary_allrole_v25_independent_replay_v2.py",
+      "sha256": "e38d383229087ff6b65fb8d741262f4e692f6f2216df127b0c95eff706fe037d"
+    },
+    "ordinary_block_local_control_v25f": {
+      "bytes": 2820,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/test_ordinary_block_local_v25f.py",
+      "sha256": "874a266f62c4f7e55195bd96db5eb663441392848cd050f58ea434355e888096"
+    },
+    "ordinary_block_local_independent_verifier_v25f": {
+      "bytes": 19521,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/verify_ordinary_allrole_v25f_independent_replay.py",
+      "sha256": "04bf2d6b69dd3ce715f0084c4b4168ac93662d39190986462e5bdbcce79d8a8f"
+    },
+    "ordinary_block_local_producer_v25f": {
+      "bytes": 133466,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/repair_coupled_quality_points_722_v25f_ordinary_blocklocal.py",
+      "sha256": "e05d5662d64edd97d25c5a0e42e00a58ba06ef2850b3afc6fd9b23a3111fc376"
+    },
+    "runner_parent_v3": {
+      "bytes": 11837,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25/run_ordinary_allrole_v25_v3.py",
+      "sha256": "c7cbef8662bbdf9a727c8e6d9f49a63ed11efe8c55e9859a06ffcbe48e4a68cb"
+    },
+    "superseded_v25e_roster_merge": {
+      "bytes": 133788,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25e-blocklocal/repair_coupled_quality_points_722_v25e_ordinary_blocklocal.py",
+      "sha256": "c34aa9bf6229186b91d12df9a23c44bfbedeeb6ce507847d75465a89ac0bf178"
+    },
+    "v25d_fallback_control": {
+      "bytes": 29374,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25d/verify_targeted_inner_back_remainder_v25d.py",
+      "sha256": "0668e57e914a9a17e2d7f7fcbcd091af9e89d44208aba2c54572bd8dabcc6651"
+    },
+    "v25d_fixed_fallback_parent": {
+      "bytes": 125618,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25d/repair_coupled_quality_points_722_v25d_inner_back_remainder_blocklocal.py",
+      "sha256": "299653fb0979d60a9e3d506cfa31750c2f97e786b2e9e8010d9f1aa399e9bd72"
+    }
+  },
+  "limitations": [
+    "Code preparation and tiny fixtures only; no actual geometry proposal, 775 scene audit, independent real-state replay, native qualification, mass reconciliation, or physical admission was run.",
+    "The v25f single-node fallback inherits the v25d corrected fallback; no new optimization performance claim is made."
+  ],
+  "mass_reconciliation": "PENDING",
+  "native_steps": 0,
+  "physical_admission": false,
+  "review_corrections": [
+    {
+      "reason": "The v25e attempt merged distinct bad-face components through shared free rows/healthy affected-cell overlap, creating a torso-sized LP; v25f keeps components sequential.",
+      "source": {
+        "bytes": 133788,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25e-blocklocal/repair_coupled_quality_points_722_v25e_ordinary_blocklocal.py",
+        "sha256": "c34aa9bf6229186b91d12df9a23c44bfbedeeb6ce507847d75465a89ac0bf178"
+      },
+      "status": "SUPERSEDED_FAILED_ROSTER_POLICY"
+    },
+    {
+      "details": "Earlier v4 draft shadowed the replay path with its loaded JSON document in the manifest pin; final v4 uses replay_path and replay_doc separately.",
+      "status": "RUNNER_SHADOWING_BUG_FIXED_BEFORE_HANDOFF"
+    },
+    {
+      "details": "A newly appended failed 775 witness suppresses stalled early-stop on that transition so the next round actually consumes it.",
+      "runner": {
+        "bytes": 15400,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25/run_ordinary_allrole_v25_v4_cumulative.py",
+        "sha256": "4a15f7c1df26b3a31b48354b5a960c30fb9ecbc3bb287ce4ea257524fc16b637"
+      },
+      "status": "RUNNER_CUMULATIVE_WITNESS_GUARD_ADDED",
+      "superseded_receipt": {
+        "bytes": 6916,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/implementation-control-receipt-002.json",
+        "sha256": "9135f0b13a2a0b877d9a66bfc961cb91148b2706741c26bfb8dfa26a27bf7e57"
+      }
+    }
+  ],
+  "reviewed_contract": {
+    "cumulative_failed_775_reports": true,
+    "hard_fixed": "authenticated current and historical Fat back, current I back, scope, rims, routes, and witness-frozen rows",
+    "independent_verifier": "v25f producer pin, free-set reconstruction, full volume replay, exact target, positivity, non-regression, source and 775 pins",
+    "native_thresholds_changed": false,
+    "ordinary_cap_m": 0.0005,
+    "ordinary_free_set": "baseline bad corners plus one direct O/I/D source-triangle ring",
+    "patches": "one patch per shared-face-connected bad-cell component; shared free rows or healthy full-star overlap are not merged; sequential patches are revalidated on the latest candidate and per-point cumulative L1 is enforced",
+    "whole_component_rollback": "existing 625 owner"
+  },
+  "runtime": {
+    "implementation": "cpython",
+    "python_executable": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "python_version": "3.13.16"
+  },
+  "schema": "h706.ordinary-allrole-v25f-blocklocal-code-preparation.v3",
+  "status": "PASS_CODE_COMPILE_SMALL_CONTROLS_AND_REPLAY_IMPORT"
+}

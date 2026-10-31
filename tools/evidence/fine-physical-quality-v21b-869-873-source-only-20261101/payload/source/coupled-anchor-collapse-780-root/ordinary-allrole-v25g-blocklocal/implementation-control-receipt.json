@@ -1,0 +1,136 @@
+{
+  "controls": [
+    {
+      "name": "compile_v25g_producer_verifier_runner",
+      "scope": "syntax only",
+      "status": "PASS"
+    },
+    {
+      "assertions": [
+        "bad-face patches remain separate",
+        "overlapping complete stars are sequential",
+        "role ring and ordinary free-set coverage",
+        "ordinary .5mm cap remains enabled"
+      ],
+      "name": "v25g_ordinary_mask_roster",
+      "status": "PASS"
+    },
+    {
+      "name": "v25g_multicell_fallback",
+      "result": "two incident thin tetrahedra accepted a positive/native-passing fallback move",
+      "status": "PASS"
+    },
+    {
+      "constraint_relative_error": 2.6755486715046572e-11,
+      "name": "v25g_analytic_jacobian_finite_difference",
+      "objective_relative_error": 3.480035102318771e-11,
+      "status": "PASS"
+    },
+    {
+      "name": "fallback_only_source_diff",
+      "result": "v25g is byte-identical to v25f outside _single_node_quality_candidate; function API and body exactly match pinned v25e",
+      "status": "PASS"
+    },
+    {
+      "name": "runner_dependency_paths",
+      "negative_control": "the original v4 block mode was rejected because the v25e path was paired with the v25f SHA",
+      "positive_controls": [
+        "root v4b base mode",
+        "root v4b v25f block mode",
+        "v4g base mode",
+        "v4g v25g block mode"
+      ],
+      "status": "PASS",
+      "verifier_producer_path_and_hash_match": true
+    }
+  ],
+  "current_job_status": {
+    "mass_reconciliation": "PENDING",
+    "native_steps": 0,
+    "physical_admission": false,
+    "scene_geometry_job_launched_by_this_agent": false
+  },
+  "implementations": {
+    "root_fixed_runner_v4b": {
+      "bytes": 15400,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25/run_ordinary_allrole_v25_v4b_producer_path_root.py",
+      "sha256": "f11a6a45090e2e1696e7344c1cfdcb79fcc00bef4e17cfe2ad67ed77b42d6ee7"
+    },
+    "runner_dependency_control": {
+      "bytes": 2463,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/dependency-validation/test_runner_dependency_validation.py",
+      "sha256": "65eff977e879b8b4f01a493fbb1901dfc012633d575bdc1ddbf43f4994a1de64"
+    },
+    "runner_dependency_validator": {
+      "bytes": 4243,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/dependency-validation/validate_runner_dependencies.py",
+      "sha256": "0757a345c05cfa856d922465720dc2f0f292c313836566fd259032d8b0441acb"
+    },
+    "v25e_fallback_source": {
+      "bytes": 127673,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25e/repair_coupled_quality_points_722_v25e_inner_back_remainder_blocklocal.py",
+      "sha256": "59b78e7f4766de9ed000d4a35bd048938c7b49cdc04e183ed560a6015767fb7c"
+    },
+    "v25f_producer_parent": {
+      "bytes": 133466,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25f-blocklocal/repair_coupled_quality_points_722_v25f_ordinary_blocklocal.py",
+      "sha256": "e05d5662d64edd97d25c5a0e42e00a58ba06ef2850b3afc6fd9b23a3111fc376"
+    },
+    "v25g_block_roster_control": {
+      "bytes": 2820,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/test_ordinary_block_local_v25g.py",
+      "sha256": "0a561db13720ceabe73c1a6a596dcd4e4f5b744948dc2dcc1ee35f6ce7298c92"
+    },
+    "v25g_fallback_only_diff_control": {
+      "bytes": 1630,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/test_v25g_fallback_only_diff.py",
+      "sha256": "4a794323df19c5f2046918a7713d7db1d95a0c1699936346946a9fcc303b703d"
+    },
+    "v25g_independent_verifier": {
+      "bytes": 19521,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/verify_ordinary_allrole_v25g_independent_replay.py",
+      "sha256": "b0d61dbadfce6e164a21b4c8c7a6d5dbfff6fb01b78f2aa82bde2e56bdfdc52a"
+    },
+    "v25g_jacobian_control": {
+      "bytes": 2676,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/test_v25g_dimensionless_slsqp_jacobians.py",
+      "sha256": "ac7b7ce517690152067cd2a5cc584e5b13bbbd938e1f6ae1191658c855e7feec"
+    },
+    "v25g_multicell_fallback_control": {
+      "bytes": 1100,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/test_v25g_multicell_fallback.py",
+      "sha256": "82dfdde85596579513bd14438bdb58f30f0e7f8aad92beec7575cffb79ff45be"
+    },
+    "v25g_producer": {
+      "bytes": 135521,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/repair_coupled_quality_points_722_v25g_ordinary_blocklocal.py",
+      "sha256": "0571c28aa8966516a204017bbeaaf1b01eb8fc460d296974d57a14464bdac189"
+    },
+    "v25g_runner": {
+      "bytes": 15400,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25g-blocklocal/run_ordinary_allrole_v25_v4g_cumulative.py",
+      "sha256": "0a86e7a175d8ad79714afe6dab8c7914d241841b67664bc4bd359ef665662002"
+    }
+  },
+  "limitations": [
+    "All v25g checks were tiny synthetic controls or static dependency checks. No scene fit, 775 audit, real-state independent replay, native qualification, or physical admission occurred."
+  ],
+  "schema": "h706.ordinary-allrole-v25g-code-preparation.v1",
+  "status": "PASS_TINY_CONTROLS_AND_RUNNER_DEPENDENCY_VALIDATION",
+  "v25g_change": {
+    "bad_face_patch_roster_unchanged": true,
+    "fallback_method": "normalized delta/cap, scaled determinant constraints, analytic objective/constraint Jacobians",
+    "fallback_source": {
+      "bytes": 127673,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25e/repair_coupled_quality_points_722_v25e_inner_back_remainder_blocklocal.py",
+      "sha256": "59b78e7f4766de9ed000d4a35bd048938c7b49cdc04e183ed560a6015767fb7c"
+    },
+    "native_thresholds_changed": false,
+    "only_replaced_function": "_single_node_quality_candidate",
+    "ordinary_free_mask_unchanged": true,
+    "trust_caps_unchanged": {
+      "inner_back_m": 5e-05,
+      "ordinary_m": 0.0005
+    }
+  }
+}

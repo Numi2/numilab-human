@@ -1,0 +1,4095 @@
+{
+  "schema": "h706.target-remainder-block-local-slp.v1",
+  "status": "PASS_F32_BLOCK_LOCAL_TARGET_QUALITY_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "bad_before": 188,
+  "bad_after": 182,
+  "bad_score_before": 356.59832541316297,
+  "bad_score_after": 345.6402538768826,
+  "strict_quality_count_progress": true,
+  "strict_bad_score_progress": false,
+  "accepted_components": 25,
+  "accepted_log_deficit_components": 0,
+  "local_patch_count": 94,
+  "local_patch_attempts": [
+    {
+      "patch": 0,
+      "bad_component": 5,
+      "seed_bad_cells": 11,
+      "bad_cluster_cells": 13,
+      "free_rows": 3,
+      "affected_cells_initial": 64,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 12,
+      "local_bad_after": 12,
+      "global_bad_before": 188,
+      "global_bad_after": 188,
+      "global_score_after": 356.33652671126663,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.26846233289688826,
+      "moved_rows": 2,
+      "maximum_cumulative_path_L1_m": 0.00013905391097068787,
+      "max_step_L1_m": 0.00013905391097068787,
+      "local_native_bad_after": 12,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345947,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 209408,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 188,
+            "score_after": 355.8980548222308,
+            "step_l1_m": 0.00036093592643737793,
+            "cumulative_path_l1_m": 0.0004999898374080658,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 5,
+            "bad_after": 5,
+            "objective_before": -5.584709764993444,
+            "objective_after": -5.6360937397207485,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 2.7234694391915177e-13,
+              "maximum": 1.433202699263752e-07
+            }
+          },
+          {
+            "node": 210311,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 188,
+            "score_after": 355.881096542031,
+            "step_l1_m": 0.00036094337701797485,
+            "cumulative_path_l1_m": 0.0004999935626983643,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 8,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.5415892576152928,
+            "objective_after": -1.5508371214908885,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 7.786646474603997e-11,
+              "maximum": 4.7772554225337085e-08
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 1,
+      "bad_component": 13,
+      "seed_bad_cells": 7,
+      "bad_cluster_cells": 7,
+      "free_rows": 4,
+      "affected_cells_initial": 115,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 11,
+      "local_bad_after": 11,
+      "global_bad_before": 188,
+      "global_bad_after": 188,
+      "global_score_after": 355.80270190668944,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.27153149992227554,
+      "moved_rows": 3,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 1.4465302228927612e-05,
+      "local_native_bad_after": 11,
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345944,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 210307,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 210302,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 188,
+            "score_after": 355.7735587281626,
+            "step_l1_m": 0.0004591047763824463,
+            "cumulative_path_l1_m": 0.0004735514521598816,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 8,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.0952628882601199,
+            "objective_after": -1.0980504863365266,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.0882545730431017e-12,
+              "maximum": 1.6217509262109646e-08
+            }
+          },
+          {
+            "node": 210312,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 188,
+            "score_after": 355.7722350245692,
+            "step_l1_m": 0.00048552826046943665,
+            "cumulative_path_l1_m": 0.0004999935626983643,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 8,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.5082813703964186,
+            "objective_after": -1.5089523168165848,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 6.522653015247569e-13,
+              "maximum": 1.4589845876714114e-08
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 2,
+      "bad_component": 77,
+      "seed_bad_cells": 5,
+      "bad_cluster_cells": 5,
+      "free_rows": 1,
+      "affected_cells_initial": 26,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 7,
+      "local_bad_after": 7,
+      "global_bad_before": 188,
+      "global_bad_candidate": 188,
+      "global_score_before": 355.7722350245692,
+      "global_score_candidate": 355.7722350245692,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345955,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -4.53530895894172e-11,
+              1.0331618271464116e-09,
+              2.5603964559639536e-11
+            ],
+            "objective_before": -10.020685167835857,
+            "objective_after": -10.020686475710477,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 3,
+      "bad_component": 10,
+      "seed_bad_cells": 4,
+      "bad_cluster_cells": 4,
+      "free_rows": 60,
+      "affected_cells_initial": 1725,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 7,
+      "local_bad_after": 7,
+      "global_bad_before": 188,
+      "global_bad_candidate": 188,
+      "global_score_before": 355.7722350245692,
+      "global_score_candidate": 355.7722350245692,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 111626,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109675,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109704,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109671,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 187,
+            "score_after": 355.76863526651846,
+            "step_l1_m": 4.351139068603516e-06,
+            "cumulative_path_l1_m": 4.351139068603516e-06,
+            "optimizer_success": false,
+            "optimizer_message": "Inequality constraints incompatible",
+            "iterations": 18,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 3,
+            "bad_after": 2,
+            "objective_before": -5.229852766881248,
+            "objective_after": -5.235994391938171,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.7485364657641566e-16,
+              "maximum": 1.0718006594916078e-09
+            }
+          },
+          {
+            "node": 109677,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109674,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109705,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109702,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 187,
+            "score_after": 355.7573838577809,
+            "step_l1_m": 2.1606683731079102e-07,
+            "cumulative_path_l1_m": 2.1606683731079102e-07,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 3,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.4034269968331685,
+            "objective_after": -1.4089460684964998,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 2.7768572277413347e-16,
+              "maximum": 7.067505448739419e-10
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 4,
+      "bad_component": 11,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 3,
+      "free_rows": 60,
+      "affected_cells_initial": 1703,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 6,
+      "local_bad_after": 6,
+      "global_bad_before": 187,
+      "global_bad_candidate": 187,
+      "global_score_before": 355.7573838577809,
+      "global_score_candidate": 355.7573838577809,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 111626,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109675,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109704,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109677,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109674,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109705,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109671,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109673,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 5,
+      "bad_component": 14,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 4,
+      "free_rows": 1,
+      "affected_cells_initial": 38,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 4,
+      "local_bad_after": 4,
+      "global_bad_before": 187,
+      "global_bad_after": 187,
+      "global_score_after": 355.7304262026082,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.23864937503822148,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00033375993371009827,
+      "local_native_bad_after": 4,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 210307,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 6,
+      "bad_component": 70,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 3,
+      "free_rows": 5,
+      "affected_cells_initial": 101,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 10,
+      "local_bad_after": 10,
+      "global_bad_before": 187,
+      "global_bad_after": 187,
+      "global_score_after": 355.6773431501447,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.28500258293934166,
+      "moved_rows": 2,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 5.016103386878967e-05,
+      "local_native_bad_after": 10,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345951,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 187,
+            "score_after": 355.6582830817889,
+            "step_l1_m": 0.00022779405117034912,
+            "cumulative_path_l1_m": 0.0002772323787212372,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 11,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 7,
+            "bad_after": 7,
+            "objective_before": -7.96340710935281,
+            "objective_after": -7.967471247727657,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.327743886230897e-13,
+              "maximum": 2.3552083062587246e-08
+            }
+          },
+          {
+            "node": 313612,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 7,
+      "bad_component": 72,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 3,
+      "free_rows": 4,
+      "affected_cells_initial": 87,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 8,
+      "local_bad_after": 8,
+      "global_bad_before": 187,
+      "global_bad_after": 187,
+      "global_score_after": 355.5655984838463,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.27026983303949237,
+      "moved_rows": 2,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 4.87305223941803e-05,
+      "local_native_bad_after": 8,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345951,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              4.852650240707644e-12,
+              1.9456851378036468e-12,
+              2.1885974135820466e-11
+            ],
+            "objective_before": -7.980049979588306,
+            "objective_after": -7.980049996805102,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 8,
+      "bad_component": 0,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 22,
+      "affected_cells_initial": 208,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 187,
+      "global_bad_candidate": 187,
+      "global_score_before": 355.5655984838463,
+      "global_score_candidate": 355.5655984838463,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59894,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59909,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 187,
+            "score_after": 354.85256197450707,
+            "step_l1_m": 4.6662986278533936e-05,
+            "cumulative_path_l1_m": 4.6662986278533936e-05,
+            "optimizer_success": false,
+            "optimizer_message": "Positive directional derivative for linesearch",
+            "iterations": 15,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -2.5833653807984183,
+            "objective_after": -2.877379758726552,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.5504477564760734e-13,
+              "maximum": 1.9241760005517694e-09
+            }
+          },
+          {
+            "node": 60043,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59908,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 186,
+            "score_after": 353.6538174565446,
+            "step_l1_m": 0.0002587661147117615,
+            "cumulative_path_l1_m": 0.0002587661147117615,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 0,
+            "objective_before": -1.302572593310873,
+            "objective_after": -2.002,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 2.1570746531657598e-13,
+              "maximum": 1.3571298620067225e-08
+            }
+          },
+          {
+            "node": 59898,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 9,
+      "bad_component": 7,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 18,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 186,
+      "global_bad_candidate": 186,
+      "global_score_before": 353.6538174565446,
+      "global_score_candidate": 353.6538174565446,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 207607,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 186,
+            "global_bad_candidate": 186,
+            "score_before": 353.6538174565446,
+            "score_candidate": 360.85051796894396
+          }
+        ]
+      }
+    },
+    {
+      "patch": 10,
+      "bad_component": 8,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 9,
+      "affected_cells_initial": 132,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 186,
+      "global_bad_after": 186,
+      "global_score_after": 353.6519344404875,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.05969716585241258,
+      "moved_rows": 9,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 1.9744038581848145e-07,
+      "local_native_bad_after": 3,
+      "single_node_fallback": {
+        "attempt_count": 6,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135103,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 135110,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 186,
+            "global_bad_candidate": 186,
+            "score_before": 353.6519344404875,
+            "score_candidate": 361.4518239331848
+          },
+          {
+            "node": 135105,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 135101,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 186,
+            "global_bad_candidate": 186,
+            "score_before": 353.6519344404875,
+            "score_candidate": 353.65164590299696
+          },
+          {
+            "node": 135102,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 209288,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 186,
+            "score_after": 353.49076429981307,
+            "step_l1_m": 0.0004997998476028442,
+            "cumulative_path_l1_m": 0.0004999935626983643,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 8,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.7585366526074646,
+            "objective_after": -1.8910166246676678,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 4.1711148124377275e-12,
+              "maximum": 4.4241962270290713e-07
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 11,
+      "bad_component": 16,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 2,
+      "affected_cells_initial": 87,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 186,
+      "global_bad_candidate": 186,
+      "global_score_before": 353.49076429981307,
+      "global_score_candidate": 353.49076429981307,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 208742,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 210309,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              3.0260479029085765e-10,
+              4.169782265889266e-09,
+              -3.7326281981621064e-09
+            ],
+            "objective_before": -2.463293118271681,
+            "objective_after": -2.4632931284355566,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 12,
+      "bad_component": 22,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 24,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 186,
+      "global_bad_candidate": 186,
+      "global_score_before": 353.49076429981307,
+      "global_score_candidate": 353.49076429981307,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 340355,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 13,
+      "bad_component": 25,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 28,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 186,
+      "global_bad_candidate": 186,
+      "global_score_before": 353.49076429981307,
+      "global_score_candidate": 353.49076429981307,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 343784,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -4.2045437748799987e-10,
+              -4.5201488756592414e-09,
+              8.954994240965853e-10
+            ],
+            "objective_before": -5.133077952333125,
+            "objective_after": -5.133078294264818,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 14,
+      "bad_component": 26,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 12,
+      "affected_cells_initial": 97,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 186,
+      "global_bad_after": 186,
+      "global_score_after": 353.1233977234285,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.26331158308312297,
+      "moved_rows": 5,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 9.5367431640625e-07,
+      "local_native_bad_after": 3,
+      "single_node_fallback": {
+        "attempt_count": 6,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 344376,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -3.9753085827935983,
+            "objective_after": -3.9753085827935983,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 248222,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 248221,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 248223,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 185,
+            "score_after": 351.84956511128166,
+            "step_l1_m": 0.00023861229419708252,
+            "cumulative_path_l1_m": 0.00023880600929260254,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 0,
+            "objective_before": -1.2807573630170892,
+            "objective_after": -2.002,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 4.170104325670732e-12,
+              "maximum": 4.858637430574123e-09
+            }
+          },
+          {
+            "node": 247089,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247090,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 185,
+            "score_after": 351.7091566270396,
+            "step_l1_m": 0.000499039888381958,
+            "cumulative_path_l1_m": 0.0004999935626983643,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.6214891642043971,
+            "objective_after": -1.7150037733728034,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 3.9137764742548515e-12,
+              "maximum": 9.060092625700372e-10
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 15,
+      "bad_component": 32,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 5,
+      "affected_cells_initial": 95,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 4,
+      "local_bad_after": 4,
+      "global_bad_before": 185,
+      "global_bad_after": 185,
+      "global_score_after": 351.6357855782845,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.27485829102806747,
+      "moved_rows": 4,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 5.237013101577759e-05,
+      "local_native_bad_after": 4,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 313824,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 185,
+            "score_after": 351.60148364139155,
+            "step_l1_m": 0.00044762343168258667,
+            "cumulative_path_l1_m": 0.0004999935626983643,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 11,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -2.1384988852357187,
+            "objective_after": -2.140860047140091,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 4.911560710787174e-10,
+              "maximum": 4.2538501640845776e-08
+            }
+          },
+          {
+            "node": 313863,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 16,
+      "bad_component": 38,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 8,
+      "affected_cells_initial": 126,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 185,
+      "global_bad_after": 185,
+      "global_score_after": 351.5621897097405,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.25287533388473094,
+      "moved_rows": 2,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00025302544236183167,
+      "local_native_bad_after": 3,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 313612,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 17,
+      "bad_component": 49,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 28,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.5621897097405,
+      "global_score_candidate": 351.5621897097405,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 343784,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -4.2045437748799987e-10,
+              -4.5201488756592414e-09,
+              8.954994240965853e-10
+            ],
+            "objective_before": -5.133077952333125,
+            "objective_after": -5.133078294264818,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 18,
+      "bad_component": 56,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 48,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.5621897097405,
+      "global_score_candidate": 351.5621897097405,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 342550,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 19,
+      "bad_component": 60,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 10,
+      "affected_cells_initial": 76,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 4,
+      "local_bad_after": 4,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.5621897097405,
+      "global_score_candidate": 351.5621897097405,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345939,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 248221,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 248222,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247089,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247090,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 9,
+            "optimizer_delta_m": [
+              -1.010440533790386e-09,
+              3.2037553678180886e-09,
+              -2.2231057341441215e-09
+            ],
+            "objective_before": -1.7150240360636242,
+            "objective_after": -1.715036572242329,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 20,
+      "bad_component": 61,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 14,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.5621897097405,
+      "global_score_candidate": 351.5621897097405,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345941,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 21,
+      "bad_component": 66,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 3,
+      "affected_cells_initial": 72,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 185,
+      "global_bad_after": 185,
+      "global_score_after": 351.5572233467154,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2720877090469003,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 1.8712133169174194e-05,
+      "local_native_bad_after": 5,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345946,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 22,
+      "bad_component": 75,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 185,
+      "global_bad_after": 185,
+      "global_score_after": 351.24826891614174,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.23901791614480317,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.0003811735659837723,
+      "local_native_bad_after": 2,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345954,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 185,
+            "score_after": 351.1609687226264,
+            "step_l1_m": 0.00011881440877914429,
+            "cumulative_path_l1_m": 0.0004999879747629166,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 9,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -3.4987661523706324,
+            "objective_after": -3.56555392247015,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 2.1706614065133538e-13,
+              "maximum": 9.733984641573785e-11
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 23,
+      "bad_component": 76,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 26,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 7,
+      "local_bad_after": 7,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.1609687226264,
+      "global_score_candidate": 351.1609687226264,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345955,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -4.53530895894172e-11,
+              1.0331618271464116e-09,
+              2.5603964559639536e-11
+            ],
+            "objective_before": -10.020685167835857,
+            "objective_after": -10.020686475710477,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 24,
+      "bad_component": 81,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 14,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.1609687226264,
+      "global_score_candidate": 351.1609687226264,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345959,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -2.152219587964188e-09,
+              -1.9380185543992764e-09,
+              -2.1296872291833024e-09
+            ],
+            "objective_before": -2.114472660503899,
+            "objective_after": -2.1144731426287118,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 25,
+      "bad_component": 82,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 4,
+      "affected_cells_initial": 71,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.1609687226264,
+      "global_score_candidate": 351.1609687226264,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345960,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 313824,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -2.140860164555822,
+            "objective_after": -2.140860164555822,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 26,
+      "bad_component": 94,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 42,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 351.1609687226264,
+      "global_score_candidate": 351.1609687226264,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345975,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -7.301177529688355e-10,
+              -2.7628378099220363e-11,
+              -9.71335790064809e-11
+            ],
+            "objective_before": -2.7997907306232857,
+            "objective_after": -2.7997907649724745,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 27,
+      "bad_component": 103,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 6,
+      "affected_cells_initial": 110,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 185,
+      "global_bad_after": 185,
+      "global_score_after": 350.98023758624186,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.27159458422102034,
+      "moved_rows": 3,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00011314451694488525,
+      "local_native_bad_after": 5,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 313612,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 345985,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 185,
+            "score_after": 350.973961185514,
+            "step_l1_m": 0.00016202405095100403,
+            "cumulative_path_l1_m": 0.00027096644043922424,
+            "optimizer_success": false,
+            "optimizer_message": "Positive directional derivative for linesearch",
+            "iterations": 12,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -3.5829330886853565,
+            "objective_after": -3.5879024100544212,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.0760306471994045e-12,
+              "maximum": 3.674574000802079e-08
+            }
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 28,
+      "bad_component": 1,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 18,
+      "affected_cells_initial": 81,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 185,
+      "global_bad_candidate": 185,
+      "global_score_before": 350.973961185514,
+      "global_score_candidate": 350.973961185514,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59904,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 59916,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 183,
+            "score_after": 350.9379185161907,
+            "step_l1_m": 1.125037670135498e-06,
+            "cumulative_path_l1_m": 1.125037670135498e-06,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 0,
+            "objective_before": -3.9664746845576553,
+            "objective_after": -4.004,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 2.430588584992672e-13,
+              "maximum": 3.357956938038604e-11
+            }
+          },
+          {
+            "node": 59939,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59961,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 29,
+      "bad_component": 2,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 14,
+      "affected_cells_initial": 100,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 183,
+      "global_bad_after": 183,
+      "global_score_after": 350.5877385712888,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.09476420795544982,
+      "moved_rows": 9,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 3.7416815757751465e-05,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59939,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59961,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 30,
+      "bad_component": 4,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 17,
+      "affected_cells_initial": 133,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 183,
+      "global_bad_after": 183,
+      "global_score_after": 347.5568825866765,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.287891749991104,
+      "moved_rows": 14,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00013857334852218628,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59939,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 59951,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 59961,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 59968,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 31,
+      "bad_component": 6,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 14,
+      "affected_cells_initial": 86,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 183,
+      "global_bad_candidate": 183,
+      "global_score_before": 347.5568825866765,
+      "global_score_candidate": 347.5568825866765,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59983,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59984,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 59988,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 209137,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 5,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.4988603609860087,
+            "objective_after": -1.4988603609860087,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 32,
+      "bad_component": 12,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 8,
+      "affected_cells_initial": 107,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 183,
+      "global_bad_candidate": 183,
+      "global_score_before": 347.5568825866765,
+      "global_score_candidate": 347.5568825866765,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135103,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 135110,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 183,
+            "global_bad_candidate": 183,
+            "score_before": 347.5568825866765,
+            "score_candidate": 355.339240793531
+          },
+          {
+            "node": 135105,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 135101,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 183,
+            "score_after": 347.54099619281965,
+            "step_l1_m": 5.848705768585205e-06,
+            "cumulative_path_l1_m": 5.908310413360596e-06,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.117368251999289,
+            "objective_after": -1.119238473967882,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 6.63263230146414e-14,
+              "maximum": 6.210709765233109e-09
+            }
+          },
+          {
+            "node": 135102,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 33,
+      "bad_component": 15,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 16,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 183,
+      "global_bad_after": 183,
+      "global_score_after": 347.50794444709464,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.24051470798440278,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00017185136675834656,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 210308,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 34,
+      "bad_component": 17,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 25,
+      "affected_cells_initial": 89,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 183,
+      "global_bad_candidate": 183,
+      "global_score_before": 347.50794444709464,
+      "global_score_candidate": 347.50794444709464,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 266219,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 182,
+            "score_after": 347.5062515192537,
+            "step_l1_m": 4.880130290985107e-07,
+            "cumulative_path_l1_m": 4.880130290985107e-07,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 0,
+            "objective_before": -1.999308504353046,
+            "objective_after": -2.002,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.5646229389159461e-12,
+              "maximum": 2.387304673763546e-10
+            }
+          }
+        ]
+      }
+    },
+    {
+      "patch": 35,
+      "bad_component": 18,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 2,
+      "free_rows": 1,
+      "affected_cells_initial": 60,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.5062515192537,
+      "global_score_candidate": 347.5062515192537,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 342027,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 36,
+      "bad_component": 19,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 9,
+      "affected_cells_initial": 310,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 347.40153614948247,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2700732909142971,
+      "moved_rows": 9,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 1.0021030902862549e-05,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 144228,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 347.40153614948247,
+            "score_candidate": 347.4014311086195
+          },
+          {
+            "node": 144251,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 144255,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 37,
+      "bad_component": 20,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 198,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.40153614948247,
+      "global_score_candidate": 347.40153614948247,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 339388,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.71300016165163,
+            "objective_after": -1.71300016165163,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 38,
+      "bad_component": 21,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 18,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 347.35307267008994,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.23953112494200468,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00031238049268722534,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 339847,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 39,
+      "bad_component": 23,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 60,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 342027,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 40,
+      "bad_component": 24,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 14,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 342631,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -4.596819602829122e-11,
+              -1.5154239208486216e-09,
+              5.581111105906755e-10
+            ],
+            "objective_before": -1.0315505119964694,
+            "objective_after": -1.0315505405999672,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 41,
+      "bad_component": 27,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 14,
+      "affected_cells_initial": 110,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 344376,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -2.788086091635736,
+            "objective_after": -2.788086091635736,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 248221,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 248222,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247089,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247090,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 9,
+            "optimizer_delta_m": [
+              -1.010440533790386e-09,
+              3.2037553678180886e-09,
+              -2.2231057341441215e-09
+            ],
+            "objective_before": -1.7150240360636242,
+            "objective_after": -1.715036572242329,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 42,
+      "bad_component": 33,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.3530660532683,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 343018,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 43,
+      "bad_component": 34,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 3,
+      "free_rows": 10,
+      "affected_cells_initial": 197,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 44,
+      "bad_component": 35,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 72,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.3530220354,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 338781,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 347.35307267008994,
+            "score_candidate": 347.3530220354
+          }
+        ]
+      }
+    },
+    {
+      "patch": 45,
+      "bad_component": 40,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 6,
+      "free_rows": 5,
+      "affected_cells_initial": 98,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 313542,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 46,
+      "bad_component": 42,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 4,
+      "affected_cells_initial": 73,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 4,
+      "local_bad_after": 4,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 3,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 313824,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -2.140860164555822,
+            "objective_after": -2.140860164555822,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 313863,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 47,
+      "bad_component": 45,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 24,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 343766,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 48,
+      "bad_component": 46,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 72,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.3530220354,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 338781,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 347.35307267008994,
+            "score_candidate": 347.3530220354
+          }
+        ]
+      }
+    },
+    {
+      "patch": 49,
+      "bad_component": 47,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 72,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.3530220354,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 338781,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 347.35307267008994,
+            "score_candidate": 347.3530220354
+          }
+        ]
+      }
+    },
+    {
+      "patch": 50,
+      "bad_component": 48,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 54,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.3529943568507,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 339905,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 347.35307267008994,
+            "score_candidate": 347.3529943568507
+          }
+        ]
+      }
+    },
+    {
+      "patch": 51,
+      "bad_component": 50,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 28,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35307267008994,
+      "global_score_candidate": 347.35307267008994,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 343784,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -4.2045437748799987e-10,
+              -4.5201488756592414e-09,
+              8.954994240965853e-10
+            ],
+            "objective_before": -5.133077952333125,
+            "objective_after": -5.133078294264818,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 52,
+      "bad_component": 51,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 67,
+      "affected_cells_initial": 2141,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 347.35196209125104,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.5295545419212431,
+      "moved_rows": 7,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 7.450580596923828e-08,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 142492,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 142498,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 142597,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 143376,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 53,
+      "bad_component": 52,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 18,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35196209125104,
+      "global_score_candidate": 347.35196209125104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345932,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 54,
+      "bad_component": 53,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 3,
+      "free_rows": 4,
+      "affected_cells_initial": 81,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 7,
+      "local_bad_after": 7,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.35196209125104,
+      "global_score_candidate": 347.35196209125104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345947,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 313542,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 55,
+      "bad_component": 62,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 20,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 347.34695448126246,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.23795541608706117,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00024996697902679443,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345943,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 56,
+      "bad_component": 63,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 56,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.34695448126246,
+      "global_score_candidate": 347.34695448126246,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345944,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 57,
+      "bad_component": 64,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 20,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 347.346453741784,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.15003304090350866,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 1.210719347000122e-07,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345945,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 58,
+      "bad_component": 65,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 3,
+      "affected_cells_initial": 72,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 347.3144366152654,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.26858016615733504,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 6.020441651344299e-05,
+      "local_native_bad_after": 5,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345946,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 182,
+            "score_after": 347.2977455733986,
+            "step_l1_m": 0.00021447613835334778,
+            "cumulative_path_l1_m": 0.00029339268803596497,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 9,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 4,
+            "bad_after": 4,
+            "objective_before": -4.527293624759348,
+            "objective_after": -4.529570809340228,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.1736643780610923e-14,
+              "maximum": 2.091029678422858e-07
+            }
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 59,
+      "bad_component": 67,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 4,
+      "affected_cells_initial": 86,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.2977455733986,
+      "global_score_candidate": 347.2977455733986,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345946,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -4.52957120681726,
+            "objective_after": -4.52957120681726,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 60,
+      "bad_component": 68,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 347.2977455733986,
+      "global_score_candidate": 347.2977455733986,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345948,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              7.693312047609563e-10,
+              -3.0208206919235535e-10,
+              -2.3571100341013284e-10
+            ],
+            "objective_before": -1.2408096109968874,
+            "objective_after": -1.2408098307120954,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 61,
+      "bad_component": 69,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 4,
+      "affected_cells_initial": 73,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 345.9766097417178,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.26625479105859995,
+      "moved_rows": 2,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.00042497366666793823,
+      "local_native_bad_after": 2,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345949,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 62,
+      "bad_component": 71,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 4,
+      "affected_cells_initial": 87,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 8,
+      "local_bad_after": 8,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 345.8069429590899,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2715062911156565,
+      "moved_rows": 2,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 3.4149736166000366e-05,
+      "local_native_bad_after": 8,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345951,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              3.604091818666682e-10,
+              1.4733247380324735e-10,
+              1.5460793599327113e-09
+            ],
+            "objective_before": -8.003780454596766,
+            "objective_after": -8.003781709458547,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 63,
+      "bad_component": 73,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 10,
+      "affected_cells_initial": 70,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.8069429590899,
+      "global_score_candidate": 345.8069429590899,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 248221,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 248222,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 345952,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247089,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247090,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 9,
+            "optimizer_delta_m": [
+              -1.010440533790386e-09,
+              3.2037553678180886e-09,
+              -2.2231057341441215e-09
+            ],
+            "objective_before": -1.7150240360636242,
+            "objective_after": -1.715036572242329,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 64,
+      "bad_component": 74,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 3,
+      "affected_cells_initial": 118,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.8069429590899,
+      "global_score_candidate": 345.8069214637556,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345953,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.8069429590899,
+            "score_candidate": 345.8069397247236
+          },
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 65,
+      "bad_component": 78,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 6,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.8069429590899,
+      "global_score_candidate": 345.8069429590899,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345956,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.8069429590899,
+            "score_candidate": 345.8069415805622
+          }
+        ]
+      }
+    },
+    {
+      "patch": 66,
+      "bad_component": 79,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 345.64225795801104,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.2362132091075182,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 0.0004999339580535889,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345957,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.2099585908709718,
+            "objective_after": -1.2099585908709718,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 67,
+      "bad_component": 80,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 24,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.6422196747595,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345958,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64225795801104,
+            "score_candidate": 345.6422196747595
+          }
+        ]
+      }
+    },
+    {
+      "patch": 68,
+      "bad_component": 83,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345961,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 69,
+      "bad_component": 84,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 42,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345966,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64225795801104,
+            "score_candidate": 345.6422557441611
+          }
+        ]
+      }
+    },
+    {
+      "patch": 70,
+      "bad_component": 85,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 2,
+      "affected_cells_initial": 117,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345966,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64225795801104,
+            "score_candidate": 345.6422557441611
+          },
+          {
+            "node": 342335,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.4761790587083476,
+            "objective_after": -1.4761790587083476,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 71,
+      "bad_component": 86,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 6,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345967,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64225795801104,
+            "score_candidate": 345.6422567828302
+          }
+        ]
+      }
+    },
+    {
+      "patch": 72,
+      "bad_component": 87,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345968,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.077330268133232,
+            "objective_after": -1.077330268133232,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 73,
+      "bad_component": 88,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345969,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 74,
+      "bad_component": 89,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345970,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 75,
+      "bad_component": 90,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345970,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 76,
+      "bad_component": 91,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 16,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345971,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64225795801104,
+            "score_candidate": 345.64225947873473
+          }
+        ]
+      }
+    },
+    {
+      "patch": 77,
+      "bad_component": 92,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 16,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64225795801104,
+      "global_score_candidate": 345.64225795801104,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345971,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64225795801104,
+            "score_candidate": 345.64225947873473
+          }
+        ]
+      }
+    },
+    {
+      "patch": 78,
+      "bad_component": 93,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_after": 182,
+      "global_score_after": 345.64025387688275,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.24073408404365182,
+      "moved_rows": 1,
+      "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+      "max_step_L1_m": 7.969886064529419e-05,
+      "local_native_bad_after": 1,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345972,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 79,
+      "bad_component": 95,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345976,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 80,
+      "bad_component": 96,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 14,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64022586359874,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345977,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64025387688275,
+            "score_candidate": 345.6402010625419
+          }
+        ]
+      }
+    },
+    {
+      "patch": 81,
+      "bad_component": 97,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 32,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345978,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 82,
+      "bad_component": 98,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345981,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 11,
+            "optimizer_delta_m": [
+              -3.5395677994670514e-09,
+              3.871227663989764e-09,
+              -1.8395832223919963e-09
+            ],
+            "objective_before": -3.0500188380693087,
+            "objective_after": -3.050019676264631,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 83,
+      "bad_component": 99,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 12,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345981,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 11,
+            "optimizer_delta_m": [
+              -3.5395677994670514e-09,
+              3.871227663989764e-09,
+              -1.8395832223919963e-09
+            ],
+            "objective_before": -3.0500188380693087,
+            "objective_after": -3.050019676264631,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 84,
+      "bad_component": 100,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 8,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345982,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.4478439904782867,
+            "objective_after": -1.4478439904782867,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 85,
+      "bad_component": 101,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 18,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345983,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 86,
+      "bad_component": 102,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 4,
+      "affected_cells_initial": 55,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 313542,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 345984,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64025387688275,
+            "score_candidate": 345.6401513805443
+          }
+        ]
+      }
+    },
+    {
+      "patch": 87,
+      "bad_component": 104,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 14,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345986,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -1.4176412312626176e-09,
+              6.952691507531097e-10,
+              -1.4208601701627688e-09
+            ],
+            "objective_before": -1.0383504006287807,
+            "objective_after": -1.0383505339750372,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 88,
+      "bad_component": 105,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 136,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.640252244946,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345987,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 89,
+      "bad_component": 106,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 14,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64025387688275,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345988,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              -7.1349163771623065e-09,
+              4.651452678514079e-09,
+              2.4233741438172254e-09
+            ],
+            "objective_before": -1.8034775337088242,
+            "objective_after": -1.8034786116213952,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 90,
+      "bad_component": 107,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 3,
+      "affected_cells_initial": 65,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.64024806825665,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 314860,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.265099382124013,
+            "objective_after": -1.265099382124013,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 345989,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64025387688275,
+            "score_candidate": 345.6401360416959
+          }
+        ]
+      }
+    },
+    {
+      "patch": 91,
+      "bad_component": 108,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 24,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.6402155936312,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 345958,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64025387688275,
+            "score_candidate": 345.6402155936312
+          }
+        ]
+      }
+    },
+    {
+      "patch": 92,
+      "bad_component": 109,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 54,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.6401755636435,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 339905,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64025387688275,
+            "score_candidate": 345.6401755636435
+          }
+        ]
+      }
+    },
+    {
+      "patch": 93,
+      "bad_component": 110,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 1,
+      "affected_cells_initial": 54,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 3,
+      "local_bad_after": 3,
+      "global_bad_before": 182,
+      "global_bad_candidate": 182,
+      "global_score_before": 345.64025387688275,
+      "global_score_candidate": 345.6401755636435,
+      "solver_status": 0,
+      "single_node_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 339905,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 182,
+            "global_bad_candidate": 182,
+            "score_before": 345.64025387688275,
+            "score_candidate": 345.6401755636435
+          }
+        ]
+      }
+    }
+  ],
+  "accepted_local_patches": 25,
+  "accepted_single_node_fallbacks": 19,
+  "skipped_local_patches": 64,
+  "local_bad_face_components": 94,
+  "affected_cell_sets_are_point_incident_only": true,
+  "current_passed_cells_and_immutable_baseline_good_cells_never_regress": true,
+  "cumulative_per_point_path_L1_cap_m": 0.0005,
+  "maximum_cumulative_path_L1_m": 0.0004999935626983643,
+  "final_full_domain_native_replay": true,
+  "full_domain_cells": 1495495,
+  "changed_point_rows": [
+    59888,
+    59904,
+    59905,
+    59908,
+    59909,
+    59916,
+    59918,
+    59919,
+    59926,
+    59927,
+    59938,
+    59939,
+    59942,
+    59948,
+    59951,
+    59958,
+    59959,
+    59961,
+    59968,
+    59975,
+    109671,
+    109702,
+    135094,
+    135101,
+    135102,
+    135103,
+    135105,
+    135110,
+    135111,
+    135114,
+    142503,
+    142507,
+    142597,
+    142608,
+    142609,
+    142830,
+    143376,
+    144226,
+    144228,
+    144235,
+    144251,
+    144254,
+    144255,
+    144257,
+    144258,
+    144705,
+    209288,
+    209408,
+    210302,
+    210307,
+    210308,
+    210311,
+    210312,
+    247090,
+    247091,
+    248221,
+    248222,
+    248223,
+    266219,
+    313467,
+    313611,
+    313612,
+    313824,
+    313825,
+    313863,
+    313904,
+    339847,
+    345943,
+    345945,
+    345946,
+    345949,
+    345951,
+    345954,
+    345957,
+    345972,
+    345985
+  ],
+  "max_free_node_l1_displacement_bound_m": 0.0004999935626983643,
+  "total_trust_cap_m": 0.0005,
+  "objective_mode": "role_equal_nearpass",
+  "trust_policy": "bounded local patches; per-point cumulative L1 measured from immutable baseline across all accepted patches",
+  "elapsed_s": 10.09280416695401
+}

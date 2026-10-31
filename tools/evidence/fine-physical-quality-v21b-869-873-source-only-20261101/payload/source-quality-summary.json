@@ -1,0 +1,142 @@
+{
+  "attempt_history": [
+    {
+      "Fat_native_quality_failures": 160,
+      "Skin_native_quality_failures": 34,
+      "attempt": 869,
+      "branch": "separate, not current",
+      "candidate_source_audit_status": "INHERITED_PARENT_SOURCE_AUDIT_CURRENT_CANDIDATE_REPLAY_PENDING",
+      "disposition": "PENDING; not selected",
+      "independent_replay": "NOT_RUN",
+      "readback": "NOT_RUN",
+      "report_status": "PASS_SOURCE_ONLY_FIXED_BOUNDARY_FLIP_BATCH_PENDING_INDEPENDENT_REPLAY"
+    },
+    {
+      "attempt": 870,
+      "disposition": "FAILED_BEFORE_CANDIDATE",
+      "reason": "v25 v4 runner stopped at pinned builder source SHA mismatch; exact wrong runner path and traceback retained"
+    },
+    {
+      "attempt": 871,
+      "disposition": "SOURCE_ONLY_CONFIRMED_AFTER_ROLLBACK",
+      "fresh_confirmation": {
+        "Fat": 154,
+        "Skin": 34,
+        "fresh_audit_pairs": 0,
+        "source_audit_status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+        "source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+        "surface_crossings": 0
+      },
+      "initial_source_validator": "FAILED because recorded 775 --config invocation path did not match proposal-audit log namespace",
+      "raw_candidate": {
+        "775_context_pairs": 58,
+        "775_status": "FAIL_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+        "Fat": 154,
+        "Skin": 34
+      },
+      "rollback": {
+        "775_context_pairs": 0,
+        "775_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+        "Fat": 154,
+        "Skin": 34,
+        "independent_replay_status": "PASS_775_SOURCE_CONTEXT_VOLUME_QUALITY_AND_V25_FREE_SET"
+      }
+    },
+    {
+      "attempt": 872,
+      "disposition": "FAILED_DURING_SETUP; NO CANDIDATE",
+      "reason": "TypeError: exact_point_map required_rows received a set; traceback and command retained"
+    },
+    {
+      "attempt": 873,
+      "round_01": {
+        "Fat": 152,
+        "Skin": 31,
+        "disposition": "ROLLBACK_BASELINE_SOURCE_ONLY"
+      },
+      "round_02": {
+        "807_source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+        "Fat": 152,
+        "Skin": 29,
+        "disposition": "PASS_SOURCE_ONLY_WITH_775_AND_INDEPENDENT_REPLAY",
+        "independent_replay_status": "PASS_775_SOURCE_CONTEXT_VOLUME_QUALITY_AND_V25_FREE_SET",
+        "proposal_775_context_pairs": 14,
+        "proposal_775_status": "FAIL_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+        "rollback_775_context_pairs": 0,
+        "rollback_775_self_pairs": 0,
+        "rollback_775_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+        "source_audit_status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+        "surface_crossings": 0
+      }
+    }
+  ],
+  "best_endpoint": {
+    "807_source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+    "Fat_native_quality_failures": 152,
+    "Skin_native_quality_failures": 29,
+    "attempt": 873,
+    "cumulative_witness_report_count": 7,
+    "cumulative_witness_reports": [
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json",
+        "sha256": "e94d41091c196bba188f8bc7295d088eb9c383f87a2c6fbf212769aa75498207"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json",
+        "sha256": "ba13ecfba819b8487a617671fa5a4f02f662d88759f89c56f254cc5676b5fd1b"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-858-audit775-root/proposal-exact-775/report.json",
+        "sha256": "0ad5c2ea1ec3a3bb495722d230947a83128c405d373829ca61128427ded5c611"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-audit805b-root/proposal-exact-805/report.json",
+        "sha256": "162c23373f64626860229d6b8cc11d67485c031d0a927f04e9797d683e211dc0"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-867-audit805b-root/proposal-exact-805/report.json",
+        "sha256": "ddb895f6216a7225eb6bf8642d10a6d57e55366244d4ad80f9ee7f75de1727a0"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-871-root/round-01/proposal-exact-775/report.json",
+        "sha256": "8b63f96fe43c4568a8d1ea50033386915ff3009772543f30456b3b946944de9f"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-01/proposal-exact-775/report.json",
+        "sha256": "bb838e2c15093e0104208d11ea8ce296f228620b9b989d346965e994336d9a1b"
+      }
+    ],
+    "final_775_context_pairs": 0,
+    "final_775_self_pairs": 0,
+    "final_775_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+    "independent_replay_status": "PASS_775_SOURCE_CONTEXT_VOLUME_QUALITY_AND_V25_FREE_SET",
+    "source_audit_status": "PASS_SOURCE_ONLY_EXACT_SURFACE_AND_VOLUME_BOUNDARY",
+    "state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/finalized-current-state.json",
+    "state_sha256": "16575c451e41cd2f3788297d89fa9c8863e874321aadd0023523f90443d049fb",
+    "surface_crossings": 0
+  },
+  "controls": {
+    "scope": "Recorded small controls and source checks; this publication only parses/compiles copied text and does not rerun geometry.",
+    "v25f": "PASS_CODE_COMPILE_SMALL_CONTROLS_AND_REPLAY_IMPORT",
+    "v25g": "PASS_TINY_CONTROLS_AND_RUNNER_DEPENDENCY_VALIDATION"
+  },
+  "evidence_scope": [
+    "v25f/v25g builders, independent replay sources, controls, relevant owner snapshots and run receipts are included.",
+    "869 is a separate branch with inherited source audit and candidate replay/readback not run; it is not summed with the 873 endpoint.",
+    "870/872 failures and the 871/873 failed proposal and rollback evidence are retained accurately.",
+    "NPZ/NPY arrays are not bundled or rehashed; copied JSON retains source path/hash declarations.",
+    "No physics, production, clinical, or physical admission claim is made."
+  ],
+  "package": "fine-physical-quality-v21b-869-873-source-only-20261101",
+  "schema": "numi-human.fine-physical-quality-869-873-source-evidence.v1",
+  "source_and_physics_limits": {
+    "boundary_source_binding": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+    "mass_reconciliation": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+    "native_steps": 0,
+    "physical_admission": false,
+    "scene_869_current": false,
+    "scene_874_included": false,
+    "typed_217_admission": "PENDING_EXPLICIT_697_217_ADAPTER"
+  },
+  "status": "SOURCE_QUALITY_873_VERIFIED; PHYSICAL_ADMISSION_FALSE"
+}
