@@ -1,0 +1,64 @@
+{
+  "archive": {
+    "archive_index_canonical_json_sha256": "daef380be10c58c20c0282ed38618b4e6c2bb098e8de185c120b57b9d1453bfb",
+    "archive_index_file_sha256": "3086984bcfc99a936300c907563d82f113330266cc1d2845c0bf32f983dd0382",
+    "archive_index_schema": "numi-human.quality-volume-proposal-archive.v1",
+    "asset_label": "quality-volume-proposals-794r002-799-807-chunk-002.tar.zst",
+    "asset_name": "quality-volume-archive-chunk-002.tar.zst",
+    "download_url": "https://github.com/Numi2/numilab-human/releases/download/human-quality-volume-archive-20261031-chunk-002/quality-volume-archive-chunk-002.tar.zst",
+    "file_reference_count": 12,
+    "independent_download_sha256": "51ed5f418bda9640a3204f997219c0416d50dccb13bbf0c9f647f6ff37e8e3ce",
+    "release_tag": "human-quality-volume-archive-20261031-chunk-002",
+    "release_url": "https://github.com/Numi2/numilab-human/releases/tag/human-quality-volume-archive-20261031-chunk-002",
+    "sha256": "51ed5f418bda9640a3204f997219c0416d50dccb13bbf0c9f647f6ff37e8e3ce",
+    "size_bytes": 175571434,
+    "unique_blob_bytes": 282529137,
+    "unique_blob_count": 12
+  },
+  "limitations": [
+    "Archived NPZs are historical proposal inputs, not current accepted geometry inputs.",
+    "No NPZ or NPY payload is bundled in this Git evidence package; the compressed archive remains the external release asset.",
+    "The local archive, independent download, and selected-restore smoke copies were removed only after release verification and hash checks.",
+    "Archive verification reports zero native steps and physical admission false."
+  ],
+  "package": "quality-volume-archive-chunk-002-restore-proof-20261101",
+  "qualification": {
+    "mass_reconciliation": "PENDING",
+    "native_steps": 0,
+    "physical_admission": false,
+    "scope": "Historical quality-volume proposal archive only; archive verification and retirement do not qualify geometry or physics."
+  },
+  "readback": {
+    "all_zip_crcs_passed": true,
+    "npy_array_headers_read": 1169,
+    "npz_count": 12,
+    "readback_report_sha256": "fc2e474f3dfb175dfed881670ace2b911f4b55764fd6b2042dabc7fd1711537c",
+    "status": "PASS_ALL_NPZ_ZIP_CRC_AND_NPY_HEADERS",
+    "uncompressed_blob_bytes": 282529137,
+    "verifier_source_sha256": "fa4869aa72abd70ff776a3a4219b08d636bfb0a8e7d64bb14b658b49bd30e94e"
+  },
+  "retirement": {
+    "all_selected_paths_absent": true,
+    "lane_release_status": "PASS_LANE_RELEASED",
+    "local_archive_restore_bytes_removed": 377033632,
+    "local_archive_restore_copies_removed": 3,
+    "post_retirement_proof_sha256": "aa4798a658baf27bf50457261b81213db0f88e419f4e3c88aa6e3e7e4654e994",
+    "protected_current_inputs_unchanged": true,
+    "retired_file_count": 12,
+    "retired_original_bytes": 282529137,
+    "status": "PASS_RETIRED_EXACT_12_LISTED_VOLUME_NPZ_FILES"
+  },
+  "schema": "numi-human.quality-volume-archive-chunk-proof.v1",
+  "selected_restore": {
+    "restore_tool_commit": "a7f784ecdd99f8b4ea70219304fff15b8d36cf85",
+    "restore_tool_path": "/Users/numi/Work/human-quality-trials-695-publish-20261031i/tools/evidence/connected-skin-fat-quality-trials-695-20261031i/restore_archive.py",
+    "sha256": "99224b13ad7d6b45be80f9c2cf075b817186b2a8cebf3d41a6fe956dcd5bacd9",
+    "size_bytes": 25890764,
+    "source_relative_path": "all-quality-794-root/round002/flips/fat-fixed-boundary-quality-queue.npz",
+    "status": "PASS_STREAMED_ARCHIVE_AND_SELECTED_RESTORE"
+  },
+  "source_plan_file_count": 23,
+  "source_plan_files_byte_exact": true,
+  "source_plan_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-002-plan",
+  "status": "PASS_INDEPENDENT_RELEASE_HASH_READBACK_SELECTED_RESTORE_AND_EXACT_RETIREMENT"
+}
