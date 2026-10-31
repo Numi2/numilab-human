@@ -1,0 +1,115 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-035-current-407-target-rebind/rebound/fat-current-typed-target-rebound.npz",
+  "input_sha256": "38644a69f8b07409df9df09cb79cafc216edc5c223c395a040e4f2c017d8f237",
+  "script_sha256": "ab0a5fe5ea877353c0852963bccd9bacaee9ebe1edc62acbcbdbb9c667cdf4d1",
+  "maximum_extra_construction_defects_per_cavity": 0,
+  "strict_native_admission_thresholds_unchanged": true,
+  "exact_retained_tet_SAT_required": true,
+  "exact_sat_aabb_pair_work_budget": 2000000,
+  "selected_component_ids": [
+    0
+  ],
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "all_target_components_admissible": true,
+    "closure_history": [],
+    "component_shell_self_pairs": 0,
+    "maximum_cells": 2113,
+    "retired_boundary_nodes": 0,
+    "selected_cells": 2113,
+    "selection": "frozen run022 comp1 cells plus all owner cells for the edge-connected current-target missing-facet component; D407 parent-child ancestry is pinned",
+    "cache_reused": true,
+    "cache_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-039-D407-target-cavity-prep/connected-cavity-shells.npz",
+    "cache_shell_sha256": "d0b813675dbbf5fb7a8ef41b0b961b67f104de769d09afab3ae3e5c7aeb7e089",
+    "cache_report_sha256": "cd8492880972eb6a66f556567b617fe8fc0f4cf6f4752e58b152a93dc2c0a0ac"
+  },
+  "components": [
+    {
+      "D_child_face_rows": [
+        237352,
+        237353,
+        237354,
+        237355,
+        237356,
+        237357,
+        237358,
+        237359,
+        237360,
+        237361,
+        237362
+      ],
+      "D_parent_face_rows": [
+        234144,
+        232293,
+        232188,
+        230875,
+        230877
+      ],
+      "closed": true,
+      "direct_D_point_ancestry": true,
+      "edge_failures": 0,
+      "empty_shell_retirement": false,
+      "exact_shell_self_pairs": 0,
+      "global_point_count": 1036,
+      "id": 0,
+      "joint_no_native_apex_faces": [],
+      "new_desired_faces": 21,
+      "old_bad": 620,
+      "old_cells": 2113,
+      "old_nonpositive": 0,
+      "old_target_delta_actual_only_faces": 16,
+      "old_target_delta_shell_only_faces": 10,
+      "shell_face_count": 2060,
+      "topological_closed": true,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": -2,
+        "witness_nodes": []
+      },
+      "unchanged_cut_face_count": 760,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS128O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a60c1c549c913fb66b2ab0ccdf32f241d793e05ac7ec30d3b47a832e21a8ffc5",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_budget": 24,
+      "construction_native_defect_budget_override_component": 0,
+      "construction_native_defect_delta": 24,
+      "exact_internal_face_pairs": 0,
+      "exact_sat_aabb_pairs_checked": 547614,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 547614,
+        "exact_point_cache_rows": 5184
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 2212,
+      "new_bad": 644,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "98b294ab9038af8d1448afcaabd4b30e61c3e5a98769bbceabbde55e611a9a53"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-041-D407-comp1-remesh-budget24/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "e11249bd297a7e08ae8d74fe406439289dfaf2f1f3069d1ebf83876e3d170a15",
+  "passing_components": 1,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 28966,
+  "complete_boundary_matches_desired": false,
+  "elapsed_s": 34.73683433281258
+}

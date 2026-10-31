@@ -1,0 +1,128 @@
+{
+  "status": "PASS_OUTER_O_QUOTIENT_PHYSICAL_PREFLIGHT",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping_status": "NOT_RUN",
+  "source_O": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-native-OI-ears-279-root/O-batch006-dp001/typed-280-003/candidate-O-typed-current.npz",
+  "source_O_sha256": "4e0c46662721fed33d4bd4efb390c6668ff67581d2484fcd9ba9058834fa7a20",
+  "candidate_O": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-quotient-431-root/run001/candidate-O-outer-quotient-raw.npz",
+  "candidate_O_sha256": "ea6cee8528a1ffa4b3d1f725f8f8e66c8de6ed43c5b74d8a0de40a2552da7ecb",
+  "maximum_edge_length_m": 0.001,
+  "Skin_exact_F32_volume_unchanged": true,
+  "inner_I_and_D_geometry_unchanged": true,
+  "source_coordinates_unchanged": true,
+  "back_source_geometry_unchanged": true,
+  "roles": [
+    {
+      "role": "Skin",
+      "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-fixed-boundary-421-root/skin-current-fixed-boundary-volume-proposal.npz",
+      "input_sha256": "97182a15943ce7a86e56128b83a3d2df40a17336349bc120b8cf70465fcdf548",
+      "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-quotient-431-root/run001/skin-outer-O-quotient-volume-proposal.npz",
+      "output_sha256": "ba2245fd253415beecf233398cfb49c7eb05193d5f807dc31b43b011cdc0b7d2",
+      "bad_before": 1506,
+      "bad_after": 1502,
+      "nonpositive": 0,
+      "point_coordinates_bit_identical": true,
+      "boundary_exactly_matches_outer_O_quotient": true,
+      "operations": [
+        {
+          "operation": 0,
+          "source_cell_rows": [
+            701644,
+            701646,
+            705641,
+            705642,
+            705643,
+            705644,
+            705645
+          ],
+          "kept_volume_node": 60360,
+          "retired_volume_node": 60364,
+          "removed_cells": 3,
+          "bad_before": 7,
+          "bad_after": 4
+        },
+        {
+          "operation": 1,
+          "source_cell_rows": [
+            661913,
+            661914,
+            678665,
+            678666,
+            688782,
+            688783,
+            693809,
+            693810,
+            699281,
+            699282,
+            708334,
+            719540,
+            719541,
+            719556,
+            719558,
+            721860,
+            721903,
+            721905,
+            722297,
+            722298
+          ],
+          "kept_volume_node": 59120,
+          "retired_volume_node": 59121,
+          "removed_cells": 10,
+          "bad_before": 1,
+          "bad_after": 0
+        }
+      ]
+    }
+  ],
+  "passing_operations": 2,
+  "operations": [
+    {
+      "retained_input_point_row": 60360,
+      "collapsed_input_point_row": 60364,
+      "retired_parent_face_rows": [
+        102694,
+        102695,
+        102696,
+        102707,
+        102709
+      ],
+      "edge_length_m": 2.3681245856453206e-07,
+      "combined_native_quality_gain": 3,
+      "exact_combined_Skin_Fat_volume_delta": 0
+    },
+    {
+      "retained_input_point_row": 59120,
+      "collapsed_input_point_row": 59121,
+      "retired_parent_face_rows": [
+        100012,
+        100387,
+        101145,
+        101148
+      ],
+      "edge_length_m": 6.51775756879828e-05,
+      "combined_native_quality_gain": 1,
+      "exact_combined_Skin_Fat_volume_delta": 0
+    }
+  ],
+  "rejections": {
+    "Skin:new_quality_failure": 162,
+    "COMBINED_MATERIAL_VOLUME_CHANGED": 863,
+    "Skin:F32_volume_inversion": 694,
+    "SOURCE_NORMAL_CHANGE": 2416,
+    "Skin:DEPENDENT_VOLUME_CAVITY": 41,
+    "DEPENDENT_SOURCE_PATCH": 38,
+    "PROTECTED_BACK412_OR_REGISTERED_ROUTE": 52,
+    "NO_STRICT_COMBINED_QUALITY_DESCENT": 607,
+    "SOURCE_SURFACE_LINK": 129,
+    "SOURCE_JOINT_NATIVE_APEX_BOUND": 3
+  },
+  "protected_O_point_count": 222,
+  "back412_source_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/back412-scope-audit-001/report.json",
+  "back412_source_report_sha256": "d20f1fd175b699a00dbe7077aae33b787054126a7d6bfef28c6d25894b30db0e",
+  "producer_sha256": "422adcea9c7f18d8d35651af0e41e2ab6550df15ee8d89f8a77d20502698c7fd",
+  "indexed_transfer_owner": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/transfer_surface_contractions_indexed_379_root.py",
+  "indexed_transfer_owner_sha256": "ea9135fe6c19efc644bd8429bd01e5f36547f304e86da9214aa1bb594441da37",
+  "elapsed_s": 7.702290750108659,
+  "limitation": "raw source O quotient requires typed seven-field parent unions, exact complete-context collision/apex audit and unchanged rim checks before use; no runtime/native or mass admission"
+}

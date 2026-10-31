@@ -1,0 +1,113 @@
+{
+  "status": "BOUNDED_WITNESS_DRIVEN_OUTER_SKIN_IN_PROGRESS",
+  "physical_admission": false,
+  "native_steps": 0,
+  "history": [
+    {
+      "iteration": 1,
+      "status": "PASS_TYPED_FULL_CONTEXT_AND_TARGET",
+      "accepted_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001",
+      "qualification": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001/qualification435001/receipt.json",
+      "qualification_sha256": "d2e426fa713440bc5eb4c30605c7d034f1256a3e5b0cc6402221061ace80ba26",
+      "bad_before": 1263,
+      "bad_after": 1209,
+      "operations": 37,
+      "failed_contexts": [],
+      "commands": [
+        [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_bounded_outer_O_with_witnesses_447_root.py",
+          "--skin",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-connected-sequence-440-root/iteration001-pruned001/qualification435001/skin-target437/skin-bound-current-O-target-volume-proposal.npz",
+          "--skin-sha256",
+          "44c3fa34d4d86f1323e1142d0795a0f5a56ee2113b5e67b582afbc47e992b9cb",
+          "--o",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-connected-sequence-440-root/iteration001-pruned001/typed434001/candidate-O-typed-current.npz",
+          "--o-sha256",
+          "a7a048e0d0d9faf9f883e52ff8cce6e114a6a095d3c8be86c381c9bf653e5893",
+          "--output",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001/run001",
+          "--maximum-edge-m",
+          ".001",
+          "--maximum-operations",
+          "1024",
+          "--seconds",
+          "40",
+          "--exclude-witness-report",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-connected-sequence-440-root/iteration001-pruned001/run001/report.json",
+          "41b4fd385eab31371073af2f1d74b9ba7c5ef30c166cf6afa200fcae9892cbf2"
+        ],
+        [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bind_and_replay_bounded_outer_O_434_root.py",
+          "--report",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001/run001/report.json",
+          "--output",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001/typed434001"
+        ],
+        [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/qualify_bounded_outer_skin_generic_439_root.py",
+          "--root",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001"
+        ]
+      ]
+    },
+    {
+      "iteration": 2,
+      "status": "PASS_TYPED_FULL_CONTEXT_AND_TARGET",
+      "accepted_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002",
+      "qualification": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002/qualification435001/receipt.json",
+      "qualification_sha256": "da08afe64f73a5324c939f6c947d388d0f632929a29d67a3c962c351ebf58034",
+      "bad_before": 1209,
+      "bad_after": 1176,
+      "operations": 23,
+      "failed_contexts": [],
+      "commands": [
+        [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_bounded_outer_O_with_witnesses_447_root.py",
+          "--skin",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001/qualification435001/skin-target437/skin-bound-current-O-target-volume-proposal.npz",
+          "--skin-sha256",
+          "7040748c1a2fc6a3388a733386aa5757bf1c63dfa1a3b9b4fe4fb119508a7265",
+          "--o",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration001/typed434001/candidate-O-typed-current.npz",
+          "--o-sha256",
+          "22eff7134a26194cf094a44b9e662f2e9c6d0800601f5ee97003643fd5ae8144",
+          "--output",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002/run001",
+          "--maximum-edge-m",
+          ".001",
+          "--maximum-operations",
+          "1024",
+          "--seconds",
+          "40",
+          "--exclude-witness-report",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-connected-sequence-440-root/iteration001-pruned001/run001/report.json",
+          "41b4fd385eab31371073af2f1d74b9ba7c5ef30c166cf6afa200fcae9892cbf2"
+        ],
+        [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bind_and_replay_bounded_outer_O_434_root.py",
+          "--report",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002/run001/report.json",
+          "--output",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002/typed434001"
+        ],
+        [
+          "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/qualify_bounded_outer_skin_generic_439_root.py",
+          "--root",
+          "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002"
+        ]
+      ]
+    }
+  ],
+  "latest_qualified_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002",
+  "latest_skin": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002/qualification435001/skin-target437/skin-bound-current-O-target-volume-proposal.npz",
+  "latest_skin_sha256": "7822cd0cd55c346d0c3005cc4f3675bc10f85d51c137893bb1b28aec594da54f",
+  "latest_O": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-witness-driven-sequence-448-root/iteration002/typed434001/candidate-O-typed-current.npz",
+  "latest_O_sha256": "7a3954dc5b655e6ac0601645a1fcaa809710b89b142bed63e13d477c89c66dc5",
+  "native_quality_failures": 1176
+}

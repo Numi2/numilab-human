@@ -1,0 +1,65 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.002457
+Creating surface mesh ...
+Surface mesh seconds:  0.000346
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [281,201].
+  2nd: [281,267].
+  Reducing collinear tolerance from 179.9 to 179.903 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [927,923].
+  2nd: [927,926].
+  Reducing collinear tolerance from 179.903 to 179.943 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [700,707].
+  2nd: [700,701].
+  Reducing collinear tolerance from 179.943 to 179.988 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [192,154].
+  2nd: [192,164].
+  Reducing collinear tolerance from 179.988 to 179.995 degree.
+Warning:  Two line segments are almost crossing.
+  1st: [192,118].
+  2nd: [111,134].
+  Reducing collinear tolerance from 179.995 to 180 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=7644 zero=7644 expected15=0 other=0 flip23=20278 flip32=19234 flip41=28 flip44=5 invalid_hull_attrs=0
+Boundary recovery seconds:  0.052369
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=2276 zero=0 expected15=0 other=2276 flip23=20278 flip32=19234 flip41=28 flip44=5 invalid_hull_attrs=0
+Exterior tets removal seconds:  0.000564
+Suppressing Steiner points ...
+Steiner suppression seconds:  0
+ATTR_CENSUS stage=after_suppresssteinerpoints total=2188 zero=0 expected15=0 other=2188 flip23=20362 flip32=19394 flip41=32 flip44=5 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=2212 zero=0 expected15=0 other=2212 flip23=21087 flip32=20095 flip41=32 flip44=5 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.001707
+ATTR_CENSUS stage=after_improvement_gate total=2212 zero=0 expected15=0 other=2212 flip23=21087 flip32=20095 flip41=32 flip44=5 invalid_hull_attrs=0
+Mesh improvement seconds:  0.00018
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.002713
+Total running seconds:  0.060486
+
+Statistics:
+
+  Input points: 1036
+  Input facets: 2060
+  Input segments: 3090
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 1032
+  Mesh tetrahedra: 2212
+  Mesh faces: 5454
+  Mesh faces on exterior boundary: 2060
+  Mesh faces on input facets: 2060
+  Mesh edges on input segments: 3090
+

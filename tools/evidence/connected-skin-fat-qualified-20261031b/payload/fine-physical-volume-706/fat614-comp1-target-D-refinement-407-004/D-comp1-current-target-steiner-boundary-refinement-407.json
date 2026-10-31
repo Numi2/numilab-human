@@ -1,0 +1,722 @@
+{
+  "checks": {
+    "actual_697_load": "PENDING",
+    "all_11_new_faces_non_degenerate": true,
+    "all_3_new_points_unique_vs_current_D_O_I": true,
+    "current_D_parent_face_crosswalk_exact": true,
+    "current_target_source_rows_exact": true,
+    "full_O_I_D_walls_all185_exact_context": "PENDING",
+    "joint_native_apex_gate": 9.999999747378752e-06,
+    "minimum_new_face_joint_apex_score": 3.136251737110035e-05,
+    "new_face_joint_apex_failures": 0,
+    "patch_oriented_boundary_equal_to_retired_parent_patch": true,
+    "volume_target_transfer": "PENDING",
+    "whole_D_bad_edges": 0,
+    "whole_D_directed_boundary_unchanged": true,
+    "whole_D_duplicate_faces": 0,
+    "whole_D_joint_apex_failures": 0
+  },
+  "child_face_retriangulation": {
+    "flipped_diagonal": {
+      "new_edge_D_rows": [
+        120646,
+        102543
+      ],
+      "retired_edge_D_rows": [
+        120644,
+        102286
+      ]
+    },
+    "reason": "The raw diagnostic triangulation had one generated face below the unchanged joint native-apex gate. This single in-patch 2-2 flip preserves the exact oriented patch boundary and raises the minimum generated-face score above the gate.",
+    "replacement_faces_D_rows": [
+      [
+        120646,
+        102543,
+        120644
+      ],
+      [
+        102543,
+        120646,
+        102286
+      ]
+    ],
+    "source_run028_face_indices_reflipped": [
+      2,
+      8
+    ],
+    "source_tetgen_output_face_count": 11
+  },
+  "complete_source_face_ancestry_union": [
+    [
+      46819,
+      62000202,
+      46819
+    ],
+    [
+      46820,
+      62000202,
+      46820
+    ],
+    [
+      46821,
+      62000202,
+      46821
+    ],
+    [
+      46822,
+      62000202,
+      46822
+    ],
+    [
+      46823,
+      62000202,
+      46823
+    ],
+    [
+      46824,
+      62000202,
+      46824
+    ],
+    [
+      46825,
+      62000202,
+      46825
+    ],
+    [
+      47579,
+      62000202,
+      47579
+    ],
+    [
+      47659,
+      62000201,
+      47659
+    ],
+    [
+      47661,
+      62000201,
+      47661
+    ],
+    [
+      47662,
+      62000201,
+      47662
+    ],
+    [
+      240381,
+      100000170,
+      240381
+    ],
+    [
+      240382,
+      100000170,
+      240382
+    ],
+    [
+      240383,
+      100000170,
+      240383
+    ],
+    [
+      240384,
+      100000170,
+      240384
+    ],
+    [
+      240385,
+      100000170,
+      240385
+    ],
+    [
+      240388,
+      100000170,
+      240388
+    ],
+    [
+      240389,
+      100000170,
+      240389
+    ],
+    [
+      240391,
+      100000170,
+      240391
+    ],
+    [
+      240392,
+      100000170,
+      240392
+    ],
+    [
+      243783,
+      100000182,
+      243783
+    ],
+    [
+      243784,
+      100000182,
+      243784
+    ],
+    [
+      243785,
+      100000182,
+      243785
+    ],
+    [
+      243788,
+      100000182,
+      243788
+    ],
+    [
+      243790,
+      100000182,
+      243790
+    ]
+  ],
+  "complete_typed_parent_union": [
+    [
+      2,
+      -1,
+      -1,
+      439,
+      62000201,
+      439,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      441,
+      62000201,
+      441,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      442,
+      62000201,
+      442,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21427,
+      62000202,
+      21427,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21428,
+      62000202,
+      21428,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21429,
+      62000202,
+      21429,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21430,
+      62000202,
+      21430,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21431,
+      62000202,
+      21431,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21432,
+      62000202,
+      21432,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      21433,
+      62000202,
+      21433,
+      -1
+    ],
+    [
+      2,
+      -1,
+      -1,
+      22264,
+      62000202,
+      22264,
+      -1
+    ],
+    [
+      3,
+      152,
+      149,
+      969,
+      100000170,
+      969,
+      -1
+    ],
+    [
+      3,
+      152,
+      149,
+      971,
+      100000170,
+      971,
+      -1
+    ],
+    [
+      3,
+      152,
+      149,
+      974,
+      100000170,
+      974,
+      -1
+    ],
+    [
+      3,
+      152,
+      149,
+      1064,
+      100000170,
+      1064,
+      -1
+    ],
+    [
+      3,
+      152,
+      149,
+      1065,
+      100000170,
+      1065,
+      -1
+    ],
+    [
+      3,
+      152,
+      149,
+      1072,
+      100000170,
+      1072,
+      -1
+    ],
+    [
+      3,
+      153,
+      162,
+      243,
+      100000182,
+      243,
+      -1
+    ],
+    [
+      3,
+      153,
+      162,
+      244,
+      100000182,
+      244,
+      -1
+    ],
+    [
+      3,
+      153,
+      162,
+      245,
+      100000182,
+      245,
+      -1
+    ],
+    [
+      3,
+      153,
+      162,
+      246,
+      100000182,
+      246,
+      -1
+    ]
+  ],
+  "current_fat_target": {
+    "parent_target_face_rows": [
+      474275,
+      472424,
+      472319,
+      471006,
+      471008
+    ],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+    "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "target_face_source_D_face_rows": [
+      234144,
+      232293,
+      232188,
+      230875,
+      230877
+    ],
+    "target_face_source_group": 1
+  },
+  "current_full_context": {
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-399-root/iteration002/typed365/candidate-I-typed-current.npz",
+      "sha256": "fec15d6b59e9094952845cbeaaf418b91a4b2f5d0405d1c58b7e3e2e752ec406"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-native-OI-ears-279-root/O-batch006-dp001/typed-280-003/candidate-O-typed-current.npz",
+      "sha256": "4e0c46662721fed33d4bd4efb390c6668ff67581d2484fcd9ba9058834fa7a20"
+    }
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "new_output_face_rows": [
+    237352,
+    237353,
+    237354,
+    237355,
+    237356,
+    237357,
+    237358,
+    237359,
+    237360,
+    237361,
+    237362
+  ],
+  "new_output_faces_D_point_rows": [
+    [
+      103396,
+      120645,
+      103429
+    ],
+    [
+      103396,
+      102986,
+      120645
+    ],
+    [
+      120646,
+      102543,
+      120644
+    ],
+    [
+      120644,
+      102547,
+      120646
+    ],
+    [
+      120645,
+      103398,
+      103429
+    ],
+    [
+      103398,
+      120645,
+      102986
+    ],
+    [
+      102545,
+      102547,
+      120644
+    ],
+    [
+      102543,
+      102545,
+      120644
+    ],
+    [
+      102543,
+      120646,
+      102286
+    ],
+    [
+      102547,
+      102557,
+      120646
+    ],
+    [
+      102557,
+      102286,
+      120646
+    ]
+  ],
+  "new_points": [
+    {
+      "coordinate_adjustment": {
+        "distance_from_raw_emitted_m": 1.1920928955078125e-07,
+        "source": "run031 exact-F32 local kernel correction",
+        "ulp_offsets_xyz": [
+          0,
+          -1,
+          0
+        ]
+      },
+      "output_D_point_row": 120644,
+      "raw_tetgen_world_f32_m": [
+        0.09685984253883362,
+        -1.7291467189788818,
+        0.21418732404708862
+      ],
+      "source_surface_support": {
+        "barycentric_on_parent_face": [
+          0.6255252975721908,
+          0.3658891847161222,
+          0.008585517711687026
+        ],
+        "distance_to_parent_surface_m": 7.441895954796463e-08,
+        "f32_point_world_m": [
+          0.09685984253883362,
+          -1.7291468381881714,
+          0.21418732404708862
+        ],
+        "nearest_current_D_parent_face_row": 234144,
+        "nearest_parent_surface_point_world_m": [
+          0.0968598398148698,
+          -1.729146763946202,
+          0.2141873283935276
+        ],
+        "new_point_row": 120644,
+        "tetgen_node_id": 1026
+      },
+      "tetgen_node_id": 1026,
+      "world_f32_m": [
+        0.09685984253883362,
+        -1.7291468381881714,
+        0.21418732404708862
+      ],
+      "world_f64_m": [
+        0.09685984253883362,
+        -1.7291468381881714,
+        0.21418732404708862
+      ]
+    },
+    {
+      "coordinate_adjustment": {
+        "distance_from_raw_emitted_m": 0.0,
+        "source": "none",
+        "ulp_offsets_xyz": [
+          0,
+          0,
+          0
+        ]
+      },
+      "output_D_point_row": 120645,
+      "raw_tetgen_world_f32_m": [
+        0.10764900594949722,
+        -1.7284504175186157,
+        0.24096140265464783
+      ],
+      "source_surface_support": {
+        "barycentric_on_parent_face": [
+          0.0737316665381007,
+          0.9262683334618993,
+          0.0
+        ],
+        "distance_to_parent_surface_m": 2.7870926704647855e-08,
+        "f32_point_world_m": [
+          0.10764900594949722,
+          -1.7284504175186157,
+          0.24096140265464783
+        ],
+        "nearest_current_D_parent_face_row": 230875,
+        "nearest_parent_surface_point_world_m": [
+          0.10764900887488,
+          -1.7284503898100434,
+          0.24096140333707777
+        ],
+        "new_point_row": 120645,
+        "tetgen_node_id": 1027
+      },
+      "tetgen_node_id": 1027,
+      "world_f32_m": [
+        0.10764900594949722,
+        -1.7284504175186157,
+        0.24096140265464783
+      ],
+      "world_f64_m": [
+        0.10764900594949722,
+        -1.7284504175186157,
+        0.24096140265464783
+      ]
+    },
+    {
+      "coordinate_adjustment": {
+        "distance_from_raw_emitted_m": 0.0,
+        "source": "none",
+        "ulp_offsets_xyz": [
+          0,
+          0,
+          0
+        ]
+      },
+      "output_D_point_row": 120646,
+      "raw_tetgen_world_f32_m": [
+        0.09686122834682465,
+        -1.7291468381881714,
+        0.21419048309326172
+      ],
+      "source_surface_support": {
+        "barycentric_on_parent_face": [
+          0.6341826735141689,
+          2.200853668471786e-05,
+          0.3657953179491463
+        ],
+        "distance_to_parent_surface_m": 4.4226790902750896e-08,
+        "f32_point_world_m": [
+          0.09686122834682465,
+          -1.7291468381881714,
+          0.21419048309326172
+        ],
+        "nearest_current_D_parent_face_row": 232188,
+        "nearest_parent_surface_point_world_m": [
+          0.09686123158751277,
+          -1.7291468822314182,
+          0.21419048070592367
+        ],
+        "new_point_row": 120646,
+        "tetgen_node_id": 1028
+      },
+      "tetgen_node_id": 1028,
+      "world_f32_m": [
+        0.09686122834682465,
+        -1.7291468381881714,
+        0.21419048309326172
+      ],
+      "world_f64_m": [
+        0.09686122834682465,
+        -1.7291468381881714,
+        0.21419048309326172
+      ]
+    }
+  ],
+  "operation": "D-comp1-current-target-steiner-boundary-refinement-407",
+  "parent_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-385-run006/typed-rebind-003/candidate-D-typed-current.npz",
+    "sha256": "9a5ca486d7b2025a7a2140798155df79c208871703f1eaf75171761b388ba7eb"
+  },
+  "parent_face_triangles_D_rows": [
+    [
+      102545,
+      102286,
+      102543
+    ],
+    [
+      102547,
+      102286,
+      102545
+    ],
+    [
+      102547,
+      102557,
+      102286
+    ],
+    [
+      102986,
+      103429,
+      103396
+    ],
+    [
+      102986,
+      103398,
+      103429
+    ]
+  ],
+  "parent_union_sha256": "bee0128d5bc4997ee95d0b6229d47d26a8bc635bf3b09dfeef94b474ba82cd0f",
+  "physical_admission": false,
+  "retired_parent_face_rows": [
+    234144,
+    232293,
+    232188,
+    230875,
+    230877
+  ],
+  "role": "D",
+  "schema": "numi.D-current-target-steiner-patch-refinement-operation.v1",
+  "scope_semantics": "The inserted points are inferred construction coordinates from the bounded TetGen diagnostic. Their nearest source-triangle barycentric support and residual are recorded; they are not exact points on the original target surface and no measured single-face identity is asserted. The 2-2 face flip changes only the local triangulation of the same patch boundary.",
+  "source_diagnostics": {
+    "original_current_target_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-014-current-target-rebound-v3/fat-D307-I377-YY-components-current-target-rebound.npz",
+      "sha256": "8915c3c7a58f8622d0568da5006bf4b7b0f2832f802b65e29bd144e95f11001d"
+    },
+    "run026_face_table": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-026-single-Y-diagnostic/cavity.1.face",
+      "sha256": "539d128fbfb242be7bd7f3e60b173050aa21e12bcb77f1354ab51118ee959a42"
+    },
+    "run026_node_table": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-026-single-Y-diagnostic/cavity.1.node",
+      "sha256": "f2e0b13f47ef30438f0ef9c7c2d849d85bd4df0caf4c2b39404b6a04ffb1e552"
+    },
+    "run026_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-026-single-Y-diagnostic/receipt.json",
+      "sha256": "4cc147c3213297865bd29e4eb5e4cc30109b03e5d439602940bc97eaa28e774a"
+    },
+    "run028_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-028-single-Y-boundary-refinement-witness/report.json",
+      "sha256": "e5a30bfeb03bbae4a28917cb512f275da454b664286e4d8e787dc3caff534ea3"
+    },
+    "run031_correction": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-031-boundary-f32-kernel/boundary-node-correction.npz",
+      "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-031-boundary-f32-kernel/report.json",
+      "report_sha256": "8e9496fd001d477193c5931a3e7ae7c765b98d4f577102e85c31cc4d57d3f1c8",
+      "sha256": "817cde16f36b0ee0b576a87b9f8374f98284520360a60126bb4af5561f60d72f"
+    }
+  },
+  "source_face_ancestry_union_sha256": "7c468634373962e0daf7b0c4e13305c557d00857933c54cfdfcde37e0a48d149",
+  "status": "DERIVED_BOUNDARY_PATCH_PROPOSAL_FULL_CONTEXT_PENDING",
+  "synthetic_identity_schema_addition": {
+    "derived_operation": "TetGen boundary Steiner target refinement with one in-patch 2-2 diagonal flip",
+    "face_count": 11,
+    "identity_keys": [
+      "face_source_identity0",
+      "face_source_identity1"
+    ],
+    "parent_support_semantics": "All eleven generated D faces carry the complete deduplicated seven-lane typed union and full flattened source-face ancestry of the five retired target parents. This is patch-level support; no exact per-triangle source-face overlap is claimed.",
+    "parent_union_tuple_count": 21,
+    "parent_union_tuple_sha256": "bee0128d5bc4997ee95d0b6229d47d26a8bc635bf3b09dfeef94b474ba82cd0f",
+    "role": "DERIVED_PATCH",
+    "source_lineage": {
+      "current_fat_target_face_rows": [
+        474275,
+        472424,
+        472319,
+        471006,
+        471008
+      ],
+      "parent_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-385-run006/typed-rebind-003/candidate-D-typed-current.npz",
+      "parent_candidate_sha256": "9a5ca486d7b2025a7a2140798155df79c208871703f1eaf75171761b388ba7eb",
+      "parent_face_rows": [
+        234144,
+        232293,
+        232188,
+        230875,
+        230877
+      ]
+    }
+  },
+  "synthetic_original_id": 100000187
+}
