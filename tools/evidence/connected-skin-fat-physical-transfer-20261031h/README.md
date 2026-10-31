@@ -24,6 +24,6 @@ The package includes the 679/680 drivers, their local owner/metadata finalizer, 
 
 The content-addressed archive is `quality678-post622-lineage.tar.zst`, attached to GitHub Release `human-connected-quality-678-20261031`. `archive-index.json` lists every source path, member, SHA-256, and size. It deduplicates repeated files by content hash. The archive contains the 678 snapshot, both finalized volume NPZs, typed O/I/D sources, and the post-622 parent-state chain. Checkpoint 622 is an explicit dependency on the existing `connected-skin-fat-physical-transfer-20261031g` package; its geometry is not duplicated here.
 
-After downloading, verify the release-asset SHA in `manifest.json`, then inspect and restore the archive using `restore_archive.py`. No source files were deleted or cleaned up during publication.
+After downloading, verify the release-asset SHA in `manifest.json`, then inspect and restore the archive using `restore_archive.py`. The downloaded GitHub asset matched the manifest and GitHub SHA-256 digest; its identical local archive passed the full streamed member-hash and restore check. No source files were deleted or cleaned up during publication.
 
 This evidence does not establish zero native-quality failures, source-mass conservation, physical admission, or a clinical claim.
