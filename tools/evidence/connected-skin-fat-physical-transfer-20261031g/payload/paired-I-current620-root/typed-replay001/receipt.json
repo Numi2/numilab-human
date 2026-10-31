@@ -1,0 +1,52 @@
+{
+  "status": "PASS_PAIRED_I_TYPED_ANCESTRY_AND_INDEPENDENT_VOLUME_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "source": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-local-cavity-527-root/run052-current-I-batch-typed-replay/typed-replay-006/candidate-I-typed-current.npz",
+  "source_sha256": "e7d76ae905c15ae3ad5c5dda7603cfdd18399934c12721b942fc4903571970a6",
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current620-root/typed-replay001/candidate-I-typed-current.npz",
+  "candidate_sha256": "e08b94be017bfc34762240002b9aa9de12a21f676ea1e8017cfc6acd353d5efa",
+  "input_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current620-root/batch001/report.json",
+  "input_report_sha256": "60159d42c0f684152827e370f90a379c76c153ffaf537713833bdaffd3ed008c",
+  "construction_quality_exchange": true,
+  "cross_tissue_quality_exchange": false,
+  "new_retained_quality_failures": 9,
+  "native_quality_gates_unchanged": true,
+  "source_points_bit_identical": true,
+  "rim_edges_bit_identical": true,
+  "protected_routes_unchanged": 45,
+  "minimum_joint_apex_bound": 1.0441201053927139e-05,
+  "joint_apex_obstructions": 0,
+  "typed_tuples": 349549,
+  "ancestry_tuples": 382113,
+  "roles": [
+    {
+      "role": "Skin",
+      "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-current612-canonical615-root/skin-current-O612-canonical-parent-unions.npz",
+      "input_sha256": "075a323111aea265b88d07eb12f83aa7902e7dd6323d86082f8a8828cbb492f9",
+      "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current620-root/batch001/skin-coupled-I-quotient-volume-proposal.npz",
+      "output_sha256": "839dd09188c041d5a2dd888f52b118bec55241eaf4931b27ea7e834410d7b61e",
+      "operations_replayed": 430,
+      "bad_before": 873,
+      "bad_after": 802,
+      "exact_signed_integer_volume_delta": "12541196664976487885016519290255240473491499790021522291219919068974756244451045991004307204208595122735750107783259219635994624",
+      "point_material_connectivity_boundary_replay": true
+    },
+    {
+      "role": "Fat",
+      "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run011-target397-current/canonical-v3/fat-current-O612-D597-I50-canonical-parent-unions.npz",
+      "input_sha256": "474f98724b2c8cd6bbdbe3dd46ab6402250b1f613ecbaeec58feb1453d802d11",
+      "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current620-root/batch001/fat-coupled-I-quotient-volume-proposal.npz",
+      "output_sha256": "f11110b29520f479351ed887ab4a5682f9425b60c9834e1c7141cf0bff4285fa",
+      "operations_replayed": 430,
+      "bad_before": 10345,
+      "bad_after": 9799,
+      "exact_signed_integer_volume_delta": "-12541196664976487885016519290255240473491499790021522291219919068974756244451045991004307204208595122735750107783259219635994624",
+      "point_material_connectivity_boundary_replay": true
+    }
+  ],
+  "exact_combined_integer_volume_delta": "0",
+  "producer_sha256": "f5ca4c6e033e4a900a41cf29fb7b1183cdbea62c29bd78dee2efdec8b3d673e0",
+  "limitations": "Complete anatomical collision context and global mass transfer not yet run; no native or physical admission",
+  "elapsed_s": 11.431904832832515
+}

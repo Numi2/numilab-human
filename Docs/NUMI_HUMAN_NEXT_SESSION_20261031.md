@@ -1,89 +1,141 @@
-# Numi Human — next development session
+# Numi Human: resume from checkpoint 622
 
-Session concluded at the user's request on 2026-10-31. All task workers stopped; no new simulation, geometry search, or mass allocation should be running. Continue on **SSH numi only**. This handoff records progress, not physical admission.
+Session closed 2026-10-31 on SSH numi. Start here. All workers stopped; no further repairs or benchmarks were launched for wrap-up.
 
-## One entry point and verified state
+## Goal and honest current status
 
-Read `/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/checkpoint-current618-root.json` first. SHA-256:
-`093da6ccb76da11c55a0eb7050be9875b07e9912bcc1e26445b52b6ea1c824d0`.
+Deliver physically coupled, source-bound Skin/Fat with **zero native quality failures in both layers**, preserve zero erroneous intersections through motion, then qualify the complete supported resting human. Keep the existing Metal mechanics, material laws, Brain/physiology ownership, accepted-state transaction and rollback.
 
-Only `current_verified_state_20261031` is authoritative; outer legacy fields are historical.
+**Current geometry is not admitted to native physics.** Reference surface geometry passes; this is not motion, material conditioning, complete mass allocation, physiological qualification or clinical validation.
 
-| Gate | Skin | Fat |
-|---|---:|---:|
-| Native quality failures remaining | **873** | **10,345** |
-| Tetrahedra | 729,600 | 788,760 |
-| Detailed point rows, including inactive rows | 210,298 | 253,712 |
+| Current check | Skin | Fat |
+| --- | ---: | ---: |
+| Native quality failures | 802 | 9,799 |
+| Cells | 728,166 | 786,223 |
+| Point rows | 210,298 | 253,712 |
 | Nonpositive cells | 0 | 0 |
-| Missing / extra complete target faces | 0 / 0 | 0 / 0 |
+| Missing/extra target boundary faces | 0 / 0 | 0 / 0 |
+| Accepted native steps | 0 | 0 |
 
-The combined **reference-pose** O/I/D/wall/all-185-bank audit has zero crossings, including the changed-set self audit. This does not establish motion validity. **Physical admission=false; accepted native steps=0; motion=NOT_RUN; complete current mass allocation=NOT_RUN.**
+Reference surface crossings: **0**, following independent typed replay and combined exact changed-versus-complete O/I/D, walls and all185 obstacle banks. Complete oriented layer targets and canonical ancestry pass. Current conservative mass allocation: NOT_RUN. Current motion: NOT_RUN. Both material quality counts still prevent admission.
 
-Current exact candidates:
+Authoritative state: /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/checkpoint-current622-root.json (SHA-256 0c5f0ae3b05667246d741761cad18d47567bb6ff0ad86ac99a2ab3dff73121e1), specifically its current_verified_state_20261031 object. Other top-level fields are historical. Live checkpoint.json matches this version at close; do not mistake its legacy406 mass diagnostic for current allocation.
 
-- Skin: `outer-O-current612-canonical615-root/skin-current-O612-canonical-parent-unions.npz`, SHA `075a323111aea265b88d07eb12f83aa7902e7dd6323d86082f8a8828cbb492f9`.
-- Fat: `fat-current-D-546-597-root/run011-target397-current/canonical-v3/fat-current-O612-D597-I50-canonical-parent-unions.npz`, SHA `474f98724b2c8cd6bbdbe3dd46ab6402250b1f613ecbaeec58feb1453d802d11`.
-- Joint exact context: `joint-current-O612-D597-context-613-root/audit354/report.json`, SHA `4f457bbbab1d858061ac141b383cff5648ff5d2080a2a39cc4b39853b6fdb73c`. Its config pins the current typed O612 / I50 / D597 surfaces.
-- Fat canonical receipt SHA `85678c5817fc928afdb18739ba9e3402cc298670487ebe78d682d8bcc362178d`.
+## Exact current files
 
-Relative paths in this document are below:
-`/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706`.
+Base: /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706 (abbreviated H below).
 
-## Work efficiently: the next implementation round
+- Skin: paired-I-current620-root/canonical621/skin-current-I430-canonical-volume-proposal.npz
+  SHA 5f7b81751379fd88f064a235f13f9bdb67588ced0fa18ec1b885e756470cf0c3.
+- Fat: paired-I-current620-root/canonical621/fat-current-I430-canonical-volume-proposal.npz
+  SHA 8b90195f20b12f35aa9f44b2054abb9585e5033e26e3bb8b7b5242d31279c39d.
+- Both canonical proof: paired-I-current620-root/canonical621/receipt.json
+  SHA bd1e8150a8c7589d372a4208a7f0d37aa38233f71610681a59ee0f803e9b1c4f.
+- Current interface I430: paired-I-current620-root/typed-replay001/candidate-I-typed-current.npz
+  SHA e08b94be017bfc34762240002b9aa9de12a21f676ea1e8017cfc6acd353d5efa.
+- Current O612 and D597 are pinned in checkpoint622; unchanged in this batch.
+- Outer skin, deep boundary, back412 and ordered Float32 point coordinates are unchanged. Combined Skin+Fat exact signed volume is unchanged; individual material volumes can change oppositely. Material mass must still be conservatively remapped.
 
-**The finish line is zero quality failures in both physical layers, a complete conservative mass map, and accepted native motion. Another isolated mesh improvement or source-loader test is not completion.**
+## What actually worked in this round
 
-1. **Use the productive connected batch method, not repeated visual adjustment.** The last D batch transferred 152 operations and removed 249 fat failures (10,594 → 10,345), preserving coordinates and positive cells. Six safe O operations removed nine skin failures (882 → 873). One O operation caused five exact intersections; pruning that operation alone retained all safe D work and restored zero crossings. Keep this reject-by-operation workflow.
+One **complete ordered341,205-edge interface frontier** accepted430 paired operations in19.57 seconds. Skin defects decreased873 ->802; Fat10,345 ->9,799, a combined reduction of617. No incomplete expensive search was presented as exhaustion.
 
-   Start from `fat-current-D-546-597-root/run011-target397-current/canonical-v3/next-D-frontier-checkpoint.json`, SHA `1bf31d99d4bdd6c09586f1c066034f9c23191a81b77cb3137e091707268a300d`. The saved measured positive-edge map is `fat-current-D-546-597-root/run003-measured-positive-subset-001/allowed-D-positive-gain-edge-map.npz`, SHA `89dc816c1fad4c5650a5b19ec0731e26999dd7f9287d4ee9b6ab4176a4b1782a`.
+The batch removed blanket construction-region exclusions while retaining actual back412/head-rim/route protections, volume-edge link conditions, per-material nonincrease and strict combined gain. Nine newly retained poor-quality cells are explicitly recorded as construction exchange; no admission threshold changed.
 
-   The previous search exhausted 100,000 orientation trials after 22,792 edges; it has **no resumable cursor**. Rekey retained proposals by exact F32 endpoints and regenerate full endpoint-star conflicts against the new topology. Add deterministic frontier persistence before another expensive search; do not restart the same prefix. Exclude already-applied and exact-witness-rejected operations.
+Independent typed replay passed, combined exact intersection audit passed (24.66s), and both canonical full-star ancestry maps were rebuilt and reread successfully (12.25s). Keep these passing outputs rather than restarting from an older candidate.
 
-2. **Repair the shared I boundary as a coupled Skin/Fat problem.** Skin's remaining defects are predominantly at the I boundary; repeating the low-yield O collapse search is a poor next priority. Regenerate a current regional/witness census, then process independent I patches together with the existing paired-I operators. Preserve per-material quality nonincrease, strict combined improvement, exact paired volume accounting, positive cells, anatomical routes/rims and back412.
+Producers:
+- repair_current_paired_I_620_root.py, SHA43f5af0052c0368a0fa2ec9c72da04ffd68640c93d0b8793a2bde48ffbb3bbfc.
+- Existing typed replay owner: bind_and_replay_paired_I_cross_tissue_472_root.py.
+- canonicalize_current_paired_I_621_root.py, SHAf01320ccdda2aa686290b3ebe24af9ebd2bf37e2abdb43239a6a294dc459908f.
+- Exact commands/configs and receipts are under paired-I-current620-root/.
+- Producer620 authenticates the OLD I50 input. **Do not rerun it unchanged on I430**: explicitly rebind current input pins and protected point domains, regenerate stars and boundary constraints.
 
-   Existing owners include `repair_paired_I_cross_tissue_471_root.py`, the indexed paired-I transfer/binders, and the `paired-I-local-cavity-527-root` workflow. Their hard-coded older point prefixes and blanket construction-region exclusions must be rebound to current arrays. Construction cells are not anatomical anchors. D operations already integrated into the current Fat do not require carrying obsolete reservation masks forever. Do not bypass actual anatomical constraints.
+## Next work, in priority order
 
-   Keep exact boundary rings, thickness, identity and source ancestry. If local topology operations cease producing useful gain, use connected cavity remeshing with the existing compiler and exact boundaries. Do not repeat larger versions of the same failed solve indefinitely.
+### 1. Finish connected volume quality in productive batches
 
-3. **Finish the authoring/provenance adapter as one aggregate closure repair.** The source-only D authoring adapter is still incomplete. Do not confuse its checks with physical admission or silently change the unchanged actual230 gate.
+Use canonical621 as the common base. Reuse the **126 remaining exact-F32 D-edge proposals** rather than repeating the original search:
+fat-current-D-546-597-root/run012-rekey-current-I430-001/result-001/allowed-D-remaining-positive-edge-proposals.npz
+SHA1f6d841f4d8b316f2c17bf97b79d285d45a284aeb4d4ce494c6d0888245d0e1a.
 
-   The aggregate D597 namespace has 470 active IDs, 353 active derived-D IDs, and 153 reachable parent IDs after the documented correction of 62000202. Every parent now has pinned evidence: 119 from current typed tuples, 29 BONE parents from parent366, four D parents through the 62000202 crosswalk, and 62000200 from its producer. Preserve all original tuples, mixed-source provenance and the corrupt original parent list beside its authenticated replacement.
+Its source-only rekey receipt records126 active /152 absent (already contracted) edges. **No current full-star quality preflight or D transfer has run.** Old gains are proposals, not current proof.
+Adapt the retained prepare_current_D_short_edge_2mm_546_strict_gain_597_back412_v2.py to current621; do not invoke it unchanged. Reconstruct full keep/drop endpoint stars and map I430's6,722-row old-base footprint into current canonical cell keys. Do not merge branches by row number.
 
-   Remaining implementation: v9 does not yet consume the authenticated 62000200 evidence and is **uncompiled/untested**. It will still fail there. Complete all unresolved closure categories before another full loader run, then run existing230 on the **current** O612/I50/D597 roles. 62000200's registry face_count=96 disagrees with the pinned asset/producer's 190 rows; preserve and explicitly resolve that metadata discrepancy. Source layer3 is BONE, not D. Role-directed derived authoring projection must retain original ancestry and the source-to-authoring crosswalk.
+Apply nonconflicting operations together; retain safe operations and prune only exact failure witnesses. Carry each batch through independent volume replay, typed provenance, complete target verification and combined O/I/D/wall/all-bank audit. Recompute every current quality witness after topology changes.
 
-4. **Finish mass mapping on the exact final topology.** Skin615 P1/143 support passed independent all-cell replay: support SHA `e73399859c1fa1e0bd47f60c3b551c13b405ea0f06a147daccf0738e3ee42f52`, replay SHA `160221eb5fa29a0c0b2d7a1f6fa908098eccd95f45eb0b8f2f0fef0127e6110c`. The replay report's edge-count label mistakenly reports 70 regions as edges; the builder reports 140 undirected edges. Correct that reporting error explicitly without claiming a new physical result.
+In parallel preparation (not simultaneous heavy execution), classify remaining Skin/Fat quality failures by connected cavities and actual witnesses. Use full local connectivity/cavity repair where the existing quotient cannot progress. Do not merely raise budgets, repeat tiny contour nudges, mark construction regions as anatomical locks or relax thresholds. Extend connected patches only where witnesses require it.
 
-   Fat597 run002 support is an older-topology node cache, not support for the final Fat candidate. Its geometry is `6677a4bb…35054`, support `6779cbaa…035d4`. Verify exact point-row F32 identity, reuse the valid node projections, and rebuild current cell P1/ties/ancestry/143 support. Never use whole-body averages to conceal unmapped regions.
+### 2. Complete registered authoring closure once, on current topology
 
-   Emit matching final role .node/.ele and child labels; regenerate FSSUP090/FSSADJ01; rebind FSSCARR01 witness child rows and distances to final centroids while preserving source barycentric quadrature and source330 role/global IDs. Then run a bounded current paired allocator and independently replay every source/corner/child/donor/material/region/radius constraint.
+registered-authoring-view-590-D-593-root/run-010-D597-aggregate-closure-handoff/aggregate-closure.json
+SHA2d5246d73c459443d2b7ad0fa0314920b7144635bf727cf4dc91d99c0f9b0b58 is the consolidated work list.
 
-   Source330 mass remains immutable: Skin 3.4525704454739734 kg; Fat 10.487108517986506 kg. Preserve M/4, existing 5e-13 relative closure, density bands, material/semantic support and declared transport radius. If a verified current cut is infeasible, retain the anatomical witness and repair its actual geometry/support problem. Do not label time/capacity exhaustion infeasible and do not relax constraints merely to pass.
+There is **no v10 adapter**. Only v9 exists: prepare_registered_deep_authoring_view_593_v9.py, SHA031c11d515f64bac6c5f9d084aeb14f2c0c3fd7e20002ded7b1fec7b63bbbedd, untested and D592-bound.
 
-   The exact receiver-signature quotient now has regressions for missing cut edges, warm-extra locking, and full-graph parity. Frozen snapshot: `skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/`; receipt SHA `defa7d869a60e94610f43246b4a94d744429b180d833defb3225ae0b462482de`. Historical run009's infeasibility conclusion was contradicted and is not evidence against the current model.
+Create one versioned current adapter and focused controls for all closure gaps, then run unchanged existing exporter230 once through the serial wrapper. In particular:
+- D202 original mixed parent list has face rows mixed with five real IDs; preserve raw evidence and use authenticated five-ID union/crosswalk.
+- D200 producer/source has190 faces while raw registry declares96; authenticate its30 parent IDs and recursive closure, preserve discrepancy.
+- D185 has369 primary rows /257 unique identities and137 geometrically changed triangles: support is identity/patch ancestry, **not exact triangle-coordinate provenance**.
+- D186, filtered D204, role/layer projection and470 active IDs belong in this same aggregate check.
+- Do not relabel actual BONE layer3 geometry as D layer2. Explicit derived-role views preserve raw ancestry/IDs.
+- Current D597 and D128 common registry entries agree; eight absent IDs704001247–254 are inactive. Use current face counts rather than D592 assertions.
 
-5. **Admit, integrate and verify real native motion.** Require **Skin quality failures=0 and Fat quality failures=0**, complete exact oriented boundaries, zero unexplained crossings, positive skin/fat cells, current conservative mass mapping, valid source identity and physical transfer. Re-run exact reference/retained-pose checks before native confirmation. Use the existing active-domain compactor and native Numi owners; preserve attachments, mass, thickness, contact, Brain, cardiac/respiratory coupling and accepted-state rollback.
+### 3. Finish current-mesh support and conservative mass mapping
 
-   Run the integrated scene for 16 simulated seconds, then 60 seconds only if the short run passes. Check motion/strain/contact and rejected-step state restoration; do not substitute render-only skin changes, wrist locks or hidden assistance. Keep the final viewer confirmation separate from the numerical repair loop.
+Both621 point arrays exactly match retained caches, so reuse verified **node** geometry work. Cell topology changed: regenerate cell P1/143 support, independently replay it, and rebind source/corner/child carrier witnesses before allocation.
 
-   The original full-Human qualification remains outstanding: 330-second baseline and matched respiratory intervention, continuous native recording, coupled traces and honest end-to-end real-time factor. These are later gates, not results already obtained.
+Old useful templates/cache evidence live in:
+skin-current-mass-550-nativepreflight/current-pair-602-597/.
 
-## Resource, publication and quality rules
+The new current-pair-615-621/source-freeze/ contains **malformed, unrun scripts from a quoting error**. Its manifest hashes are stale. Do not run or trust it. Rebuild from the valid prior templates with structured source edits; syntax-check and pin them first. No621 support build, independent verifier, mesh export or allocation was launched this session.
 
-- Run one substantial geometry/CPU/GPU task at a time through the existing lock:
-  `PY /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py COMMAND ARGS`.
-  Here PY=`/Users/numi/numi-human-prep-venv-20261005/bin/python`. The wrapper is invoked with Python; it takes no `--` separator. Release the lock before Git push.
-- Parallel workers may prepare independent code/provenance while the heavy job runs. Integrate passing batches continuously; don't let branches diverge.
-- Order gates cheapest first: schema/finite/orientation/ancestry → local volume quality → typed replay → one combined exact context → target + immediate-parent canonicalization → independent mass checks → native run. Stop at the first failure and retain its deterministic witness. Preserve safe batch operations.
-- Measure quality failures removed per unit work and coverage. Cache loaded arrays, exact point projections and incidence; rebuild topology-dependent constraints when required. Avoid full repeated audits of untouched regions unless the cumulative proof requires them.
-- Bound an unproductive method (four iterations or ~20 minutes), record the reason and change it. Do not spend another session on low-yield tweaks.
-- Disk is below the 12 GiB qualification floor. Use verified redundant outputs/cache or hash-verified lossless compression; preserve sources, current geometry, recovery evidence and parent chains. Do not repeat known no-gain compression of the 565 MB p1-anchor CSV.
-- Native owner repo: `/Users/numi/Work/skin-fat-native-integration-209`, HEAD `f75955f08d6edf0f85027eac7614017ac9fbc996`, dirty. Human owner: `/Users/numi/numilab-human`, HEAD `fdab86eb28ae597e4c50e0a3b8e829a6c0e89cec`, dirty. Preserve both.
-- Human publication checkout: `/Users/numi/Work/human-volume-proof-publication-20261031`. It is sparse; archive payloads remain in Git even if absent in its worktree.
-- Native publication checkout: `/Users/numi/Work/numi-lab-723-publication-20261030`, clean baseline/main `d343dc2e713163c6a19d4c8886e2ced758f0e7ec` at session inspection. **Do not copy the quotient snapshot headers over this checkout wholesale.** They contain stale owner layouts and would delete newer carrier/mapping code. Port a reviewed additive patch and run owning tests before publishing to Numi2/numi-lab.
-- Publish coherent tested increments to the owning repositories without paid CI. Keep geometry, replay, physical, physiological and performance claims separate.
+Source330 mass is immutable: Skin3.4525704454739734kg (material15), Fat10.487108517986506kg (material16),14,316 source cells each. Preserve original M/4 closure tolerance5e-13 relative, radius19.353mm, same-material one-hop143 support, Skin density900–1100 and Fat850–950kg/m3. No fabricated density or arbitrary mass.
 
-The anatomy remains a labeled reference assembly, not measurements of one individual. Preserve the working back repair and unrelated user changes. Efficient work means delivering more verified physical capability per round, while keeping the acceptance conditions intact.
+The receiver-signature quotient regression fixed warm cut-closure lock release and ULP residue classification:
+skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/.
+Its focused regression passes; it is not a current complete allocation. Port additively into the current owner: retained snapshots use stale SourceCarrier/mapping layouts. **Do not overwrite newer owner headers with snapshots.** Legacy406 partial allocation and alleged009 cut are not current infeasibility proofs.
 
-## Frozen source-closure handoff
+### 4. Integrate and qualify after all admission checks pass
 
-Read `registered-authoring-view-590-D-593-root/run-010-D597-aggregate-closure-handoff/aggregate-closure.md` and its adjacent JSON/SHA256SUMS for the full authenticated 153-parent inventory and exact next command. JSON SHA: `2d5246d73c459443d2b7ad0fa0314920b7144635bf727cf4dc91d99c0f9b0b58`. The command requires a completed, pinned v10 first. Current v9 is untested; no D597 actual230 run has passed.
+Re-emit current compact domains using existing active-domain-compaction-565-root/compact_physical_skin_domains.py (tested599 earlier, not current621). Preserve full cell/source ancestry and actual physical mapping, contact and rollback. Retain detailed anatomical surfaces; no render-only correction.
+
+Native full-reference capacity route already built under full-reference-native-capacity-705/native-build-004/numi-human-native; build is not current asset admission. Read native-launch-route-preparation-711/readiness-006.json and refresh asset/header/library/source pins.
+
+Require **0 Skin +0 Fat native-quality failures**, positive cells, exact target boundary, zero unexplained crossings, complete source ancestry, conservative mass and contact transfer. Then complete native supported motion:16 simulated seconds, then60 if stable, including breathing/heartbeats and rollback. Audit retained breathing poses and settled capture. One final visual confirmation after numerical gates, not iterative image-guided contour edits.
+
+Only after passing these run the full330-second baseline and matched respiratory intervention with continuous native recording. Report actual end-to-end performance; do not claim source geometry or an old physiology run qualifies current body motion.
+
+## Efficient execution and publication
+
+- All builds/audits/runs stay **SSH numi**. No Air or macmini.
+- Inspect current revision/status, processes, disk and pins before changes. Preserve dirty source.
+- One heavy geometry/CPU/GPU task at a time; use:
+  /Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py COMMAND ARGS
+  (no -- separator; wrapper is not directly executable).
+- Keep planning/preparation for geometry, authoring and mass independent; integrate on a common pinned base, regenerate constraints after topology changes. Use bounded runs with saved frontiers and deterministic witnesses.
+- Fail cheap checks first. Every failed trial records one specific next method change. Stop unproductive approaches rather than re-running larger versions.
+- **Quality target remains zero failures.** Positive volumes, smaller counts and source closure are distinct partial results. Never claim finished because one stage passes.
+- No new framework, general artifact format, parallel physical owner or paidCI. Publish narrow, tested increments; no force push/history rewrite.
+- Git author is now configured numi2 <33553832+Numi2@users.noreply.github.com> globally and in selected owner/publication worktrees; old commits were not rewritten.
+- Human dirty owner HEAD:fdab86eb28ae597e4c50e0a3b8e829a6c0e89cec.
+- Native integration dirty worktree:/Users/numi/Work/skin-fat-native-integration-209, HEADf75955f08d6edf0f85027eac7614017ac9fbc996.
+- Clean publication:/Users/numi/Work/human-volume-proof-publication-20261031; before this close archive, main505e28efef629345513239a9477ee56521374819.
+- Native publication worktree:/Users/numi/Work/numi-lab-723-publication-20261030, baseline d343dc2e713163c6a19d4c8886e2ced758f0e7ec.
+- Metal compiler:/Users/numi/Library/Developer/Toolchains/Metal.xctoolchain/usr/metal/32023/bin/metal.
+- Device:Apple M6, Mac18,5,16GB,macOS27. Qualification requires12GiB free; current free is roughly10GiB. Reclaim only verified redundant outputs/cache; preserve source/current evidence/recovery archives.
+
+## Stopped process state
+
+No new repair, support, allocation or native benchmark remains running. Root canonical621 PID25914 has exited (verified at close). Two older orphan Python processes remain reversibly SIGSTOPped:48434 and87783, bothTs/0%CPU. Do not blindly resume them; they refer to stale topology and previously consumed full CPU.
+
+Process audit receipt:
+skin-current-mass-550-nativepreflight/current-pair-602-597/process-audit-orphan-pids-001/orphan-stop-receipt.json
+SHA3421b2780be18ea44723ad3f2c8e3b72b1b22f36011da27bb6f0848ae92448e.
+Original stdin script cannot be reconstructed from reused temporary filename alone. If recovery is necessary, verify PID identity before kill -CONT; otherwise leave paused until stale outputs are reconciled.
+
+## Recovery from GitHub
+
+This close increment uses the existing numi-human.evidence-payload.v1 format under tools/evidence/connected-skin-fat-physical-transfer-20261031g. Validate every file against its manifest before restoring. Dependencies remain in priorf/e/d packages and source-owned files; this incremental archive is not a standalone runtime or full dependency closure. Check archived producer commands for host paths; repin deliberately after relocation.
+
+Do not redo the zero-crossing surface search or revert to old hand assets. Resume at current621/622, finish volume quality, complete authoring+mass, then admit and verify real motion.
