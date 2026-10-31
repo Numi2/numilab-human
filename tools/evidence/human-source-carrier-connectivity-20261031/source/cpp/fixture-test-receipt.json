@@ -1,0 +1,29 @@
+{
+  "compile_command": [
+    "clang++",
+    "-std=c++20",
+    "-O0",
+    "-Wall",
+    "-Wextra",
+    "-I",
+    "/Users/numi/Work/numi-lab-723-publication-20261030/apps",
+    "SourceCarrierLPFeasibilityFinalizerCheck.cpp",
+    "-o",
+    "SourceCarrierLPFeasibilityFinalizerCheck"
+  ],
+  "files": {
+    "ConservativeSpatialSourceCarrierQuadrature.hpp": "b19bf684b03ec4b155a24cfef7f19280c02f8e522fe633956d00089259d42336",
+    "README.md": "8144d72d9bae6ec4e8a08d0f47dded56098ee9ec55e885a614cfee00bbcb7044",
+    "SourceCarrierLPFeasibilityFinalizer.hpp": "4e346de1f7159d53036894b8bc3081add9a84b479e6533ae27e10f84e8dae718",
+    "SourceCarrierLPFeasibilityFinalizerCheck": "fb6751988d1971351b549df1a0604ffbca9f5e80e50dd3f6be3383df4f507dd4",
+    "SourceCarrierLPFeasibilityFinalizerCheck.cpp": "ced69832bd65c9f4b03655ff906942d7af46378ad1a1b18e133d2c7e7bb07881"
+  },
+  "native_steps": 0,
+  "optimizer_invoked": false,
+  "physical_admission": false,
+  "real_lp_proposal_finalized": false,
+  "schema": "numi.human.source-carrier-lp-finalizer-fixture.v1",
+  "source_only": true,
+  "status": "PASS_FIXTURE_CONTROLS_ONLY",
+  "test_output": "PASS source-carrier LP feasibility/export: roles 15/16 accepted; six CSVs and truthful source-only receipt verified; malformed outputs, invalid registration and region-label pins, wrong radius, stale expanded row, altered source moment, cross-material support, and pure-LP/no-held-evidence path rejected; optimizer not invoked"
+}

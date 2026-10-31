@@ -1,0 +1,42 @@
+{
+  "cxx_binary_recompiled_this_turn": false,
+  "cxx_binary_sha256": "fb6751988d1971351b549df1a0604ffbca9f5e80e50dd3f6be3383df4f507dd4",
+  "cxx_feasibility_fixture": "PASS_EXISTING_BINARY_FIXTURE",
+  "files": {
+    "ConservativeSpatialSourceCarrierQuadrature.hpp": "b19bf684b03ec4b155a24cfef7f19280c02f8e522fe633956d00089259d42336",
+    "README.md": "8144d72d9bae6ec4e8a08d0f47dded56098ee9ec55e885a614cfee00bbcb7044",
+    "SourceCarrierLPFeasibilityFinalizer.hpp": "4e346de1f7159d53036894b8bc3081add9a84b479e6533ae27e10f84e8dae718",
+    "SourceCarrierLPFeasibilityFinalizerCheck.cpp": "ced69832bd65c9f4b03655ff906942d7af46378ad1a1b18e133d2c7e7bb07881",
+    "fixture-test-receipt.json": "d844288f7f429116925505b26b8789690e115393f30f4d2c1be30b52f6287c5a",
+    "recorded-carrier-verifier-188-tests-root/receipt.json": "76998bd3a14d9189f7fd3a7ff864c9ae8385f9125bd4f6fdd3d5f72968db6b11",
+    "semantic-flow-verifier-191-tests-root/receipt.json": "2529947c0e2093f55bdf352c359d678fa57a0161a8c4a50b8669dffa5f79223d",
+    "source_carrier_packet_188_root.py": "f64e8dc3627f2d4436cc0cfc8e9d2aa5e0033fdd584e1a348a448d0f76979494",
+    "source_carrier_receipt_197_root.py": "a33c38eadd6751ffd0fa9cce9a56230c41b4610a17975ac8b8eb862d36fc6829",
+    "source_semantic_support_191_root.py": "4ec6751ff152d4c85ec0b4874ff2867cf3284ceea1361daf329f1ae2397b3aa0",
+    "test_source_carrier_packet_188_root.py": "dc950ac35fc877517125b014de89a590f173d97f31e3ad2471f7188807df911a",
+    "test_source_carrier_receipt_197_root.py": "02889bd450760729eb0f9f1bde8be3a606066ac63055034e77492e269c436835",
+    "test_source_semantic_support_191_root.py": "04219932060dd905614ad9ed9b323141803b94ffa3fc2b945d86d2ccf9a537d3",
+    "verify_recorded_carrier_allocation_188_root.py": "c1d87abc51b3ce1ac5c1e98ce3fa26709e77abe718b63ee3ca244957f99d469d",
+    "verify_recorded_carrier_allocation_191_root.py": "a2b9d00ef34915db13909f94f08f3454f89758289670613ff81e51313dc84608",
+    "verify_recorded_carrier_allocation_197_root.py": "f4e6ba822b586c8dbda38b35bb8752e3167eddc614241154f74226860dad3921"
+  },
+  "full_allocation_verifier": "NOT_RUN_NO_REAL_LP_PROPOSAL",
+  "native_steps": 0,
+  "physical_admission": false,
+  "previous_188_actual_packet_controls": {
+    "case_count": 11,
+    "receipt_sha256": "76998bd3a14d9189f7fd3a7ff864c9ae8385f9125bd4f6fdd3d5f72968db6b11",
+    "status": "PASS_PACKET_AND_SCALE_AWARE_VERIFIER_CONTROLS"
+  },
+  "previous_191_actual_semantic_support_controls": {
+    "receipt_sha256": "2529947c0e2093f55bdf352c359d678fa57a0161a8c4a50b8669dffa5f79223d",
+    "status": "PASS_FULL_DOMAIN_SUPPORT_AND_PARTIAL_FLOW_PERMISSION_CHECKS"
+  },
+  "python_compile": "PASS",
+  "python_compile_command": "/Users/numi/numi-human-prep-venv-20261005/bin/python -m py_compile source_carrier_packet_188_root.py source_semantic_support_191_root.py verify_recorded_carrier_allocation_188_root.py verify_recorded_carrier_allocation_191_root.py source_carrier_receipt_197_root.py verify_recorded_carrier_allocation_197_root.py test_source_carrier_packet_188_root.py test_source_semantic_support_191_root.py test_source_carrier_receipt_197_root.py fixed_boundary_volume_flip_198_root.py fixed_boundary_volume_edge_flip_199_root.py batch_fixed_boundary_volume_flips_200_root.py verify_fixed_boundary_volume_flips_201_root.py fixed_boundary_volume_polygon_flip_202_root.py batch_fixed_boundary_polygon_flips_203_root.py verify_fixed_boundary_volume_flips_204_root.py",
+  "schema": "numi.human.source-carrier-receipt-197-tests.v1",
+  "status": "PASS_RECEIPT_MODE_AND_CANONICAL_DIGEST_CONTROLS_ONLY",
+  "test_command": "/Users/numi/numi-human-prep-venv-20261005/bin/python -m unittest -v test_source_carrier_receipt_197_root.py",
+  "tests": 14,
+  "unit_tests": "PASS"
+}

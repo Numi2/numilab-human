@@ -1,0 +1,92 @@
+{
+  "status": "PASS_INDEPENDENT_FIXED_BOUNDARY_VOLUME_CONNECTIVITY_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "role": "Skin",
+  "coordinates_bit_identical": true,
+  "complete_oriented_boundary_identical": true,
+  "boundary_face_count": 404114,
+  "oriented_boundary_sha256": "456fb4f158a78d308d5e0f8632f1f0e6c5b0cea9f393c6e723413d77f0360364",
+  "nonmanifold_faces": 0,
+  "inconsistent_internal_face_orientation": 0,
+  "duplicate_tets": 0,
+  "all_local_cavity_F32_volume_equalities_exact": true,
+  "material_per_cavity_preserved": true,
+  "operations": 14305,
+  "baseline_quality": {
+    "cells": 743497,
+    "normalized_det_failures": 42438,
+    "absolute_volume_failures": 2160,
+    "union_failures": 43090,
+    "minimum_normalized_det": 1.0390901636639553e-12,
+    "minimum_volume_m3": 6.203854594147708e-25
+  },
+  "final_quality": {
+    "cells": 729292,
+    "normalized_det_failures": 28004,
+    "absolute_volume_failures": 1403,
+    "union_failures": 28416,
+    "minimum_normalized_det": 7.244501989958876e-13,
+    "minimum_volume_m3": 8.823259867232295e-24
+  },
+  "source_node_sha256": "b4a7e41745d533289b25659220662c4787e85a7cb56a9701b621e542dcc2a6db",
+  "source_element_sha256": "aaa070b48cecd64f65cb80308b8a64cd01eeaea6f41b309506f9205466092105",
+  "final_proposal": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-007/fixed-boundary-volume-proposal.npz",
+  "final_proposal_sha256": "35745c1dc8438921046c5e9605ec61a6c30d6d9a5ab3f9c7b0f1b932b7351165",
+  "checked_steps": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-198-root/skin-run001",
+      "operations": 50,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-199-root/skin-after198-run001",
+      "operations": 6315,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-000",
+      "operations": 3470,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-001",
+      "operations": 1895,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-002",
+      "operations": 1043,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-003",
+      "operations": 608,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-004",
+      "operations": 370,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-005",
+      "operations": 248,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-006",
+      "operations": 174,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/skin-batch001/pass-007",
+      "operations": 132,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    }
+  ],
+  "verifier_sha256": "fc3549fded42beac9b16bb30350c781302985bf1b4a90861e341cb1fd2918f1a",
+  "cavity_predicate_source_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "elapsed_s": 5.54358983412385,
+  "limitation": "Connectivity proposal still fails the native geometry gate; new cell ancestry and physical mass mapping are not yet generated. No motion or runtime claim."
+}

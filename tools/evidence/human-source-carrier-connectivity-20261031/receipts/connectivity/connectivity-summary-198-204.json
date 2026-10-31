@@ -1,0 +1,78 @@
+{
+  "limitations": [
+    "Final candidates retain normalized-determinant, absolute-volume, and union-gate failures in both roles.",
+    "No new cell ancestry or mass mapping was generated.",
+    "These source-only connectivity receipts do not establish a positive complete volume mesh, physical admission, or motion/runtime qualification.",
+    "Proposal NPZs and source .node/.ele are excluded; receipts pin their local hashes."
+  ],
+  "mass_allocation": "NOT_RUN",
+  "native_steps": 0,
+  "operation_totals": {
+    "Fat": 32528,
+    "Skin": 19309,
+    "combined": 51837
+  },
+  "physical_admission": false,
+  "roles": {
+    "Fat": {
+      "all_local_cavity_F32_volume_equalities_exact": true,
+      "baseline": {
+        "absolute_volume_failures": 6698,
+        "cells": 853406,
+        "minimum_normalized_det": 7.861103816356367e-16,
+        "minimum_volume_m3": 2.757268708510092e-25,
+        "normalized_det_failures": 83133,
+        "union_failures": 84202
+      },
+      "boundary_face_count": 492972,
+      "complete_oriented_boundary_identical": true,
+      "coordinates_bit_identical": true,
+      "duplicate_tets": 0,
+      "final": {
+        "absolute_volume_failures": 2882,
+        "cells": 831302,
+        "minimum_normalized_det": 7.861103816356367e-16,
+        "minimum_volume_m3": 2.2058149668080737e-24,
+        "normalized_det_failures": 49525,
+        "union_failures": 50058
+      },
+      "final_proposal_sha256": "ab5cbe46336175e8809198dd44c2b6a07da3b9b188d4d3f1217897848a1efd94",
+      "inconsistent_internal_face_orientation": 0,
+      "nonmanifold_faces": 0,
+      "oriented_boundary_sha256": "6747c1b12379cc825f4c72c4d8ec54d2b014ce688919038d889c9ba67fae1601",
+      "source_element_sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6",
+      "source_node_sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4"
+    },
+    "Skin": {
+      "all_local_cavity_F32_volume_equalities_exact": true,
+      "baseline": {
+        "absolute_volume_failures": 2160,
+        "cells": 743497,
+        "minimum_normalized_det": 1.0390901636639553e-12,
+        "minimum_volume_m3": 6.203854594147708e-25,
+        "normalized_det_failures": 42438,
+        "union_failures": 43090
+      },
+      "boundary_face_count": 404114,
+      "complete_oriented_boundary_identical": true,
+      "coordinates_bit_identical": true,
+      "duplicate_tets": 0,
+      "final": {
+        "absolute_volume_failures": 1211,
+        "cells": 731342,
+        "minimum_normalized_det": 1.0390901636639553e-12,
+        "minimum_volume_m3": 8.823259867232295e-24,
+        "normalized_det_failures": 22814,
+        "union_failures": 23147
+      },
+      "final_proposal_sha256": "90432fcaf54df3c4f13e129afd54d04ecc378d055b3d4bb2dbcc80067ea9d679",
+      "inconsistent_internal_face_orientation": 0,
+      "nonmanifold_faces": 0,
+      "oriented_boundary_sha256": "456fb4f158a78d308d5e0f8632f1f0e6c5b0cea9f393c6e723413d77f0360364",
+      "source_element_sha256": "aaa070b48cecd64f65cb80308b8a64cd01eeaea6f41b309506f9205466092105",
+      "source_node_sha256": "b4a7e41745d533289b25659220662c4787e85a7cb56a9701b621e542dcc2a6db"
+    }
+  },
+  "schema": "numi.human.fixed-boundary-connectivity-summary.v1",
+  "status": "PASS_EXACT_LOCAL_CONNECTIVITY_REPLAY_WITH_GLOBAL_QUALITY_FAILURES"
+}

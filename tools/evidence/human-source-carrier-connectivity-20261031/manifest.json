@@ -1,0 +1,199 @@
+{
+  "base_commit": "ed375cb82423b6a79fe48856d60662b239b61eab",
+  "created_utc": "2026-10-31",
+  "evidence_scope": [
+    "source carrier packet verification 188",
+    "semantic support verification 191",
+    "truthful source carrier receipt and digest verification 197",
+    "fixed-coordinate connectivity candidates and independent replay 198-204"
+  ],
+  "external_dependencies": [
+    {
+      "path": "/Users/numi/Work/numi-lab-723-publication-20261030/apps/ConservativeSpatialSourceCarrierQuadrature.hpp",
+      "purpose": "C++ finalizer compile dependency; source is not copied into this Human evidence prefix",
+      "sha256": "b19bf684b03ec4b155a24cfef7f19280c02f8e522fe633956d00089259d42336"
+    }
+  ],
+  "mass_allocation": "NOT_RUN",
+  "native_steps": 0,
+  "payload": [
+    {
+      "path": ".gitattributes",
+      "sha256": "088b0c913e33fc9c22040f4722cb0095a04b6861e8c01e3f9ecd6b0247e6803f",
+      "size_bytes": 157
+    },
+    {
+      "path": "README.md",
+      "sha256": "dde5740a0929db867fa44d09aedee2f4f676f6029046cfde023caa8354129ab1",
+      "size_bytes": 3574
+    },
+    {
+      "path": "receipts/carrier/188-packet-controls.json",
+      "sha256": "76998bd3a14d9189f7fd3a7ff864c9ae8385f9125bd4f6fdd3d5f72968db6b11",
+      "size_bytes": 1883
+    },
+    {
+      "path": "receipts/carrier/191-semantic-support-controls.json",
+      "sha256": "2529947c0e2093f55bdf352c359d678fa57a0161a8c4a50b8669dffa5f79223d",
+      "size_bytes": 1435
+    },
+    {
+      "path": "receipts/carrier/197-receipt-and-digest-controls.json",
+      "sha256": "c5c0cb12f4052300e29a4a85df9d9afdbd70b215f51bbfa4faf9a2847bfc0d25",
+      "size_bytes": 3721
+    },
+    {
+      "path": "receipts/carrier/whitespace-exceptions.json",
+      "sha256": "e34578308be0acfada09a539c90bbe20fc6d7434add6f4c6002059852efe272e",
+      "size_bytes": 720
+    },
+    {
+      "path": "receipts/connectivity/198-launch-preparation-failure.json",
+      "sha256": "2622baf83765aa26adf4343e4168c273fb029998a1ef5d3b66d9daa49a53e690",
+      "size_bytes": 215
+    },
+    {
+      "path": "receipts/connectivity/201-fat-replay.json",
+      "sha256": "f42d0c9b915c1c6e7ec9bfc460034d130cb1123705473b291a2245e3c97f968f",
+      "size_bytes": 4366
+    },
+    {
+      "path": "receipts/connectivity/201-skin-replay.json",
+      "sha256": "1ef6582c787e327070c414797079dc1402534d4a935de0da32a783e245fd819d",
+      "size_bytes": 4944
+    },
+    {
+      "path": "receipts/connectivity/202-initial-attempt-failure.json",
+      "sha256": "c1465325db9627dbe51f229a008b3f8e08fb3840a14b1c4696d0076ad13bce0f",
+      "size_bytes": 354
+    },
+    {
+      "path": "receipts/connectivity/203-fat-batch.json",
+      "sha256": "f127080f851f0d5b1cc1fd92be2577841b306ac68629d002d922399172436fcc",
+      "size_bytes": 7162
+    },
+    {
+      "path": "receipts/connectivity/203-skin-batch.json",
+      "sha256": "d9ebf58352ed1eb39118bfd23eedd2cb72ca8dcd7046896870cac5ccf8479426",
+      "size_bytes": 7156
+    },
+    {
+      "path": "receipts/connectivity/204-fat-independent-replay.json",
+      "sha256": "0d40519dfecfafc5c1989598c1db9c9686623c04179317cb9804efaaee030415",
+      "size_bytes": 6694
+    },
+    {
+      "path": "receipts/connectivity/204-skin-independent-replay.json",
+      "sha256": "f16bca4d0be31cfe0418b0bde618c1f8630a93ea43a7d3603273f8eaf913209b",
+      "size_bytes": 7561
+    },
+    {
+      "path": "receipts/connectivity/connectivity-summary-198-204.json",
+      "sha256": "5490fd0e5a59bf6d8ffd1bcf13c379728074ebbea636c995833a5222fa0b8b49",
+      "size_bytes": 3311
+    },
+    {
+      "path": "source/connectivity/batch_fixed_boundary_polygon_flips_203_root.py",
+      "sha256": "527136a01375cd22be965916e938aea576c4dfa1935271b21ef603a84d446308",
+      "size_bytes": 4223
+    },
+    {
+      "path": "source/connectivity/batch_fixed_boundary_volume_flips_200_root.py",
+      "sha256": "9953788d216c92b75f09c1beac735a558d0cdd968d598a905ffa36c5d94bea98",
+      "size_bytes": 3863
+    },
+    {
+      "path": "source/connectivity/fixed_boundary_volume_edge_flip_199_root.py",
+      "sha256": "fbb1cc8fb45b59774d5e66b4a5320570bd17ef05dd19edc8a1de07529f695a7b",
+      "size_bytes": 8598
+    },
+    {
+      "path": "source/connectivity/fixed_boundary_volume_flip_198_root.py",
+      "sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+      "size_bytes": 7925
+    },
+    {
+      "path": "source/connectivity/fixed_boundary_volume_polygon_flip_202_root.py",
+      "sha256": "a98fead7f9ac1bb408ad600df28375539200c289c6647e5c9b898c418236a196",
+      "size_bytes": 8736
+    },
+    {
+      "path": "source/connectivity/verify_fixed_boundary_volume_flips_201_root.py",
+      "sha256": "fc3549fded42beac9b16bb30350c781302985bf1b4a90861e341cb1fd2918f1a",
+      "size_bytes": 5969
+    },
+    {
+      "path": "source/connectivity/verify_fixed_boundary_volume_flips_204_root.py",
+      "sha256": "eeae85286839a1414410b04e2b1c0654bbf8d6c1157f082aac3452c7b5a9e780",
+      "size_bytes": 7077
+    },
+    {
+      "path": "source/cpp/README.md",
+      "sha256": "8144d72d9bae6ec4e8a08d0f47dded56098ee9ec55e885a614cfee00bbcb7044",
+      "size_bytes": 3164
+    },
+    {
+      "path": "source/cpp/SourceCarrierLPFeasibilityFinalizer.hpp",
+      "sha256": "4e346de1f7159d53036894b8bc3081add9a84b479e6533ae27e10f84e8dae718",
+      "size_bytes": 55104
+    },
+    {
+      "path": "source/cpp/SourceCarrierLPFeasibilityFinalizerCheck.cpp",
+      "sha256": "ced69832bd65c9f4b03655ff906942d7af46378ad1a1b18e133d2c7e7bb07881",
+      "size_bytes": 18305
+    },
+    {
+      "path": "source/cpp/fixture-test-receipt.json",
+      "sha256": "d844288f7f429116925505b26b8789690e115393f30f4d2c1be30b52f6287c5a",
+      "size_bytes": 1458
+    },
+    {
+      "path": "source/python/source_carrier_packet_188_root.py",
+      "sha256": "f64e8dc3627f2d4436cc0cfc8e9d2aa5e0033fdd584e1a348a448d0f76979494",
+      "size_bytes": 3161
+    },
+    {
+      "path": "source/python/source_carrier_receipt_197_root.py",
+      "sha256": "a33c38eadd6751ffd0fa9cce9a56230c41b4610a17975ac8b8eb862d36fc6829",
+      "size_bytes": 11075
+    },
+    {
+      "path": "source/python/source_semantic_support_191_root.py",
+      "sha256": "4ec6751ff152d4c85ec0b4874ff2867cf3284ceea1361daf329f1ae2397b3aa0",
+      "size_bytes": 3760
+    },
+    {
+      "path": "source/python/test_source_carrier_packet_188_root.py",
+      "sha256": "dc950ac35fc877517125b014de89a590f173d97f31e3ad2471f7188807df911a",
+      "size_bytes": 2825
+    },
+    {
+      "path": "source/python/test_source_carrier_receipt_197_root.py",
+      "sha256": "02889bd450760729eb0f9f1bde8be3a606066ac63055034e77492e269c436835",
+      "size_bytes": 11036
+    },
+    {
+      "path": "source/python/test_source_semantic_support_191_root.py",
+      "sha256": "04219932060dd905614ad9ed9b323141803b94ffa3fc2b945d86d2ccf9a537d3",
+      "size_bytes": 2749
+    },
+    {
+      "path": "source/python/verify_recorded_carrier_allocation_188_root.py",
+      "sha256": "c1d87abc51b3ce1ac5c1e98ce3fa26709e77abe718b63ee3ca244957f99d469d",
+      "size_bytes": 11226
+    },
+    {
+      "path": "source/python/verify_recorded_carrier_allocation_191_root.py",
+      "sha256": "a2b9d00ef34915db13909f94f08f3454f89758289670613ff81e51313dc84608",
+      "size_bytes": 11522
+    },
+    {
+      "path": "source/python/verify_recorded_carrier_allocation_197_root.py",
+      "sha256": "f4e6ba822b586c8dbda38b35bb8752e3167eddc614241154f74226860dad3921",
+      "size_bytes": 33524
+    }
+  ],
+  "payload_count": 35,
+  "physical_admission": false,
+  "schema": "numi.human.carrier-connectivity-source-evidence.v1"
+}

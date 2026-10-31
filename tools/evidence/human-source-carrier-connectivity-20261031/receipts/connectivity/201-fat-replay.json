@@ -1,0 +1,82 @@
+{
+  "status": "PASS_INDEPENDENT_FIXED_BOUNDARY_VOLUME_CONNECTIVITY_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "role": "Fat",
+  "coordinates_bit_identical": true,
+  "complete_oriented_boundary_identical": true,
+  "boundary_face_count": 492972,
+  "oriented_boundary_sha256": "6747c1b12379cc825f4c72c4d8ec54d2b014ce688919038d889c9ba67fae1601",
+  "nonmanifold_faces": 0,
+  "inconsistent_internal_face_orientation": 0,
+  "duplicate_tets": 0,
+  "all_local_cavity_F32_volume_equalities_exact": true,
+  "material_per_cavity_preserved": true,
+  "operations": 24648,
+  "baseline_quality": {
+    "cells": 853406,
+    "normalized_det_failures": 83133,
+    "absolute_volume_failures": 6698,
+    "union_failures": 84202,
+    "minimum_normalized_det": 7.861103816356367e-16,
+    "minimum_volume_m3": 2.757268708510092e-25
+  },
+  "final_quality": {
+    "cells": 828758,
+    "normalized_det_failures": 57850,
+    "absolute_volume_failures": 3450,
+    "union_failures": 58515,
+    "minimum_normalized_det": 7.861103816356367e-16,
+    "minimum_volume_m3": 2.2058149668080737e-24
+  },
+  "source_node_sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4",
+  "source_element_sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6",
+  "final_proposal": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-007/fixed-boundary-volume-proposal.npz",
+  "final_proposal_sha256": "bbb8300c348f6aafa70566263dac218b425334d9822bc11317c9e77821d84311",
+  "checked_steps": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-000",
+      "operations": 9921,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-001",
+      "operations": 5925,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-002",
+      "operations": 3530,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-003",
+      "operations": 2102,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-004",
+      "operations": 1332,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-005",
+      "operations": 855,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-006",
+      "operations": 576,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-200-root/fat-batch001/pass-007",
+      "operations": 407,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    }
+  ],
+  "verifier_sha256": "fc3549fded42beac9b16bb30350c781302985bf1b4a90861e341cb1fd2918f1a",
+  "cavity_predicate_source_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "elapsed_s": 6.845731791807339,
+  "limitation": "Connectivity proposal still fails the native geometry gate; new cell ancestry and physical mass mapping are not yet generated. No motion or runtime claim."
+}
