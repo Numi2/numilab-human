@@ -1,0 +1,119 @@
+{
+  "actual_boundary_vs_desired_oriented_identity": "PASS",
+  "bad_cell_count": 988,
+  "bad_cell_examples_with_canonical531_parent_union": {
+    "I_and_wall": [],
+    "I_only": [
+      {
+        "canonical531_parent_rows": [
+          5769
+        ],
+        "output_cell_row": 5768
+      },
+      {
+        "canonical531_parent_rows": [
+          8751
+        ],
+        "output_cell_row": 8747
+      },
+      {
+        "canonical531_parent_rows": [
+          10059
+        ],
+        "output_cell_row": 10055
+      }
+    ],
+    "O_I_and_wall": [],
+    "O_and_I": [],
+    "O_and_wall": [],
+    "O_only": [
+      {
+        "canonical531_parent_rows": [
+          14005
+        ],
+        "output_cell_row": 13999
+      },
+      {
+        "canonical531_parent_rows": [
+          61378
+        ],
+        "output_cell_row": 61348
+      },
+      {
+        "canonical531_parent_rows": [
+          66341
+        ],
+        "output_cell_row": 66310
+      }
+    ],
+    "interior_no_O_I_or_wall": [
+      {
+        "canonical531_parent_rows": [
+          233362
+        ],
+        "output_cell_row": 233217
+      },
+      {
+        "canonical531_parent_rows": [
+          290241
+        ],
+        "output_cell_row": 290083
+      },
+      {
+        "canonical531_parent_rows": [
+          323912
+        ],
+        "output_cell_row": 323745
+      }
+    ],
+    "rim_wall_only": []
+  },
+  "bad_cells_by_surface_incidence": {
+    "0": 106,
+    "1": 256,
+    "2": 626,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0
+  },
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run003-corrected/fan-output/kernel-fan-volume-proposal.npz",
+  "candidate_cells": 729953,
+  "candidate_points": 210298,
+  "candidate_sha256": "055e2177e208187002a4a45ad12bada98111b1f1ba12e2b8d473935946aab5f3",
+  "category_definitions": {
+    "0": "interior; no O, I, or rim-wall face",
+    "1": "O only",
+    "2": "I only",
+    "3": "O and I",
+    "4": "rim wall only",
+    "5": "O and rim wall",
+    "6": "I and rim wall",
+    "7": "O, I, and rim wall"
+  },
+  "classification_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run003-corrected/quality-classification-004/bad-cell-classification.npz",
+  "classification_npz_sha256": "56ba923f043cc2e2c74ef4734be35243a498047bf60b156dee76ff1c32642d30",
+  "elapsed_s": 3.351155041018501,
+  "helper_sha256": "f1b9f76cc2621fc5bc60d217486cfe511023c5c893cec3d97f332992074036e1",
+  "limitation": "Diagnostic classification only; no mass/native/physical admission. O/I incidence is by exact F32 coordinate crosswalk and exact typed face owner cell. Category 0 includes interior and rim-wall cells.",
+  "lineage_sha256": "939b23184eef42c70c973959263375548599b41d4a8df8ee13d76bbb99695287",
+  "lineage_sidecar": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run003-corrected/fan-output/current531-row-lineage.npz",
+  "native_steps": 0,
+  "physical_admission": false,
+  "point_views_bit_identical": true,
+  "point_views_sha256": "b31e428609fac468258c2ee9880b4adee9b36c07e96238a17fb3760d7119ea20",
+  "point_views_sidecar": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run003-corrected/canonical531-point-coordinate-views.npz",
+  "quality_predicate": "exact existing 297 owner m.m.measurements + m.m.passes on final candidate",
+  "rim_wall_face_count": 90,
+  "schema": "numi.skin.quality-failure-surface-classification.531.v1",
+  "status": "PASS_TYPED_O_I_QUALITY_CENSUS",
+  "typed_I_candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/typed463001/candidate-I-typed-current.npz",
+  "typed_I_face_count": 239295,
+  "typed_I_sha256": "6f59262c2ae70065576166dd84f767afb64352241e76009707f78447afe477d1",
+  "typed_O_I_faces_covered_by_current_skin_target": "PASS",
+  "typed_O_candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-connected-quality-530-root/candidate/typed434001/candidate-O-typed-current.npz",
+  "typed_O_face_count": 152533,
+  "typed_O_sha256": "2f98f16f06baaefada41d4577594923ff5e9019a84a5e1c7f6cb44a1171f8901",
+  "typed_surface_faces_with_unique_tet_owner": 391918
+}

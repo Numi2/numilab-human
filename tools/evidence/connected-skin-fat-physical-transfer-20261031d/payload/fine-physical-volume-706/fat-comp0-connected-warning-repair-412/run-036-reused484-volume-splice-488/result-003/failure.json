@@ -1,0 +1,41 @@
+{
+  "candidate_written": false,
+  "checks_before_sat": {
+    "all_exact_tet_material_keys_rebased": true,
+    "boundary_refinement": "2-to-4 exact oriented outer chain",
+    "exact_tet_flux_equals_refined_shell_flux": true,
+    "local_shell_cut_and_target_boundary": "PASS",
+    "new_tets_exact_f32_positive": true,
+    "one_interior_point_exactly_inside_refined_shell": true,
+    "refined_shell_self_pairs": 0,
+    "selected_source_cell_count": 14048,
+    "source_points_bitwise_unchanged": true,
+    "unused_tetgen_node_rows_excluded": true,
+    "used_new_tetgen_points": 2
+  },
+  "input_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-480-next-001-preflight-100um/volume-transfer-001/transfer-result-001/fat-D480-short-edge-quotient-volume-proposal.npz",
+    "sha256": "40c90ad65ac924511e5bd98da79f338d15df18839acb099e1c13a6f65058a88c"
+  },
+  "limitation": "Exact retained/new volume separation remains unproven because the configured AABB work budget was reached. This is not an overlap finding and not a SAT pass.",
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "prepared_shell_sha256": "c5f9889ab26e152144652ae51fde8ce7eff6a673038cc110b3f34f0cd7ba46b8",
+  "reused_tetgen_ele_sha256": "7c2d38cea06e6a9500de57f2e7719e1626b8a896bd4e06d9098eea5d319aa26c",
+  "reused_tetgen_node_sha256": "92d3b46d4c4dfcaf528390e08199b3caa2e30d2d2dc8aac4947d6edd8fb90f31",
+  "sat": {
+    "checked_pairs": 2000001,
+    "configured_max_pairs": 2000000,
+    "overlap_found": false,
+    "owner": "direct_connected_skin_caps_288_root.check_intersections",
+    "pass_claimed": false,
+    "result": "INCOMPLETE_AABB_PAIR_BUDGET"
+  },
+  "schema": "numi.fat614.reused484-volume-splice-attempt.v1",
+  "source_script": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-036-reused484-volume-splice-488/source-freeze/build_fat_comp0_reused484_volume_splice_491_root.py",
+    "sha256": "67707ac49878abcc300817158b9f61890eb670fe88536557806640eb1b5b39d7"
+  },
+  "status": "INCOMPLETE_EXACT_RETAINED_NEW_SAT_PAIR_BUDGET"
+}

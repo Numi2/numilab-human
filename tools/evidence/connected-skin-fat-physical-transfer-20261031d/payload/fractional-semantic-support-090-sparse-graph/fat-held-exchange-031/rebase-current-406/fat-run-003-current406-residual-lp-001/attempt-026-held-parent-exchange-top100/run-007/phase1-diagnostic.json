@@ -1,0 +1,944 @@
+{
+  "complete_allocation": false,
+  "counts": {
+    "positive_lower_slack_rows": 1159,
+    "positive_upper_slack_rows": 11,
+    "receiver_rows": 43414,
+    "slack_rows": 86828,
+    "variables": 119715
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/graph-preparation-report.json": "da4eb2e017009c30e5850fdb720d79e36a08fa0f20fd37aa623673ba5e2b1669",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-report.json": "d5abd6f7d3c9b44d7a474127436284d2213549156afa4e92a462088abd299767",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/independent-replay-013.json": "7ce2d8dc4ab8c57da2b2b3b3692dece7f1fd8fe0901b15e26a7e5cbe1a1ea090",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/merged-held-centroid-noncentroid-source-exhaustion.npz": "69c212a0a11395a7c0584b99fc4cc00fd543754baec4c542266b8a4226957623",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/proposal.npz": "fc4280fb824eb2903d107a8c447d395e0fddcaf74d32343dbd80f5086b49eda3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "largest_receiver_slacks": [
+    {
+      "child_row": 752683,
+      "current_need_kg": 0.0014964360393517524,
+      "lower_slack_mass_kg": 0.0014211297836896229,
+      "lower_slack_normalized": 0.8497103393948006,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 752740,
+      "current_need_kg": 0.001623764256370443,
+      "lower_slack_mass_kg": 0.0012109826269139558,
+      "lower_slack_normalized": 0.6191395088087043,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 752013,
+      "current_need_kg": 0.0010547363461161968,
+      "lower_slack_mass_kg": 0.0010547363461161968,
+      "lower_slack_normalized": 0.8796482162147341,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 703246,
+      "current_need_kg": 0.001013791030943971,
+      "lower_slack_mass_kg": 0.001013791030943971,
+      "lower_slack_normalized": 0.6405663381566814,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 315240,
+      "current_need_kg": 0.0008593415515655786,
+      "lower_slack_mass_kg": 0.0008593415515655786,
+      "lower_slack_normalized": 0.8826814655985296,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 751929,
+      "current_need_kg": 0.000939445051520067,
+      "lower_slack_mass_kg": 0.0008547066219087626,
+      "lower_slack_normalized": 0.8140311161102202,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 812821,
+      "current_need_kg": 0.0007519556466899879,
+      "lower_slack_mass_kg": 0.0007519556466899879,
+      "lower_slack_normalized": 0.6715249183042026,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 752641,
+      "current_need_kg": 0.0007712602566491427,
+      "lower_slack_mass_kg": 0.0007361777679557745,
+      "lower_slack_normalized": 0.8374209819698346,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 113610,
+      "current_need_kg": 0.000704794105025271,
+      "lower_slack_mass_kg": 0.000704794105025271,
+      "lower_slack_normalized": 0.8904017143261606,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 813988,
+      "current_need_kg": 0.0006559134016461228,
+      "lower_slack_mass_kg": 0.0006559134016461228,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 813763,
+      "current_need_kg": 0.000619352465199029,
+      "lower_slack_mass_kg": 0.000619352465199029,
+      "lower_slack_normalized": 0.7114427772996198,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 789498,
+      "current_need_kg": 0.0006129292143524976,
+      "lower_slack_mass_kg": 0.0006129292143524976,
+      "lower_slack_normalized": 0.894643020348428,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 823578,
+      "current_need_kg": 0.0005543179438268194,
+      "lower_slack_mass_kg": 0.0005543179438268194,
+      "lower_slack_normalized": 0.6178370634212497,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 229216,
+      "current_need_kg": 0.0005003688359858109,
+      "lower_slack_mass_kg": 0.0005003688359858109,
+      "lower_slack_normalized": 0.6432975276295375,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 627969,
+      "current_need_kg": 0.001132172277420128,
+      "lower_slack_mass_kg": 0.000446185817239571,
+      "lower_slack_normalized": 0.3097433144188887,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 814018,
+      "current_need_kg": 0.000510226558356094,
+      "lower_slack_mass_kg": 0.00043348645905285147,
+      "lower_slack_normalized": 0.7601648701274594,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 508270,
+      "current_need_kg": 0.0,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 0.0004177843575173013,
+      "upper_slack_normalized": 1.1661041537328471
+    },
+    {
+      "child_row": 279340,
+      "current_need_kg": 0.00041439529834669096,
+      "lower_slack_mass_kg": 0.00041439529834669096,
+      "lower_slack_normalized": 0.8927153001518333,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 815399,
+      "current_need_kg": 0.00040577132977853746,
+      "lower_slack_mass_kg": 0.00040577132977853746,
+      "lower_slack_normalized": 0.2972414683298014,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 814147,
+      "current_need_kg": 0.0004307003104779025,
+      "lower_slack_mass_kg": 0.00035848563015753083,
+      "lower_slack_normalized": 0.6954440658356655,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 496748,
+      "current_need_kg": 0.00031859399711033873,
+      "lower_slack_mass_kg": 0.00031859399711033873,
+      "lower_slack_normalized": 0.4997969033350797,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 813654,
+      "current_need_kg": 0.0006183455758758361,
+      "lower_slack_mass_kg": 0.000302549844087152,
+      "lower_slack_normalized": 0.2641103041468924,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 378715,
+      "current_need_kg": 0.0002833655595126675,
+      "lower_slack_mass_kg": 0.0002833655595126675,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 813796,
+      "current_need_kg": 0.00028240385130668603,
+      "lower_slack_mass_kg": 0.00028240385130668603,
+      "lower_slack_normalized": 0.6421266918519465,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675595,
+      "current_need_kg": 0.0002799778927152493,
+      "lower_slack_mass_kg": 0.0002799778927152493,
+      "lower_slack_normalized": 0.885935359864308,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 641160,
+      "current_need_kg": 0.0003261461616314637,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 0.00025055015405637957,
+      "upper_slack_normalized": 0.606484994987973
+    },
+    {
+      "child_row": 821382,
+      "current_need_kg": 0.00024141039768501562,
+      "lower_slack_mass_kg": 0.00024141039768501562,
+      "lower_slack_normalized": 0.8810014187848773,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 815481,
+      "current_need_kg": 0.00023914807351116396,
+      "lower_slack_mass_kg": 0.00023914807351116396,
+      "lower_slack_normalized": 0.6517166412281497,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675586,
+      "current_need_kg": 0.0002348892728344156,
+      "lower_slack_mass_kg": 0.0002348892728344156,
+      "lower_slack_normalized": 0.8442484085747858,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 813851,
+      "current_need_kg": 0.0002804785271373529,
+      "lower_slack_mass_kg": 0.00022130793022047006,
+      "lower_slack_normalized": 0.7059804564694782,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675596,
+      "current_need_kg": 0.00020691546643434629,
+      "lower_slack_mass_kg": 0.00020691546643434629,
+      "lower_slack_normalized": 0.8332212094709998,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 274386,
+      "current_need_kg": 0.00019881561319698242,
+      "lower_slack_mass_kg": 0.00019881561319698242,
+      "lower_slack_normalized": 0.8921157671260047,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 805370,
+      "current_need_kg": 0.00023350546213446184,
+      "lower_slack_mass_kg": 0.00017241578542546965,
+      "lower_slack_normalized": 0.2944450938871572,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 818492,
+      "current_need_kg": 0.00018030422277043746,
+      "lower_slack_mass_kg": 0.00015986086430773585,
+      "lower_slack_normalized": 0.7553915742910334,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 310013,
+      "current_need_kg": 0.0001147254237290853,
+      "lower_slack_mass_kg": 0.0001147254237290853,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 786238,
+      "current_need_kg": 0.00011260118010229919,
+      "lower_slack_mass_kg": 0.00011260118010229919,
+      "lower_slack_normalized": 0.8938742197512487,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675589,
+      "current_need_kg": 0.0001114831383991596,
+      "lower_slack_mass_kg": 0.0001114831383991596,
+      "lower_slack_normalized": 0.211849697823525,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 821001,
+      "current_need_kg": 0.00011036376730746218,
+      "lower_slack_mass_kg": 0.00011036376730746218,
+      "lower_slack_normalized": 0.8745626013046198,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 52352,
+      "current_need_kg": 0.00010497917931117544,
+      "lower_slack_mass_kg": 0.00010497917931117544,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 657112,
+      "current_need_kg": 0.004025522681459413,
+      "lower_slack_mass_kg": 0.00010401741342945119,
+      "lower_slack_normalized": 0.023119534872943204,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 801444,
+      "current_need_kg": 0.0,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 9.57915034715039e-05,
+      "upper_slack_normalized": 0.22379138262116216
+    },
+    {
+      "child_row": 812340,
+      "current_need_kg": 9.525444348538656e-05,
+      "lower_slack_mass_kg": 9.525444348538656e-05,
+      "lower_slack_normalized": 0.21049286089588626,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 814125,
+      "current_need_kg": 0.0001056095261027508,
+      "lower_slack_mass_kg": 9.20723016266116e-05,
+      "lower_slack_normalized": 0.3516412015216495,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 814650,
+      "current_need_kg": 0.0,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 8.638113378714908e-05,
+      "upper_slack_normalized": 0.5601576323260953
+    },
+    {
+      "child_row": 527989,
+      "current_need_kg": 8.299363414916936e-05,
+      "lower_slack_mass_kg": 8.299363414916936e-05,
+      "lower_slack_normalized": 0.24739559458336546,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 817205,
+      "current_need_kg": 7.826493552017802e-05,
+      "lower_slack_mass_kg": 7.826493552017802e-05,
+      "lower_slack_normalized": 0.13842657626399715,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 38149,
+      "current_need_kg": 7.714285453524289e-05,
+      "lower_slack_mass_kg": 7.714285453524289e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 818919,
+      "current_need_kg": 0.0001635140098435773,
+      "lower_slack_mass_kg": 7.687215281203095e-05,
+      "lower_slack_normalized": 0.42063886341401124,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675597,
+      "current_need_kg": 7.284357293104712e-05,
+      "lower_slack_mass_kg": 7.284357293104712e-05,
+      "lower_slack_normalized": 0.13356181231078518,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675603,
+      "current_need_kg": 6.200206958738557e-05,
+      "lower_slack_mass_kg": 6.200206958738557e-05,
+      "lower_slack_normalized": 0.11202488721359909,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 675587,
+      "current_need_kg": 5.3283804637867455e-05,
+      "lower_slack_mass_kg": 5.328380463786746e-05,
+      "lower_slack_normalized": 0.13023602903931936,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 823449,
+      "current_need_kg": 0.0,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 4.776843003180929e-05,
+      "upper_slack_normalized": 0.8657856518045305
+    },
+    {
+      "child_row": 772378,
+      "current_need_kg": 5.529659197198201e-06,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 4.7261789374839664e-05,
+      "upper_slack_normalized": 4.009756263520705
+    },
+    {
+      "child_row": 288898,
+      "current_need_kg": 4.591510837567476e-05,
+      "lower_slack_mass_kg": 4.591510837567476e-05,
+      "lower_slack_normalized": 0.8160670377874112,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 260359,
+      "current_need_kg": 4.5259920166908525e-05,
+      "lower_slack_mass_kg": 4.5259920166908525e-05,
+      "lower_slack_normalized": 0.5685509502306985,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 816889,
+      "current_need_kg": 8.781596930698385e-05,
+      "lower_slack_mass_kg": 4.222212582761421e-05,
+      "lower_slack_normalized": 0.4218567339735726,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 516063,
+      "current_need_kg": 5.623394800669936e-05,
+      "lower_slack_mass_kg": 3.898622131373192e-05,
+      "lower_slack_normalized": 0.6203087241840058,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 531171,
+      "current_need_kg": 3.800108597413367e-05,
+      "lower_slack_mass_kg": 3.800108597413367e-05,
+      "lower_slack_normalized": 0.1859340041037675,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 786738,
+      "current_need_kg": 3.79606874802579e-05,
+      "lower_slack_mass_kg": 3.79606874802579e-05,
+      "lower_slack_normalized": 0.6904932483985254,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 814703,
+      "current_need_kg": 0.0004159215696982798,
+      "lower_slack_mass_kg": 3.667202629978487e-05,
+      "lower_slack_normalized": 0.0788894238615064,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 823162,
+      "current_need_kg": 3.4584022865596175e-05,
+      "lower_slack_mass_kg": 3.4584022865596175e-05,
+      "lower_slack_normalized": 0.33182009776303867,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 100011,
+      "current_need_kg": 3.4072368692931804e-05,
+      "lower_slack_mass_kg": 3.4072368692931804e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 466213,
+      "current_need_kg": 3.3857819629101065e-05,
+      "lower_slack_mass_kg": 3.3857819629101065e-05,
+      "lower_slack_normalized": 0.08371444011422145,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 310997,
+      "current_need_kg": 3.329434842031418e-05,
+      "lower_slack_mass_kg": 3.329434842031418e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 335143,
+      "current_need_kg": 3.3256513131645804e-05,
+      "lower_slack_mass_kg": 3.3256513131645804e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 549402,
+      "current_need_kg": 3.311642259715939e-05,
+      "lower_slack_mass_kg": 3.311642259715939e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 251724,
+      "current_need_kg": 6.400658777592896e-05,
+      "lower_slack_mass_kg": 3.276771438557899e-05,
+      "lower_slack_normalized": 0.387194042582375,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 534150,
+      "current_need_kg": 3.115798185291149e-05,
+      "lower_slack_mass_kg": 3.115798185291149e-05,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 481439,
+      "current_need_kg": 3.105691653913195e-05,
+      "lower_slack_mass_kg": 3.105691653913195e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 417763,
+      "current_need_kg": 3.105043242799478e-05,
+      "lower_slack_mass_kg": 3.105043242799478e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 360489,
+      "current_need_kg": 3.1041834201376314e-05,
+      "lower_slack_mass_kg": 3.1041834201376314e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 465125,
+      "current_need_kg": 3.0445415536213576e-05,
+      "lower_slack_mass_kg": 3.0445415536213576e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 738031,
+      "current_need_kg": 2.821385035520444e-05,
+      "lower_slack_mass_kg": 2.821385035520444e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 352919,
+      "current_need_kg": 2.7263660182665608e-05,
+      "lower_slack_mass_kg": 2.7263660182665608e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 79703,
+      "current_need_kg": 2.6666089107119048e-05,
+      "lower_slack_mass_kg": 2.6666089107119048e-05,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 295041,
+      "current_need_kg": 2.6522262250417174e-05,
+      "lower_slack_mass_kg": 2.6522262250417174e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 315877,
+      "current_need_kg": 2.6302390418955032e-05,
+      "lower_slack_mass_kg": 2.6302390418955032e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 14468,
+      "current_need_kg": 2.5984219324467666e-05,
+      "lower_slack_mass_kg": 2.5984219324467666e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 313771,
+      "current_need_kg": 2.5888502762122946e-05,
+      "lower_slack_mass_kg": 2.5888502762122946e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 663296,
+      "current_need_kg": 0.0,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 2.577135330888948e-05,
+      "upper_slack_normalized": 0.00609437998223752
+    },
+    {
+      "child_row": 547607,
+      "current_need_kg": 2.5690321297193196e-05,
+      "lower_slack_mass_kg": 2.5690321297193196e-05,
+      "lower_slack_normalized": 0.825244189707349,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 723051,
+      "current_need_kg": 2.5409261958101576e-05,
+      "lower_slack_mass_kg": 2.5409261958101576e-05,
+      "lower_slack_normalized": 0.8943828438577515,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 367087,
+      "current_need_kg": 2.5267412486192393e-05,
+      "lower_slack_mass_kg": 2.5267412486192393e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 37684,
+      "current_need_kg": 2.490470737464639e-05,
+      "lower_slack_mass_kg": 2.490470737464639e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 548384,
+      "current_need_kg": 2.456438147279932e-05,
+      "lower_slack_mass_kg": 2.456438147279932e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 315863,
+      "current_need_kg": 2.3853736466873742e-05,
+      "lower_slack_mass_kg": 2.3853736466873742e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 818459,
+      "current_need_kg": 0.0,
+      "lower_slack_mass_kg": 0.0,
+      "lower_slack_normalized": 0.0,
+      "upper_slack_mass_kg": 2.2013030617326333e-05,
+      "upper_slack_normalized": 0.047021677287876144
+    },
+    {
+      "child_row": 418047,
+      "current_need_kg": 2.1936193400184357e-05,
+      "lower_slack_mass_kg": 2.1936193400184357e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 299555,
+      "current_need_kg": 2.1459941725663293e-05,
+      "lower_slack_mass_kg": 2.1459941725663293e-05,
+      "lower_slack_normalized": 0.894736842105263,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 365925,
+      "current_need_kg": 2.1191354640348098e-05,
+      "lower_slack_mass_kg": 2.1191354640348098e-05,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 457961,
+      "current_need_kg": 2.11886342477685e-05,
+      "lower_slack_mass_kg": 2.11886342477685e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 723072,
+      "current_need_kg": 2.1139256783445837e-05,
+      "lower_slack_mass_kg": 2.1139256783445837e-05,
+      "lower_slack_normalized": 0.8939045993221305,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 723061,
+      "current_need_kg": 2.10878809596341e-05,
+      "lower_slack_mass_kg": 2.10878809596341e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 761883,
+      "current_need_kg": 2.0707332367606443e-05,
+      "lower_slack_mass_kg": 2.0707332367606443e-05,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 441085,
+      "current_need_kg": 2.0696996527935423e-05,
+      "lower_slack_mass_kg": 2.0696996527935423e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 76058,
+      "current_need_kg": 2.0472044133032837e-05,
+      "lower_slack_mass_kg": 2.0472044133032837e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 256255,
+      "current_need_kg": 2.0471198391993884e-05,
+      "lower_slack_mass_kg": 2.0471198391993884e-05,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 763558,
+      "current_need_kg": 2.0270043520720685e-05,
+      "lower_slack_mass_kg": 2.0270043520720685e-05,
+      "lower_slack_normalized": 0.053230602941637485,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 536789,
+      "current_need_kg": 2.0145302067825293e-05,
+      "lower_slack_mass_kg": 2.0145302067825293e-05,
+      "lower_slack_normalized": 0.8947368421052633,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    },
+    {
+      "child_row": 112329,
+      "current_need_kg": 2.0141875314713702e-05,
+      "lower_slack_mass_kg": 2.0141875314713702e-05,
+      "lower_slack_normalized": 0.8947368421052632,
+      "upper_slack_mass_kg": 0.0,
+      "upper_slack_normalized": 0.0
+    }
+  ],
+  "mass_kg": {
+    "sum_lower_slack": 0.022368191363427756,
+    "sum_lower_slack_for_slack_gt_1e-10": 0.022368191363427756,
+    "sum_upper_slack": 0.001021178089252677,
+    "sum_upper_slack_for_slack_gt_1e-10": 0.00102117808925268
+  },
+  "native_steps": 0,
+  "original_LP_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+  "original_LP_status": 2,
+  "phase1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "phase1_objective_dimensionless": 894.0358674850971,
+  "phase1_status": 0,
+  "physical_admission": false,
+  "schema": "numi.human.current406-held-parent-exchange-phase1-diagnostic.v1",
+  "selected_parent_rows": [
+    147,
+    149,
+    503,
+    638,
+    4432,
+    4473,
+    4474,
+    4475,
+    4566,
+    4568,
+    4707,
+    4708,
+    4801,
+    4802,
+    4803,
+    4908,
+    4940,
+    4941,
+    4973,
+    5026,
+    5038,
+    5094,
+    5095,
+    5096,
+    5097,
+    5200,
+    5201,
+    5202,
+    5224,
+    5285,
+    5286,
+    5290,
+    5419,
+    5491,
+    5493,
+    5561,
+    8638,
+    8707,
+    8708,
+    8709,
+    8843,
+    9032,
+    9033,
+    9094,
+    9169,
+    9170,
+    9445,
+    11517,
+    11519,
+    11556,
+    11557,
+    12265,
+    12450,
+    12451,
+    12452,
+    12586,
+    12803,
+    12805,
+    12806,
+    13206,
+    13208,
+    13334,
+    13367,
+    13527,
+    13658,
+    13749,
+    13753,
+    13754,
+    13759,
+    13788,
+    13790,
+    13793,
+    13812,
+    13813,
+    13814,
+    13885,
+    13886,
+    13895,
+    13972,
+    14020,
+    14049,
+    14050,
+    14051,
+    14067,
+    14068,
+    14077,
+    14078,
+    14083,
+    14090,
+    14148,
+    14149,
+    14150,
+    14153,
+    14155,
+    14156,
+    14184,
+    14187,
+    14188,
+    14189,
+    14193
+  ],
+  "slack_scope": "Only local receiver upper/lower rows receive nonnegative diagnostic slack; selected-parent four M/4 equalities remain hard. Any nonzero slack is a failure witness, never accepted mass.",
+  "status": "PASS_PHASE1_RECEIVER_SLACK_DIAGNOSTIC"
+}

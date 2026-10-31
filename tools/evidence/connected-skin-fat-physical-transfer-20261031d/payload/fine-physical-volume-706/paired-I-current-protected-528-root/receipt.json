@@ -1,0 +1,164 @@
+{
+  "status": "PASS_PROTECTED_PAIRED_I_TYPED_COMPLETE_CONTEXT_AND_CURRENT_TARGETS",
+  "raw_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/exchange520/report.json",
+  "raw_report_sha256": "339c2045cfef9a76005fb2bc0eb4bb973ec73015467ab74dd039a4c4d5b34773",
+  "operations": 267,
+  "quality": [
+    {
+      "role": "Skin",
+      "bad_before": 1060,
+      "bad_after": 1046
+    },
+    {
+      "role": "Fat",
+      "bad_before": 16929,
+      "bad_after": 16618
+    }
+  ],
+  "typed_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/typed463001/receipt.json",
+    "sha256": "dd7516a3b6404e2e8d34009c74d47454013a16d41fff315b22b1ed7c411852ab"
+  },
+  "context": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/audit354/report.json",
+    "sha256": "42e1085e9f175ba90ecc29b9dbf7ab1249d67e180038ccf4615afa945a510231"
+  },
+  "Skin_target": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/skin-target369/receipt.json",
+    "sha256": "46dd9a41dafe2a9ad9de141bc5662604d35a2ca7b31eac0dfbd18defefb4c181"
+  },
+  "Fat_target": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/fat-target397/report.json",
+    "sha256": "eb19386256df5a6d02b239ffcefbbac24b1871122f5d56d08017b1187f1ef841"
+  },
+  "physical_admission": false,
+  "native_steps": 0,
+  "source330_mass_immutable": true,
+  "protected_D500_and_comp0_comp1_points": 32668,
+  "commands": [
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_paired_I_quality_exchange_462_root.py",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/strict462",
+      "--maximum-edge-m",
+      ".001",
+      "--maximum-operations",
+      "4",
+      "--seconds",
+      "1200",
+      "--protect-fat-points",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/protected-comp0-comp1-all-next-D-orientation-stars.npz",
+      "--protect-fat-points-sha256",
+      "6f07e482ca9d16efe29fdc5cb97a7f8c3dade14bfa019ce28403aa6d66ad6051",
+      "--skin",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-interior-LP-455-root/run001/conditioned-volume-proposal.npz",
+      "--skin-sha256",
+      "cdeccad0b3aa6b5e6171dce2f62691a08b62dbf136950d1abb140d2c1004ddf3",
+      "--fat",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-012-final-D-current-target-rebind/fat-current-typed-target-rebound.npz",
+      "--fat-sha256",
+      "72c851692580a639f89a4916bc4bf5c38331be9b6def89322eccf02ee66ea6ec",
+      "--i",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-399-root/iteration002/typed365/candidate-I-typed-current.npz",
+      "--i-sha256",
+      "fec15d6b59e9094952845cbeaaf418b91a4b2f5d0405d1c58b7e3e2e752ec406"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_paired_I_authenticated_interior_526_root.py",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/strict520",
+      "--maximum-edge-m",
+      ".001",
+      "--maximum-operations",
+      "4",
+      "--seconds",
+      "1200",
+      "--protect-fat-points",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-quality-exchange-466-root/protected-comp0-comp1-all-next-D-orientation-stars.npz",
+      "--protect-fat-points-sha256",
+      "6f07e482ca9d16efe29fdc5cb97a7f8c3dade14bfa019ce28403aa6d66ad6051",
+      "--skin",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-interior-LP-455-root/run001/conditioned-volume-proposal.npz",
+      "--skin-sha256",
+      "cdeccad0b3aa6b5e6171dce2f62691a08b62dbf136950d1abb140d2c1004ddf3",
+      "--fat",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-012-final-D-current-target-rebind/fat-current-typed-target-rebound.npz",
+      "--fat-sha256",
+      "72c851692580a639f89a4916bc4bf5c38331be9b6def89322eccf02ee66ea6ec",
+      "--i",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-399-root/iteration002/typed365/candidate-I-typed-current.npz",
+      "--i-sha256",
+      "fec15d6b59e9094952845cbeaaf418b91a4b2f5d0405d1c58b7e3e2e752ec406"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_paired_I_authenticated_interior_526_root.py",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/exchange520",
+      "--maximum-edge-m",
+      ".003",
+      "--maximum-operations",
+      "2048",
+      "--seconds",
+      "60",
+      "--allow-construction-quality-exchange",
+      "--use-certified-current496-prefix",
+      "--protect-fat-points",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/protected-all-D500-and-comp0-comp1-points.npz",
+      "--protect-fat-points-sha256",
+      "8be131016031b83f67e51760c81ac35445da19776872fe6d357fd26cb7bad6cf",
+      "--skin",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/run001/conditioned-volume-proposal.npz",
+      "--skin-sha256",
+      "bbc30d8efe7538694df629a1a739365dd13ff3d85dfe38984bf4d511260bb274",
+      "--fat",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-042-current-54381-normalized-rebind/fat-current-typed-target-rebound-54381-lineage-corrected.npz",
+      "--fat-sha256",
+      "5aa02086aac4b20e879332cd9d5ba64da636dd8a520de54e7b96b00225c7fe42",
+      "--i",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-031-threeD-oneI-safe-flips/prep-003/candidate-I-warning-flips-typed.npz",
+      "--i-sha256",
+      "81b285a4e12f11dfd4156bb2545bb86f5ccee900ef6021a11beff36954b00774"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bind_and_replay_paired_I_quality_exchange_463_root.py",
+      "--report",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/exchange520/report.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/typed463001"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_declared_surface_diff_354.py",
+      "--config",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/config354.json",
+      "--out",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/audit354"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bind_paired_I_skin_target_generic_369_root.py",
+      "--report",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/exchange520/report.json",
+      "--typed-receipt",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/typed463001/receipt.json",
+      "--context",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/audit354/report.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/skin-target369"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/rebind_current_fat_target_397_root.py",
+      "--config",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/config397.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-current-protected-528-root/fat-target397"
+    ]
+  ],
+  "producer_sha256": "f7cabb5ef5dace5d9e5c5fa49ebd9935c7c28e5b09cefa8aefaeb45532343d66",
+  "elapsed_s": 112.98458204208873
+}

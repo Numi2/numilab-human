@@ -1,0 +1,48 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_VOLUME_CONNECTIVITY_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_pins": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-fixed-boundary-batch-508-root/cycle00-edge/pass-002/fixed-boundary-volume-proposal.npz": "4519adff85382d5e414e45e3f8fb308408f22e2c5309de4c41ee989d314dcfc9",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_face_flips_npz_313_root.py": "224935f5978f9f52c4b413dde4ea31bbe8e52ae6ca27a399547d136d04095ab1"
+  },
+  "node_coordinates_unchanged": true,
+  "oriented_boundary_unchanged_exact": true,
+  "exact_F32_volume_unchanged": true,
+  "material_ownership_preserved": true,
+  "tested_pair_count": 2518,
+  "total_eligible_pairs": 2518,
+  "passing_operations": 1,
+  "rejections": {
+    "quality_no_progress": 1877,
+    "new_edge_exists": 215,
+    "oriented_boundary": 287,
+    "conflict": 138
+  },
+  "input_cells": 730888,
+  "output_cells": 730889,
+  "bad_cells_before": 1070,
+  "bad_cells_after": 1069,
+  "minimum_volume_before_m3": 9.815876602295929e-22,
+  "minimum_volume_after_m3": 9.815876602295929e-22,
+  "minimum_normalized_det_before": 1.2290416625971925e-11,
+  "minimum_normalized_det_after": 1.2290416625971925e-11,
+  "elapsed_s": 2.7152206669561565,
+  "operations": [
+    {
+      "old_rows": [
+        408229,
+        697546
+      ],
+      "new_rows_start": 0,
+      "new_edge": [
+        127014,
+        208724
+      ],
+      "before_bad": 1,
+      "after_bad": 0,
+      "minimum_normalized_det_before": 1.883793274371882e-06,
+      "minimum_normalized_det_after": 1.3058713777332642e-05
+    }
+  ]
+}

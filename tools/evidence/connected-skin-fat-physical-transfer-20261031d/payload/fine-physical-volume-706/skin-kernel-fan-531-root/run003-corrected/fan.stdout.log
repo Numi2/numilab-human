@@ -1,0 +1,47 @@
+{
+  "status": "PASS_NATIVE_QUALITY_KERNEL_FAN_BATCH",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run002/fan-output/kernel-fan-volume-proposal.npz",
+  "input_sha256": "0a4687eb31d30f706b1f82d9fcbd23080155a9bf0dea7b3d743cdb1e619c4873",
+  "source_sha256": "f1b9f76cc2621fc5bc60d217486cfe511023c5c893cec3d97f332992074036e1",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run003-corrected/fan-output/kernel-fan-volume-proposal.npz",
+  "output_sha256": "055e2177e208187002a4a45ad12bada98111b1f1ba12e2b8d473935946aab5f3",
+  "bad_before": 1002,
+  "bad_after": 988,
+  "nonpositive": 0,
+  "input_cells": 729880,
+  "output_cells": 729953,
+  "new_inferred_interior_points": 14,
+  "enumeration": "face_connected_joint_volume_shape_witness_growth",
+  "growth_statistics": {
+    "yielded_domains": 7805,
+    "added_face_neighbors": 63455,
+    "joint_bound_joint_volume_and_shape": 417,
+    "absorbed_internal_no_apex_faces": 716,
+    "joint_bound_normalized_shape": 329
+  },
+  "identical_cavity_algorithm_source_sha256": "89cb1ba952b41c35f53ab621e897f03fb12700a75e968cdbdf5c27aa721a650f",
+  "adaptive_kernel": {
+    "adaptive_attempts": 1499,
+    "adaptive_native_centers": 8,
+    "adaptive_passing_fans": 8
+  },
+  "cell_disjoint_cavities": true,
+  "shared_boundary_vertex_reuse_operations": 1,
+  "prior_negative_cache_sources": [],
+  "cache_entries_before": 3986,
+  "cache_entries_after": 5935,
+  "cache_hits": 3805,
+  "attempts": 1963,
+  "passing_operations": 14,
+  "rejections": {
+    "no_positive_kernel": 206,
+    "nonclosed": 193,
+    "nonmanifold": 59,
+    "adaptive_no_positive_kernel": 1491
+  },
+  "oriented_boundary_bit_identical": true,
+  "original_points_bit_identical": true,
+  "elapsed_s": 18.152196124894544
+}

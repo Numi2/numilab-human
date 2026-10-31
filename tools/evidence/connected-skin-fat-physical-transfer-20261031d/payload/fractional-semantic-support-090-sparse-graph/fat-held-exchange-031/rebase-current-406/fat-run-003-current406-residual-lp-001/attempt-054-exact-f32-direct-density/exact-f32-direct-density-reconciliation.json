@@ -1,0 +1,87 @@
+{
+  "complete_allocation": false,
+  "density": {
+    "limit_kg_m3": 950.0,
+    "m21_gt950_plus_tolerance": 8,
+    "m21_ids_gt950_plus_tolerance": [
+      198545,
+      233459,
+      233636,
+      288320,
+      288360,
+      539645,
+      752551,
+      804459
+    ],
+    "m21_max_density_exact_det": 950.0000000457437,
+    "m21_max_density_exact_det_child": 288360,
+    "m21_raw_gt950": 748,
+    "m22_gt950_plus_tolerance": 8,
+    "m22_ids_gt950_plus_tolerance": [
+      198545,
+      233459,
+      233636,
+      288320,
+      288360,
+      539645,
+      752551,
+      804459
+    ],
+    "m22_m21_child_mass_array_equal": false,
+    "m22_max_density_exact_det": 950.0000000457437,
+    "m22_max_density_exact_det_child": 288360,
+    "m22_raw_gt950": 1806,
+    "numerical_evaluation_comparisons": {
+      "numpy_linalg_det_f64": {
+        "m21_gt950_plus_tolerance": 20,
+        "m21_max_density": 950.0000001776198,
+        "m21_raw_gt950": 1047,
+        "m22_gt950_plus_tolerance": 20,
+        "m22_max_density": 950.0000001776198,
+        "m22_raw_gt950": 2015,
+        "volume_rows_bitwise_different_from_exact_rounded": 794189
+      },
+      "scalar_triple_f64": {
+        "m21_gt950_plus_tolerance": 3,
+        "m21_max_density": 950.0000000084268,
+        "m21_raw_gt950": 375,
+        "m22_gt950_plus_tolerance": 3,
+        "m22_max_density": 950.0000000084268,
+        "m22_raw_gt950": 942,
+        "volume_rows_bitwise_different_from_exact_rounded": 34083
+      }
+    },
+    "unchanged_tolerance_kg_m3": 5e-10
+  },
+  "elapsed_seconds": 12.282582374988124,
+  "geometry": {
+    "canonical_point_dtype": "float32",
+    "cell_count": 826737,
+    "determinant_owner_sha256": "3f7c276bef3bb4427f6acb41f6eeedffbeae273c9493a3b7854b244a5a2fa024",
+    "exact_determinant_unit": "2^-447 m^3 det6",
+    "exact_negative_count": 0,
+    "exact_zero_count": 0,
+    "point_count": 253220,
+    "target_sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211"
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/solve_oriented_cavity_milp_081.py": "3f7c276bef3bb4427f6acb41f6eeedffbeae273c9493a3b7854b244a5a2fa024",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-021-source-exhaustion-batch/run-001/merged-held-centroid-noncentroid-exhaustion.npz": "6609bd2720dff820fac1075e42d99f4a4c011f15f3a7e8c2597cc0ac5c918c19",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/independent-replay-013.json": "7ce2d8dc4ab8c57da2b2b3b3692dece7f1fd8fe0901b15e26a7e5cbe1a1ea090",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/merged-held-centroid-noncentroid-source-exhaustion.npz": "69c212a0a11395a7c0584b99fc4cc00fd543754baec4c542266b8a4226957623"
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "reconciliation": {
+    "022_independent_receipt_formula": "widen exact canonical F32 coordinates to binary64; compute abs(dot(x1-x0,cross(x2-x0,x3-x0)))/6",
+    "052_diagnostic_formula": "numpy.linalg.det of the 3x3 edge matrix",
+    "statement": "Do not confuse a greater-than-950 raw count with overages beyond the existing 5e-10 kg/m^3 tolerance. Numerically evaluated determinants differ on near-degenerate cells. Exact dyadic predicate and independent 013 formula are separately reported; do not change the gate tolerance."
+  },
+  "schema": "numi.human.current406-022-exact-f32-density-reconciliation.v1",
+  "source330_pins": {
+    "nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "tets_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "status": "PASS_RECONCILED_EXACT_F32_VOLUME_AND_RECEIPT_METHOD"
+}

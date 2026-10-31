@@ -1,0 +1,15 @@
+{
+  "schema": "h706.preflight-preparation-attempt-failure.v1",
+  "status": "FAILED_DURING_INPUT_PREPARATION_BEFORE_PREFLIGHT",
+  "producer": "/tmp/prepare_500_inputs.py",
+  "producer_sha256": "119bc71e0097ef9d9edc8574390751fd6f3bc763f53dd25d44c0ad5a951499b7",
+  "failure": "metadata correction receipt path was incorrectly rooted beneath fat-comp0; correct location is under fine-physical-volume-706/d-shortedge-quotient-480-next-001-preflight-100um/volume-transfer-001/comp0-boundary-split-001/metadata-lineage-correction-002",
+  "outputs_written": [
+    {"path": "current-protected-shells/comp0-current-fullstar-shell.npz", "sha256": "3d581fbebd1dc663e09aa178b5143ad040edf14ea9d6baae77f738ecd124f201"},
+    {"path": "current-protected-shells/comp1-current-fullstar-shell.npz", "sha256": "00f3c668fefa13c2bfd14fac97d93c2784756b67755b37e30193d9abce6121ec"}
+  ],
+  "no_preflight_started": true,
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping": "NOT_RUN"
+}

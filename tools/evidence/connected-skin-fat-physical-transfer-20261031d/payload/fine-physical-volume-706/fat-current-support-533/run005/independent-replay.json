@@ -1,0 +1,296 @@
+{
+  "checks": {
+    "143_one_hop_closure": true,
+    "all_P1_group_ties_and_parent_face_unions": true,
+    "exact_F32_cache_join": true,
+    "full_cell_P1_integer_scores": true,
+    "new_points_requeried_with_source_owner": true,
+    "node_group_parent_tuple_and_face_unions": true,
+    "same_material_shared_face_region_graph": true
+  },
+  "counts": {
+    "P1_group_slots": 1009609,
+    "admissible_region_slots": 3863608,
+    "cells": 798672,
+    "nodes": 253712,
+    "requeried_points": 774,
+    "reused_exact_points": 252938,
+    "same_material_region_edges": 140,
+    "tie_cells": 46241,
+    "unique_max_cells": 752431
+  },
+  "elapsed_s": 19.823210041038692,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-semantic-atlas-088/export_authoring_registered_surface_sidecars_230_semantic_088.py": "121e3bf44d90ba3d7b82ccaa40a26a92d1675c6d277a4409ae95f8c05ad2485d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/volume-transfer-500um-001/compose-D500-I528-comp0-54138-005/fat-D500-I528-comp0-kernel-fan-composed-volume-proposal.npz": "d899b2789c0d4fc91553a5d46b1bb8d7b40e9c818d6301f6b32a3265976e3703",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-semantic-support-406-root-run002/fat-current-semantic-support.npz": "c16f2ff3cd6e30df365ed1418ca385db58cc76403b57359f3effdd1ac3381efc",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run003/fat-current-semantic-support-d899-p1-143.npz": "4aa03ccf8e3b798ba36cd751d2ea61527e6a04f3f41c316ee291a75fbfb9622c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run003/fat-current-semantic-support-d899-p1.npz": "8e9cb1094a8cd4d12d3155c45b985bb4eb607ede7a64716850f071520d76dd62",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run003/receipt.json": "3c7fdec03502b58ef37ce1bbabda72088bc631511a777743f4a83f6334346b24",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+  },
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "new_point_witnesses_first32": [
+    {
+      "chosen_parent": 26572,
+      "distance_m": 1.3877787807814457e-17,
+      "node": 246002,
+      "ties": [
+        26572
+      ]
+    },
+    {
+      "chosen_parent": 28060,
+      "distance_m": 1.734723475976807e-18,
+      "node": 246010,
+      "ties": [
+        28060
+      ]
+    },
+    {
+      "chosen_parent": 26622,
+      "distance_m": 0.0,
+      "node": 246030,
+      "ties": [
+        26622
+      ]
+    },
+    {
+      "chosen_parent": 28392,
+      "distance_m": 0.0010705014805891932,
+      "node": 246045,
+      "ties": [
+        28392
+      ]
+    },
+    {
+      "chosen_parent": 26769,
+      "distance_m": 6.938893903907228e-18,
+      "node": 246095,
+      "ties": [
+        26769
+      ]
+    },
+    {
+      "chosen_parent": 25667,
+      "distance_m": 2.0117125933250414e-08,
+      "node": 246101,
+      "ties": [
+        25667
+      ]
+    },
+    {
+      "chosen_parent": 27363,
+      "distance_m": 2.943923360032078e-17,
+      "node": 246131,
+      "ties": [
+        27363
+      ]
+    },
+    {
+      "chosen_parent": 28051,
+      "distance_m": 3.469446951953614e-18,
+      "node": 246143,
+      "ties": [
+        28051
+      ]
+    },
+    {
+      "chosen_parent": 27904,
+      "distance_m": 3.469446951953614e-18,
+      "node": 246160,
+      "ties": [
+        27904
+      ]
+    },
+    {
+      "chosen_parent": 18808,
+      "distance_m": 2.220446049250313e-16,
+      "node": 246171,
+      "ties": [
+        18808
+      ]
+    },
+    {
+      "chosen_parent": 28033,
+      "distance_m": 1.4304896245381992e-17,
+      "node": 246173,
+      "ties": [
+        28033
+      ]
+    },
+    {
+      "chosen_parent": 26572,
+      "distance_m": 3.1031676915590914e-17,
+      "node": 246174,
+      "ties": [
+        26572
+      ]
+    },
+    {
+      "chosen_parent": 26035,
+      "distance_m": 0.0,
+      "node": 246202,
+      "ties": [
+        26035
+      ]
+    },
+    {
+      "chosen_parent": 27850,
+      "distance_m": 0.0,
+      "node": 246206,
+      "ties": [
+        27850
+      ]
+    },
+    {
+      "chosen_parent": 28189,
+      "distance_m": 2.6020852139652106e-18,
+      "node": 246216,
+      "ties": [
+        28189
+      ]
+    },
+    {
+      "chosen_parent": 28008,
+      "distance_m": 1.3877787807814457e-17,
+      "node": 246225,
+      "ties": [
+        28008
+      ]
+    },
+    {
+      "chosen_parent": 28008,
+      "distance_m": 0.0,
+      "node": 246234,
+      "ties": [
+        28008
+      ]
+    },
+    {
+      "chosen_parent": 26928,
+      "distance_m": 3.7367087251761353e-17,
+      "node": 246242,
+      "ties": [
+        26928
+      ]
+    },
+    {
+      "chosen_parent": 28528,
+      "distance_m": 0.0,
+      "node": 246266,
+      "ties": [
+        28528
+      ]
+    },
+    {
+      "chosen_parent": 26622,
+      "distance_m": 6.938893903907228e-18,
+      "node": 246267,
+      "ties": [
+        26622
+      ]
+    },
+    {
+      "chosen_parent": 26571,
+      "distance_m": 0.0,
+      "node": 246269,
+      "ties": [
+        26571
+      ]
+    },
+    {
+      "chosen_parent": 27904,
+      "distance_m": 6.938893903907228e-18,
+      "node": 246272,
+      "ties": [
+        27904
+      ]
+    },
+    {
+      "chosen_parent": 26605,
+      "distance_m": 0.0,
+      "node": 246276,
+      "ties": [
+        26605
+      ]
+    },
+    {
+      "chosen_parent": 27904,
+      "distance_m": 7.757919228897728e-18,
+      "node": 246281,
+      "ties": [
+        27904
+      ]
+    },
+    {
+      "chosen_parent": 14320,
+      "distance_m": 0.0,
+      "node": 246289,
+      "ties": [
+        14320
+      ]
+    },
+    {
+      "chosen_parent": 28008,
+      "distance_m": 6.938893903907228e-18,
+      "node": 246290,
+      "ties": [
+        28008
+      ]
+    },
+    {
+      "chosen_parent": 26571,
+      "distance_m": 0.0,
+      "node": 246395,
+      "ties": [
+        26571
+      ]
+    },
+    {
+      "chosen_parent": 26919,
+      "distance_m": 1.3877787807814457e-17,
+      "node": 246398,
+      "ties": [
+        26919
+      ]
+    },
+    {
+      "chosen_parent": 28499,
+      "distance_m": 6.938893903907228e-18,
+      "node": 246400,
+      "ties": [
+        28499
+      ]
+    },
+    {
+      "chosen_parent": 26441,
+      "distance_m": 1.3877787807814457e-17,
+      "node": 246402,
+      "ties": [
+        26441
+      ]
+    },
+    {
+      "chosen_parent": 28033,
+      "distance_m": 1.4304896245381992e-17,
+      "node": 246405,
+      "ties": [
+        28033
+      ]
+    },
+    {
+      "chosen_parent": 23902,
+      "distance_m": 0.0,
+      "node": 246437,
+      "ties": [
+        23902
+      ]
+    }
+  ],
+  "physical_admission": false,
+  "schema": "numi.human.current-fat-p1-143-independent-replay.v1",
+  "status": "PASS_INDEPENDENT_CURRENT_FAT_P1_AND_ONE_HOP_REPLAY"
+}

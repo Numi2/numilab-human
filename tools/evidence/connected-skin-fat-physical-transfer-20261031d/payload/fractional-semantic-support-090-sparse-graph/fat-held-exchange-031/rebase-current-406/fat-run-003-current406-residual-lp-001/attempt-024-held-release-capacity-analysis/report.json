@@ -1,0 +1,2182 @@
+{
+  "complete_allocation": false,
+  "counts": {
+    "capacity_census_chunk_rows": 200000,
+    "children_with_lower_deficit": 194836,
+    "deficit_children_below_direct_site_capacity_bound": 131252,
+    "deficit_children_no_capacity": 125617,
+    "deficit_children_uncovered_even_by_allheldrelease_bound": 10,
+    "deficit_children_with_direct_site_capacity_bound_cover": 63584,
+    "graph_rows": 5189622,
+    "prior_stage_rows": [
+      9240,
+      6353,
+      100000,
+      100000
+    ],
+    "rows_with_optimistic_fullrelease_capacity": 5189622,
+    "rows_with_positive_local_capacity": 1178019,
+    "rows_with_residual_corner_support": 1178019
+  },
+  "elapsed_seconds": 1.1028730869293213,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-012-centroid-partial-batch/partial-centroid-additions.npz": "be4f6f634b1fd0beb99265708df90163a1f2804167755d8a083d2e4ee0555d32",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-014-noncentroid-partial-batch/partial-noncentroid-additions.npz": "da134faf8f980393a142f87a78ed40548cbbd0b38193ae2cb1fc91050214ecf7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-021-source-exhaustion-batch/run-001/proposal.npz": "211b6c67aea8634090a8a01aaece19d7019becd456fe20dbf9b5e90bde592a7f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/merged-held-centroid-noncentroid-source-exhaustion.npz": "69c212a0a11395a7c0584b99fc4cc00fd543754baec4c542266b8a4226957623",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/proposal.npz": "fc4280fb824eb2903d107a8c447d395e0fddcaf74d32343dbd80f5086b49eda3"
+  },
+  "mass_kg": {
+    "allheldrelease_deficit_child_capacity_bound": 0.11159497379590275,
+    "allheldrelease_independent_site_capacity_bound": 8.54369824649938,
+    "covered_deficit_total": 1.3359701192282816e-05,
+    "deficit_mass_uncovered_by_allheldrelease_bound_kg": 0.003374843432916217,
+    "receiver_lower_deficit": 0.03898232855247649,
+    "receiver_upper_headroom": 0.6640540267176471,
+    "source_corner_residual": 0.27183449655726,
+    "sum_deficit_receiver_individual_caps": 0.0017050039334144886,
+    "sum_independent_site_row_caps": 0.23438753932754236,
+    "uncovered_deficit_total": 0.0389689688512842
+  },
+  "metrics": {
+    "max_child_deficit_kg": 0.0009394439759911005,
+    "max_parent_corner_capacity_over_q": 25230.0,
+    "max_single_child_capacity_kg": 0.0004638939979968631,
+    "top_held_parents_with_deficit_capacity": [
+      {
+        "global_source330_row": 28130,
+        "held_mass_kg": 0.001363446494906384,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.008672621626846696,
+        "parent_role_row": 13814,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23024,
+        "held_mass_kg": 0.006473919256677618,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.008142309051001748,
+        "parent_role_row": 8708,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23023,
+        "held_mass_kg": 0.005411491055613362,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.007975723865579716,
+        "parent_role_row": 8707,
+        "remaining_M4_kg": 0.0013710741866337123
+      },
+      {
+        "global_source330_row": 28065,
+        "held_mass_kg": 0.0003045227686016005,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.006497245741614931,
+        "parent_role_row": 13749,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28472,
+        "held_mass_kg": 0.0012522961389879058,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.005891275936215407,
+        "parent_role_row": 14156,
+        "remaining_M4_kg": 0.0007463416602729997
+      },
+      {
+        "global_source330_row": 19119,
+        "held_mass_kg": 0.0035770876820606645,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0050851812053234425,
+        "parent_role_row": 4803,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28129,
+        "held_mass_kg": 0.0014774373084947001,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.004888669880360957,
+        "parent_role_row": 13813,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28365,
+        "held_mass_kg": 0.000898233679436089,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00405599489990276,
+        "parent_role_row": 14049,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19023,
+        "held_mass_kg": 0.002975452750485617,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.003827725622820987,
+        "parent_role_row": 4707,
+        "remaining_M4_kg": 0.00019238789531571656
+      },
+      {
+        "global_source330_row": 19118,
+        "held_mass_kg": 0.0030298581910639666,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0036642136422162888,
+        "parent_role_row": 4802,
+        "remaining_M4_kg": 0.00012903043481202214
+      },
+      {
+        "global_source330_row": 26767,
+        "held_mass_kg": 0.0011964516033913242,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.003615958298276237,
+        "parent_role_row": 12451,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27974,
+        "held_mass_kg": 8.450736430631886e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.003418285371497568,
+        "parent_role_row": 13658,
+        "remaining_M4_kg": -1.0587911840678754e-22
+      },
+      {
+        "global_source330_row": 23159,
+        "held_mass_kg": 0.0026519997845753096,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0031755444776554245,
+        "parent_role_row": 8843,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28503,
+        "held_mass_kg": 0.00168707134662327,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0030801816919128876,
+        "parent_role_row": 14187,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18790,
+        "held_mass_kg": 0.010397349322593024,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002866149665039935,
+        "parent_role_row": 4474,
+        "remaining_M4_kg": 0.00037689553370005434
+      },
+      {
+        "global_source330_row": 28106,
+        "held_mass_kg": 0.0006590481632429146,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0028143716525104463,
+        "parent_role_row": 13790,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23025,
+        "held_mass_kg": 0.006201141104611452,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002772087992955896,
+        "parent_role_row": 8709,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28465,
+        "held_mass_kg": 0.001144440113876044,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0026702844657463956,
+        "parent_role_row": 14149,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28466,
+        "held_mass_kg": 0.0002059802184817272,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002599495649276954,
+        "parent_role_row": 14150,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19516,
+        "held_mass_kg": 0.006071636370834855,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002590787801022335,
+        "parent_role_row": 5200,
+        "remaining_M4_kg": 0.0008427011477027968
+      },
+      {
+        "global_source330_row": 19256,
+        "held_mass_kg": 0.0013724699036269201,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002575267165570998,
+        "parent_role_row": 4940,
+        "remaining_M4_kg": 0.00046352234420700834
+      },
+      {
+        "global_source330_row": 28471,
+        "held_mass_kg": 0.0015148589277543586,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002517768083681824,
+        "parent_role_row": 14155,
+        "remaining_M4_kg": 0.0005801124366314969
+      },
+      {
+        "global_source330_row": 28104,
+        "held_mass_kg": 0.00045331249793889583,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0025154249768557764,
+        "parent_role_row": 13788,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 22954,
+        "held_mass_kg": 0.0030146713925205404,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0024556359613886014,
+        "parent_role_row": 8638,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28128,
+        "held_mass_kg": 0.000751795528231014,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0024399334725653393,
+        "parent_role_row": 13812,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26766,
+        "held_mass_kg": 0.0012332638334555668,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002388755690596922,
+        "parent_role_row": 12450,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28070,
+        "held_mass_kg": 6.347588694666233e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002313275683855462,
+        "parent_role_row": 13754,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18789,
+        "held_mass_kg": 0.009017885174018398,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0021253891143266754,
+        "parent_role_row": 4473,
+        "remaining_M4_kg": 0.0014883646992693452
+      },
+      {
+        "global_source330_row": 19606,
+        "held_mass_kg": 0.00718147221050458,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0021213033418064063,
+        "parent_role_row": 5290,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28464,
+        "held_mass_kg": 0.0015694240702028343,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002117996915983183,
+        "parent_role_row": 14148,
+        "remaining_M4_kg": 1.8465583162148982e-05
+      },
+      {
+        "global_source330_row": 28505,
+        "held_mass_kg": 0.00023938570166137652,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0021083040086057325,
+        "parent_role_row": 14189,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28366,
+        "held_mass_kg": 0.0007710307784236647,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.002011457850983042,
+        "parent_role_row": 14050,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19410,
+        "held_mass_kg": 0.005181850929147913,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001961333724391367,
+        "parent_role_row": 5094,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19517,
+        "held_mass_kg": 0.007538659927180824,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0019587546584505598,
+        "parent_role_row": 5201,
+        "remaining_M4_kg": 1.8747188929148783e-05
+      },
+      {
+        "global_source330_row": 23486,
+        "held_mass_kg": 0.0022052793383409153,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0019318624537404943,
+        "parent_role_row": 9170,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28288,
+        "held_mass_kg": 0.0015806760732123353,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001853691641970045,
+        "parent_role_row": 13972,
+        "remaining_M4_kg": 0.0006674013118351738
+      },
+      {
+        "global_source330_row": 27122,
+        "held_mass_kg": 0.0029462602469720878,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0018202533172839521,
+        "parent_role_row": 12806,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28509,
+        "held_mass_kg": 0.001943223105627112,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001725829753114183,
+        "parent_role_row": 14193,
+        "remaining_M4_kg": 4.188838487966473e-20
+      },
+      {
+        "global_source330_row": 26768,
+        "held_mass_kg": 0.0012443935929695726,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0016874324066281448,
+        "parent_role_row": 12452,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27121,
+        "held_mass_kg": 0.0023864651438998408,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0016598148350686628,
+        "parent_role_row": 12805,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28201,
+        "held_mass_kg": 0.00042072388453107123,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001630316519587143,
+        "parent_role_row": 13885,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19024,
+        "held_mass_kg": 0.00230195917978188,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0016282887492844696,
+        "parent_role_row": 4708,
+        "remaining_M4_kg": 0.00027192642406964233
+      },
+      {
+        "global_source330_row": 23761,
+        "held_mass_kg": 0.0013841254527976355,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015770869233762725,
+        "parent_role_row": 9445,
+        "remaining_M4_kg": 0.0004578438123174044
+      },
+      {
+        "global_source330_row": 26902,
+        "held_mass_kg": 0.0008023715963645373,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015564032579262713,
+        "parent_role_row": 12586,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19257,
+        "held_mass_kg": 0.0014373148815138848,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015529153227768092,
+        "parent_role_row": 4941,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28500,
+        "held_mass_kg": 0.00024308455408572627,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015404599361700012,
+        "parent_role_row": 14184,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23348,
+        "held_mass_kg": 0.002182142831228109,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015297835862583533,
+        "parent_role_row": 9032,
+        "remaining_M4_kg": 2.2662774060018866e-05
+      },
+      {
+        "global_source330_row": 28406,
+        "held_mass_kg": 0.0016209607893378562,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015294445452348265,
+        "parent_role_row": 14090,
+        "remaining_M4_kg": 7.065665518354226e-05
+      },
+      {
+        "global_source330_row": 19807,
+        "held_mass_kg": 0.002441001853780171,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0015072237425306566,
+        "parent_role_row": 5491,
+        "remaining_M4_kg": 9.289559189647827e-06
+      },
+      {
+        "global_source330_row": 19601,
+        "held_mass_kg": 0.0005015031717903184,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0014763278778522088,
+        "parent_role_row": 5285,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19518,
+        "held_mass_kg": 0.007065643967507641,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001440289545685429,
+        "parent_role_row": 5202,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19411,
+        "held_mass_kg": 0.0066970813550786025,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0014135152792295654,
+        "parent_role_row": 5095,
+        "remaining_M4_kg": 0.0007622656793766732
+      },
+      {
+        "global_source330_row": 19342,
+        "held_mass_kg": 0.0011990889393273141,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0013766510725979292,
+        "parent_role_row": 5026,
+        "remaining_M4_kg": 0.0006601342360882219
+      },
+      {
+        "global_source330_row": 27524,
+        "held_mass_kg": 0.0009820973875626711,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0013653518250512967,
+        "parent_role_row": 13208,
+        "remaining_M4_kg": 0.0001804457749734958
+      },
+      {
+        "global_source330_row": 27522,
+        "held_mass_kg": 0.001205097487400053,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0013483407202453694,
+        "parent_role_row": 13206,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28211,
+        "held_mass_kg": 0.00012495550834046298,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0013385511805791193,
+        "parent_role_row": 13895,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23485,
+        "held_mass_kg": 0.002369359624904386,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0012956444764505811,
+        "parent_role_row": 9169,
+        "remaining_M4_kg": 0.00010798429869705415
+      },
+      {
+        "global_source330_row": 19602,
+        "held_mass_kg": 0.00038590601943223326,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0012953735370480506,
+        "parent_role_row": 5286,
+        "remaining_M4_kg": 5.405257812118042e-05
+      },
+      {
+        "global_source330_row": 28069,
+        "held_mass_kg": 0.00040944387080799006,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0012633439709060083,
+        "parent_role_row": 13753,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27650,
+        "held_mass_kg": 0.001092142645120475,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0012338741913778056,
+        "parent_role_row": 13334,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27683,
+        "held_mass_kg": 0.001678207870819373,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0012205971628961127,
+        "parent_role_row": 13367,
+        "remaining_M4_kg": 7.235751782800079e-05
+      },
+      {
+        "global_source330_row": 19224,
+        "held_mass_kg": 0.00021335166593416943,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001195882170698452,
+        "parent_role_row": 4908,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28399,
+        "held_mass_kg": 0.0014684468169434695,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011872951983562133,
+        "parent_role_row": 14083,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28504,
+        "held_mass_kg": 0.0005981318736303365,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011786921187918534,
+        "parent_role_row": 14188,
+        "remaining_M4_kg": 7.30736192414757e-21
+      },
+      {
+        "global_source330_row": 18791,
+        "held_mass_kg": 0.008260579037820381,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011749343855621643,
+        "parent_role_row": 4475,
+        "remaining_M4_kg": 0.0014864054680891142
+      },
+      {
+        "global_source330_row": 28202,
+        "held_mass_kg": 0.00032115499379870016,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011648079054731,
+        "parent_role_row": 13886,
+        "remaining_M4_kg": -1.6940658945086007e-21
+      },
+      {
+        "global_source330_row": 28109,
+        "held_mass_kg": 0.0001563520768854687,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011490130281302303,
+        "parent_role_row": 13793,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19354,
+        "held_mass_kg": 0.0018052296809401014,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011411801376606714,
+        "parent_role_row": 5038,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18884,
+        "held_mass_kg": 0.0004815889975580713,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011390546980451284,
+        "parent_role_row": 4568,
+        "remaining_M4_kg": 2.3004847549521304e-05
+      },
+      {
+        "global_source330_row": 19809,
+        "held_mass_kg": 0.0023648258775210702,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001129289793244823,
+        "parent_role_row": 5493,
+        "remaining_M4_kg": 1.1859288608483588e-20
+      },
+      {
+        "global_source330_row": 28394,
+        "held_mass_kg": 0.0009441147767574876,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0011154022829887981,
+        "parent_role_row": 14078,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19412,
+        "held_mass_kg": 0.007854953445430708,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0010779917242137091,
+        "parent_role_row": 5096,
+        "remaining_M4_kg": 9.46293322247451e-05
+      },
+      {
+        "global_source330_row": 19289,
+        "held_mass_kg": 0.003033786060768762,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0010426092540402141,
+        "parent_role_row": 4973,
+        "remaining_M4_kg": 1.6704779438076223e-52
+      },
+      {
+        "global_source330_row": 25873,
+        "held_mass_kg": 3.288368297660327e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0010265481477001186,
+        "parent_role_row": 11557,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23410,
+        "held_mass_kg": 0.005520621834875783,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0010190441568709407,
+        "parent_role_row": 9094,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28469,
+        "held_mass_kg": 0.0008536900338640407,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.001013589736988625,
+        "parent_role_row": 14153,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23349,
+        "held_mass_kg": 0.0019173208091207631,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0010128908278824067,
+        "parent_role_row": 9033,
+        "remaining_M4_kg": 7.91472313674898e-05
+      },
+      {
+        "global_source330_row": 28336,
+        "held_mass_kg": 0.0007855898097546669,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0010049456802400335,
+        "parent_role_row": 14020,
+        "remaining_M4_kg": 3.3944122162582085e-05
+      },
+      {
+        "global_source330_row": 19877,
+        "held_mass_kg": 0.0035906697302460293,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009903613663887604,
+        "parent_role_row": 5561,
+        "remaining_M4_kg": 3.3569840608084785e-05
+      },
+      {
+        "global_source330_row": 25872,
+        "held_mass_kg": 7.242499719950501e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009884068617705812,
+        "parent_role_row": 11556,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18748,
+        "held_mass_kg": 0.0009867271160146627,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009706343007675578,
+        "parent_role_row": 4432,
+        "remaining_M4_kg": 7.52316384526264e-37
+      },
+      {
+        "global_source330_row": 28075,
+        "held_mass_kg": 0.0004225776848443274,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009478922757269771,
+        "parent_role_row": 13759,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28384,
+        "held_mass_kg": 0.00020009532590847812,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009462281944704307,
+        "parent_role_row": 14068,
+        "remaining_M4_kg": 5.293955920339377e-23
+      },
+      {
+        "global_source330_row": 28393,
+        "held_mass_kg": 0.00011961968056084515,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009407353056268244,
+        "parent_role_row": 14077,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 14465,
+        "held_mass_kg": 3.365748000305757e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009130732850991944,
+        "parent_role_row": 149,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 14954,
+        "held_mass_kg": 9.70173509529104e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009106576289132005,
+        "parent_role_row": 638,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25833,
+        "held_mass_kg": 7.361720193443944e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009086232702730996,
+        "parent_role_row": 11517,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27843,
+        "held_mass_kg": 0.0019558199028324452,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0009014388826219179,
+        "parent_role_row": 13527,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26581,
+        "held_mass_kg": 0.0007370828939201601,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008919255555000757,
+        "parent_role_row": 12265,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19735,
+        "held_mass_kg": 0.0018423042547510704,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008800890415561371,
+        "parent_role_row": 5419,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 14819,
+        "held_mass_kg": 1.1833234392355507e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008777178126575682,
+        "parent_role_row": 503,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18882,
+        "held_mass_kg": 0.0010545323990270783,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000873747863336294,
+        "parent_role_row": 4566,
+        "remaining_M4_kg": 8.553780881193875e-05
+      },
+      {
+        "global_source330_row": 27119,
+        "held_mass_kg": 0.0006481513821654518,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008568305268765492,
+        "parent_role_row": 12803,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19413,
+        "held_mass_kg": 0.006369543503480468,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008521986812293859,
+        "parent_role_row": 5097,
+        "remaining_M4_kg": 0.001412215400976626
+      },
+      {
+        "global_source330_row": 25835,
+        "held_mass_kg": 4.9527658774195515e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008472425088944503,
+        "parent_role_row": 11519,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 14463,
+        "held_mass_kg": 9.310238979765018e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008385967066028915,
+        "parent_role_row": 147,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19117,
+        "held_mass_kg": 0.003620583474170046,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008223644288491354,
+        "parent_role_row": 4801,
+        "remaining_M4_kg": 4.412906566031574e-05
+      },
+      {
+        "global_source330_row": 28383,
+        "held_mass_kg": 0.000459646093986521,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008108812362574963,
+        "parent_role_row": 14067,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19540,
+        "held_mass_kg": 0.0005442150355404016,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008098723202202365,
+        "parent_role_row": 5224,
+        "remaining_M4_kg": 0.0001574913566517343
+      },
+      {
+        "global_source330_row": 28367,
+        "held_mass_kg": 0.00029378158785675623,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0008083378416520034,
+        "parent_role_row": 14051,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19216,
+        "held_mass_kg": 0.0015498211610065482,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007941309394387488,
+        "parent_role_row": 4900,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28076,
+        "held_mass_kg": 0.00010963200907099235,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007855403441577267,
+        "parent_role_row": 13760,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23221,
+        "held_mass_kg": 0.002421888441331978,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007669370603708653,
+        "parent_role_row": 8905,
+        "remaining_M4_kg": 0.0007589599113809508
+      },
+      {
+        "global_source330_row": 19862,
+        "held_mass_kg": 0.0017617252296986408,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007614323964449923,
+        "parent_role_row": 5546,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25921,
+        "held_mass_kg": 1.99226251496043e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007611750077619924,
+        "parent_role_row": 11605,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28282,
+        "held_mass_kg": 0.0003179409247877629,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000757954823901743,
+        "parent_role_row": 13966,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19022,
+        "held_mass_kg": 0.002748711926869873,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007573043588750087,
+        "parent_role_row": 4706,
+        "remaining_M4_kg": 1.3552527156068817e-20
+      },
+      {
+        "global_source330_row": 28519,
+        "held_mass_kg": 0.001488806546280076,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0007114038848469421,
+        "parent_role_row": 14203,
+        "remaining_M4_kg": 0.0002169713214753103
+      },
+      {
+        "global_source330_row": 28210,
+        "held_mass_kg": 8.27189435812732e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006924647738282133,
+        "parent_role_row": 13894,
+        "remaining_M4_kg": 3.598257018848372e-10
+      },
+      {
+        "global_source330_row": 18844,
+        "held_mass_kg": 0.007010151190744979,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006915243818007228,
+        "parent_role_row": 4528,
+        "remaining_M4_kg": 0.00010391300139246858
+      },
+      {
+        "global_source330_row": 28428,
+        "held_mass_kg": 0.00028255393544895924,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006871901684155025,
+        "parent_role_row": 14112,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28396,
+        "held_mass_kg": 0.00014486956274595286,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006836558691761212,
+        "parent_role_row": 14080,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 14324,
+        "held_mass_kg": 0.0002722455860748596,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006820858064478613,
+        "parent_role_row": 8,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27844,
+        "held_mass_kg": 0.001479164438933367,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006776443872779663,
+        "parent_role_row": 13528,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19607,
+        "held_mass_kg": 0.006758653871272099,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006738125667756498,
+        "parent_role_row": 5291,
+        "remaining_M4_kg": 0.00031458865162044297
+      },
+      {
+        "global_source330_row": 25920,
+        "held_mass_kg": 7.939330473050177e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006653964789079764,
+        "parent_role_row": 11604,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19808,
+        "held_mass_kg": 0.0022086904751680908,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006641358243567642,
+        "parent_role_row": 5492,
+        "remaining_M4_kg": 4.9404801707941995e-06
+      },
+      {
+        "global_source330_row": 25870,
+        "held_mass_kg": 0.00015414218218155897,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006612527230958144,
+        "parent_role_row": 11554,
+        "remaining_M4_kg": 1.6484110443428374e-06
+      },
+      {
+        "global_source330_row": 21167,
+        "held_mass_kg": 0.008926295918485958,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006470128525015975,
+        "parent_role_row": 6851,
+        "remaining_M4_kg": 9.070340152469525e-05
+      },
+      {
+        "global_source330_row": 25760,
+        "held_mass_kg": 4.9445299055150826e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006462403707548308,
+        "parent_role_row": 11444,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28122,
+        "held_mass_kg": 9.244699725741161e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006449519351852817,
+        "parent_role_row": 13806,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23158,
+        "held_mass_kg": 0.002878015266105649,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006416886138737759,
+        "parent_role_row": 8842,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 22955,
+        "held_mass_kg": 0.0032213250051427167,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006408205694809033,
+        "parent_role_row": 8639,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19288,
+        "held_mass_kg": 0.0035723736667290554,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000629297203318376,
+        "parent_role_row": 4972,
+        "remaining_M4_kg": 3.3292703547539e-05
+      },
+      {
+        "global_source330_row": 28416,
+        "held_mass_kg": 0.0022138657364610755,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006266347010802077,
+        "parent_role_row": 14100,
+        "remaining_M4_kg": 0.0014247372568444638
+      },
+      {
+        "global_source330_row": 19223,
+        "held_mass_kg": 0.00026596759994390595,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006261125411577545,
+        "parent_role_row": 4907,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27523,
+        "held_mass_kg": 0.001107980881442927,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006229843507433094,
+        "parent_role_row": 13207,
+        "remaining_M4_kg": -5.421010862427522e-20
+      },
+      {
+        "global_source330_row": 19967,
+        "held_mass_kg": 0.0023904369299998507,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000621445047329891,
+        "parent_role_row": 5651,
+        "remaining_M4_kg": -1.0842021724855044e-19
+      },
+      {
+        "global_source330_row": 23347,
+        "held_mass_kg": 0.0017766339496821295,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0006030090474586931,
+        "parent_role_row": 9031,
+        "remaining_M4_kg": 6.293390835971689e-05
+      },
+      {
+        "global_source330_row": 25916,
+        "held_mass_kg": 2.2377507846726985e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005968708737384734,
+        "parent_role_row": 11600,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25831,
+        "held_mass_kg": 2.3952198624499488e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005859519221336339,
+        "parent_role_row": 11515,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 23569,
+        "held_mass_kg": 0.0026364054747318733,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00056105021781713,
+        "parent_role_row": 9253,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19600,
+        "held_mass_kg": 0.0006647092505348224,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005605371480266646,
+        "parent_role_row": 5284,
+        "remaining_M4_kg": 6.602055572938488e-05
+      },
+      {
+        "global_source330_row": 28392,
+        "held_mass_kg": 0.0009332713034382323,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005564470705464493,
+        "parent_role_row": 14076,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19971,
+        "held_mass_kg": 0.0011909668387488637,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005537252053576904,
+        "parent_role_row": 5655,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28208,
+        "held_mass_kg": 0.001010836240311619,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005515069632844492,
+        "parent_role_row": 13892,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 20550,
+        "held_mass_kg": 0.00038563847795103356,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005495070082664509,
+        "parent_role_row": 6234,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19730,
+        "held_mass_kg": 0.0014439019196288427,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005445281614839307,
+        "parent_role_row": 5414,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19731,
+        "held_mass_kg": 0.001338029949238262,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005445243413170764,
+        "parent_role_row": 5415,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28179,
+        "held_mass_kg": 1.9344497204087923e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005415395051793926,
+        "parent_role_row": 13863,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28134,
+        "held_mass_kg": 2.3787703007371878e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005298481116170438,
+        "parent_role_row": 13818,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28520,
+        "held_mass_kg": 0.0009118911066252622,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005260554167937527,
+        "parent_role_row": 14204,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26907,
+        "held_mass_kg": 0.0026913235160463955,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005209506116943593,
+        "parent_role_row": 12591,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18845,
+        "held_mass_kg": 0.0069353935799870954,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005177753720370504,
+        "parent_role_row": 4529,
+        "remaining_M4_kg": 0.00019254904655205553
+      },
+      {
+        "global_source330_row": 27361,
+        "held_mass_kg": 0.0015665911318834237,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000516502917430761,
+        "parent_role_row": 13045,
+        "remaining_M4_kg": 1.289592567818704e-06
+      },
+      {
+        "global_source330_row": 26578,
+        "held_mass_kg": 0.0006451933643347728,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005151528522946237,
+        "parent_role_row": 12262,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25865,
+        "held_mass_kg": 3.817727574073615e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000509296847380535,
+        "parent_role_row": 11549,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26909,
+        "held_mass_kg": 0.002462696875227266,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.000508846645097715,
+        "parent_role_row": 12593,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26577,
+        "held_mass_kg": 0.0006144235840110922,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005084796132200756,
+        "parent_role_row": 12261,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19776,
+        "held_mass_kg": 0.0011320955309201963,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005071376432366167,
+        "parent_role_row": 5460,
+        "remaining_M4_kg": -1.0842021724855044e-19
+      },
+      {
+        "global_source330_row": 27935,
+        "held_mass_kg": 0.0005987743804780621,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0005043737012584118,
+        "parent_role_row": 13619,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28085,
+        "held_mass_kg": 0.0011024497666767272,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004993807624221777,
+        "parent_role_row": 13769,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 21985,
+        "held_mass_kg": 0.000146464920192102,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004993302768527958,
+        "parent_role_row": 7669,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19774,
+        "held_mass_kg": 0.0014187805618348648,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004979072728878588,
+        "parent_role_row": 5458,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19861,
+        "held_mass_kg": 0.002161915097097045,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004910408739735919,
+        "parent_role_row": 5545,
+        "remaining_M4_kg": 0.0003323053874531236
+      },
+      {
+        "global_source330_row": 28502,
+        "held_mass_kg": 4.136105857810435e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004872557857879659,
+        "parent_role_row": 14186,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18254,
+        "held_mass_kg": 0.0014626533388316253,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00047852736134858004,
+        "parent_role_row": 3938,
+        "remaining_M4_kg": 8.272260997658836e-05
+      },
+      {
+        "global_source330_row": 18931,
+        "held_mass_kg": 0.0025111852437476045,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004780484057975568,
+        "parent_role_row": 4615,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26165,
+        "held_mass_kg": 5.610118449794754e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00047722440706762776,
+        "parent_role_row": 11849,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28072,
+        "held_mass_kg": 0.00042192883427105677,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00047658969305823865,
+        "parent_role_row": 13756,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28482,
+        "held_mass_kg": 0.002151390950428785,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004696249459177508,
+        "parent_role_row": 14166,
+        "remaining_M4_kg": 4.137467304780427e-05
+      },
+      {
+        "global_source330_row": 25869,
+        "held_mass_kg": 5.5471851112542936e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004632901517329983,
+        "parent_role_row": 11553,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25864,
+        "held_mass_kg": 7.769131897816806e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00046191178663349724,
+        "parent_role_row": 11548,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28400,
+        "held_mass_kg": 0.001248101398232393,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00045855847845239513,
+        "parent_role_row": 14084,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27125,
+        "held_mass_kg": 0.006922752391945834,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004447729335844538,
+        "parent_role_row": 12809,
+        "remaining_M4_kg": 0.0001609331310113994
+      },
+      {
+        "global_source330_row": 19450,
+        "held_mass_kg": 0.0006435420004891057,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00043538049499455654,
+        "parent_role_row": 5134,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28470,
+        "held_mass_kg": 0.0007725714903107173,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004280812259558063,
+        "parent_role_row": 14154,
+        "remaining_M4_kg": 5.674564305548578e-05
+      },
+      {
+        "global_source330_row": 19687,
+        "held_mass_kg": 0.0006994553416461713,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00042623916888072773,
+        "parent_role_row": 5371,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18933,
+        "held_mass_kg": 0.0020377208444961347,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00042235956409765343,
+        "parent_role_row": 4617,
+        "remaining_M4_kg": 9.637616341476071e-05
+      },
+      {
+        "global_source330_row": 16300,
+        "held_mass_kg": 0.0001915504421655029,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00041899554031289146,
+        "parent_role_row": 1984,
+        "remaining_M4_kg": 6.435786845845865e-06
+      },
+      {
+        "global_source330_row": 18632,
+        "held_mass_kg": 5.46455169114779e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004149530436568976,
+        "parent_role_row": 4316,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25923,
+        "held_mass_kg": 4.353188849393064e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00041430718346047786,
+        "parent_role_row": 11607,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19198,
+        "held_mass_kg": 0.002150476711904048,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004130507870338528,
+        "parent_role_row": 4882,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19219,
+        "held_mass_kg": 0.0018732792172547737,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00041193362014489763,
+        "parent_role_row": 4903,
+        "remaining_M4_kg": 0.0004379968173063856
+      },
+      {
+        "global_source330_row": 19220,
+        "held_mass_kg": 0.0016878800787046453,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004119018556049863,
+        "parent_role_row": 4904,
+        "remaining_M4_kg": 0.00023819716459254093
+      },
+      {
+        "global_source330_row": 18908,
+        "held_mass_kg": 0.0037597292703139824,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00041130130299964386,
+        "parent_role_row": 4592,
+        "remaining_M4_kg": 5.452658563186911e-20
+      },
+      {
+        "global_source330_row": 28123,
+        "held_mass_kg": 4.9407946534074633e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0004070330914552022,
+        "parent_role_row": 13807,
+        "remaining_M4_kg": -7.52316384526264e-37
+      },
+      {
+        "global_source330_row": 27985,
+        "held_mass_kg": 0.00024833605240631983,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00040284377772805996,
+        "parent_role_row": 13669,
+        "remaining_M4_kg": 1.500565443462736e-05
+      },
+      {
+        "global_source330_row": 22168,
+        "held_mass_kg": 0.0001508526423776857,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00040272250707836405,
+        "parent_role_row": 7852,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18662,
+        "held_mass_kg": 0.00014019158953715305,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003980039985619478,
+        "parent_role_row": 4346,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27989,
+        "held_mass_kg": 7.017672203346592e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003959410821852413,
+        "parent_role_row": 13673,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27124,
+        "held_mass_kg": 0.006189857867866522,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00039138516428726685,
+        "parent_role_row": 12808,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 14744,
+        "held_mass_kg": 7.683781291234482e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003913237054030861,
+        "parent_role_row": 428,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 16254,
+        "held_mass_kg": 0.0001287928100168756,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003894257884966641,
+        "parent_role_row": 1938,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19339,
+        "held_mass_kg": 0.00031146660887401657,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003890087324465906,
+        "parent_role_row": 5023,
+        "remaining_M4_kg": 3.7297593317446472e-06
+      },
+      {
+        "global_source330_row": 19534,
+        "held_mass_kg": 0.0035091984891727586,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003848216633074474,
+        "parent_role_row": 5218,
+        "remaining_M4_kg": 3.1772112361596136e-05
+      },
+      {
+        "global_source330_row": 25922,
+        "held_mass_kg": 6.262741139835562e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00038285111327170985,
+        "parent_role_row": 11606,
+        "remaining_M4_kg": 6.631006328887476e-07
+      },
+      {
+        "global_source330_row": 16358,
+        "held_mass_kg": 1.9361269387729863e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00038003085947733203,
+        "parent_role_row": 2042,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 26168,
+        "held_mass_kg": 3.448877663458916e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00037900703999657734,
+        "parent_role_row": 11852,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18883,
+        "held_mass_kg": 0.0008529260074998402,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003785081518821744,
+        "parent_role_row": 4567,
+        "remaining_M4_kg": 0.00012262704524015666
+      },
+      {
+        "global_source330_row": 26071,
+        "held_mass_kg": 7.6817956795594e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00037684687044980497,
+        "parent_role_row": 11755,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 25924,
+        "held_mass_kg": 1.9264297357324267e-05,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003767419703372583,
+        "parent_role_row": 11608,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19775,
+        "held_mass_kg": 0.0011607565257810751,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003756763957688012,
+        "parent_role_row": 5459,
+        "remaining_M4_kg": 2.1988844661642096e-05
+      },
+      {
+        "global_source330_row": 27954,
+        "held_mass_kg": 0.003184839350984282,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003753137848907346,
+        "parent_role_row": 13638,
+        "remaining_M4_kg": 0.00014204463331608704
+      },
+      {
+        "global_source330_row": 19246,
+        "held_mass_kg": 0.0005031990440329537,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003752037980231175,
+        "parent_role_row": 4930,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19243,
+        "held_mass_kg": 0.0021462626364154858,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003752037980231175,
+        "parent_role_row": 4927,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 28501,
+        "held_mass_kg": 0.00010056209305275843,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003735662719769846,
+        "parent_role_row": 14185,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 18764,
+        "held_mass_kg": 0.0002650468132969763,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.00037283420127753587,
+        "parent_role_row": 4448,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 19479,
+        "held_mass_kg": 0.0016319651422236348,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003718514501579674,
+        "parent_role_row": 5163,
+        "remaining_M4_kg": 0.0
+      },
+      {
+        "global_source330_row": 27129,
+        "held_mass_kg": 0.002807156494596426,
+        "independent_fullrelease_capacity_to_deficits_kg": 0.0003696113858184898,
+        "parent_role_row": 12813,
+        "remaining_M4_kg": 3.586350722281366e-05
+      }
+    ],
+    "total_source_corner_capacity_over_q_sum": 0.8622435426556333,
+    "worst_covered_child_rows": [
+      {
+        "child": 700161,
+        "direct_capacity_bound_kg": 2.079936325195492e-09,
+        "need_kg": 1.597601201677427e-09,
+        "site_rows": 2
+      },
+      {
+        "child": 780719,
+        "direct_capacity_bound_kg": 1.784403523191845e-09,
+        "need_kg": 1.596571573382177e-09,
+        "site_rows": 18
+      },
+      {
+        "child": 601402,
+        "direct_capacity_bound_kg": 1.7842719359304222e-09,
+        "need_kg": 1.5964538374114304e-09,
+        "site_rows": 7
+      },
+      {
+        "child": 608577,
+        "direct_capacity_bound_kg": 1.7837437210399196e-09,
+        "need_kg": 1.595981224088349e-09,
+        "site_rows": 7
+      },
+      {
+        "child": 667232,
+        "direct_capacity_bound_kg": 1.7834786890105343e-09,
+        "need_kg": 1.59574409016732e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 801603,
+        "direct_capacity_bound_kg": 1.7833217517797076e-09,
+        "need_kg": 1.5956036726450016e-09,
+        "site_rows": 2
+      },
+      {
+        "child": 657248,
+        "direct_capacity_bound_kg": 1.7828388976402025e-09,
+        "need_kg": 1.5951716452570234e-09,
+        "site_rows": 7
+      },
+      {
+        "child": 580577,
+        "direct_capacity_bound_kg": 1.7826382745720985e-09,
+        "need_kg": 1.5949921404066144e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 605139,
+        "direct_capacity_bound_kg": 8.179174684437647e-09,
+        "need_kg": 1.5948002036373063e-09,
+        "site_rows": 2
+      },
+      {
+        "child": 740385,
+        "direct_capacity_bound_kg": 2.2820224619607966e-09,
+        "need_kg": 1.5945911971017038e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 690547,
+        "direct_capacity_bound_kg": 1.7821215111032089e-09,
+        "need_kg": 1.5945297730923447e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 596494,
+        "direct_capacity_bound_kg": 1.7833270851480618e-09,
+        "need_kg": 1.594497327305232e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 802983,
+        "direct_capacity_bound_kg": 7.80666044743587e-08,
+        "need_kg": 1.5941649322491405e-09,
+        "site_rows": 2
+      },
+      {
+        "child": 370397,
+        "direct_capacity_bound_kg": 3.753276155472024e-08,
+        "need_kg": 1.5941329191090553e-09,
+        "site_rows": 12
+      },
+      {
+        "child": 584857,
+        "direct_capacity_bound_kg": 1.7813894719020544e-09,
+        "need_kg": 1.5938747906492065e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 621559,
+        "direct_capacity_bound_kg": 1.7810271409177284e-09,
+        "need_kg": 1.5935505997684938e-09,
+        "site_rows": 4
+      },
+      {
+        "child": 599358,
+        "direct_capacity_bound_kg": 1.780561832978488e-09,
+        "need_kg": 1.5931342716123312e-09,
+        "site_rows": 2
+      },
+      {
+        "child": 656702,
+        "direct_capacity_bound_kg": 1.780273400988931e-09,
+        "need_kg": 1.592876200884833e-09,
+        "site_rows": 1
+      },
+      {
+        "child": 700363,
+        "direct_capacity_bound_kg": 2.2153345025579752e-09,
+        "need_kg": 1.5926822055937562e-09,
+        "site_rows": 3
+      },
+      {
+        "child": 637877,
+        "direct_capacity_bound_kg": 1.780020611067803e-09,
+        "need_kg": 1.5926292935919855e-09,
+        "site_rows": 4
+      }
+    ],
+    "worst_uncovered_child_rows": [
+      {
+        "child": 751929,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0009394439759911005,
+        "site_rows": 0
+      },
+      {
+        "child": 752013,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0009187161333256321,
+        "site_rows": 0
+      },
+      {
+        "child": 315240,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0008282378593395456,
+        "site_rows": 0
+      },
+      {
+        "child": 113610,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.000704794105025271,
+        "site_rows": 0
+      },
+      {
+        "child": 752641,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.000630718442349622,
+        "site_rows": 0
+      },
+      {
+        "child": 789498,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0006129292143524976,
+        "site_rows": 0
+      },
+      {
+        "child": 724908,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0005909542065159765,
+        "site_rows": 0
+      },
+      {
+        "child": 724926,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0005756426249565055,
+        "site_rows": 0
+      },
+      {
+        "child": 752198,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0005279052776367843,
+        "site_rows": 0
+      },
+      {
+        "child": 229216,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00046296675992305817,
+        "site_rows": 0
+      },
+      {
+        "child": 279340,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00041439529834669096,
+        "site_rows": 0
+      },
+      {
+        "child": 724925,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0004004616885808658,
+        "site_rows": 0
+      },
+      {
+        "child": 809710,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.000395650215367668,
+        "site_rows": 0
+      },
+      {
+        "child": 812821,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00035353567406974195,
+        "site_rows": 0
+      },
+      {
+        "child": 752284,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0003469904674057677,
+        "site_rows": 0
+      },
+      {
+        "child": 813763,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0003308857997401576,
+        "site_rows": 0
+      },
+      {
+        "child": 496748,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00031859399711033873,
+        "site_rows": 0
+      },
+      {
+        "child": 378715,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0002833655595126675,
+        "site_rows": 0
+      },
+      {
+        "child": 813796,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00028240385130668603,
+        "site_rows": 0
+      },
+      {
+        "child": 657097,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00027586167288018703,
+        "site_rows": 0
+      },
+      {
+        "child": 802960,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00026930972214186813,
+        "site_rows": 0
+      },
+      {
+        "child": 721211,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.000264342231603463,
+        "site_rows": 0
+      },
+      {
+        "child": 721215,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00021177736270226114,
+        "site_rows": 0
+      },
+      {
+        "child": 675588,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0002044886219334053,
+        "site_rows": 0
+      },
+      {
+        "child": 675584,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00020346983995801638,
+        "site_rows": 0
+      },
+      {
+        "child": 726709,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00020031769639440047,
+        "site_rows": 0
+      },
+      {
+        "child": 812472,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00019934990762239202,
+        "site_rows": 0
+      },
+      {
+        "child": 274386,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00019881561319698242,
+        "site_rows": 0
+      },
+      {
+        "child": 752683,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00019873938416036852,
+        "site_rows": 0
+      },
+      {
+        "child": 808889,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00018516646148687682,
+        "site_rows": 0
+      },
+      {
+        "child": 812285,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00018194535507088698,
+        "site_rows": 0
+      },
+      {
+        "child": 752366,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.000168015374151404,
+        "site_rows": 0
+      },
+      {
+        "child": 814822,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001671166050002337,
+        "site_rows": 0
+      },
+      {
+        "child": 721210,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00015944251021850087,
+        "site_rows": 0
+      },
+      {
+        "child": 703241,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001544878634834983,
+        "site_rows": 0
+      },
+      {
+        "child": 622430,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00015388120921346456,
+        "site_rows": 0
+      },
+      {
+        "child": 675590,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00015060310989017305,
+        "site_rows": 0
+      },
+      {
+        "child": 627969,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00014782269011909244,
+        "site_rows": 0
+      },
+      {
+        "child": 721219,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001465640784422966,
+        "site_rows": 0
+      },
+      {
+        "child": 802649,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00014649260499900092,
+        "site_rows": 0
+      },
+      {
+        "child": 695886,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00014175467743300635,
+        "site_rows": 0
+      },
+      {
+        "child": 675595,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00013038592031974647,
+        "site_rows": 0
+      },
+      {
+        "child": 803046,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001300044725688916,
+        "site_rows": 0
+      },
+      {
+        "child": 802827,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00012609444666384688,
+        "site_rows": 0
+      },
+      {
+        "child": 752740,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001209415064471395,
+        "site_rows": 0
+      },
+      {
+        "child": 812183,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00012042503188613977,
+        "site_rows": 0
+      },
+      {
+        "child": 789915,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00011944574679523173,
+        "site_rows": 0
+      },
+      {
+        "child": 812804,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00011818822286901064,
+        "site_rows": 0
+      },
+      {
+        "child": 310013,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001147254237290853,
+        "site_rows": 0
+      },
+      {
+        "child": 805641,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00011327367181742005,
+        "site_rows": 0
+      },
+      {
+        "child": 786238,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00011260118010229919,
+        "site_rows": 0
+      },
+      {
+        "child": 133453,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00011055145885438306,
+        "site_rows": 0
+      },
+      {
+        "child": 812519,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010955260871230238,
+        "site_rows": 0
+      },
+      {
+        "child": 779982,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.0001087447668335406,
+        "site_rows": 0
+      },
+      {
+        "child": 52352,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010497917931117544,
+        "site_rows": 0
+      },
+      {
+        "child": 721223,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010286110026272978,
+        "site_rows": 0
+      },
+      {
+        "child": 815962,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010252030662629142,
+        "site_rows": 0
+      },
+      {
+        "child": 726706,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010176835744449534,
+        "site_rows": 0
+      },
+      {
+        "child": 645365,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010053957042688981,
+        "site_rows": 0
+      },
+      {
+        "child": 752478,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 0.00010025920866554788,
+        "site_rows": 0
+      },
+      {
+        "child": 816082,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 9.977609044663132e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 812340,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 9.525444348538656e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 814147,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 9.26526488043872e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 675585,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.937666703293485e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 752689,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.871250931826809e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 752323,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.82052073398477e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 752319,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.777071649312089e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 590335,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.748859754649613e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 791205,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.469846911660745e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 815850,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.366063666323229e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 803113,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.334046156854835e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 675594,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.316098476277124e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 754707,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.271425481884087e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 675598,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.122268669353518e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 802627,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 8.010708928502148e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 802599,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.982474228834387e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 657100,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.981119848848918e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 816102,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.827138067945859e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 737631,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.769552129783268e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 38149,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.714285453524289e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 679132,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.650199763502794e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 780588,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.641037533224614e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 695892,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 7.616481881637469e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 641377,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.96933636707076e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 645357,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.80566545326307e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 752578,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.709311450325576e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 814654,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.685537953861219e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 731833,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.547182470097343e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 657105,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.520449225708711e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 721218,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.465488391660317e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 803321,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.413112289093092e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 815133,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.315434859114622e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 801757,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.281676796961736e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 721199,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.213841789204019e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 675603,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.200206958738557e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 752024,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.194708692678957e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 731839,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.095396242346125e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 814689,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 6.033692261028241e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 703230,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 5.868173035510536e-05,
+        "site_rows": 0
+      },
+      {
+        "child": 814096,
+        "direct_capacity_bound_kg": 0.0,
+        "need_kg": 5.8534978976951126e-05,
+        "site_rows": 0
+      }
+    ]
+  },
+  "native_steps": 0,
+  "peak_rss_bytes": 660324352,
+  "physical_admission": false,
+  "schema": "numi.human.current406-source-only-residual-capacity-census.v1",
+  "scope": "Optimistic independent per-site upper-capacity census on pinned 406 graph. Sums single-site caps separately by receiver and source corner, so shared parent/receiver coupling is not solved; passing a bound is not a feasible allocation. Inputs and current406 geometry only.",
+  "status": "SOURCE_ONLY_RESIDUAL_CAPACITY_BOUND_DIAGNOSTIC"
+}

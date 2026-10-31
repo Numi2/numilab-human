@@ -1,0 +1,2437 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_POLYGON_EDGE_FLIP_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/pass-000/fixed-boundary-volume-proposal.npz",
+  "input_npz_sha256": "acfeac0c73603388b16351ed2427037d86d19ff087f767f3fbfce5b2b36a35c3",
+  "script_sha256": "acf252585d427214b2c93b78a28fc9d27e3096b33080855b570458296ca2bff3",
+  "cavity_predicate_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "nodes_bit_identical": true,
+  "oriented_boundary_exactly_unchanged": true,
+  "exact_F32_volume_unchanged": true,
+  "material_preserved": true,
+  "eligible_stars": 4268,
+  "tested_stars": 4268,
+  "passing_operations": 124,
+  "rejections": {
+    "quality_no_progress": 73,
+    "open_or_non_simple_edge_link": 434,
+    "no_positive_polygon_triangulation": 182,
+    "conflict": 3455
+  },
+  "input_cells": 13529,
+  "output_cells": 13429,
+  "bad_cells_before": 1763,
+  "bad_cells_after": 1629,
+  "minimum_normalized_det_before": 8.308346649853593e-12,
+  "minimum_normalized_det_after": 8.308346649853593e-12,
+  "minimum_volume_before_m3": 4.411629933616147e-24,
+  "minimum_volume_after_m3": 1.3129010682441655e-20,
+  "elapsed_s": 0.1435185419395566,
+  "operations": [
+    {
+      "old_rows": [
+        2844,
+        2892,
+        10473
+      ],
+      "removed_edge": [
+        6440,
+        128422
+      ],
+      "ring": [
+        128042,
+        128411,
+        128423
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        251,
+        2454,
+        13098
+      ],
+      "removed_edge": [
+        11040,
+        128466
+      ],
+      "ring": [
+        128447,
+        128464,
+        128469
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        1341,
+        3214,
+        3215
+      ],
+      "removed_edge": [
+        12029,
+        128109
+      ],
+      "ring": [
+        6251,
+        128027,
+        128193
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2033,
+        2206,
+        13101
+      ],
+      "removed_edge": [
+        13145,
+        129396
+      ],
+      "ring": [
+        13156,
+        13314,
+        129395
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2013,
+        6741,
+        13103
+      ],
+      "removed_edge": [
+        13152,
+        131194
+      ],
+      "ring": [
+        14108,
+        14905,
+        131191
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        6697,
+        7822,
+        10859
+      ],
+      "removed_edge": [
+        15007,
+        15899
+      ],
+      "ring": [
+        15005,
+        16585,
+        131195
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1415,
+        2800,
+        7803
+      ],
+      "removed_edge": [
+        15020,
+        129682
+      ],
+      "ring": [
+        15018,
+        129681,
+        129695
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2034,
+        2981,
+        12543
+      ],
+      "removed_edge": [
+        15035,
+        18472
+      ],
+      "ring": [
+        15028,
+        19035,
+        131252
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        2684,
+        7144,
+        7482
+      ],
+      "removed_edge": [
+        15044,
+        131189
+      ],
+      "ring": [
+        15042,
+        15049,
+        131190
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        1888,
+        2541,
+        5301
+      ],
+      "removed_edge": [
+        15074,
+        129792
+      ],
+      "ring": [
+        8934,
+        15084,
+        129789
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        3282,
+        5197,
+        9093
+      ],
+      "removed_edge": [
+        16766,
+        130734
+      ],
+      "ring": [
+        130543,
+        130732,
+        131021
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        354,
+        10210,
+        13136
+      ],
+      "removed_edge": [
+        16996,
+        17480
+      ],
+      "ring": [
+        17001,
+        17383,
+        17482
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3027,
+        3038,
+        3039
+      ],
+      "removed_edge": [
+        17019,
+        130087
+      ],
+      "ring": [
+        17049,
+        129245,
+        130086
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1813,
+        1851,
+        5634
+      ],
+      "removed_edge": [
+        17112,
+        17127
+      ],
+      "ring": [
+        16966,
+        17123,
+        130243
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        9716,
+        12390,
+        12758
+      ],
+      "removed_edge": [
+        17136,
+        20141
+      ],
+      "ring": [
+        17546,
+        19157,
+        131197
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7274,
+        11371,
+        13140
+      ],
+      "removed_edge": [
+        17295,
+        18795
+      ],
+      "ring": [
+        17359,
+        17498,
+        18801
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3406,
+        5209,
+        9419
+      ],
+      "removed_edge": [
+        17298,
+        130787
+      ],
+      "ring": [
+        18230,
+        130324,
+        131060
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1991,
+        4082,
+        13147
+      ],
+      "removed_edge": [
+        18003,
+        131740
+      ],
+      "ring": [
+        129012,
+        131360,
+        131738
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3144,
+        8865,
+        9971
+      ],
+      "removed_edge": [
+        19185,
+        19726
+      ],
+      "ring": [
+        19159,
+        24558,
+        248337
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3281,
+        11664,
+        13151
+      ],
+      "removed_edge": [
+        19616,
+        131097
+      ],
+      "ring": [
+        19577,
+        131098,
+        132587
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        327,
+        12760,
+        13157
+      ],
+      "removed_edge": [
+        21207,
+        131800
+      ],
+      "ring": [
+        21210,
+        24456,
+        131799
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2523,
+        3661,
+        3866
+      ],
+      "removed_edge": [
+        21788,
+        132595
+      ],
+      "ring": [
+        21811,
+        131820,
+        132600
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        1183,
+        9530,
+        13356
+      ],
+      "removed_edge": [
+        23597,
+        131907
+      ],
+      "ring": [
+        131671,
+        131906,
+        132033
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        382,
+        3297,
+        7299
+      ],
+      "removed_edge": [
+        23931,
+        134107
+      ],
+      "ring": [
+        23247,
+        23832,
+        134349
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4062,
+        12608,
+        13185
+      ],
+      "removed_edge": [
+        25386,
+        130864
+      ],
+      "ring": [
+        130866,
+        130934,
+        133605
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        1234,
+        8286,
+        11055
+      ],
+      "removed_edge": [
+        25883,
+        131848
+      ],
+      "ring": [
+        131584,
+        131849,
+        135084
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        10863,
+        12093,
+        13433
+      ],
+      "removed_edge": [
+        26176,
+        26779
+      ],
+      "ring": [
+        26211,
+        26569,
+        27841
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        5669,
+        5718,
+        5732
+      ],
+      "removed_edge": [
+        26679,
+        27445
+      ],
+      "ring": [
+        26179,
+        26451,
+        27619
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        12053,
+        12739,
+        12956
+      ],
+      "removed_edge": [
+        27249,
+        135489
+      ],
+      "ring": [
+        15183,
+        27243,
+        135487
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        970,
+        5639,
+        6405
+      ],
+      "removed_edge": [
+        27828,
+        28186
+      ],
+      "ring": [
+        27869,
+        27986,
+        28492
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2432,
+        8217,
+        11631
+      ],
+      "removed_edge": [
+        27918,
+        27930
+      ],
+      "ring": [
+        27926,
+        130897,
+        248041
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4136,
+        5686,
+        8684
+      ],
+      "removed_edge": [
+        27980,
+        27995
+      ],
+      "ring": [
+        27913,
+        27981,
+        136421
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        5593,
+        10683,
+        11143
+      ],
+      "removed_edge": [
+        28103,
+        28628
+      ],
+      "ring": [
+        28074,
+        28364,
+        28666
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        5585,
+        6164,
+        10165
+      ],
+      "removed_edge": [
+        28128,
+        135488
+      ],
+      "ring": [
+        28087,
+        135833,
+        136186
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        8215,
+        8637,
+        11830
+      ],
+      "removed_edge": [
+        28889,
+        28970
+      ],
+      "ring": [
+        28837,
+        28890,
+        28912
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2869,
+        3107,
+        11703
+      ],
+      "removed_edge": [
+        29195,
+        29223
+      ],
+      "ring": [
+        29166,
+        29229,
+        136535
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        860,
+        3403,
+        7579
+      ],
+      "removed_edge": [
+        29667,
+        29796
+      ],
+      "ring": [
+        29692,
+        29756,
+        136602
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        690,
+        3783,
+        12380
+      ],
+      "removed_edge": [
+        30186,
+        31275
+      ],
+      "ring": [
+        30061,
+        30808,
+        31301
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        5437,
+        10440,
+        13230
+      ],
+      "removed_edge": [
+        30214,
+        136517
+      ],
+      "ring": [
+        30189,
+        30293,
+        136516
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        5367,
+        10199,
+        10688
+      ],
+      "removed_edge": [
+        31098,
+        31875
+      ],
+      "ring": [
+        31126,
+        31861,
+        31883
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3808,
+        10585,
+        11791
+      ],
+      "removed_edge": [
+        32705,
+        138469
+      ],
+      "ring": [
+        32720,
+        138471,
+        138612
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1228,
+        9873,
+        13249
+      ],
+      "removed_edge": [
+        32968,
+        33002
+      ],
+      "ring": [
+        32975,
+        33004,
+        138707
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        138,
+        10384,
+        13252
+      ],
+      "removed_edge": [
+        32992,
+        33020
+      ],
+      "ring": [
+        32989,
+        33022,
+        33037
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        8943,
+        9007,
+        9068
+      ],
+      "removed_edge": [
+        32994,
+        33025
+      ],
+      "ring": [
+        33023,
+        33036,
+        33042
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2942,
+        2992,
+        9151
+      ],
+      "removed_edge": [
+        33008,
+        33012
+      ],
+      "ring": [
+        33010,
+        33027,
+        138732
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        11472,
+        12597,
+        13262
+      ],
+      "removed_edge": [
+        33141,
+        33857
+      ],
+      "ring": [
+        33160,
+        33560,
+        139018
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        193,
+        9004,
+        12636
+      ],
+      "removed_edge": [
+        33238,
+        138681
+      ],
+      "ring": [
+        33234,
+        35911,
+        138682
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7453,
+        11033,
+        11997
+      ],
+      "removed_edge": [
+        33261,
+        33403
+      ],
+      "ring": [
+        33236,
+        33345,
+        33415
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        11712,
+        12541,
+        12542
+      ],
+      "removed_edge": [
+        33412,
+        33479
+      ],
+      "ring": [
+        33410,
+        33476,
+        139264
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7106,
+        11447,
+        13274
+      ],
+      "removed_edge": [
+        33760,
+        139417
+      ],
+      "ring": [
+        33763,
+        139374,
+        139542
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        10663,
+        10915,
+        13275
+      ],
+      "removed_edge": [
+        33846,
+        34353
+      ],
+      "ring": [
+        34011,
+        34298,
+        34349
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        6766,
+        10307,
+        13278
+      ],
+      "removed_edge": [
+        33903,
+        34129
+      ],
+      "ring": [
+        33944,
+        34122,
+        251985
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4159,
+        7171,
+        9140
+      ],
+      "removed_edge": [
+        33981,
+        139746
+      ],
+      "ring": [
+        34025,
+        139626,
+        139747
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        9580,
+        9703,
+        13287
+      ],
+      "removed_edge": [
+        34031,
+        34105
+      ],
+      "ring": [
+        33874,
+        34040,
+        247892
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3595,
+        7159,
+        13297
+      ],
+      "removed_edge": [
+        34346,
+        34731
+      ],
+      "ring": [
+        34354,
+        34741,
+        140475
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4399,
+        4405,
+        4442
+      ],
+      "removed_edge": [
+        34792,
+        140233
+      ],
+      "ring": [
+        34765,
+        34786,
+        140234
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4759,
+        4794,
+        4796
+      ],
+      "removed_edge": [
+        34957,
+        139676
+      ],
+      "ring": [
+        139677,
+        250678,
+        250833
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4607,
+        7855,
+        11226
+      ],
+      "removed_edge": [
+        35096,
+        35102
+      ],
+      "ring": [
+        35098,
+        35106,
+        140396
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        46,
+        5221,
+        6887
+      ],
+      "removed_edge": [
+        35135,
+        140393
+      ],
+      "ring": [
+        35117,
+        140394,
+        140522
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1544,
+        4727,
+        5870
+      ],
+      "removed_edge": [
+        35181,
+        38260
+      ],
+      "ring": [
+        35961,
+        37036,
+        140879
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        786,
+        6737,
+        10330
+      ],
+      "removed_edge": [
+        35454,
+        35455
+      ],
+      "ring": [
+        35138,
+        35456,
+        141020
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        9406,
+        10033,
+        12346
+      ],
+      "removed_edge": [
+        36796,
+        142045
+      ],
+      "ring": [
+        36890,
+        141311,
+        142046
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        1352,
+        1390,
+        1399
+      ],
+      "removed_edge": [
+        127979,
+        127981
+      ],
+      "ring": [
+        127542,
+        127935,
+        127980
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        218,
+        1778,
+        12491
+      ],
+      "removed_edge": [
+        129613,
+        249307
+      ],
+      "ring": [
+        14837,
+        129612,
+        129843
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        2422,
+        2557,
+        9445
+      ],
+      "removed_edge": [
+        129829,
+        129933
+      ],
+      "ring": [
+        129803,
+        129839,
+        129931
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1163,
+        6635,
+        11854
+      ],
+      "removed_edge": [
+        129895,
+        130492
+      ],
+      "ring": [
+        17084,
+        129900,
+        130493
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7528,
+        7529,
+        7881
+      ],
+      "removed_edge": [
+        130354,
+        130446
+      ],
+      "ring": [
+        130244,
+        130329,
+        130447
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        8718,
+        8727,
+        8731
+      ],
+      "removed_edge": [
+        130925,
+        131686
+      ],
+      "ring": [
+        131182,
+        131507,
+        131933
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        411,
+        7298,
+        10753
+      ],
+      "removed_edge": [
+        131162,
+        131202
+      ],
+      "ring": [
+        18686,
+        131161,
+        134045
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        874,
+        3380,
+        6718
+      ],
+      "removed_edge": [
+        131332,
+        131409
+      ],
+      "ring": [
+        131335,
+        131408,
+        249136
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        10376,
+        10461,
+        13349
+      ],
+      "removed_edge": [
+        131365,
+        132198
+      ],
+      "ring": [
+        131363,
+        131364,
+        131745
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        483,
+        8012,
+        13118
+      ],
+      "removed_edge": [
+        131529,
+        131531
+      ],
+      "ring": [
+        128642,
+        131530,
+        131532
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        2357,
+        2399,
+        13353
+      ],
+      "removed_edge": [
+        131601,
+        131607
+      ],
+      "ring": [
+        131537,
+        131600,
+        131759
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7055,
+        11422,
+        11888
+      ],
+      "removed_edge": [
+        132135,
+        132165
+      ],
+      "ring": [
+        131936,
+        132136,
+        132164
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        951,
+        8791,
+        12897
+      ],
+      "removed_edge": [
+        132142,
+        132649
+      ],
+      "ring": [
+        131938,
+        132145,
+        245998
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        3720,
+        3990,
+        10088
+      ],
+      "removed_edge": [
+        132150,
+        132489
+      ],
+      "ring": [
+        132405,
+        132490,
+        251347
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        5882,
+        10737,
+        12880
+      ],
+      "removed_edge": [
+        132200,
+        132360
+      ],
+      "ring": [
+        131748,
+        132080,
+        132201
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        5900,
+        6552,
+        12517
+      ],
+      "removed_edge": [
+        132339,
+        134185
+      ],
+      "ring": [
+        20679,
+        132344,
+        134516
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1309,
+        4057,
+        9464
+      ],
+      "removed_edge": [
+        133662,
+        133831
+      ],
+      "ring": [
+        22307,
+        133509,
+        134017
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7145,
+        8486,
+        11748
+      ],
+      "removed_edge": [
+        133725,
+        133996
+      ],
+      "ring": [
+        133113,
+        133716,
+        133881
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4013,
+        11570,
+        13367
+      ],
+      "removed_edge": [
+        134001,
+        134174
+      ],
+      "ring": [
+        23326,
+        133806,
+        134329
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        342,
+        3849,
+        3975
+      ],
+      "removed_edge": [
+        134417,
+        134726
+      ],
+      "ring": [
+        23904,
+        134514,
+        134641
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2505,
+        11734,
+        11735
+      ],
+      "removed_edge": [
+        135117,
+        135310
+      ],
+      "ring": [
+        24827,
+        135119,
+        135900
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        6305,
+        6384,
+        10954
+      ],
+      "removed_edge": [
+        135508,
+        135888
+      ],
+      "ring": [
+        27007,
+        135360,
+        136032
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1377,
+        9937,
+        13122
+      ],
+      "removed_edge": [
+        135551,
+        136303
+      ],
+      "ring": [
+        29362,
+        136010,
+        136302
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4152,
+        10327,
+        12448
+      ],
+      "removed_edge": [
+        136074,
+        138267
+      ],
+      "ring": [
+        31311,
+        136081,
+        138507
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        529,
+        10553,
+        13378
+      ],
+      "removed_edge": [
+        136312,
+        136531
+      ],
+      "ring": [
+        27812,
+        136091,
+        136524
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        724,
+        6030,
+        6280
+      ],
+      "removed_edge": [
+        136384,
+        136588
+      ],
+      "ring": [
+        28337,
+        136377,
+        136593
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        455,
+        4611,
+        10991
+      ],
+      "removed_edge": [
+        136472,
+        137914
+      ],
+      "ring": [
+        136473,
+        137917,
+        137919
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        539,
+        6679,
+        13184
+      ],
+      "removed_edge": [
+        136576,
+        136700
+      ],
+      "ring": [
+        31202,
+        136575,
+        136701
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        4359,
+        4599,
+        11514
+      ],
+      "removed_edge": [
+        136889,
+        136971
+      ],
+      "ring": [
+        28430,
+        136557,
+        136890
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        8180,
+        8346,
+        10031
+      ],
+      "removed_edge": [
+        137053,
+        137063
+      ],
+      "ring": [
+        136933,
+        137052,
+        137077
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        849,
+        10201,
+        10203
+      ],
+      "removed_edge": [
+        137957,
+        137959
+      ],
+      "ring": [
+        31884,
+        137958,
+        138228
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        6835,
+        9102,
+        12535
+      ],
+      "removed_edge": [
+        138762,
+        139232
+      ],
+      "ring": [
+        138766,
+        138834,
+        140021
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        610,
+        4723,
+        12394
+      ],
+      "removed_edge": [
+        138975,
+        139172
+      ],
+      "ring": [
+        138014,
+        138986,
+        139001
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        10231,
+        11508,
+        13400
+      ],
+      "removed_edge": [
+        139256,
+        139777
+      ],
+      "ring": [
+        34065,
+        139254,
+        139776
+      ],
+      "new_cell_count": 2,
+      "before_bad": 2,
+      "after_bad": 1
+    },
+    {
+      "old_rows": [
+        7138,
+        7422,
+        12313
+      ],
+      "removed_edge": [
+        139703,
+        139985
+      ],
+      "ring": [
+        33924,
+        139704,
+        140141
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2220,
+        7052,
+        10381
+      ],
+      "removed_edge": [
+        139817,
+        140189
+      ],
+      "ring": [
+        139819,
+        140050,
+        252194
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        508,
+        9095,
+        9437
+      ],
+      "removed_edge": [
+        139821,
+        141201
+      ],
+      "ring": [
+        139818,
+        139822,
+        140718
+      ],
+      "new_cell_count": 2,
+      "before_bad": 3,
+      "after_bad": 2
+    },
+    {
+      "old_rows": [
+        1142,
+        5858,
+        6940
+      ],
+      "removed_edge": [
+        140254,
+        140307
+      ],
+      "ring": [
+        140190,
+        140244,
+        140305
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3350,
+        10419,
+        10420
+      ],
+      "removed_edge": [
+        140339,
+        140734
+      ],
+      "ring": [
+        139990,
+        140338,
+        140733
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1291,
+        8884,
+        12263
+      ],
+      "removed_edge": [
+        140474,
+        140548
+      ],
+      "ring": [
+        35165,
+        140477,
+        140587
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        275,
+        6994,
+        12397
+      ],
+      "removed_edge": [
+        141400,
+        142742
+      ],
+      "ring": [
+        38608,
+        141105,
+        142664
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        8795,
+        9958,
+        12422
+      ],
+      "removed_edge": [
+        142101,
+        142106
+      ],
+      "ring": [
+        38293,
+        142077,
+        142103
+      ],
+      "new_cell_count": 2,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        781,
+        3156,
+        3157,
+        10226
+      ],
+      "removed_edge": [
+        19926,
+        131339
+      ],
+      "ring": [
+        19561,
+        130998,
+        131340,
+        131349
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1188,
+        3448,
+        6470,
+        12761
+      ],
+      "removed_edge": [
+        21868,
+        23484
+      ],
+      "ring": [
+        21808,
+        21813,
+        23489,
+        21840
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3892,
+        3979,
+        8767,
+        11753
+      ],
+      "removed_edge": [
+        22666,
+        22891
+      ],
+      "ring": [
+        21209,
+        22734,
+        133273,
+        132472
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        543,
+        5573,
+        13010,
+        13195
+      ],
+      "removed_edge": [
+        27231,
+        28013
+      ],
+      "ring": [
+        27263,
+        27357,
+        27264,
+        28019
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1086,
+        6027,
+        8244,
+        9648
+      ],
+      "removed_edge": [
+        28232,
+        28504
+      ],
+      "ring": [
+        28443,
+        28677,
+        28782,
+        136259
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4521,
+        7247,
+        8435,
+        11265
+      ],
+      "removed_edge": [
+        28359,
+        28394
+      ],
+      "ring": [
+        28224,
+        135767,
+        28367,
+        136934
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        6829,
+        7173,
+        8093,
+        12495
+      ],
+      "removed_edge": [
+        29019,
+        29304
+      ],
+      "ring": [
+        27192,
+        27281,
+        136603,
+        29313
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        7323,
+        11964,
+        13233,
+        13234
+      ],
+      "removed_edge": [
+        32025,
+        32285
+      ],
+      "ring": [
+        31837,
+        31842,
+        32289,
+        32242
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        172,
+        1082,
+        7507,
+        7560
+      ],
+      "removed_edge": [
+        32069,
+        32444
+      ],
+      "ring": [
+        32068,
+        32445,
+        32439,
+        32456
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1109,
+        9772,
+        9804,
+        13281
+      ],
+      "removed_edge": [
+        33947,
+        33951
+      ],
+      "ring": [
+        33941,
+        33949,
+        139627,
+        139543
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        107,
+        4703,
+        6558,
+        11944
+      ],
+      "removed_edge": [
+        33960,
+        139233
+      ],
+      "ring": [
+        33533,
+        33860,
+        247364,
+        139234
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1322,
+        6720,
+        10504,
+        12178
+      ],
+      "removed_edge": [
+        34210,
+        34931
+      ],
+      "ring": [
+        31831,
+        34443,
+        140067,
+        139870
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1236,
+        11654,
+        11749,
+        12236
+      ],
+      "removed_edge": [
+        35967,
+        36068
+      ],
+      "ring": [
+        35972,
+        36062,
+        141312,
+        36371
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1879,
+        10958,
+        11162,
+        13517
+      ],
+      "removed_edge": [
+        129630,
+        130471
+      ],
+      "ring": [
+        16728,
+        16936,
+        130472,
+        129631
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        2607,
+        9475,
+        11498,
+        12317
+      ],
+      "removed_edge": [
+        130699,
+        130764
+      ],
+      "ring": [
+        17987,
+        18665,
+        131140,
+        130700
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        506,
+        697,
+        5646,
+        8908
+      ],
+      "removed_edge": [
+        134760,
+        135610
+      ],
+      "ring": [
+        26227,
+        26249,
+        135026,
+        135281
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        9167,
+        9232,
+        9235,
+        13391
+      ],
+      "removed_edge": [
+        138373,
+        138619
+      ],
+      "ring": [
+        138444,
+        138650,
+        138741,
+        138654
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        1169,
+        4537,
+        4538,
+        8809
+      ],
+      "removed_edge": [
+        139500,
+        139502
+      ],
+      "ring": [
+        33554,
+        139414,
+        139501,
+        139597
+      ],
+      "new_cell_count": 4,
+      "before_bad": 2,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        4717,
+        5230,
+        5853,
+        8433,
+        12076
+      ],
+      "removed_edge": [
+        32656,
+        32868
+      ],
+      "ring": [
+        32668,
+        32867,
+        139581,
+        33453,
+        250939
+      ],
+      "new_cell_count": 6,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        3421,
+        6518,
+        7083,
+        8587,
+        8628,
+        8700,
+        8750
+      ],
+      "removed_edge": [
+        28454,
+        248378
+      ],
+      "ring": [
+        28452,
+        28493,
+        28497,
+        28580,
+        28602,
+        28707,
+        135710
+      ],
+      "new_cell_count": 10,
+      "before_bad": 1,
+      "after_bad": 0
+    }
+  ]
+}

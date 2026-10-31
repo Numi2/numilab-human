@@ -1,0 +1,132 @@
+{
+  "complete_allocation": false,
+  "counts": {
+    "exact_m21_over_tolerance": 8,
+    "exact_m22_over_tolerance": 8,
+    "rows_changed_by_022_batch": 0
+  },
+  "formula": {
+    "coordinate_source": "points_world_m canonical float32 from target 406; interpreted exactly as dyadic binary32",
+    "density_gate_kg_m3": 950.0,
+    "determinant_owner": "081 exact dyadic predicate; det6 integer units 2^-447 m^3",
+    "unchanged_tolerance_kg_m3": 5e-10,
+    "volume": "abs(det6)/(6*2^447) m^3"
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/solve_oriented_cavity_milp_081.py": "3f7c276bef3bb4427f6acb41f6eeedffbeae273c9493a3b7854b244a5a2fa024",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-021-source-exhaustion-batch/run-001/merged-held-centroid-noncentroid-exhaustion.npz": "6609bd2720dff820fac1075e42d99f4a4c011f15f3a7e8c2597cc0ac5c918c19",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/independent-replay-013.json": "7ce2d8dc4ab8c57da2b2b3b3692dece7f1fd8fe0901b15e26a7e5cbe1a1ea090",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/merged-held-centroid-noncentroid-source-exhaustion.npz": "69c212a0a11395a7c0584b99fc4cc00fd543754baec4c542266b8a4226957623",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-054-exact-f32-direct-density/exact-f32-direct-density-reconciliation.json": "d10302d30e44b7388cf9f4a71195a5fbd928b08c36fdeeae9b8e96a242eb701d"
+  },
+  "interpretation": "Exact dyadic evaluation identifies eight inherited rows above the unchanged density tolerance. Their M21 and M22 mass values are identical, so the 022 source-exhaustion additions did not worsen these overages. The independent 013 cross-product calculation reports three; the 052 numpy.linalg.det calculation reports twenty. These counts differ from determinant evaluation, not target geometry/source330/022 ledger pins.",
+  "metrics": {
+    "max_density_delta_kg_m3": 0.0,
+    "max_exact_density_m21_kg_m3": 950.0000000457437,
+    "max_exact_density_m22_kg_m3": 950.0000000457437,
+    "max_mass_delta_kg": 0.0
+  },
+  "native_steps": 0,
+  "overage_rows": [
+    {
+      "child_row": 198545,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.000000000833,
+      "density_m22_kg_m3": 950.000000000833,
+      "det6_abs": 71308822947337949001661001399957979635294919949089130718583046069337149306026221030622269251412964070676416329044932704600064,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 3.1067589703012334e-08,
+      "mass_m22_kg": 3.1067589703012334e-08,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 233459,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.0000000053379,
+      "density_m22_kg_m3": 950.0000000053379,
+      "det6_abs": 320997726745140846006085486756828719870013722012106709625419073950146193920658894352359744340470569545948470213704178204672,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 1.398512169739479e-10,
+      "mass_m22_kg": 1.398512169739479e-10,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 233636,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.000000001309,
+      "density_m22_kg_m3": 950.000000001309,
+      "det6_abs": 849966099454676717756526343692514954692166968439665005614647080521706719478208989023622572956156415671197921196137457091870720,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 3.703103900458742e-07,
+      "mass_m22_kg": 3.703103900458742e-07,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 288320,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.0000000084268,
+      "density_m22_kg_m3": 950.0000000084268,
+      "det6_abs": 33890211319692430537306489738139635969279945693500464421010476623743799339865645538936885781229662106554100778592070795264,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 1.476517402362074e-11,
+      "mass_m22_kg": 1.476517402362074e-11,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 288360,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.0000000457437,
+      "density_m22_kg_m3": 950.0000000457437,
+      "det6_abs": 37458736024831714790075840110585190642881822064653605456495615877280104858223613594625828424224196069722741660590402437120,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 1.63198969435714e-11,
+      "mass_m22_kg": 1.63198969435714e-11,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 539645,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.0000000238849,
+      "density_m22_kg_m3": 950.0000000238849,
+      "det6_abs": 765223921387817240227492361278641982316468216574687793547868422445163182265662768665452975059210918759058376750668435161088,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 3.333902010798966e-10,
+      "mass_m22_kg": 3.333902010798966e-10,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 752551,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.0000000006906,
+      "density_m22_kg_m3": 950.0000000006906,
+      "det6_abs": 206718058680777763982701850054663176314194635687215168292099966238113227474990027660394029971224652066964750904553342238720,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 9.00622330569042e-11,
+      "mass_m22_kg": 9.00622330569042e-11,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    },
+    {
+      "child_row": 804459,
+      "density_delta_kg_m3": 0.0,
+      "density_m21_kg_m3": 950.0000000005798,
+      "density_m22_kg_m3": 950.0000000005798,
+      "det6_abs": 15765024098864432620903937182909790018750669801552659528591760551506736078485381652865099541201074479220365338296455417298944,
+      "mass_delta_kg": 0.0,
+      "mass_m21_kg": 6.8684530205076896e-09,
+      "mass_m22_kg": 6.8684530205076896e-09,
+      "over_950_plus_5e-10_after": true,
+      "over_950_plus_5e-10_before": true
+    }
+  ],
+  "physical_admission": false,
+  "schema": "numi.human.current406-exact-f32-density-inherited-overage-row-replay.v1",
+  "status": "PASS_EXACT_F32_OVERAGE_ROWS_INHERITED_UNCHANGED"
+}

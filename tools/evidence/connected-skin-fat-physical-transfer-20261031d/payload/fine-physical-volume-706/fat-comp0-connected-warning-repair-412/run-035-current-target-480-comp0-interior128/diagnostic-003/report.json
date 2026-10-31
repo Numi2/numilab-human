@@ -1,0 +1,187 @@
+{
+  "status": "PASS_LOCAL_TETGEN_MESH_DIAGNOSTIC_SOURCE_ONLY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-033-target-rebind-480/result-002/fat-current-typed-target-rebound.npz",
+  "input_sha256": "1bdff4e0007fdc2ab5867830f20ded3f30c70a1bac5a9ffaa0b66577db7913b2",
+  "prepared_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-034-compact-prep-481/preparation-002/connected-cavity-shells.npz",
+  "prepared_shell_sha256": "c5f9889ab26e152144652ae51fde8ce7eff6a673038cc110b3f34f0cd7ba46b8",
+  "remesher_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_fat614_compact_cavities_484_root.py",
+  "remesher_sha256": "edcdb4d52b179c6f06885c9ba5de3c738f2d9fb4ef3f8ab3433692048eacfde5",
+  "tetgen_return_code": 200,
+  "tetgen_failure": "-YY boundary Steiner rejection; original failure retained",
+  "tetgen_artifact_sha256": {
+    "candidate": "1bdff4e0007fdc2ab5867830f20ded3f30c70a1bac5a9ffaa0b66577db7913b2",
+    "shell": "c5f9889ab26e152144652ae51fde8ce7eff6a673038cc110b3f34f0cd7ba46b8",
+    "prep_report": "8de29b9c440759b4c15fe71402355578601db8eb99182eec111a378e8ac8f835",
+    "remesher": "edcdb4d52b179c6f06885c9ba5de3c738f2d9fb4ef3f8ab3433692048eacfde5",
+    "node": "92d3b46d4c4dfcaf528390e08199b3caa2e30d2d2dc8aac4947d6edd8fb90f31",
+    "ele": "7c2d38cea06e6a9500de57f2e7719e1626b8a896bd4e06d9098eea5d319aa26c",
+    "face": "b2f04933345dfbf5b6248380ef057ffbbfbc86d842434e3527af7b66ef381eb0",
+    "poly": "235476399bbe5c579c836f7f5d72d549725dfc47bfced3e33d8092ad848cecce",
+    "stdout": "5ce4b4896cc2d65609f392860431ff0684f20f72d05f198faea3424b2095c40c"
+  },
+  "source_cavity_cell_rows": 14048,
+  "source_cavity_boundary_faces": 9336,
+  "source_cavity_points": 4652,
+  "emitted_node_count": 4703,
+  "emitted_tet_count": 13675,
+  "emitted_boundary_face_count": 9338,
+  "new_output_points_after_F32_map": 44,
+  "new_output_boundary_points": 1,
+  "new_output_interior_points": 43,
+  "single_boundary_point": {
+    "global_volume_row": 253251,
+    "xyz_f32": [
+      -0.29879412055015564,
+      -0.9244550466537476,
+      0.10537811368703842
+    ],
+    "sha256_f32_bytes": "5719b56f5a0569b0fd73efd2212fc6ae7631084c70e5a03787068e716ab4a0b6",
+    "source_edge_global_volume_rows": [
+      131938,
+      132166
+    ],
+    "source_edge_typed_D_rows": [
+      6570,
+      6798
+    ],
+    "source_typed_D_parent_face_rows": [
+      201274,
+      197352
+    ],
+    "source_parent_triangles_global": [
+      [
+        131938,
+        132166,
+        245998
+      ],
+      [
+        131938,
+        132165,
+        132166
+      ]
+    ],
+    "edge_parameter_F32": 0.03368671864752793,
+    "inside_parent_segment": true,
+    "perpendicular_residual_m": 2.4113933712751456e-08,
+    "max_source_face_plane_residual_m": 2.06436611187467e-08,
+    "exact_F32_collinear_with_edge": false,
+    "raw_TetGen_F64_xyz": [
+      -0.2987941303959045,
+      -0.9244550247152514,
+      0.10537811560983827
+    ]
+  },
+  "boundary_refinement": {
+    "old_parent_face_rows_in_shell": [
+      7052,
+      7050
+    ],
+    "output_child_face_count": 4,
+    "output_child_faces_global": [
+      [
+        131938,
+        132165,
+        253251
+      ],
+      [
+        245998,
+        131938,
+        253251
+      ],
+      [
+        132166,
+        253251,
+        132165
+      ],
+      [
+        253251,
+        132166,
+        245998
+      ]
+    ],
+    "four_vertex_edge_split_topology": true,
+    "oriented_shell_residual_missing": 0,
+    "oriented_shell_residual_extra": 0,
+    "oriented_patch_outer_chain_preserved": true,
+    "old_patch_faces_global": [
+      [
+        131938,
+        132166,
+        245998
+      ],
+      [
+        131938,
+        132165,
+        132166
+      ]
+    ]
+  },
+  "tetrahedra": {
+    "all_F32_determinants_positive": true,
+    "nonpositive_F32_count": 0,
+    "all_exact_F32_determinants_positive": true,
+    "exact_nonpositive_count": 0,
+    "minimum_exact_det6_integer": "9619630419041620901435312524449124464130795720328478190417063819395928166869436184427311097384012607618805661696",
+    "minimum_F32_det6_m3": 2.6469779601696886e-23,
+    "native_quality_failures": 1954,
+    "old_component_quality_failures": 1215,
+    "quality_failure_delta": 739,
+    "material_all_16": true,
+    "duplicate_unordered_tetrahedra": 0,
+    "exact_tet_flux_equals_refined_shell_flux": true,
+    "exact_original_shell_flux_integer": "342131247813722971263278323029035518740709554320301437406914149391615989287195401710556736300244507412722407099933590617082919124992",
+    "exact_refined_shell_flux_integer": "342131247811149599948141864350931651009060045583234519165695347412001391835128695212588573421043949643774644108926053120840107556864",
+    "exact_tet_flux_integer": "342131247811149599948141864350931651009060045583234519165695347412001391835128695212588573421043949643774644108926053120840107556864",
+    "refinement_volume_delta_m3": -1.1801661217350801e-15
+  },
+  "new_target_face_joint_apex": {
+    "joint_score_min": 1.42875076133883e-05,
+    "proven_exact_apex_failures": 0,
+    "per_face": [
+      {
+        "face": [
+          131938,
+          132165,
+          253251
+        ],
+        "reason": null,
+        "gap": null
+      },
+      {
+        "face": [
+          245998,
+          131938,
+          253251
+        ],
+        "reason": null,
+        "gap": null
+      },
+      {
+        "face": [
+          132166,
+          253251,
+          132165
+        ],
+        "reason": null,
+        "gap": null
+      },
+      {
+        "face": [
+          253251,
+          132166,
+          245998
+        ],
+        "reason": null,
+        "gap": null
+      }
+    ]
+  },
+  "limitations": [
+    "Read-only diagnosis of TetGen output; no candidate D or Fat mesh was written.",
+    "F32 boundary point is off the old source edge and requires an explicit typed D target refinement.",
+    "No complete O/I/D/wall/all185 audit, 697 load, whole-volume SAT, P1/mass rebind, or native admission."
+  ],
+  "elapsed_s": 0.26234516710974276
+}

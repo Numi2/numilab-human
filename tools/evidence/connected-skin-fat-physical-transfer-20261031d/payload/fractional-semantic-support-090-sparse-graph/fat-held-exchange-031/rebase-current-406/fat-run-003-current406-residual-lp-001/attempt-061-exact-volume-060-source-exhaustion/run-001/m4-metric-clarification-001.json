@@ -1,0 +1,52 @@
+{
+  "field_correction": {
+    "actual_definition": "maximum absolute corner closure residual divided by the original per-corner tolerance 5e-13*(source_parent_mass/4), not divided by source_parent_mass/4",
+    "actual_max_relative_to_M_over_4": 1.4173597439377852e-15,
+    "frozen_field_name": "max_parent_M4_relative_residual",
+    "frozen_value": 0.0028347194878755705,
+    "tolerance_relative_to_M_over_4": 5e-13,
+    "within_original_tolerance": true
+  },
+  "limitations": [
+    "Original run reports, replay, manifest and ledger remain unchanged.",
+    "This clarifies the tolerance-normalized metric only; the allocation is partial, on legacy current406 Fat geometry, source-only, and requires rebase to current paired geometry."
+  ],
+  "native_steps": 0,
+  "numerical_closure": {
+    "flow_plus_residual_minus_source_kg": -1.7763568394002505e-15,
+    "max_abs_corner_residual_kg": 1.3010426069826053e-18,
+    "max_abs_witness": {
+      "M_over_4_target_kg": 0.0007649449457858282,
+      "actual_relative_error": 1.4173597439377852e-15,
+      "corner": 2,
+      "original_relative_tolerance_kg": 3.824724728929141e-16,
+      "signed_error_kg": -1.0842021724855044e-18,
+      "source_parent_role_row": 14226,
+      "tolerance_fraction": 0.0028347194878755705
+    },
+    "max_source_total_tolerance_kg": 5.243554258993253e-12,
+    "minimum_residual_witness": {
+      "M_over_4_target_kg": 5.056804575076512e-05,
+      "corner": 2,
+      "original_tolerance_kg": 2.528402287538256e-17,
+      "signed_residual_fraction_of_tolerance": -0.2066324352107467,
+      "source_parent_role_row": 13839
+    },
+    "minimum_signed_corner_residual_kg": -5.2244992186645245e-18,
+    "source_total_kg": 10.487108517986506,
+    "total_flow_kg": 10.25119668237007,
+    "unallocated_corner_residual_total_kg": 0.2359118356164346
+  },
+  "physical_admission": false,
+  "schema": "numi.human.current406-061-m4-metric-clarification.v1",
+  "source_files": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/run-001/independent-replay/independent-replay.json": "ff1452bcccddb24b2a40a8b2a6343875939b54df3434ae654f8c00757f5746a3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/run-001/merged-held-ledger.npz": "e75f1b6106111bbfe68a26cc157532a78b1a850fba2fd45b4a478e854d6d9951",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/run-001/report.json": "b68cf1a7bac7c8a9834db0f7c4b8a7695c1432b6a2ac680ca25dd2a266487566",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/source-freeze/extend_060_with_source_exhaustion_061.py": "c239c6a108fc186c600486cba60df051902144e9943d30e31f2ae403af09216c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/source-freeze/verify_061_independent.py": "2e7b15bfc3313caa9bf212fb4304f7b1d6c1b26501758499ad9d1deead285da9",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/verified-chain-manifest.json": "039188096d9234fbc1340c5cf5404af28569e1c2fde49ab60e6316d1e4bcc012"
+  },
+  "source_ledger_mutated": false,
+  "status": "PASS_CORRECTED_INTERPRETATION_OF_FROZEN_M4_METRIC"
+}

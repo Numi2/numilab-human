@@ -1,0 +1,103 @@
+{
+  "elapsed_s": 7.574773874832317,
+  "geometry_dependency_equality": {
+    "material_indices": {
+      "dtype": "int32",
+      "equal": true,
+      "shape": [
+        798672
+      ]
+    },
+    "points_world_m": {
+      "dtype": "float32",
+      "equal": true,
+      "shape": [
+        253712,
+        3
+      ]
+    },
+    "points_world_m_f32": {
+      "dtype": "float32",
+      "equal": true,
+      "shape": [
+        253712,
+        3
+      ]
+    },
+    "tetrahedra": {
+      "dtype": "int64",
+      "equal": true,
+      "shape": [
+        798672,
+        4
+      ]
+    }
+  },
+  "inputs": {
+    "canonical_current_geometry": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-canonical-current-target-540-root/fat-current-D500-I528-O530-canonical-volume-proposal.npz",
+      "sha256": "e2d9e132288b7628418947e646fcdada25bcdbdca19201b3741aff55e81606f8"
+    },
+    "canonical_current_geometry_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-canonical-current-target-540-root/receipt.json",
+      "sha256": "fbd623796d3a411a324b821cb9b32cd486fe6a079ad248001df25b9715a360e0"
+    },
+    "d899_p1_143_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run003/fat-current-semantic-support-d899-p1-143.npz",
+      "sha256": "4aa03ccf8e3b798ba36cd751d2ea61527e6a04f3f41c316ee291a75fbfb9622c"
+    },
+    "d899_p1_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run003/fat-current-semantic-support-d899-p1.npz",
+      "sha256": "8e9cb1094a8cd4d12d3155c45b985bb4eb607ede7a64716850f071520d76dd62"
+    },
+    "d899_support_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run003/receipt.json",
+      "sha256": "3c7fdec03502b58ef37ce1bbabda72088bc631511a777743f4a83f6334346b24"
+    },
+    "independent_d899_replay": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run005/independent-replay.json",
+      "sha256": "1ffe48572b45d1e5bc33fb11c6f041782f6fd65d88eadba9fe0346b091cc11c2"
+    },
+    "p1_source_geometry": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/volume-transfer-500um-001/compose-D500-I528-comp0-54138-005/fat-D500-I528-comp0-kernel-fan-composed-volume-proposal.npz",
+      "sha256": "d899b2789c0d4fc91553a5d46b1bb8d7b40e9c818d6301f6b32a3265976e3703"
+    }
+  },
+  "limitations": [
+    "This is a byte-exact geometry rebind of the independently replayed d899 P1/143 arrays; canonical 540 metadata and its typed sidecar pins are separately authoritative.",
+    "No mass allocation, native installation or physical admission."
+  ],
+  "mass_transport": "NOT_RUN",
+  "metadata_authority": {
+    "note": "Canonical 540 metadata is authoritative. Its geometry/material are identical to d899; d899 metadata fields for D/I target row maps are stale and are not used by this support rebind.",
+    "typed_D_sha256": "9e20be647417adefd13421603850f29e364e83ce0cfd49b668404b2c5011f04d",
+    "typed_I_sha256": "6f59262c2ae70065576166dd84f767afb64352241e76009707f78447afe477d1",
+    "typed_O_sha256": "2f98f16f06baaefada41d4577594923ff5e9019a84a5e1c7f6cb44a1171f8901"
+  },
+  "native_steps": 0,
+  "outputs": {
+    "base_p1": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run006/fat-current-semantic-support-540-p1.npz",
+      "sha256": "df8476ad895732699e46a597a092f5cc03ad53c4493c4af953a89c99f49e933d",
+      "size_bytes": 27441684
+    },
+    "p1_plus_143": {
+      "admissibility_source_support_sha256": "df8476ad895732699e46a597a092f5cc03ad53c4493c4af953a89c99f49e933d",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-support-533/run006/fat-current-semantic-support-540-p1-143.npz",
+      "sha256": "2b1f5033c2bf417b2b4bdb75e94a0a1dee4538a1f568108530b82ea919c32404",
+      "size_bytes": 29245677
+    }
+  },
+  "p1_replay_inherited": {
+    "admissible_region_slots": 3863608,
+    "cells": 798672,
+    "nodes": 253712,
+    "p1_group_slots": 1009609,
+    "receipt_sha256": "1ffe48572b45d1e5bc33fb11c6f041782f6fd65d88eadba9fe0346b091cc11c2",
+    "status": "PASS_INDEPENDENT_CURRENT_FAT_P1_AND_ONE_HOP_REPLAY",
+    "ties": 46241
+  },
+  "physical_admission": false,
+  "schema": "numi.human.current-fat-p1-143-canonical-540-rebind.v1",
+  "status": "PASS_EXACT_GEOMETRY_REBIND_OF_INDEPENDENT_P1_143_SUPPORT"
+}

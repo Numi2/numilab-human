@@ -1,0 +1,61 @@
+{
+  "status": "PASS_INDEPENDENT_FIXED_BOUNDARY_VOLUME_CONNECTIVITY_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "role": "Fat",
+  "coordinates_bit_identical": true,
+  "complete_oriented_boundary_identical": true,
+  "boundary_face_count": 9338,
+  "oriented_boundary_sha256": "1e60ad5398decc9ca286bfe76d73f028e5e965475db451a0d87aa57ad3183c55",
+  "nonmanifold_faces": 0,
+  "inconsistent_internal_face_orientation": 0,
+  "duplicate_tets": 0,
+  "all_local_cavity_F32_volume_equalities_exact": true,
+  "material_per_cavity_preserved": true,
+  "operations": 443,
+  "baseline_quality": {
+    "cells": 13675,
+    "normalized_det_failures": 1950,
+    "absolute_volume_failures": 54,
+    "union_failures": 1954,
+    "minimum_normalized_det": 8.308346649853593e-12,
+    "minimum_volume_m3": 4.411629933616147e-24
+  },
+  "final_quality": {
+    "cells": 13348,
+    "normalized_det_failures": 1479,
+    "absolute_volume_failures": 38,
+    "union_failures": 1481,
+    "minimum_normalized_det": 8.308346649853593e-12,
+    "minimum_volume_m3": 1.3129010682441655e-20
+  },
+  "input_npz_sha256": "0b13733f7f19e387da8ab1904972224770b58b433b491dfe91aa34e3890a2562",
+  "final_proposal": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/pass-003/fixed-boundary-volume-proposal.npz",
+  "final_proposal_sha256": "aecff676419dd37d5ba41742c2d2eca1779a0d6140a594acf6d775010f060d8c",
+  "checked_steps": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/pass-000",
+      "operations": 181,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/pass-001",
+      "operations": 124,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/pass-002",
+      "operations": 81,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/pass-003",
+      "operations": 57,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    }
+  ],
+  "verifier_sha256": "fc1ea9f8d84149a759006b7532d1e93d46752dfdb5ec91c95aff1d20b4112151",
+  "cavity_predicate_source_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "elapsed_s": 0.09201108408160508,
+  "limitation": "Connectivity proposal still fails the native geometry gate; new cell ancestry and physical mass mapping are not yet generated. No motion or runtime claim."
+}

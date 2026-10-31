@@ -1,0 +1,146 @@
+{
+  "boundary_refinement": {
+    "four_child_boundary_faces": [
+      [
+        131938,
+        132165,
+        253223
+      ],
+      [
+        245998,
+        131938,
+        253223
+      ],
+      [
+        132166,
+        253223,
+        132165
+      ],
+      [
+        253223,
+        132166,
+        245998
+      ]
+    ],
+    "fresh_D_target_rebind_required": true,
+    "outer_oriented_chain_preserved": true,
+    "selected_shell_extra": 0,
+    "selected_shell_missing": 0,
+    "two_retired_target_faces": [
+      [
+        131938,
+        132166,
+        245998
+      ],
+      [
+        131938,
+        132165,
+        132166
+      ]
+    ],
+    "whole_target_extra": 0,
+    "whole_target_missing": 0
+  },
+  "candidate": {
+    "actual_boundary_faces": 463028,
+    "cells": 802487,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-036-reused484-volume-splice-488/result-004/fat-comp0-reused484-spliced-volume-proposal.npz",
+    "points": 253225,
+    "sha256": "ed7d84228d5b1d11e9fbf0c39af296c6ace54ce0add867c5cc7b527c46820a08",
+    "size_bytes": 25439805,
+    "target_boundary_faces": 463028
+  },
+  "exact": {
+    "all_interior_points_inside_refined_shell": true,
+    "exact_sat_pair_budget": 5000000,
+    "flux_equal": true,
+    "interior_point_locations": {
+      "inside": 1
+    },
+    "new_tet_flux_det6": "342131247811149599948141864350931651009060045583234519165695347412001391835128695212588573421043949643774644108926053120840107556864",
+    "refined_shell_flux_det6": "342131247811149599948141864350931651009060045583234519165695347412001391835128695212588573421043949643774644108926053120840107556864",
+    "retained_and_new_sat": {
+      "checked_pairs": 2315388,
+      "exact_point_cache_rows": 13882,
+      "pass": true,
+      "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP"
+    },
+    "shell_self_intersection_pairs": 0
+  },
+  "inputs": {
+    "D480_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-480-next-001-preflight-100um/volume-transfer-001/transfer-result-001/fat-D480-short-edge-quotient-volume-proposal.npz",
+      "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-480-next-001-preflight-100um/volume-transfer-001/transfer-result-001/report.json",
+      "report_sha256": "32ceb28a404a7e4ee52f9d744bb53d1b5ee1320b428eda4b032146fd4b40637e",
+      "sha256": "40c90ad65ac924511e5bd98da79f338d15df18839acb099e1c13a6f65058a88c"
+    },
+    "TetGen_ele": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-035-current-target-480-comp0-interior128/component-0000/cavity.1.ele",
+      "sha256": "7c2d38cea06e6a9500de57f2e7719e1626b8a896bd4e06d9098eea5d319aa26c"
+    },
+    "TetGen_face": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-035-current-target-480-comp0-interior128/component-0000/cavity.1.face",
+      "sha256": "b2f04933345dfbf5b6248380ef057ffbbfbc86d842434e3527af7b66ef381eb0"
+    },
+    "TetGen_node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-035-current-target-480-comp0-interior128/component-0000/cavity.1.node",
+      "sha256": "92d3b46d4c4dfcaf528390e08199b3caa2e30d2d2dc8aac4947d6edd8fb90f31"
+    },
+    "diagnostic": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-035-current-target-480-comp0-interior128/diagnostic-003/report.json",
+      "sha256": "88051c7b2d194e573954b1f2cb3f1c4b2ed2355800abfa6bf665cebe987a2443"
+    },
+    "prepared_shell": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-034-compact-prep-481/preparation-002/connected-cavity-shells.npz",
+      "prep_report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-034-compact-prep-481/preparation-002/report.json",
+      "prep_report_sha256": "8de29b9c440759b4c15fe71402355578601db8eb99182eec111a378e8ac8f835",
+      "sha256": "c5f9889ab26e152144652ae51fde8ce7eff6a673038cc110b3f34f0cd7ba46b8"
+    },
+    "remesher": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_fat614_compact_cavities_484_root.py",
+      "sha256": "edcdb4d52b179c6f06885c9ba5de3c738f2d9fb4ef3f8ab3433692048eacfde5"
+    },
+    "source480": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-033-target-rebind-480/result-002/fat-current-typed-target-rebound.npz",
+      "sha256": "1bdff4e0007fdc2ab5867830f20ded3f30c70a1bac5a9ffaa0b66577db7913b2"
+    }
+  },
+  "limitations": "This is an explicit inferred D boundary refinement and positive volume splice, not exact old-surface support and not native/physical/mass admission. The new point is 24.1139 nm off the old edge and 20.6437 nm from the old source-face plane; 43 interior points carry construction ancestry pending source330/P1/mass rebind.",
+  "mass_mapping": "NOT_RUN",
+  "mesh": {
+    "TetGen_nodes": 4703,
+    "TetGen_tets": 13675,
+    "all_F32_positive": true,
+    "all_exact_positive": true,
+    "boundary_point_f32": [
+      -0.29879412055015564,
+      -0.9244550466537476,
+      0.10537811368703842
+    ],
+    "boundary_point_f32_sha256": "5719b56f5a0569b0fd73efd2212fc6ae7631084c70e5a03787068e716ab4a0b6",
+    "boundary_point_row": 253223,
+    "duplicate_tets": 0,
+    "interior_point_count": 1,
+    "material_16": true,
+    "new_point_count": 2,
+    "output_boundary_faces": 9338
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "quality": {
+    "global_failures_after": 17407,
+    "local_failure_delta": 739,
+    "native_gate_changed": false,
+    "new_local_failures": 1954,
+    "old_local_failures": 1215
+  },
+  "rebase": {
+    "D480_current_rows": 14048,
+    "all_points_bitwise_unchanged": true,
+    "all_selected_exact_keys_recovered": true,
+    "method": "exact ordered tet corner tuple + material",
+    "prepared_source_rows": 14048
+  },
+  "schema": "numi.fat614.comp0-reused-484-tetgen-volume-splice.v1",
+  "status": "PASS_EXACT_COMPOSED_COMP0_TARGET_VOLUME_SOURCE_ONLY"
+}

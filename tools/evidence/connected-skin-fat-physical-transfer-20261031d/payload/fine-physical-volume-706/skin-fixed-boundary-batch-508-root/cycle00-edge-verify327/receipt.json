@@ -1,0 +1,56 @@
+{
+  "status": "PASS_INDEPENDENT_FIXED_BOUNDARY_VOLUME_CONNECTIVITY_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "role": "Skin",
+  "coordinates_bit_identical": true,
+  "complete_oriented_boundary_identical": true,
+  "boundary_face_count": 392480,
+  "oriented_boundary_sha256": "7f75ef0301c3fcada7711e08db3dca0e96703f8d30dbb96350768431481b28fd",
+  "nonmanifold_faces": 0,
+  "inconsistent_internal_face_orientation": 0,
+  "duplicate_tets": 0,
+  "all_local_cavity_F32_volume_equalities_exact": true,
+  "material_per_cavity_preserved": true,
+  "operations": 9,
+  "baseline_quality": {
+    "cells": 730876,
+    "normalized_det_failures": 1077,
+    "absolute_volume_failures": 60,
+    "union_failures": 1080,
+    "minimum_normalized_det": 1.2290416625971925e-11,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "final_quality": {
+    "cells": 730888,
+    "normalized_det_failures": 1067,
+    "absolute_volume_failures": 59,
+    "union_failures": 1070,
+    "minimum_normalized_det": 1.2290416625971925e-11,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "input_npz_sha256": "57142ca2b67de660b51bafaf3adbd6b55f727c3919273f40a6e4096a6be10528",
+  "final_proposal": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-fixed-boundary-batch-508-root/cycle00-edge/pass-002/fixed-boundary-volume-proposal.npz",
+  "final_proposal_sha256": "4519adff85382d5e414e45e3f8fb308408f22e2c5309de4c41ee989d314dcfc9",
+  "checked_steps": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-fixed-boundary-batch-508-root/cycle00-edge/pass-000",
+      "operations": 7,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-fixed-boundary-batch-508-root/cycle00-edge/pass-001",
+      "operations": 2,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-fixed-boundary-batch-508-root/cycle00-edge/pass-002",
+      "operations": 0,
+      "exact_F32_positive_volume_and_boundary": "PASS"
+    }
+  ],
+  "verifier_sha256": "fc1ea9f8d84149a759006b7532d1e93d46752dfdb5ec91c95aff1d20b4112151",
+  "cavity_predicate_source_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "elapsed_s": 2.909764332929626,
+  "limitation": "Connectivity proposal still fails the native geometry gate; new cell ancestry and physical mass mapping are not yet generated. No motion or runtime claim."
+}

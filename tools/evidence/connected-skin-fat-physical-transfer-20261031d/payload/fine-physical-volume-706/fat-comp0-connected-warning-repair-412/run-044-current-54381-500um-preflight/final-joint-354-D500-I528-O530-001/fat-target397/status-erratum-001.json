@@ -1,0 +1,33 @@
+{
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/final-joint-354-D500-I528-O530-001/fat-target397/fat-current-typed-target-rebound.npz",
+    "sha256": "ca0324b031fa57b0012ffc79c13a9bdaf4de92aa987a14c194f2f1280c1162e6",
+    "target_faces": 459940
+  },
+  "config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/final-joint-354-D500-I528-O530-001/target397-config.json",
+    "sha256": "8b9adbe2d559c47baf3709bcefd6f33f724ff5993850b6eaae86bf98d35765ee"
+  },
+  "joint_context": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/final-joint-354-D500-I528-O530-001/audit354/report.json",
+    "sha256": "e8846ff27d694e5a341c1183b9a81c3045db4f8923283cbe842728d27b7d5244",
+    "status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185"
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/final-joint-354-D500-I528-O530-001/rebind_fat_target_D500_I528_002.py",
+    "sha256": "5d152187edf4687f27519be34bd9d09f630dbebc3b5f18241700f2ca57060c0c"
+  },
+  "schema": "h706.current-fat-target-rebind-status-erratum.v1",
+  "source_report": {
+    "original_status": "PASS_TYPED_CURRENT_TARGET_REBOUND_SOURCE_ONLY_WITH_RESIDUAL_BOUNDARY_MISMATCH",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/final-joint-354-D500-I528-O530-001/fat-target397/report.json",
+    "sha256": "17a362bdb53b54fc13405a045fcb51eb20b52ffba484d8ef9e05553a5945dd6d"
+  },
+  "status": "PASS_CANONICAL_TYPED_TARGET_REBOUND_BOUNDARY_COMPLETE",
+  "status_correction": {
+    "reason": "The reused 397 producer emitted its historical residual-boundary status label unconditionally. Its actual computed ledger in this run is 0 missing and 0 extra, with boundary_complete=true. This erratum corrects that label only; it does not alter candidate bytes or add a geometry check."
+  }
+}

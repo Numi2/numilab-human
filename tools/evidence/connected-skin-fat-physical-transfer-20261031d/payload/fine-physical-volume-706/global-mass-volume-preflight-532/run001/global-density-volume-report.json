@@ -1,0 +1,85 @@
+{
+  "density_bounds_are_per_role": true,
+  "input_geometry_scope": "Skin531 and Fat54138/D500; Fat I528-composed successor not yet included",
+  "limitations": [
+    "Global role totals only; no regional or receiver-level feasibility proof.",
+    "Fat target is pre-I528 composition and must be refreshed against the final paired geometry pin.",
+    "No mass allocation, physics run, or admission claim."
+  ],
+  "mass_allocation": "NOT_RUN",
+  "method": "exact F32 dyadic determinant on the 2^-149 integer lattice; signed tetrahedron determinant sum divided by 6*2^447",
+  "native_steps": 0,
+  "physical_admission": false,
+  "results": {
+    "Fat": {
+      "aggregate_role_feasible": true,
+      "allowed_mass_kg": [
+        9.734096491968112,
+        10.879284314552594
+      ],
+      "density_bounds_kg_m3": [
+        850.0,
+        950.0
+      ],
+      "elapsed_s": 3.614290582947433,
+      "exact_dyadic_negative_tets": 0,
+      "exact_dyadic_positive_tets": 800097,
+      "exact_dyadic_zero_tets": 0,
+      "exact_signed_det6_sum_lattice": "24971005681385094464975229873707043620180010292117415297891970274924175409904184651063250622336366035278481989339253753147148589858816",
+      "exact_signed_volume_m3": 0.011451878225844836,
+      "exact_signed_volume_m3_fraction": "2721933807512399346679094921/237684487542793012780631851008",
+      "implied_uniform_density_kg_m3": 915.7544562706738,
+      "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/volume-transfer-500um-001/compose-comp0-54138-001/fat-D500-comp0-kernel-fan-composed-volume-proposal.npz",
+      "input_sha256": "7f827e1d0630a790b74a5a4069588105350480534ec2f5ca9286a752cbbd5f6e",
+      "mass_excess_over_max_kg": 0.0,
+      "maximum_exact_signed_det6_lattice": "39404489436943403403494947958700403856753079304920725955021152869977835866246447607003804446581721569315520011548549029218651996160",
+      "minimum_exact_signed_det6_lattice": "601226901190101306339707032778070279008174732520529886901066488712245510429339761526706943586500787976175353856",
+      "point_count": 253712,
+      "required_volume_m3_for_mass": [
+        0.011039061597880533,
+        0.012337774727042948
+      ],
+      "source_mass_kg": 10.487108517986506,
+      "tet_count": 800097
+    },
+    "Skin": {
+      "aggregate_role_feasible": true,
+      "allowed_mass_kg": [
+        3.263710305349959,
+        3.9889792620943942
+      ],
+      "density_bounds_kg_m3": [
+        900.0,
+        1100.0
+      ],
+      "elapsed_s": 1.6516505000181496,
+      "exact_dyadic_negative_tets": 0,
+      "exact_dyadic_positive_tets": 729848,
+      "exact_dyadic_zero_tets": 0,
+      "exact_signed_det6_sum_lattice": "7907303449369966216401077034092482459150547219719578607565053381047193676468397646147043918822257453993217963450862071190455123443712",
+      "exact_signed_volume_m3": 0.0036263447837221767,
+      "exact_signed_volume_m3_fraction": "13790814425159778167706481277/3802951800684688204490109616128",
+      "implied_uniform_density_kg_m3": 952.0800286204897,
+      "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-canonical-outer-O-531-root/skin-current-O530-I528-canonical-volume-proposal.npz",
+      "input_sha256": "aba0761c3690bd68d964a1aca472ef70385a70dad16eed75da34ccb01ba58ebe",
+      "mass_excess_over_max_kg": 0.0,
+      "maximum_exact_signed_det6_lattice": "11507760433863158434540703221528427634566878223897391641451504663764937066264314313419460359934868169113197631978447956186488635392",
+      "minimum_exact_signed_det6_lattice": "2140367768236760650569357036689930193269102047773086397367796699815594017128449551035076719167942805195184259727360",
+      "point_count": 210268,
+      "required_volume_m3_for_mass": [
+        0.0031387004049763393,
+        0.0038361893838599706
+      ],
+      "source_mass_kg": 3.4525704454739734,
+      "tet_count": 729848
+    },
+    "combined": {
+      "elapsed_s": 3.6142958749551326,
+      "exact_signed_volume_m3": 0.015078223009567012,
+      "implied_uniform_density_kg_m3": 924.4908338745132,
+      "source_mass_kg": 13.93967896346048
+    }
+  },
+  "schema": "numi.human.current-role-global-density-volume-preflight.v1",
+  "status": "SOURCE_ONLY_EXACT_DYADIC_VOLUME_DENSITY_PREFLIGHT"
+}

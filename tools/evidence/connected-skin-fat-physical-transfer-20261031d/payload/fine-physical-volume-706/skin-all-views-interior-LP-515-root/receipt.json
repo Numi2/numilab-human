@@ -1,0 +1,48 @@
+{
+  "status": "PASS_CURRENT_SKIN_LP_SYNCHRONIZED_PHYSICAL_VIEWS_AND_EXACT_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/run001/conditioned-volume-proposal.npz",
+  "candidate_sha256": "bbc30d8efe7538694df629a1a739365dd13ff3d85dfe38984bf4d511260bb274",
+  "bad_before": 1064,
+  "bad_after": 1060,
+  "operations": 4,
+  "independent_proof": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/independent514001/receipt.json",
+  "independent_proof_sha256": "bc9c833ad3338e9b693df0d942bd44eb2b0c551cebcd63e6cb013be19ddc7a90",
+  "source330_mass_immutable": true,
+  "boundary_coordinates_unchanged": true,
+  "native_thresholds_unchanged": true,
+  "commands": [
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/condition_fixed_skin_all_views_LP_513_root.py",
+      "--fixture",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/fixture513"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/condition_fixed_skin_all_views_LP_513_root.py",
+      "--input",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-canonical-lineage-512-root/skin-current-O506-Iflip-physical-volume-proposal.npz",
+      "--input-sha256",
+      "97137971e9b29f88c3e80dc777ba188dd1adfbb18475d8b639bce085f75a1a69",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/run001",
+      "--seconds",
+      "40",
+      "--maximum-operations",
+      "10000"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_fixed_skin_all_views_LP_514_root.py",
+      "--report",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/run001/report.json",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-all-views-interior-LP-515-root/independent514001"
+    ]
+  ],
+  "producer_sha256": "ef535046e9be6ebb37f0f8983dcc610b315ed454301f651264edb23904d085b3",
+  "elapsed_s": 10.735694000031799
+}

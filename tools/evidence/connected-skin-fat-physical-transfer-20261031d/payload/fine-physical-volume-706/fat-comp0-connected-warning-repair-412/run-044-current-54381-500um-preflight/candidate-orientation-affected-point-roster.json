@@ -1,0 +1,54 @@
+{
+  "admission": {
+    "mass_mapping": "NOT_RUN",
+    "native_steps": 0,
+    "physical_admission": false
+  },
+  "affected_D_surface_fullstar_point_count": 16427,
+  "affected_Fat_cell_count": 22424,
+  "affected_Fat_point_count": 21418,
+  "allowed_orientation_count": 2732,
+  "authorized_edge_map": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/preflight-output/allowed-D-edge-map.npz",
+    "sha256": "d99ca979adb617ea3bf50ccc4507152a3452fbbe6eb215197b5aee7fa03900b1"
+  },
+  "current_D": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-480-next-001-preflight-100um/volume-transfer-001/comp0-boundary-split-001/metadata-lineage-correction-002/candidate-D-comp0-480-boundary-split-typed-lineage-corrected-001.npz",
+    "point_count": 120648,
+    "sha256": "6451dfe347d42b247ecf9ca9c6baf14dd8f0c0bf7d8aa5bfca81c7fa8b6991e8"
+  },
+  "current_coordinate_rows_exported": true,
+  "current_volume": {
+    "cell_count": 802165,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-042-current-54381-normalized-rebind/fat-current-typed-target-rebound-54381-lineage-corrected.npz",
+    "point_count": 253225,
+    "sha256": "5aa02086aac4b20e879332cd9d5ba64da636dd8a520de54e7b96b00225c7fe42"
+  },
+  "limitation": "This is a preflight exclusion roster only; no contraction was applied, and no all-185 or volume replay claim is made.",
+  "measured_native_bad_cell_gain_sum": 1944,
+  "parameters": {
+    "max_accepted": 8192,
+    "max_edge_length_m": 0.0005,
+    "max_trials": 100000,
+    "maximum_candidates": 8192,
+    "native_min_q": 1e-05,
+    "native_min_volume_m3": 1e-18,
+    "rank_order": [
+      "descending measured native bad-cell gain",
+      "descending minimum resulting local q",
+      "ascending exact D edge length"
+    ],
+    "wall_budget_seconds": 90.0
+  },
+  "preflight_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/preflight-output/preflight.json",
+    "sha256": "ec34db5e3615290689252bb4e1b25840278ee957bc936ca56c59235b200c3377"
+  },
+  "producer": "/tmp/export_500_roster.py",
+  "producer_sha256": "d8e5a4308500462ec73249e2e5fff01c42d656e03a44cf001fb6510449af18bd",
+  "roster_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-044-current-54381-500um-preflight/candidate-orientation-affected-point-roster.npz",
+  "roster_sha256": "47c03dc1fdfa2e1bf871ff083762b684bc4bbd70230b1dcebbad4e61e807b080",
+  "schema": "h706.d500-preflight-candidate-orientation-point-roster.v1",
+  "selected_edge_count": 1712,
+  "status": "PASS_BOUNDED_PRELIGHT_ROSTER_EXPORTED_NO_GEOMETRY_CHANGED"
+}

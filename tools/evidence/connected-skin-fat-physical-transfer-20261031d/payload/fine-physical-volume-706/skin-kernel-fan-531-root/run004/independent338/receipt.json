@@ -1,0 +1,50 @@
+{
+  "status": "PASS_INDEPENDENT_CACHED_KERNEL_FAN_CHAIN_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run003-corrected/fan-output/kernel-fan-volume-proposal.npz",
+  "input_sha256": "055e2177e208187002a4a45ad12bada98111b1f1ba12e2b8d473935946aab5f3",
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run004/fan-output/kernel-fan-volume-proposal.npz",
+  "candidate_sha256": "35bb692474ec4609f6cc5f69232cb1121e1a56d100b87b0e93d7dd3cd382cb59",
+  "original_point_prefix_bit_identical": true,
+  "new_nodes": "inferred volume-interior construction points only",
+  "complete_oriented_boundary_bit_identical": true,
+  "boundary_face_count": 391918,
+  "oriented_boundary_sha256": "c12dc0e1c6201c7f695f1026f50a6f9e583b845c1b1cb8a5722307baa8ffded2",
+  "nonmanifold_faces": 0,
+  "inconsistent_internal_face_orientation": 0,
+  "duplicate_cells": 0,
+  "exact_per_cavity_positive_F32_volume_and_boundary": true,
+  "connectivity_and_material_full_replay": "PASS",
+  "operations": 0,
+  "baseline_quality": {
+    "cells": 729953,
+    "normalized_det_failures": 986,
+    "absolute_volume_failures": 54,
+    "union_failures": 988,
+    "minimum_normalized_det": 1.2290416625971925e-11,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "final_quality": {
+    "cells": 729953,
+    "normalized_det_failures": 986,
+    "absolute_volume_failures": 54,
+    "union_failures": 988,
+    "minimum_normalized_det": 1.2290416625971925e-11,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "chain": [
+    {
+      "input_sha256": "055e2177e208187002a4a45ad12bada98111b1f1ba12e2b8d473935946aab5f3",
+      "report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run004/fan-output/report.json",
+      "report_sha256": "61bdcab322e22de98ffa4a149386a1145be807e9b27778b52f38c2f40305b7a6",
+      "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run004/fan-output/kernel-fan-volume-proposal.npz",
+      "candidate_sha256": "35bb692474ec4609f6cc5f69232cb1121e1a56d100b87b0e93d7dd3cd382cb59",
+      "operations": 0
+    }
+  ],
+  "case_payload_pins": [],
+  "verifier_sha256": "cd125e2cdd301df65bdf21f0fe0fcd0d63a4330fbe03b844707763acb25bb563",
+  "elapsed_s": 2.631962541025132,
+  "limitation": "native quality still incomplete; mass mapping, GPU accepted-state and motion are not qualified"
+}

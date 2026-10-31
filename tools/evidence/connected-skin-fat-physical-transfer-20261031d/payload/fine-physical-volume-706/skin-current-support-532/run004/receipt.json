@@ -1,0 +1,79 @@
+{
+  "counts": {
+    "P1_group_slots": 926745,
+    "admissible_cell_region_slots": 3778899,
+    "cells": 729848,
+    "cells_with_P1_tie": 44524,
+    "cells_with_unique_max_group": 685324,
+    "direct_cell_region_slots": 808060,
+    "max_admissible_regions_per_cell": 21,
+    "nodes": 210268,
+    "same_material_shared_face_region_edges": 140,
+    "source_groups": 287
+  },
+  "elapsed_s": 5.686248749960214,
+  "inputs": {
+    "combined_p1_143_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-support-532/run002/skin-current-semantic-support-531-p1-143.npz",
+      "sha256": "ca3fad4cc4e760b8562d94248d473b84648156944b3bb1b93d64c118274fad8a"
+    },
+    "producer_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-support-532/run002/receipt.json",
+      "sha256": "96e1d52ad4235d872fcac06a3b2c1e65b470a8c9027b9090dc03f058915451a3"
+    },
+    "source_producer": {
+      "exact_global_volume_report": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/global-mass-volume-preflight-532/run002/global-density-volume-report.json",
+        "sha256": "b783e88fa0e62d43e4af0cf2604f1fdc3f27070bc8d41b8e718dbceb156cba52"
+      },
+      "geometry": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-canonical-outer-O-531-root/skin-current-O530-I528-canonical-volume-proposal.npz",
+        "sha256": "aba0761c3690bd68d964a1aca472ef70385a70dad16eed75da34ccb01ba58ebe"
+      },
+      "geometry_receipt": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-canonical-outer-O-531-root/receipt.json",
+        "sha256": "d5f3ba42d0703c96f795e1c9c02cb57d9f41651ffecb081ff3da6b35d5685bbd"
+      },
+      "node_support": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-node-support-cache-531-nativepreflight/run001/skin-node-source330-support.npz",
+        "sha256": "00148df66d7e928edd3490a285fe028cafaa014f0fd43a057a7f961b32edac59"
+      },
+      "node_support_receipt": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-node-support-cache-531-nativepreflight/run001/receipt.json",
+        "sha256": "e87c472705556f4d956c8f97692a82bb303f2d916a850d3210c3da0a21419124"
+      },
+      "semantic_owner": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-semantic-atlas-088/export_authoring_registered_surface_sidecars_230_semantic_088.py",
+        "sha256": "121e3bf44d90ba3d7b82ccaa40a26a92d1675c6d277a4409ae95f8c05ad2485d"
+      },
+      "source330_mass": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+        "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+      }
+    }
+  },
+  "limitations": [
+    "Cell support is derived for Skin531 and must be regenerated if current cell topology changes.",
+    "No mass allocation, receiver-level feasibility, native installation, or physical admission.",
+    "This repack separates the base P1 support hash from the 143 one-hop extension; no new geometry or ancestry is created."
+  ],
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "outputs": {
+    "base_p1": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-support-532/run004/skin-current-semantic-support-531-p1.npz",
+      "sha256": "b7790fb0b60bb2ac47b2e4d5aae1fd6779c504bbb9a33acba8b89cee3472fb5a",
+      "size_bytes": 16265037
+    },
+    "p1_plus_authenticated_143": {
+      "admissibility_source_support_sha256": "b7790fb0b60bb2ac47b2e4d5aae1fd6779c504bbb9a33acba8b89cee3472fb5a",
+      "max_source_region_hops": 1,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-support-532/run004/skin-current-semantic-support-531-p1-143.npz",
+      "sha256": "da9317b108ad70052f0a145d4b777c870a4687142bfd5b772c502363e62d907f",
+      "size_bytes": 17992010
+    }
+  },
+  "physical_admission": false,
+  "schema": "numi.human.current-skin-p1-and-143-support-artifacts.v1",
+  "status": "PASS_SOURCE_ONLY_CURRENT_SKIN_P1_AND_AUTHENTICATED_ONE_HOP_SUPPORT"
+}

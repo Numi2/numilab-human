@@ -1,0 +1,105 @@
+{
+  "schema": "numi.fat614.comp0-conditioned-fixed-boundary-connectivity.v1",
+  "status": "PASS_EXACT_LOCAL_CONNECTIVITY_COMPOSITION_SOURCE_ONLY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping": "NOT_RUN",
+  "inputs": {
+    "parent_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-036-reused484-volume-splice-488/result-004/fat-comp0-reused484-spliced-volume-proposal.npz",
+      "sha256": "ed7d84228d5b1d11e9fbf0c39af296c6ace54ce0add867c5cc7b527c46820a08"
+    },
+    "parent_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-036-reused484-volume-splice-488/result-004/report.json",
+      "sha256": "6db9a54d18aca2cb482bbe3d53c64e243d50c8958be78db6fdfe422e13a2b8b5"
+    },
+    "local_input": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/input-comp0-replacement.npz",
+      "sha256": "0b13733f7f19e387da8ab1904972224770b58b433b491dfe91aa34e3890a2562"
+    },
+    "307_batch_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-307/receipt.json",
+      "sha256": "5e247a2db5df72b5adec577446425c33bf9c425dd0619f9da43379efbe04e729"
+    },
+    "327_Fat_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/verify-327-fat/receipt.json",
+      "sha256": "9f2f115048a1f53a0a3735c5dba630ec62ed50f7f50db0597e7d3e8d03440471"
+    },
+    "313_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-313/report.json",
+      "sha256": "aaca5cea61c89913b49308ea0bf0df44a91766db2037dfcee358a219b5cb02db"
+    },
+    "374_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/verify-374/receipt.json",
+      "sha256": "83a32ac3a3b26108f3b69de0083648ad98b77b66bc8bef94415181902d9a7508"
+    },
+    "second_313_no_progress_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/connectivity-313-second/report.json",
+      "sha256": "f583bbaa24480e1e1c6828afea93c0ed3bd23faa007a2eb1511bca28fd40f02b"
+    },
+    "exact_SAT_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/direct_connected_skin_caps_288_root.py",
+      "sha256": "4b7c46955fa286db38c6ee5ec1dc91ac427e97ed5184cbe964bc7934640d0791"
+    }
+  },
+  "operations": {
+    "fixed_boundary_edge_stars_307": 443,
+    "fixed_boundary_face_flips_313": 5,
+    "followup_313_accepted": 0,
+    "exact_per_operation_volume_boundary_replay": "PASS",
+    "no_point_motion": true,
+    "new_interior_global_edges_checked_against_retained": 121,
+    "global_existing_edge_conflicts": 0
+  },
+  "local_patch": {
+    "input_cells": 13675,
+    "conditioned_cells": 13353,
+    "input_union_quality_failures": 1954,
+    "conditioned_union_quality_failures": 1476,
+    "quality_failure_reduction": 478,
+    "material": 16,
+    "boundary_faces": 9338,
+    "oriented_boundary_sha256": "1e60ad5398decc9ca286bfe76d73f028e5e965475db451a0d87aa57ad3183c55",
+    "boundary_unchanged": true,
+    "exact_signed_det6_before": "342131247811149599948141864350931651009060045583234519165695347412001391835128695212588573421043949643774644108926053120840107556864",
+    "exact_signed_det6_after": "342131247811149599948141864350931651009060045583234519165695347412001391835128695212588573421043949643774644108926053120840107556864",
+    "exact_volume_unchanged": true,
+    "all_exact_determinants_positive": true,
+    "all_F32_determinants_positive": true
+  },
+  "whole_candidate": {
+    "points": 253225,
+    "cells_before": 802487,
+    "cells_after": 802165,
+    "global_quality_failures_after": 16929,
+    "all_F32_determinants_positive": true,
+    "material_16": true,
+    "duplicate_tets": 0,
+    "oriented_boundary_faces": 463028,
+    "global_oriented_boundary_matches_parent": true,
+    "current_target_boundary_matches": true,
+    "target_faces": 463028,
+    "exact_sat": {
+      "status": "INHERITED_FROM_EXACT_PARENT",
+      "parent_candidate_sha256": "ed7d84228d5b1d11e9fbf0c39af296c6ace54ce0add867c5cc7b527c46820a08",
+      "parent_sat_report_sha256": "6db9a54d18aca2cb482bbe3d53c64e243d50c8958be78db6fdfe422e13a2b8b5",
+      "parent_checked_pairs": 2315388,
+      "rerun_after_connectivity_changes": false,
+      "basis": "exact local positive fixed-boundary and exact-volume operation replay; no claim of a second whole-mesh SAT run"
+    }
+  },
+  "lineage": {
+    "conditioned_tet_to_parent_output_cell_map": "CSR in candidate comp0_conditioned_cell_ancestor_offsets / comp0_conditioned_cell_ancestor_parent_output_cell_rows",
+    "patch_source_union_D480_rows": 14048,
+    "patch_source_union_source480_rows": 14048,
+    "per_tet_direct_D480_parent": "not asserted; complete cavity-level parent union retained"
+  },
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-comp0-connected-warning-repair-412/run-037-local-conditioning-492/result-006/fat-comp0-conditioned-volume-proposal.npz",
+    "sha256": "54381f3d6072f95111010b3de0fdd7334f254f5466f5422b6936bf684083ee3e",
+    "size_bytes": 25524869
+  },
+  "limitations": "Source-only geometric construction/conditioning evidence. Native quality failures remain; no mass mapping or physical admission.",
+  "producer_sha256": "4d84ae0e1bf868c855fbc0d2c906ef6cb305017504aa1e66ed217a784d20de49",
+  "elapsed_s": 7.240703708026558
+}

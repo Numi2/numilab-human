@@ -1,0 +1,829 @@
+{
+  "candidate_frontier": {
+    "candidate_graph_site_rows": 5189622,
+    "exact_unique_rows": 5189622,
+    "floor_phase_site_cap_sum_kg_nonadditive_upper_bound": 7.697814453563332e-09,
+    "floor_phase_site_rows": 51367,
+    "max_candidate_radius_recomputed_m": 0.019353,
+    "prior_flow_rows": 1264363,
+    "prior_flow_rows_matched_to_005_sites": 894962,
+    "prior_flow_rows_outside_005_site_domain": 369401,
+    "prior_site_cap_overrun_rows": 308470,
+    "site_rows_after_exact_radius": 4552141,
+    "site_rows_same_material_region_bary_positive_head_before_radius": 4552141,
+    "site_rows_with_positive_current_source_corner_cap": 442563,
+    "site_rows_with_remaining_cap_before_geometry": 4879442,
+    "source_exhaustion_phase_site_rows": 391196,
+    "source_exhaustion_site_cap_sum_kg_nonadditive_upper_bound": 0.0003042869650567119,
+    "source_positive_site_row_cap_sum_kg_nonadditive_upper_bound": 0.015544873913158366
+  },
+  "complete_allocation": false,
+  "elapsed_seconds": 9.408835583832115,
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/solve_oriented_cavity_milp_081.py": "3f7c276bef3bb4427f6acb41f6eeedffbeae273c9493a3b7854b244a5a2fa024",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/run-001/independent-replay/independent-replay.json": "ff1452bcccddb24b2a40a8b2a6343875939b54df3434ae654f8c00757f5746a3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/run-001/merged-held-ledger.npz": "e75f1b6106111bbfe68a26cc157532a78b1a850fba2fd45b4a478e854d6d9951",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-061-exact-volume-060-source-exhaustion/source-freeze/extend_060_with_source_exhaustion_061.py": "c239c6a108fc186c600486cba60df051902144e9943d30e31f2ae403af09216c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase_held_flows_current_volume_406_regionaware.frozen.py": "a6e796fde1fa63cacabd5e3111711956d4821b2c871c6c3cb787bd392296d16a",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "receiver_state": {
+    "above_nominal_950_receivers": 1421,
+    "child_count": 826737,
+    "floor_deficit_kg": 0.03610959342008318,
+    "max_floor_deficit_kg": 0.0009187161333256307,
+    "nominal950_headroom_kg": 0.6281313657768217,
+    "top_floor_deficits": [
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 752013,
+        "floor_deficit_kg": 0.0009187161333256307,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 106,
+        "site_rows_region_material_bary_head_before_radius": 106,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.00104493122305355
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 315240,
+        "floor_deficit_kg": 0.0008282378593395452,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 336,
+        "site_rows_region_material_bary_head_before_radius": 336,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0009307176427647228
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 113610,
+        "floor_deficit_kg": 0.0006484469253530631,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 248,
+        "site_rows_region_material_bary_head_before_radius": 248,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.000731767579353263
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 789498,
+        "floor_deficit_kg": 0.0006129292143524976,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 267,
+        "site_rows_region_material_bary_head_before_radius": 267,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0006850460958361942
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 751929,
+        "floor_deficit_kg": 0.0005784677082863996,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 6,
+        "site_rows_region_material_bary_head_before_radius": 6,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0006889906555240545
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 752641,
+        "floor_deficit_kg": 0.0005330393573616914,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 77,
+        "site_rows_region_material_bary_head_before_radius": 77,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0006255763229923365
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 752198,
+        "floor_deficit_kg": 0.0005279052776367831,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 89,
+        "site_rows_region_material_bary_head_before_radius": 89,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0006622294171776083
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 229216,
+        "floor_deficit_kg": 0.0004472526228220704,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 159,
+        "site_rows_region_material_bary_head_before_radius": 159,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0005291282737080038
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          23,
+          26,
+          29,
+          34,
+          41,
+          42,
+          43,
+          79,
+          84,
+          91,
+          92,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 724926,
+        "floor_deficit_kg": 0.0004461310137394059,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 11,
+        "site_rows_region_material_bary_head_before_radius": 11,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0006497724065633703
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 279340,
+        "floor_deficit_kg": 0.0004143952983466908,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 305,
+        "site_rows_region_material_bary_head_before_radius": 305,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0004632580855233924
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          23,
+          26,
+          29,
+          34,
+          41,
+          42,
+          43,
+          79,
+          84,
+          91,
+          92,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 724925,
+        "floor_deficit_kg": 0.0004004616885808659,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 11,
+        "site_rows_region_material_bary_head_before_radius": 11,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0005187995117398325
+      },
+      {
+        "admissible_regions": [
+          4,
+          20,
+          23,
+          26,
+          29,
+          34,
+          41,
+          42,
+          43,
+          79,
+          84,
+          91,
+          92,
+          128
+        ],
+        "child_row": 809710,
+        "floor_deficit_kg": 0.000395650215367668,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 6,
+        "site_rows_region_material_bary_head_before_radius": 6,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.00044843998135063847
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 812821,
+        "floor_deficit_kg": 0.0003508519406098078,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 34,
+        "site_rows_region_material_bary_head_before_radius": 34,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0004687228100441875
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 752284,
+        "floor_deficit_kg": 0.0003469904674057677,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 6,
+        "site_rows_region_material_bary_head_before_radius": 6,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.000387812875335858
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 813763,
+        "floor_deficit_kg": 0.0003308857997401571,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 33,
+        "site_rows_region_material_bary_head_before_radius": 33,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0004225235229934545
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 496748,
+        "floor_deficit_kg": 0.0003115128394565917,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 111,
+        "site_rows_region_material_bary_head_before_radius": 111,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.00037861251534165245
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 813796,
+        "floor_deficit_kg": 0.00028240385130668457,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 8,
+        "site_rows_region_material_bary_head_before_radius": 8,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0003286980196809086
+      },
+      {
+        "admissible_regions": [
+          128,
+          145,
+          150,
+          152,
+          156
+        ],
+        "child_row": 657097,
+        "floor_deficit_kg": 0.0002758616728801869,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 4,
+        "site_rows_region_material_bary_head_before_radius": 4,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0003089911280145016
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 378715,
+        "floor_deficit_kg": 0.00026938308738022566,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 208,
+        "site_rows_region_material_bary_head_before_radius": 208,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0003027202120287748
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 721211,
+        "floor_deficit_kg": 0.0002643422316034625,
+        "floor_phase_one_site_cap_sum_upper_bound_kg": 0.0,
+        "floor_phase_site_rows": 0,
+        "one_site_cap_sum_upper_bound_kg": 0.0,
+        "site_rows_after_radius_before_corner_capacity": 7,
+        "site_rows_region_material_bary_head_before_radius": 7,
+        "site_rows_with_positive_current_corner_capacity": 0,
+        "upper_headroom_kg": 0.0003276687392185638
+      }
+    ],
+    "top_nominal_headroom": [
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 417508,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0015535591987828022
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          138,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 523780,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0015148843461223055
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 523778,
+        "floor_deficit_kg": 1.734723475976807e-18,
+        "headroom_kg": 0.0013781945444467474
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 53424,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0013672147628747168
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 246320,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0013481828204688438
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 8575,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0012916536894313092
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 6188,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0012656247031838808
+      },
+      {
+        "admissible_regions": [
+          1,
+          4,
+          20,
+          128,
+          131,
+          136,
+          142,
+          145,
+          150,
+          156
+        ],
+        "child_row": 246209,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0011402954579457902
+      },
+      {
+        "admissible_regions": [
+          4,
+          20,
+          23,
+          26,
+          29,
+          34,
+          41,
+          42,
+          43,
+          79,
+          84,
+          91,
+          92,
+          128
+        ],
+        "child_row": 288260,
+        "floor_deficit_kg": 0.0,
+        "headroom_kg": 0.0010452610680174012
+      },
+      {
+        "admissible_regions": [
+          20,
+          23,
+          26
+        ],
+        "child_row": 752013,
+        "floor_deficit_kg": 0.0009187161333256307,
+        "headroom_kg": 0.00104493122305355
+      }
+    ],
+    "underfloor_receivers": 169863
+  },
+  "schema": "numi.human.current406-source-exhaustion-061-frontier-diagnostic.v1",
+  "scope_note": "Per-site capacity sums are deliberately labeled non-additive upper bounds because rows compete for the same parent-corner residual and receiver capacity. This census is not a continuous/global feasibility proof. It identifies remaining exact graph support under fixed 143 region, material, radius and exact M/4 residual state.",
+  "source_state": {
+    "corner_residuals": [
+      {
+        "corner": 0,
+        "max_residual_kg": 0.0008662847008641078,
+        "positive_parent_count": 1405,
+        "residual_mass_kg": 0.059701953507654545,
+        "top_parent_role_rows": [
+          {
+            "M4_target_kg": 0.0010926690720225452,
+            "global_source330_row": 23222,
+            "q_kg": 0.0008662847008641078,
+            "row": 8906
+          },
+          {
+            "M4_target_kg": 0.0011836358453365392,
+            "global_source330_row": 23075,
+            "q_kg": 0.0008598449972288508,
+            "row": 8759
+          },
+          {
+            "M4_target_kg": 0.0009961917498912953,
+            "global_source330_row": 28007,
+            "q_kg": 0.0008403593778811548,
+            "row": 13691
+          },
+          {
+            "M4_target_kg": 0.000752969577888507,
+            "global_source330_row": 18441,
+            "q_kg": 0.0006670669932916046,
+            "row": 4125
+          },
+          {
+            "M4_target_kg": 0.000825329385634177,
+            "global_source330_row": 26928,
+            "q_kg": 0.000588980961390165,
+            "row": 12612
+          },
+          {
+            "M4_target_kg": 0.0007392950635676243,
+            "global_source330_row": 28539,
+            "q_kg": 0.0005882659216723553,
+            "row": 14223
+          },
+          {
+            "M4_target_kg": 0.0011393783324820106,
+            "global_source330_row": 28005,
+            "q_kg": 0.0005833497851712034,
+            "row": 13689
+          },
+          {
+            "M4_target_kg": 0.0007618794938935025,
+            "global_source330_row": 28326,
+            "q_kg": 0.0005681505650100909,
+            "row": 14010
+          }
+        ]
+      },
+      {
+        "corner": 1,
+        "max_residual_kg": 0.0007891566800033947,
+        "positive_parent_count": 1395,
+        "residual_mass_kg": 0.06067228669492153,
+        "top_parent_role_rows": [
+          {
+            "M4_target_kg": 0.0010926690720225452,
+            "global_source330_row": 23222,
+            "q_kg": 0.0007891566800033947,
+            "row": 8906
+          },
+          {
+            "M4_target_kg": 0.0017400661135980044,
+            "global_source330_row": 19728,
+            "q_kg": 0.0006637687876574687,
+            "row": 5412
+          },
+          {
+            "M4_target_kg": 0.000752969577888507,
+            "global_source330_row": 18441,
+            "q_kg": 0.0006075363711797807,
+            "row": 4125
+          },
+          {
+            "M4_target_kg": 0.000825329385634177,
+            "global_source330_row": 26928,
+            "q_kg": 0.0005970944202745574,
+            "row": 12612
+          },
+          {
+            "M4_target_kg": 0.0007392950635676243,
+            "global_source330_row": 28539,
+            "q_kg": 0.0005752291301935094,
+            "row": 14223
+          },
+          {
+            "M4_target_kg": 0.0008242582680395572,
+            "global_source330_row": 23753,
+            "q_kg": 0.0005672354991753726,
+            "row": 9437
+          },
+          {
+            "M4_target_kg": 0.0009638443771109451,
+            "global_source330_row": 23710,
+            "q_kg": 0.0005184415192266546,
+            "row": 9394
+          },
+          {
+            "M4_target_kg": 0.0006732612803261873,
+            "global_source330_row": 28540,
+            "q_kg": 0.0005065969607469119,
+            "row": 14224
+          }
+        ]
+      },
+      {
+        "corner": 2,
+        "max_residual_kg": 0.0008631774875380112,
+        "positive_parent_count": 1411,
+        "residual_mass_kg": 0.06251163393456954,
+        "top_parent_role_rows": [
+          {
+            "M4_target_kg": 0.0026265624683219357,
+            "global_source330_row": 18789,
+            "q_kg": 0.0008631774875380112,
+            "row": 4473
+          },
+          {
+            "M4_target_kg": 0.0011836358453365392,
+            "global_source330_row": 23075,
+            "q_kg": 0.0008401069493216821,
+            "row": 8759
+          },
+          {
+            "M4_target_kg": 0.0016956413105617685,
+            "global_source330_row": 23023,
+            "q_kg": 0.000744041327937297,
+            "row": 8707
+          },
+          {
+            "M4_target_kg": 0.0008031972015487554,
+            "global_source330_row": 21115,
+            "q_kg": 0.0006662505570518662,
+            "row": 6799
+          },
+          {
+            "M4_target_kg": 0.0008158575383276911,
+            "global_source330_row": 19870,
+            "q_kg": 0.0006611154384355967,
+            "row": 5554
+          },
+          {
+            "M4_target_kg": 0.000752969577888507,
+            "global_source330_row": 18441,
+            "q_kg": 0.0006509070180415538,
+            "row": 4125
+          },
+          {
+            "M4_target_kg": 0.000825329385634177,
+            "global_source330_row": 26928,
+            "q_kg": 0.0006172175253389786,
+            "row": 12612
+          },
+          {
+            "M4_target_kg": 0.0008242582680395572,
+            "global_source330_row": 23753,
+            "q_kg": 0.0005690297732030708,
+            "row": 9437
+          }
+        ]
+      },
+      {
+        "corner": 3,
+        "max_residual_kg": 0.000656059809532662,
+        "positive_parent_count": 1266,
+        "residual_mass_kg": 0.05302596147928898,
+        "top_parent_role_rows": [
+          {
+            "M4_target_kg": 0.000752969577888507,
+            "global_source330_row": 18441,
+            "q_kg": 0.000656059809532662,
+            "row": 4125
+          },
+          {
+            "M4_target_kg": 0.0010926690720225452,
+            "global_source330_row": 23222,
+            "q_kg": 0.000633642124097921,
+            "row": 8906
+          },
+          {
+            "M4_target_kg": 0.0024367461264773738,
+            "global_source330_row": 18791,
+            "q_kg": 0.0006265241648475185,
+            "row": 4475
+          },
+          {
+            "M4_target_kg": 0.0007392950635676243,
+            "global_source330_row": 28539,
+            "q_kg": 0.0006023100512377861,
+            "row": 14223
+          },
+          {
+            "M4_target_kg": 0.000825329385634177,
+            "global_source330_row": 26928,
+            "q_kg": 0.0005829122665767504,
+            "row": 12612
+          },
+          {
+            "M4_target_kg": 0.0011393783324820106,
+            "global_source330_row": 28005,
+            "q_kg": 0.0005718597566991975,
+            "row": 13689
+          },
+          {
+            "M4_target_kg": 0.0006301526468632801,
+            "global_source330_row": 28555,
+            "q_kg": 0.0005057427669607625,
+            "row": 14239
+          },
+          {
+            "M4_target_kg": 0.0007618794938935025,
+            "global_source330_row": 28326,
+            "q_kg": 0.0004994656025824582,
+            "row": 14010
+          }
+        ]
+      }
+    ],
+    "parent_count": 14316,
+    "parents_with_all_four_positive_corner_residuals": 632,
+    "parents_with_any_positive_corner_residual": 2091,
+    "source_mass_total_kg": 10.487108517986506,
+    "unallocated_residual_total_kg": 0.2359118356164346
+  },
+  "status": "PASS_SOURCE_ONLY_FRONTIER_DIAGNOSTIC_NOT_INFEASIBILITY_PROOF"
+}

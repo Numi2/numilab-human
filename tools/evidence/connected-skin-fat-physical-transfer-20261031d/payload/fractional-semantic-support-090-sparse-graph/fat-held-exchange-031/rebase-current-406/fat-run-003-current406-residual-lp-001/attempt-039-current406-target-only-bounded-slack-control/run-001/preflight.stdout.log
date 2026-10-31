@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-039-current406-target-only-bounded-slack-control/run-001/source-freeze/solve_current406_target_only_bounded_slack_control_003.py", line 150, in <module>
+    control_receipt={"noncontiguous_parent_child":control(),"bounded_target_only_slack":bounded_slack_control()}
+                                                                                        ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-039-current406-target-only-bounded-slack-control/run-001/source-freeze/solve_current406_target_only_bounded_slack_control_003.py", line 147, in bounded_slack_control
+    if np.max(np.abs(m4),initial=0)>1e-9 or recv+slack<cap[0]-1e-10 or recv>950.*vol[9]+1e-10:raise RuntimeError("bounded target-slack optimized control replay failed")
+                                                                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: bounded target-slack optimized control replay failed

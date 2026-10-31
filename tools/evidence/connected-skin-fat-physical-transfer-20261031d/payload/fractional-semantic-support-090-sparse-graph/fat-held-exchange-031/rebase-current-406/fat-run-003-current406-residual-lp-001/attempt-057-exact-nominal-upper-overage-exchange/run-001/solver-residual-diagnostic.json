@@ -1,0 +1,452 @@
+{
+  "complete_allocation": false,
+  "counts": {
+    "remainder_variables": 1164,
+    "selected_parents": 291,
+    "site_variables": 53581,
+    "target_slack_variables": 40,
+    "violating_parent_corner_rows": 1
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/solve_oriented_cavity_milp_081.py": "3f7c276bef3bb4427f6acb41f6eeedffbeae273c9493a3b7854b244a5a2fa024",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/graph-preparation-report.json": "da4eb2e017009c30e5850fdb720d79e36a08fa0f20fd37aa623673ba5e2b1669",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-input-current406.npz": "4798d69dad18ffca8acedd65ec1b761135763d5121c0de67042c5cc083271328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-005/lp-report.json": "d5abd6f7d3c9b44d7a474127436284d2213549156afa4e92a462088abd299767",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/independent-replay-013.json": "7ce2d8dc4ab8c57da2b2b3b3692dece7f1fd8fe0901b15e26a7e5cbe1a1ea090",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/merged-held-centroid-noncentroid-source-exhaustion.npz": "69c212a0a11395a7c0584b99fc4cc00fd543754baec4c542266b8a4226957623",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-022-source-exhaustion-reserved-batch/run-001/proposal.npz": "fc4280fb824eb2903d107a8c447d395e0fddcaf74d32343dbd80f5086b49eda3",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-026-held-parent-exchange-top100/run-007/phase1-diagnostic.json": "cd30296c4b8818fdcdbd6e08d48aa6acc04a0a3e9c7c7b7c1690b6148bec6e83",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-054-exact-f32-direct-density/exact-f32-direct-density-reconciliation.json": "d10302d30e44b7388cf9f4a71195a5fbd928b08c36fdeeae9b8e96a242eb701d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-054-exact-f32-direct-density/exact-overage-row-replay-055.json": "51ee398270a8306bbf66637bd5f94e20d458061f82a900d694b4987f1749f0a1",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "native_steps": 0,
+  "note": "HiGHS reported success, but returned vector failed the existing independent M/4 replay tolerance. No proposal or merged ledger was written; this vector is diagnostic only.",
+  "physical_admission": false,
+  "producer_source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-057-exact-nominal-upper-overage-exchange/run-001/source-freeze/solve_current406_exact_f32_overage_exchange_057.py",
+  "producer_source_sha256": "f748edcea72d8a30267ce50c175bcb443bb6268d69e875b23aefb158cb9da178",
+  "residuals": {
+    "max_Aeq_fraction_residual": 3.8336001040306655e-13,
+    "max_abs_parent_corner_error_kg": 1.0377170043401884e-16,
+    "max_parent_corner_error_over_5e-13_relative_tolerance": 3.066111748378453
+  },
+  "schema": "numi.human.current406-target-slack-m4-solver-return-diagnostic.v1",
+  "solver": {
+    "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "objective_target_slack_kg": 0.0076039103440322855,
+    "primal_feasibility_tolerance": 1e-10,
+    "status": 0,
+    "success": true,
+    "time_limit_seconds": 60.0
+  },
+  "solver_vector_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-003-current406-residual-lp-001/attempt-057-exact-nominal-upper-overage-exchange/run-001/unaccepted-solver-vector.npz",
+  "solver_vector_sha256": "b20e6baab3d16460ce5766787e5867d6d1cd00a016265c0c0a2332f14f9c869c",
+  "status": "FAIL_SOLVER_RETURNED_VECTOR_M4_REPLAY",
+  "worst_rows": [
+    {
+      "allowed_kg": 3.384472222478507e-17,
+      "corner": 2,
+      "global_source330_row": 28019,
+      "parent_role_row": 13703,
+      "ratio": 3.066111748378453,
+      "residual_kg": -1.0377170043401884e-16
+    },
+    {
+      "allowed_kg": 2.528402287538256e-17,
+      "corner": 2,
+      "global_source330_row": 28155,
+      "parent_role_row": 13839,
+      "ratio": 0.2261968551463946,
+      "residual_kg": 5.719166459861036e-18
+    },
+    {
+      "allowed_kg": 6.515088628589182e-17,
+      "corner": 3,
+      "global_source330_row": 27969,
+      "parent_role_row": 13653,
+      "ratio": 0.07530234982481407,
+      "residual_kg": 4.9060148304969076e-18
+    },
+    {
+      "allowed_kg": 4.1242414283715336e-17,
+      "corner": 2,
+      "global_source330_row": 28018,
+      "parent_role_row": 13702,
+      "ratio": 0.06999319352122582,
+      "residual_kg": 2.8866882842426556e-18
+    },
+    {
+      "allowed_kg": 3.038556926071578e-17,
+      "corner": 0,
+      "global_source330_row": 28500,
+      "parent_role_row": 14184,
+      "ratio": 0.05619833569721457,
+      "residual_kg": 1.7076184216646695e-18
+    },
+    {
+      "allowed_kg": 1.2570261631594804e-17,
+      "corner": 1,
+      "global_source330_row": 28501,
+      "parent_role_row": 14185,
+      "ratio": 0.04555149997074972,
+      "residual_kg": 5.72594272343907e-19
+    },
+    {
+      "allowed_kg": 4.1242414283715336e-17,
+      "corner": 3,
+      "global_source330_row": 28018,
+      "parent_role_row": 13702,
+      "ratio": 0.03088901498119825,
+      "residual_kg": 1.2739375526704677e-18
+    },
+    {
+      "allowed_kg": 4.834822462385091e-17,
+      "corner": 0,
+      "global_source330_row": 28385,
+      "parent_role_row": 14069,
+      "ratio": 0.027470453602541335,
+      "residual_kg": 1.328147661294743e-18
+    },
+    {
+      "allowed_kg": 4.876334216419309e-17,
+      "corner": 3,
+      "global_source330_row": 27971,
+      "parent_role_row": 13655,
+      "ratio": 0.021400185973790217,
+      "residual_kg": 1.043544591017298e-18
+    },
+    {
+      "allowed_kg": 7.3043925907789745e-19,
+      "corner": 3,
+      "global_source330_row": 28171,
+      "parent_role_row": 13855,
+      "ratio": 0.01826403599403535,
+      "residual_kg": 1.334076891925523e-20
+    },
+    {
+      "allowed_kg": 1.6735033671333444e-20,
+      "corner": 0,
+      "global_source330_row": 28172,
+      "parent_role_row": 13856,
+      "ratio": 0.014235287546707996,
+      "residual_kg": 2.3822801641527197e-22
+    },
+    {
+      "allowed_kg": 1.9673109141749025e-18,
+      "corner": 0,
+      "global_source330_row": 28215,
+      "parent_role_row": 13899,
+      "ratio": 0.01248605662347831,
+      "residual_kg": -2.456395547037471e-20
+    },
+    {
+      "allowed_kg": 7.478636909752368e-18,
+      "corner": 1,
+      "global_source330_row": 28110,
+      "parent_role_row": 13794,
+      "ratio": 0.010872992487491325,
+      "residual_kg": 8.131516293641283e-20
+    },
+    {
+      "allowed_kg": 3.5319241931119905e-17,
+      "corner": 2,
+      "global_source330_row": 28428,
+      "parent_role_row": 14112,
+      "ratio": 0.008441732640099724,
+      "residual_kg": 2.981555974335137e-19
+    },
+    {
+      "allowed_kg": 5.274110428388212e-17,
+      "corner": 3,
+      "global_source330_row": 28072,
+      "parent_role_row": 13756,
+      "ratio": 0.0059101554436895186,
+      "residual_kg": -3.1170812458958252e-19
+    },
+    {
+      "allowed_kg": 4.1947667739350435e-17,
+      "corner": 1,
+      "global_source330_row": 28073,
+      "parent_role_row": 13757,
+      "ratio": 0.005492390258375241,
+      "residual_kg": 2.303929616531697e-19
+    },
+    {
+      "allowed_kg": 3.7065652946921545e-17,
+      "corner": 0,
+      "global_source330_row": 28063,
+      "parent_role_row": 13747,
+      "ratio": 0.005484535983546352,
+      "residual_kg": 2.0328790734103208e-19
+    },
+    {
+      "allowed_kg": 3.9486107823449855e-16,
+      "corner": 1,
+      "global_source330_row": 19118,
+      "parent_role_row": 4802,
+      "ratio": 0.00521698450739448,
+      "residual_kg": 2.0599841277224584e-18
+    },
+    {
+      "allowed_kg": 4.1947667739350435e-17,
+      "corner": 3,
+      "global_source330_row": 28073,
+      "parent_role_row": 13757,
+      "ratio": 0.004846226698566389,
+      "residual_kg": 2.0328790734103208e-19
+    },
+    {
+      "allowed_kg": 1.9848620667062277e-16,
+      "corner": 2,
+      "global_source330_row": 28464,
+      "parent_role_row": 14148,
+      "ratio": 0.0046430019600403665,
+      "residual_kg": 9.215718466126788e-19
+    },
+    {
+      "allowed_kg": 4.467793635054562e-19,
+      "corner": 3,
+      "global_source330_row": 28169,
+      "parent_role_row": 13853,
+      "ratio": 0.00450267719158966,
+      "residual_kg": 2.0117032497289633e-21
+    },
+    {
+      "allowed_kg": 1.0366464167077538e-16,
+      "corner": 0,
+      "global_source330_row": 28470,
+      "parent_role_row": 14154,
+      "ratio": 0.00418349846200706,
+      "residual_kg": 4.336808689942018e-19
+    },
+    {
+      "allowed_kg": 1.0366464167077538e-16,
+      "corner": 1,
+      "global_source330_row": 28470,
+      "parent_role_row": 14154,
+      "ratio": 0.00418349846200706,
+      "residual_kg": 4.336808689942018e-19
+    },
+    {
+      "allowed_kg": 1.0366464167077538e-16,
+      "corner": 3,
+      "global_source330_row": 28470,
+      "parent_role_row": 14154,
+      "ratio": 0.00418349846200706,
+      "residual_kg": 4.336808689942018e-19
+    },
+    {
+      "allowed_kg": 1.5780121209729714e-18,
+      "corner": 1,
+      "global_source330_row": 27889,
+      "parent_role_row": 13573,
+      "ratio": 0.0037574049983369294,
+      "residual_kg": 5.929230630780102e-21
+    },
+    {
+      "allowed_kg": 1.7821561186792677e-16,
+      "corner": 3,
+      "global_source330_row": 27682,
+      "parent_role_row": 13366,
+      "ratio": 0.0036501925766940966,
+      "residual_kg": -6.505213034913027e-19
+    },
+    {
+      "allowed_kg": 1.7821561186792677e-16,
+      "corner": 0,
+      "global_source330_row": 27682,
+      "parent_role_row": 13366,
+      "ratio": 0.0036501925766940966,
+      "residual_kg": -6.505213034913027e-19
+    },
+    {
+      "allowed_kg": 9.091513462067269e-17,
+      "corner": 0,
+      "global_source330_row": 28068,
+      "parent_role_row": 13752,
+      "ratio": 0.00357762932544448,
+      "residual_kg": 3.2526065174565133e-19
+    },
+    {
+      "allowed_kg": 4.45651555658344e-18,
+      "corner": 0,
+      "global_source330_row": 28203,
+      "parent_role_row": 13887,
+      "ratio": 0.0034211914795302797,
+      "residual_kg": 1.5246593050577406e-20
+    },
+    {
+      "allowed_kg": 1.0231106362112996e-17,
+      "corner": 1,
+      "global_source330_row": 28209,
+      "parent_role_row": 13893,
+      "ratio": 0.00331159863762521,
+      "residual_kg": -3.3881317890172014e-20
+    },
+    {
+      "allowed_kg": 4.543076954632852e-17,
+      "corner": 0,
+      "global_source330_row": 27983,
+      "parent_role_row": 13667,
+      "ratio": 0.003281427988243368,
+      "residual_kg": 1.4907779871675686e-19
+    },
+    {
+      "allowed_kg": 5.463034824515489e-16,
+      "corner": 1,
+      "global_source330_row": 20818,
+      "parent_role_row": 6502,
+      "ratio": 0.0031753842538074207,
+      "residual_kg": -1.734723475976807e-18
+    },
+    {
+      "allowed_kg": 2.761412986274081e-16,
+      "corner": 1,
+      "global_source330_row": 28287,
+      "parent_role_row": 13971,
+      "ratio": 0.0031410069493397917,
+      "residual_kg": 8.673617379884035e-19
+    },
+    {
+      "allowed_kg": 6.125878684315466e-17,
+      "corner": 0,
+      "global_source330_row": 28153,
+      "parent_role_row": 13837,
+      "ratio": 0.0030972761617163035,
+      "residual_kg": 1.8973538018496328e-19
+    },
+    {
+      "allowed_kg": 8.771329902401703e-17,
+      "corner": 1,
+      "global_source330_row": 19540,
+      "parent_role_row": 5224,
+      "ratio": 0.003090187532989256,
+      "residual_kg": 2.710505431213761e-19
+    },
+    {
+      "allowed_kg": 1.7821561186792677e-16,
+      "corner": 2,
+      "global_source330_row": 27682,
+      "parent_role_row": 13366,
+      "ratio": 0.0030418271472450807,
+      "residual_kg": -5.421010862427522e-19
+    },
+    {
+      "allowed_kg": 2.3240289692694206e-16,
+      "corner": 3,
+      "global_source330_row": 19342,
+      "parent_role_row": 5026,
+      "ratio": 0.0030323693096524374,
+      "residual_kg": -7.047314121155779e-19
+    },
+    {
+      "allowed_kg": 6.1759933167593316e-18,
+      "corner": 0,
+      "global_source330_row": 28123,
+      "parent_role_row": 13807,
+      "ratio": 0.0030172838414554218,
+      "residual_kg": 1.8634724839594607e-20
+    },
+    {
+      "allowed_kg": 8.771329902401703e-17,
+      "corner": 2,
+      "global_source330_row": 19540,
+      "parent_role_row": 5224,
+      "ratio": 0.00278116877969033,
+      "residual_kg": 2.439454888092385e-19
+    },
+    {
+      "allowed_kg": 4.302434408742784e-18,
+      "corner": 3,
+      "global_source330_row": 28124,
+      "parent_role_row": 13808,
+      "ratio": 0.0027562212772990003,
+      "residual_kg": 1.1858461261560205e-20
+    },
+    {
+      "allowed_kg": 2.761412986274081e-16,
+      "corner": 3,
+      "global_source330_row": 28287,
+      "parent_role_row": 13971,
+      "ratio": 0.0027483810806723176,
+      "residual_kg": 7.589415207398531e-19
+    },
+    {
+      "allowed_kg": 2.761412986274081e-16,
+      "corner": 0,
+      "global_source330_row": 28287,
+      "parent_role_row": 13971,
+      "ratio": 0.0027483810806723176,
+      "residual_kg": 7.589415207398531e-19
+    },
+    {
+      "allowed_kg": 1.0259754645858266e-17,
+      "corner": 3,
+      "global_source330_row": 28111,
+      "parent_role_row": 13795,
+      "ratio": 0.002641881336127232,
+      "residual_kg": 2.710505431213761e-20
+    },
+    {
+      "allowed_kg": 1.0563420538289847e-17,
+      "corner": 1,
+      "global_source330_row": 27974,
+      "parent_role_row": 13658,
+      "ratio": 0.002565935362876858,
+      "residual_kg": 2.710505431213761e-20
+    },
+    {
+      "allowed_kg": 4.530299463567644e-16,
+      "corner": 1,
+      "global_source330_row": 19877,
+      "parent_role_row": 5561,
+      "ratio": 0.002393224070957303,
+      "residual_kg": 1.0842021724855044e-18
+    },
+    {
+      "allowed_kg": 9.091513462067269e-17,
+      "corner": 1,
+      "global_source330_row": 28068,
+      "parent_role_row": 13752,
+      "ratio": 0.002385086216962987,
+      "residual_kg": 2.168404344971009e-19
+    },
+    {
+      "allowed_kg": 2.761412986274081e-16,
+      "corner": 2,
+      "global_source330_row": 28287,
+      "parent_role_row": 13971,
+      "ratio": 0.002355755212004844,
+      "residual_kg": 6.505213034913027e-19
+    },
+    {
+      "allowed_kg": 1.1555874657176446e-17,
+      "corner": 3,
+      "global_source330_row": 28122,
+      "parent_role_row": 13806,
+      "ratio": 0.0023455649283375354,
+      "residual_kg": 2.710505431213761e-20
+    },
+    {
+      "allowed_kg": 8.780413995879144e-18,
+      "corner": 3,
+      "global_source330_row": 28205,
+      "parent_role_row": 13889,
+      "ratio": 0.0023152428511507535,
+      "residual_kg": 2.0328790734103208e-20
+    },
+    {
+      "allowed_kg": 3.5319241931119905e-17,
+      "corner": 0,
+      "global_source330_row": 28428,
+      "parent_role_row": 14112,
+      "ratio": 0.0023022907200271974,
+      "residual_kg": 8.131516293641283e-20
+    }
+  ]
+}

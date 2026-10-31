@@ -1,0 +1,47 @@
+{
+  "status": "PASS_NATIVE_QUALITY_KERNEL_FAN_BATCH",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-canonical-outer-O-531-root/skin-current-O530-I528-canonical-volume-proposal.npz",
+  "input_sha256": "aba0761c3690bd68d964a1aca472ef70385a70dad16eed75da34ccb01ba58ebe",
+  "source_sha256": "f1b9f76cc2621fc5bc60d217486cfe511023c5c893cec3d97f332992074036e1",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-kernel-fan-531-root/run002/fan-output/kernel-fan-volume-proposal.npz",
+  "output_sha256": "0a4687eb31d30f706b1f82d9fcbd23080155a9bf0dea7b3d743cdb1e619c4873",
+  "bad_before": 1024,
+  "bad_after": 1002,
+  "nonpositive": 0,
+  "input_cells": 729848,
+  "output_cells": 729880,
+  "new_inferred_interior_points": 16,
+  "enumeration": "face_connected_joint_volume_shape_witness_growth",
+  "growth_statistics": {
+    "yielded_domains": 5326,
+    "added_face_neighbors": 43414,
+    "joint_bound_joint_volume_and_shape": 369,
+    "absorbed_internal_no_apex_faces": 640,
+    "joint_bound_normalized_shape": 295
+  },
+  "identical_cavity_algorithm_source_sha256": "89cb1ba952b41c35f53ab621e897f03fb12700a75e968cdbdf5c27aa721a650f",
+  "adaptive_kernel": {
+    "adaptive_attempts": 2973,
+    "adaptive_native_centers": 6,
+    "adaptive_passing_fans": 6
+  },
+  "cell_disjoint_cavities": true,
+  "shared_boundary_vertex_reuse_operations": 0,
+  "prior_negative_cache_sources": [],
+  "cache_entries_before": 0,
+  "cache_entries_after": 3986,
+  "cache_hits": 0,
+  "attempts": 4002,
+  "passing_operations": 16,
+  "rejections": {
+    "adaptive_no_positive_kernel": 2967,
+    "no_positive_kernel": 502,
+    "nonmanifold": 104,
+    "nonclosed": 413
+  },
+  "oriented_boundary_bit_identical": true,
+  "original_points_bit_identical": true,
+  "elapsed_s": 19.53801658283919
+}
