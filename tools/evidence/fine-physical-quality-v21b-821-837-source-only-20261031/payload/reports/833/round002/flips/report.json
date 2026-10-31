@@ -1,0 +1,82 @@
+{
+  "status": "PASS_INCREMENTAL_LEXICOGRAPHIC_QUALITY_SEARCH",
+  "roles": [
+    {
+      "role": "Skin",
+      "input": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 724921,
+        "native_quality_failures": 44,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-833-root/round001/points/skin-coupled-quality-point-proposal.npz",
+        "sha256": "d7a4ba0aa14d29e3856919d54f7dec15a0f1138e5b0ff363c8c2abf9235dad0b",
+        "geometry_changed_points": 1
+      },
+      "candidate": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 724921,
+        "native_quality_failures": 44,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-833-root/round002/flips/skin-fixed-boundary-quality-queue.npz",
+        "sha256": "2ffc26769ad4686ee8398d56927b50ec37d6b41922cf49483f6ab60741868b05",
+        "geometry_changed_points": 1
+      },
+      "bad_before": 44,
+      "bad_after": 44,
+      "operations": [],
+      "tests": 220,
+      "rejections": {
+        "edge link is not a simple ring": 70,
+        "no_certified_quality_gain": 220,
+        "invalid bounded polygon ring": 12
+      },
+      "queue_exhausted": true,
+      "queue_remaining": 0,
+      "elapsed_s": 5.438259792048484,
+      "initial_cells": 724921,
+      "active_cell_ids": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-833-root/round002/flips/skin-active-cell-ids.npz"
+    },
+    {
+      "role": "Fat",
+      "input": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 770694,
+        "native_quality_failures": 183,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-833-root/round001/points/fat-coupled-quality-point-proposal.npz",
+        "sha256": "24a89483f307c20764852ac7b23eede9f5a0182740f6d7e18c1c7214e2e25adb",
+        "geometry_changed_points": 0
+      },
+      "candidate": {
+        "boundary_source_metadata": "PENDING_CANONICAL_REGENERATION_FROM_IMMEDIATE_PARENT_UNIONS",
+        "cells": 770694,
+        "native_quality_failures": 183,
+        "nonpositive": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-833-root/round002/flips/fat-fixed-boundary-quality-queue.npz",
+        "sha256": "117489a002739a69d5054337ba20784b5f733d41117038ebbd8209cbdcb45bb8",
+        "geometry_changed_points": 0
+      },
+      "bad_before": 183,
+      "bad_after": 183,
+      "operations": [],
+      "tests": 1052,
+      "rejections": {
+        "invalid bounded polygon ring": 69,
+        "no_certified_quality_gain": 1052,
+        "edge link is not a simple ring": 168
+      },
+      "queue_exhausted": true,
+      "queue_remaining": 0,
+      "elapsed_s": 6.861206958070397,
+      "initial_cells": 770694,
+      "active_cell_ids": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-833-root/round002/flips/fat-active-cell-ids.npz"
+    }
+  ],
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental_fixed_boundary_polygon_search_657_root.py",
+    "sha256": "6e351b3b4983458a5316985d6fdfaf4309c3b263c64b7fb649fe0d95a640e4bd"
+  },
+  "elapsed_s": 12.742634166963398,
+  "physical_admission": false,
+  "native_steps": 0
+}

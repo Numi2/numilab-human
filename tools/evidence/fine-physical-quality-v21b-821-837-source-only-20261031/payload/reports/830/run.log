@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_787_inner_layer.py", line 260, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_787_inner_layer.py", line 247, in main
+    report=run_from_prepared(cfg,proposal,prep)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_787_inner_layer.py", line 223, in run_from_prepared
+    result=M.run_from_config(cfgpath,out)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py", line 98, in run_from_config_785
+    result=ORIGINAL_RUN(cp,od,edges_override=edges_override,prune_receipt=prune_receipt)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py", line 88, in _run_from_config_783
+    report = _BASE_RUN_FROM_CONFIG(config_path, out_dir, edges_override=edges_override,
+                                   prune_receipt=prune_receipt)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py", line 506, in run_from_config
+    report=run_batch(x["surface"],x["volumes"],use_edges,
+        protected_surface_rows=x["protected"],route_anchor_rows=x["routes"],
+        move_cap_m=float(x["cfg"].get("move_cap_m",.0005)),
+        max_operations=int(x["cfg"].get("max_operations",32)),
+        time_limit_s=float(x["cfg"].get("time_limit_s",90)),output_dir=out)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py", line 340, in run_batch
+    if out is not None:out.mkdir(parents=True,exist_ok=False)
+                       ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py", line 722, in mkdir
+    os.mkdir(self, mode)
+    ~~~~~~~~^^^^^^^^^^^^
+FileExistsError: [Errno 17] File exists: '/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-830-root/proposal'

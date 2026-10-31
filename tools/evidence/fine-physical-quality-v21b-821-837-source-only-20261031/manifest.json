@@ -1,0 +1,1175 @@
+{
+  "branch_relationships": [
+    {
+      "name": "821-823-current-source-quality-trials",
+      "relationship": "821 flip and point trials, 822 no-gain, then 823 external independent promotion; keep individual states distinct"
+    },
+    {
+      "name": "824-canonical-old-source",
+      "relationship": "separate 52/190 branch; DO_NOT_SUM with later current-source lineage"
+    },
+    {
+      "name": "826-837-current-source-lineage",
+      "relationship": "3 I operations to 51/188; 7 I operations and typed-parent alias rebind to 45/183; 44/183 at 833/835; 837 verified at 40/182"
+    },
+    {
+      "name": "836-candidate",
+      "relationship": "pending exact 775 audit; superseded by the separately verified 837 endpoint"
+    },
+    {
+      "name": "838-and-later",
+      "relationship": "excluded from frozen 837 snapshot"
+    }
+  ],
+  "external_npz_reference_manifest": {
+    "included": false,
+    "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/external-npz-pins.json",
+    "sha256": "e69603cf350f1f428f0af7fb6fbff27dc1459691c352fe2d1bac8b87e7a8f42c"
+  },
+  "failure_classifications": {
+    "822_no_gain": "Attempt did not advance the verified state; previous 821 flip state remained current.",
+    "825_cli_entry": "AttributeError: imported module lacked run_verified_state; no geometry result.",
+    "828_partial": "Retained exploratory PASS_WITH_PARTIAL_NATIVE_DEFECTS result; not promoted.",
+    "829_lineage": "ValueError: lineage step lacked explicit parent/point map; failed before LP; no geometry result.",
+    "830_preparation": "FileExistsError on existing proposal directory; no geometry result.",
+    "834_context_guard": "ValueError: verified state missing exact_context; fail-closed before geometry."
+  },
+  "files": [
+    {
+      "categories": [
+        "publication_metadata"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/README.md",
+      "sha256": "86f7eab58b3fd411c6a85b003f658deba367a6cdaeddfbffb5abbe22abdb411c",
+      "size_bytes": 3400
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_780.py",
+      "sha256": "84631a7c8343d3301a6010c87c835b34f2362cbbf98016934f424e1f76c6439e",
+      "size_bytes": 31293
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_781.py",
+      "sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb",
+      "size_bytes": 73772
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_782.py",
+      "sha256": "f23abf417b9fd1ce017837c32912e7d17a3a485cf941f0230d403faf67524b23",
+      "size_bytes": 24793
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_783.py",
+      "sha256": "b78358fccf208a12a24b229608c10c231817a8f8c15e4e4c0da45f9352585841",
+      "size_bytes": 11666
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_784.py",
+      "sha256": "09c12fc697c7fe2151fe02d24abf07dc469426a67a9e8a2e11827bdcb47da5fc",
+      "size_bytes": 18356
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_785.py",
+      "sha256": "9416c4883ff20f59dd0b97108cff9ecb38463b4db21b5a865cbe6486aeea0230",
+      "size_bytes": 11403
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_786_root.py",
+      "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892",
+      "size_bytes": 11405
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_787_inner_layer.py",
+      "sha256": "12a90998552a3b4942486aa5045c66d064cd8cac8680f467ba60d43054145383",
+      "size_bytes": 17907
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_790_inner_layer_root.py",
+      "sha256": "097e4c7256d23ddee251e782fa8cc81b56275aea6f516adc4ea298fbd4c4070a",
+      "size_bytes": 17913
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_791_current_parent_root.py",
+      "sha256": "5d8b00a3ca57bbcb0c53ad1b92c78c97cb3ade5da441d3b5d71a7c3dfdb6fd76",
+      "size_bytes": 1981
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_replay_788_root.py",
+      "sha256": "8dc8d4e216131a59a94ae7f203ee7d713637cdf3e21c42dfb0c0064cba3fc655",
+      "size_bytes": 73936
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/coupled-anchor-collapse/coupled_anchor_collapse_replay_789_root.py",
+      "sha256": "5fcefd6745b09754e6414bfd1d86a364b76fcfd8946fb077d8636ac5c1663052",
+      "size_bytes": 73974
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/quality/batch_connected_wide_graph_quality_702_root.py",
+      "sha256": "37f5eff7f7fd8538644bb6c5ec60d2f9df609e4b3d6ba46b2ccee3fbeab3fab5",
+      "size_bytes": 16433
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/quality/qualify_coupled_anchor_quality_working_state_837_root.py",
+      "sha256": "11c5dd42f6711786eed204c4868a5cbff400e42c5383b8e5b1944eb6b36ab229",
+      "size_bytes": 4818
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/quality/repair_coupled_quality_points_722_inner_back_v22_role_balanced.py",
+      "sha256": "5e3732bd4323e7e956d7b16887b37916b2a1e1d804cda1f89ffff7c78e67ee09",
+      "size_bytes": 65085
+    },
+    {
+      "categories": [
+        "source_test"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/source-verification/current-source-evidence-791-root-corpus-tests.json",
+      "sha256": "0a6dda5aeb65e902e6f2758b838e4d9ed04fd1ad06a4ffbdeef15d8c40d7e350",
+      "size_bytes": 3435
+    },
+    {
+      "categories": [
+        "source_test"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/source-verification/test_current_source_evidence_791.py",
+      "sha256": "78bd35da7d7a85bd6ea6e1435090d192f0a120da20c85da78fb0d7144bd568be",
+      "size_bytes": 6026
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/source-verification/verify_current_source_evidence_791_root.py",
+      "sha256": "b4da6ac3509767e11f3df6bd712a9908adf6b9bd0c1efc2122b16ec15df04ed9",
+      "size_bytes": 5678
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/source-verification/verify_current_source_evidence_791_validation_root.py",
+      "sha256": "ce6a200772e3ee135d4cfc3844026cf5cdcdce9a67af8e909651a7b7e33ee861",
+      "size_bytes": 22262
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/typed-I-alias-rebind/typed-I-immediate-parent-alias-rebind-002/receipt.json",
+      "sha256": "9f62235018b5623cc835df57bb4a9c5eb32cf810b1098651fe5e6169431fa928",
+      "size_bytes": 3062
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/typed-I-alias-rebind/typed-I-immediate-parent-alias-rebind-003/rebind_typed_I_immediate_parent_generic_003.py",
+      "sha256": "9c8ca434c090a38a6d8898c693a9e142c48670d99169cf31fd26653fe0e3f65e",
+      "size_bytes": 12322
+    },
+    {
+      "categories": [
+        "source_code"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/code/typed-I-alias-rebind/typed-I-immediate-parent-alias-rebind-003/run-831/receipt.json",
+      "sha256": "2f4461dac48030794dd14920ece84496b146d6a762994115b322a36009c65a59",
+      "size_bytes": 4487
+    },
+    {
+      "categories": [
+        "publication_metadata"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/external-npz-pins.json",
+      "sha256": "e69603cf350f1f428f0af7fb6fbff27dc1459691c352fe2d1bac8b87e7a8f42c",
+      "size_bytes": 69398
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/flips/independent-replay.json",
+      "sha256": "8dcc0c0be6cdac27110f6bbb30ade5cc33c7baee073d455009a73068a4334a6f",
+      "size_bytes": 7864
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/flips/report.json",
+      "sha256": "5bb187b1909c21e40b3479498a13d3f20a16fe5ca9384511f64ad13db93c0283",
+      "size_bytes": 10478
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/flips/state.json",
+      "sha256": "24e28e754a4cea2032abcc391a2646a3a6a647a3ef031892d9072fdcd7cd2bde",
+      "size_bytes": 47190
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/flips/verified-state.json",
+      "sha256": "c89b2ff77ca9c95cbe528c929415e5e0c45a9986a83c89131b57bf83517431a1",
+      "size_bytes": 47502
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/flips.log",
+      "sha256": "27f2366ebe2113c0714bf2ee3e994337f4b2daae46a9b75ebdb9b9dae42de72d",
+      "size_bytes": 238
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/points/context-config.json",
+      "sha256": "bed36d7edf0dad78f747de4f4fc723a4932da9d332a32e52b90fdc543df9c3bc",
+      "size_bytes": 2145
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/points/independent-replay.json",
+      "sha256": "3726f0a414da6ff461316aca515b86280574f316648940d238b31df911a52d20",
+      "size_bytes": 1210
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/points/state.json",
+      "sha256": "2665458b744d14b90fea80e12a8669c77a93358ab0b9556169b3ba1b20961645",
+      "size_bytes": 47193
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/points/verified-state.json",
+      "sha256": "ddda40f6cf7db8b409d12edbb346aa6952d75a4058c89b382d2a2e9f9ba693b4",
+      "size_bytes": 47503
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/round001/points.log",
+      "sha256": "2952c25c69128d045ad032c77504d16ed3b369122a7412510982c2c9c960ad42",
+      "size_bytes": 100126
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/821/run.log",
+      "sha256": "ef357881ba7ba9e250fd0b1cd000faf755eb75a7fa749a394c3c38e24a002bd3",
+      "size_bytes": 333
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/822/round001/flips/report.json",
+      "sha256": "37b50928e558dd1dd324d8da882104790f9e8f8f175a4645c3d029cc0b42b2f4",
+      "size_bytes": 6439
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/822/round001/flips.log",
+      "sha256": "a12c824868ebd47ce4cb350b2d54eda98e5f86ccfc3f6550caab8258d0bdff42",
+      "size_bytes": 238
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/822/run.log",
+      "sha256": "ef357881ba7ba9e250fd0b1cd000faf755eb75a7fa749a394c3c38e24a002bd3",
+      "size_bytes": 333
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/executed-driver-root.py",
+      "sha256": "d6aaaf5694a681dad9faa10434f554dca2595f72cdcec8cd6da8a97261782cf4",
+      "size_bytes": 1531
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/independent-promoter.json",
+      "sha256": "9d782445ba3612ca647eaa35976dde1f7af7fd8e06d384237b973044aa6d213b",
+      "size_bytes": 13803
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/proposal/fat-independent-steiner-readback.json",
+      "sha256": "7fcab7cba231550c0afbe7ddb19419e7bad8c7a30c979cca8c652fbe819b807e",
+      "size_bytes": 19644
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/proposal/report.json",
+      "sha256": "2bf073f04d790b4ea78b9656acd04f0815ddce43b47a97d9819bdf10cf163995",
+      "size_bytes": 2296193
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/proposal/skin-independent-steiner-readback.json",
+      "sha256": "ae3c2b397ab4406b692060bca78c8e3f51a8a1629c230a492a6db3223811a10d",
+      "size_bytes": 3792
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/proposal/state.json",
+      "sha256": "9c2c35d36a57d9f6711d3036d1a5ecc65ac1c1c1b4c14ccfeb84de10d10998bd",
+      "size_bytes": 47307
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/run.log",
+      "sha256": "0617a6312a41d3e649ef80e86ecc0e72a266afdf6329c8c0a62b422d0cb054a2",
+      "size_bytes": 12538
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/823/verified-state.json",
+      "sha256": "0850283efff5c82bf53e15cf3cf699b6189824fda9cecce4f03fd71a2a6ae5eb",
+      "size_bytes": 49134
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/latest-verified.json",
+      "sha256": "75447d1819159296e7b406b0a51468d4cc16ef31a8c2c369a095cdf993420359",
+      "size_bytes": 1138
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/flips/independent-replay.json",
+      "sha256": "b7ddbc683b9102ab7fc11394d7c648107263422c168fdba72d858033f4e87e72",
+      "size_bytes": 7851
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/flips/report.json",
+      "sha256": "fcadda5c75b427c56ab15f474b215e0b641ddc9282b0d010c4b320a4228926ff",
+      "size_bytes": 19619
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/flips/state.json",
+      "sha256": "a7805bd5eb5637fe4b172b21f942ccba2829c9741fcdae8aed202385fd698908",
+      "size_bytes": 49121
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/flips/verified-state.json",
+      "sha256": "4ddd973bfe6570e16f2218f693011c1210fa5c6c0f9888d744503bb756a9027f",
+      "size_bytes": 49446
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/flips.log",
+      "sha256": "608804cbb798c9c4594256a736643cd287ffd85f8eb1129d4af8c76640dfee56",
+      "size_bytes": 239
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/points/independent-replay.json",
+      "sha256": "7e516bccf6a9735581f1f19a005cb51c57303e5baca482b296d467a609a27f6b",
+      "size_bytes": 1197
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/points/state.json",
+      "sha256": "c51f460b014a55bb1eb6e5b3606e80cda63ccccf9f3abb1a0cee21ba6b79af91",
+      "size_bytes": 49111
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/points/verified-state.json",
+      "sha256": "b23357f10533aea03181e4449271519b1936322856b9adad46fbd41f51854d33",
+      "size_bytes": 49421
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round001/points.log",
+      "sha256": "3177d058b8e7dccb62240dc8cfc02bb247f611152ef932a43e2f1bb71bbecca6",
+      "size_bytes": 198706
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round002/flips/report.json",
+      "sha256": "ae380de57eaafce28a545a5280efd9afd3611d0b1c03d221ad85feedcf65fee8",
+      "size_bytes": 6438
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round002/flips/state.json",
+      "sha256": "c7c98b1ec8e200f03fb6ea81a0defeead0ba11b2e5e48ecca930ce369af020c6",
+      "size_bytes": 49136
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/round002/flips.log",
+      "sha256": "dab56667d8255b18e971a5721efd714d31854cbb4ab8092d7de66bdf18dcbd77",
+      "size_bytes": 238
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/824/run.log",
+      "sha256": "bf28b27a527db272e5b9bb936e1c85ec6838a2714bbb1faf0f53043abb6795be",
+      "size_bytes": 666
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/825/run.log",
+      "sha256": "3ec7ad7f9ad2fdcf3dd5808f785e16ab1387be0522a02d69994363fad5cd5ee5",
+      "size_bytes": 774
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/audit-correct-context.log",
+      "sha256": "0374b47c35f3142beed10a88a6186fffdb40e4984d12c0a037823ef2e305324f",
+      "size_bytes": 1757
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/audit.log",
+      "sha256": "8240d9124e5d3ff500e6ab11f6f138fd59cd84b0c65875f69b2e573ba0c68a2b",
+      "size_bytes": 1380
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/exact-775-correct-context/report.json",
+      "sha256": "93ece75ad30adf0b9a2f66681feff25c33eaee3f37d666755510cc2f6c61a42d",
+      "size_bytes": 78959
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/exact-775-recorded/report.json",
+      "sha256": "e52b858772838cc8e4af4566547193916a6e8dabceff62eb92fd70aaf995f46c",
+      "size_bytes": 78960
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/inputs/run-config.json",
+      "sha256": "8b8be5044cf7a3b634b70d56579af3f997756c6f45f28eca55e68aca4a48efb5",
+      "size_bytes": 4761
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/inputs/state-preparation.json",
+      "sha256": "a3946f1c9469ed8e1732ec055f1f28bff75540b66873efc0d816c56ead0a2745",
+      "size_bytes": 14786
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal/775-context-config.json",
+      "sha256": "f0cedc70d18b9ba7a18ed108ee31396bc2d79e1c534658deb058646b7df1495b",
+      "size_bytes": 2719
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal/accepted-operations-pre-serialization.json",
+      "sha256": "d43278296e6b53f99ad837784d44b6ba894748291f65c552337698072868ed34",
+      "size_bytes": 16973
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal/independent-replay.json",
+      "sha256": "b22773fead2459789eae5093c8a76a69c1547249d8cca4c353adc760da042414",
+      "size_bytes": 2985
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal/state.json",
+      "sha256": "d20db79b43c0337f9ec54207fd0640a441a116f99dc8062714fc00a17186c772",
+      "size_bytes": 27706
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal-audit-logs/audit775.command.json",
+      "sha256": "8186b5a25aea1ce5bd9df25c6fcd35f54cf8291fe0d113fc2b0bbcc0ec6fe92d",
+      "size_bytes": 690
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal-audit-logs/audit775.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/proposal-audit-logs/audit775.stdout.log",
+      "sha256": "743f7b801ac573401477502ac5215fc225fca9c7b447e7ba3eba807b2d0fc5de",
+      "size_bytes": 1757
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/replay-788.log",
+      "sha256": "9d82b91f80e746fce84c0768eced59d448637b6a260c83e87ca1209e6984cdd7",
+      "size_bytes": 1204
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/replay-789.log",
+      "sha256": "654a5cbd6b82065defee580fb9dd5a6fdc9fd1e2013754005b44a8e9bf7b0623",
+      "size_bytes": 2985
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/replay.log",
+      "sha256": "9b64caccc94b9c33e4df096ebd6f2c22c4dcc7c2b7b0838b5f7623fddd3b79f3",
+      "size_bytes": 986
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/state-wrapper.json",
+      "sha256": "1b9753807c6371fdf32c02102817629a876420d7f2f15e9d36523c13db4fe369",
+      "size_bytes": 17721
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/826/verified-context-775.json",
+      "sha256": "83dd9496e394c4bdd4c10832d67af529cbe6d37d0c61c261ad9a0575711260c0",
+      "size_bytes": 2611
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/827/executed-driver-root.py",
+      "sha256": "83b68627e9b3ba43b040766d5cdcf40a7022296a8611d91c1d226b593b30aaf5",
+      "size_bytes": 3035
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/827/quality-working-state.json",
+      "sha256": "c3f35923e00b523503bc989389996ba0f9b08237934f7089c95e723fc9594a3a",
+      "size_bytes": 48925
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/827/source-proof.json",
+      "sha256": "aa631ca1c40a5588842ff3e01107418dd74ce45ab8bff956f2a82861f0dcbcaa",
+      "size_bytes": 5877
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/828/fat-independent-replay.json",
+      "sha256": "47a40b549ac6fa870403c450e211e29dd4418e0c82e58e627fa0caed7373edb2",
+      "size_bytes": 11299
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/828/report.json",
+      "sha256": "f255c1e82a37f320abc918ade6614ef8e71f76925d130ba3b9e81d4ef7ba7c86",
+      "size_bytes": 314534
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/828/state.json",
+      "sha256": "99e7901d13eb5cb2f46620b97bb7ce13231ba45abd4379a7a476ac5ed0607d2c",
+      "size_bytes": 48406
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/829/round-01/builder-logs/builder722.command.json",
+      "sha256": "eb7c2f5653c0ccb173c71f1dcc6704d0529e0b3d36fea0ed147fad91d2ca3327",
+      "size_bytes": 3846
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/829/round-01/builder-logs/builder722.stderr.log",
+      "sha256": "76775ef34a5f3c037ffd3e40fac614238bf9cca0c9892a40c9963dd078710d12",
+      "size_bytes": 2277
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/829/round-01/builder-logs/builder722.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/829/run.log",
+      "sha256": "e28097962783e10215134c2a4d3ac7ed8c74fca72d8b052ec23387ef00b0ad57",
+      "size_bytes": 3212
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/830/inputs/run-config.json",
+      "sha256": "d1639eb180464ed6027879fe3977c6c48f0c12485d2ce819c56d7af0396ee107",
+      "size_bytes": 5072
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/830/inputs/state-preparation.json",
+      "sha256": "41e2500ffd34fb27fdd5527122fbef0cd4d9ae6f329c985ea6be24abf9f8e5d2",
+      "size_bytes": 8204
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/830/run.log",
+      "sha256": "dce4e89d42d3249ea6958e3984d6e4157373837382bfb6e630a576184272c21c",
+      "size_bytes": 2885
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/inputs/run-config.json",
+      "sha256": "ab9215146cd449da36b3813f73041cb790b8b3287bd9fa54e758f7a52ddb4b21",
+      "size_bytes": 5072
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/inputs/state-preparation.json",
+      "sha256": "8849c0f995b52d1bd24a68beb99b98eddb637655b1df23b9b43902874fe381fe",
+      "size_bytes": 8209
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal/775-context-config.json",
+      "sha256": "bb6466583a74f7802f49f16cf3626b19cb189b50d47faafbb80984f327ec509b",
+      "size_bytes": 2978
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal/accepted-operations-pre-serialization.json",
+      "sha256": "916364c6f2b0527ebb8692aca874e8f7faa7c284dcb070cf3c320c88bacf24d0",
+      "size_bytes": 36631
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal/exact-805/report.json",
+      "sha256": "63cd89d14abc3e2ce893c2abca2f76dc3cf4cc5785e2f02ae79eebb0b767b30f",
+      "size_bytes": 80479
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal/independent-replay.json",
+      "sha256": "28ebb646da2e3762765536564bfbcb5b6dc9351807d6244aad52ef1c2b471ca8",
+      "size_bytes": 2961
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal/state.json",
+      "sha256": "91db7e1d330f167f7f6c19a43f06c834fb8aa282b2ecad0ab7ec571987d913ea",
+      "size_bytes": 39158
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal-audit-logs/audit805.command.json",
+      "sha256": "e99feb01b687644f4fdfd9cff59f1e30882e4bd9e27f912c31615b731707d3ac",
+      "size_bytes": 703
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal-audit-logs/audit805.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/proposal-audit-logs/audit805.stdout.log",
+      "sha256": "1bcc4be797c579504495da35ab9e1be2c2d87fb7bca48e89245d053748eba09c",
+      "size_bytes": 2077
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/replay-789.log",
+      "sha256": "1e6d7cc8ff54492d47cfe882194261d66f6bed44c938cec31255265d3619609e",
+      "size_bytes": 2961
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/831/state-wrapper.json",
+      "sha256": "77e180e83b52e65aa764e31625e4f316fe61f4c286dc5b5ac51f125a11dac458",
+      "size_bytes": 1285
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/832/context-config.json",
+      "sha256": "2b0635df74796d9721f5f45c2ffdae1b8cbd5e154a67fe065146506114f5805f",
+      "size_bytes": 3653
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/832/executed-driver-root.py",
+      "sha256": "42adaba0dbcde06ff440dace6e12ee7e0e58aea569dfc9c2f95d9051c7ca63e3",
+      "size_bytes": 3755
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/832/proposal-exact-805/report.json",
+      "sha256": "9739bdfc62c19a0223e8b30c5ccb2ad2fffd90831412617731068f2a8c9b8898",
+      "size_bytes": 80499
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/832/quality-working-state.json",
+      "sha256": "b94a86d1e23da73be012396a449f07cdba154d0bbc0ae9b419208ca939d2291d",
+      "size_bytes": 49563
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/832/source-proof.json",
+      "sha256": "5b7f5fff6200f17aa1d109e3d81372dcfa087aff7b38cfa825139146fd95d61d",
+      "size_bytes": 5918
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/833/round001/points/context-config.json",
+      "sha256": "b222d0dd0ad2e4cdb07b0790ae1f71141dc543aaf063030882b5462687d47dcb",
+      "size_bytes": 2131
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/833/round001/points/independent-replay.json",
+      "sha256": "d5e11658730b655968edf9dc2c1bf7d688d64e42eed898a1aefebfc238942fd0",
+      "size_bytes": 1204
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/833/round001/points/verified-state.json",
+      "sha256": "73d74104b28ccc10b9f02d4dcb7012f831f3a8f7f40d856c7ae4841a8c5fc111",
+      "size_bytes": 49341
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/833/round002/flips/report.json",
+      "sha256": "af580fd68fd043003fba09dd8549ddb2d73a1be8314b2d8c0d6742ef4b3f27de",
+      "size_bytes": 3942
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/833/round002/flips/state.json",
+      "sha256": "e7060fb70d430b8c271bb02c41399c1f979ae41d8448f20e1247c4e1259a7ca7",
+      "size_bytes": 49034
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/834/run.log",
+      "sha256": "5f3b342d37b795217239e902cec3d2ee645c25b60fdceb717e6058b5603de0e7",
+      "size_bytes": 1855
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/835/quality-working-state.json",
+      "sha256": "0b58aa109e9ce7e9b13f42aa3061096bff6e303842a854b2b5b52bb047fda874",
+      "size_bytes": 50402
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/835/source-proof.json",
+      "sha256": "c27a9cd3aff30a3a1b068380e8c1141f25391bdd3c339c4f9ccc53cc1fbc15ab",
+      "size_bytes": 5909
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/836/inputs/run-config.json",
+      "sha256": "19fb3e5d664d083b92f30fa23eec3ba51e609f8f778f494f965906c529c32560",
+      "size_bytes": 5229
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/836/inputs/state-preparation.json",
+      "sha256": "1d8e71565092313479c1e80c96c258655211c3be098e3caab2f5cd3fbe1b747e",
+      "size_bytes": 8269
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/836/proposal/775-context-config.json",
+      "sha256": "9e0a2192c6ebc1f75cf94d4a626250a525aa569051f8de4f0f851d4a49e89915",
+      "size_bytes": 2998
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/836/proposal/accepted-operations-pre-serialization.json",
+      "sha256": "f4b374a3e681bf4067b321790c06cf38b86c560ffc5c127d2cf34069ef7498c4",
+      "size_bytes": 21891
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/836/proposal/state.json",
+      "sha256": "4fd746d1f76e3fc279d83e4316267af5b033f8d0e6bcb27a5dc860ac697f1f5a",
+      "size_bytes": 31290
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/836/state-wrapper.json",
+      "sha256": "b06301cd365ee3dafe3d130fc13acb80cbcc763ff169f49932a2464dc934a8a7",
+      "size_bytes": 1285
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/independent-replay.json",
+      "sha256": "3f312515bf5243700e40e18a0146ee0bd15c416532f816838ef88d78f6a8fc3a",
+      "size_bytes": 2979
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/proposal-audit-logs/audit805.command.json",
+      "sha256": "367b35890139b7dbd6440e2ca2c268b75410073540daf3015d4705d817f06ffe",
+      "size_bytes": 703
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/proposal-audit-logs/audit805.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/proposal-audit-logs/audit805.stdout.log",
+      "sha256": "4f33a6e6ef1f0952e615bec0a6c1f0ec5966716c4b3d77dcf6a7cce10b558ffb",
+      "size_bytes": 2078
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/proposal-exact-805/report.json",
+      "sha256": "40ee5d38236303cf1506a8f3ff097ea05b750731c9122a3f32a89d9ef2527b4f",
+      "size_bytes": 79424
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/quality-working-state.json",
+      "sha256": "49340792748c5f18c34373be9252faa477e60520b99d8bdf2264f7da2aca4533",
+      "size_bytes": 50601
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/replay.log",
+      "sha256": "2f0e7f821270b93e3815c11134291ea77854c15dca4ffde690468bc2536f1b1e",
+      "size_bytes": 2979
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/run.log",
+      "sha256": "76e980e098935a438d4f7da14f716a1af2804f8cc88fd058463ae7c3d13afe4f",
+      "size_bytes": 721
+    },
+    {
+      "categories": [
+        "source_report"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/reports/837/source-proof.json",
+      "sha256": "292a9d0b92d2137d18d3fd9b575573c313bfb7cf6b8e9fc52e0b6ad5f3d5953e",
+      "size_bytes": 5901
+    },
+    {
+      "categories": [
+        "publication_metadata"
+      ],
+      "relative_path": "tools/evidence/fine-physical-quality-v21b-821-837-source-only-20261031/payload/source-only-result.json",
+      "sha256": "db60741d35154bcbda128451e79dec9340ef441a8f2cad9587f4f5265a70e07c",
+      "size_bytes": 5228
+    }
+  ],
+  "mass_mapping": "PENDING",
+  "mass_reconciliation": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+  "native_steps": 0,
+  "physical_admission": false,
+  "publication_checks": {
+    "endpoint_status_assertions": "PASS_FROM_RETAINED_837_RECEIPTS",
+    "external_npz_pins": 82,
+    "geometry_or_native_jobs_run_during_publication": 0,
+    "listed_files": 133,
+    "manifest_file_sha256_and_size_verified": 133,
+    "npz_geometry_payloads_included": 0,
+    "python_source_compile_check": "PASS_BUILTIN_COMPILE_NO_IMPORT_OR_EXECUTION",
+    "python_source_count": 22,
+    "unhashed_npz_references": 5
+  },
+  "qualification_scope": "Source-only quality evidence and replay receipts. Not physical qualification; no native steps; mass mapping/reconciliation, typed-217 admission, canonical source binding, and per-cell metadata remain pending.",
+  "quality_summary": {
+    "821_flip_trial": {
+      "fat_source_quality_failures": 206,
+      "skin_source_quality_failures": 52
+    },
+    "821_point_trial": {
+      "fat_source_quality_failures": 209,
+      "skin_source_quality_failures": 52
+    },
+    "822": {
+      "retained_state_sha256": "c89b2ff77ca9c95cbe528c929415e5e0c45a9986a83c89131b57bf83517431a1",
+      "status": "NO_GAIN"
+    },
+    "823_independent_promotion": {
+      "fat_source_quality_failures": 195,
+      "skin_source_quality_failures": 52,
+      "status": "PASS_EXTERNAL_INDEPENDENT_REPLAY",
+      "strict_quality_score_improvement": true
+    },
+    "824_separate_canonical_old_source_branch": {
+      "do_not_sum": true,
+      "fat_source_quality_failures": 190,
+      "skin_source_quality_failures": 52
+    },
+    "827": {
+      "fat_source_quality_failures": 188,
+      "skin_source_quality_failures": 51,
+      "source_proof": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE"
+    },
+    "832": {
+      "fat_source_quality_failures": 183,
+      "skin_source_quality_failures": 45,
+      "source_proof": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE"
+    },
+    "833_835": {
+      "fat_source_quality_failures": 183,
+      "skin_source_quality_failures": 44
+    },
+    "837_endpoint": {
+      "current_source_proof": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+      "exact_audit": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "fat_source_quality_failures": 182,
+      "independent_replay": "PASS_INDEPENDENT_SOURCE_REPLAY",
+      "native_steps": 0,
+      "physical_admission": false,
+      "skin_source_quality_failures": 40,
+      "surface_crossings": 0
+    }
+  },
+  "schema": "numi.fine-physical-quality-source-only-publication.v1",
+  "status": "SOURCE_ONLY_NOT_QUALIFIED",
+  "upstream_publication": {
+    "manifest_path": "tools/evidence/fine-physical-quality-v21b-814-820-source-only-20261031/manifest.json",
+    "manifest_sha256": "4e75a07bcce9ca8e18e45da4a997b00e70fdcd64e4c7be013c75bfa6fddc2ed6",
+    "note": "The 814\u2013820 source-only increment and earlier code dependencies remain published unchanged."
+  }
+}

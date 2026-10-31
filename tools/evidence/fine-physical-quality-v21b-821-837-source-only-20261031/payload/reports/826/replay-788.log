@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_replay_788_root.py", line 1048, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_replay_788_root.py", line 1035, in main
+    r=independent_replay(a.config,a.run_dir,a.out);print(json.dumps(r,indent=2));return
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_replay_788_root.py", line 681, in independent_replay
+    if not _array_equal(vo["replacement_parent_cell_rows"],np.asarray(newparents,np.int64)):raise ValueError(role+" direct replacement parents mismatch")
+                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Skin direct replacement parents mismatch

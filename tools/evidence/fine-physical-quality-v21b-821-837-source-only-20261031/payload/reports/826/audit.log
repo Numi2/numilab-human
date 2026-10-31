@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_point_surface_diff_775_root.py", line 713, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_point_surface_diff_775_root.py", line 500, in main
+    pointmaps[role],moved_by_role[role]=bounded_point_identity(p0,p1,role,config["bounded_point_repair"][role],np.asarray(baseline[role]["faces"],np.int64))
+                                        ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_point_surface_diff_775_root.py", line 438, in bounded_point_identity
+    if not np.isfinite(maximum) or maximum<=0 or maximum>0.0005:raise ValueError("invalid bounded repair trust cap")
+                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: invalid bounded repair trust cap

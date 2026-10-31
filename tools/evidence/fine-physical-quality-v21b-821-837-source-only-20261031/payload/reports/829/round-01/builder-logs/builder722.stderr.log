@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_inner_back_v22_role_balanced.py", line 1053, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_inner_back_v22_role_balanced.py", line 990, in main
+    separation_rows,witness_info=_witness_separation_rows(args.witness_report,st,surfaces,smap,p,out,pin(args.state))
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_inner_back_v22_role_balanced.py", line 444, in _witness_separation_rows
+    point_map, depth = current_to_report_baseline(role, bp, rr["baseline"]["sha256"])
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_inner_back_v22_role_balanced.py", line 385, in current_to_report_baseline
+    lineage_cache[key] = _compose_point_map_to_ancestor(
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        entry["path"], entry["sha256"], base_path, base_sha, sha_cache)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/repair_coupled_quality_points_722_inner_back_v22_role_balanced.py", line 196, in _compose_point_map_to_ancestor
+    raise ValueError("lineage step lacks explicit parent/point map: " + str(cur))
+ValueError: lineage step lacks explicit parent/point map: /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-native-OI-ears-279-root/O-batch006-dp001/typed-280-003/candidate-O-typed-current.npz

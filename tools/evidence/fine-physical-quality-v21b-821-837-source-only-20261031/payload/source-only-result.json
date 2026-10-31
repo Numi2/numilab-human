@@ -1,0 +1,117 @@
+{
+  "endpoint": {
+    "boundary_source_binding_status": "PENDING_CANONICAL_REBIND",
+    "current_source_proof_sha256": "292a9d0b92d2137d18d3fd9b575573c313bfb7cf6b8e9fc52e0b6ad5f3d5953e",
+    "current_source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+    "exact_audit_sha256": "40ee5d38236303cf1506a8f3ff097ea05b750731c9122a3f32a89d9ef2527b4f",
+    "exact_audit_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+    "independent_replay_sha256": "3f312515bf5243700e40e18a0146ee0bd15c416532f816838ef88d78f6a8fc3a",
+    "independent_replay_status": "PASS_INDEPENDENT_SOURCE_REPLAY",
+    "mass_mapping": "PENDING",
+    "mass_reconciliation": "PENDING_VOLUME_CHANGE_RECONCILIATION",
+    "native_steps": 0,
+    "per_cell_canonical_volume_metadata": "PENDING",
+    "physical_admission": false,
+    "remaining_source_quality_failures": {
+      "Fat": 182,
+      "Skin": 40
+    },
+    "source_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-837-root/quality-working-state.json",
+    "source_state_sha256": "49340792748c5f18c34373be9252faa477e60520b99d8bdf2264f7da2aca4533",
+    "surface_crossings": 0,
+    "typed_217_admission": "PENDING_EXPLICIT_ADAPTER"
+  },
+  "lineage": [
+    {
+      "checkpoint": "821 flips trial",
+      "fat_failures": 206,
+      "role": "source-only candidate",
+      "skin_failures": 52,
+      "state_sha256": "c89b2ff77ca9c95cbe528c929415e5e0c45a9986a83c89131b57bf83517431a1"
+    },
+    {
+      "checkpoint": "821 points trial",
+      "fat_failures": 209,
+      "role": "separate exploratory candidate",
+      "skin_failures": 52,
+      "state_sha256": "ddda40f6cf7db8b409d12edbb346aa6952d75a4058c89b382d2a2e9f9ba693b4"
+    },
+    {
+      "checkpoint": "822",
+      "fat_failures": 206,
+      "role": "NO_GAIN; verified pointer remained on the 821 flips state",
+      "skin_failures": 52
+    },
+    {
+      "checkpoint": "823 independent promotion",
+      "fat_failures": 195,
+      "promotion_status": "PASS_EXTERNAL_INDEPENDENT_REPLAY",
+      "skin_failures": 52,
+      "state_sha256": "0850283efff5c82bf53e15cf3cf699b6189824fda9cecce4f03fd71a2a6ae5eb"
+    },
+    {
+      "checkpoint": "824 canonical old-source branch",
+      "fat_failures": 190,
+      "relationship": "separate branch; DO_NOT_SUM with later v21b lineage",
+      "skin_failures": 52,
+      "state_sha256": "4ddd973bfe6570e16f2218f693011c1210fa5c6c0f9888d744503bb756a9027f"
+    },
+    {
+      "accepted_I_operations": 3,
+      "checkpoint": "826/827 current-source branch",
+      "fat_failures": 188,
+      "skin_failures": 51,
+      "source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE"
+    },
+    {
+      "accepted_I_operations": 7,
+      "checkpoint": "831/832 current-source branch",
+      "exact_805_status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+      "fat_failures": 183,
+      "skin_failures": 45,
+      "source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE"
+    },
+    {
+      "checkpoint": "833/835",
+      "fat_failures": 183,
+      "skin_failures": 44,
+      "state_sha256": "0b58aa109e9ce7e9b13f42aa3061096bff6e303842a854b2b5b52bb047fda874"
+    },
+    {
+      "checkpoint": "836 candidate",
+      "role": "candidate only; status CANDIDATE_PENDING_775_ALL185, not an accepted endpoint"
+    },
+    {
+      "checkpoint": "837 verified endpoint",
+      "exact_audit": "PASS",
+      "fat_failures": 182,
+      "independent_replay": "PASS",
+      "skin_failures": 40,
+      "source_proof": "PASS",
+      "state_sha256": "49340792748c5f18c34373be9252faa477e60520b99d8bdf2264f7da2aca4533"
+    }
+  ],
+  "retained_failures_and_nonprogress": {
+    "822": "No gain; retained verified pointer remained 821 flips state.",
+    "825": "CLI/module entry failure: AttributeError, run_verified_state missing; no geometry result.",
+    "828": "Exploratory report says PASS_WITH_PARTIAL_NATIVE_DEFECTS; not promoted as endpoint.",
+    "829": "Lineage remap failed before LP: explicit parent/point map missing; no geometry result.",
+    "830": "Preparation failed because the proposal directory already existed (FileExistsError); no geometry result.",
+    "834": "Fail-closed exact-context guard rejected a state missing exact_context; no geometry result."
+  },
+  "schema": "numi.fine-physical-quality-source-only-result.v1",
+  "scope_and_limits": {
+    "external_npz_pin_file": "payload/external-npz-pins.json",
+    "geometry_arrays_included": false,
+    "later_838_work": "Excluded from this frozen 837 publication snapshot.",
+    "native_or_physical_qualification": false,
+    "notes": [
+      "Source-quality bad-cell counts are not native steps or physical admission.",
+      "Zero recorded source surface crossings does not settle material mass, all metadata, dynamics, or physical qualification.",
+      "The 814-820 predecessor records the inherited inner-back D/I geometric reconstruction policy and keeps the outer-back O points fixed; that prior evidence is not rewritten here.",
+      "The 824 52/190 state is a separate canonical old-source branch and must not be summed with the current-source branch."
+    ],
+    "source_only": true
+  },
+  "status": "SOURCE_ONLY_NOT_QUALIFIED"
+}

@@ -1,0 +1,443 @@
+{
+  "journal_npz": {
+    "array_count": 57,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-826-root/proposal/accepted-operations-pre-serialization.npz",
+    "sha256": "3d2ff3e6975292245727dced2224ce4913410fa2548f4072523f4a12042ce8d9"
+  },
+  "native_steps": 0,
+  "operation_count": 3,
+  "operations": [
+    {
+      "anchor_f32": [
+        -0.2646796405315399,
+        -0.8161216974258423,
+        0.09225304424762726
+      ],
+      "drop": 35096,
+      "exact_paired_delta": "0",
+      "fit": {
+        "all185_775": "REQUIRED_NOT_RUN",
+        "anchor_displacement_m": 4.6878310064926575e-05,
+        "anchor_point_f32": [
+          -0.2646796405315399,
+          -0.8161216974258423,
+          0.09225304424762726
+        ],
+        "anchor_point_world_m": [
+          -0.2646796405315399,
+          -0.8161216974258423,
+          0.09225304424762726
+        ],
+        "construction_q_margin_multiplier": 1.01,
+        "continuous_anchor_world_m": [
+          -0.26467969934478763,
+          -0.8161215605203881,
+          0.09225305661441227
+        ],
+        "continuous_common_slack_m": 2.8850277737931798e-05,
+        "exact_paired_volume_delta_integer": "0",
+        "exact_volume_by_role": {
+          "Fat": {
+            "delta_volume_m3": -1.0606440947641226e-10,
+            "exact_det_delta_integer": "-231275160231007096804089224811247691407048379010149920382320335974237501600464787680241091554705107094775151509085286658211840",
+            "minimum_native_q": 1.3278121236315643e-05,
+            "new_cells": 47
+          },
+          "Skin": {
+            "delta_volume_m3": 1.0606440947641226e-10,
+            "exact_det_delta_integer": "231275160231007096804089224811247691407048379010149920382320335974237501600464787680241091554705107094775151509085286658211840",
+            "minimum_native_q": 1.350670046352835e-05,
+            "new_cells": 11
+          }
+        },
+        "min_cell_volume_gate_m3_unchanged": 1e-18,
+        "minimum_new_native_q": 1.3278121236315643e-05,
+        "move_cap_m": 0.0005,
+        "native_q_gate_unchanged": 1e-05,
+        "solver_message": "Optimization terminated successfully",
+        "solver_success": true,
+        "status": "PASS",
+        "tested_f32_candidates": 125
+      },
+      "index": 0,
+      "keep": 35094,
+      "native_bad_gain_by_role": {
+        "Fat": 0,
+        "Skin": 1
+      },
+      "source_min_face_apex_bound": 0.0010270712360812403,
+      "surface_changed_output_face_rows_key": "op0000_surface_changed_output_face_rows",
+      "surface_full_endpoint_face_rows_key": "op0000_surface_full_endpoint_face_rows",
+      "surface_retired_face_rows_key": "op0000_surface_retired_face_rows",
+      "surface_star_vertices_key": "op0000_surface_star_vertices",
+      "volume_data": {
+        "Fat": {
+          "delta_m3": -1.0606440947641226e-10,
+          "drop_volume_node": 35096,
+          "exact_delta": -231275160231007096804089224811247691407048379010149920382320335974237501600464787680241091554705107094775151509085286658211840,
+          "keep_volume_node": 35094,
+          "materials_dtype": "int32",
+          "materials_key": "op0000_Fat_materials",
+          "materials_shape": [
+            47
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0000_Fat_new_tets",
+          "new_tets_shape": [
+            47,
+            4
+          ],
+          "old_bad": 0,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0000_Fat_old_rows",
+          "old_rows_shape": [
+            56
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0000_Fat_parent_rows",
+          "parent_rows_shape": [
+            47
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0000_Fat_point_rows",
+          "point_rows_shape": [
+            29
+          ]
+        },
+        "Skin": {
+          "delta_m3": 1.0606440947641226e-10,
+          "drop_volume_node": 111765,
+          "exact_delta": 231275160231007096804089224811247691407048379010149920382320335974237501600464787680241091554705107094775151509085286658211840,
+          "keep_volume_node": 111763,
+          "materials_dtype": "int32",
+          "materials_key": "op0000_Skin_materials",
+          "materials_shape": [
+            11
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0000_Skin_new_tets",
+          "new_tets_shape": [
+            11,
+            4
+          ],
+          "old_bad": 1,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0000_Skin_old_rows",
+          "old_rows_shape": [
+            12
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0000_Skin_parent_rows",
+          "parent_rows_shape": [
+            11
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0000_Skin_point_rows",
+          "point_rows_shape": [
+            11
+          ]
+        }
+      },
+      "volume_star_cells_Fat_key": "op0000_Fat_volume_star_cells",
+      "volume_star_cells_Skin_key": "op0000_Skin_volume_star_cells",
+      "volume_star_points_Fat_key": "op0000_Fat_volume_star_points",
+      "volume_star_points_Skin_key": "op0000_Skin_volume_star_points"
+    },
+    {
+      "anchor_f32": [
+        0.255415141582489,
+        -0.9344909191131592,
+        0.13188984990119934
+      ],
+      "drop": 88900,
+      "exact_paired_delta": "0",
+      "fit": {
+        "all185_775": "REQUIRED_NOT_RUN",
+        "anchor_displacement_m": 7.010723174820873e-05,
+        "anchor_point_f32": [
+          0.255415141582489,
+          -0.9344909191131592,
+          0.13188984990119934
+        ],
+        "anchor_point_world_m": [
+          0.255415141582489,
+          -0.9344909191131592,
+          0.13188984990119934
+        ],
+        "construction_q_margin_multiplier": 1.01,
+        "continuous_anchor_world_m": [
+          0.25541506766132727,
+          -0.934490799743935,
+          0.131889840997338
+        ],
+        "continuous_common_slack_m": 0.00015959079832102648,
+        "exact_paired_volume_delta_integer": "0",
+        "exact_volume_by_role": {
+          "Fat": {
+            "delta_volume_m3": -2.968736396633554e-13,
+            "exact_det_delta_integer": "-647337772589720745494025875618046461449081833785220176887067936689917742900190005861026329839235043661156202895188831502336",
+            "minimum_native_q": 1.4786372708643071e-05,
+            "new_cells": 16
+          },
+          "Skin": {
+            "delta_volume_m3": 2.968736396633554e-13,
+            "exact_det_delta_integer": "647337772589720745494025875618046461449081833785220176887067936689917742900190005861026329839235043661156202895188831502336",
+            "minimum_native_q": 1.4784817725519014e-05,
+            "new_cells": 20
+          }
+        },
+        "min_cell_volume_gate_m3_unchanged": 1e-18,
+        "minimum_new_native_q": 1.4784817725519014e-05,
+        "move_cap_m": 0.0005,
+        "native_q_gate_unchanged": 1e-05,
+        "solver_message": "Optimization terminated successfully",
+        "solver_success": true,
+        "status": "PASS",
+        "tested_f32_candidates": 125
+      },
+      "index": 1,
+      "keep": 88823,
+      "native_bad_gain_by_role": {
+        "Fat": 1,
+        "Skin": 0
+      },
+      "source_min_face_apex_bound": 0.009238641233046367,
+      "surface_changed_output_face_rows_key": "op0001_surface_changed_output_face_rows",
+      "surface_full_endpoint_face_rows_key": "op0001_surface_full_endpoint_face_rows",
+      "surface_retired_face_rows_key": "op0001_surface_retired_face_rows",
+      "surface_star_vertices_key": "op0001_surface_star_vertices",
+      "volume_data": {
+        "Fat": {
+          "delta_m3": -2.968736396633554e-13,
+          "drop_volume_node": 88900,
+          "exact_delta": -647337772589720745494025875618046461449081833785220176887067936689917742900190005861026329839235043661156202895188831502336,
+          "keep_volume_node": 88823,
+          "materials_dtype": "int32",
+          "materials_key": "op0001_Fat_materials",
+          "materials_shape": [
+            16
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0001_Fat_new_tets",
+          "new_tets_shape": [
+            16,
+            4
+          ],
+          "old_bad": 1,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0001_Fat_old_rows",
+          "old_rows_shape": [
+            21
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0001_Fat_parent_rows",
+          "parent_rows_shape": [
+            16
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0001_Fat_point_rows",
+          "point_rows_shape": [
+            14
+          ]
+        },
+        "Skin": {
+          "delta_m3": 2.968736396633554e-13,
+          "drop_volume_node": 165569,
+          "exact_delta": 647337772589720745494025875618046461449081833785220176887067936689917742900190005861026329839235043661156202895188831502336,
+          "keep_volume_node": 165492,
+          "materials_dtype": "int32",
+          "materials_key": "op0001_Skin_materials",
+          "materials_shape": [
+            20
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0001_Skin_new_tets",
+          "new_tets_shape": [
+            20,
+            4
+          ],
+          "old_bad": 0,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0001_Skin_old_rows",
+          "old_rows_shape": [
+            26
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0001_Skin_parent_rows",
+          "parent_rows_shape": [
+            20
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0001_Skin_point_rows",
+          "point_rows_shape": [
+            16
+          ]
+        }
+      },
+      "volume_star_cells_Fat_key": "op0001_Fat_volume_star_cells",
+      "volume_star_cells_Skin_key": "op0001_Skin_volume_star_cells",
+      "volume_star_points_Fat_key": "op0001_Fat_volume_star_points",
+      "volume_star_points_Skin_key": "op0001_Skin_volume_star_points"
+    },
+    {
+      "anchor_f32": [
+        -0.0047854227013885975,
+        -0.13582353293895721,
+        0.2285640388727188
+      ],
+      "drop": 122967,
+      "exact_paired_delta": "0",
+      "fit": {
+        "all185_775": "REQUIRED_NOT_RUN",
+        "anchor_displacement_m": 5.4666294461521215e-05,
+        "anchor_point_f32": [
+          -0.0047854227013885975,
+          -0.13582353293895721,
+          0.2285640388727188
+        ],
+        "anchor_point_world_m": [
+          -0.0047854227013885975,
+          -0.13582353293895721,
+          0.2285640388727188
+        ],
+        "construction_q_margin_multiplier": 1.01,
+        "continuous_anchor_world_m": [
+          -0.004785423793640254,
+          -0.13582356372342935,
+          0.22856400200165378
+        ],
+        "continuous_common_slack_m": 1.1797101205471332e-05,
+        "exact_paired_volume_delta_integer": "0",
+        "exact_volume_by_role": {
+          "Fat": {
+            "delta_volume_m3": -2.5265467901107354e-11,
+            "exact_det_delta_integer": "-55091761373917421091432765368340243347019144312311821836208955448762652604049770782643705344568991689340863454611227136753664",
+            "minimum_native_q": 1.0393278900334424e-05,
+            "new_cells": 18
+          },
+          "Skin": {
+            "delta_volume_m3": 2.5265467901107354e-11,
+            "exact_det_delta_integer": "55091761373917421091432765368340243347019144312311821836208955448762652604049770782643705344568991689340863454611227136753664",
+            "minimum_native_q": 1.6966098717263124e-05,
+            "new_cells": 42
+          }
+        },
+        "min_cell_volume_gate_m3_unchanged": 1e-18,
+        "minimum_new_native_q": 1.0393278900334424e-05,
+        "move_cap_m": 0.0005,
+        "native_q_gate_unchanged": 1e-05,
+        "solver_message": "Optimization terminated successfully",
+        "solver_success": true,
+        "status": "PASS",
+        "tested_f32_candidates": 125
+      },
+      "index": 2,
+      "keep": 122968,
+      "native_bad_gain_by_role": {
+        "Fat": 1,
+        "Skin": 0
+      },
+      "source_min_face_apex_bound": 0.00263352157909054,
+      "surface_changed_output_face_rows_key": "op0002_surface_changed_output_face_rows",
+      "surface_full_endpoint_face_rows_key": "op0002_surface_full_endpoint_face_rows",
+      "surface_retired_face_rows_key": "op0002_surface_retired_face_rows",
+      "surface_star_vertices_key": "op0002_surface_star_vertices",
+      "volume_data": {
+        "Fat": {
+          "delta_m3": -2.5265467901107354e-11,
+          "drop_volume_node": 122967,
+          "exact_delta": -55091761373917421091432765368340243347019144312311821836208955448762652604049770782643705344568991689340863454611227136753664,
+          "keep_volume_node": 122968,
+          "materials_dtype": "int32",
+          "materials_key": "op0002_Fat_materials",
+          "materials_shape": [
+            18
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0002_Fat_new_tets",
+          "new_tets_shape": [
+            18,
+            4
+          ],
+          "old_bad": 1,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0002_Fat_old_rows",
+          "old_rows_shape": [
+            22
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0002_Fat_parent_rows",
+          "parent_rows_shape": [
+            18
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0002_Fat_point_rows",
+          "point_rows_shape": [
+            16
+          ]
+        },
+        "Skin": {
+          "delta_m3": 2.5265467901107354e-11,
+          "drop_volume_node": 199636,
+          "exact_delta": 55091761373917421091432765368340243347019144312311821836208955448762652604049770782643705344568991689340863454611227136753664,
+          "keep_volume_node": 199637,
+          "materials_dtype": "int32",
+          "materials_key": "op0002_Skin_materials",
+          "materials_shape": [
+            42
+          ],
+          "new_tets_dtype": "int64",
+          "new_tets_key": "op0002_Skin_new_tets",
+          "new_tets_shape": [
+            42,
+            4
+          ],
+          "old_bad": 0,
+          "old_rows_dtype": "int64",
+          "old_rows_key": "op0002_Skin_old_rows",
+          "old_rows_shape": [
+            51
+          ],
+          "parent_rows_dtype": "int64",
+          "parent_rows_key": "op0002_Skin_parent_rows",
+          "parent_rows_shape": [
+            42
+          ],
+          "point_rows_dtype": "int64",
+          "point_rows_key": "op0002_Skin_point_rows",
+          "point_rows_shape": [
+            28
+          ]
+        }
+      },
+      "volume_star_cells_Fat_key": "op0002_Fat_volume_star_cells",
+      "volume_star_cells_Skin_key": "op0002_Skin_volume_star_cells",
+      "volume_star_points_Fat_key": "op0002_Fat_volume_star_points",
+      "volume_star_points_Skin_key": "op0002_Skin_volume_star_points"
+    }
+  ],
+  "parent_surface": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-814-root/round-02/witness-component-rollback/candidate-I-typed-current.npz",
+    "sha256": "a375e28cfd530ca1cc31457479f90dee533e948ed4d69df7482e249086c34155"
+  },
+  "physical_admission": false,
+  "schema": "h706.coupled-anchor-collapse-pre-serialization-journal.v1",
+  "scope": "replay payload only; no independent geometry/source qualification",
+  "source_781": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_781.py",
+    "sha256": "739e41b0fb4a3bd7d7eff2b9688657bad325d294185f7ae22a25af9aa2b186eb"
+  },
+  "source_783": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_783.py",
+    "sha256": "b78358fccf208a12a24b229608c10c231817a8f8c15e4e4c0da45f9352585841"
+  },
+  "source_785": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_786_root.py",
+    "sha256": "23759366608fe9c73b6f32efebabb183ebfd54c22eeecc9755133d8e877a7892"
+  },
+  "source_run_config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-826-root/inputs/run-config.json",
+    "sha256": "8b8be5044cf7a3b634b70d56579af3f997756c6f45f28eca55e68aca4a48efb5"
+  },
+  "status": "PASS_ACCEPTED_OPERATIONS_PERSISTED_BEFORE_TYPED_SERIALIZATION"
+}
