@@ -1,0 +1,91 @@
+{
+  "status": "PASS_CURRENT598_EXACT_ACTIVE_PHYSICAL_DOMAIN_AND_DERIVED_ROLE_PREPARATION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "checkpoint": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/checkpoint-current598-root.json",
+    "sha256": "f5be01b9695bfbb0bee0e9f63967a54c8a9641d0b425a010353e8b282356a2ac"
+  },
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_active_domains_599_root.py",
+    "sha256": "f988cb645655d261d8d5f53aa8fac549c6ecaa87279bfdd6a94aedd057fbdfc1"
+  },
+  "implementation": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/active-domain-compaction-565-root/compact_physical_skin_domains.py",
+    "sha256": "1acdae02673cd70f151093321dacdaf3fb1adb52af20c7c89aa069cbd0856479"
+  },
+  "controls": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/active-domain-compaction-565-root/controls-receipt.json",
+    "sha256": "7ea14ca72ac6806e78438645052c292866860ccfd20cd2fdb70be2cee4ac6190"
+  },
+  "crosswalk": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/active-domain-compaction-599-root/active-domain-source-crosswalk.npz",
+    "sha256": "f59056776ea60a3ada222d70f34f8f563aeca7af39b37fd7ecb7b050c8bf3fbf"
+  },
+  "volumes": {
+    "Skin": {
+      "source_points": 210298,
+      "active_points": 203044,
+      "retired_unreferenced_points": 7254,
+      "cells": 729640
+    },
+    "Fat": {
+      "source_points": 253712,
+      "active_points": 233342,
+      "retired_unreferenced_points": 20370,
+      "cells": 789327
+    }
+  },
+  "roles": {
+    "O": {
+      "original_source_points": 76669,
+      "active_role_points": 76250,
+      "faces": 152455,
+      "all_face_corners_order_source_identity_and_coordinates_unchanged": true
+    },
+    "I": {
+      "original_source_points": 125368,
+      "active_role_points": 119599,
+      "faces": 239193,
+      "all_face_corners_order_source_identity_and_coordinates_unchanged": true
+    },
+    "D": {
+      "original_source_points": 120648,
+      "active_role_points": 107226,
+      "faces": 215335,
+      "all_face_corners_order_source_identity_and_coordinates_unchanged": true
+    }
+  },
+  "quality": {
+    "Skin": {
+      "native_quality_failures": 890,
+      "min_signed_det6_m3": 5.889525961377557e-21,
+      "min_normalized_det": 1.2290416625971925e-11,
+      "all_cell_corner_bits_and_order_unchanged": true
+    },
+    "Fat": {
+      "native_quality_failures": 10594,
+      "min_signed_det6_m3": 1.6543612251060553e-24,
+      "min_normalized_det": 9.286892561545908e-14,
+      "all_cell_corner_bits_and_order_unchanged": true
+    }
+  },
+  "combined_nodes": 316787,
+  "combined_cells": 1518967,
+  "only_shared_registered_I_welded": true,
+  "no_coordinate_or_cell_changes": true,
+  "cell_mass_material_and_parent_row_order_unchanged": true,
+  "mass_allocated_by_this_stage": false,
+  "old_217_writer_limits": {
+    "combined_nodes": 300000,
+    "combined_cells": 200000
+  },
+  "requires_capacity_qualified_current_native_emitter": true,
+  "limitations": [
+    "This is exact geometry and namespace preparation, not a native import or motion run.",
+    "Retired source rows remain recoverable through the complete input/output source crosswalks.",
+    "No mass is assigned, no node is constrained, and no native quality threshold changes.",
+    "The historical 217 combined writer must not be used with its old fixed capacity limits."
+  ],
+  "elapsed_s": 3.2751364160794765
+}
