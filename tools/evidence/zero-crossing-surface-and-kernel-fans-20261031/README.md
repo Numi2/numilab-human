@@ -1,0 +1,11 @@
+# Target surfaces and physical-volume construction
+
+Current O/I/D target surfaces have zero retained erroneous crossings and zero q-bound failures. The final D join uses the current 024 topology, seven 028/030 inferred point corrections, and the twelve independent 227 physical-boundary coordinate corrections. Its exact changed-set audit covers complete current O/I/D, both rim sets and 938,272 obstacle records from 185 structures; external and changed-internal pair counts are zero. The mixed-source reference assembly and protected-route provenance remain in the pinned receipts; it is not a measured single individual.
+
+Physical transfer is incomplete. Skin remains positive but has 13,216 native-quality failures after the kernel-fan batch; Fat still has two exact-negative cells and 46,628 native-quality failures. Current target-to-volume boundary replacement and conservative mass binding are not yet admitted. No current-candidate native steps or motion verification have run.
+
+The tested compiler increments retain native admission thresholds. They reuse existing determinant-kernel, material, boundary, exact-intersection and volume owners. Original boundary coordinates stay fixed; each accepted fan declares one inferred interior point whose source mapping and mass allocation remain mandatory. Skin 245 batch002 accepted 1,528 disjoint replacements in 49.96 seconds: 15,188 to 13,216 bad cells, no nonpositive cells, exact cavity volume and oriented-boundary parity. This is offline construction time, not simulation throughput.
+
+The preserved pilots also show why smaller methods were insufficient. An edge-derived TetGen T value classified thin but nonzero cavities as coplanar because the option also controls normalized volume. Capping that construction tolerance and explicitly requesting dihedral refinement preserved exact gates but yielded modest gains. Connected MILP growth and order changes are retained with their measured results. No physics precision or acceptance tolerance was relaxed.
+
+Source and evidence bytes are pinned in manifest.csv. Existing on-Numi owner paths and dependencies are recorded in the reports; this package is a construction checkpoint, not a standalone simulator or an accepted scene.
