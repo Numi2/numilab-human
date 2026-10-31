@@ -1,0 +1,296 @@
+{
+  "status": "PASS_BOUNDED_EXACT_FIXED_COORDINATE_TOPOLOGY_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "source_sha256": "07d08273251df7d6ef40d4d7b5012460e1d8f1df8082bf8ad0e5ce9e3b2f144b",
+  "ear_helper_sha256": "af473a57c2a1b0d72316e4d4db07a148cdbe089ab1f849827822e080aeda4142",
+  "joint_bound_owner_sha256": "5df00334a92311b4cc0dd24dc7f7d1127f55fd354777ff888eabc607484c8e82",
+  "quality_metric": "joint_volume_shape_apex_upper_bound",
+  "construction_surface_floor": 1.1e-05,
+  "native_gate_unchanged": true,
+  "all_point_arrays_unchanged": true,
+  "joint_complete_surface_walls_all185_pairs": 0,
+  "joint_changed_self_pairs": 0,
+  "accepted_operations": [
+    {
+      "role": "D",
+      "seed_face": 119512,
+      "retired_parent_face_rows": [
+        119511,
+        119512,
+        238469,
+        238568,
+        238569,
+        238570
+      ],
+      "parent_face_rows": [
+        119511,
+        119512,
+        238469,
+        238568,
+        238569,
+        238570
+      ],
+      "new_faces": [
+        [
+          73551,
+          73310,
+          73328
+        ],
+        [
+          73328,
+          73546,
+          73551
+        ]
+      ],
+      "typed_parent_union": [
+        [
+          3,
+          23,
+          28,
+          20678,
+          100000060,
+          20678,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12411,
+          100000061,
+          12411,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12412,
+          100000061,
+          12412,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12413,
+          100000061,
+          12413,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12414,
+          100000061,
+          12414,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12415,
+          100000061,
+          12415,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12416,
+          100000061,
+          12416,
+          -1
+        ],
+        [
+          3,
+          23,
+          29,
+          12417,
+          100000061,
+          12417,
+          -1
+        ]
+      ],
+      "source_face_ancestry_union": [
+        [
+          101400,
+          100000060,
+          101400
+        ],
+        [
+          101401,
+          100000060,
+          101401
+        ],
+        [
+          101402,
+          100000060,
+          101402
+        ],
+        [
+          101403,
+          100000060,
+          101403
+        ],
+        [
+          101404,
+          100000060,
+          101404
+        ],
+        [
+          101405,
+          100000060,
+          101405
+        ],
+        [
+          128400,
+          100000061,
+          128400
+        ],
+        [
+          128401,
+          100000061,
+          128401
+        ],
+        [
+          128402,
+          100000061,
+          128402
+        ],
+        [
+          128403,
+          100000061,
+          128403
+        ],
+        [
+          128404,
+          100000061,
+          128404
+        ],
+        [
+          128405,
+          100000061,
+          128405
+        ],
+        [
+          128406,
+          100000061,
+          128406
+        ],
+        [
+          128407,
+          100000061,
+          128407
+        ]
+      ],
+      "q_before": [
+        0.05018894534345305,
+        3.0281676869496876e-07,
+        0.000327030481631838,
+        0.0010346325383955826,
+        0.00011448403059971959,
+        0.00010129735724417226
+      ],
+      "q_after": [
+        0.05018894534345305,
+        0.0011812116048197183
+      ],
+      "native_apex_obstructions_before": 1,
+      "native_apex_obstructions_after": 0,
+      "exact_changed_vs_complete_pairs": 0,
+      "exact_new_internal_and_previous_pairs": 0,
+      "vertices_unchanged": true,
+      "ear_search": {
+        "method": "lazy_exact_checked_oriented_ear_clipping_bounded_best_qbound",
+        "boundary_vertex_count": 4,
+        "minimum_new_qbound_ratio": 0.0011812116048197186,
+        "new_bad_face_count": 0,
+        "topology": {
+          "vertices": 4,
+          "edges": 5,
+          "faces": 2,
+          "euler_characteristic": 1
+        },
+        "statistics": {
+          "search_nodes": 2,
+          "candidate_ears": 2,
+          "quality_rejects": 0,
+          "external_exact_calls": 2,
+          "external_exact_pairs": 0,
+          "internal_exact_calls": 1,
+          "internal_exact_pairs": 0,
+          "external_cache_hits": 0,
+          "internal_cache_hits": 0,
+          "backtracks": 1,
+          "max_depth": 1,
+          "complete_exact_clean_solutions": 1,
+          "best_bad_faces": 0,
+          "budget_truncated": false
+        },
+        "elapsed_s": 0.0009201248176395893
+      },
+      "typed_parent_union_sha256": "ef15d32cf60c7ae0f1ad093710f1d6fefd549ba71372824c6de24602441bae02",
+      "new_output_face_rows": [
+        238565,
+        238566
+      ]
+    }
+  ],
+  "failed_attempts": [],
+  "outputs": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/candidate-D-native-apex-connected-raw.npz",
+      "sha256": "d88b9d5bf5564933cc717c13a146a5fb38b329bc508ca4eac60bafd1c73a0d51",
+      "parent": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/candidate-D-paired-resolution-reduced.npz",
+      "parent_sha256": "9a66be5a75d097647d8ff6c0b8a7ee447faa687f2434d146709d6ae5fa316ff5",
+      "no_native_apex_before": 1,
+      "no_native_apex_after": 0,
+      "floor_bad_after": 65
+    }
+  },
+  "paired_retirement_input": {
+    "receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/receipt.json",
+    "receipt_sha256": "7ef042cea2ced053824261505d37454fcf64353249080e23beeb2402c9d23183",
+    "maps_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/paired-retirement-maps.npz",
+    "maps_sha256": "6c9a38306195d0cce8d96d869a9e2cbdede87c0c9a477cb399e9ee24a3b1abca",
+    "singleton_D282_parent_face_rows": [
+      119513,
+      119514,
+      238473,
+      238572,
+      238573,
+      238574
+    ],
+    "singleton_D0_parent_face_rows": [
+      119511,
+      119512,
+      238469,
+      238568,
+      238569,
+      238570
+    ]
+  },
+  "context_inputs": {
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-native-OI-ears-279-root/O-batch006-dp001/typed-280-003/candidate-O-typed-current.npz",
+      "sha256": "4e0c46662721fed33d4bd4efb390c6668ff67581d2484fcd9ba9058834fa7a20"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-native-OI-ears-279-root/I-batch002-run001/typed-280-002/candidate-I-typed-current.npz",
+      "sha256": "d1f897d88dddbf07bcf9c48388bd38ebed3423cc3be0ee1242f7816a76cb3c66"
+    },
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/candidate-D-paired-resolution-reduced.npz",
+      "sha256": "9a66be5a75d097647d8ff6c0b8a7ee447faa687f2434d146709d6ae5fa316ff5"
+    }
+  },
+  "elapsed_s": 28.765041125006974,
+  "total_time_budget_s": 75.0,
+  "time_budget_exhausted": false
+}

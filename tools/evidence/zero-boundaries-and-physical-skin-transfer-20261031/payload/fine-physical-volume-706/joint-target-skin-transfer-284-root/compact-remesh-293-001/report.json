@@ -1,0 +1,713 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-target-skin-transfer-284-root/target-preparation-004/skin-current-typed-target-input.npz",
+  "input_sha256": "8b2f2aa82be7b7808147abefff0d9b264bd722d5ce61e5ffeb893ac40bd0fd44",
+  "script_sha256": "ed386b94d7d62ca693af350427c9266d85e538cdb866133b1ecd1223a20cd668",
+  "maximum_extra_construction_defects_per_cavity": 100,
+  "strict_native_admission_thresholds_unchanged": true,
+  "exact_retained_tet_SAT_required": true,
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "selected_cells": 2068,
+    "retired_boundary_nodes": 69,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 356,
+        "components": 14,
+        "unclosed_components": 5,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 283
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 639,
+        "components": 14,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 266
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 905,
+        "components": 14,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 67
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 972,
+        "components": 14,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 75
+      },
+      {
+        "iteration": 4,
+        "selected_cells": 1047,
+        "components": 14,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 204
+      },
+      {
+        "iteration": 5,
+        "selected_cells": 1251,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 150
+      },
+      {
+        "iteration": 6,
+        "selected_cells": 1401,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 161
+      },
+      {
+        "iteration": 7,
+        "selected_cells": 1562,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 118
+      },
+      {
+        "iteration": 8,
+        "selected_cells": 1680,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 169
+      },
+      {
+        "iteration": 9,
+        "selected_cells": 1849,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 112
+      },
+      {
+        "iteration": 10,
+        "selected_cells": 1961,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 79
+      },
+      {
+        "iteration": 11,
+        "selected_cells": 2040,
+        "components": 14,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 28
+      },
+      {
+        "iteration": 12,
+        "selected_cells": 2068,
+        "components": 14,
+        "unclosed_components": 0,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "new_cells": 0
+      }
+    ],
+    "maximum_cells": 20000,
+    "selection": "extra-face owners plus retired-boundary-node stars; exact internal joint-witness growth",
+    "all_target_components_admissible": true,
+    "compact_preparer_sha256": "0db9aae84cc32be640435d621d86a3b3b31d155ad3cb5b74ad9d6f29ee6d8e6f"
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 27,
+      "old_nonpositive": 0,
+      "old_cells": 1434,
+      "new_desired_faces": 15,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "7871e7882bf206de7ae5e74483a8e03b3cccdb855f46d67a498849d3acfc9333",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 43,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 295728,
+        "exact_point_cache_rows": 1334
+      },
+      "new_interior_points": 1,
+      "new_interior_global_rows": [
+        209561
+      ],
+      "new_cells": 1349,
+      "new_bad": 70,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "5592c53dace889f74e20b43b2ac49026664eb49ed7cadf1f5d9b2425b4122b7b"
+    },
+    {
+      "id": 1,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 290,
+      "new_desired_faces": 11,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a7a624bd29b56ff36c108bf60d548acc10c449bd6afe4ce99b306e429413dba3",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 19,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 46106,
+        "exact_point_cache_rows": 462
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 298,
+      "new_bad": 23,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "9110b077698c85ecf47b4153c87846abfae390901d79e143f84ae8eda40e38a2"
+    },
+    {
+      "id": 2,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "0edf31864f1624d9b221bb77ff319ad11309a9ced37ab6390e69cac9a3d56517",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 305,
+        "exact_point_cache_rows": 54
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 5,
+      "new_bad": 0,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "e90a9f82396e9ca8ec544ef4fd90fad402b3b72cbfc21e648edef2a8d863bdad"
+    },
+    {
+      "id": 3,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 59,
+      "new_desired_faces": 9,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "97314864d7b60b2b005a47e8248df59bd59f56bbdfe0d61539877952257afac1",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -3,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 4926,
+        "exact_point_cache_rows": 165
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 31,
+      "new_bad": 1,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "667c5a1a40aa77b4f04a2338c0d99b5126db18f2cb1249835010e0cf4443b3ee"
+    },
+    {
+      "id": 4,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "f70d7fb6f46a85ab23af8f960a46f5ee671529cbddaa1f37499789ec5a951783",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -2,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 988,
+        "exact_point_cache_rows": 104
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 7,
+      "new_bad": 0,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "0f34b6d4b12f768a7dfe36a1c1f449ad7faacb6d10b65849a638d659f2f06fa5"
+    },
+    {
+      "id": 5,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 9,
+      "old_nonpositive": 0,
+      "old_cells": 53,
+      "new_desired_faces": 7,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6b2dc10ff6cde187eed48360eaecfebf66ceb0c867eabe0f4e0f66d594028a65",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -5,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 5462,
+        "exact_point_cache_rows": 145
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 53,
+      "new_bad": 4,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "975fbb3fe6cfed5f0021f35ec31a84f2e0f2ebbd89db966f3e6e385f8c48c038"
+    },
+    {
+      "id": 6,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 46,
+      "new_desired_faces": 10,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "1ec76710b0a03351d33a13d88e488dc418baeab8787fa0c0b3bed28e15b1cbe5",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 2729,
+        "exact_point_cache_rows": 129
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 31,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "7579fe423a43298a9f7511b644e3579739cd1401b078fd2f0b43967e71982002"
+    },
+    {
+      "id": 7,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 12,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 2,
+      "status": "REJECT",
+      "error": "ValueError: restored shell self-intersection"
+    },
+    {
+      "id": 8,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 14,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "3a3afa53138bcc5f09a46a976135492b3fe161ecf732889e0d1ef12abc3c4db7",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 0,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 955,
+        "exact_point_cache_rows": 102
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 9,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "4007e8fdaacbc98383a7e561057803fef607a90a2416b5a26f2f55d05df2b7f3"
+    },
+    {
+      "id": 9,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 6,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ad4d325f072497f4dc2e8bae5e089651bf260886c2a1f3e3153d23c556e776a9",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -2,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 900,
+        "exact_point_cache_rows": 54
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 11,
+      "new_bad": 0,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "f1a111ab937de225c38b5dba3bfd21b1a9a688615229e8dfc77ab812a9a275d3"
+    },
+    {
+      "id": 10,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 14,
+      "old_nonpositive": 0,
+      "old_cells": 84,
+      "new_desired_faces": 13,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 30,
+      "status": "REJECT",
+      "error": "ValueError: restored shell self-intersection"
+    },
+    {
+      "id": 11,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "5ee7a76d53076843be57a0bd63c0858df7591bc50bd94f43cb2e319358fb9a36",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": 0,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 346,
+        "exact_point_cache_rows": 44
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 5,
+      "new_bad": 1,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "866d7451a789bd6b8df5c9f87bf551a6ea86969dceb2c7b5d17c2e70d4c46b84"
+    },
+    {
+      "id": 12,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 14,
+      "old_nonpositive": 0,
+      "old_cells": 32,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "fb073cc706404f2b39b8e79bb278e370235ba36934274032b3a198317a8e3bce",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -12,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 1024,
+        "exact_point_cache_rows": 52
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 10,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "2660cb2dfefa22c553bf104abd67a318d637bda1a0687074dadbc48242bd0914"
+    },
+    {
+      "id": 13,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true,
+      "exact_shell_self_pairs": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAS0O0/0/0T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "fea521b71d802e21990fdae3eba6507b8ffa849c686593ae1e3ee99a0968467e",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 342,
+        "exact_point_cache_rows": 44
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 6,
+      "new_bad": 2,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "0c6e27087807ebcee1f2c9d2f067d2b032cf01c8691f8eda2fc966bb32cc40c5"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-target-skin-transfer-284-root/compact-remesh-293-001/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "01eb999a6724e929ac4251a5f431ba2efc10d6bf3e0d2bec39368783ea8d66d9",
+  "passing_components": 12,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 4333,
+  "complete_boundary_matches_desired": false,
+  "elapsed_s": 25.04602741682902
+}

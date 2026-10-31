@@ -1,0 +1,32 @@
+{
+  "status": "PASS_ACTUAL_CONNECTED_GROWTH_LOCAL_CHAIN_CONTROL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "source_sha256": "ce798babff3484787930e8b86f2b62a6b05c36f28ed53e87142b44d76d57053a",
+  "input_sha256": "99554ef3220507426ecfd30a8bfd0eb148b0e013295e5011ad09f9ce11f23a34",
+  "witness_report_sha256": "6774741b092c1188ae8a44d2b90ab6822ee181dc6ab62fae67c27fd23ef3daf4",
+  "cases": [
+    {
+      "component_id": 3,
+      "seed_cells": 5,
+      "expanded_cells": 11,
+      "positive_options": 1,
+      "growth": [
+        {
+          "ring": 0,
+          "cells": 5,
+          "reason": "no_positive_existing_vertex_fan",
+          "positive_options": 0
+        },
+        {
+          "ring": 1,
+          "cells": 11,
+          "reason": null,
+          "positive_options": 1
+        }
+      ],
+      "actual_growth_success": true
+    }
+  ],
+  "scope": "actual production candidate helper; full retained-volume intersection gate runs in production driver"
+}

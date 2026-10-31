@@ -1,0 +1,145 @@
+{
+  "Fat": {
+    "boundary_combinatorial_face_rows": [
+      364315,
+      364314,
+      364313,
+      364316
+    ],
+    "boundary_target_face_rows": [
+      413166,
+      413165,
+      312726,
+      312728
+    ],
+    "exact_positive_det6_m3_times6": "5379/4835703278458516698824704",
+    "exact_positive_volume_m3": "1793/9671406556917033397649408",
+    "input264_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-current-target-map-264-002/fat-current-target-remesh-input.npz",
+    "input264_sha256": "6d11485752787ceade9aabeabd5434e5290ff460610494cd883598fb4ae907a0",
+    "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-direct-boundary-recap-264-001/direct-recap-candidate.npz",
+    "input_report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/fat-direct-boundary-recap-264-001/report.json",
+    "input_report_sha256": "2b818e8b3ff4086a348d6d958d47692e8895b4cfb51408f2eabe00d2d9b4470b",
+    "input_sha256": "614faff06c2d7137c5d16b587e98f065da6518d0879c69e76d82291489e9aaa0",
+    "maps_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-paired-resolution-reduction-614-005/paired-retirement-maps-614.npz",
+    "maps_sha256": "197c564062f5fc219adc6499f5c7fdff6173dba7da188ad428a6516d24191b11",
+    "output_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-paired-resolution-reduction-614-005/candidate-Fat-paired-resolution-reduced-614.npz",
+    "output_candidate_sha256": "d1789d1ceef76cc1865741a4234c7ce9926c2613babd0b1b10c3287e51d48282",
+    "output_cell_count": [
+      855640,
+      855639
+    ],
+    "output_point_count": [
+      253191,
+      253187
+    ],
+    "raw_material_index": 16,
+    "retired_cell_row": 145146,
+    "retired_input264_cell_row": 145169,
+    "retired_point_rows": [
+      182083,
+      182084,
+      182085,
+      182082
+    ],
+    "retired_tet_nodes": [
+      182083,
+      182084,
+      182085,
+      182082
+    ],
+    "shell140_face_rows": [
+      418136,
+      418135,
+      316688,
+      316690
+    ]
+  },
+  "boundary_scope": {
+    "candidate614_report_had_exact_boundary": false,
+    "input_other_boundary_difference_count": 1818,
+    "new_combinatorial_boundary_face_count": 489786,
+    "new_target_boundary_face_count": 489482,
+    "old_combinatorial_boundary_face_count": 489790,
+    "old_target_boundary_face_count": 489486,
+    "output_other_boundary_difference_count": 1818,
+    "removed_component_face_count": 4
+  },
+  "checks": {
+    "Fat140_typed_shell_faces_match_exact_coordinates": true,
+    "all_other_point_coordinates_bitwise_preserved": true,
+    "all_other_tet_corner_orders_and_material_indices_preserved": true,
+    "closed_positive_component_exact_volume_matches_source135_and_D_K4": true,
+    "four_component_boundary_faces_match_target_and_combinatorial_boundaries": true,
+    "four_nodes_used_only_by_that_tet": true,
+    "native_and_mass_not_run": true,
+    "no_new_faces_or_cells": true,
+    "no_other_row_uses_retired_points": true,
+    "one_exact_Fat614_tet": true,
+    "paired_D_K4_and_Fat_pocket_retired": true,
+    "raw_material16": true,
+    "replacement_output_rows_reindexed": true,
+    "unique_exact_F32_corner_map": true
+  },
+  "effect": {
+    "clearance_to_coincident_D_interface_m": 0.0,
+    "geometric_capacity_at_1000_kg_m3_reference_only": 1.8539185478844733e-19,
+    "no_new_crossings_possible_by_deletion_only": true,
+    "not_a_positive_clearance_claim": true,
+    "retired_closed_D_components": 1,
+    "retired_closed_Fat_components": 1,
+    "volume_removed_m3_reference_only": 1.8539185478844733e-22
+  },
+  "limitations": [
+    "The 614 volume boundary report was already not exact to its target before this operation; this reduction removes only the four exact pocket faces from both recorded boundary arrays.",
+    "Semantic material support for all conditioned 614 cells and source330 mass redistribution require a later full rebind; support141 is cited only for the exact inherited pocket tuple.",
+    "No physical, native, or mass qualification is claimed."
+  ],
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "paired_D": {
+    "final_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz",
+    "final_candidate_sha256": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca",
+    "paired_retirement_operation_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/operation.json",
+    "paired_retirement_operation_sha256": "b73348842c2a8653e9ce8f641c93fa836e38315da8aa00173e8173c781b6c1ba",
+    "paired_retirement_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/receipt.json",
+    "paired_retirement_receipt_sha256": "7ef042cea2ced053824261505d37454fcf64353249080e23beeb2402c9d23183",
+    "retired_K4_D282_face_rows": [
+      62075,
+      62077,
+      162298,
+      162299
+    ],
+    "retired_K4_D282_point_rows": [
+      56714,
+      56715,
+      56716,
+      56717
+    ],
+    "singleton_final_composed_rowmap_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/composed-row-maps-001.json",
+    "singleton_final_composed_rowmap_receipt_sha256": "0eb5ba832819211ac9b88d60f2c4c012fbb20b1e35894b89bab1f386600c4360"
+  },
+  "physical_admission": false,
+  "schema": "numi.fat614-paired-subresolution-pocket-retirement.v1",
+  "source_semantic_witness": {
+    "Fat135_input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-positive-PLC-prefix-compaction-135-root/fat-positive-compact-PLC-prefix.npz",
+    "Fat135_input_sha256": "7ab13a433e0cb08350c901388c0c86712269e0cf66ce70df5fe33de248357e76",
+    "P1_score": [
+      4,
+      4
+    ],
+    "exact_F32_corner_key_matches_Fat614_tet": true,
+    "regional_mass_redistribution_required": true,
+    "semantic_group": [
+      16,
+      23,
+      23
+    ],
+    "semantic_support141_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-semantic-support-141-root/fat-current-semantic-support.npz",
+    "semantic_support141_sha256": "f3081e59fd88a88b48aa3d9caa8153609f6c24fcc0aac32d069c634ddad12b2b",
+    "source330_mass_edited": false,
+    "source330_mass_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+    "source330_mass_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "source_cell_row135": 207166
+  },
+  "status": "PASS_SOURCE_ONLY_PAIRED_SUBRESOLUTION_COMPONENT_RETIREMENT_ON_FAT614"
+}

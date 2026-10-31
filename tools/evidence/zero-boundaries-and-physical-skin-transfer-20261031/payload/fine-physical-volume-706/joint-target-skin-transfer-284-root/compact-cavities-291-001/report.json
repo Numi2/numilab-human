@@ -1,0 +1,483 @@
+{
+  "status": "COMPACT_TARGET_CAVITY_WITNESSES_REMAIN",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-target-skin-transfer-284-root/target-preparation-003/skin-current-typed-target-input.npz",
+  "input_sha256": "462d6120a9a770051da2f9cf9c6212e3f212bfcd6a85747896085d42cb4b2ecd",
+  "script_sha256": "0db9aae84cc32be640435d621d86a3b3b31d155ad3cb5b74ad9d6f29ee6d8e6f",
+  "preparation": {
+    "selected_cells": 630,
+    "retired_boundary_nodes": 38,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 212,
+        "components": 20,
+        "unclosed_components": 5,
+        "internal_joint_cut_witnesses": 2,
+        "blocked_witnesses": 1,
+        "new_cells": 263
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 475,
+        "components": 20,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 7,
+        "new_cells": 77
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 552,
+        "components": 19,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 7,
+        "new_cells": 58
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 610,
+        "components": 19,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 7,
+        "new_cells": 9
+      },
+      {
+        "iteration": 4,
+        "selected_cells": 619,
+        "components": 19,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 7,
+        "new_cells": 11
+      },
+      {
+        "iteration": 5,
+        "selected_cells": 630,
+        "components": 19,
+        "unclosed_components": 0,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 7,
+        "new_cells": 0
+      }
+    ],
+    "maximum_cells": 20000,
+    "selection": "extra-face owners plus retired-boundary-node stars; exact internal joint-witness growth",
+    "all_target_components_admissible": false
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 316,
+      "new_desired_faces": 13,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 1,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 2,
+      "closed": false,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 15,
+      "old_nonpositive": 0,
+      "old_cells": 60,
+      "new_desired_faces": 7,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [
+        {
+          "face": [
+            27617,
+            27621,
+            27620
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        },
+        {
+          "face": [
+            27617,
+            27622,
+            27621
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        },
+        {
+          "face": [
+            27619,
+            27620,
+            27623
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        },
+        {
+          "face": [
+            27620,
+            27621,
+            27623
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        },
+        {
+          "face": [
+            27621,
+            27622,
+            27623
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        },
+        {
+          "face": [
+            27622,
+            27624,
+            27623
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        }
+      ],
+      "topological_closed": true
+    },
+    {
+      "id": 3,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 4,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 2,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 5,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 6,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 6,
+      "old_nonpositive": 0,
+      "old_cells": 32,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 7,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 9,
+      "old_nonpositive": 0,
+      "old_cells": 53,
+      "new_desired_faces": 7,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 8,
+      "closed": false,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 50,
+      "new_desired_faces": 7,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [
+        {
+          "face": [
+            170806,
+            170808,
+            170807
+          ],
+          "reason": "joint_volume_and_shape",
+          "fixed_target": true
+        }
+      ],
+      "topological_closed": true
+    },
+    {
+      "id": 9,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 12,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 10,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 14,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 11,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 6,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 12,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 3,
+      "new_desired_faces": 2,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 13,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 15,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 14,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 15,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 4,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 16,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 17,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 3,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    },
+    {
+      "id": 18,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 5,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "topological_closed": true
+    }
+  ],
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-target-skin-transfer-284-root/compact-cavities-291-001/connected-cavity-shells.npz",
+  "output_sha256": "8562806136abe29c410fab6e12ca7a37ab34d511a73ae3cc9cf18b611be0ba7f",
+  "elapsed_s": 2.173374082893133
+}

@@ -1,0 +1,107 @@
+{
+  "schema": "h706.direct-boundary-recap-diagnostic.v1",
+  "status": "PASS_DIRECT_RECAP_TARGET_BOUNDARY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-target-skin-transfer-284-root/owner-union-fixture-286-001/input.npz",
+  "input_sha256": "6149a26a9c56fa1d7182a410ab304a29c9a0f0136e0c5d7a8ab0dce34523e337",
+  "producer_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/direct_skin_owner_union_caps_286_root.py",
+  "producer_sha256": "64a5c1e9bfb69f7a5f4a2f5c197bd0f5113e024151b38b8d108713556f3b805c",
+  "policy": {
+    "edge_connected_changed_facets": true,
+    "exact_connected_owner_union_or_empty_shell_required": true,
+    "positive_exact_f32_required": true,
+    "local_oriented_chain_required": true,
+    "max_construction_quality_debt": 0,
+    "native_quality_threshold_remains_final_zero": true
+  },
+  "input_points": 5,
+  "input_cells": 2,
+  "input_boundary_faces": 6,
+  "desired_boundary_faces": 4,
+  "missing_target_faces": 1,
+  "extra_current_faces": 3,
+  "edge_connected_changed_components": 1,
+  "eligible_components": 1,
+  "accepted_components": 1,
+  "accepted_new_tets": 0,
+  "consumed_input_cells": 1,
+  "output_cells": 1,
+  "output_boundary_faces": 4,
+  "output_boundary_exactly_target": true,
+  "residual_missing_face_count": 0,
+  "residual_extra_face_count": 0,
+  "residual_face_key_examples": {
+    "missing": [],
+    "extra": []
+  },
+  "candidate_filter_rejections": {},
+  "candidate_reject_witnesses": [],
+  "operation_rejections": {},
+  "aggregate_construction_quality_debt": 0,
+  "old_native_quality_failures_in_consumed_cells": 0,
+  "new_native_quality_failures_in_replacements": 0,
+  "exact_determinant_sum_delta_lattice_2m447": "-363419362147803445274661903944002267176820680343659030140745099590319644056698961663095525356881782780381260803133088966767300814307328",
+  "physical_volume_delta_m3": -0.16666666666666666,
+  "target_shell_volume_identity": "candidate oriented boundary exactly equals target shell",
+  "new_cap_internal_intersection": "exact SAT on F32 integer lattice against every AABB-overlapping retained tet and prior cap tet",
+  "elapsed_seconds": 0.0029577079694718122,
+  "operations": [
+    {
+      "changed_component_id": 0,
+      "old_extra_boundary_faces": [
+        [
+          0,
+          1,
+          3
+        ],
+        [
+          1,
+          2,
+          3
+        ],
+        [
+          0,
+          3,
+          2
+        ]
+      ],
+      "new_target_boundary_faces": [
+        [
+          0,
+          1,
+          2
+        ]
+      ],
+      "owner_input_cell_rows": [
+        0
+      ],
+      "common_opposite_apex_input_point_row": null,
+      "construction": "empty_target_shell_remove_wedge",
+      "material_index": 15,
+      "old_cells": 1,
+      "new_cells": 0,
+      "old_native_quality_failures": 0,
+      "new_native_quality_failures": 0,
+      "construction_quality_debt": 0,
+      "physical_volume_delta_m3": -0.16666666666666666,
+      "replacement_output_tet_row_start": 1,
+      "replacement_output_tet_row_end": 1,
+      "local_oriented_chain": "PASS",
+      "intersection_check": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 0,
+        "exact_point_cache_rows": 0
+      }
+    }
+  ],
+  "limitations": [
+    "no TetGen",
+    "owner-union existing-vertex fans and exact empty-shell wedge retirement",
+    "source mesh qualification inherited",
+    "construction diagnostic only",
+    "native zero-quality-defect gate not waived",
+    "no mass/native admission"
+  ]
+}

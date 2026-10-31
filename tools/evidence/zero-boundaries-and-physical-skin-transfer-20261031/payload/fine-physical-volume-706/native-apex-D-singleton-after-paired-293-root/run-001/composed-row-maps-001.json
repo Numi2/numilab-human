@@ -1,0 +1,112 @@
+{
+  "checks": {
+    "all185_context_and_joint_self_receipts_pinned": true,
+    "c157_face_crosswalk_is_exact_triangle_identity_only": true,
+    "exact_unique_F32_point_crosswalk_to_c157": true,
+    "final_points_bitwise_equal_paired_D0": true,
+    "final_points_exactly_mapped_to_D282": true,
+    "final_to_D015_point_map_matches_D282_composition": true,
+    "full_typed_patch_union_remains_in_final_candidate": true,
+    "unmatched_c157_faces_remain_minus_one_no_nearest_or_fabricated_face_identity": true
+  },
+  "counts": {
+    "c157_faces_without_exact_final_triangle": 1315,
+    "c157_points_retired_from_final": 4,
+    "faces_exactly_shared_with_c157": 237730,
+    "final_D_faces": 238567,
+    "final_D_points": 120633,
+    "final_faces_without_exact_c157_triangle": 837
+  },
+  "final_typed_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz",
+    "sha256": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca"
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D-proof-015/candidate-D-saved-op-replay-source-mapped.npz": "15afa8eecdaeff456cda25ef26890da60d60dd06e0412ed2035c77a8cbeb460f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/candidate-D-pY-boundary-split.npz": "c157370a5389bdd54552abaffc991325b12bfafd2fed9772a639df3ac5d38487",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-volume-boundary-remesh-032/derived-D-pY-edge-split-001/registered-217-adapter-001/candidate-D-pY-boundary-split-registered.npz": "03a017eb723ac5a6f72435d3a5369c2693724d3dc349f1078c39002f2d799f98",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-ears-282-root/run-001/typed-001/candidate-D-typed-current.npz": "a8845bc3ab5106fa08e77ecd37f7bc65ffe9991961f68351c444e2cf6b1a6866",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/candidate-D-native-apex-connected-raw.npz": "d88b9d5bf5564933cc717c13a146a5fb38b329bc508ca4eac60bafd1c73a0d51",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/report.json": "ed2fc12e9e6733b447859a45d206881b2c5579d75ac7084ffdf99b78d2baf457",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/candidate-D-typed-current.npz": "214f888227a38da66bbbbeff70932927f393f9d6b34b1a2690f328a01b6a4dca",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/receipt.json": "b8afa27dfab89ba7beaf039030201029422c42d3fd4415bce3cac9c1ae2157ac",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/candidate-D-paired-resolution-reduced.npz": "9a66be5a75d097647d8ff6c0b8a7ee447faa687f2434d146709d6ae5fa316ff5",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/paired-retirement-maps.npz": "6c9a38306195d0cce8d96d869a9e2cbdede87c0c9a477cb399e9ee24a3b1abca"
+  },
+  "limitations": [
+    "c157 is a sibling geometry/topology base, not the immediate parent of the D282 branch; exact c157 face map is partial where triangle topology differs.",
+    "Physical combined-shell closure, Fat mass redistribution, volume rebind, and native qualification remain pending."
+  ],
+  "maps": {
+    "keys": [
+      "final_output_point_to_paired_D_row",
+      "final_output_face_to_paired_D_row",
+      "final_output_point_to_D282_row",
+      "final_output_face_to_D282_row",
+      "final_output_point_to_D015_row",
+      "final_output_face_to_D015_row",
+      "final_output_point_to_c157_row",
+      "c157_point_to_final_output_row",
+      "final_output_face_to_c157_exact_triangle_row",
+      "final_output_face_to_c157_orientation",
+      "c157_face_to_final_output_exact_triangle_row"
+    ],
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/composed-row-maps-001.npz",
+    "sha256": "1f05fde555a310ac7d7ea16ee153a68df739a57448a1f57ed8b4e4330c77670a"
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "paired_operation": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/operation.json",
+    "sha256": "b73348842c2a8653e9ce8f641c93fa836e38315da8aa00173e8173c781b6c1ba"
+  },
+  "paired_retirement_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/receipt.json",
+    "sha256": "7ef042cea2ced053824261505d37454fcf64353249080e23beeb2402c9d23183"
+  },
+  "physical_admission": false,
+  "retirement_rows": {
+    "paired_D282_faces": [
+      62075,
+      62077,
+      162298,
+      162299
+    ],
+    "paired_D282_points": [
+      56714,
+      56715,
+      56716,
+      56717
+    ],
+    "singleton_D282_faces": [
+      119513,
+      119514,
+      238473,
+      238572,
+      238573,
+      238574
+    ],
+    "singleton_final_generated_face_rows": [
+      238565,
+      238566
+    ],
+    "singleton_paired_D_faces": [
+      119511,
+      119512,
+      238469,
+      238568,
+      238569,
+      238570
+    ]
+  },
+  "schema": "numi.paired-retirement-singleton-composed-row-maps.v1",
+  "singleton_raw_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/report.json",
+    "sha256": "ed2fc12e9e6733b447859a45d206881b2c5579d75ac7084ffdf99b78d2baf457"
+  },
+  "singleton_typed_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-singleton-after-paired-293-root/run-001/typed-001/receipt.json",
+    "sha256": "b8afa27dfab89ba7beaf039030201029422c42d3fd4415bce3cac9c1ae2157ac"
+  },
+  "status": "PASS_SOURCE_ONLY_ROW_MAP_COMPOSITION"
+}

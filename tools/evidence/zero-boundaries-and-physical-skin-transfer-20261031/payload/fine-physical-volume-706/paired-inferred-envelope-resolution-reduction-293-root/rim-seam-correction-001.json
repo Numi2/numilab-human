@@ -1,0 +1,1285 @@
+{
+  "checks": {
+    "D_boundary_edge_counter_unchanged": true,
+    "D_itself_globally_closed": false,
+    "D_to_inner_D_opposite_winding": true,
+    "each_edge_has_one_inner_D_and_one_headwall_face": true,
+    "exact_unique_shell140_coordinate_match_for_all_rim_endpoints": true,
+    "full_face_triangle_equivalence_checked": false,
+    "inherited_D_open_edges": 45,
+    "inner_D_to_wall_opposite_winding": true,
+    "rim_edge_level_orientation_chain_verified": true,
+    "source_D_directed_edge_census_equals_retained_output_mapped_to_D282": true,
+    "whole_current_I_D_and_walls_closure_claimed": false
+  },
+  "counts": {
+    "D282_faces": 238575,
+    "D_open_edges_before_after": [
+      45,
+      45
+    ],
+    "paired_reduced_D_faces": 238571,
+    "shell140_headwall_faces": 90,
+    "shell140_inner_D_faces": 242151,
+    "verified_rim_edge_pairs": 45
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz": {
+      "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-apex-D-ears-282-root/run-001/typed-001/candidate-D-typed-current.npz": {
+      "sha256": "a8845bc3ab5106fa08e77ecd37f7bc65ffe9991961f68351c444e2cf6b1a6866"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/candidate-D-paired-resolution-reduced.npz": {
+      "sha256": "9a66be5a75d097647d8ff6c0b8a7ee447faa687f2434d146709d6ae5fa316ff5"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/operation.json": {
+      "sha256": "b73348842c2a8653e9ce8f641c93fa836e38315da8aa00173e8173c781b6c1ba"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/paired-retirement-maps.npz": {
+      "sha256": "6c9a38306195d0cce8d96d869a9e2cbdede87c0c9a477cb399e9ee24a3b1abca"
+    },
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inferred-envelope-resolution-reduction-293-root/receipt.json": {
+      "sha256": "7ef042cea2ced053824261505d37454fcf64353249080e23beeb2402c9d23183"
+    }
+  },
+  "limitations": [
+    "This verifies the inherited rim edge chain only; the final current I/D plus wall assembly must still pass its existing complete assembly/closure owner after singleton repair and final surface rebinding.",
+    "No mass redistribution, physical installation, or native qualification is claimed."
+  ],
+  "owner_receipts": {
+    "collar014_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-collar-014-saved-op-replay/receipt.json",
+      "sha256": "a7eaac55c3cacf88aa5d31c2f2844b6da957a3348c98e76951bfc96c32968a01",
+      "wall_ancestry_existing_owner_pass": true,
+      "wall_csv_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/microedge-collar-014-saved-op-replay/wall-provenance-current.csv",
+      "wall_csv_sha256": "62373bf5fc8e7ebcdf03261acbf4a564957485eaa058db3d1140dd47df3e97a7"
+    },
+    "shell140_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/receipt.json",
+      "sha256": "eef320118fc8f14b123042acf7df2c8a5720670b1e452404ae97dd54721676f6",
+      "status": "PASS_EXISTING_697_ASSEMBLY_AND_EXACT_CANDIDATE135_BOUNDARY"
+    }
+  },
+  "pairs": [
+    {
+      "D282_edge": [
+        42596,
+        43410
+      ],
+      "D282_face_row": 13413,
+      "D282_face_vertices": [
+        42596,
+        43410,
+        42926
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 264941,
+      "shell140_inner_D_vertices": [
+        167964,
+        168294,
+        168778
+      ],
+      "shell140_wall_face_row": 492887,
+      "shell140_wall_vertices": [
+        49686,
+        167964,
+        168778
+      ]
+    },
+    {
+      "D282_edge": [
+        43410,
+        43808
+      ],
+      "D282_face_row": 13416,
+      "D282_face_vertices": [
+        43410,
+        43808,
+        43649
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 264944,
+      "shell140_inner_D_vertices": [
+        168778,
+        169017,
+        169176
+      ],
+      "shell140_wall_face_row": 492891,
+      "shell140_wall_vertices": [
+        49904,
+        168778,
+        169176
+      ]
+    },
+    {
+      "D282_edge": [
+        43975,
+        43191
+      ],
+      "D282_face_row": 13439,
+      "D282_face_vertices": [
+        43191,
+        43338,
+        43975
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 264967,
+      "shell140_inner_D_vertices": [
+        168559,
+        169343,
+        168706
+      ],
+      "shell140_wall_face_row": 492883,
+      "shell140_wall_vertices": [
+        49800,
+        169343,
+        168559
+      ]
+    },
+    {
+      "D282_edge": [
+        44093,
+        43975
+      ],
+      "D282_face_row": 13441,
+      "D282_face_vertices": [
+        43975,
+        43338,
+        44093
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 264969,
+      "shell140_inner_D_vertices": [
+        169343,
+        169461,
+        168706
+      ],
+      "shell140_wall_face_row": 492889,
+      "shell140_wall_vertices": [
+        49949,
+        169461,
+        169343
+      ]
+    },
+    {
+      "D282_edge": [
+        43808,
+        44565
+      ],
+      "D282_face_row": 13443,
+      "D282_face_vertices": [
+        43808,
+        44565,
+        43649
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 264971,
+      "shell140_inner_D_vertices": [
+        169176,
+        169017,
+        169933
+      ],
+      "shell140_wall_face_row": 492895,
+      "shell140_wall_vertices": [
+        49973,
+        169176,
+        169933
+      ]
+    },
+    {
+      "D282_edge": [
+        44565,
+        45098
+      ],
+      "D282_face_row": 13453,
+      "D282_face_vertices": [
+        43649,
+        44565,
+        45098
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 264981,
+      "shell140_inner_D_vertices": [
+        169017,
+        170466,
+        169933
+      ],
+      "shell140_wall_face_row": 492893,
+      "shell140_wall_vertices": [
+        50344,
+        169933,
+        170466
+      ]
+    },
+    {
+      "D282_edge": [
+        45098,
+        46436
+      ],
+      "D282_face_row": 13650,
+      "D282_face_vertices": [
+        45098,
+        46436,
+        46472
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 265188,
+      "shell140_inner_D_vertices": [
+        170466,
+        171840,
+        171804
+      ],
+      "shell140_wall_face_row": 492907,
+      "shell140_wall_vertices": [
+        50344,
+        170466,
+        171804
+      ]
+    },
+    {
+      "D282_edge": [
+        48503,
+        47586
+      ],
+      "D282_face_row": 13658,
+      "D282_face_vertices": [
+        47586,
+        46965,
+        48503
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 265196,
+      "shell140_inner_D_vertices": [
+        172954,
+        173871,
+        172333
+      ],
+      "shell140_wall_face_row": 492911,
+      "shell140_wall_vertices": [
+        51572,
+        173871,
+        172954
+      ]
+    },
+    {
+      "D282_edge": [
+        46436,
+        47692
+      ],
+      "D282_face_row": 13659,
+      "D282_face_vertices": [
+        46436,
+        47692,
+        47701
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 265197,
+      "shell140_inner_D_vertices": [
+        171804,
+        173069,
+        173060
+      ],
+      "shell140_wall_face_row": 492909,
+      "shell140_wall_vertices": [
+        51294,
+        171804,
+        173060
+      ]
+    },
+    {
+      "D282_edge": [
+        51282,
+        49985
+      ],
+      "D282_face_row": 13704,
+      "D282_face_vertices": [
+        51282,
+        49985,
+        50737
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 265244,
+      "shell140_inner_D_vertices": [
+        176650,
+        176105,
+        175353
+      ],
+      "shell140_wall_face_row": 492925,
+      "shell140_wall_vertices": [
+        51783,
+        176650,
+        175353
+      ]
+    },
+    {
+      "D282_edge": [
+        51382,
+        52345
+      ],
+      "D282_face_row": 13705,
+      "D282_face_vertices": [
+        52345,
+        50737,
+        51382
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 265245,
+      "shell140_inner_D_vertices": [
+        177713,
+        176750,
+        176105
+      ],
+      "shell140_wall_face_row": 492929,
+      "shell140_wall_vertices": [
+        51948,
+        176750,
+        177713
+      ]
+    },
+    {
+      "D282_edge": [
+        50926,
+        51382
+      ],
+      "D282_face_row": 13707,
+      "D282_face_vertices": [
+        51382,
+        50109,
+        50926
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 265247,
+      "shell140_inner_D_vertices": [
+        176750,
+        176294,
+        175477
+      ],
+      "shell140_wall_face_row": 492923,
+      "shell140_wall_vertices": [
+        51932,
+        176294,
+        176750
+      ]
+    },
+    {
+      "D282_edge": [
+        76997,
+        76479
+      ],
+      "D282_face_row": 23194,
+      "D282_face_vertices": [
+        76997,
+        76479,
+        77499
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275348,
+      "shell140_inner_D_vertices": [
+        202365,
+        202867,
+        201847
+      ],
+      "shell140_wall_face_row": 492933,
+      "shell140_wall_vertices": [
+        55165,
+        202365,
+        201847
+      ]
+    },
+    {
+      "D282_edge": [
+        77979,
+        76997
+      ],
+      "D282_face_row": 23195,
+      "D282_face_vertices": [
+        76997,
+        77499,
+        77979
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275349,
+      "shell140_inner_D_vertices": [
+        202365,
+        203347,
+        202867
+      ],
+      "shell140_wall_face_row": 492935,
+      "shell140_wall_vertices": [
+        55314,
+        203347,
+        202365
+      ]
+    },
+    {
+      "D282_edge": [
+        79744,
+        77979
+      ],
+      "D282_face_row": 23196,
+      "D282_face_vertices": [
+        77979,
+        77499,
+        79744
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275350,
+      "shell140_inner_D_vertices": [
+        203347,
+        205112,
+        202867
+      ],
+      "shell140_wall_face_row": 492941,
+      "shell140_wall_vertices": [
+        55622,
+        205112,
+        203347
+      ]
+    },
+    {
+      "D282_edge": [
+        80879,
+        79744
+      ],
+      "D282_face_row": 23248,
+      "D282_face_vertices": [
+        80879,
+        79744,
+        79829
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275407,
+      "shell140_inner_D_vertices": [
+        206247,
+        205197,
+        205112
+      ],
+      "shell140_wall_face_row": 492943,
+      "shell140_wall_vertices": [
+        55622,
+        206247,
+        205112
+      ]
+    },
+    {
+      "D282_edge": [
+        79423,
+        80025
+      ],
+      "D282_face_row": 23250,
+      "D282_face_vertices": [
+        79423,
+        80025,
+        81450
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275409,
+      "shell140_inner_D_vertices": [
+        204791,
+        206818,
+        205393
+      ],
+      "shell140_wall_face_row": 492945,
+      "shell140_wall_vertices": [
+        55473,
+        204791,
+        205393
+      ]
+    },
+    {
+      "D282_edge": [
+        82132,
+        80879
+      ],
+      "D282_face_row": 23251,
+      "D282_face_vertices": [
+        80879,
+        79829,
+        82132
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275410,
+      "shell140_inner_D_vertices": [
+        206247,
+        207500,
+        205197
+      ],
+      "shell140_wall_face_row": 492953,
+      "shell140_wall_vertices": [
+        55729,
+        207500,
+        206247
+      ]
+    },
+    {
+      "D282_edge": [
+        80025,
+        80882
+      ],
+      "D282_face_row": 23252,
+      "D282_face_vertices": [
+        80025,
+        80882,
+        81450
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275411,
+      "shell140_inner_D_vertices": [
+        205393,
+        206818,
+        206250
+      ],
+      "shell140_wall_face_row": 492947,
+      "shell140_wall_vertices": [
+        206250,
+        55646,
+        205393
+      ]
+    },
+    {
+      "D282_edge": [
+        83108,
+        82132
+      ],
+      "D282_face_row": 23253,
+      "D282_face_vertices": [
+        83108,
+        82132,
+        82975
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275412,
+      "shell140_inner_D_vertices": [
+        208476,
+        208343,
+        207500
+      ],
+      "shell140_wall_face_row": 492955,
+      "shell140_wall_vertices": [
+        56094,
+        208476,
+        207500
+      ]
+    },
+    {
+      "D282_edge": [
+        81848,
+        82799
+      ],
+      "D282_face_row": 23254,
+      "D282_face_vertices": [
+        81450,
+        81848,
+        82799
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275413,
+      "shell140_inner_D_vertices": [
+        206818,
+        208167,
+        207216
+      ],
+      "shell140_wall_face_row": 492951,
+      "shell140_wall_vertices": [
+        55819,
+        207216,
+        208167
+      ]
+    },
+    {
+      "D282_edge": [
+        86708,
+        86946
+      ],
+      "D282_face_row": 23298,
+      "D282_face_vertices": [
+        86946,
+        86674,
+        86708
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 275476,
+      "shell140_inner_D_vertices": [
+        212314,
+        212076,
+        212042
+      ],
+      "shell140_wall_face_row": 492971,
+      "shell140_wall_vertices": [
+        56731,
+        212076,
+        212314
+      ]
+    },
+    {
+      "D282_edge": [
+        43191,
+        42596
+      ],
+      "D282_face_row": 35172,
+      "D282_face_vertices": [
+        42596,
+        42455,
+        43191
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288212,
+      "shell140_inner_D_vertices": [
+        167964,
+        168559,
+        167823
+      ],
+      "shell140_wall_face_row": 492885,
+      "shell140_wall_vertices": [
+        49686,
+        168559,
+        167964
+      ]
+    },
+    {
+      "D282_edge": [
+        45429,
+        44967
+      ],
+      "D282_face_row": 35179,
+      "D282_face_vertices": [
+        44093,
+        45429,
+        44967
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288219,
+      "shell140_inner_D_vertices": [
+        169461,
+        170335,
+        170797
+      ],
+      "shell140_wall_face_row": 492900,
+      "shell140_wall_vertices": [
+        50631,
+        170797,
+        170335
+      ]
+    },
+    {
+      "D282_edge": [
+        44967,
+        44093
+      ],
+      "D282_face_row": 35179,
+      "D282_face_vertices": [
+        44093,
+        45429,
+        44967
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288219,
+      "shell140_inner_D_vertices": [
+        169461,
+        170335,
+        170797
+      ],
+      "shell140_wall_face_row": 492901,
+      "shell140_wall_vertices": [
+        169461,
+        49975,
+        170335
+      ]
+    },
+    {
+      "D282_edge": [
+        46583,
+        45920
+      ],
+      "D282_face_row": 35277,
+      "D282_face_vertices": [
+        45429,
+        46583,
+        45920
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288321,
+      "shell140_inner_D_vertices": [
+        170797,
+        171288,
+        171951
+      ],
+      "shell140_wall_face_row": 492904,
+      "shell140_wall_vertices": [
+        51454,
+        171951,
+        171288
+      ]
+    },
+    {
+      "D282_edge": [
+        45920,
+        45429
+      ],
+      "D282_face_row": 35277,
+      "D282_face_vertices": [
+        45429,
+        46583,
+        45920
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288321,
+      "shell140_inner_D_vertices": [
+        170797,
+        171288,
+        171951
+      ],
+      "shell140_wall_face_row": 492905,
+      "shell140_wall_vertices": [
+        170797,
+        50631,
+        171288
+      ]
+    },
+    {
+      "D282_edge": [
+        47586,
+        46583
+      ],
+      "D282_face_row": 35279,
+      "D282_face_vertices": [
+        46583,
+        46965,
+        47586
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288323,
+      "shell140_inner_D_vertices": [
+        171951,
+        172954,
+        172333
+      ],
+      "shell140_wall_face_row": 492897,
+      "shell140_wall_vertices": [
+        51454,
+        172954,
+        171951
+      ]
+    },
+    {
+      "D282_edge": [
+        47692,
+        48607
+      ],
+      "D282_face_row": 35281,
+      "D282_face_vertices": [
+        47692,
+        48607,
+        47701
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288325,
+      "shell140_inner_D_vertices": [
+        173060,
+        173069,
+        173975
+      ],
+      "shell140_wall_face_row": 492917,
+      "shell140_wall_vertices": [
+        51568,
+        173060,
+        173975
+      ]
+    },
+    {
+      "D282_edge": [
+        48607,
+        49588
+      ],
+      "D282_face_row": 35283,
+      "D282_face_vertices": [
+        47701,
+        48607,
+        49588
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288327,
+      "shell140_inner_D_vertices": [
+        173069,
+        174956,
+        173975
+      ],
+      "shell140_wall_face_row": 492915,
+      "shell140_wall_vertices": [
+        51683,
+        173975,
+        174956
+      ]
+    },
+    {
+      "D282_edge": [
+        49985,
+        48503
+      ],
+      "D282_face_row": 35284,
+      "D282_face_vertices": [
+        48503,
+        48955,
+        49985
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288328,
+      "shell140_inner_D_vertices": [
+        173871,
+        175353,
+        174323
+      ],
+      "shell140_wall_face_row": 492913,
+      "shell140_wall_vertices": [
+        51684,
+        175353,
+        173871
+      ]
+    },
+    {
+      "D282_edge": [
+        52345,
+        51282
+      ],
+      "D282_face_row": 35298,
+      "D282_face_vertices": [
+        51282,
+        50737,
+        52345
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288342,
+      "shell140_inner_D_vertices": [
+        176650,
+        177713,
+        176105
+      ],
+      "shell140_wall_face_row": 492927,
+      "shell140_wall_vertices": [
+        176650,
+        51846,
+        177713
+      ]
+    },
+    {
+      "D282_edge": [
+        49588,
+        51187
+      ],
+      "D282_face_row": 35300,
+      "D282_face_vertices": [
+        49588,
+        51187,
+        50926
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288344,
+      "shell140_inner_D_vertices": [
+        174956,
+        176294,
+        176555
+      ],
+      "shell140_wall_face_row": 492921,
+      "shell140_wall_vertices": [
+        174956,
+        176555,
+        51782
+      ]
+    },
+    {
+      "D282_edge": [
+        51187,
+        50926
+      ],
+      "D282_face_row": 35300,
+      "D282_face_vertices": [
+        49588,
+        51187,
+        50926
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 288344,
+      "shell140_inner_D_vertices": [
+        174956,
+        176294,
+        176555
+      ],
+      "shell140_wall_face_row": 492919,
+      "shell140_wall_vertices": [
+        51840,
+        176555,
+        176294
+      ]
+    },
+    {
+      "D282_edge": [
+        76479,
+        78771
+      ],
+      "D282_face_row": 49138,
+      "D282_face_vertices": [
+        76479,
+        78771,
+        77582
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303122,
+      "shell140_inner_D_vertices": [
+        201847,
+        202950,
+        204139
+      ],
+      "shell140_wall_face_row": 492931,
+      "shell140_wall_vertices": [
+        55165,
+        201847,
+        204139
+      ]
+    },
+    {
+      "D282_edge": [
+        77373,
+        79423
+      ],
+      "D282_face_row": 49140,
+      "D282_face_vertices": [
+        77373,
+        79423,
+        78771
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303124,
+      "shell140_inner_D_vertices": [
+        202741,
+        204139,
+        204791
+      ],
+      "shell140_wall_face_row": 492937,
+      "shell140_wall_vertices": [
+        55341,
+        202741,
+        204791
+      ]
+    },
+    {
+      "D282_edge": [
+        78771,
+        77373
+      ],
+      "D282_face_row": 49140,
+      "D282_face_vertices": [
+        77373,
+        79423,
+        78771
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303124,
+      "shell140_inner_D_vertices": [
+        202741,
+        204139,
+        204791
+      ],
+      "shell140_wall_face_row": 492939,
+      "shell140_wall_vertices": [
+        204139,
+        202741,
+        55335
+      ]
+    },
+    {
+      "D282_edge": [
+        85236,
+        83108
+      ],
+      "D282_face_row": 49145,
+      "D282_face_vertices": [
+        83108,
+        82975,
+        85236
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303129,
+      "shell140_inner_D_vertices": [
+        208476,
+        210604,
+        208343
+      ],
+      "shell140_wall_face_row": 492957,
+      "shell140_wall_vertices": [
+        56531,
+        210604,
+        208476
+      ]
+    },
+    {
+      "D282_edge": [
+        80882,
+        81848
+      ],
+      "D282_face_row": 49147,
+      "D282_face_vertices": [
+        80882,
+        81848,
+        81450
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303131,
+      "shell140_inner_D_vertices": [
+        206250,
+        206818,
+        207216
+      ],
+      "shell140_wall_face_row": 492949,
+      "shell140_wall_vertices": [
+        55646,
+        206250,
+        207216
+      ]
+    },
+    {
+      "D282_edge": [
+        82799,
+        84109
+      ],
+      "D282_face_row": 49148,
+      "D282_face_vertices": [
+        82799,
+        84109,
+        86189
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303132,
+      "shell140_inner_D_vertices": [
+        208167,
+        211557,
+        209477
+      ],
+      "shell140_wall_face_row": 492959,
+      "shell140_wall_vertices": [
+        208167,
+        209477,
+        56050
+      ]
+    },
+    {
+      "D282_edge": [
+        86531,
+        85236
+      ],
+      "D282_face_row": 49226,
+      "D282_face_vertices": [
+        86531,
+        85236,
+        86674
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303244,
+      "shell140_inner_D_vertices": [
+        211899,
+        212042,
+        210604
+      ],
+      "shell140_wall_face_row": 492965,
+      "shell140_wall_vertices": [
+        56531,
+        211899,
+        210604
+      ]
+    },
+    {
+      "D282_edge": [
+        86946,
+        86531
+      ],
+      "D282_face_row": 49227,
+      "D282_face_vertices": [
+        86531,
+        86674,
+        86946
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303245,
+      "shell140_inner_D_vertices": [
+        211899,
+        212314,
+        212042
+      ],
+      "shell140_wall_face_row": 492967,
+      "shell140_wall_vertices": [
+        211899,
+        56665,
+        212314
+      ]
+    },
+    {
+      "D282_edge": [
+        86189,
+        86708
+      ],
+      "D282_face_row": 49228,
+      "D282_face_vertices": [
+        84330,
+        86189,
+        86708
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303246,
+      "shell140_inner_D_vertices": [
+        209698,
+        212076,
+        211557
+      ],
+      "shell140_wall_face_row": 492969,
+      "shell140_wall_vertices": [
+        56628,
+        211557,
+        212076
+      ]
+    },
+    {
+      "D282_edge": [
+        84109,
+        85798
+      ],
+      "D282_face_row": 49229,
+      "D282_face_vertices": [
+        84109,
+        85798,
+        86189
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303247,
+      "shell140_inner_D_vertices": [
+        209477,
+        211557,
+        211166
+      ],
+      "shell140_wall_face_row": 492963,
+      "shell140_wall_vertices": [
+        209477,
+        211166,
+        56396
+      ]
+    },
+    {
+      "D282_edge": [
+        85798,
+        86189
+      ],
+      "D282_face_row": 49229,
+      "D282_face_vertices": [
+        84109,
+        85798,
+        86189
+      ],
+      "D_to_inner_D": "opposite",
+      "full_face_triangle_equivalence": "not_asserted",
+      "inner_D_to_wall": "opposite",
+      "shell140_inner_D_face_row": 303247,
+      "shell140_inner_D_vertices": [
+        209477,
+        211557,
+        211166
+      ],
+      "shell140_wall_face_row": 492961,
+      "shell140_wall_vertices": [
+        56549,
+        211166,
+        211557
+      ]
+    }
+  ],
+  "schema": "numi.paired-retirement-inherited-rim-seam-correction.v1",
+  "scope": "only the inherited D rim seam and its unchanged edge census; this does not claim the whole current I/D/Fat assembly is closed",
+  "status": "PASS_INHERITED_45_EDGE_RIM_SEAM_EXACTLY_REPRESENTED_IN_SHELL140",
+  "supersedes_diagnostic_field": "operation.json effect.inherited_registered_rim_wall_pairing.orientation_relation_counts was computed from sorted edge endpoints and is superseded here"
+}

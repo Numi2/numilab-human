@@ -1,0 +1,153 @@
+{
+  "schema": "h706.direct-boundary-recap-diagnostic.v1",
+  "status": "PASS_DIRECT_RECAP_TARGET_BOUNDARY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-target-skin-transfer-284-root/expanded-ownership-driver-control-288-001/input.npz",
+  "input_sha256": "4dbd6b1e55aeeabda1e77e17710152a5b33dc8cb267c7165ed4553237de9c774",
+  "producer_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/direct_connected_skin_caps_288_root.py",
+  "producer_sha256": "4b7c46955fa286db38c6ee5ec1dc91ac427e97ed5184cbe964bc7934640d0791",
+  "policy": {
+    "edge_connected_changed_facets": true,
+    "exact_connected_owner_union_or_empty_shell_required": true,
+    "maximum_face_growth_rings": 3,
+    "maximum_cavity_cells": 256,
+    "positive_exact_f32_required": true,
+    "local_oriented_chain_required": true,
+    "max_construction_quality_debt": 500,
+    "native_quality_threshold_remains_final_zero": true
+  },
+  "input_points": 11,
+  "input_cells": 11,
+  "input_boundary_faces": 18,
+  "desired_boundary_faces": 16,
+  "missing_target_faces": 3,
+  "extra_current_faces": 5,
+  "edge_connected_changed_components": 1,
+  "eligible_components": 1,
+  "accepted_components": 1,
+  "accepted_new_tets": 9,
+  "consumed_input_cells": 11,
+  "output_cells": 9,
+  "output_boundary_faces": 16,
+  "output_boundary_exactly_target": true,
+  "residual_missing_face_count": 0,
+  "residual_extra_face_count": 0,
+  "residual_face_key_examples": {
+    "missing": [],
+    "extra": []
+  },
+  "candidate_filter_rejections": {},
+  "candidate_reject_witnesses": [],
+  "operation_rejections": {},
+  "aggregate_construction_quality_debt": -2,
+  "old_native_quality_failures_in_consumed_cells": 4,
+  "new_native_quality_failures_in_replacements": 2,
+  "exact_determinant_sum_delta_lattice_2m447": "-234632405550844175406908707783838594804614238414531911542462603618886083918112417974366544976293451512430288894427136",
+  "physical_volume_delta_m3": -1.0760406571083145e-19,
+  "target_shell_volume_identity": "candidate oriented boundary exactly equals target shell",
+  "new_cap_internal_intersection": "exact SAT on F32 integer lattice against every AABB-overlapping retained tet and prior cap tet",
+  "elapsed_seconds": 0.0031161250080913305,
+  "operations": [
+    {
+      "changed_component_id": 0,
+      "old_extra_boundary_faces": [
+        [
+          3,
+          5,
+          7
+        ],
+        [
+          3,
+          7,
+          9
+        ],
+        [
+          4,
+          6,
+          5
+        ],
+        [
+          5,
+          6,
+          9
+        ],
+        [
+          5,
+          9,
+          7
+        ]
+      ],
+      "new_target_boundary_faces": [
+        [
+          4,
+          9,
+          5
+        ],
+        [
+          9,
+          4,
+          6
+        ],
+        [
+          3,
+          5,
+          9
+        ]
+      ],
+      "owner_input_cell_rows": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "common_opposite_apex_input_point_row": 10,
+      "construction": "connected_owner_union_boundary_vertex_fan",
+      "connected_growth": [
+        {
+          "ring": 0,
+          "cells": 5,
+          "reason": "no_positive_existing_vertex_fan",
+          "positive_options": 0
+        },
+        {
+          "ring": 1,
+          "cells": 11,
+          "reason": null,
+          "positive_options": 1
+        }
+      ],
+      "material_index": 15,
+      "old_cells": 11,
+      "new_cells": 9,
+      "old_native_quality_failures": 4,
+      "new_native_quality_failures": 2,
+      "construction_quality_debt": -2,
+      "physical_volume_delta_m3": -1.0760406571083145e-19,
+      "replacement_output_tet_row_start": 0,
+      "replacement_output_tet_row_end": 9,
+      "local_oriented_chain": "PASS",
+      "intersection_check": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 36,
+        "exact_point_cache_rows": 10
+      }
+    }
+  ],
+  "limitations": [
+    "no TetGen",
+    "bounded face-connected owner-union fans and exact empty-shell wedge retirement",
+    "source mesh qualification inherited",
+    "construction diagnostic only",
+    "native zero-quality-defect gate not waived",
+    "no mass/native admission"
+  ]
+}
