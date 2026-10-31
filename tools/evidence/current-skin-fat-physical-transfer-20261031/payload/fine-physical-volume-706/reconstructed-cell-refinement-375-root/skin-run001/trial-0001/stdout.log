@@ -1,0 +1,44 @@
+Opening cavity.node.
+Opening cavity.ele.
+Opening cavity.face.
+Reconstructing mesh ...
+Mesh reconstruction seconds:  7.6e-05
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=15 zero=0 expected15=15 other=0 flip23=4 flip32=3 flip41=0 flip44=2 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.000119
+Refining mesh...
+  15 insertions, added 0 points, 0 tetrahedra in queue.
+  4 insertions, added 0 points, 0 tetrahedra in queue.
+  6 insertions, added 1 points, 4 tetrahedra in queue.
+  8 insertions, added 0 points, 1 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=18 zero=0 expected15=18 other=0 flip23=4 flip32=3 flip41=0 flip44=2 invalid_hull_attrs=0
+Refinement seconds:  9.1e-05
+Smoothing vertices...
+ATTR_CENSUS stage=after_smoothing total=18 zero=0 expected15=18 other=0 flip23=4 flip32=3 flip41=0 flip44=2 invalid_hull_attrs=0
+Mesh smoothing seconds:  2.8e-05
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=19 zero=0 expected15=19 other=0 flip23=14 flip32=12 flip41=0 flip44=2 invalid_hull_attrs=0
+Mesh improvement seconds:  6e-05
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000245
+Total running seconds:  0.00067
+
+Statistics:
+
+  Input points: 12
+  Input tetrahedra: 14
+  Input triangles: 20
+
+  Mesh points: 13
+  Mesh tetrahedra: 19
+  Mesh faces: 48
+  Mesh faces on exterior boundary: 20
+  Mesh faces on input facets: 20
+  Mesh edges on input segments: 20
+  Steiner points inside domain: 1
+

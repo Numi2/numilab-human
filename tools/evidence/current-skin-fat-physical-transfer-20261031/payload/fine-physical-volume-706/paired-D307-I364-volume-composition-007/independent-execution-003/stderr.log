@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-D307-I364-volume-composition-007/independent-check-source-001/independent_check_composition_007.corrected-003.py", line 95, in <module>
+    d_exp=map_faces(d_boundary,np.asarray(c['output_node_to_input_node'],np.int64)) # to test same output rows via exact source reps
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-D307-I364-volume-composition-007/independent-check-source-001/independent_check_composition_007.corrected-003.py", line 51, in map_faces
+    q=node_map[np.asarray(faces,np.int64)]
+      ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IndexError: index 250001 is out of bounds for axis 0 with size 248466

@@ -1,0 +1,39 @@
+{
+  "status": "PASS_ACTUAL_OWNER_INDEXED_QUOTIENT_PARITY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_operation_report_sha256": "baa09bce6e6995268ec5a932be530573b8de69bb202025568ad41dd9e5325486",
+  "dense_owner_sha256": "5d90632e208af37d3a4f4bd6bcaaad3533eec1113e5145cdb3fecfba322dbdbd",
+  "indexed_owner_sha256": "ea9135fe6c19efc644bd8429bd01e5f36547f304e86da9214aa1bb594441da37",
+  "batch_producer_sha256": "df5c99a237b2f64b807fda9a792543a1a4b09c2002afc7854686a48d1180cab4",
+  "same_exact_quality_sign_boundary_and_rejection_predicates": true,
+  "role_controls": [
+    {
+      "role": "Skin",
+      "input_sha256": "c7f4d1452fa72e2ebd275388368b4d35c9923a70a6759807175ef150717e1ab8",
+      "actual_passing_operations_compared": 64,
+      "current_full_body_dynamic_stars_compared": 64,
+      "repeated_retired_endpoints_rejected": true,
+      "timing": {
+        "dense_s": 0.2646065396256745,
+        "indexed_s": 0.008753339294344187
+      },
+      "lookup_path_speedup": 30.229210902020586
+    },
+    {
+      "role": "Fat",
+      "input_sha256": "7bfc84aab5675229aea3b264944acbef4bd112f577c10b363cad980c0e024e62",
+      "actual_passing_operations_compared": 64,
+      "current_full_body_dynamic_stars_compared": 64,
+      "repeated_retired_endpoints_rejected": true,
+      "timing": {
+        "dense_s": 0.30401008296757936,
+        "indexed_s": 0.009612913941964507
+      },
+      "lookup_path_speedup": 31.62517471840089
+    }
+  ],
+  "verifier_sha256": "cb82ab1e9b09e1d4f0c2c2e18cb41c248a7edeea4542617d282fe21fe5989182",
+  "elapsed_s": 4.316724624950439,
+  "limitation": "construction lookup microbenchmark only, not integrated simulation throughput"
+}

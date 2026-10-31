@@ -1,0 +1,71 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.00031
+Creating surface mesh ...
+Surface mesh seconds:  8.4e-05
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [36,44].
+  2nd: [36,43].
+  Reducing collinear tolerance from 179.9 to 179.947 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [9,15].
+  2nd: [9,14].
+  Reducing collinear tolerance from 179.947 to 179.956 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [37,45].
+  2nd: [37,44].
+  Reducing collinear tolerance from 179.956 to 179.969 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [171,15].
+  2nd: [171,161].
+  Reducing collinear tolerance from 179.969 to 179.969 degree.
+Warning:  Two line segments are almost crossing.
+  1st: [21,30].
+  2nd: [13,22].
+  Reducing collinear tolerance from 179.969 to 179.997 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=1075 zero=1075 expected15=0 other=0 flip23=1362 flip32=1148 flip41=2 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  0.004172
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=386 zero=0 expected15=386 other=0 flip23=1362 flip32=1148 flip41=2 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  0.000107
+ATTR_CENSUS stage=after_suppresssteinerpoints total=386 zero=0 expected15=386 other=0 flip23=1362 flip32=1148 flip41=2 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=392 zero=0 expected15=392 other=0 flip23=1597 flip32=1377 flip41=2 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.000631
+Refining mesh...
+  235 insertions, added 0 points, 58 tetrahedra in queue.
+  78 insertions, added 0 points, 0 tetrahedra in queue.
+  104 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=392 zero=0 expected15=392 other=0 flip23=1597 flip32=1377 flip41=2 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  0.001707
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=527 zero=0 expected15=527 other=0 flip23=8559 flip32=8373 flip41=2 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  0.004806
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000794
+Total running seconds:  0.012656
+
+Statistics:
+
+  Input points: 175
+  Input facets: 346
+  Input segments: 519
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 200
+  Mesh tetrahedra: 527
+  Mesh faces: 1227
+  Mesh faces on exterior boundary: 346
+  Mesh faces on input facets: 346
+  Mesh edges on input segments: 519
+  Steiner points inside domain: 25
+

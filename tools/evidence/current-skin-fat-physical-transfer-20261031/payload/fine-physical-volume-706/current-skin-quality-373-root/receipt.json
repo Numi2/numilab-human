@@ -1,0 +1,121 @@
+{
+  "status": "PASS_SKIN_CHAIN_AND_BOUNDED_FACE_FLIP_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "producer_sha256": "a354f1b038ab365ddd23ffc5da140bd0a2b1fc7e0955f905991893845beb5eac",
+  "checks": [
+    {
+      "tag": "verify-370-retire",
+      "command": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_interior_node_retirement_326_root.py",
+        "--input",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-physical-target-369-root/skin-run001/skin-bound-current-I-target-volume-proposal.npz",
+        "--proposal",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-retire/fixed-boundary-volume-proposal.npz",
+        "--report",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-retire/report.json",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-370-retire"
+      ],
+      "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-370-retire/receipt.json",
+      "receipt_sha256": "e78a2422be2c5e0c2da11c4584f4ef441a95701c3fc6b3ec0f0fa0c263c53be7",
+      "status": "PASS_INDEPENDENT_INFERRED_INTERIOR_RETIREMENT_REPLAY"
+    },
+    {
+      "tag": "verify-370-condition",
+      "command": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_inferred_coordinate_replay_330_root.py",
+        "--input",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-edge/pass-005/fixed-boundary-volume-proposal.npz",
+        "--proposal",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-condition/conditioned-volume-proposal.npz",
+        "--report",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-condition/report.json",
+        "--registration-map",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/registered-node-map-177-143-713-source008/registered-node-map.csv",
+        "--source-node",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/skin.node",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-370-condition"
+      ],
+      "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-370-condition/receipt.json",
+      "receipt_sha256": "0d99e12cc108f1e3a560a07cf8b0b3394144c429ba7b87a260762f96f0e7a279",
+      "status": "PASS_INDEPENDENT_INFERRED_INTERIOR_COORDINATE_REPLAY"
+    },
+    {
+      "tag": "verify-370-kernel",
+      "command": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_cached_kernel_chain_338_root.py",
+        "--input",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-condition/conditioned-volume-proposal.npz",
+        "--step",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-kernel",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-370-kernel"
+      ],
+      "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-370-kernel/receipt.json",
+      "receipt_sha256": "6196cc857d108e905e184951971ee4c4222f1c422069ef9060934235d8afcc53",
+      "status": "PASS_INDEPENDENT_CACHED_KERNEL_FAN_CHAIN_REPLAY"
+    },
+    {
+      "tag": "face-flips-000",
+      "command": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_face_flips_npz_313_root.py",
+        "--input-npz",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-kernel/kernel-fan-volume-proposal.npz",
+        "--seconds",
+        "30",
+        "--max-operations",
+        "10000",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-000"
+      ],
+      "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-000/report.json",
+      "receipt_sha256": "160105ad9d257ba5129f281924ccc2eee785054652809007c00473590a51dbce",
+      "status": "PASS_FIXED_BOUNDARY_VOLUME_CONNECTIVITY_PROPOSAL"
+    },
+    {
+      "tag": "verify-face-flips-000",
+      "command": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_face_flips_generic_374_root.py",
+        "--input",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-kernel/kernel-fan-volume-proposal.npz",
+        "--proposal",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-000/fixed-boundary-volume-proposal.npz",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-face-flips-000"
+      ],
+      "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/verify-face-flips-000/receipt.json",
+      "receipt_sha256": "adecf4cbaf09b9d609394dbfe82ba1e1b8b803b63e6bebe2676b17fc8ea63ffd",
+      "status": "PASS_INDEPENDENT_SOURCE198_FACE_FLIP_REPLAY"
+    },
+    {
+      "tag": "face-flips-001",
+      "command": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_face_flips_npz_313_root.py",
+        "--input-npz",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-000/fixed-boundary-volume-proposal.npz",
+        "--seconds",
+        "30",
+        "--max-operations",
+        "10000",
+        "--output",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-001"
+      ],
+      "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-001/report.json",
+      "receipt_sha256": "67336ea864b5e14a35d97ff101050f06ada03c3490b40dd5f05885a55688c22d",
+      "status": "NO_VALID_CONNECTIVITY_PROGRESS"
+    }
+  ],
+  "final_candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-000/fixed-boundary-volume-proposal.npz",
+  "final_candidate_sha256": "ae29e16d9efb3ff1d2b310994fd5e1f9e72084e9fe4f9134885fb9dd55370fb3",
+  "quality_before": 1783,
+  "quality_after": 1781,
+  "elapsed_s": 20.620272874832153
+}

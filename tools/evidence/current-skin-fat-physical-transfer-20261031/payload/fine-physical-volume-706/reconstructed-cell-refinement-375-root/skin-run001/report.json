@@ -1,0 +1,61 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_NATIVE_DEFECT_REFINEMENT",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-quality-373-root/face-flips-000/fixed-boundary-volume-proposal.npz",
+  "input_sha256": "ae29e16d9efb3ff1d2b310994fd5e1f9e72084e9fe4f9134885fb9dd55370fb3",
+  "script_sha256": "a6bcbdab187a95ebe58425732ee7c060f93454e88a84e7cb31cc0bb98c57d644",
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_complete_surface_cavities_218_root.py": "81e1128ca6f92693039d9ce53bea62e90b1d99f72bd9b9d997826b7ee2877b9a"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reconstructed-cell-refinement-375-root/skin-run001/fixed-boundary-refined-volume-proposal.npz",
+  "output_sha256": "c7f4d1452fa72e2ebd275388368b4d35c9923a70a6759807175ef150717e1ab8",
+  "attempts": 48,
+  "passing_operations": 1,
+  "bad_before": 1781,
+  "bad_after": 1780,
+  "new_interior_points": 0,
+  "output_cells": 746005,
+  "nonpositive": 0,
+  "oriented_boundary_bit_identical": true,
+  "original_points_bit_identical": true,
+  "operations": [
+    {
+      "old_bad": 8,
+      "new_bad": 7,
+      "old_cells": 8,
+      "new_cells": 7,
+      "interior_points": 0,
+      "exact_F32_positive": true,
+      "exact_oriented_boundary": true,
+      "exact_volume": true,
+      "exact_internal_face_crossings": 0,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-rYYq5/0.001S128O2T9.9999999999999998e-17",
+        "cavity.ele"
+      ],
+      "node": 60352,
+      "old_cell_rows": [
+        713594,
+        713595,
+        713596,
+        727383,
+        727384,
+        727388,
+        727391,
+        733087
+      ],
+      "new_global_point_rows": [],
+      "source_ancestry_rule": "rebind strictly interior nodes against retained material region; mass allocation remains mandatory"
+    }
+  ],
+  "rejections": {
+    "ValueError:F32 nonpositive": 2,
+    "ValueError:no strict total native-defect descent": 37,
+    "ValueError:fixed boundary": 8
+  },
+  "elapsed_s": 4.336422957945615
+}

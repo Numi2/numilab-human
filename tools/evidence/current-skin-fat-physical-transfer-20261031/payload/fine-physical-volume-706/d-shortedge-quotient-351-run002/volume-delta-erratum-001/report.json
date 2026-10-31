@@ -1,0 +1,40 @@
+{
+  "elapsed_s": 4.513246332993731,
+  "mass_mapping": "NOT_RUN",
+  "method": {
+    "boundary_units": "sum of oriented face triple-product integer differences divided by 6*2^447",
+    "coordinate_lattice": "Float32 exact values represented as integers in units of 2^-149 m",
+    "domain": "complete affected drop+keep input cell-star union; all outside cells are unchanged by the pinned quotient replay",
+    "tet_volume_units": "sum of signed 4x4 determinant integer differences divided by 6*2^447"
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "preservation": "No producer file or float delta field was modified; this is a versioned correction/precision receipt for the frozen candidate.",
+  "prior_independent_replay": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/independent-replay-002/report.json",
+    "sha256": "b42ea68bee49a629842c9f9a9d6b69c435a77be52463691e9c1cd2fd26eea975"
+  },
+  "results": [
+    {
+      "affected_parent_cells": 2286,
+      "boundary_equals_tet_delta_exact_integer": true,
+      "exact_boundary_flux_delta_determinant_sum": "80734286463894732111633714461697598531620501792695832686648771101775823426525556862130217248918812534846164913429059469312",
+      "exact_delta_determinant_sum_on_2^-149_lattice": "80734286463894732111633714461697598531620501792695832686648771101775823426525556862130217248918812534846164913429059469312",
+      "exact_volume_delta_m3": 3.7025309634374e-14,
+      "float_delta_difference_m3": 2.7127338740659882e-17,
+      "lattice_scale_exponent": 149,
+      "material": 16,
+      "note": "Producer total-volume delta is preserved as emitted; exact local integer delta is the cancellation-free authoritative geometric difference.",
+      "producer_float_delta_m3": 3.699818229563334e-14
+    }
+  ],
+  "schema": "h706.d307-exact-local-volume-delta-erratum.v1",
+  "source_pins": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/independent-replay-002/report.json": "b42ea68bee49a629842c9f9a9d6b69c435a77be52463691e9c1cd2fd26eea975",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/affected-fat-stars-001.npz": "0f62550ea189dcb0012092cfb544ab9f4bb72bcfd43f0157e01d6304a8743322",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/fat-D-shortedge-quotient-volume-proposal.npz": "93435e624d47f7cfbf253df709871c6b4d170e9ea6b0b9c5867104b1b6f2875d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/report.json": "9d64de9f5b316ff2583b473fb50a6e772f1dd7d4271b118918b83462d9a52328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-002/fat-comp2-comp6-rounded-boundary-points-volume-proposal.npz": "d4906b176f78283f4073f9bd1e8d202a7301b57550a7b1b71fb101e76c4d236f"
+  },
+  "status": "PASS_EXACT_LOCAL_TET_AND_ORIENTED_BOUNDARY_VOLUME_DELTA"
+}

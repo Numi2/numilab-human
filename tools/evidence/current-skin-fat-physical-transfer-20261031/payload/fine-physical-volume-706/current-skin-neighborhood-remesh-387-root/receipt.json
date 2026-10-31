@@ -1,0 +1,50 @@
+{
+  "status": "CURRENT_SKIN_CONNECTED_NEIGHBORHOOD_REMESH_FINISHED",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-377-root/qualification378001/skin-target369/skin-bound-current-I-target-volume-proposal.npz",
+  "input_sha256": "0c49929963c35c904083477bcf4c41f6f79bc160b40d37e1445f2596040ddde9",
+  "preparation_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-neighborhood-remesh-387-root/preparation304/report.json",
+  "preparation_report_sha256": "b78e7b98c50e2194105aa9d9edb5222d66d51bd131f67f124a889f501cd49953",
+  "remesh_report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-neighborhood-remesh-387-root/remesh305/report.json",
+  "remesh_report_sha256": "1e9123239bf12b747fc30c87ef1397f12b0bd34145deb52fda8a57fb2e3f46d2",
+  "passing_components": 1,
+  "remaining_quality_failures": 1675,
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-neighborhood-remesh-387-root/remesh305/connected-fixed-surface-volume-proposal.npz",
+  "candidate_sha256": "0b0aa6e97d1ea2624c8a0a8a177d737260ccf189fccc867f4bc7f85ae183aa38",
+  "elapsed_s": 9.754615749930963,
+  "commands": [
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/prepare_quality_neighbor_cavities_304_root.py",
+      "--input",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-377-root/qualification378001/skin-target369/skin-bound-current-I-target-volume-proposal.npz",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-neighborhood-remesh-387-root/preparation304",
+      "--quality-seeds",
+      "32",
+      "--quality-rings",
+      "2",
+      "--maximum-cells",
+      "4000"
+    ],
+    [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_quality_neighbor_cavities_305_root.py",
+      "--input",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-377-root/qualification378001/skin-target369/skin-bound-current-I-target-volume-proposal.npz",
+      "--output",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-neighborhood-remesh-387-root/remesh305",
+      "--prepared-dir",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-skin-neighborhood-remesh-387-root/preparation304",
+      "--prepared-sha256",
+      "b4dae89d6a8fc719c15882c98583eac7590528559a9d670a91b67f40c4a26e1b",
+      "--seconds",
+      "60",
+      "--component-seconds",
+      "1.5",
+      "--refine"
+    ]
+  ],
+  "producer_sha256": "3e036275ef53dd1240374dcf1e9658cdfc81b3b0a077c7dfff860628b0344872"
+}

@@ -1,0 +1,64 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.000717
+Creating surface mesh ...
+Surface mesh seconds:  0.000154
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [68,110].
+  2nd: [68,112].
+  Reducing collinear tolerance from 179.9 to 179.98 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=3207 zero=3207 expected15=0 other=0 flip23=14561 flip32=13667 flip41=3 flip44=1 invalid_hull_attrs=0
+Boundary recovery seconds:  0.037322
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=1719 zero=0 expected15=1719 other=0 flip23=14561 flip32=13667 flip41=3 flip44=1 invalid_hull_attrs=0
+Exterior tets removal seconds:  0.000286
+Suppressing Steiner points ...
+Steiner suppression seconds:  2e-06
+ATTR_CENSUS stage=after_suppresssteinerpoints total=1713 zero=0 expected15=1713 other=0 flip23=14566 flip32=13675 flip41=4 flip44=1 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=1757 zero=0 expected15=1757 other=0 flip23=15462 flip32=14527 flip41=4 flip44=1 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.00279
+Refining mesh...
+  569 insertions, added 0 points, 1150 tetrahedra in queue.
+  189 insertions, added 0 points, 949 tetrahedra in queue.
+  252 insertions, added 0 points, 683 tetrahedra in queue.
+  336 insertions, added 0 points, 331 tetrahedra in queue.
+  448 insertions, added 2 points, 60 tetrahedra in queue.
+  597 insertions, added 3 points, 138 tetrahedra in queue.
+  796 insertions, added 2 points, 95 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=1908 zero=0 expected15=1908 other=0 flip23=15591 flip32=14640 flip41=4 flip44=1 invalid_hull_attrs=0
+Refinement seconds:  0.024853
+Smoothing vertices...
+ATTR_CENSUS stage=after_smoothing total=1911 zero=0 expected15=1911 other=0 flip23=15966 flip32=15012 flip41=4 flip44=1 invalid_hull_attrs=0
+Mesh smoothing seconds:  0.001053
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=2343 zero=0 expected15=2343 other=0 flip23=172030 flip32=171883 flip41=4 flip44=1 invalid_hull_attrs=0
+Mesh improvement seconds:  0.079409
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.001594
+Total running seconds:  0.148221
+
+Statistics:
+
+  Input points: 422
+  Input facets: 840
+  Input segments: 1260
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 620
+  Mesh tetrahedra: 2343
+  Mesh faces: 5106
+  Mesh faces on exterior boundary: 840
+  Mesh faces on input facets: 840
+  Mesh edges on input segments: 1260
+  Steiner points inside domain: 198
+

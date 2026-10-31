@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "test_exit_code": 0,
+  "test_stderr": "test_collinear_and_duplicate (__main__.Tests.test_collinear_and_duplicate) ... ok\ntest_nonfinite_matches_reject (__main__.Tests.test_nonfinite_matches_reject) ... ok\ntest_oversized_loop_rejected (__main__.Tests.test_oversized_loop_rejected) ... ok\ntest_random_parity (__main__.Tests.test_random_parity) ... ok\ntest_slot_cache_immutable (__main__.Tests.test_slot_cache_immutable) ... ok\ntest_threshold_neighbors (__main__.Tests.test_threshold_neighbors) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.121s\n\nOK\n",
+  "benchmarks": [
+    {
+      "name": "scalar",
+      "seconds_per_loop": [
+        0.027264041686430575,
+        0.027349795796908438,
+        0.02641233750618994
+      ],
+      "values": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "name": "vectorized",
+      "seconds_per_loop": [
+        0.00024992499966174363,
+        0.0002188042039051652,
+        0.00022162920795381068
+      ],
+      "values": [
+        true,
+        true,
+        true
+      ]
+    }
+  ],
+  "median_precheck_speedup": 123.01646492421081,
+  "scope": "offline quality feasibility only, not GPU simulation or integrated throughput",
+  "physical_admission": false,
+  "sources": {
+    "disk_feasibility.py": "6f889b1d631af51bcb186976fc78cddd546f81f2e858e88f982da05941413909",
+    "test_disk_feasibility.py": "fb3511b9c19ca63ac92426a9b2137c8d1c472d62fa0cf5dfc575a043dc5d5788"
+  }
+}

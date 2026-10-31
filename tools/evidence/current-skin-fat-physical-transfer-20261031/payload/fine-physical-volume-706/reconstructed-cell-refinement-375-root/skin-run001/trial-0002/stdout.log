@@ -1,0 +1,38 @@
+Opening cavity.node.
+Opening cavity.ele.
+Opening cavity.face.
+Reconstructing mesh ...
+Mesh reconstruction seconds:  1.4e-05
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=12 zero=0 expected15=12 other=0 flip23=7 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  2.2e-05
+Refining mesh...
+  15 insertions, added 0 points, 0 tetrahedra in queue.
+  4 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=12 zero=0 expected15=12 other=0 flip23=7 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  4.8e-05
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=12 zero=0 expected15=12 other=0 flip23=11 flip32=10 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  1.7e-05
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000213
+Total running seconds:  0.000332
+
+Statistics:
+
+  Input points: 12
+  Input tetrahedra: 11
+  Input triangles: 20
+
+  Mesh points: 12
+  Mesh tetrahedra: 12
+  Mesh faces: 34
+  Mesh faces on exterior boundary: 20
+  Mesh faces on input facets: 20
+  Mesh edges on input segments: 26
+

@@ -1,0 +1,41 @@
+{
+  "status": "PASS_INDEPENDENT_INFERRED_INTERIOR_COORDINATE_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-edge/pass-005/fixed-boundary-volume-proposal.npz",
+  "input_sha256": "f9006d3fda6374289103f6df51a161fc24dac2690923c0e2aff4f2423405c8db",
+  "proposal": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-condition/conditioned-volume-proposal.npz",
+  "proposal_sha256": "4aba651fcbd3905bca6a0c0b7d735bb704a97ad6e4df0ed0a61717d960c76e97",
+  "report_sha256": "bc616977678cd203003452393bc01a4f919741c74dd5c553beca734295872dba",
+  "verifier_sha256": "e9c0956e6705bc027abe9eeea4c65f40873d506f2c2e50bc0b6b0b38d2c3b2cd",
+  "exact_per_star_F32_volume_and_sign": true,
+  "all_registered_surface_identity_and_boundary_points_fixed": true,
+  "nonpoint_npz_members_identical": true,
+  "complete_oriented_boundary_sha256": "5f6e53b9b287d878e6bbabd69ece283bf177b0c5452cc2109e62122aca2701b5",
+  "boundary_face_count": 400584,
+  "unique_changed_inferred_nodes": 5,
+  "registered_identity_counts": {
+    "O": 76669,
+    "I": 125368,
+    "interior_no_surface_ancestry": 488
+  },
+  "baseline_quality": {
+    "cells": 745964,
+    "normalized_det_failures": 1805,
+    "absolute_volume_failures": 112,
+    "union_failures": 1816,
+    "minimum_normalized_det": 5.418069994163561e-12,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "final_quality": {
+    "cells": 745964,
+    "normalized_det_failures": 1798,
+    "absolute_volume_failures": 112,
+    "union_failures": 1809,
+    "minimum_normalized_det": 5.418069994163561e-12,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "no_formerly_good_cell_regressed": true,
+  "operation_incident_row_note": "producer incident_cell_rows are local star rows; replay independently reconstructs global incidence from each point identity",
+  "elapsed_s": 6.01224424992688
+}

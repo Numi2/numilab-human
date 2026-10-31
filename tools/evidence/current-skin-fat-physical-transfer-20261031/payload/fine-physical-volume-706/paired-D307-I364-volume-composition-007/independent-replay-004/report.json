@@ -1,0 +1,48 @@
+{
+  "elapsed_s": 4.249377012252808,
+  "independent_replay": {
+    "D_transformed_oriented_boundary_matches_composition": true,
+    "I_transformed_oriented_boundary_matches_composition": true,
+    "base_d4906_cells": 854589,
+    "base_d4906_points": 253199,
+    "boundary_missing_or_extra_or_reversed": 0,
+    "boundary_orientation_comparison": "canonical oriented triangle key modulo cyclic rotation; reversed winding distinct",
+    "candidate_declared_boundary_exact": true,
+    "candidate_oriented_boundary_faces": 485576,
+    "candidate_output_cells": 846002,
+    "candidate_output_points": 248466,
+    "candidate_source_cells": 846002,
+    "expected_retained_source_cells": 846002,
+    "material_mismatches": 0,
+    "point_f32_byte_mismatches": 0,
+    "tet_connectivity_mismatches": 0
+  },
+  "input_pins": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/affected-fat-stars-001.npz": "0f62550ea189dcb0012092cfb544ab9f4bb72bcfd43f0157e01d6304a8743322",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/fat-D-shortedge-quotient-volume-proposal.npz": "93435e624d47f7cfbf253df709871c6b4d170e9ea6b0b9c5867104b1b6f2875d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/report.json": "9d64de9f5b316ff2583b473fb50a6e772f1dd7d4271b118918b83462d9a52328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-002/fat-comp2-comp6-rounded-boundary-points-volume-proposal.npz": "d4906b176f78283f4073f9bd1e8d202a7301b57550a7b1b71fb101e76c4d236f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-D307-I364-volume-composition-007/composition-report.json": "946cdfe6549551a984c603b91d0351d1fcb9fa647deeb7996c6a8568b7e1a002",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-D307-I364-volume-composition-007/fat-i364-d307-composed.npz": "1f35492c40ff80f2d4edfecb235a1339c9801fd76af4b3648becc80fea0a083f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-364-root/run001/fat-coupled-I-quotient-volume-proposal.npz": "d273c17f3e93d066ca4b8da8ca7750ad888a484f3803629ac894cb1f0bb85a47",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-I-interface-364-root/run001/report.json": "b20a0e8866ad5e328aef7ace009998ba2c564cde25c4c23d888d883212d45e21",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inner-interface-quotient-352-root/run001/fat-coupled-I-quotient-volume-proposal.npz": "39222da11b5e32faa3c755912dab183a0529b6112092e99aae71be153280541d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/paired-inner-interface-quotient-352-root/run001/report.json": "a221353bcb8b9923813023bec07644ac60d120d61fb1f756ee26ab8b7fddad31"
+  },
+  "limitations": [
+    "The current full target boundary remains incomplete; this proves a composed partial-volume branch only.",
+    "Native quality and mass mapping are not claimed by this replay."
+  ],
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "operation_disjointness": {
+    "D307_affected_base_cell_rows": 2286,
+    "I352_I364_endpoint_rows": 3012,
+    "I352_I364_full_star_cells": 34415,
+    "full_star_cell_overlap": 0,
+    "status": "PASS_DISJOINT"
+  },
+  "physical_admission": false,
+  "schema": "h706.d307-i364-composition-independent-replay.v1",
+  "status": "PASS_INDEPENDENT_EXACT_CELL_POINT_MATERIAL_AND_ORIENTED_BOUNDARY_REPLAY"
+}

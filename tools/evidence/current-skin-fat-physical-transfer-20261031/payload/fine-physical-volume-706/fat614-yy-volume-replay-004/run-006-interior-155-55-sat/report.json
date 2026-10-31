@@ -1,0 +1,113 @@
+{
+  "schema": "numi.fat614.inferred-interior-point-exact-star-and-sat.v1",
+  "status": "PASS_LOCAL_INTERIOR_STAR_CHECKS",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping_status": "NOT_RUN",
+  "parent_candidate_sha256": "d4906b176f78283f4073f9bd1e8d202a7301b57550a7b1b71fb101e76c4d236f",
+  "D_target_sha256": "4ce01a4bd397e7cf2b3c469ee33a3937d9173ff7d585a2687a1a09cf98377ab2",
+  "search_receipt_sha256": "54472a6fbf94ff6e95c19316d1ed04e3743ab9260b401c8593ee5fecabd58a90",
+  "pending_source_cavities_excluded": 9645,
+  "components": {
+    "7": {
+      "component_id": 7,
+      "tetgen_node_id": 155,
+      "global_appended_point_row": 253208,
+      "old_point_f32": [
+        0.15756773948669434,
+        -0.3199242651462555,
+        0.1103954017162323
+      ],
+      "new_point_f32": [
+        0.15756773948669434,
+        -0.3199242651462555,
+        0.1103954166173935
+      ],
+      "ulp_offsets": [
+        0,
+        0,
+        2
+      ],
+      "displacement_m": 1.4901161193847656e-08,
+      "star_tets": 8,
+      "star_exact_positive_after": 8,
+      "component_tets": 292,
+      "component_exact_nonpositive_before": 4,
+      "component_exact_nonpositive_after": 1,
+      "component_exact_positive_after": 291,
+      "component_native_failures_before": 92,
+      "component_native_failures_after": 92,
+      "formerly_good_cells_degraded": 0,
+      "raw_tetgen_f64_nonpositive": 0,
+      "star_boundary_unchanged": true,
+      "component_boundary_unchanged": true,
+      "exact_star_volume_equals_boundary_flux": true,
+      "exact_component_volume_equals_boundary_flux": true,
+      "local_component_sat": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 292,
+        "exact_point_cache_rows": 33
+      },
+      "d4906_retained_sat": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 244,
+        "exact_point_cache_rows": 51
+      },
+      "local_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-006-interior-155-55-sat/component-0007-interior-corrected.npz",
+      "local_candidate_sha256": "d248deba707badd1a83b2001d77311096ef795a6ef2abf2c8250fcfe31bb9326"
+    },
+    "10": {
+      "component_id": 10,
+      "tetgen_node_id": 55,
+      "global_appended_point_row": 253208,
+      "old_point_f32": [
+        -0.08999139070510864,
+        -0.1371743232011795,
+        0.11208843439817429
+      ],
+      "new_point_f32": [
+        -0.08999139815568924,
+        -0.1371743232011795,
+        0.11208843439817429
+      ],
+      "ulp_offsets": [
+        -1,
+        0,
+        0
+      ],
+      "displacement_m": 7.450580596923828e-09,
+      "star_tets": 18,
+      "star_exact_positive_after": 18,
+      "component_tets": 110,
+      "component_exact_nonpositive_before": 2,
+      "component_exact_nonpositive_after": 0,
+      "component_exact_positive_after": 110,
+      "component_native_failures_before": 40,
+      "component_native_failures_after": 40,
+      "formerly_good_cells_degraded": 0,
+      "raw_tetgen_f64_nonpositive": 0,
+      "star_boundary_unchanged": true,
+      "component_boundary_unchanged": true,
+      "exact_star_volume_equals_boundary_flux": true,
+      "exact_component_volume_equals_boundary_flux": true,
+      "local_component_sat": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 1159,
+        "exact_point_cache_rows": 50
+      },
+      "d4906_retained_sat": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 2502,
+        "exact_point_cache_rows": 119
+      },
+      "local_candidate_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-006-interior-155-55-sat/component-0010-interior-corrected.npz",
+      "local_candidate_sha256": "7c14d90dc0270ce94c85acb585a2b82a9626993456249ba0848e5a1ee32499f6"
+    }
+  },
+  "elapsed_s": 2.1403113338164985,
+  "comp7_boundary_only_nonpositive_remains": 1
+}

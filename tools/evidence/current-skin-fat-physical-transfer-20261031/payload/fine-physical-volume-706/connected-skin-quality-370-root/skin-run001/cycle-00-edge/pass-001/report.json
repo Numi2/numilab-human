@@ -1,0 +1,98 @@
+{
+  "status": "PASS_FIXED_BOUNDARY_POLYGON_EDGE_FLIP_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-skin-quality-370-root/skin-run001/cycle-00-edge/pass-000/fixed-boundary-volume-proposal.npz",
+  "input_npz_sha256": "0bc454250403ca082f8047b7b0f77050e4d45b0ed10e9ef126e192aa3afade0b",
+  "script_sha256": "acf252585d427214b2c93b78a28fc9d27e3096b33080855b570458296ca2bff3",
+  "cavity_predicate_sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+  "nodes_bit_identical": true,
+  "oriented_boundary_exactly_unchanged": true,
+  "exact_F32_volume_unchanged": true,
+  "material_preserved": true,
+  "eligible_stars": 5394,
+  "tested_stars": 5394,
+  "passing_operations": 3,
+  "rejections": {
+    "open_or_non_simple_edge_link": 2359,
+    "quality_no_progress": 1072,
+    "no_positive_polygon_triangulation": 1925,
+    "oriented_boundary": 12,
+    "conflict": 19,
+    "new_diagonal_exists_outside": 4
+  },
+  "input_cells": 745963,
+  "output_cells": 745963,
+  "bad_cells_before": 1823,
+  "bad_cells_after": 1820,
+  "minimum_normalized_det_before": 5.418069994163561e-12,
+  "minimum_normalized_det_after": 5.418069994163561e-12,
+  "minimum_volume_before_m3": 9.815876602295929e-22,
+  "minimum_volume_after_m3": 9.815876602295929e-22,
+  "elapsed_s": 3.0232091250363737,
+  "operations": [
+    {
+      "old_rows": [
+        548638,
+        548639,
+        745929,
+        745931
+      ],
+      "removed_edge": [
+        13218,
+        99510
+      ],
+      "ring": [
+        13576,
+        99509,
+        97403,
+        210242
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        718458,
+        735583,
+        745943,
+        745945
+      ],
+      "removed_edge": [
+        59035,
+        209077
+      ],
+      "ring": [
+        59036,
+        59076,
+        209981,
+        209652
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    },
+    {
+      "old_rows": [
+        672090,
+        672103,
+        745938,
+        745940
+      ],
+      "removed_edge": [
+        151520,
+        206456
+      ],
+      "ring": [
+        151234,
+        151519,
+        205283,
+        209667
+      ],
+      "new_cell_count": 4,
+      "before_bad": 1,
+      "after_bad": 0
+    }
+  ]
+}

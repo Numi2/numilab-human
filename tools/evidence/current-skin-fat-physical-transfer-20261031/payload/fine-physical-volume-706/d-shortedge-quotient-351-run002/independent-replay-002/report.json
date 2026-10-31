@@ -1,0 +1,112 @@
+{
+  "affected_star_replay": {
+    "affected_cell_count": 2286,
+    "affected_point_count": 2638,
+    "operation_star_overlap_cells": 0,
+    "per_operation_drop_keep_union_CSR_matches_d4906_incidence": true,
+    "status": "PASS",
+    "transfer_touched_cell_rows_match": true
+  },
+  "counts_and_metrics": {
+    "affected_union_cells": 2286,
+    "affected_union_points": 2638,
+    "contracted_node_count": 307,
+    "formerly_good_retained_cell_regressions": 0,
+    "input_boundary_faces": 489270,
+    "input_cells": 854589,
+    "input_native_quality_failures": 36494,
+    "input_nodes": 253199,
+    "operation_count": 307,
+    "output_boundary_faces": 488656,
+    "output_cells": 854105,
+    "output_exact_integer_positive_cells": 854105,
+    "output_minimum_cell_volume_m3": 2.757268708510092e-25,
+    "output_minimum_normalized_det": 7.553724406590747e-16,
+    "output_minimum_signed_det6_m3": 1.6543612251060553e-24,
+    "output_native_quality_failures": 36079,
+    "output_nodes": 250006,
+    "producer_boundary_equals_transformed_source": true,
+    "producer_claimed_input_output_cells": [
+      854589,
+      854105
+    ],
+    "producer_claimed_input_output_nodes": [
+      253199,
+      250006
+    ],
+    "producer_claimed_input_output_quality_failures": [
+      36494,
+      36079
+    ],
+    "retired_degenerate_cells": 484,
+    "source_boundary_to_output_boundary_changed_oriented_faces": -614
+  },
+  "elapsed_s": 6.7182736250106245,
+  "limitations": [
+    "D-only quotient of d4906; the full paired I/D/cavity boundary is not yet composed.",
+    "Mass mapping, native installation, native runtime, and physical admission were not run."
+  ],
+  "mass_mapping": "NOT_RUN",
+  "material_volume_and_boundary_flux": [
+    {
+      "absolute_consistency_tolerance_m3": 2e-14,
+      "boundary_delta_m3": 3.702593787124897e-14,
+      "declared_transfer_delta_m3": 3.699818229563334e-14,
+      "input_oriented_boundary_flux_m3": 0.011451968111307331,
+      "input_tet_volume_m3": 0.011451968111307331,
+      "material": 16,
+      "output_oriented_boundary_flux_m3": 0.011451968111344357,
+      "output_tet_volume_m3": 0.011451968111344357,
+      "tet_delta_m3": 3.702593787124897e-14
+    }
+  ],
+  "native_steps": 0,
+  "operation_crosswalk": {
+    "coordinate_crosswalk_exact_F32": true,
+    "count": 307,
+    "distinct_drop_nodes": 307,
+    "drop_keep_rows_approved": true,
+    "surface_ledger_matches_volume_ledger": true
+  },
+  "oriented_boundary_replay": {
+    "input_boundary_array_matches_input_tets": true,
+    "input_boundary_face_count": 489270,
+    "output_boundary_array_matches_output_tets": true,
+    "output_boundary_equals_transformed_input_boundary": true,
+    "output_boundary_face_count": 488656
+  },
+  "physical_admission": false,
+  "quality_replay": {
+    "all_output_exact_F32_integer_positive": true,
+    "all_output_float64_widened_F32_positive": true,
+    "formerly_good_retained_cell_regressions": 0,
+    "metric": "signed_det6>0, det6/6>1e-18 m3, normalized_det6>=1e-5",
+    "minimum_cell_volume_m3": 2.757268708510092e-25,
+    "minimum_normalized_det": 7.553724406590747e-16,
+    "native_quality_failures_before_after": [
+      36494,
+      36079
+    ]
+  },
+  "row_map_replay": {
+    "all_output_points_exact_input_rows": true,
+    "all_output_tets_exact_point_quotient_of_input_rows": true,
+    "material_rows_preserved": true,
+    "output_cell_inverse_bijective": true,
+    "output_node_inverse_bijective": true,
+    "retired_rows_exactly_degenerate_tets": true
+  },
+  "schema": "h706.d307-independent-volume-quotient-replay.v1",
+  "source_pins": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/identity-seed-D.npz": "7cab78eefc85112eda3c9f13df9839ecaadc58d82ac00f20b828d11d0ca8b535",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/surface-run001/accepted-operations.jsonl": "4e735a7d9e573dfbf37ff6119dd36a4dad2aae1e9da2ab6bc26d28d87901b23e",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/surface-run001/report.json": "b549dd67254f0e44ae69c28f69545c5847235ca12dbdf69b98f7d3295d77156b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/affected-fat-stars-001.json": "c4adfd86854da380c1bfcf123666f1e2e4a0b583b11db5f006ef175f4d2bfa5b",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/affected-fat-stars-001.npz": "0f62550ea189dcb0012092cfb544ab9f4bb72bcfd43f0157e01d6304a8743322",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/fat-D-shortedge-quotient-volume-proposal.npz": "93435e624d47f7cfbf253df709871c6b4d170e9ea6b0b9c5867104b1b6f2875d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-351-run002/volume-run003/report.json": "9d64de9f5b316ff2583b473fb50a6e772f1dd7d4271b118918b83462d9a52328",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-002/fat-comp2-comp6-rounded-boundary-points-volume-proposal.npz": "d4906b176f78283f4073f9bd1e8d202a7301b57550a7b1b71fb101e76c4d236f",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-002/report.json": "05562cfe70678bc591252e60540006b5294b8a48a3bbdca6ee0a99ea055a8550"
+  },
+  "status": "PASS_INDEPENDENT_D307_VOLUME_MAP_BOUNDARY_QUALITY_MATERIAL_REPLAY"
+}
