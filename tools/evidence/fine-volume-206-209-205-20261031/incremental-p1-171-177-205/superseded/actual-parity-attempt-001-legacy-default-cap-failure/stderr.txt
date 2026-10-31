@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental-p1-171-177-205-root/export_changed_p1_rows_205.py", line 591, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental-p1-171-177-205-root/export_changed_p1_rows_205.py", line 579, in main
+    receipt = regenerate_changed_rows(
+        base_receipt_path=args.base_171_receipt, candidate_node_path=args.candidate_node,
+    ...<3 lines>...
+        projection_tolerance_m=args.projection_tolerance_m,
+        full86_tolerance=args.full86_tolerance)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental-p1-171-177-205-root/export_changed_p1_rows_205.py", line 243, in regenerate_changed_rows
+    child = native.read_tetgen_vectorized(candidate_node_path, candidate_ele_path)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/downstream-004-same-material-current-reference-229/native-domain-217-source-007/export_child_semantic_labels_217.py", line 352, in read_tetgen_vectorized
+    raise ValueError("child TetGen node header invalid or out of bounds")
+ValueError: child TetGen node header invalid or out of bounds

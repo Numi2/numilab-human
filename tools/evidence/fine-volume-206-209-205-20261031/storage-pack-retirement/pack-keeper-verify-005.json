@@ -1,0 +1,226 @@
+{
+  "active_git_pack_processes_after": [],
+  "active_git_pack_processes_before": [],
+  "alternates": null,
+  "base_index_audit_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-spatial-native-install-723-carrier-anchor-consumer/native-build-010-resource-inventory/pack-index-audit-002.json",
+  "base_index_audit_sha256": "71bd8645f93c0628c311914337a1ff95cbc9c63801c0fe59a6cc4424b3e9793e",
+  "candidate_allocated_bytes_upper_bound": 7062077440,
+  "candidate_pack_bytes": 7062074710,
+  "candidate_stems": [
+    "1e94ab8032e4ffe06b038deef5d025d53a00d8d8",
+    "2db540257b27495e294cf111d17c7ddcf7ac2f92",
+    "41be6f73c546b33e618190a829b65be382430691",
+    "d46809bd284f729034ef7e293490684c045976ec",
+    "f17078d41b3c5f3e39c33e14bacb6a7437a1f9f8"
+  ],
+  "created_epoch": 1793406207.972768,
+  "disk_after_verification": "Filesystem   1024-blocks      Used Available Capacity iused    ifree %iused  Mounted on\n/dev/disk3s5   239311296 182664696   8942772    96% 1054706 89427720    1%   /System/Volumes/Data",
+  "disk_before": "Filesystem   1024-blocks      Used Available Capacity iused    ifree %iused  Mounted on\n/dev/disk3s5   239311296 182663512   8943956    96% 1054704 89439560    1%   /System/Volumes/Data",
+  "duplicate_group_object_count": 13629,
+  "duplicate_group_oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+  "index_snapshots_stable": true,
+  "keeper_isolated_verification": {
+    "all_indexed_objects_independently_sha1_recomputed": true,
+    "alternates_absent": true,
+    "canonical_payload_stream_sha256": "f9e2e069e076e413dca1866f722cebc2b7cbd28d1b13329fa0dfe3fe91c806fb",
+    "expected_index_oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+    "git_verify_pack_log_sha256": "f1be15adc9474bfe250a329369762d823a4bb32985861a9d5287d29861dad5d9",
+    "git_verify_pack_object_entries": 13629,
+    "git_verify_pack_returncode": 0,
+    "git_verify_pack_stderr": "",
+    "isolated_object_directory_entries": [
+      "pack-571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa.idx",
+      "pack-571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa.pack"
+    ],
+    "isolated_repo": "/var/folders/dw/10_cc09x7ld9g0s2yz_7gtdc0000gn/T/numi-human-pack-keeper-verify-8lttenbu/repo",
+    "lazy_fetch_disabled": true,
+    "object_count": 13629,
+    "status": "PASS_ISOLATED_KEEPER_CANONICAL_OBJECT_HASHES",
+    "verified_oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c"
+  },
+  "keeper_stem": "571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa",
+  "locks_keep_bitmap": [],
+  "midx": {
+    "allocated_bytes": 671744,
+    "bytes": 668636,
+    "hash_version": 1,
+    "mtime_ns": 1793266645715468478,
+    "pack_count": 5,
+    "path": "/Users/numi/numilab-human/.git/objects/pack/multi-pack-index",
+    "pnam_names": [
+      "pack-2d38710941715e3815e091ecea0a9e4cf28a3ac8.idx",
+      "pack-51b7f0082683500a861ca50845b712b5cccebff9.idx",
+      "pack-75f992094dd3af3682270fa905908f1044507241.idx",
+      "pack-912b4f7dfd7253981878bd7c1cf90f07ffd9b6ac.idx",
+      "pack-af54708be6b8b51f06b5ea33a52f9d3a456cba02.idx"
+    ],
+    "pnam_trailing_padding_bytes": 2,
+    "present": true,
+    "sha256": "95ecb8ec80c20fb08616a5be697ea60bf72a62d7a3d3b3fd8e09e0ff72e31303",
+    "version": 1
+  },
+  "midx_references_duplicate_group": false,
+  "note": "All five candidate pack files passed whole-pack SHA-1 trailer verification and have recorded SHA-256. The keeper passed git verify-pack plus isolated canonical object SHA-1 recomputation. Index object-ID set equality does not replace post-retirement Git/readability checks.",
+  "object_format": "sha1",
+  "physical_retirement_performed": false,
+  "refs_after": {
+    "count": 147,
+    "head_oid": "fdab86eb28ae597e4c50e0a3b8e829a6c0e89cec",
+    "head_ref": "refs/heads/main",
+    "sha256": "b726e29288983fac92bf03828a7748f02eb16b4e9c1f8bbf906e3b5be0c66203"
+  },
+  "refs_before": {
+    "count": 147,
+    "head_oid": "fdab86eb28ae597e4c50e0a3b8e829a6c0e89cec",
+    "head_ref": "refs/heads/main",
+    "sha256": "b726e29288983fac92bf03828a7748f02eb16b4e9c1f8bbf906e3b5be0c66203"
+  },
+  "refs_stable": true,
+  "repo": "/Users/numi/numilab-human",
+  "schema": "numi.human.duplicate-pack-keeper-proof.v1",
+  "scope": "Verified newest keeper pack in isolation and compared candidate group indexes; no Git files mutated, no fetch, no repack, no loose-object scan.",
+  "six_pack_hashes": [
+    {
+      "allocated_bytes": 1412415488,
+      "bytes": 1412414942,
+      "dev": 16777231,
+      "index_sha256": "1445fa2e9a34adaf56adde3d97607be6ff5d1e1f6bb86ba8c5616c447eee181b",
+      "ino": 5778702,
+      "mtime_ns": 1793385104242043124,
+      "nlink": 1,
+      "object_count": 13629,
+      "oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+      "path": "/Users/numi/numilab-human/.git/objects/pack/pack-1e94ab8032e4ffe06b038deef5d025d53a00d8d8.pack",
+      "role": "candidate",
+      "sha1_pack_checksum": "1e94ab8032e4ffe06b038deef5d025d53a00d8d8",
+      "sha256": "8d72bdbaab14af7731728ac9f3c20e8398b394e757be0a9eed00ae9f726714db",
+      "stem": "1e94ab8032e4ffe06b038deef5d025d53a00d8d8",
+      "trailer_sha1": "1e94ab8032e4ffe06b038deef5d025d53a00d8d8"
+    },
+    {
+      "allocated_bytes": 1412415488,
+      "bytes": 1412414942,
+      "dev": 16777231,
+      "index_sha256": "2aab3e39513e6cd277930f67322f828cf9f619d2945eaec63a588585bc061ee5",
+      "ino": 5691106,
+      "mtime_ns": 1793306303259892187,
+      "nlink": 1,
+      "object_count": 13629,
+      "oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+      "path": "/Users/numi/numilab-human/.git/objects/pack/pack-2db540257b27495e294cf111d17c7ddcf7ac2f92.pack",
+      "role": "candidate",
+      "sha1_pack_checksum": "2db540257b27495e294cf111d17c7ddcf7ac2f92",
+      "sha256": "02e2c7a3ecbd3b82adb780430c028b8ccf0c1b5dc9ca5cc56788905eef48e2dc",
+      "stem": "2db540257b27495e294cf111d17c7ddcf7ac2f92",
+      "trailer_sha1": "2db540257b27495e294cf111d17c7ddcf7ac2f92"
+    },
+    {
+      "allocated_bytes": 1412415488,
+      "bytes": 1412414942,
+      "dev": 16777231,
+      "index_sha256": "1a3abe035229cc97d037ac3aa3d14f7372cd1305b20d79a47161b36917e5b5e0",
+      "ino": 5747872,
+      "mtime_ns": 1793369732920713030,
+      "nlink": 1,
+      "object_count": 13629,
+      "oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+      "path": "/Users/numi/numilab-human/.git/objects/pack/pack-41be6f73c546b33e618190a829b65be382430691.pack",
+      "role": "candidate",
+      "sha1_pack_checksum": "41be6f73c546b33e618190a829b65be382430691",
+      "sha256": "6fc0e590b38211f8e8e396e3ed31cab6a743e00106d675175d786da182f92e79",
+      "stem": "41be6f73c546b33e618190a829b65be382430691",
+      "trailer_sha1": "41be6f73c546b33e618190a829b65be382430691"
+    },
+    {
+      "allocated_bytes": 1412415488,
+      "bytes": 1412414942,
+      "dev": 16777231,
+      "index_sha256": "4403787b30b1a6845fbb4442a504028ec2bc87988393418b48cb1601aa04b311",
+      "ino": 5820698,
+      "mtime_ns": 1793402854797089795,
+      "nlink": 1,
+      "object_count": 13629,
+      "oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+      "path": "/Users/numi/numilab-human/.git/objects/pack/pack-571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa.pack",
+      "role": "keeper",
+      "sha1_pack_checksum": "571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa",
+      "sha256": "c7a7be31ce2a98c3d5cfd071b1a0e6ab01643adc0faf433e8fb0219580aaeae6",
+      "stem": "571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa",
+      "trailer_sha1": "571a134d43ff1cffedc14f7e864aeb6cfd6bb2fa"
+    },
+    {
+      "allocated_bytes": 1412415488,
+      "bytes": 1412414942,
+      "dev": 16777231,
+      "index_sha256": "6f0e264a4adddde92a032f9a36950e19620165ea89c9e79cebf7beb46678c186",
+      "ino": 5755390,
+      "mtime_ns": 1793377160728235653,
+      "nlink": 1,
+      "object_count": 13629,
+      "oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+      "path": "/Users/numi/numilab-human/.git/objects/pack/pack-d46809bd284f729034ef7e293490684c045976ec.pack",
+      "role": "candidate",
+      "sha1_pack_checksum": "d46809bd284f729034ef7e293490684c045976ec",
+      "sha256": "420378938cae3c4765ae3a0d610809951a4616d2f1d2532f015778da9cefe232",
+      "stem": "d46809bd284f729034ef7e293490684c045976ec",
+      "trailer_sha1": "d46809bd284f729034ef7e293490684c045976ec"
+    },
+    {
+      "allocated_bytes": 1412415488,
+      "bytes": 1412414942,
+      "dev": 16777231,
+      "index_sha256": "25ae946832c7ad1efffb5dfa750945b11fba20126a735c94b9214cf7f9e77f2a",
+      "ino": 5780589,
+      "mtime_ns": 1793385330840908272,
+      "nlink": 1,
+      "object_count": 13629,
+      "oid_set_sha256": "2af8dbee2f980bf983839d280f72e1e565bfa4b392b296540b71eb6e1397554c",
+      "path": "/Users/numi/numilab-human/.git/objects/pack/pack-f17078d41b3c5f3e39c33e14bacb6a7437a1f9f8.pack",
+      "role": "candidate",
+      "sha1_pack_checksum": "f17078d41b3c5f3e39c33e14bacb6a7437a1f9f8",
+      "sha256": "1941ec45db7e320bf69bfa7c83db2b4075d1735dbb0608e8e98eb043c99de182",
+      "stem": "f17078d41b3c5f3e39c33e14bacb6a7437a1f9f8",
+      "trailer_sha1": "f17078d41b3c5f3e39c33e14bacb6a7437a1f9f8"
+    }
+  ],
+  "status": "PASS_KEEPER_AND_CANDIDATE_PACK_INTEGRITY_PREFLIGHT",
+  "target_open_handles_after": "none",
+  "target_open_handles_before": "none",
+  "worktree_snapshot": {
+    "count": 5,
+    "raw_sha256": "a4ba4fa1a2f13d2db34a79d0aa8edc638b56b92e7c9c2c3a6e11d39697b18272",
+    "worktrees": [
+      {
+        "common_dir": "/Users/numi/numilab-human/.git",
+        "head_oid": "fdab86eb28ae597e4c50e0a3b8e829a6c0e89cec",
+        "head_ref": "refs/heads/main",
+        "path": "/Users/numi/numilab-human"
+      },
+      {
+        "common_dir": "/Users/numi/numilab-human/.git",
+        "head_oid": "b0bd2fd4fa12c9bb9ea5d8f57d5b3470013dca8b",
+        "head_ref": "",
+        "path": "/Users/n/numi-human-left-pq-publication-1344"
+      },
+      {
+        "common_dir": "/Users/numi/numilab-human/.git",
+        "head_oid": "eeaf5b437b344b4dffffdff46a91f1ab33a085c8",
+        "head_ref": "refs/heads/codex/skin-partial-seeds-resume-1267",
+        "path": "/Users/n/numi-human-self-separation-partial-resume-1267"
+      },
+      {
+        "common_dir": "/Users/numi/numilab-human/.git",
+        "head_oid": "2d6aedd424035372058b1be79dc57a7e27348b78",
+        "head_ref": "refs/heads/codex/upper-limb-hand-scope",
+        "path": "/Users/numi/numi-human-anatomy-finish-1378"
+      },
+      {
+        "common_dir": "/Users/numi/numilab-human/.git",
+        "head_oid": "f9d50d0ecaa3394f19f056aa0f28eb52a4e2770e",
+        "head_ref": "",
+        "path": "/Users/numi/numi-human-balance-20261013/numilab-human"
+      }
+    ]
+  },
+  "worktrees_stable": true
+}

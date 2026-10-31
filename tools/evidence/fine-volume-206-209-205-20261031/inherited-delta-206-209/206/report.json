@@ -1,0 +1,339 @@
+{
+  "direct_restored_vs_new_audit": {
+    "aabb_candidate_pairs": 27,
+    "actual_new_face_count": 212,
+    "audit_pairs": [
+      {
+        "aabb_candidate_pairs": 2,
+        "allowed_shared_feature_pairs": 2,
+        "kind": "same-role",
+        "new_faces": 20,
+        "pair_count": 0,
+        "restored_faces": 147,
+        "role": "O"
+      },
+      {
+        "aabb_candidate_pairs": 7,
+        "allowed_shared_feature_pairs": 6,
+        "kind": "same-role",
+        "new_faces": 23,
+        "pair_count": 0,
+        "restored_faces": 261,
+        "role": "I"
+      },
+      {
+        "aabb_candidate_pairs": 18,
+        "allowed_shared_feature_pairs": 0,
+        "kind": "same-role",
+        "new_faces": 169,
+        "pair_count": 0,
+        "restored_faces": 109,
+        "role": "D"
+      },
+      {
+        "aabb_candidate_pairs": 0,
+        "kind": "cross-role",
+        "restored_A_vs_new_B_pairs": 0,
+        "restored_B_vs_new_A_pairs": 0,
+        "roles": [
+          "O",
+          "I"
+        ]
+      },
+      {
+        "aabb_candidate_pairs": 0,
+        "kind": "cross-role",
+        "restored_A_vs_new_B_pairs": 0,
+        "restored_B_vs_new_A_pairs": 0,
+        "roles": [
+          "O",
+          "D"
+        ]
+      },
+      {
+        "aabb_candidate_pairs": 0,
+        "kind": "cross-role",
+        "restored_A_vs_new_B_pairs": 0,
+        "restored_B_vs_new_A_pairs": 0,
+        "roles": [
+          "I",
+          "D"
+        ]
+      }
+    ],
+    "intersecting_pair_count": 0,
+    "predicate_owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+    "predicate_owner_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "record_domain_map_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/surface-volume-quotient-206-root/inherited-delta-audit-009/restored-new-record-domain-map.npz",
+    "record_domain_map_sha256": "258ea4fe1b7bfb1ae29d06faedf4b9cdb5e81a1411aa4cf36b45219011b62692",
+    "restored_by_role": {
+      "D": {
+        "actual_new_vs_original": 169,
+        "restored_original_absent_collapse002": 109
+      },
+      "I": {
+        "actual_new_vs_original": 23,
+        "restored_original_absent_collapse002": 261
+      },
+      "O": {
+        "actual_new_vs_original": 20,
+        "restored_original_absent_collapse002": 147
+      }
+    },
+    "restored_face_count": 517,
+    "role_code_order": [
+      "O",
+      "I",
+      "D"
+    ],
+    "shared_I_source_vertex_crosswalk_verified_exact": true,
+    "shared_I_source_vertex_seams": 125368,
+    "witness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/surface-volume-quotient-206-root/inherited-delta-audit-009/restored-original-vs-actual-new-exact-pairs.npy",
+    "witness_sha256": "55737cf1229ed3c3f82eb23b50874fb56749277d1c3a190bccfa1f3a991a57de",
+    "witness_shape": [
+      0,
+      2
+    ]
+  },
+  "elapsed_seconds": 14.205147981643677,
+  "limitations": [
+    "Source-only surface identity and inherited exact-intersection scope; no mass, native execution, or physical admission.",
+    "Old-old pairs inherit geometry scope 713. New/current-vs-new pairs inherit collapse-batch-002 exact joint changed-vs-complete O/I/D/wall/all185 audit. Original faces restored by the volume quotient and absent from collapse-batch-002 are directly queried against actual new faces below.",
+    "713 exact-gates-010 all185 subsection is explicitly excluded due mixed units; all185 inheritance uses exact-gates-014 F32/F64 common-lattice proof."
+  ],
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "references": {
+    "collapse002_report": {
+      "all185_records": 938272,
+      "changed_query_records": 251,
+      "joint_changed_pair_count": 0,
+      "joint_changed_self_pairs": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-002/report.json",
+      "sha256": "094919ba53d1a4fb4c01dccc170dc12a284ee18a146d82b4667f642593625bdc",
+      "status": "PASS_BOUNDED_EXACT_SHORT_EDGE_COLLAPSE_PROPOSAL"
+    },
+    "dp_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/dp-batch-004/report.json",
+      "sha256": "6ad15416fc04410ea2f0cbeaed7a1273675989dc573ba98b57f8df1c6a56fe66",
+      "status": "PASS_BOUNDED_EXACT_FIXED_COORDINATE_TOPOLOGY_PROPOSAL"
+    },
+    "exact_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "inherited_713_scope": {
+      "coverage_chain": [
+        {
+          "all185_subsection": "EXCLUDED_INVALID_MIXED_UNITS",
+          "cross_pair_counts": [
+            0,
+            0,
+            0
+          ],
+          "name": "010-self-and-interlayer-only",
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-gates-010/report.json",
+          "self_pair_counts": [
+            0,
+            0,
+            0
+          ],
+          "sha256": "810a2f07d589eb3646155c277840ce0e98455b965cfe1d935e01f36d7e29acbc",
+          "status": "PASS_CHANGED_FACES_SELF_CROSS_ALL185"
+        },
+        {
+          "all185_pairs": 0,
+          "all185_records": 938272,
+          "domains": 370,
+          "name": "014-all185-f32-f64",
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/local-microedge-condition-001/exact-gates-014-current-all185-F32-F64/report.json",
+          "sha256": "48f5e8d76cb123f4ac890061163641331403ed342f1adf01821a0b8ff73c26bc",
+          "status": "PASS_WHOLE_CURRENT_OID_VS_ALL185_F32_F64"
+        },
+        {
+          "all185_pairs": 0,
+          "changed_faces": 7614,
+          "complete_surface_faces": 646159,
+          "name": "complete-geometry-038",
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-warning-connected-union-038/merge-run004-run005-O/full-check/independent-verification-001/report.json",
+          "sha256": "af18d3e4d3f02284acc4a27740c5c9256464c17fb99ca443a7186716a836cdf7",
+          "status": "PASS_FIXED_COORDINATE_GEOMETRY_DELTA",
+          "surface_pairs": 0
+        },
+        {
+          "all185_pairs": 0,
+          "changed_faces": 10,
+          "complete_surface_faces": 646159,
+          "name": "D-delta-128",
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/inferred-D-boundary-exact-delta-128-root/report.json",
+          "sha256": "12457244fe94dc502b6c2c6cb1f505091b7684ca0cad883887f2273baaf32c23",
+          "status": "PASS_EXACT_CURRENT_D_ONE_ULP_DELTA",
+          "surface_pairs": 0
+        },
+        {
+          "all185_pairs": 0,
+          "changed_faces": 32,
+          "complete_surface_faces": 646175,
+          "name": "D-delta-137",
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/D-refinement-exact-geometry-audit-137-root/report.json",
+          "sha256": "f9481aa1fead9ffa22e71ff55badc34ec2a12ce495b73f85e4b87bdeb61f0b4e",
+          "status": "PASS_EXACT_CURRENT_D_BOUNDARY_REFINEMENT_DELTA",
+          "surface_pairs": 0
+        }
+      ],
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/publication-source-177-001/receipts/geometry-scope-713.json",
+      "physical_admission": false,
+      "runtime": 0,
+      "sha256": "35d6a46efac809166d2ef0ea6d5860391c78f2e2ecff2466ac8b2b794ed1ed34",
+      "status": "PASS_GEOMETRY_SCOPE_INHERITED_PLUS_EXACT_DELTAS"
+    },
+    "source_shells": {
+      "Fat": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+        "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a"
+      },
+      "Skin": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+        "sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a"
+      }
+    }
+  },
+  "roles": {
+    "Fat": {
+      "actual_boundary_outside_original_shell_plus_collapse_count": 0,
+      "role_face_partition": {
+        "D": {
+          "actual_boundary_baseline_missing": 299,
+          "actual_new_subset_collapse002_changed_faces": true,
+          "actual_new_vs_original": 169,
+          "actual_restored_original_absent_from_collapse002": 109,
+          "actual_retained_original_and_collapse": 241743,
+          "actual_role_faces": 242021,
+          "collapse002_changed_faces": 188,
+          "collapse002_faces": 241965,
+          "dp_input_faces": 242151,
+          "shell_baseline_faces": 242151
+        },
+        "I": {
+          "actual_boundary_baseline_missing": 43,
+          "actual_new_subset_collapse002_changed_faces": true,
+          "actual_new_vs_original": 23,
+          "actual_restored_original_absent_from_collapse002": 261,
+          "actual_retained_original_and_collapse": 250427,
+          "actual_role_faces": 250711,
+          "collapse002_changed_faces": 38,
+          "collapse002_faces": 250607,
+          "dp_input_faces": 250731,
+          "shell_baseline_faces": 250731
+        }
+      },
+      "shell": {
+        "face_count": 492972,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+        "point_count": 246004,
+        "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a",
+        "wall_face_count": 90,
+        "wall_faces_retained_exactly": true,
+        "wall_marker": 6,
+        "wall_missing_count": 0
+      },
+      "volume_input": {
+        "boundary_face_count": 492972,
+        "boundary_input_vertices_all_in_shell_prefix": true,
+        "outside_original_shell_plus_collapse_count": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-203-root/fat-batch001/pass-007/fixed-boundary-volume-proposal.npz",
+        "sha256": "ab5cbe46336175e8809198dd44c2b6a07da3b9b188d4d3f1217897848a1efd94"
+      },
+      "volume_output": {
+        "boundary_faces": 492822,
+        "boundary_unique_triangle_keys": 492822,
+        "boundary_vertices_all_map_to_shell_prefix": true,
+        "interior_face_keys": 1415813,
+        "node_count": 246370,
+        "nonmanifold_face_keys": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/surface-volume-quotient-206-root/run001/fat-surface-contraction-volume-proposal.npz",
+        "sha256": "90b74c77219e1c03288b3b1d4e329140d3c270396f0f2105ae9253c2c636057c",
+        "tetrahedron_count": 831112,
+        "unpaired_face_keys": 492822
+      }
+    },
+    "Skin": {
+      "actual_boundary_outside_original_shell_plus_collapse_count": 0,
+      "role_face_partition": {
+        "I": {
+          "actual_boundary_baseline_missing": 43,
+          "actual_new_subset_collapse002_changed_faces": true,
+          "actual_new_vs_original": 23,
+          "actual_restored_original_absent_from_collapse002": 261,
+          "actual_retained_original_and_collapse": 250427,
+          "actual_role_faces": 250711,
+          "collapse002_changed_faces": 38,
+          "collapse002_faces": 250607,
+          "dp_input_faces": 250731,
+          "shell_baseline_faces": 250731
+        },
+        "O": {
+          "actual_boundary_baseline_missing": 32,
+          "actual_new_subset_collapse002_changed_faces": true,
+          "actual_new_vs_original": 20,
+          "actual_restored_original_absent_from_collapse002": 147,
+          "actual_retained_original_and_collapse": 153114,
+          "actual_role_faces": 153281,
+          "collapse002_changed_faces": 25,
+          "collapse002_faces": 153225,
+          "dp_input_faces": 153293,
+          "shell_baseline_faces": 153293
+        }
+      },
+      "shell": {
+        "face_count": 404114,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+        "point_count": 202037,
+        "sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a",
+        "wall_face_count": 90,
+        "wall_faces_retained_exactly": true,
+        "wall_marker": 3,
+        "wall_missing_count": 0
+      },
+      "volume_input": {
+        "boundary_face_count": 404114,
+        "boundary_input_vertices_all_in_shell_prefix": true,
+        "outside_original_shell_plus_collapse_count": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-203-root/skin-batch001/pass-007/fixed-boundary-volume-proposal.npz",
+        "sha256": "90432fcaf54df3c4f13e129afd54d04ecc378d055b3d4bb2dbcc80067ea9d679"
+      },
+      "volume_output": {
+        "boundary_faces": 404082,
+        "boundary_unique_triangle_keys": 404082,
+        "boundary_vertices_all_map_to_shell_prefix": true,
+        "interior_face_keys": 1260505,
+        "node_count": 202509,
+        "nonmanifold_face_keys": 0,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/surface-volume-quotient-206-root/run001/skin-surface-contraction-volume-proposal.npz",
+        "sha256": "2485b6c32758f21ab805d0b6a2aeb3c3382b07ebc57f11b6d2cc4b67950840e1",
+        "tetrahedron_count": 731273,
+        "unpaired_face_keys": 404082
+      }
+    }
+  },
+  "schema": "numi.human.volume-surface-inherited-delta-audit.v1",
+  "shared_I": {
+    "oppositely_oriented_triangle_count": 250711,
+    "same_direction_triangle_count": 0,
+    "sets_identical_exact_F32": true,
+    "triangle_count_per_role": 250711
+  },
+  "status": "PASS_INHERITED_DELTA_PLUS_DIRECT_RESTORED_NEW_EXACT",
+  "validator": {
+    "path": "/private/tmp/validate_volume_surface_inherited_delta.py",
+    "sha256": "b458c9b7594d33e85ad85f3f7450da049d46e5923af26fc439507e18296cc13a"
+  },
+  "volume_report": {
+    "declared_status": "POSITIVE_VOLUME_QUOTIENT_PROPOSAL_REQUIRES_GEOMETRY_AND_MASS_QUALIFICATION",
+    "native_steps": 0,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/surface-volume-quotient-206-root/run001/report.json",
+    "physical_admission": false,
+    "sha256": "e12942f10155672bf77ef6cc6c7fb10e81a50aaf38a148126f2f78566c23424f"
+  }
+}
