@@ -1,0 +1,347 @@
+{
+  "status": "PASS_INCREMENTAL_LEXICOGRAPHIC_QUALITY_SEARCH",
+  "roles": [
+    {
+      "role": "Skin",
+      "input": {
+        "absolute_geometric_volume_change_m3": 5.964059866667005e-12,
+        "cells": 724914,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 1,
+        "missing_target_faces": 0,
+        "native_quality_failures": 81,
+        "nodes": 210298,
+        "nonpositive": 0,
+        "operations": 7,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-751-root/round001/points/skin-coupled-quality-point-proposal.npz",
+        "sha256": "ea3620d313a775449e548019f963cc4c7693bf97e68a7ed2f9021f44b33aebc4"
+      },
+      "candidate": {
+        "absolute_geometric_volume_change_m3": 5.964059866667005e-12,
+        "cells": 724914,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 1,
+        "missing_target_faces": 0,
+        "native_quality_failures": 81,
+        "nodes": 210298,
+        "nonpositive": 0,
+        "operations": 7,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-751-root/round001/flips/skin-fixed-boundary-quality-queue.npz",
+        "sha256": "4485c0ea994675226526c4f68dde9a6d25b1a7de003515bb268b212bef77c32a"
+      },
+      "bad_before": 81,
+      "bad_after": 81,
+      "operations": [],
+      "tests": 412,
+      "rejections": {
+        "edge link is not a simple ring": 132,
+        "no_certified_quality_gain": 412,
+        "invalid bounded polygon ring": 30
+      },
+      "queue_exhausted": true,
+      "queue_remaining": 0,
+      "elapsed_s": 3.942583791911602,
+      "initial_cells": 724914,
+      "active_cell_ids": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-751-root/round001/flips/skin-active-cell-ids.npz"
+    },
+    {
+      "role": "Fat",
+      "input": {
+        "absolute_geometric_volume_change_m3": 0.0,
+        "cells": 770053,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 0,
+        "missing_target_faces": 0,
+        "native_quality_failures": 468,
+        "nodes": 253713,
+        "nonpositive": 0,
+        "operations": 18,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-751-root/round001/points/fat-coupled-quality-point-proposal.npz",
+        "sha256": "11c932df7e13cc372084e9c39bc5f90d0740c83c46243ff45106cdd5bfbd4288",
+        "target_boundary_match": true,
+        "target_face_count": 444594
+      },
+      "candidate": {
+        "absolute_geometric_volume_change_m3": 0.0,
+        "cells": 770051,
+        "extra_actual_faces": 0,
+        "geometry_changed_points": 0,
+        "missing_target_faces": 0,
+        "native_quality_failures": 467,
+        "nodes": 253713,
+        "nonpositive": 0,
+        "operations": 18,
+        "oriented_volume_target_boundary_equal": true,
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-751-root/round001/flips/fat-fixed-boundary-quality-queue.npz",
+        "sha256": "8447a2b67e7a85f87dc0764259ba7418cb8e2831376e937325203c6d0d7c776a",
+        "target_boundary_match": true,
+        "target_face_count": 444594
+      },
+      "bad_before": 468,
+      "bad_after": 467,
+      "operations": [
+        {
+          "kind": "3-2",
+          "old_cell_ids": [
+            764157,
+            769955,
+            769960
+          ],
+          "new_cell_ids": [
+            770053,
+            770054
+          ],
+          "new_tetrahedra": [
+            [
+              58784,
+              57482,
+              59607,
+              58782
+            ],
+            [
+              59607,
+              57482,
+              58784,
+              59897
+            ]
+          ],
+          "native_bad_gain": 0,
+          "native_log_deficit_before": 2.5628722421108416,
+          "native_log_deficit_after": 1.1702685844647944,
+          "exact_m_certify": "PASS"
+        },
+        {
+          "kind": "3-2",
+          "old_cell_ids": [
+            737468,
+            769997,
+            770002
+          ],
+          "new_cell_ids": [
+            770055,
+            770056
+          ],
+          "new_tetrahedra": [
+            [
+              217222,
+              217269,
+              219190,
+              217267
+            ],
+            [
+              217222,
+              219190,
+              217269,
+              219137
+            ]
+          ],
+          "native_bad_gain": 1,
+          "native_log_deficit_before": 7.535915084121646,
+          "native_log_deficit_after": 5.4998420106324195,
+          "exact_m_certify": "PASS"
+        },
+        {
+          "kind": "4-4",
+          "old_cell_ids": [
+            764109,
+            764110,
+            764156,
+            770053
+          ],
+          "new_cell_ids": [
+            770057,
+            770058,
+            770059,
+            770060
+          ],
+          "new_tetrahedra": [
+            [
+              222443,
+              58784,
+              59598,
+              58782
+            ],
+            [
+              58784,
+              222443,
+              59598,
+              59607
+            ],
+            [
+              59598,
+              58784,
+              57482,
+              58782
+            ],
+            [
+              58784,
+              59598,
+              57482,
+              59607
+            ]
+          ],
+          "native_bad_gain": 0,
+          "native_log_deficit_before": 1.1702685844647944,
+          "native_log_deficit_after": 1.160617661232915,
+          "exact_m_certify": "PASS"
+        },
+        {
+          "kind": "4-4",
+          "old_cell_ids": [
+            737464,
+            764086,
+            770001,
+            770055
+          ],
+          "new_cell_ids": [
+            770061,
+            770062,
+            770063,
+            770064
+          ],
+          "new_tetrahedra": [
+            [
+              217269,
+              218934,
+              219195,
+              217267
+            ],
+            [
+              218934,
+              217269,
+              219195,
+              219190
+            ],
+            [
+              217269,
+              219195,
+              217222,
+              217267
+            ],
+            [
+              219195,
+              217269,
+              217222,
+              219190
+            ]
+          ],
+          "native_bad_gain": 0,
+          "native_log_deficit_before": 7.748844754337106,
+          "native_log_deficit_after": 7.738170194250888,
+          "exact_m_certify": "PASS"
+        },
+        {
+          "kind": "4-4",
+          "old_cell_ids": [
+            738237,
+            763952,
+            770057,
+            770059
+          ],
+          "new_cell_ids": [
+            770065,
+            770066,
+            770067,
+            770068
+          ],
+          "new_tetrahedra": [
+            [
+              222443,
+              58784,
+              59595,
+              58782
+            ],
+            [
+              58784,
+              222443,
+              59595,
+              59598
+            ],
+            [
+              59595,
+              58784,
+              57482,
+              58782
+            ],
+            [
+              58784,
+              59595,
+              57482,
+              59598
+            ]
+          ],
+          "native_bad_gain": 0,
+          "native_log_deficit_before": 1.160617661232915,
+          "native_log_deficit_after": 1.1546967136743316,
+          "exact_m_certify": "PASS"
+        },
+        {
+          "kind": "4-4",
+          "old_cell_ids": [
+            739091,
+            762947,
+            770065,
+            770067
+          ],
+          "new_cell_ids": [
+            770069,
+            770070,
+            770071,
+            770072
+          ],
+          "new_tetrahedra": [
+            [
+              222443,
+              58784,
+              59592,
+              58782
+            ],
+            [
+              58784,
+              222443,
+              59592,
+              59595
+            ],
+            [
+              59592,
+              58784,
+              57482,
+              58782
+            ],
+            [
+              58784,
+              59592,
+              57482,
+              59595
+            ]
+          ],
+          "native_bad_gain": 0,
+          "native_log_deficit_before": 1.1546967136743316,
+          "native_log_deficit_after": 1.1482461314154675,
+          "exact_m_certify": "PASS"
+        }
+      ],
+      "tests": 2651,
+      "rejections": {
+        "no_certified_quality_gain": 2645,
+        "invalid bounded polygon ring": 314,
+        "edge link is not a simple ring": 567
+      },
+      "queue_exhausted": true,
+      "queue_remaining": 0,
+      "elapsed_s": 5.135092624928802,
+      "initial_cells": 770053,
+      "active_cell_ids": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-751-root/round001/flips/fat-active-cell-ids.npz"
+    }
+  ],
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental_fixed_boundary_polygon_search_657_root.py",
+    "sha256": "6e351b3b4983458a5316985d6fdfaf4309c3b263c64b7fb649fe0d95a640e4bd"
+  },
+  "elapsed_s": 9.517262290930375,
+  "physical_admission": false,
+  "native_steps": 0
+}
