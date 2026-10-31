@@ -1,0 +1,52 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.000205
+Creating surface mesh ...
+Surface mesh seconds:  4.5e-05
+Recovering boundaries...
+ATTR_CENSUS stage=after_boundary_before_carve total=784 zero=784 expected15=0 other=0 flip23=1581 flip32=1451 flip41=2 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  0.003449
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=318 zero=0 expected15=318 other=0 flip23=1581 flip32=1451 flip41=2 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  6.5e-05
+ATTR_CENSUS stage=after_suppresssteinerpoints total=318 zero=0 expected15=318 other=0 flip23=1581 flip32=1451 flip41=2 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=302 zero=0 expected15=302 other=0 flip23=1620 flip32=1506 flip41=2 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.000129
+Refining mesh...
+  171 insertions, added 0 points, 81 tetrahedra in queue.
+  56 insertions, added 0 points, 12 tetrahedra in queue.
+  75 insertions, added 0 points, 0 tetrahedra in queue.
+  100 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=302 zero=0 expected15=302 other=0 flip23=1620 flip32=1506 flip41=2 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  0.001236
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=300 zero=0 expected15=300 other=0 flip23=2090 flip32=1995 flip41=2 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  0.000406
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000466
+Total running seconds:  0.006025
+
+Statistics:
+
+  Input points: 127
+  Input facets: 250
+  Input segments: 375
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 130
+  Mesh tetrahedra: 300
+  Mesh faces: 725
+  Mesh faces on exterior boundary: 250
+  Mesh faces on input facets: 250
+  Mesh edges on input segments: 375
+  Steiner points inside domain: 3
+

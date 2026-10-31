@@ -1,0 +1,52 @@
+{
+  "candidate": {
+    "parent_report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/face-flips-npz-313-root/skin-run001/report.json",
+    "parent_report_sha256": "0ea06c61e10788bb74aa35b8ac2f0410a36a625f3f29a2d9b12a22aaba6effcd",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/face-flips-npz-313-root/skin-run001/fixed-boundary-volume-proposal.npz",
+    "sha256": "5d89d2700ddd87f734e638105249f8b88365283b17c23cb41bf18713f22eb061",
+    "source_prefix_bit_identical": true
+  },
+  "conclusion": "The 713 nonboundary matches are 225 O/I registered surface identities (3 used, 222 unused) plus 488 prior volume-interior construction rows (475 used, 13 unused). Freeing only the 475 used no-surface-ancestry rows is supported by the explicit 142 registration map; do not unfreeze the three used registered O/I points.",
+  "identity_interpretation": {
+    "O_I_rows": "explicit registered_surface vertex identity (derived_registered_skin_authoring/source_mapping_kind=vertex); remain fixed even when no longer on the current volume boundary",
+    "conditioning_eligibility": "all actual boundary points remain fixed; explicit O/I rows remain fixed; used nonboundary interior rows with no surface ancestry may move under the safeguarded local quality gates; unused rows are irrelevant",
+    "interior_rows": "explicit derived_volume_interior_no_surface_ancestry/source_mapping_kind=none; parent tet/material/donor/region fields are inferred registration support, not a registered surface or attachment identity"
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "nonboundary_partition_counts": {
+    "candidate_boundary_vertex_count": 201812,
+    "candidate_only_unregistered_used_nonboundary": 6202,
+    "candidate_used_point_count": 208492,
+    "historical_inferred_volume_interior_unused_nonboundary": 13,
+    "historical_inferred_volume_interior_used_nonboundary": 475,
+    "registered_source_surface_boundary_used": 201812,
+    "registered_source_surface_nonboundary_unused": 222,
+    "registered_source_surface_nonboundary_used": 3
+  },
+  "physical_admission": false,
+  "registered_identity_counts": {
+    "I": 125368,
+    "O": 76669,
+    "interior_no_surface_ancestry": 488
+  },
+  "registration_map": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/registered-node-map-177-143-713-source008/registered-node-map.csv",
+    "receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/registered-node-map-177-143-713-source008/registration-receipt.json",
+    "receipt_sha256": "f170c87042517234266888b3fc3ae241cbc71851a79c514b666ecb7a72354a25",
+    "rows": 202525,
+    "sha256": "40646a6c501b89046e0e9836790a78b3303ad8f0033fe5281fc64ebb760fccc3"
+  },
+  "schema": "h706.interior-conditioning-registered-identity-audit.v1",
+  "source_node": {
+    "coordinate_dtype": "Float32 cast from pinned node decimals",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/skin.node",
+    "rows": 202525,
+    "sha256": "b4a7e41745d533289b25659220662c4787e85a7cb56a9701b621e542dcc2a6db"
+  },
+  "source_report_pins": {
+    "handoff_142_sha256": "8f0daa820b2392309939db3bec35e6f7e1d7d65e9289a9a93f2f9a529573b49d",
+    "typed_shell_074_sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a"
+  },
+  "status": "PASS_REGISTRATION_IDENTITY_SCOPE"
+}

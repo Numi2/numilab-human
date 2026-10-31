@@ -1,0 +1,2887 @@
+{
+  "status": "CONNECTED_CAVITY_BATCH_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-297-root/skin-batch001/kernel-fan-volume-proposal.npz",
+  "input_sha256": "562e4abdf35ef5cdeeed36ef31a5948d2bf5d3573b83b65167427b3ca7eef853",
+  "script_sha256": "5910b65ad0d9a3f98daa847450db87f0897f663e7e0b9c24d26196606a182f00",
+  "maximum_extra_construction_defects_per_cavity": 0,
+  "strict_native_admission_thresholds_unchanged": true,
+  "exact_retained_tet_SAT_required": true,
+  "physical_mass_mapping_status": "PENDING_SOURCE330_CONSERVATIVE_REBIND",
+  "preparation": {
+    "selected_cells": 7430,
+    "retired_boundary_nodes": 0,
+    "closure_history": [
+      {
+        "iteration": 0,
+        "selected_cells": 1104,
+        "components": 97,
+        "unclosed_components": 10,
+        "internal_joint_cut_witnesses": 8,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 3367
+      },
+      {
+        "iteration": 1,
+        "selected_cells": 4471,
+        "components": 92,
+        "unclosed_components": 5,
+        "internal_joint_cut_witnesses": 1,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 814
+      },
+      {
+        "iteration": 2,
+        "selected_cells": 5285,
+        "components": 91,
+        "unclosed_components": 4,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 1056
+      },
+      {
+        "iteration": 3,
+        "selected_cells": 6341,
+        "components": 91,
+        "unclosed_components": 3,
+        "internal_joint_cut_witnesses": 2,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 648
+      },
+      {
+        "iteration": 4,
+        "selected_cells": 6989,
+        "components": 91,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 1,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 213
+      },
+      {
+        "iteration": 5,
+        "selected_cells": 7202,
+        "components": 91,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 75
+      },
+      {
+        "iteration": 6,
+        "selected_cells": 7277,
+        "components": 91,
+        "unclosed_components": 2,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 73
+      },
+      {
+        "iteration": 7,
+        "selected_cells": 7350,
+        "components": 91,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 22
+      },
+      {
+        "iteration": 8,
+        "selected_cells": 7372,
+        "components": 91,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 37
+      },
+      {
+        "iteration": 9,
+        "selected_cells": 7409,
+        "components": 91,
+        "unclosed_components": 1,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 21
+      },
+      {
+        "iteration": 10,
+        "selected_cells": 7430,
+        "components": 91,
+        "unclosed_components": 0,
+        "internal_joint_cut_witnesses": 0,
+        "blocked_witnesses": 0,
+        "exact_shell_self_pairs": 0,
+        "self_cut_witness_faces": 0,
+        "new_cells": 0
+      }
+    ],
+    "maximum_cells": 20000,
+    "selection": "native-quality seed neighborhoods with two face-neighbor rings; exact joint/internal-self witness growth",
+    "all_target_components_admissible": true,
+    "quality_neighbor_rings": 2,
+    "seed_neighborhood_cells": 1104,
+    "quality_seed_rows": [
+      601045,
+      747268,
+      583134,
+      544705,
+      577693,
+      541345,
+      599358,
+      504509,
+      576078,
+      321689,
+      599634,
+      731412,
+      580956,
+      675905,
+      577297,
+      722249,
+      580271,
+      155956,
+      130796,
+      576927,
+      606029,
+      731037,
+      179712,
+      599778,
+      732181,
+      429191,
+      23018,
+      562986,
+      564195,
+      598925,
+      564190,
+      737617,
+      505015,
+      599631,
+      732355,
+      117887,
+      748303,
+      599611,
+      562987,
+      681883,
+      507947,
+      535576,
+      512428,
+      578191,
+      346619,
+      604932,
+      480711,
+      563021,
+      732900,
+      563133,
+      362420,
+      222828,
+      25550,
+      563222,
+      582697,
+      340602,
+      217194,
+      606038,
+      169826,
+      12748,
+      349550,
+      731941,
+      745480,
+      732062,
+      373521,
+      539280,
+      45341,
+      91676,
+      167627,
+      560272,
+      563410,
+      541418,
+      541416,
+      599568,
+      512328,
+      366871,
+      543446,
+      725578,
+      726698,
+      578688,
+      598911,
+      321339,
+      430446,
+      731045,
+      85496,
+      403271,
+      600925,
+      241064,
+      563588,
+      251594,
+      747878,
+      598844,
+      739524,
+      357585,
+      726950,
+      582503,
+      721838,
+      745471,
+      600605,
+      532412,
+      747848,
+      581889,
+      485905,
+      722709,
+      684211,
+      193248,
+      576021,
+      582455,
+      162612,
+      731722,
+      563030,
+      406459,
+      672117,
+      603169,
+      577984,
+      583677,
+      745477,
+      498943,
+      600865,
+      584995,
+      600624,
+      471210,
+      740106,
+      457578,
+      744948,
+      435788,
+      599722,
+      63084
+    ],
+    "quality_seed_count": 128,
+    "full_input_native_defects": 4090,
+    "cache_reused": true,
+    "cache_shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-witness-cavities-302-root/skin-neighbor-prep001/connected-cavity-shells.npz",
+    "cache_shell_sha256": "9bce0e49696da9ac48d09fb4ae06daa6f0472f4c3830954acc83ba97e2889677",
+    "cache_report_sha256": "4482f07b951c3da10f0b754ac424fc85bfcf04e94e9a639c95954b4da7c6e277"
+  },
+  "components": [
+    {
+      "id": 0,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 60,
+      "old_nonpositive": 0,
+      "old_cells": 982,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 0,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6b4b2057eb344c4d5f1130cfe7559503691598cccb0715c226cc8c5a9f640239",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 1,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "b36377e746367b0d3453393fea05d7dd5e8c524da3f5a56ad7ca470ed02f84ff",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 2,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 352,
+      "old_nonpositive": 0,
+      "old_cells": 2632,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "71e5606ce2b79df662868e3c0d65c583f250745108e49598abaee0578adf6b93",
+      "status": "REJECT",
+      "return_code": 200,
+      "error": "ValueError: TetGen failed"
+    },
+    {
+      "id": 3,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 12,
+      "old_nonpositive": 0,
+      "old_cells": 482,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "7e3c7da7a95ae5cb5277db7f9894280b4dfedac26605d2f243824a0a823c4b19",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 4,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 12,
+      "old_nonpositive": 0,
+      "old_cells": 315,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "4a3cbc53f89a98964b9d2fa1e45e6e856bc83eb44a40b19e8238d8a5c7d02d07",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 5,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "7ce24278fb1098e6974e0b7ea1672f81a5d2b7270d5bb7aeb0dbcbac3951a8d3",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 6,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 532,
+      "old_nonpositive": 0,
+      "old_cells": 2079,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a7fcc822e01ab14f787d3f98019ea72706d823d4ecdc097919d2b8d02b2f25e3",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: TetGen F32 nonpositive"
+    },
+    {
+      "id": 7,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 15,
+      "old_nonpositive": 0,
+      "old_cells": 157,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "0b41986d0c8edac20531590da7b6341a7c456a6c49761f5c4d39bbe6869e0ad0",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 8,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "53717433e758bdf7cda9534efc07c02cd417c05f349747cbe623b52c002051e6",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 9,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "38a8a37d241ca0eadc50ea801ad8aaf773300258512bccadecba70add4d7a4b0",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 10,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 37,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "46aebc6fb10ac10a1793b65ad06170ea83eb632ae47953eef9c6637f5ddf2a75",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 11,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 44,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "dad023b29e12a2bab146569e6243832e4756b3a78248f04fa5944bbe15fbbb00",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 12,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9b59a7f5ba6b19cfc2c917e065898ce5fd1f43011bfe179a1e1296967ac1ba1e",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 13,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "1a8aad39d0251596d87ed14b135188e20353bab4baebff35451e0e5f4f122faf",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 14,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a6585d7534cca7b59b6a449be5cc80b7cdc4cff2098783cffcf1c4486a4cf263",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 15,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a0b6548e4d0d299119b103f00d7bda9309d66f7279fc7bbeebd764b49798e571",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 16,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "0baabf23053673c1004203bbf7074e89b626225d03bddfc6e991cf490d6ca646",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 17,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "c4e1751cce6a57bb3deba9c60e0f63424ea7d77264c88a0ec9b9ab241423a5e7",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 18,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9c3e510452058d00ba613eb908462320eab7b108194bdbb1ddb01e5d88314515",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 19,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 11,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "dfbf586ae43942e8607d9d1eb2b7cd370786e020fd54b03785cdfe2ec3f88977",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 20,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 11,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "1b19b37fe551a345f28305b8c7cb7000b0454048d1366fd1acbb36d7bf5952fa",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 21,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "3c78287fffec67f93616cf86faa840845ff3eebe27a7ffcc626930eb26ac91dc",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 22,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "244b85bcb5c94a5d9b77c3504a3a8a3017c461e15a1c7c8acb0e932403f8a0bc",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 23,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "00810b82504ffdf6229c9d7851bb02435ce3be69056477a7d3f67a9566d2ab8a",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 24,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9fe8904c9c5b0b416caf2cb3d1666b14cf227f1e325154763bd4f398a2691548",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 25,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "3d771ea6a685873f1c9b0de61e65602a06952b01f3b738b0afc119ecf5d260fa",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 26,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "4b4bc755b65a0ea00a7f34798e5de643146f510ebc7f570fb7134be2c6f1cd50",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 27,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "b97655db8821311e58e199b53196c5afa1864c4edcf902c23ceadde76c68d786",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 28,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 6,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "818872431e7853134df8fe997ce8330885d071026b4fd3fb7dbab419330e0b08",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 29,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6658caadd1ef1855f67893f73419e2e23345f3b41b117ef1157b7f711cf0a84f",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 30,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 6,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "3864c9e4674853a1d1ce585d5da9bc44aa0337cbadcd823caf4b517cd84fa88c",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 31,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "8a48e769c96d1cf2bbe0fa494e843b9d1ee2fc778826851e571c4f31d98c3a98",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 32,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9b03248ff0b7c21e1dcdb5926ebd1e2001a1ca1fa28866b0641191511811ff32",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 33,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ee56851c73892d0ecaff0875c031cadb92e9bbe07dc29f46e6846b1b1b8f2bd4",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 34,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "010a9b0330e82b02c623624da596970f4ba90f83869fd59de1ceed87301c80fc",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 35,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "31c75e2e1b5e70e4fe96ab6474616d04221f7f69ae48b018972a7c0526503ed0",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 36,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "93f84039acad46253abf9701f075a7b2485059b95890d67ac2b461f1122c8dc5",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 37,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "059df952fb231eed294972a0c02ca4ec0f9edbe6fc6df8533838f70f2bc21ea3",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 38,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "2387b2f4b5c11f18a455b986cf1ebd4f09cbf077ef2f6facabc67538d6035614",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 39,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "e8258f0271653a29937a1e7d58199efb0f1e7ff53a2d3e6caf3871e6723821ce",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 40,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9721cf86f98e88e46c8f04e04df0ebe645d647b1a1a28b549e7dbfdf27112e52",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 41,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "19fc168a51f9042150daf514eb50abcb1c0e12ffc5126769b330c6f17be64a22",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 42,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "c43a2edf802e8b06601180f163fb10d59b88a6f8e5aba4f89a75f5cd964bd301",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 43,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "30939b72fe0697da811bf98529db6b64bedb56aabf6cb32490d88ff264222c25",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 44,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 6,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ccf959994522aa097eac1ff3d3c287b9fdb894e088bbd755818a5fa37ee8820b",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 45,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "db8eb4724d39c7d92b433e3afde18dd8faa0e35ced6bbe492e1eaba06a0ee6bf",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 46,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "52288efa4cbeb938a25596b29b2b05879a4b45450224f963e45c5047334d79bb",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 47,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "d154d873be9999644083db513b76d3920405eb5556d7b77764fdde4d38223078",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 48,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a119bba837a7c02bd637947fd249374b56dcbc2e63a5eba982b05e42315a8853",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 49,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "1f25209a57a2f9fa079d22a9b4f8409fe2964218452cee40f9f408551f1e28c6",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 50,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ae1fceea305d5b1604bc38ecc6abf5a5bb540baca948dfa4acab6c087751ca9a",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 51,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "d3d022bd94d13239da45e485bceeb8b2f2ddf3af159ed5cfe9b1ba998b7ed8ef",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 52,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6e2eb3bc6de1adc7f8b247263383fff4e6d841fd8c5c1a6795d5dfbd632f0723",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 53,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 6,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "3602790caca73d288a5c743e1cd5f6f811a1f27f5690cbdbdea5621b760d7b01",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 54,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "f331f035fb8e72dfd1dc5af244915645a07c6f18b97c6db32741170c703c2a86",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 55,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 11,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "b65bd3530b2fcf864a756cb213d32bae35593ef7c92ae7a1865c58efb1d8a114",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 56,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "b49a099608edb9b0b3e37243600a19a0a3581e5e635248180a63f85d15ae6577",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 57,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "223d0831af7c48277f92232e82f59c202c4c088365c4765baec9dad9e17cd676",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 58,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "dd2a51dcfbb7a717dda591ad5afb24b8f13788405909e38757f0a30cb9e0eedb",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 59,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "674b6d7d97dd44a9cb372b7f4dce68b3ac3a921cb807dae621363026c539d80e",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 60,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "138897983a763f5cb2b95d55f1525c0008a35add1283c08b1f7526c48a19640c",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 2746,
+        "exact_point_cache_rows": 235
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 8,
+      "new_bad": 0,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "c708725ed390edf290163063d0a729319ff1257002d7d8dd4e649c967acdcc3d"
+    },
+    {
+      "id": 61,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 4,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9f5629d82c54461c910719a8eec8effd72dbb444fd289b95c20e4877df28791a",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 62,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "ff74a2155515cb5a81e9106d4bc33ea0e3f310f03e8f3f3570396c6a4cb60e5a",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 63,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 6,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "b08a6da0c27e3e615bc44d7f231462ec29d65beeaea138edafa25bd6d4b5d52f",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 64,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a263da275c92f0d7b3a9b6f753e6e6b23598db73a7ae72801fca83cb8d75f672",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 65,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a6fc532d9d272c9fb0380325ebe35b8d91ed4b4610cd2751a4502b8550dc43e6",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 66,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "27875f0d461f22a6d6082ffa1f3a7fc4bbc67bc2b8fc7c130abb93c7952c0814",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 67,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "626f313981ee210c5293de41246796e96e6625cf87a519d87ecd90c1fa8e1230",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 68,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 14,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "bb7c74fbd81d2072e4bafc701d8cc6bef817f15ddf11eea1cf1ca52c3f2fd8e5",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 69,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "e7a3c6fec44fbaa0bcb4e4a688b1a9987f8212536062dd8bb3ea22ff473db651",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 70,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "28cd7ecd438777c8126221a0b080c3dbe6ec9109501f1e074944b2aa9d0673f0",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 71,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "d16319a5bfc209d0285be0ffcf0eeab35731ca5fadc4a2618ae03b8385dd000e",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 72,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "104120197e1290e88535b4cb87459d1a2740a62cc406ddab647ace6b9b7403de",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 73,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "c4be20db1ae1f936b0d99dba27c206037c2bc5b6d5cdcebea27589ffa72ad33c",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 74,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 1,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "e163f9a7e76a0a897b4eb167f782a4b345ae569ce5f3b045c3f947961eb2b2ce",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 75,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "6fa6df4162c63c94335088c37ae9bd06db59ec4369f82bfb9bce12fefb54c671",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 76,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 5,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "0243d01e50a03f6648d63f9ae9931824a56cd13461fe242606646e97e975d403",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 77,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "74f33a93bacdf34042b7ca544fc1a0eff61c72a6bf2bdd86ba9143aabc5e9bea",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 78,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "dbed58414041630be279f3d6ee8dc377c19da3e5e13b211d81d2609d7a0d49dc",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 79,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "81a16a1bd553b78ec692e5c47ae50ec50bf88d45f2a4901a04ef7622e3550182",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 80,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 7,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "7fa6e0a7254a9d2aee7794fcc7bb76cf46657bde244eb9319acf9a819925e7fb",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 81,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 37,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "d782137f9110762087257f2107bc1e222a77d9e1dda57880e567a1db507803bb",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 82,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 11,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "88f80d051eca907f880cd10d0f2c045fd010249de05a708b0a14c04c819807e1",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 83,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "468d5da7aed19df490687efd99059561bc53a7f9c9fd4e546fd7a03ff88d2fa8",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 84,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "4582d257ef79cc65b2f5cb814d30aaf5f6cd4fa342193fa5b5cbdb7c1753716c",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 85,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 8,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "c63dc5ee9e3fd7f8ff04e0cc6eaf8c009e7f7ad1c2fb1dceaa372b89cff6b0c3",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 86,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 5,
+      "old_nonpositive": 0,
+      "old_cells": 10,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "adb680d0da96e8a91ccc33a18758ae3f6f501503b08d9594ed26ca0632f05a1e",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 87,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 4,
+      "old_nonpositive": 0,
+      "old_cells": 6,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "9b73bab26dd31a2c1aa9ac72ca2ce6c662d089b93535db8c5c799cb9a1923c5f",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 823,
+        "exact_point_cache_rows": 102
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 5,
+      "new_bad": 3,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "64c244c9811d16b2ab8e389d3eca5440c9ea72e1dbc408ca9c76211cfad3228b"
+    },
+    {
+      "id": 88,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 2,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a7668ba55eab86bdb61b7b3aed8647cbf15398588c5916ce349184b28ad9fe47",
+      "status": "PASS_CONNECTED_FIXED_SURFACE_CAVITY",
+      "return_code": 0,
+      "construction_native_defect_delta": -1,
+      "exact_internal_face_pairs": 0,
+      "exact_retained_and_prior_volume_intersections": {
+        "pass": true,
+        "reason": "PASS_EXACT_F32_SAT_NO_POSITIVE_VOLUME_OVERLAP",
+        "checked_pairs": 1073,
+        "exact_point_cache_rows": 54
+      },
+      "new_interior_points": 0,
+      "new_interior_global_rows": [],
+      "new_cells": 11,
+      "new_bad": 1,
+      "all_F32_positive": true,
+      "oriented_boundary_exact": true,
+      "exact_new_shell_volume": true,
+      "replacement_sha256": "b92aff071daf45dd614f0959a5426a39a7b45f715d7d6de3899b5cf690240277"
+    },
+    {
+      "id": 89,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 3,
+      "old_nonpositive": 0,
+      "old_cells": 9,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "a95eb548ea523af40e2e12af426054580daacef3fcdc90dd0f7dc7c575525ca0",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    },
+    {
+      "id": 90,
+      "closed": true,
+      "empty_shell_retirement": false,
+      "edge_failures": 0,
+      "old_bad": 9,
+      "old_nonpositive": 0,
+      "old_cells": 12,
+      "new_desired_faces": 0,
+      "topology": {
+        "bad_vertex_links": [],
+        "boundary_components": 1,
+        "euler_characteristic": 2,
+        "witness_nodes": []
+      },
+      "joint_no_native_apex_faces": [],
+      "exact_shell_self_pairs": 0,
+      "topological_closed": true,
+      "argv": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix",
+        "-pMYYAq5/1S128O2T9.9999999999999998e-17",
+        "cavity.poly"
+      ],
+      "poly_sha256": "7498299be4c97058282fbfab9851cce5bc5fea709077ba21bc1f68aa82738bbc",
+      "status": "REJECT",
+      "return_code": 0,
+      "error": "ValueError: quality replacement must strictly reduce native defects"
+    }
+  ],
+  "owners": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/attribute-propagation-062/hull-attribute-fix-001/tetgen-hull-attribute-fix": "01d15d76f8dfcdcd84f10fac280f7aeed3de1ae24991b0a359e05006c99e6bcb",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-domain-217-source-004/build_native_domain_217.py": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd"
+  },
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-witness-cavities-302-root/skin-remesh001/connected-fixed-surface-volume-proposal.npz",
+  "output_sha256": "9f433f3e96ced8bccf2823812c963b404edc8ddad5a0fb3bbaa08343c88d581e",
+  "passing_components": 3,
+  "remaining_nonpositive_cells": 0,
+  "remaining_quality_failures": 4087,
+  "complete_boundary_matches_desired": true,
+  "elapsed_s": 8.38498799991794
+}

@@ -1,0 +1,54 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.000223
+Creating surface mesh ...
+Surface mesh seconds:  3.9e-05
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [52,50].
+  2nd: [52,51].
+  Reducing collinear tolerance from 179.9 to 179.938 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=475 zero=475 expected15=0 other=0 flip23=214 flip32=133 flip41=0 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  0.000619
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=165 zero=0 expected15=165 other=0 flip23=214 flip32=133 flip41=0 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  5.2e-05
+ATTR_CENSUS stage=after_suppresssteinerpoints total=165 zero=0 expected15=165 other=0 flip23=214 flip32=133 flip41=0 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=166 zero=0 expected15=166 other=0 flip23=221 flip32=139 flip41=0 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  4.6e-05
+Refining mesh...
+  114 insertions, added 0 points, 51 tetrahedra in queue.
+  37 insertions, added 0 points, 14 tetrahedra in queue.
+  50 insertions, added 0 points, 0 tetrahedra in queue.
+  66 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=166 zero=0 expected15=166 other=0 flip23=221 flip32=139 flip41=0 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  0.001174
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=161 zero=0 expected15=161 other=0 flip23=232 flip32=155 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  9e-05
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000467
+Total running seconds:  0.002737
+
+Statistics:
+
+  Input points: 86
+  Input facets: 168
+  Input segments: 252
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 86
+  Mesh tetrahedra: 161
+  Mesh faces: 406
+  Mesh faces on exterior boundary: 168
+  Mesh faces on input facets: 168
+  Mesh edges on input segments: 252
+

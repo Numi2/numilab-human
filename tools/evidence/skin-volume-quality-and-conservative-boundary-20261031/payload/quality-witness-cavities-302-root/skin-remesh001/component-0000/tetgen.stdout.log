@@ -1,0 +1,59 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.001193
+Creating surface mesh ...
+Surface mesh seconds:  0.000219
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [343,346].
+  2nd: [343,345].
+  Reducing collinear tolerance from 179.9 to 179.996 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=3749 zero=3749 expected15=0 other=0 flip23=4891 flip32=4071 flip41=1 flip44=2 invalid_hull_attrs=0
+Boundary recovery seconds:  0.013788
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=1060 zero=0 expected15=1060 other=0 flip23=4891 flip32=4071 flip41=1 flip44=2 invalid_hull_attrs=0
+Exterior tets removal seconds:  0.000263
+ATTR_CENSUS stage=after_suppresssteinerpoints total=1060 zero=0 expected15=1060 other=0 flip23=4891 flip32=4071 flip41=1 flip44=2 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=1048 zero=0 expected15=1048 other=0 flip23=5160 flip32=4352 flip41=1 flip44=3 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.00068
+Refining mesh...
+  650 insertions, added 1 points, 240 tetrahedra in queue.
+  216 insertions, added 0 points, 0 tetrahedra in queue.
+  288 insertions, added 1 points, 50 tetrahedra in queue.
+  384 insertions, added 0 points, 38 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=1070 zero=0 expected15=1070 other=0 flip23=5161 flip32=4353 flip41=1 flip44=3 invalid_hull_attrs=0
+Refinement seconds:  0.006305
+Smoothing vertices...
+ATTR_CENSUS stage=after_smoothing total=1071 zero=0 expected15=1071 other=0 flip23=5162 flip32=4353 flip41=1 flip44=3 invalid_hull_attrs=0
+Mesh smoothing seconds:  4.7e-05
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=997 zero=0 expected15=997 other=0 flip23=5416 flip32=4706 flip41=1 flip44=3 invalid_hull_attrs=0
+Mesh improvement seconds:  0.000649
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.001441
+Total running seconds:  0.024639
+
+Statistics:
+
+  Input points: 487
+  Input facets: 974
+  Input segments: 1461
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 495
+  Mesh tetrahedra: 997
+  Mesh faces: 2481
+  Mesh faces on exterior boundary: 974
+  Mesh faces on input facets: 974
+  Mesh edges on input segments: 1461
+  Steiner points inside domain: 8
+

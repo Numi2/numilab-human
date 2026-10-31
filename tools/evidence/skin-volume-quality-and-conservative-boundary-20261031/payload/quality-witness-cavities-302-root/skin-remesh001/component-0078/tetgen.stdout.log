@@ -1,0 +1,53 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  1.3e-05
+Creating surface mesh ...
+Surface mesh seconds:  1e-05
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [3,8].
+  2nd: [3,7].
+  Reducing collinear tolerance from 179.9 to 179.987 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=25 zero=25 expected15=0 other=0 flip23=6 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  5.3e-05
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=11 zero=0 expected15=11 other=0 flip23=6 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  1.2e-05
+ATTR_CENSUS stage=after_suppresssteinerpoints total=11 zero=0 expected15=11 other=0 flip23=6 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=11 zero=0 expected15=11 other=0 flip23=6 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  3e-06
+Refining mesh...
+  14 insertions, added 0 points, 0 tetrahedra in queue.
+  4 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=11 zero=0 expected15=11 other=0 flip23=6 flip32=6 flip41=0 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  3.6e-05
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=22 zero=0 expected15=22 other=0 flip23=117 flip32=119 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  0.000131
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.000263
+Total running seconds:  0.000545
+
+Statistics:
+
+  Input points: 11
+  Input facets: 18
+  Input segments: 27
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 14
+  Mesh tetrahedra: 22
+  Mesh faces: 53
+  Mesh faces on exterior boundary: 18
+  Mesh faces on input facets: 18
+  Mesh edges on input segments: 27
+  Steiner points inside domain: 3
+

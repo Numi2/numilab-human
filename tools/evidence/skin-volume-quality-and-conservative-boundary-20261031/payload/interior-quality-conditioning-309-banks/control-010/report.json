@@ -1,0 +1,36 @@
+{
+  "schema": "h706.registered-anchor-interior-conditioning-controls.v1",
+  "status": "PASS_REGISTERED_IDENTITY_ELIGIBILITY_CONTROLS",
+  "controls": [
+    "direct_OI_vertex_identity_fixed",
+    "no_surface_ancestry_interior_eligible",
+    "nonboundary_registered_identity_fixed",
+    "unknown_role_rejected",
+    "false_surface_ancestry_rejected",
+    "missing_source_row_rejected",
+    "coordinate_mismatch_rejected",
+    "duplicate_registered_identity_rejected"
+  ],
+  "fixture": {
+    "registered_mask": [
+      true,
+      true,
+      true,
+      true,
+      false
+    ],
+    "eligible_rows": [
+      4
+    ],
+    "boundary_rows": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "positive_cells": 4
+  },
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping": "NOT_RUN"
+}

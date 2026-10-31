@@ -1,0 +1,83 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.001554
+Creating surface mesh ...
+Surface mesh seconds:  0.000213
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [135,118].
+  2nd: [135,127].
+  Reducing collinear tolerance from 179.9 to 179.972 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [433,437].
+  2nd: [433,434].
+  Reducing collinear tolerance from 179.972 to 179.984 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [1,108].
+  2nd: [1,97].
+  Reducing collinear tolerance from 179.984 to 179.986 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [111,122].
+  2nd: [111,121].
+  Reducing collinear tolerance from 179.986 to 179.988 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [1,118].
+  2nd: [1,108].
+  Reducing collinear tolerance from 179.988 to 179.99 degree.
+Warning:  Two line segments are almost crossing.
+  1st: [81,95].
+  2nd: [67,82].
+  Reducing collinear tolerance from 179.99 to 179.997 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=5207 zero=5207 expected15=0 other=0 flip23=30655 flip32=29363 flip41=15 flip44=2 invalid_hull_attrs=0
+Boundary recovery seconds:  0.080972
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=2513 zero=0 expected15=2513 other=0 flip23=30655 flip32=29363 flip41=15 flip44=2 invalid_hull_attrs=0
+Exterior tets removal seconds:  0.000487
+Suppressing Steiner points ...
+Steiner suppression seconds:  1e-06
+ATTR_CENSUS stage=after_suppresssteinerpoints total=2509 zero=0 expected15=2509 other=0 flip23=30657 flip32=29366 flip41=16 flip44=2 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=2530 zero=0 expected15=2530 other=0 flip23=31754 flip32=30442 flip41=16 flip44=3 invalid_hull_attrs=0
+Delaunay recovery seconds:  0.003634
+Refining mesh...
+  947 insertions, added 1 points, 1515 tetrahedra in queue.
+  315 insertions, added 0 points, 1160 tetrahedra in queue.
+  420 insertions, added 0 points, 666 tetrahedra in queue.
+  560 insertions, added 0 points, 16 tetrahedra in queue.
+  746 insertions, added 4 points, 160 tetrahedra in queue.
+  995 insertions, added 2 points, 216 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=2811 zero=0 expected15=2811 other=0 flip23=31813 flip32=30495 flip41=16 flip44=3 invalid_hull_attrs=0
+Refinement seconds:  0.034158
+Smoothing vertices...
+ATTR_CENSUS stage=after_smoothing total=2836 zero=0 expected15=2836 other=0 flip23=32429 flip32=31086 flip41=16 flip44=3 invalid_hull_attrs=0
+Mesh smoothing seconds:  0.001289
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=4266 zero=0 expected15=4266 other=0 flip23=238993 flip32=238926 flip41=16 flip44=3 invalid_hull_attrs=0
+Mesh improvement seconds:  0.103464
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.00285
+Total running seconds:  0.228669
+
+Statistics:
+
+  Input points: 692
+  Input facets: 1380
+  Input segments: 2070
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 1095
+  Mesh tetrahedra: 4266
+  Mesh faces: 9222
+  Mesh faces on exterior boundary: 1380
+  Mesh faces on input facets: 1380
+  Mesh edges on input segments: 2070
+  Steiner points inside domain: 403
+

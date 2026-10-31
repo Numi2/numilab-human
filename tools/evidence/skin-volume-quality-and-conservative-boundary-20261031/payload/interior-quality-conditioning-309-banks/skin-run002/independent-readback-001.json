@@ -1,0 +1,90 @@
+{
+  "actual_boundary_matches_desired_exactly": true,
+  "all_boundary_and_registered_surface_identity_points_fixed": true,
+  "bad_after": 3372,
+  "bad_before": 3403,
+  "changed_point_rows": [
+    202068,
+    202198,
+    202520,
+    203000,
+    205318,
+    208815,
+    208938,
+    209024,
+    209037,
+    209120,
+    209193,
+    209194,
+    209407,
+    209479,
+    209497,
+    209626,
+    209633
+  ],
+  "changed_rows_are_unregistered_interior_or_new_construction_points": true,
+  "historical_no_surface_ancestry_rows_changed": [
+    202068,
+    202198,
+    202520
+  ],
+  "input": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/face-flips-npz-313-root/skin-run001/fixed-boundary-volume-proposal.npz",
+    "sha256": "5d89d2700ddd87f734e638105249f8b88365283b17c23cb41bf18713f22eb061"
+  },
+  "input_source_node_prefix_bit_identical": true,
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "no_previously_good_cell_regressed": true,
+  "nonpositive_after": 0,
+  "nonpositive_before": 0,
+  "operations": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/interior-quality-conditioning-309-banks/skin-run002/operations.jsonl",
+    "records": 19,
+    "sha256": "6f2fb675facb28c52f37c85d1d990ef2bddbe17079c6cd6969e7ef2f193e6a0a",
+    "stale_rule_string_records": 19,
+    "unique_changed_rows": 17,
+    "unique_point_rows": 17
+  },
+  "other_npz_members_bit_identical": [
+    "tetrahedra",
+    "material_indices",
+    "retained_input_cell_rows",
+    "replacement_parent_cell_rows",
+    "replacement_tetrahedra",
+    "desired_boundary_faces",
+    "solver_infeasible_cavity_sha256"
+  ],
+  "output": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/interior-quality-conditioning-309-banks/skin-run002/conditioned-volume-proposal.npz",
+    "sha256": "ca1f3476e569a233a4cb313bdeb24ea40b86993b42e2a7b3c917da988cdc5a8d"
+  },
+  "output_source_node_prefix_changed_only_at_reported_no_surface_ancestry_rows": true,
+  "physical_admission": false,
+  "policy_erratum": {
+    "corrected_rule": "all complete boundary rows and explicit O/I registered-surface vertex identities fixed; used no-surface-ancestry volume interior rows remain eligible",
+    "historical_text": "all original 142 node coordinates and all complete boundary point rows fixed; only unmatched inferred interior points eligible",
+    "operation_record_field": "registered_identity_rule",
+    "reason": "The runner top-level fixed mask and report used the registration-map identity mask. Only the redundant per-operation string retained its 308 wording. The identity audit and changed-row check independently confirm that no explicit O/I identity or boundary row moved."
+  },
+  "registered_identity_audit": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/interior-quality-conditioning-309-banks/registration-identity-scope-audit-001.json",
+    "sha256": "6e90f36879ba28e54ae0d02122f6d65f4f2e4233e96994d7dc1dae572041f416"
+  },
+  "registration_map": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/registered-node-map-177-143-713-source008/registered-node-map.csv",
+    "registered_identity_counts": {
+      "I": 125368,
+      "O": 76669,
+      "interior_no_surface_ancestry": 488
+    },
+    "sha256": "40646a6c501b89046e0e9836790a78b3303ad8f0033fe5281fc64ebb760fccc3"
+  },
+  "run_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/interior-quality-conditioning-309-banks/skin-run002/report.json",
+    "sha256": "8731484b4404b3951561989dc83f4e32544d648e09c4f7c3fa9b73a887f7abc2"
+  },
+  "schema": "h706.registered-anchor-conditioning-independent-readback.v1",
+  "status": "PASS_NUMERICAL_OUTPUT_WITH_OPERATION_POLICY_ERRATUM",
+  "topology_material_bit_identical": true
+}

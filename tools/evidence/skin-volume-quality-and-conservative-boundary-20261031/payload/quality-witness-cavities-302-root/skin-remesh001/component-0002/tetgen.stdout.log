@@ -1,0 +1,25 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  0.001279
+Creating surface mesh ...
+Surface mesh seconds:  0.000244
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [435,729].
+  2nd: [435,436].
+  Reducing collinear tolerance from 179.9 to 179.997 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=6458 zero=6458 expected15=0 other=0 flip23=19472 flip32=17134 flip41=12 flip44=1 invalid_hull_attrs=0
+Boundary recovery seconds:  0.051346
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=2406 zero=0 expected15=2406 other=0 flip23=19472 flip32=17134 flip41=12 flip44=1 invalid_hull_attrs=0
+Exterior tets removal seconds:  0.000569
+Suppressing Steiner points ...
+Steiner suppression seconds:  2e-06
+ATTR_CENSUS stage=after_suppresssteinerpoints total=2410 zero=0 expected15=2410 other=0 flip23=19472 flip32=17134 flip41=12 flip44=1 invalid_hull_attrs=0
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+!! Boundary contains Steiner points (-YY option). Program stopped.
+Boundary contains Steiner points (-YY option). Program stopped.

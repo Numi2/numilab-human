@@ -1,0 +1,59 @@
+Opening cavity.poly.
+Delaunizing vertices...
+Delaunay seconds:  1e-05
+Creating surface mesh ...
+Surface mesh seconds:  7e-06
+Recovering boundaries...
+Warning:  Two line segments are nearly overlapping.
+  1st: [9,6].
+  2nd: [9,7].
+  Reducing collinear tolerance from 179.9 to 179.965 degree.
+Warning:  Two line segments are nearly overlapping.
+  1st: [9,4].
+  2nd: [9,6].
+  Reducing collinear tolerance from 179.965 to 179.995 degree.
+ATTR_CENSUS stage=after_boundary_before_carve total=23 zero=23 expected15=0 other=0 flip23=5 flip32=3 flip41=0 flip44=0 invalid_hull_attrs=0
+Boundary recovery seconds:  6.1e-05
+Removing exterior tetrahedra ...
+Spreading region attributes.
+ATTR_CENSUS stage=after_carveholes total=8 zero=0 expected15=8 other=0 flip23=5 flip32=3 flip41=0 flip44=0 invalid_hull_attrs=0
+Exterior tets removal seconds:  9e-06
+Suppressing Steiner points ...
+Steiner suppression seconds:  0
+ATTR_CENSUS stage=after_suppresssteinerpoints total=8 zero=0 expected15=8 other=0 flip23=5 flip32=3 flip41=0 flip44=0 invalid_hull_attrs=0
+Recovering Delaunayness...
+ATTR_CENSUS stage=after_recoverdelaunay total=9 zero=0 expected15=9 other=0 flip23=6 flip32=3 flip41=0 flip44=0 invalid_hull_attrs=0
+Delaunay recovery seconds:  3e-06
+Refining mesh...
+  13 insertions, added 0 points, 0 tetrahedra in queue.
+  4 insertions, added 0 points, 0 tetrahedra in queue.
+ATTR_CENSUS stage=after_delaunayrefinement total=9 zero=0 expected15=9 other=0 flip23=6 flip32=3 flip41=0 flip44=0 invalid_hull_attrs=0
+Refinement seconds:  2.4e-05
+Improving mesh...
+ATTR_CENSUS stage=after_improvement_gate total=9 zero=0 expected15=9 other=0 flip23=6 flip32=3 flip41=0 flip44=0 invalid_hull_attrs=0
+Mesh improvement seconds:  6e-06
+Jettisoning redundant points.
+
+Writing cavity.1.node.
+Writing cavity.1.ele.
+Writing cavity.1.face.
+Writing cavity.1.edge.
+
+Output seconds:  0.00021
+Total running seconds:  0.00035
+
+Statistics:
+
+  Input points: 9
+  Input facets: 14
+  Input segments: 21
+  Input holes: 0
+  Input regions: 1
+
+  Mesh points: 9
+  Mesh tetrahedra: 9
+  Mesh faces: 25
+  Mesh faces on exterior boundary: 14
+  Mesh faces on input facets: 14
+  Mesh edges on input segments: 21
+
