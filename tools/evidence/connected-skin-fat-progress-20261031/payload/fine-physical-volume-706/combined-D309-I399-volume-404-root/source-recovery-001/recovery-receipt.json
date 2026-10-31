@@ -1,0 +1,30 @@
+{
+  "current_passing_checker": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_D309_I399_volume_404_001.py",
+    "sha256": "60d1e6bb3284e315b1a8cdb0530e1f504ce1fdec3748e6f058087b2f94759a45",
+    "status": "PASS checker preserved unchanged"
+  },
+  "expected_original_source_sha256_prefix": "e902",
+  "failed_attempt": {
+    "attempt": "independent-verification-001",
+    "cause": "The surviving determinant list is empty when an authorized endpoint quotient deletes every tetrahedron in its local star.",
+    "exception": "ValueError: min() iterable argument is empty",
+    "failed_assertion": "assert min(old_det) > 0 and min([d for d, dead in zip(new_det, deleted) if not dead]) > 0",
+    "failure_text_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-D309-I399-volume-404-root/independent-verification-001-failed.txt",
+    "failure_text_sha256": "b173a06256096ff7d3dfb58f5ba172ce0b3db9ee5f1669ed534e1c456680a45a",
+    "source_line": 196,
+    "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_D309_I399_volume_404_001.py"
+  },
+  "reconstruction": {
+    "archived_source_created": false,
+    "candidate_sha256": "304b04d370d3fe1aeb45e9b55a83332ebc471971b8dc5eb4e59fb0e18135a88f",
+    "expected_prefix_match": false,
+    "method": "A forensic reconstruction restored only the failed one-line min() assertion from the exact traceback into a copy of the current passing checker.",
+    "note": "Candidate did not match the expected e902 prefix. The original failed source had been edited in place; no source is claimed or archived.",
+    "source_bytes_recovered": false,
+    "status": "UNVERIFIED"
+  },
+  "schema": "h706.404-checker-source-recovery.v1",
+  "scope": "Evidence-only recovery note. No geometry was rerun, no source/candidate was changed, and the failed traceback plus current checker remain the authoritative retained artifacts.",
+  "status": "SOURCE_RECOVERY_UNVERIFIED_NO_ARCHIVED_SOURCE"
+}

@@ -1,0 +1,75 @@
+{
+  "status": "PASS_INDEPENDENT_CACHED_KERNEL_FAN_CHAIN_REPLAY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/targeted-interior-conditioning-359-root/skin-run001/conditioned-volume-proposal.npz",
+  "input_sha256": "5b58db3b8f9196cb952cc99b66aaeef8ca9335bad3c064dff1973d5954fcf986",
+  "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/kernel-fan-volume-proposal.npz",
+  "candidate_sha256": "5ecd5bbe2d2392adb5c02fc308cc999cbcb33c9904cd6008c2721c59008c72ee",
+  "original_point_prefix_bit_identical": true,
+  "new_nodes": "inferred volume-interior construction points only",
+  "complete_oriented_boundary_bit_identical": true,
+  "boundary_face_count": 403152,
+  "oriented_boundary_sha256": "95c54d5f3bf3e136bf3668a62fd02684d7e442e0a6520f0d88850f54687e6a89",
+  "nonmanifold_faces": 0,
+  "inconsistent_internal_face_orientation": 0,
+  "duplicate_cells": 0,
+  "exact_per_cavity_positive_F32_volume_and_boundary": true,
+  "connectivity_and_material_full_replay": "PASS",
+  "operations": 6,
+  "baseline_quality": {
+    "cells": 750133,
+    "normalized_det_failures": 1991,
+    "absolute_volume_failures": 118,
+    "union_failures": 2006,
+    "minimum_normalized_det": 5.418069994163561e-12,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "final_quality": {
+    "cells": 750141,
+    "normalized_det_failures": 1977,
+    "absolute_volume_failures": 118,
+    "union_failures": 1992,
+    "minimum_normalized_det": 5.418069994163561e-12,
+    "minimum_volume_m3": 9.815876602295929e-22
+  },
+  "chain": [
+    {
+      "input_sha256": "5b58db3b8f9196cb952cc99b66aaeef8ca9335bad3c064dff1973d5954fcf986",
+      "report": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/report.json",
+      "report_sha256": "fd69d68a744b8a7d0599e08988ea043d7286b57ff9db91891c0aebc6c09b6299",
+      "candidate": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/kernel-fan-volume-proposal.npz",
+      "candidate_sha256": "5ecd5bbe2d2392adb5c02fc308cc999cbcb33c9904cd6008c2721c59008c72ee",
+      "operations": 6
+    }
+  ],
+  "case_payload_pins": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/pass-0000/replacement.npz",
+      "sha256": "cb2ab72783907e35383076ba76d1fc91071676daf60caa15ea3f17bdd692b9c8"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/pass-0001/replacement.npz",
+      "sha256": "e06423b3f4344d309351ee84d1a427931294a256073141ca6d9bbf3088b2203c"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/pass-0002/replacement.npz",
+      "sha256": "90a2e777e322243496b99e1124ce16cb7b95a378d1b0a83fc98b58d1d7c290a2"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/pass-0003/replacement.npz",
+      "sha256": "653925d8ea17f63fa45e01332d3ade5cd78631dab0998e65af3f7dc06f46c16e"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/pass-0004/replacement.npz",
+      "sha256": "0bd689225e60d48da5902eeaaa03d11ea0850b1038bccc14c6ccd1bb029db21b"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cached-joint-witness-360-root/skin-run001/pass-0005/replacement.npz",
+      "sha256": "c31e8acecfa88e089b6b191d6e275c65f6101b91306a264fc9552fd470e5dae9"
+    }
+  ],
+  "verifier_sha256": "cd125e2cdd301df65bdf21f0fe0fcd0d63a4330fbe03b844707763acb25bb563",
+  "elapsed_s": 2.428530874894932,
+  "limitation": "native quality still incomplete; mass mapping, GPU accepted-state and motion are not qualified"
+}

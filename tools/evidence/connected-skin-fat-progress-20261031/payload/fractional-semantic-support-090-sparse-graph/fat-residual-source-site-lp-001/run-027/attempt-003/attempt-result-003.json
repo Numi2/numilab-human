@@ -1,0 +1,139 @@
+{
+  "active_capacity": {
+    "active_limit": 12000000,
+    "active_lp_columns_final": 8736684,
+    "historical_candidate_count_final": 12012407,
+    "legacy_combined_cap_exceeded": true,
+    "peak_rss_bytes": 5758025728,
+    "remaining_active_headroom": 3263316,
+    "retained_held_history": 3275723
+  },
+  "attempt002": {
+    "failure_receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-residual-source-site-lp-001/run-027/attempt-002/attempt-failure-002.json",
+    "failure_receipt_sha256": "17d947e65e8805602e4f2e05a5a5a15ef4682d3f5c69a372dd31792e33fc16c2",
+    "round17_accepted_site_sha256": "d09873b67f5c9d8291ad6846c2bbf713408d02a260abd76908233eef60e213ef",
+    "status": "FAIL_HIGHS_ADD_COLS_WARNING_TINY_MATRIX_COEFFICIENTS_OMITTED"
+  },
+  "attempt_source": {
+    "run_log": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-residual-source-site-lp-001/run-027/attempt-003/highs-incremental.log",
+    "run_log_sha256": "4d6f7140bb257f9504d5d4d535d8bdbe954d22ae47990651b441a6a461716b7a",
+    "script": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-residual-source-site-lp-001/run-027/attempt-003/column_generate_027_attempt003.py",
+    "script_sha256": "f48c5075b1ff1946a1b8ee9633963ce5c2a7f7359d3ee1448cef66e5f4f0d754"
+  },
+  "baseline_geometry_admissible": false,
+  "bounded_rounds": [
+    {
+      "active_after": 8732469,
+      "active_before": 8728373,
+      "historical_count_after": 12008192,
+      "largest_factor": 1.0,
+      "min_post_scale_nonzero": 7.870236323545969e-09,
+      "min_pre_scale_nonzero": 7.870236323545969e-09,
+      "model_status_after": "HighsModelStatus.kInfeasible",
+      "pair_search_exhaustive": false,
+      "positive_new_sites": 313825,
+      "report_sha256": "17cebd88aa585509fd6979c80507cc6fd65957f9f5d40847329c312a7bf2ed67",
+      "round": 18,
+      "scaled_columns": 0,
+      "site_delta_sha256": "1e474d4bcda9fa543fed52b85c7ebb1bdfd12126c144ff4c77793f348abd90db",
+      "sites": 4096,
+      "strict_farkas_gap": 283064.1690042163,
+      "unscaled_columns": 4096
+    },
+    {
+      "active_after": 8732586,
+      "active_before": 8732469,
+      "historical_count_after": 12008309,
+      "largest_factor": 256.0,
+      "min_post_scale_nonzero": 1.38906344507044e-12,
+      "min_pre_scale_nonzero": 1.6005825515404544e-14,
+      "model_status_after": "HighsModelStatus.kInfeasible",
+      "pair_search_exhaustive": true,
+      "positive_new_sites": 117,
+      "report_sha256": "8e1047667f9b0ba09272a648fc92ac708722b6552f9089272d720c4d56d0dce8",
+      "round": 19,
+      "scaled_columns": 10,
+      "site_delta_sha256": "5d704cae4084a733a781714f460c7c1d30b164ac29fa07d551c98e50443ed8d0",
+      "sites": 117,
+      "strict_farkas_gap": 805491758.5260811,
+      "unscaled_columns": 107
+    },
+    {
+      "active_after": 8736682,
+      "active_before": 8732586,
+      "historical_count_after": 12012405,
+      "largest_factor": 1.0,
+      "min_post_scale_nonzero": 3.555121518948226e-06,
+      "min_pre_scale_nonzero": 3.555121518948226e-06,
+      "model_status_after": "HighsModelStatus.kInfeasible",
+      "pair_search_exhaustive": false,
+      "positive_new_sites": 162029,
+      "report_sha256": "b481625a5284b17d2427f94aeab73d5de5dc97dea77e5e97d38120ae1eaed6ee",
+      "round": 20,
+      "scaled_columns": 0,
+      "site_delta_sha256": "6d3865b9d2e22530565b472e2284241bb1bf7d684025e725630ccfabecd5267b",
+      "sites": 4096,
+      "strict_farkas_gap": 90973.14641708869,
+      "unscaled_columns": 4096
+    },
+    {
+      "active_after": 8736684,
+      "active_before": 8736682,
+      "historical_count_after": 12012407,
+      "largest_factor": 1.0,
+      "min_post_scale_nonzero": 1.7320118726702813e-06,
+      "min_pre_scale_nonzero": 1.7320118726702813e-06,
+      "model_status_after": "HighsModelStatus.kInfeasible",
+      "pair_search_exhaustive": true,
+      "positive_new_sites": 2,
+      "report_sha256": "b9ed2a0295854a1a5430fa7f5cb357aa8b6b4f4adb62b1cea3bbcc231d7a7807",
+      "round": 21,
+      "scaled_columns": 0,
+      "site_delta_sha256": "78e5eb8731ef159cd93e02225127213f268968c3ad8bb98a19799a6bce3467bd",
+      "sites": 2,
+      "strict_farkas_gap": 1817324.5065719727,
+      "unscaled_columns": 2
+    }
+  ],
+  "checks": {
+    "active_plus_retained_history_identity": true,
+    "all_four_batches_serialized_and_reoptimized": true,
+    "all_scaled_matrix_minima_above_HiGHS_1e-12_omission_threshold": true,
+    "all_selected_barycentrics_finite_nonnegative_unit_sum": true,
+    "equivalent_variable_scaling_cap_identity_checked_for_all_new_sites": true,
+    "no_AddCols_warning_in_attempt003": true,
+    "source_inputs_unchanged": true
+  },
+  "control": {
+    "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-residual-source-site-lp-001/run-027/active-round-control-027-v2.json",
+    "receipt_sha256": "5b399af9e9d8cba953c4ca78acbbb362e5d12f89c6e478bdd2f21df2c1616244",
+    "status": "PASS_TINY_HIGHS_REPLAY_SCALED_COLUMN_ACCOUNTING_AND_REOPT_CONTROLS",
+    "test_count": 2,
+    "test_sha256": "f2f8de12b103d0158b32eda9e478e127067bd3f1ebad09a9e364e2aafe5c87f8"
+  },
+  "final_lp": {
+    "candidate_flow": null,
+    "elapsed_seconds": 164.17332045803778,
+    "feasibility_claim": false,
+    "index": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-residual-source-site-lp-001/run-027/attempt-003/column-generation-index.json",
+    "index_sha256": "7a6995be6b46f4c352d70bcc2774986888542b1ad227e0fea1afbeff38c36d27",
+    "model_status": "HighsModelStatus.kInfeasible",
+    "status": "NO_FEASIBLE_PRIMAL"
+  },
+  "mass_transfer": "NOT_RUN",
+  "native_steps": 0,
+  "new_sites_total": 8311,
+  "physical_admission": false,
+  "replayed_prefix": {
+    "columns_after": 8728373,
+    "receipt": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-residual-source-site-lp-001/run-027/attempt-003/replayed-prefix-receipt.json",
+    "receipt_sha256": "03a30c97391f12248430faa9485c58bde17291d8fa5dff0f4b0c20f284b30317",
+    "rounds": 17,
+    "rows_after": 888365,
+    "status": "HighsModelStatus.kInfeasible"
+  },
+  "scaled_columns_total": 10,
+  "schema": "numi.human.fat-residual-source-site-column-generation-attempt-result.v1",
+  "status": "SOURCE_ONLY_INFEASIBLE_AFTER_BOUNDED_EQUIVALENTLY_SCALED_COLUMNS",
+  "unscaled_columns_total": 8301
+}

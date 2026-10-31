@@ -1,0 +1,63 @@
+{
+  "status": "PASS_PACKET_AND_SCALE_AWARE_VERIFIER_CONTROLS",
+  "cases": [
+    {
+      "name": "Skin actual packet binary/NPZ/source moments",
+      "status": "PASS"
+    },
+    {
+      "name": "Skin trailing packet byte",
+      "status": "EXPECTED_REJECTION",
+      "reason": "source carrier packet trailing bytes"
+    },
+    {
+      "name": "Skin NPZ/binary mismatch",
+      "status": "EXPECTED_REJECTION",
+      "reason": "source carrier binary/NPZ mismatch carrier_weights"
+    },
+    {
+      "name": "Skin jointly corrupted mass/first moment",
+      "status": "EXPECTED_REJECTION",
+      "reason": "source carrier original tetrahedron mass/first moments"
+    },
+    {
+      "name": "Fat actual packet binary/NPZ/source moments",
+      "status": "PASS"
+    },
+    {
+      "name": "Fat trailing packet byte",
+      "status": "EXPECTED_REJECTION",
+      "reason": "source carrier packet trailing bytes"
+    },
+    {
+      "name": "Fat NPZ/binary mismatch",
+      "status": "EXPECTED_REJECTION",
+      "reason": "source carrier binary/NPZ mismatch carrier_weights"
+    },
+    {
+      "name": "Fat jointly corrupted mass/first moment",
+      "status": "EXPECTED_REJECTION",
+      "reason": "source carrier original tetrahedron mass/first moments"
+    },
+    {
+      "name": "tiny positive source preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "tiny source omitted",
+      "status": "EXPECTED_REJECTION",
+      "reason": "tiny relative closure"
+    },
+    {
+      "name": "tiny source doubled",
+      "status": "EXPECTED_REJECTION",
+      "reason": "tiny relative closure"
+    }
+  ],
+  "case_count": 11,
+  "physical_admission": false,
+  "native_steps": 0,
+  "full_allocation_checked": false,
+  "helper_sha256": "f64e8dc3627f2d4436cc0cfc8e9d2aa5e0033fdd584e1a348a448d0f76979494",
+  "verifier_sha256": "c1d87abc51b3ce1ac5c1e98ce3fa26709e77abe718b63ee3ca244957f99d469d"
+}

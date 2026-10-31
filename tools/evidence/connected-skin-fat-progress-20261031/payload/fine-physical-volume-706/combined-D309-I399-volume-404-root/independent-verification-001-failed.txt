@@ -1,0 +1,10 @@
+Independent verifier attempt 001 failed before producing a report. This was a checker defect, not a producer/candidate failure.
+
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_D309_I399_volume_404_001.py", line 275, in <module>
+    main()
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_D309_I399_volume_404_001.py", line 196, in main
+    assert min(old_det) > 0 and min([d for d, dead in zip(new_det, deleted) if not dead]) > 0
+ValueError: min() iterable argument is empty
+
+Cause: one authorized endpoint quotient deletes every tetrahedron in its local star. The independent checker incorrectly required a minimum retained determinant for an empty surviving-star list. The verifier was corrected to check positivity only when retained cells exist; attempt 002 then passed. Candidate and producer files were unchanged.

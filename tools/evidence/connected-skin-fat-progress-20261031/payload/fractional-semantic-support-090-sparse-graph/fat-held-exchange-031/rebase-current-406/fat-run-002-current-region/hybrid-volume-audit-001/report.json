@@ -1,0 +1,100 @@
+{
+  "checks": {
+    "all_direct_current_determinants_positive": true,
+    "all_hybrid_volumes_positive": true,
+    "baseline_mesh_row_counts_match_source_csv": true,
+    "candidate_matches_its_report": true,
+    "exact_coordinate_tet_pairs_are_bitwise_identical_unordered": true,
+    "exact_map_domain_matches_baseline": true,
+    "exact_map_is_injective": true
+  },
+  "counts": {
+    "baseline_cells": 853406,
+    "changed_baseline_cells": 270489,
+    "current_cells": 826737,
+    "exact_coordinate_pair_mismatches": 0,
+    "exact_identity_cell_pairs": 582917
+  },
+  "density_comparison_using_same_retained_mass": {
+    "direct_current_det_max_kg_m3": 950.0000000119425,
+    "direct_current_det_min_positive_kg_m3": 2.8369888724356276e-10,
+    "direct_det_density_over_950_after_owner_release": 431,
+    "direct_det_over_950_cells": 431,
+    "direct_det_under_850_cells": 100235,
+    "direct_det_under_850_deficit_kg": 0.5353714282660222,
+    "high_density_classification_flips": 235,
+    "hybrid_density_still_over_950_after_owner_release": 244,
+    "hybrid_max_kg_m3": 950.0000000000001,
+    "hybrid_min_positive_kg_m3": 2.8369888724356276e-10,
+    "hybrid_over_950_cells": 244,
+    "hybrid_under_850_cells": 89391,
+    "hybrid_under_850_deficit_kg": 0.5353714282660218,
+    "hybrid_upper_roundoff_witnesses": 244,
+    "low_density_classification_flips": 13396,
+    "max_abs_density_delta_kg_m3": 1.0467773449818196e-05,
+    "max_abs_density_delta_on_exact_identity_rows_kg_m3": 1.0467773449818196e-05,
+    "retained_positive_mass_cells": 658306
+  },
+  "elapsed_seconds": 1.4763073329813778,
+  "exact_identity_volume_comparison": {
+    "baseline_direct_exact_equal_count": 554424,
+    "baseline_direct_float64_det_vs_pinned_csv_absolute_m3": {
+      "count": 582917,
+      "max": 9.317362419797304e-21,
+      "min": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 9.926167350636332e-24,
+      "p999": 5.040375431759312e-22
+    },
+    "baseline_direct_float64_det_vs_pinned_csv_relative_error": {
+      "count": 582917,
+      "max": 1.2315027482773476e-08,
+      "min": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 3.816265905189583e-15,
+      "p999": 8.959258813316504e-13
+    },
+    "current_direct_exact_equal_count": 553887,
+    "current_direct_float64_det_vs_pinned_csv_absolute_m3": {
+      "count": 582917,
+      "max": 9.317362419797304e-21,
+      "min": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 1.1849879262704546e-23,
+      "p999": 4.938334431393723e-22
+    },
+    "current_direct_float64_det_vs_pinned_csv_relative_error": {
+      "count": 582917,
+      "max": 1.2315027482773476e-08,
+      "min": 0.0,
+      "p50": 0.0,
+      "p95": 0.0,
+      "p99": 4.461332088108632e-15,
+      "p999": 1.0404757626768147e-12
+    },
+    "pinned_volume_rule": "For all 582,917 exact ordered/signed Float32 coordinate tetrahedron identities, reuse the original transport child's 17-digit reference_volume_m3 value. For other 243,820 current rows, compute absolute signed determinant of current Float32 coordinates widened to Float64, divided by 6. This preserves the previously admitted source-volume rows exactly and gives changed rows their current determinant volume."
+  },
+  "inputs": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.ele": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.node": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/report.json": "fc2d2e23a00b530e5074abd06e1549516e1364fb73bb713b23a05ae3ae4555c7",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-child-mass.csv": "c09178538857ac5cbd473d85987e242f9497181fc655b188117d0b9f46e861ab",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/exact-map.npz": "d17b076423ae28ef95fe19f41d61b97165f87ba4a2ae51e128f6e35a38c155a0",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/rebased-held-flow-ledger.npz": "0ee4e4909740e0029a10cb0019a531652b90c882226a0212f6d688f0bbf405fc"
+  },
+  "interpretation": "The direct determinant comparison is diagnostic. Exact-coordinate identity rows use the pinned source volume by design; numerical differences are reported, not normalized away. Density cap results are reported under both hybrid and all-current-direct determinant volumes; the source-only held ledger is not a complete allocation.",
+  "mass_transport": "NOT_ADMITTED",
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "numi.human.current-fat-hybrid-volume-audit.v1",
+  "scope": "Quantifies the existing rebase producer's volume rule and compares pinned baseline volumes to direct determinants on exact-coordinate tetrahedra; no volume or density result is used to suppress the existing quality failure.",
+  "source": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/hybrid-volume-audit-001/source-freeze/hybrid-volume-audit-v1.py",
+    "sha256": "ee6d01ead06f9338f56dde712392fd35af9643518d4da9eb1a60ede22bef02d5"
+  },
+  "status": "PASS_SOURCE_ONLY_HYBRID_VOLUME_REPLAY"
+}

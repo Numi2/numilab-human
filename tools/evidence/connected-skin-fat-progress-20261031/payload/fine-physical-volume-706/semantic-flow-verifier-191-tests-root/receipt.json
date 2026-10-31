@@ -1,0 +1,40 @@
+{
+  "status": "PASS_FULL_DOMAIN_SUPPORT_AND_PARTIAL_FLOW_PERMISSION_CHECKS",
+  "physical_admission": false,
+  "native_steps": 0,
+  "complete_mass_allocation": false,
+  "roles": [
+    {
+      "role": "Skin",
+      "source_parent_rows": 14316,
+      "partial_flow_edges_checked": 571561,
+      "children": 743497,
+      "groups": 314,
+      "nonpreferred_p1_but_onehop_permitted_edges": 101663,
+      "support_sha256": "a85ec581fcabe2062b4f782f6a316aef6ebf63edec6e95722c9e24fa723cc803",
+      "status": "PASS_PARTIAL_FLOW_SEMANTIC_PERMISSIONS_ONLY",
+      "rejections": [
+        "flow outside one-hop source region",
+        "FSSUP090 trailing bytes"
+      ],
+      "elapsed_s": 2.666588375112042
+    },
+    {
+      "role": "Fat",
+      "source_parent_rows": 14316,
+      "partial_flow_edges_checked": 834624,
+      "children": 853406,
+      "groups": 314,
+      "nonpreferred_p1_but_onehop_permitted_edges": 204741,
+      "support_sha256": "7b49c31e8684167470cc30103c7a344c79cc9959f0ca9a949930fdb0f9238eea",
+      "status": "PASS_PARTIAL_FLOW_SEMANTIC_PERMISSIONS_ONLY",
+      "rejections": [
+        "flow outside one-hop source region",
+        "FSSUP090 trailing bytes"
+      ],
+      "elapsed_s": 3.4043479580432177
+    }
+  ],
+  "support_verifier_sha256": "4ec6751ff152d4c85ec0b4874ff2867cf3284ceea1361daf329f1ae2397b3aa0",
+  "final_allocation_verifier_sha256": "a2b9d00ef34915db13909f94f08f3454f89758289670613ff81e51313dc84608"
+}

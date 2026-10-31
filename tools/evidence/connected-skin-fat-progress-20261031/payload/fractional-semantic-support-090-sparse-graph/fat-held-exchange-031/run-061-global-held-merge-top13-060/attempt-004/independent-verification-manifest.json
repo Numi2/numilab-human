@@ -1,0 +1,52 @@
+{
+  "schema": "numi.human.fat-held-060-061-independent-verification-manifest.v1",
+  "status": "PASS_SOURCE_ONLY_060_PROPOSAL_AND_061_MERGE_REPLAY",
+  "geometry_scope": "baseline142 Fat only; incomplete and not final geometry",
+  "inputs": {
+    "060_proposal_npz": {
+      "path": "run-060-top13-exact-tet-closure/attempt-002/proposal.npz",
+      "sha256": "d630fcaa0cc09b89d8efa5de6332dd29904a455a2362c0aeef6a2242b8b0c13e"
+    },
+    "060_producer_report": {
+      "path": "run-060-top13-exact-tet-closure/attempt-002/report.json",
+      "sha256": "7a09b5fa9d5a2d00995e538f73c1ef2d703fef06467a1ea020fe9ffe427e2499"
+    },
+    "060_source_freeze": {
+      "path": "run-060-top13-exact-tet-closure/attempt-002/source-freeze.json",
+      "sha256": "143a3aeb40de35ecea6f7f5911f49d58cfe64d71e54d45317eb268f5d21c7579"
+    },
+    "061_merged_ledger": {
+      "path": "run-061-global-held-merge-top13-060/attempt-004/merged-held-state-060.npz",
+      "sha256": "cd4bb12c4b81067a8d6d385766e51883a69275744cc538a8cfcdbf9bafbb9099"
+    },
+    "061_producer_report": {
+      "path": "run-061-global-held-merge-top13-060/attempt-004/report.json",
+      "sha256": "e08e8b095be770e3adab1be5d9bf73faaaccd4a17d5830b979585308a344d601"
+    },
+    "061_source_freeze": {
+      "path": "run-061-global-held-merge-top13-060/attempt-004/source-freeze.json",
+      "sha256": "4a8a868d3a842737d1a91ac08e824b967b723fa96136de0314499bb179ac3f79"
+    }
+  },
+  "independent_verifier": {
+    "path": "run-061-global-held-merge-top13-060/attempt-004/verify_060_061_independent.py",
+    "sha256": "5d39755b2811a0f06ab093b5e2516797c51dede6d48740afc540782091918b39",
+    "receipt": "run-061-global-held-merge-top13-060/attempt-004/independent-verification-003.json",
+    "receipt_sha256": "a87a978ed89940cf8e5064bf8130b218d51e14df7caabe15530c01771b65312c"
+  },
+  "checks": {
+    "060_source_geometry_material_region_radius_and_M_over_4": "PASS",
+    "061_exact_retire_preserve_append_partition": "PASS",
+    "whole_merged_source_parent_and_corner_ledgers": "PASS",
+    "whole_merged_child_mass_and_donor_closure": "PASS",
+    "whole_merged_radius": "PASS",
+    "global_receiver_bounds": "INCOMPLETE_BELOW_MINIMUM",
+    "physical_admission": false,
+    "native_steps": 0,
+    "mass_transport": "NOT_ADMITTED",
+    "complete_allocation": false
+  },
+  "retained_verifier_attempt_notes": [
+    "Earlier independent-verifier attempts failed on verifier-only implementation defects (boolean-expression TypeError, then a corner-residual scale that used the residual instead of original parent M/4). They produced no passing receipt and did not alter producer inputs or outputs. The passing verifier scales ledger differences against original parent mass/M-over-4."
+  ]
+}

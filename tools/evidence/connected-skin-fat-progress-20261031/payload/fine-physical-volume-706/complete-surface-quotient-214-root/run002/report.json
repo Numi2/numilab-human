@@ -1,0 +1,83 @@
+{
+  "status": "COMPLETE_SURFACE_QUOTIENT_DIAGNOSTIC_REQUIRES_LOCAL_REMESH",
+  "physical_admission": false,
+  "native_steps": 0,
+  "script_sha256": "a3d2aa389450102a7f94c984592e06f4e6a49599f1a017ffa18d0d3a7f583bf9",
+  "ledger_pins": {
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-002/accepted-operations.jsonl": "9e0498d54d106e3acc376e1f3bd461b24d0c34182449b49c3f1d7d3dc799cd51",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-003-lineage-corrected-002/accepted-operations.jsonl": "644f93df1a24d380f582af3102084c0ec98a90f543a3cc984c3ed75d1c03f46c",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/accepted-operations.jsonl": "97620e6c702ba67c18f65cebccfd441c9e5931866cb19385a33118f9a44b76bd"
+  },
+  "operations": 808,
+  "roles": [
+    {
+      "role": "Skin",
+      "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-203-root/skin-batch001/pass-007/fixed-boundary-volume-proposal.npz",
+      "input_sha256": "90432fcaf54df3c4f13e129afd54d04ecc378d055b3d4bb2dbcc80067ea9d679",
+      "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-surface-quotient-214-root/run002/skin-complete-surface-quotient-remesh-input.npz",
+      "output_sha256": "42d438fba30b43243cafa1e9f33fa2b247404c1b979757b724c7e51132f62ec8",
+      "cells": 731208,
+      "removed_degenerate_cells": 134,
+      "nonpositive_cells": 3,
+      "quality_failures": 23065,
+      "desired_faces": 403894,
+      "desired_missing_faces": 228,
+      "current_extra_boundary_faces": 374,
+      "desired_boundary_closed_oriented": true,
+      "source_parts": {
+        "O": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-O-short-edge-collapse-raw.npz",
+          "sha256": "1c3fb9f1d9da14f2a16e3b420851ad07dcd272817b5498ec468ab956d5e6b52c",
+          "faces": 153223,
+          "winding_flip": false
+        },
+        "I": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-I-short-edge-collapse-raw.npz",
+          "sha256": "ec939082a0989070455f083bdedac8b9f1125ccca7f7864bbdae12a6fbbb7986",
+          "faces": 250581,
+          "winding_flip": true
+        }
+      },
+      "walls": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+        "sha256": "e18930bf18863cb97b4d98590a7c25d0d043c3e6f4f783676dac196ae812d55a",
+        "wall_faces": 90
+      }
+    },
+    {
+      "role": "Fat",
+      "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-volume-flips-203-root/fat-batch001/pass-007/fixed-boundary-volume-proposal.npz",
+      "input_sha256": "ab5cbe46336175e8809198dd44c2b6a07da3b9b188d4d3f1217897848a1efd94",
+      "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-surface-quotient-214-root/run002/fat-complete-surface-quotient-remesh-input.npz",
+      "output_sha256": "eed6ea151acf68a23093c91d6568f8a3f273e3d6aa4d7adee5623d85ed046427",
+      "cells": 829139,
+      "removed_degenerate_cells": 2163,
+      "nonpositive_cells": 62,
+      "quality_failures": 48120,
+      "desired_faces": 491248,
+      "desired_missing_faces": 176,
+      "current_extra_boundary_faces": 300,
+      "desired_boundary_closed_oriented": true,
+      "source_parts": {
+        "I": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-I-short-edge-collapse-raw.npz",
+          "sha256": "ec939082a0989070455f083bdedac8b9f1125ccca7f7864bbdae12a6fbbb7986",
+          "faces": 250581,
+          "winding_flip": false
+        },
+        "D": {
+          "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-D-short-edge-collapse-raw.npz",
+          "sha256": "b2056cb9a2a810c2f2712493121b08456ee006d6bb74c17d517d8ac72a6860dc",
+          "faces": 240577,
+          "winding_flip": true
+        }
+      },
+      "walls": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+        "sha256": "65a13549560123b31ecbc698680edaff48ab843e834ef127e72f59d6aaffc04a",
+        "wall_faces": 90
+      }
+    }
+  ],
+  "elapsed_s": 11.882042207987979
+}

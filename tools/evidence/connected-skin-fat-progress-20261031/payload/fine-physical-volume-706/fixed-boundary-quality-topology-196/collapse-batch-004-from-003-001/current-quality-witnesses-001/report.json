@@ -1,0 +1,65 @@
+{
+  "elapsed_seconds": 0.07506366702727973,
+  "inputs": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-D-short-edge-collapse-raw.npz",
+      "sha256": "b2056cb9a2a810c2f2712493121b08456ee006d6bb74c17d517d8ac72a6860dc"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-I-short-edge-collapse-raw.npz",
+      "sha256": "ec939082a0989070455f083bdedac8b9f1125ccca7f7864bbdae12a6fbbb7986"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-O-short-edge-collapse-raw.npz",
+      "sha256": "1c3fb9f1d9da14f2a16e3b420851ad07dcd272817b5498ec468ab956d5e6b52c"
+    }
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "roles": {
+    "D": {
+      "bad_bound_key": "D_bound_ratio",
+      "bad_count": 793,
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-D-short-edge-collapse-raw.npz",
+        "sha256": "b2056cb9a2a810c2f2712493121b08456ee006d6bb74c17d517d8ac72a6860dc"
+      },
+      "faces": 240577,
+      "max_bad_bound_ratio": 9.999337335708917e-06,
+      "minimum_bound_ratio": 5.7294430918211907e-08,
+      "witness_rows_key": "D_face_rows"
+    },
+    "I": {
+      "bad_bound_key": "I_bound_ratio",
+      "bad_count": 6,
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-I-short-edge-collapse-raw.npz",
+        "sha256": "ec939082a0989070455f083bdedac8b9f1125ccca7f7864bbdae12a6fbbb7986"
+      },
+      "faces": 250581,
+      "max_bad_bound_ratio": 9.165914097752577e-06,
+      "minimum_bound_ratio": 3.2735388138800123e-06,
+      "witness_rows_key": "I_face_rows"
+    },
+    "O": {
+      "bad_bound_key": "O_bound_ratio",
+      "bad_count": 0,
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/candidate-O-short-edge-collapse-raw.npz",
+        "sha256": "1c3fb9f1d9da14f2a16e3b420851ad07dcd272817b5498ec468ab956d5e6b52c"
+      },
+      "faces": 153223,
+      "max_bad_bound_ratio": null,
+      "minimum_bound_ratio": 1.0132712678804438e-05,
+      "witness_rows_key": "O_face_rows"
+    }
+  },
+  "schema": "h706.fixed-boundary-collapse-current-qbound-witnesses.v1",
+  "status": "READ_ONLY_CURRENT_WITNESS_CENSUS",
+  "threshold": 1e-05,
+  "witness_asset": {
+    "arrays": "per-role zero-based current face row IDs and corresponding qbound ratios",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/current-quality-witnesses-001/qbound-witness-rows.npz",
+    "sha256": "c6b5fba099e4b6aae24cabb7614430ff5a67d1bebf5dd106cff8ae8b683931fb"
+  }
+}

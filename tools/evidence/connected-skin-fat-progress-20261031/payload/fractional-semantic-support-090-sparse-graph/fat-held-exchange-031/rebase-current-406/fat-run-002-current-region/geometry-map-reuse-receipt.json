@@ -1,0 +1,62 @@
+{
+  "baseline_element_sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6",
+  "baseline_node_sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4",
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+    "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211"
+  },
+  "changed_helper_scope": "Only current-region admission in held-flow rebasing changed. The geometry reader, centroid/determinant, exact-key map, and changed-cell point-location functions have identical ASTs to the run-001 helper.",
+  "current_143_support_sha256": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+  "current_p1_support_sha256": "c16f2ff3cd6e30df365ed1418ca385db58cc76403b57359f3effdd1ac3381efc",
+  "function_ast_sha256": {
+    "centroids": "d829b8332fd554e57873afcf5258a874fa3f6c0cd0317d0df757b9ac45a338e6",
+    "exact_key_maps": "bce32368ec2ba7a5130828a3dadc9e2849ba3aec8ff1c6ab836318b4f4f3e0e9",
+    "point_locate_changed": "c691034c06758a9c23e496681c3247cadfeb9550da5263cf2e23f17bf9833e8d",
+    "read_mesh": "5b3aa765af54da3a49c5e925a77c7720443ad8b90868d7af154260363adab55d",
+    "signed_det": "93cc09e6b99b12203e576e33b158df2bd35db0be43874ed10096b815c5b9940a"
+  },
+  "interpretation": "Reusing the exact and point-location maps is valid because baseline mesh, candidate 406 bytes, and all map-producing function ASTs are unchanged; current semantic support is consumed only by the ledger-stage per-flow region check.",
+  "map_artifacts": [
+    {
+      "byte_identical": true,
+      "name": "exact-map.npz",
+      "output_sha256": "d17b076423ae28ef95fe19f41d61b97165f87ba4a2ae51e128f6e35a38c155a0",
+      "source_sha256": "d17b076423ae28ef95fe19f41d61b97165f87ba4a2ae51e128f6e35a38c155a0"
+    },
+    {
+      "byte_identical": true,
+      "name": "cell-row-map.npz",
+      "output_sha256": "c825c8483d3b4cbe99e755a938dfa6ea85b07b8fb7c962f5204bee16f2e47587",
+      "source_sha256": "c825c8483d3b4cbe99e755a938dfa6ea85b07b8fb7c962f5204bee16f2e47587"
+    },
+    {
+      "byte_identical": true,
+      "name": "exact-stage-report.json",
+      "output_sha256": "75a060974c0ca1175778e12e8acecebbbc1d8bed5eb7c338a789024937186562",
+      "source_sha256": "75a060974c0ca1175778e12e8acecebbbc1d8bed5eb7c338a789024937186562"
+    },
+    {
+      "byte_identical": true,
+      "name": "point-location-stage-report.json",
+      "output_sha256": "a7a274e4572b5e79537c750da841b290ff66ae2409632a027f5336a6b9c5bf6d",
+      "source_sha256": "a7a274e4572b5e79537c750da841b290ff66ae2409632a027f5336a6b9c5bf6d"
+    }
+  ],
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "new_ledger_helper_sha256": "a6e796fde1fa63cacabd5e3111711956d4821b2c871c6c3cb787bd392296d16a",
+  "output_dir": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region",
+  "physical_admission": false,
+  "schema": "numi.human.current-region-ledger-geometry-map-reuse.v1",
+  "source_exact_stage_helper_sha256": "657f303c27b50d49199c34f404adca3d7a51c0ef9e10e01b59f1c8723e75b624",
+  "source_geometry_run": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-001-full",
+  "source_point_location_stage_helper_sha256": "657f303c27b50d49199c34f404adca3d7a51c0ef9e10e01b59f1c8723e75b624",
+  "status": "PASS_REUSED_IDENTICAL_GEOMETRY_MAP_CHECKPOINTS",
+  "unchanged_geometry_functions": [
+    "centroids",
+    "exact_key_maps",
+    "point_locate_changed",
+    "read_mesh",
+    "signed_det"
+  ]
+}

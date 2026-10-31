@@ -1,0 +1,193 @@
+{
+  "baseline_geometry": {
+    "cell_count": 853406,
+    "element_sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6",
+    "node_sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142",
+    "point_count": 246445
+  },
+  "candidate_geometry": {
+    "candidate_report_physical_admission": false,
+    "candidate_report_status": "PASS_TYPED_CURRENT_TARGET_REBOUND_SOURCE_ONLY_WITH_RESIDUAL_BOUNDARY_MISMATCH",
+    "cell_count": 826737,
+    "minimum_absolute_volume_m3": 2.757268708510092e-25,
+    "minimum_signed_volume_m3": 2.757268708510092e-25,
+    "negative_orientation_cells": 0,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+    "point_count": 253220,
+    "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/report.json",
+    "report_sha256": "fc2d2e23a00b530e5074abd06e1549516e1364fb73bb713b23a05ae3ae4555c7",
+    "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211",
+    "zero_volume_cells": 0
+  },
+  "canonical_region_admission": {
+    "baseline_independent_verification_sha256": "b0940d6954779767009f257da92de587a6cc57d58c304b925177a3a3e972ea2d",
+    "baseline_row_domain_count": 853406,
+    "baseline_source_support_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/fat-connected-region-support.npz",
+    "baseline_source_support_sha256": "0e47882aab9219230bc263eb4b23759830666908fefdb90f66a970e9655e2d13",
+    "centroid_mapped_old_rows_checked_against_current_support": 262864,
+    "current_region_support_independent_verification_sha256": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "current_row_domain_count": 826737,
+    "current_rows_uncontained_or_wrong_material": 7625,
+    "exact_geometry_identity_old_rows": 582917,
+    "held_flows_passing_current_region_support": 844408,
+    "held_flows_released_for_current_region_miss": 36,
+    "independent_verification_sha256": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482",
+    "rule": "first authenticate every held source-region assignment against baseline 143; then check each mapped current receiver row against current 406 P1 region groups plus only source330 same-material shared-face one-hop regions. No nearest-label fallback.",
+    "source_receipt_sha256": "0cfb03092bdc8e0f28a0f0bb4f5c631f4e88c6355301c7e7433fc160c9ed6859",
+    "status": "PASS_INDEPENDENT_AUTHENTICATED_CONNECTED_SUPPORT",
+    "support_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz",
+    "support_sha256": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526"
+  },
+  "elapsed_seconds": 0.8860018749255687,
+  "held_ledger_rebase": {
+    "baseline_child_count": 853406,
+    "baseline_child_volume_determinant_formula_difference": {
+      "interpretation": "different double-precision determinant association on the same pinned Float32 .node/.ele geometry; exact cell identity reuses the source allocation's pinned child volume, changed target cells use their current Float32 determinant and current-region permission is checked separately",
+      "max_absolute_m3": 9.317362419797304e-21,
+      "max_relative": 1.2315027634433379e-08,
+      "p99_relative": 1.3382758077536046e-14
+    },
+    "baseline_held_flow_mass_kg": 9.821765198675307,
+    "baseline_source_site_max_radius_m": 0.019353,
+    "carrier_packet_sha256": "0cf2307a774d6a56b76bb7643bb37d7c842ab249c97f4470fb49cca5ed633bc6",
+    "carrier_witness_receiver_mismatch_count": 34029,
+    "current_cell_volumes": {
+      "exact_identity_rows_reusing_pinned_baseline_child_volume": 582917,
+      "other_rows_using_current_F32_determinant": 243820
+    },
+    "current_child_count": 826737,
+    "current_density_max_kg_m3": 950.0000000000001,
+    "current_density_min_positive_kg_m3": 2.8369888724356276e-10,
+    "current_density_release_mass_kg": 0.44460563682345783,
+    "current_density_release_rows": 87815,
+    "current_mass_below_density_floor_is_not_filled": true,
+    "current_nonzero_recipient_count": 658306,
+    "current_over_950_density_cell_count": 244,
+    "current_retained_flow_rows": 754841,
+    "current_retained_mass_kg": 9.307850188419508,
+    "current_under_850_density_cell_count": 257822,
+    "current_under_850_density_deficit_kg": 0.5353714282660218,
+    "distance_hard_radius_m": 0.019353,
+    "held_flow_rows": 852047,
+    "master_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-073-release-next8-from-round6-attempt014/phase1-master-state.npz",
+    "master_state_sha256": "f4f3744b643454503706125bdf05490fc171aa389088de902d55b2786e7ee4c7",
+    "merge_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/run-061-global-held-merge-top13-060/attempt-004/merged-held-state-060.npz",
+    "merge_sha256": "cd4bb12c4b81067a8d6d385766e51883a69275744cc538a8cfcdbf9bafbb9099",
+    "parent_corner_after_max_abs_M4_residual_kg": 0.0028183256500176777,
+    "parent_corner_after_max_relative_M4_residual": 1.0,
+    "parent_corner_before_max_abs_M4_error_kg": 0.0009511244242755925,
+    "parent_corner_before_max_relative_M4_error": 1.0,
+    "parents_fully_at_M4_after": 9453,
+    "reason_codes": {
+      "0": "retained",
+      "1": "no containing current cell",
+      "2": "wrong material or only wrong-material point-location container",
+      "3": "current recipient centroid exceeds unchanged 19.353 mm radius",
+      "4": "released to restore current 950 kg/m3 upper density bound",
+      "5": "source parent region is absent from the current recipient row's authenticated P1 plus one-hop support"
+    },
+    "release_reason_counts": {
+      "0": 754841,
+      "1": 7603,
+      "2": 0,
+      "3": 1752,
+      "4": 87815,
+      "5": 36
+    },
+    "released_corner_mass_total_kg": [
+      0.12756514329992868,
+      0.12852593316318808,
+      0.1287037705040154,
+      0.12912016328866713
+    ],
+    "released_flow_rows": 97206,
+    "released_mass_by_reason_kg": {
+      "0": 9.307850188419508,
+      "1": 6.192157394678586e-05,
+      "2": 0.0,
+      "3": 0.06923909304545116,
+      "4": 0.44460563682346044,
+      "5": 8.358812940288744e-06
+    },
+    "released_mass_kg": 0.5139150102557986,
+    "released_mass_reassigned_or_clipped": false,
+    "retained_corner_mass_total_kg": [
+      2.3272321496970942,
+      2.3272491935595383,
+      2.326365335206121,
+      2.3270035099567523
+    ],
+    "retained_current_mass_kg": 9.307850188419508,
+    "retained_current_max_distance_m": 0.019353,
+    "source_mass_total_kg": 10.487108517986506,
+    "source_parent_count": 14316,
+    "source_sites_points_masses_barycentrics_changed": false,
+    "support143_sha256": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526",
+    "unallocated_source_mass_after_kg": 1.1792583295669985,
+    "unallocated_source_mass_before_kg": 0.6653433193111997
+  },
+  "inputs": {
+    "baseline_element": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.ele",
+      "sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6"
+    },
+    "baseline_node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.node",
+      "sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4"
+    },
+    "baseline_support": {
+      "independent_verification_sha256": "b0940d6954779767009f257da92de587a6cc57d58c304b925177a3a3e972ea2d",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/fat-connected-region-support.npz",
+      "receipt_sha256": "055a1fb7f909205248b6d8ebe160ef8ea1c743f335615fc93dd14192728de246",
+      "sha256": "0e47882aab9219230bc263eb4b23759830666908fefdb90f66a970e9655e2d13"
+    },
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+      "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211"
+    },
+    "candidate_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/report.json",
+      "sha256": "fc2d2e23a00b530e5074abd06e1549516e1364fb73bb713b23a05ae3ae4555c7"
+    },
+    "helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase_held_flows_current_volume_406_regionaware.frozen.py",
+      "sha256": "a6e796fde1fa63cacabd5e3111711956d4821b2c871c6c3cb787bd392296d16a"
+    },
+    "support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz",
+      "sha256": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526"
+    },
+    "support_independent_verification": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json",
+      "sha256": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482"
+    },
+    "support_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/receipt.json",
+      "sha256": "0cfb03092bdc8e0f28a0f0bb4f5c631f4e88c6355301c7e7433fc160c9ed6859"
+    }
+  },
+  "limitations": "Source-only held-ledger rebase. Candidate 406 retains residual boundary mismatch and physical_admission=false. Current region permissions are checked on each mapped recipient against the independently verified current 406 support. Released mass is not redistributed; M/4 remains incomplete and the under-density deficit is unfilled. This is not a complete allocation or native/physical admission.",
+  "mass_transport": "NOT_ADMITTED",
+  "native_steps": 0,
+  "outputs": {
+    "ledger_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/rebased-held-flow-ledger.npz",
+    "ledger_sha256": "0ee4e4909740e0029a10cb0019a531652b90c882226a0212f6d688f0bbf405fc",
+    "ledger_size_bytes": 30901249
+  },
+  "peak_rss_bytes": 840728576,
+  "physical_admission": false,
+  "role": "Fat",
+  "schema": "numi.human.current-volume-held-ledger-rebase.v1",
+  "stage_checkpoints": {
+    "cell_row_map_sha256": "c825c8483d3b4cbe99e755a938dfa6ea85b07b8fb7c962f5204bee16f2e47587",
+    "exact_map_sha256": "d17b076423ae28ef95fe19f41d61b97165f87ba4a2ae51e128f6e35a38c155a0",
+    "exact_stage_helper_sha256": "657f303c27b50d49199c34f404adca3d7a51c0ef9e10e01b59f1c8723e75b624",
+    "exact_stage_report_sha256": "75a060974c0ca1175778e12e8acecebbbc1d8bed5eb7c338a789024937186562",
+    "ledger_stage_helper_sha256": "a6e796fde1fa63cacabd5e3111711956d4821b2c871c6c3cb787bd392296d16a",
+    "point_location_stage_helper_sha256": "657f303c27b50d49199c34f404adca3d7a51c0ef9e10e01b59f1c8723e75b624",
+    "point_location_stage_report_sha256": "a7a274e4572b5e79537c750da841b290ff66ae2409632a027f5336a6b9c5bf6d",
+    "post-map-helper-change_scope": "exact-key and point-location outputs are reused byte-for-byte; the new ledger helper validates baseline region assignments and checks each mapped receiver against authenticated current-406 region support"
+  },
+  "status": "SOURCE_ONLY_CURRENT_GEOMETRY_REBASE_CLASSIFIED"
+}

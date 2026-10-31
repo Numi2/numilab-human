@@ -1,0 +1,46 @@
+{
+  "counts": {
+    "current_volume_cells": 841623,
+    "current_volume_cells_with_exact_d4906_identity": 812756,
+    "selected_D_edges": 1497,
+    "surface_star_point_entries": 12108,
+    "volume_star_current_cell_entries": 14677,
+    "volume_star_d4906_exact_identity_entries": 14614,
+    "volume_star_without_exact_d4906_identity": 63
+  },
+  "domains": {
+    "current_volume_cell_rows": "rebound candidate 8915c3 current output row domain",
+    "d4906_cell_rows": "only exact ordered-tetrahedron identity matches; -1 means current changed/generated cell with no one-to-one d4906 identity",
+    "surface_point_rows": "current typed D 18517 domain; exact F32 crosswalk to rebound Fat volume point rows is included"
+  },
+  "guards": {
+    "all_selected_cells_in_current_volume_row_domain": true,
+    "all_surface_star_points_map_to_rebound_volume_points": true,
+    "cell_rows_without_exact_identity_are_explicit_minus_one": true,
+    "d4906_map_is_injective_where_present": true
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "output": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-385-run006/affected-star-map-001.npz",
+    "sha256": "8bdf1a6bd037593c4cae5c5aa9ebc291bfb9ae968468c6448a3125fe559aeaa6",
+    "size_bytes": 1651851
+  },
+  "physical_admission": false,
+  "schema": "h706.d-short-edge-quotient-affected-star-map.v1",
+  "source": {
+    "authorized_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-385-run006/allowed-D-edge-map.npz",
+      "sha256": "4639ff52a389c8fe44db64eb5bf69af8c8b73fe71994a6fc73556fce9c911210"
+    },
+    "current_rebound_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat614-yy-volume-replay-004/run-014-current-target-rebound-v3/fat-D307-I377-YY-components-current-target-rebound.npz",
+      "sha256": "8915c3c7a58f8622d0568da5006bf4b7b0f2832f802b65e29bd144e95f11001d"
+    },
+    "preflight": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/d-shortedge-quotient-385-run006/preflight.json",
+      "sha256": "ce18c8b27ab4fbea4f956f13910cb8d2bc7fe5be08f2a7ae85f970b296d8d0a5"
+    }
+  },
+  "status": "PASS_EXPLICIT_CURRENT_AND_D4906_IDENTITY_ROW_MAP"
+}

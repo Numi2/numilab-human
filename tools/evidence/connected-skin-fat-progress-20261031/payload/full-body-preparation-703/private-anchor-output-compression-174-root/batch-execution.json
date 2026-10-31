@@ -1,0 +1,20 @@
+[
+  {
+    "exit_code": 0,
+    "index": 0,
+    "stderr": "",
+    "stdout": "{\"allocated_after\": 10235904, \"allocated_before\": 36704256, \"compressed_flag\": true, \"free_bytes\": 11647418368, \"index\": 0, \"path\": \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/semantic-labels-171-vectorized-full-export/child.labels.csv\", \"receipt\": \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/private-anchor-output-compression-174-root/hfs-compression-000.json\", \"saved_bytes\": 26468352, \"sha256\": \"27b7620e328578b6521f341cdda9962412134bf6e8a826e7bc805c0063617685\", \"status\": \"byte_identical_hfs_compressed_at_original_path\"}\n"
+  },
+  {
+    "exit_code": 0,
+    "index": 1,
+    "stderr": "",
+    "stdout": "{\"allocated_after\": 223092736, \"allocated_before\": 503377920, \"compressed_flag\": true, \"free_bytes\": 11927695360, \"index\": 1, \"path\": \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/semantic-labels-171-vectorized-full-export/child.labels.csv.source.csv\", \"receipt\": \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/private-anchor-output-compression-174-root/hfs-compression-001.json\", \"saved_bytes\": 280285184, \"sha256\": \"222e9964d186e57a346bdf06a4226e1ea680be39b24f35e499177070374ce5de\", \"status\": \"byte_identical_hfs_compressed_at_original_path\"}\n"
+  },
+  {
+    "exit_code": 1,
+    "index": 2,
+    "stderr": "Traceback (most recent call last):\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/private-anchor-output-compression-174-root/compress_in_place_batch.py\", line 38, in <module>\n    raise RuntimeError(f'HFS compression probe failed before source mutation: {checks}; {line}')\nRuntimeError: HFS compression probe failed before source mutation: {'size': True, 'mode': True, 'uid': True, 'gid': True, 'mtime_ns': True, 'sha256': True, 'compressed_flag': False, 'allocation_reduced': True, 'same_device': True}; -rw-r--r--  1 numi  staff  - 564998749 Oct 30 15:51 /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/full-body-preparation-703/private-anchor-output-compression-174-root/hfs-swap/002-p1-anchor-projection.csv.tmp\n",
+    "stdout": ""
+  }
+]

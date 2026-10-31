@@ -1,0 +1,233 @@
+{
+  "accepted_steps": 0,
+  "assembly": {
+    "fat_shell": {
+      "edge_report": {
+        "boundary_edges": 0,
+        "edges": 739458,
+        "incidence_histogram": {
+          "2": 739458
+        },
+        "nonmanifold_edges": 0,
+        "same_direction_twoface_edges": 0
+      },
+      "faces": 492972,
+      "signed_volume_m3": 0.011443639668672421,
+      "vertices": 246004
+    },
+    "marker_roles": {
+      "fat_inner_D": 5,
+      "fat_outer_I": 4,
+      "fat_wall_ID": 6,
+      "skin_inner_I": 2,
+      "skin_outer_O": 1,
+      "skin_wall_OI": 3
+    },
+    "orientation": {
+      "D_flipped_to_wall": true,
+      "I_fat_flipped_to_wall": false,
+      "I_skin_flipped_to_wall": true,
+      "O_flipped_to_wall": false,
+      "fat_global_positive_volume_flip": false,
+      "skin_global_positive_volume_flip": false
+    },
+    "skin_shell": {
+      "edge_report": {
+        "boundary_edges": 0,
+        "edges": 606171,
+        "incidence_histogram": {
+          "2": 606171
+        },
+        "nonmanifold_edges": 0,
+        "same_direction_twoface_edges": 0
+      },
+      "faces": 404114,
+      "signed_volume_m3": 0.003626316932451737,
+      "vertices": 202037
+    },
+    "wall_donor_I_ring_local_rows": [
+      49686,
+      49800,
+      49949,
+      49904,
+      50344,
+      49975,
+      49973,
+      50203,
+      50631,
+      51454,
+      51294,
+      50297,
+      51572,
+      51684,
+      51783,
+      51568,
+      51683,
+      51846,
+      51782,
+      51840,
+      51932,
+      51948,
+      52006,
+      55165,
+      55314,
+      55335,
+      55341,
+      55473,
+      55622,
+      55729,
+      55646,
+      55819,
+      56050,
+      56396,
+      56531,
+      56665,
+      56549,
+      56628,
+      56731,
+      56686,
+      51024,
+      55462,
+      55554,
+      56094,
+      56315
+    ]
+  },
+  "classification": "existing-format reconstructed child-volume handoff; no mass or physical admission",
+  "combined_skin_fat_child_mesh": {
+    "capacity_profile": {
+      "max_cells_combined": 2000000,
+      "max_cells_per_child": 2000000,
+      "max_nodes_combined": 500000,
+      "max_nodes_per_child": 500000,
+      "name": "full-reference-500k-nodes-2m-cells"
+    },
+    "combined_cell_budget_200000_pass": false,
+    "combined_cell_budget_selected_profile_pass": true,
+    "combined_node_order": "registered_O_source_rows_then_remaining_TetGen_rows",
+    "combined_tetrahedra": 1596903,
+    "fat_tetrahedra": 853406,
+    "nodes": 323602,
+    "only_registered_I_nodes_merged": true,
+    "outputs": {
+      "skin-fat-combined-I-interface.csv.gz": "3a4392bd59028cd67cac126168d08cec58b24fef664367501234a16f35f7f5f3",
+      "skin-fat-combined-element-map.csv.gz": "abb645330b7ff2eed465275b9af2f6476f68c329debf548b6150d725eca0f38a",
+      "skin-fat-combined-facet-ancestry.csv.gz": "ba02a83ddae337df857d4e36bf80757321c8c23574ee65d8990be016a3490bb5",
+      "skin-fat-combined-node-map.csv.gz": "9aed1d4ffdb0a8f8fff39041e385833962e8b0e280f506b7f905e271ef322416",
+      "skin-fat-combined.ele": "239ad96895ad0fcae5fa69b061771470460eb2e4ec657e7560d047df92aaecb1",
+      "skin-fat-combined.node": "2288c5cbb92db6165d7db803280311c4c277788d28fe4023a9ff7c555d0cb94c"
+    },
+    "physical_admission": false,
+    "positive_float32_cells": 1596903,
+    "registered_I_source_faces": 250731,
+    "registered_I_source_vertices": 125368,
+    "registered_outer_nodes_are_mechanical_prefix": true,
+    "registered_surface_node_map_complete": true,
+    "registered_surface_node_rows": {
+      "D": 120636,
+      "I": 125368,
+      "O": 76669
+    },
+    "skin_tetrahedra": 743497,
+    "status": "COMBINED_POSITIVE_F32_CHILD_MESH_NOT_PHYSICAL_ADMISSION",
+    "unregistered_equal_coordinate_nodes_welded": false
+  },
+  "construction_method": "retained cells plus certified connected local cavity replacements; no TetGen invoked by this handoff",
+  "current_D137_exact_gates": {
+    "protected149": 149,
+    "status": "PASS_EXACT_CURRENT_D_BOUNDARY_REFINEMENT_DELTA",
+    "vs_all185_both_domains": 0,
+    "vs_complete_surfaces": 0
+  },
+  "elapsed_s": 72.94589358312078,
+  "fat_shell_assembly_140_v2": {
+    "boundary_extra": 0,
+    "boundary_missing": 0,
+    "status": "PASS_EXISTING_697_ASSEMBLY_AND_EXACT_CANDIDATE135_BOUNDARY"
+  },
+  "inputs": {
+    "current_inferred_D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-D-refinement-128-v2/candidate-D-inferred-boundary-refined-typed.npz",
+      "sha256": "ff73291bce77dda81eff985fecdbba1b198f24e95a7f8f9af1d6058172d4da45"
+    },
+    "current_inferred_D_exact_delta_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/D-refinement-exact-geometry-audit-137-root/report.json",
+      "sha256": "f9481aa1fead9ffa22e71ff55badc34ec2a12ce495b73f85e4b87bdeb61f0b4e"
+    },
+    "fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-positive-PLC-prefix-compaction-135-root/fat-positive-compact-PLC-prefix.npz",
+      "sha256": "7ab13a433e0cb08350c901388c0c86712269e0cf66ce70df5fe33de248357e76"
+    },
+    "fat_material_independent_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-material-attribution-135/run-001/independent-verification.json",
+      "sha256": "20442dde9e2e8b0c667407055bb19f3a319c94f7b663551180cf628de0a55ca6"
+    },
+    "fat_material_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-material-attribution-135/run-001/report.json",
+      "sha256": "d3d96596bfd229ba254b1a93d20140a4ad64b8a863ca79e75f45b17e1e32893c"
+    },
+    "fat_material_sidecar": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-material-attribution-135/run-001/fat-material-attribution.npz",
+      "sha256": "377e2de5e134ed24da6aeea9caf59884c8f12ea58404e7a257f28f31ac540351"
+    },
+    "fat_shell_assembly_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/receipt.json",
+      "sha256": "eef320118fc8f14b123042acf7df2c8a5720670b1e452404ae97dd54721676f6"
+    },
+    "full_typed_shell_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/receipt.json",
+      "sha256": "c105a7430fe4a206a1f85e4f3fe2e9f402545a1e9f6df9e15b15c547b8a47de7"
+    },
+    "skin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin010-restored-cavity-batch-072-expand1/skin-restored-boundary-proposal.npz",
+      "sha256": "0cd9c8d3181f0050a507e3fbbf9162271b40b571ab166ee19ceea19538bb675b"
+    }
+  },
+  "mass_mapping": "NOT_RUN",
+  "outputs": {
+    "fat.ele": {
+      "sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6",
+      "size_bytes": 30580021
+    },
+    "fat.node": {
+      "sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4",
+      "size_bytes": 11026005
+    },
+    "skin-fat-combined-I-interface.csv.gz": {
+      "sha256": "3a4392bd59028cd67cac126168d08cec58b24fef664367501234a16f35f7f5f3",
+      "size_bytes": 10926993
+    },
+    "skin-fat-combined-element-map.csv.gz": {
+      "sha256": "abb645330b7ff2eed465275b9af2f6476f68c329debf548b6150d725eca0f38a",
+      "size_bytes": 11519043
+    },
+    "skin-fat-combined-facet-ancestry.csv.gz": {
+      "sha256": "ba02a83ddae337df857d4e36bf80757321c8c23574ee65d8990be016a3490bb5",
+      "size_bytes": 25676156
+    },
+    "skin-fat-combined-node-map.csv.gz": {
+      "sha256": "9aed1d4ffdb0a8f8fff39041e385833962e8b0e280f506b7f905e271ef322416",
+      "size_bytes": 4481865
+    },
+    "skin-fat-combined.ele": {
+      "sha256": "239ad96895ad0fcae5fa69b061771470460eb2e4ec657e7560d047df92aaecb1",
+      "size_bytes": 58908537
+    },
+    "skin-fat-combined.node": {
+      "sha256": "2288c5cbb92db6165d7db803280311c4c277788d28fe4023a9ff7c555d0cb94c",
+      "size_bytes": 14479676
+    },
+    "skin.ele": {
+      "sha256": "aaa070b48cecd64f65cb80308b8a64cd01eeaea6f41b309506f9205466092105",
+      "size_bytes": 26227290
+    },
+    "skin.node": {
+      "sha256": "b4a7e41745d533289b25659220662c4787e85a7cb56a9701b621e542dcc2a6db",
+      "size_bytes": 8965572
+    }
+  },
+  "owner_sha256": "46799a2d63fd20bc8a191f319f1f56244610a5e719983a7ce44cc5222659b6bd",
+  "physical_admission": false,
+  "runtime": 0,
+  "status": "PREPARED_EXISTING_217_COMBINED_CHILD_VOLUME_HANDOFF_NO_PHYSICAL_ADMISSION"
+}

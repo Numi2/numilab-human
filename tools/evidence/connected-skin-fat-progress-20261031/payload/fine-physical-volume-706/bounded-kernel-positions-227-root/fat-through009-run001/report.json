@@ -1,0 +1,546 @@
+{
+  "status": "BOUNDED_KERNEL_PROPOSAL_REQUIRES_EXACT_GEOMETRY_AND_ANCESTRY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "input": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/cluster-segment-positions-226-root/fat-through009-run001/cluster-segment-volume-and-boundary-proposal.npz",
+  "input_sha256": "8faca0be4d57d543b397908bb7dbbc905be587c67e29ecee0b12f5e4e4ac47aa",
+  "script_sha256": "60cb8b1e0d34ba2ba09caf12f725db8d218550cbbe9ec05e6bc3cf9e19ddaa94",
+  "output": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded-kernel-positions-227-root/fat-through009-run001/bounded-kernel-volume-and-boundary-proposal.npz",
+  "output_sha256": "7c6eddc2e8db42a89f7fe11d3473ab139233c41701a06b09977cdc31cb2bfde1",
+  "clusters": 15,
+  "trials": 143,
+  "passing_operations": 7,
+  "nonpositive_before": 26,
+  "nonpositive_after": 19,
+  "quality_failures_before": 46746,
+  "quality_failures_after": 46743,
+  "rejections": {
+    "nonpositive_not_reduced": 78,
+    "no_bounded_kernel": 2
+  },
+  "elapsed_s": 2.6951977908611298,
+  "operations": [
+    {
+      "current_node": 136074,
+      "position_before_world_m": [
+        -0.2880849838256836,
+        -0.8520141243934631,
+        0.12719027698040009
+      ],
+      "position_after_world_m": [
+        -0.28808513283729553,
+        -0.8520142436027527,
+        0.12719015777111053
+      ],
+      "source_cluster_nodes": [
+        136073,
+        136074
+      ],
+      "source_cluster_diameter_m": 3.332000937312528e-08,
+      "construction_pad_m": 1.1920928955078125e-07,
+      "bounded_lower_world_m": [
+        -0.28808513283729553,
+        -0.8520142436027527,
+        0.12719015777111053
+      ],
+      "bounded_upper_world_m": [
+        -0.28808486461639404,
+        -0.8520140051841736,
+        0.12719041109085083
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 1.8751994400798856e-07,
+      "planned_double_point_world_m": [
+        -0.28808513283729553,
+        -0.8520142436027527,
+        0.12719015777111053
+      ],
+      "displacement_m": 2.2500259981366246e-07,
+      "affected_cell_rows": [
+        32783,
+        123714,
+        147348,
+        250179,
+        254737,
+        361299,
+        429956,
+        655308,
+        770949
+      ],
+      "affected_desired_face_rows": [
+        489194,
+        489195,
+        489196,
+        489784,
+        489785
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 2,
+      "new_quality_failures": 2
+    },
+    {
+      "current_node": 136530,
+      "position_before_world_m": [
+        -0.28646019101142883,
+        -0.8691399693489075,
+        0.09763083606958389
+      ],
+      "position_after_world_m": [
+        -0.28646138310432434,
+        -0.8691443800926208,
+        0.09762481600046158
+      ],
+      "source_cluster_nodes": [
+        136530,
+        136531
+      ],
+      "source_cluster_diameter_m": 1.1923610862412378e-05,
+      "construction_pad_m": 1.1923610862412378e-06,
+      "bounded_lower_world_m": [
+        -0.2864613833725151,
+        -0.8691509368717368,
+        0.09762481573227084
+      ],
+      "bounded_upper_world_m": [
+        -0.28645417067411577,
+        -0.8691387769878213,
+        0.09763202843067013
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 4.32440502009438e-06,
+      "planned_double_point_world_m": [
+        -0.2864613833725151,
+        -0.8691443086375987,
+        0.09762481573227084
+      ],
+      "displacement_m": 7.557577509630692e-06,
+      "affected_cell_rows": [
+        28205,
+        42737,
+        130888,
+        163949,
+        305880,
+        459693,
+        549611,
+        666980,
+        683333,
+        719193,
+        762326,
+        802405,
+        802407
+      ],
+      "affected_desired_face_rows": [
+        260451,
+        260452,
+        489137,
+        489138,
+        489139
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 4,
+      "new_quality_failures": 3
+    },
+    {
+      "current_node": 148605,
+      "position_before_world_m": [
+        -0.1227661594748497,
+        -1.7291901111602783,
+        0.2745310366153717
+      ],
+      "position_after_world_m": [
+        -0.12276702374219894,
+        -1.7291898727416992,
+        0.2745310068130493
+      ],
+      "source_cluster_nodes": [
+        148604,
+        148605
+      ],
+      "source_cluster_diameter_m": 6.931843369968538e-07,
+      "construction_pad_m": 2.384185791015625e-07,
+      "bounded_lower_world_m": [
+        -0.12276702374219894,
+        -1.7291905879974365,
+        0.2745306193828583
+      ],
+      "bounded_upper_world_m": [
+        -0.1227659210562706,
+        -1.7291898727416992,
+        0.2745312750339508
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 4.728357275717969e-07,
+      "planned_double_point_world_m": [
+        -0.12276702374219894,
+        -1.7291898727416992,
+        0.27453097859450504
+      ],
+      "displacement_m": 8.970449533040768e-07,
+      "affected_cell_rows": [
+        63750,
+        118833,
+        133071,
+        144488,
+        167903,
+        199025,
+        212253,
+        213108,
+        284390,
+        339949,
+        340484,
+        342246,
+        345181,
+        345189,
+        345504,
+        345949,
+        345989,
+        380178,
+        414053,
+        438504,
+        438573,
+        460025,
+        479237,
+        501340,
+        504061,
+        609199,
+        611666,
+        615723,
+        616445,
+        627369,
+        628518,
+        651330,
+        656515,
+        681261,
+        685737,
+        685738,
+        688909,
+        688911,
+        691415,
+        696044,
+        714608,
+        715233,
+        715890,
+        715891,
+        717579,
+        723313,
+        724716,
+        724717,
+        746412,
+        774961,
+        774962,
+        789325
+      ],
+      "affected_desired_face_rows": [
+        282677,
+        470019,
+        488256,
+        488257
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 25,
+      "new_quality_failures": 24
+    },
+    {
+      "current_node": 149788,
+      "position_before_world_m": [
+        -0.11294572800397873,
+        -1.7279751300811768,
+        0.25343596935272217
+      ],
+      "position_after_world_m": [
+        -0.11294563859701157,
+        -1.7279750108718872,
+        0.25343573093414307
+      ],
+      "source_cluster_nodes": [
+        149787,
+        149788,
+        149789
+      ],
+      "source_cluster_diameter_m": 1.2489448945403256e-07,
+      "construction_pad_m": 2.384185791015625e-07,
+      "bounded_lower_world_m": [
+        -0.11294599622488022,
+        -1.7279753684997559,
+        0.2534357011318207
+      ],
+      "bounded_upper_world_m": [
+        -0.11294548213481903,
+        -1.7279748916625977,
+        0.25343629717826843
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 3.747100787367832e-09,
+      "planned_double_point_world_m": [
+        -0.11294563041721693,
+        -1.727974980280097,
+        0.2534357011318207
+      ],
+      "displacement_m": 2.8115454709698567e-07,
+      "affected_cell_rows": [
+        10218,
+        105615,
+        120310,
+        275116,
+        312491,
+        330683,
+        343780,
+        373693,
+        534752,
+        577139,
+        585097,
+        604220,
+        674790,
+        685403,
+        706357,
+        711901,
+        726297,
+        742779
+      ],
+      "affected_desired_face_rows": [
+        282540,
+        282541,
+        282542,
+        282543,
+        487638,
+        487639,
+        487640,
+        487641,
+        488735,
+        488736,
+        488737,
+        488738,
+        488739,
+        488740
+      ],
+      "old_nonpositive": 3,
+      "new_nonpositive": 2,
+      "old_quality_failures": 12,
+      "new_quality_failures": 11
+    },
+    {
+      "current_node": 164916,
+      "position_before_world_m": [
+        -0.07882881164550781,
+        -0.13493607938289642,
+        0.07040081918239594
+      ],
+      "position_after_world_m": [
+        -0.0788288488984108,
+        -0.1349361091852188,
+        0.07040083408355713
+      ],
+      "source_cluster_nodes": [
+        164915,
+        164916
+      ],
+      "source_cluster_diameter_m": 6.409231772305538e-08,
+      "construction_pad_m": 2.9802322387695312e-08,
+      "bounded_lower_world_m": [
+        -0.0788288488984108,
+        -0.1349361091852188,
+        0.07040076702833176
+      ],
+      "bounded_upper_world_m": [
+        -0.07882878184318542,
+        -0.13493598997592926,
+        0.07040084898471832
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 2.6714444840574986e-08,
+      "planned_double_point_world_m": [
+        -0.0788288488984108,
+        -0.1349361091852188,
+        0.0704008438756814
+      ],
+      "displacement_m": 4.998001405968792e-08,
+      "affected_cell_rows": [
+        92776,
+        194183,
+        194226,
+        194365,
+        194388,
+        527301,
+        600073,
+        660960,
+        763899,
+        763900,
+        814994,
+        814995
+      ],
+      "affected_desired_face_rows": [
+        262945,
+        414945,
+        488664,
+        488665
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 4,
+      "new_quality_failures": 4
+    },
+    {
+      "current_node": 177356,
+      "position_before_world_m": [
+        -0.036328140646219254,
+        -0.08413533121347427,
+        0.21969233453273773
+      ],
+      "position_after_world_m": [
+        -0.03632810711860657,
+        -0.08413537591695786,
+        0.21969226002693176
+      ],
+      "source_cluster_nodes": [
+        177355,
+        177356,
+        177357
+      ],
+      "source_cluster_diameter_m": 1.8143349382111313e-07,
+      "construction_pad_m": 2.9802322387695312e-08,
+      "bounded_lower_world_m": [
+        -0.03632821887731552,
+        -0.08413537591695786,
+        0.21969221532344818
+      ],
+      "bounded_upper_world_m": [
+        -0.03632810711860657,
+        -0.08413516730070114,
+        0.21969236433506012
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 6.520516346593525e-08,
+      "planned_double_point_world_m": [
+        -0.03632810711860657,
+        -0.08413537591695786,
+        0.2196922813489865
+      ],
+      "displacement_m": 9.313225746154785e-08,
+      "affected_cell_rows": [
+        335659,
+        396830,
+        445952,
+        526979,
+        541920,
+        572718,
+        616168,
+        689563,
+        706756,
+        737141,
+        824189,
+        824190,
+        827254,
+        827255
+      ],
+      "affected_desired_face_rows": [
+        264760,
+        264761,
+        264762,
+        487518,
+        487519,
+        487520,
+        487521,
+        487522,
+        488858,
+        488859,
+        488860,
+        488861,
+        488862,
+        488863
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 7,
+      "new_quality_failures": 7
+    },
+    {
+      "current_node": 201967,
+      "position_before_world_m": [
+        -0.015209830366075039,
+        -0.38911956548690796,
+        0.22557304799556732
+      ],
+      "position_after_world_m": [
+        -0.015209770761430264,
+        -0.38911956548690796,
+        0.2255730777978897
+      ],
+      "source_cluster_nodes": [
+        201965,
+        201966,
+        201967
+      ],
+      "source_cluster_diameter_m": 1.9715903136729064e-07,
+      "construction_pad_m": 5.960464477539063e-08,
+      "bounded_lower_world_m": [
+        -0.015210035257041454,
+        -0.38911962509155273,
+        0.225572869181633
+      ],
+      "bounded_upper_world_m": [
+        -0.015209770761430264,
+        -0.3891194462776184,
+        0.2255731076002121
+      ],
+      "LP_mode": "preserve_native_and_positive",
+      "kernel_radius_m": 1.2438712756374853e-08,
+      "planned_double_point_world_m": [
+        -0.015209770761430264,
+        -0.38911956781650725,
+        0.2255730700634443
+      ],
+      "displacement_m": 6.664001874625056e-08,
+      "affected_cell_rows": [
+        16189,
+        27345,
+        44360,
+        212503,
+        217577,
+        308564,
+        385599,
+        385735,
+        406043,
+        441187,
+        513202,
+        548662,
+        564006,
+        566364,
+        651153,
+        766849,
+        766850,
+        777560,
+        777561,
+        787607,
+        793148,
+        805284,
+        805285,
+        818075,
+        818077,
+        818079,
+        823295,
+        823296
+      ],
+      "affected_desired_face_rows": [
+        274238,
+        300518,
+        300519,
+        300520,
+        300521,
+        308503,
+        488747,
+        488748,
+        488749,
+        488750,
+        488751,
+        488752
+      ],
+      "old_nonpositive": 1,
+      "new_nonpositive": 0,
+      "old_quality_failures": 14,
+      "new_quality_failures": 14
+    }
+  ]
+}

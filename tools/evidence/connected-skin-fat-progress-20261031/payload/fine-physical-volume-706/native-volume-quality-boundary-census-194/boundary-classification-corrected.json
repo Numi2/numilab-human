@@ -1,0 +1,1225 @@
+{
+  "status": "READ_ONLY_BOUNDARY_AND_CELL_QUALITY_CLASSIFICATION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "inputs": {
+    "Skin": {
+      "node_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/skin.node",
+      "ele_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/skin.ele",
+      "failure_rows_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-volume-quality-193-root/skin-failing-cells.npz",
+      "shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+      "node_rows": 202525,
+      "ele_rows": 743497
+    },
+    "Fat": {
+      "node_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.node",
+      "ele_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.ele",
+      "failure_rows_npz": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/native-volume-quality-193-root/fat-failing-cells.npz",
+      "shell_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+      "node_rows": 246445,
+      "ele_rows": 853406
+    }
+  },
+  "roles": [
+    {
+      "role": "Skin",
+      "cells": 743497,
+      "nodes": 202525,
+      "tetgen_attribute_histogram": {
+        "15": 743497
+      },
+      "bad_normalized_det": 42438,
+      "bad_abs_volume": 2160,
+      "bad_normalized_by_boundary_faces": {
+        "0": 11448,
+        "1": 10985,
+        "2": 19919,
+        "3": 86
+      },
+      "bad_normalized_by_boundary_node_count": {
+        "1": 2,
+        "2": 14,
+        "3": 162,
+        "4": 42260
+      },
+      "bad_abs_volume_by_boundary_faces": {
+        "0": 556,
+        "1": 581,
+        "2": 997,
+        "3": 26
+      },
+      "bad_abs_volume_by_boundary_node_count": {
+        "3": 3,
+        "4": 2157
+      },
+      "bad_normalized_boundary_touch_cells": 30990,
+      "bad_normalized_interior_cells": 11448,
+      "bad_abs_volume_boundary_touch_cells": 1604,
+      "bad_abs_volume_interior_cells": 556,
+      "bad_normalized_det_distribution": {
+        "count": 42438,
+        "min": 1.0390901636639553e-12,
+        "p0_1": 4.334876295848909e-11,
+        "p1": 1.135890746167029e-09,
+        "p10": 4.583977743578789e-08,
+        "median": 1.1326819806534493e-06,
+        "p90": 6.804911515417379e-06,
+        "p99": 9.636828307326634e-06,
+        "max": 9.99977944704849e-06
+      },
+      "bad_absolute_volume_m3_distribution": {
+        "count": 2160,
+        "min": 6.203854594147708e-25,
+        "p0_1": 2.4030975429019713e-24,
+        "p1": 5.40424666867978e-23,
+        "p10": 1.0896284773038525e-20,
+        "median": 2.8980107324672814e-19,
+        "p90": 8.36909600725147e-19,
+        "p99": 9.862269836898649e-19,
+        "max": 9.997635755560914e-19
+      },
+      "bad_max_edge_m_distribution": {
+        "count": 42438,
+        "min": 9.373011027272368e-07,
+        "p0_1": 2.3835710925627332e-05,
+        "p1": 0.00011725193574464836,
+        "p10": 0.0003827676578950453,
+        "median": 0.0015548604872449576,
+        "p90": 0.015897854458752272,
+        "p99": 0.05074624699985506,
+        "max": 0.13211003961748724
+      },
+      "bad_min_tet_edge_m_distribution": {
+        "count": 42438,
+        "min": 7.450580596923828e-09,
+        "p0_1": 2.9802322387695312e-08,
+        "p1": 1.2310379476739693e-07,
+        "p10": 3.3548729968064975e-06,
+        "median": 6.541114765455068e-05,
+        "p90": 0.000554695415482895,
+        "p99": 0.0019361874644712577,
+        "max": 0.021100528517689784
+      },
+      "bad_boundary_edge_m_distribution": {
+        "count": 162462,
+        "min": 2.2351741790771484e-08,
+        "p0_1": 6.762247376702194e-08,
+        "p1": 9.021017457768288e-07,
+        "p10": 2.615056083656682e-05,
+        "median": 0.0005002399076530569,
+        "p90": 0.0035152369965126985,
+        "p99": 0.03168401187961139,
+        "max": 0.13211003961748724
+      },
+      "bad_boundary_face_area_m2_distribution": {
+        "count": 51081,
+        "min": 4.440892098500626e-16,
+        "p0_1": 1.9150701494188473e-14,
+        "p1": 5.615539371133192e-12,
+        "p10": 6.351212384202266e-10,
+        "median": 4.280478725487454e-08,
+        "p90": 9.480507116266985e-07,
+        "p99": 9.440833823894643e-06,
+        "max": 0.002506371765582174
+      },
+      "bad_boundary_short_edge_counts": {
+        "lt_1e-06_m": 1682,
+        "lt_1e-05_m": 9670,
+        "lt_0.0001_m": 37804,
+        "lt_0.001_m": 103193
+      },
+      "boundary_topology": {
+        "boundary_faces": 404114,
+        "boundary_nodes": 202037,
+        "boundary_edges": 606171,
+        "nonmanifold_face_count": 0
+      },
+      "typed_shell_match": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-typed-shell-owner-074/skin-shell.npz",
+        "shell_faces": 404114,
+        "shell_vertices": 202037,
+        "shell_vertices_exactly_mapped_to_one_child_node": 202037,
+        "shell_vertices_unmapped": 0,
+        "shell_vertices_ambiguous_child_node": 0,
+        "shell_faces_whose_vertices_mapped": 404114,
+        "shell_duplicate_face_keys": 0,
+        "exact_boundary_shell_face_key_matches": 404114,
+        "boundary_faces_missing_typed_shell_match": 0,
+        "typed_shell_marker_histogram_on_matches": {
+          "1": 153293,
+          "2": 250731,
+          "3": 90
+        },
+        "bad_cell_boundary_faces_by_marker": {
+          "1": 15590,
+          "2": 35491,
+          "3": 0
+        }
+      },
+      "raw_node_text_to_owner_F32_max_rounding_m": 4.999389568993706e-09,
+      "elapsed_s": 1.0456108748912811,
+      "worst_cell_samples": [
+        {
+          "cell": 218454,
+          "tet_nodes_zero_based": [
+            124184,
+            121016,
+            124183,
+            124185
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 1.4369132264490343e-18,
+          "normalized_det": 1.0390901636639553e-12,
+          "max_edge_m": 0.020244614891086792,
+          "min_edge_m": 3.8744810067559886e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 2.846890987710795e-09,
+          "boundary_shell_markers": [
+            2,
+            2
+          ],
+          "tet_edge_lengths_m": [
+            0.020244271875283236,
+            5.093304305570948e-07,
+            3.8744810067559886e-07,
+            0.020244614891086792,
+            0.02024400539603472,
+            8.967354887234032e-07
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 587859,
+          "tet_nodes_zero_based": [
+            186364,
+            186362,
+            186363,
+            186365
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 9.694556779121484e-22,
+          "normalized_det": 1.5443202730797054e-12,
+          "max_edge_m": 0.0015558961712382644,
+          "min_edge_m": 0.0005184809974516116,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            0.0010371127781138455,
+            0.000518631793479396,
+            0.0005187834307163,
+            0.0005184809974516116,
+            0.0015558961712382644,
+            0.00103741521180713
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "cell": 303947,
+          "tet_nodes_zero_based": [
+            59943,
+            59991,
+            59962,
+            26850
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 3.1946099895782766e-18,
+          "normalized_det": 2.170884170933697e-12,
+          "max_edge_m": 0.02066858830035952,
+          "min_edge_m": 0.0029555712895361712,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            0.011873906646373694,
+            0.0029555712895361712,
+            0.008794686364348403,
+            0.008918338267218814,
+            0.02066858830035952,
+            0.0117502576292394
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            false,
+            true,
+            false,
+            false,
+            true
+          ]
+        },
+        {
+          "cell": 260135,
+          "tet_nodes_zero_based": [
+            124182,
+            124183,
+            121016,
+            124186
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 4.963302464590186e-18,
+          "normalized_det": 3.588072539925138e-12,
+          "max_edge_m": 0.020246669451597952,
+          "min_edge_m": 3.0121938095907606e-06,
+          "boundary_face_count": 1,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 2.2298009825071443e-08,
+          "boundary_shell_markers": [
+            2
+          ],
+          "tet_edge_lengths_m": [
+            3.0121938095907606e-06,
+            0.020246669451597952,
+            1.6071760678504468e-05,
+            0.020244614891086792,
+            1.3059567695266587e-05,
+            0.020235702146783677
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            false,
+            true,
+            false,
+            true
+          ]
+        },
+        {
+          "cell": 670389,
+          "tet_nodes_zero_based": [
+            151748,
+            150352,
+            150353,
+            150356
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 6.320983368885216e-20,
+          "normalized_det": 4.17570950150799e-12,
+          "max_edge_m": 0.0044950570366726885,
+          "min_edge_m": 7.77863451012265e-08,
+          "boundary_face_count": 1,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 4.816198325660523e-11,
+          "boundary_shell_markers": [
+            2
+          ],
+          "tet_edge_lengths_m": [
+            0.0044950570366726885,
+            0.004494982260261788,
+            0.004493718149591006,
+            7.77863451012265e-08,
+            1.3606033155961428e-06,
+            1.283231386042296e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "cell": 216614,
+          "tet_nodes_zero_based": [
+            121016,
+            124479,
+            124480,
+            124478
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 5.677948187800954e-18,
+          "normalized_det": 5.034424713325259e-12,
+          "max_edge_m": 0.0189146194641334,
+          "min_edge_m": 8.984439480799722e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 6.678293185074929e-09,
+          "boundary_shell_markers": [
+            2,
+            2
+          ],
+          "tet_edge_lengths_m": [
+            0.018914064003079312,
+            0.01891170790457379,
+            0.0189146194641334,
+            3.764549159711748e-06,
+            8.984439480799722e-07,
+            4.662957934997825e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 298941,
+          "tet_nodes_zero_based": [
+            117810,
+            117986,
+            117811,
+            117809
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 7.243631653201698e-18,
+          "normalized_det": 6.2517465454163486e-12,
+          "max_edge_m": 0.019085435828978016,
+          "min_edge_m": 2.4755668231600746e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 1.514776149384229e-09,
+          "boundary_shell_markers": [
+            2,
+            2
+          ],
+          "tet_edge_lengths_m": [
+            0.01908524586363015,
+            1.7613651580556876e-06,
+            2.4755668231600746e-07,
+            0.01908362096772407,
+            0.019085435828978016,
+            1.9992005623875167e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 218776,
+          "tet_nodes_zero_based": [
+            121016,
+            124626,
+            124627,
+            124625
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 6.945956716635794e-18,
+          "normalized_det": 6.647787108636501e-12,
+          "max_edge_m": 0.0184389168849476,
+          "min_edge_m": 6.887758533878327e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 5.036140141285582e-09,
+          "boundary_shell_markers": [
+            2,
+            2
+          ],
+          "tet_edge_lengths_m": [
+            0.0184351866215617,
+            0.01843476722407107,
+            0.0184389168849476,
+            6.887758533878327e-07,
+            6.233546189345378e-06,
+            6.922267031423598e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 496273,
+          "tet_nodes_zero_based": [
+            95480,
+            95484,
+            95485,
+            95281
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 1.2749610508150666e-21,
+          "normalized_det": 6.991858363309462e-12,
+          "max_edge_m": 0.0010304300498914717,
+          "min_edge_m": 2.425733297482089e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 3.104935671291241e-11,
+          "boundary_shell_markers": [
+            2,
+            2
+          ],
+          "tet_edge_lengths_m": [
+            9.783426576481457e-06,
+            9.547133392253974e-06,
+            0.0010206499217690042,
+            2.425733297482089e-07,
+            0.0010304300498914717,
+            0.001030195083639246
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "cell": 558006,
+          "tet_nodes_zero_based": [
+            46707,
+            164807,
+            164808,
+            164806
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 8.459300397708963e-20,
+          "normalized_det": 8.633818935673188e-12,
+          "max_edge_m": 0.0038883103415150106,
+          "min_edge_m": 1.1920928955078125e-07,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            0.0038881932941248194,
+            0.0038883103415150106,
+            0.0038880753545858953,
+            1.1920928955078125e-07,
+            1.1944189326376765e-07,
+            2.385349660155493e-07
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            false,
+            false,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 530014,
+          "tet_nodes_zero_based": [
+            53793,
+            175575,
+            175648,
+            53757
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 6.245985660013741e-20,
+          "normalized_det": 9.503144146610214e-12,
+          "max_edge_m": 0.0034037812278978137,
+          "min_edge_m": 0.00044471025491884034,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            0.0034037812278978137,
+            0.00044471025491884034,
+            0.0033501428031488707,
+            0.00335014444726897,
+            0.0004447400572412113,
+            0.0033551093723043447
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            false,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "cell": 254505,
+          "tet_nodes_zero_based": [
+            108647,
+            16978,
+            108619,
+            16985
+          ],
+          "material_attribute": [
+            15
+          ],
+          "volume_m3": 4.149137952565987e-21,
+          "normalized_det": 1.071419467690112e-11,
+          "max_edge_m": 0.0013244935995051295,
+          "min_edge_m": 0.00044471025473160215,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            0.001220008125792788,
+            0.0011931368537021567,
+            0.00044471025473160215,
+            0.00044474005705398567,
+            0.0011931331201272362,
+            0.0013244935995051295
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            true,
+            false,
+            false,
+            true,
+            false
+          ]
+        }
+      ],
+      "bad_normalized_cells_with_zero_boundary_nodes": 0,
+      "bad_normalized_cells_with_boundary_nodes_but_no_incident_boundary_face": 11448,
+      "bad_abs_volume_cells_with_zero_boundary_nodes": 0,
+      "bad_abs_volume_cells_with_boundary_nodes_but_no_incident_boundary_face": 556,
+      "boundary_face_marker_counts_are_incident_faces_not_unique_cells": true
+    },
+    {
+      "role": "Fat",
+      "cells": 853406,
+      "nodes": 246445,
+      "tetgen_attribute_histogram": {
+        "16": 853406
+      },
+      "bad_normalized_det": 83133,
+      "bad_abs_volume": 6698,
+      "bad_normalized_by_boundary_faces": {
+        "0": 23740,
+        "1": 27496,
+        "2": 31353,
+        "3": 544
+      },
+      "bad_normalized_by_boundary_node_count": {
+        "2": 28,
+        "3": 1260,
+        "4": 81845
+      },
+      "bad_abs_volume_by_boundary_faces": {
+        "0": 1281,
+        "1": 1540,
+        "2": 3771,
+        "3": 105,
+        "4": 1
+      },
+      "bad_abs_volume_by_boundary_node_count": {
+        "2": 5,
+        "3": 112,
+        "4": 6581
+      },
+      "bad_normalized_boundary_touch_cells": 59393,
+      "bad_normalized_interior_cells": 23740,
+      "bad_abs_volume_boundary_touch_cells": 5417,
+      "bad_abs_volume_interior_cells": 1281,
+      "bad_normalized_det_distribution": {
+        "count": 83133,
+        "min": 7.861103816356367e-16,
+        "p0_1": 6.035310585951221e-13,
+        "p1": 3.764865290546206e-11,
+        "p10": 8.270137686937642e-09,
+        "median": 9.499699749928135e-07,
+        "p90": 6.854367883163229e-06,
+        "p99": 9.652490757131864e-06,
+        "max": 9.999980769897154e-06
+      },
+      "bad_absolute_volume_m3_distribution": {
+        "count": 6698,
+        "min": 2.757268708510092e-25,
+        "p0_1": 2.8413481711902217e-24,
+        "p1": 4.411629933616148e-23,
+        "p10": 6.96104194053521e-21,
+        "median": 2.0014651663556767e-19,
+        "p90": 7.73172832306583e-19,
+        "p99": 9.725874619487737e-19,
+        "max": 9.995518173192778e-19
+      },
+      "bad_max_edge_m_distribution": {
+        "count": 83133,
+        "min": 1.4582215740636134e-06,
+        "p0_1": 1.2023971783258211e-05,
+        "p1": 9.773543413273627e-05,
+        "p10": 0.00042166067614378855,
+        "median": 0.002312128531810411,
+        "p90": 0.019885278528904544,
+        "p99": 0.06226023136742325,
+        "max": 0.22604391773137297
+      },
+      "bad_min_tet_edge_m_distribution": {
+        "count": 83133,
+        "min": 9.313225746154785e-10,
+        "p0_1": 6.384126597562505e-09,
+        "p1": 2.9802322387695312e-08,
+        "p10": 2.5647751209227006e-07,
+        "median": 3.993511199951172e-06,
+        "p90": 0.0003473409302951198,
+        "p99": 0.0017867380868236123,
+        "max": 0.026375075321843213
+      },
+      "bad_boundary_edge_m_distribution": {
+        "count": 302464,
+        "min": 9.313225746154785e-10,
+        "p0_1": 1.4901161193847656e-08,
+        "p1": 8.024520884654677e-08,
+        "p10": 1.8677975500753386e-06,
+        "median": 0.0005105318499481941,
+        "p90": 0.00623915609175423,
+        "p99": 0.045615198799049905,
+        "max": 0.225099371775462
+      },
+      "bad_boundary_face_area_m2_distribution": {
+        "count": 91834,
+        "min": 6.798699777552591e-17,
+        "p0_1": 9.18191749230457e-15,
+        "p1": 7.246086406265011e-13,
+        "p10": 4.842780703943817e-11,
+        "median": 9.065847006002616e-09,
+        "p90": 8.804406211003252e-07,
+        "p99": 1.6939091443878333e-05,
+        "max": 0.002860670936391679
+      },
+      "bad_boundary_short_edge_counts": {
+        "lt_1e-06_m": 19664,
+        "lt_1e-05_m": 67268,
+        "lt_0.0001_m": 93112,
+        "lt_0.001_m": 188886
+      },
+      "boundary_topology": {
+        "boundary_faces": 492972,
+        "boundary_nodes": 246004,
+        "boundary_edges": 739458,
+        "nonmanifold_face_count": 0
+      },
+      "typed_shell_match": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-shell-assembly-140-v2/fat-shell-refined-typed.npz",
+        "shell_faces": 492972,
+        "shell_vertices": 246004,
+        "shell_vertices_exactly_mapped_to_one_child_node": 246004,
+        "shell_vertices_unmapped": 0,
+        "shell_vertices_ambiguous_child_node": 0,
+        "shell_faces_whose_vertices_mapped": 492972,
+        "shell_duplicate_face_keys": 0,
+        "exact_boundary_shell_face_key_matches": 492972,
+        "boundary_faces_missing_typed_shell_match": 0,
+        "typed_shell_marker_histogram_on_matches": {
+          "4": 250731,
+          "5": 242151,
+          "6": 90
+        },
+        "bad_cell_boundary_faces_by_marker": {
+          "4": 35350,
+          "5": 56484,
+          "6": 0
+        }
+      },
+      "raw_node_text_to_owner_F32_max_rounding_m": 4.999694880325478e-09,
+      "elapsed_s": 1.2222827908117324,
+      "worst_cell_samples": [
+        {
+          "cell": 756615,
+          "tet_nodes_zero_based": [
+            178751,
+            182123,
+            178750,
+            178752
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 5.418033012222331e-22,
+          "normalized_det": 7.861103816356367e-16,
+          "max_edge_m": 0.016051037960090355,
+          "min_edge_m": 8.494968899333014e-08,
+          "boundary_face_count": 1,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 1.6200463066231097e-09,
+          "boundary_shell_markers": [
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.016050924981125425,
+            2.313282295504216e-07,
+            8.494968899333014e-08,
+            0.016051037960090355,
+            0.01605088307483292,
+            3.1627692694650775e-07
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "cell": 409812,
+          "tet_nodes_zero_based": [
+            178753,
+            178756,
+            178755,
+            182128
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 6.092185211453049e-21,
+          "normalized_det": 8.8433367009751e-15,
+          "max_edge_m": 0.016048559717112054,
+          "min_edge_m": 8.136156822682006e-08,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            1.247126823135959e-06,
+            1.1657718492242185e-06,
+            0.016048559717112054,
+            8.136156822682006e-08,
+            0.01604794498943571,
+            0.016047985959905538
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            false,
+            true,
+            true,
+            false,
+            true
+          ]
+        },
+        {
+          "cell": 115777,
+          "tet_nodes_zero_based": [
+            177589,
+            197096,
+            177588,
+            197097
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 2.615087562616355e-19,
+          "normalized_det": 9.44587533660025e-15,
+          "max_edge_m": 0.054970762189593486,
+          "min_edge_m": 8.33000234328132e-09,
+          "boundary_face_count": 1,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 4.4814617045912773e-10,
+          "boundary_shell_markers": [
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.054970762189593486,
+            1.666000468656264e-08,
+            0.05497075623941585,
+            0.054970758768162487,
+            8.33000234328132e-09,
+            0.0549707528179865
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            true,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "cell": 311361,
+          "tet_nodes_zero_based": [
+            177585,
+            197096,
+            177586,
+            177584
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 3.674950031742134e-19,
+          "normalized_det": 1.3274222735384219e-14,
+          "max_edge_m": 0.054970690976163354,
+          "min_edge_m": 1.84354827279726e-07,
+          "boundary_face_count": 1,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 5.066873055009581e-09,
+          "boundary_shell_markers": [
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.05497068940939454,
+            1.84354827279726e-07,
+            7.213416500287469e-07,
+            0.054970690976163354,
+            0.05497067086279575,
+            9.0567469235972e-07
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+          ]
+        },
+        {
+          "cell": 689743,
+          "tet_nodes_zero_based": [
+            225447,
+            225374,
+            245997,
+            225446
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 4.084066411045149e-20,
+          "normalized_det": 1.7386722324312664e-14,
+          "max_edge_m": 0.02415509644721378,
+          "min_edge_m": 2.297981789631573e-06,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            0.02415280459669712,
+            0.02415509644721378,
+            4.369116007318293e-06,
+            2.297981789631573e-06,
+            0.024148473176397612,
+            0.02415076503089154
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            false,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "cell": 584831,
+          "tet_nodes_zero_based": [
+            220620,
+            220617,
+            57456,
+            220619
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 4.841628745977005e-19,
+          "normalized_det": 2.6261951679353142e-14,
+          "max_edge_m": 0.04800339045362218,
+          "min_edge_m": 1.8763780980502112e-07,
+          "boundary_face_count": 0,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": null,
+          "boundary_shell_markers": [],
+          "tet_edge_lengths_m": [
+            6.506473062092703e-07,
+            0.04800339045362218,
+            1.8763780980502112e-07,
+            0.0480032256461399,
+            4.6361533361983434e-07,
+            0.04800335533525181
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            false,
+            true,
+            false,
+            false,
+            false
+          ]
+        },
+        {
+          "cell": 706326,
+          "tet_nodes_zero_based": [
+            177588,
+            197096,
+            177587,
+            197097
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 8.708199647178698e-19,
+          "normalized_det": 3.145461926726309e-14,
+          "max_edge_m": 0.054970758768162487,
+          "min_edge_m": 8.33000234328132e-09,
+          "boundary_face_count": 1,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 9.494419921452941e-10,
+          "boundary_shell_markers": [
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.054970758768162487,
+            3.454692101290712e-08,
+            0.0549707528179865,
+            0.054970758284314046,
+            8.33000234328132e-09,
+            0.05497075233414129
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            true,
+            true,
+            false,
+            true,
+            true
+          ]
+        },
+        {
+          "cell": 337820,
+          "tet_nodes_zero_based": [
+            182128,
+            178754,
+            178755,
+            178753
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 2.9784016589326014e-20,
+          "normalized_det": 4.323409053810049e-14,
+          "max_edge_m": 0.016048559717112054,
+          "min_edge_m": 1.0536712127723509e-08,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 4.3176716881710534e-11,
+          "boundary_shell_markers": [
+            5,
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.016047995019026907,
+            0.016047985959905538,
+            0.016048559717112054,
+            1.0536712127723509e-08,
+            1.156641147752108e-06,
+            1.1657718492242185e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 800925,
+          "tet_nodes_zero_based": [
+            229453,
+            229385,
+            229384,
+            229386
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 5.260648114340576e-19,
+          "normalized_det": 4.682721420157533e-14,
+          "max_edge_m": 0.040697155952363916,
+          "min_edge_m": 3.960037906741593e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 4.77824521811903e-09,
+          "boundary_shell_markers": [
+            5,
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.040694721812193205,
+            0.040697155952363916,
+            0.04069440295215714,
+            3.0576442059808797e-06,
+            3.960037906741593e-07,
+            3.453607318341825e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 650919,
+          "tet_nodes_zero_based": [
+            165110,
+            165118,
+            165470,
+            165116
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 1.549860741053523e-21,
+          "normalized_det": 4.975109450694919e-14,
+          "max_edge_m": 0.005717599916809514,
+          "min_edge_m": 6.23452012259437e-06,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 5.2853998964337154e-14,
+          "boundary_shell_markers": [
+            5,
+            5
+          ],
+          "tet_edge_lengths_m": [
+            4.8660923735462774e-05,
+            0.005717599916809514,
+            4.242640404694474e-05,
+            0.005668938993323953,
+            6.23452012259437e-06,
+            0.005675173512817967
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ]
+        },
+        {
+          "cell": 264264,
+          "tet_nodes_zero_based": [
+            202002,
+            199562,
+            201997,
+            202001
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 3.469157275026391e-19,
+          "normalized_det": 5.433040577818309e-14,
+          "max_edge_m": 0.03371144980160682,
+          "min_edge_m": 2.6972362361409007e-07,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 2.2128726573208463e-09,
+          "boundary_shell_markers": [
+            5,
+            5
+          ],
+          "tet_edge_lengths_m": [
+            0.03371144980160682,
+            6.620763209015485e-06,
+            2.6972362361409007e-07,
+            0.0337056496997518,
+            0.03371121418444435,
+            6.351043386680353e-06
+          ],
+          "tet_edge_on_boundary": [
+            true,
+            false,
+            true,
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "cell": 50999,
+          "tet_nodes_zero_based": [
+            226033,
+            226031,
+            226032,
+            227364
+          ],
+          "material_attribute": [
+            16
+          ],
+          "volume_m3": 1.2105512537842708e-19,
+          "normalized_det": 5.649255764875099e-14,
+          "max_edge_m": 0.023426877049256573,
+          "min_edge_m": 1.4901161193847656e-08,
+          "boundary_face_count": 2,
+          "boundary_node_count": 4,
+          "boundary_min_area_m2": 1.2182867939889622e-10,
+          "boundary_shell_markers": [
+            5,
+            5
+          ],
+          "tet_edge_lengths_m": [
+            3.993955985963572e-06,
+            3.979056490448377e-06,
+            0.023423975849595848,
+            1.4901161193847656e-08,
+            0.023426877049256573,
+            0.023426866378327946
+          ],
+          "tet_edge_on_boundary": [
+            false,
+            true,
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      ],
+      "bad_normalized_cells_with_zero_boundary_nodes": 0,
+      "bad_normalized_cells_with_boundary_nodes_but_no_incident_boundary_face": 23740,
+      "bad_abs_volume_cells_with_zero_boundary_nodes": 0,
+      "bad_abs_volume_cells_with_boundary_nodes_but_no_incident_boundary_face": 1281,
+      "boundary_face_marker_counts_are_incident_faces_not_unique_cells": true
+    }
+  ],
+  "elapsed_s": 2.2678936657030135,
+  "classification_note": "Boundary-node-star counts are distinct from direct boundary-face incidence; a cell with no incidence-one face may still contain vertices that lie on the fixed surface.",
+  "source_report_sha256": "cd946a8d5d8396708054f3beecc04de3337ec940c9aea7844128a64b15eb6032"
+}

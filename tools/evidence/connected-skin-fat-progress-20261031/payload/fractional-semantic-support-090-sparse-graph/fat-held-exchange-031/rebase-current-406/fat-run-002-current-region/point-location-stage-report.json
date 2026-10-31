@@ -1,0 +1,76 @@
+{
+  "changed_cell_pointlocated_count": 262864,
+  "changed_cell_uncontained_count": 7625,
+  "changed_centroid_multiple_containers_count": 176,
+  "changed_centroid_only_wrong_material_count": 0,
+  "changed_old_cell_count": 270489,
+  "current_cell_count": 826737,
+  "current_negative_orientation_cells": 0,
+  "current_zero_volume_cells": 0,
+  "elapsed_seconds": 78.10396891715936,
+  "exact_checkpoint": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-001-full/exact-map.npz",
+    "sha256": "d17b076423ae28ef95fe19f41d61b97165f87ba4a2ae51e128f6e35a38c155a0"
+  },
+  "inputs": {
+    "baseline_element": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.ele",
+      "sha256": "69cefbb10501154206d2065e80a5babe5cf6b561644f3a12f68c142e5f073ec6"
+    },
+    "baseline_node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-child-handoff-142/fat.node",
+      "sha256": "ba5d39714bbef252d8c76c438083b432c2e1956a7a298b1b9b48e690aaa4d2e4"
+    },
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+      "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211"
+    },
+    "candidate_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/report.json",
+      "sha256": "fc2d2e23a00b530e5074abd06e1549516e1364fb73bb713b23a05ae3ae4555c7"
+    },
+    "helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase_held_flows_current_volume.py",
+      "sha256": "657f303c27b50d49199c34f404adca3d7a51c0ef9e10e01b59f1c8723e75b624"
+    },
+    "support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/fat-connected-region-support.npz",
+      "sha256": "0e47882aab9219230bc263eb4b23759830666908fefdb90f66a970e9655e2d13"
+    },
+    "support_independent_verification": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/independent-verification.json",
+      "sha256": "b0940d6954779767009f257da92de587a6cc57d58c304b925177a3a3e972ea2d"
+    },
+    "support_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-root/receipt.json",
+      "sha256": "055a1fb7f909205248b6d8ebe160ef8ea1c743f335615fc93dd14192728de246"
+    }
+  },
+  "native_steps": 0,
+  "old_cell_count": 853406,
+  "output": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-001-full/cell-row-map.npz",
+    "sha256": "c825c8483d3b4cbe99e755a938dfa6ea85b07b8fb7c962f5204bee16f2e47587",
+    "size_bytes": 3437828
+  },
+  "peak_rss_bytes": 791314432,
+  "physical_admission": false,
+  "point_location": {
+    "candidate_pair_count_after_sphere_filter": 88821116,
+    "candidate_pair_count_before_sphere_filter": 185051535,
+    "exact_boundary_predicate_count": 287052,
+    "max_cell_circumradius_m": 0.16880909884524795,
+    "query_count": 270489,
+    "query_tile_size": 256,
+    "radius_bin_count": 20
+  },
+  "region_admission": {
+    "baseline_fat_domain_rows": 853406,
+    "centroid_mapped_current_recipient_rows": 262864,
+    "current_region_proof_rule": "only ordered or signed-permutation exact cell-identity matches inherit baseline compiler region support; centroid-mapped rows have no current compiler region proof and will be released at ledger stage",
+    "exact_identity_current_recipient_rows": 582917
+  },
+  "schema": "numi.human.current-volume-rebase-stage.v1",
+  "stage": "changed-centroid-point-location",
+  "status": "PASS_GEOMETRY_MAP_CHECKPOINT"
+}

@@ -1,0 +1,105 @@
+{
+  "checks": {
+    "barycentric_sum": true,
+    "candidate_sha_matches_report": true,
+    "child_mass_reaggregation": true,
+    "current_volumes_positive": true,
+    "density_matches_ledger": true,
+    "density_under_950": true,
+    "hard_radius": true,
+    "material_matches_current_cell": true,
+    "parent_corner_reaggregation": true,
+    "positive_finite_flow_and_barycentrics": true,
+    "retained_global_source_map": true,
+    "source_parent_identity_material_map": true,
+    "source_parent_mass_matches_csv": true,
+    "source_region_allowed_by_current_support": true,
+    "support_bound_to_candidate": true,
+    "support_independent_status_pass": true,
+    "support_sha_matches_report": true
+  },
+  "counts": {
+    "current_cells": 826737,
+    "current_points": 253220,
+    "historical_held_rows": 852047,
+    "retained_current_cells": 658306,
+    "retained_rows": 754841,
+    "source_parents": 14316
+  },
+  "inputs": {
+    "candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+      "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211"
+    },
+    "current_region_support": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/fat-connected-region-support.npz",
+      "sha256": "e24f0d343af79153e5030bee5fe85f8a12676a17daa56adcfa99e15956da4526"
+    },
+    "current_support_independent_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/connected-region-mass-support-143-current406-root/independent-verification.json",
+      "sha256": "b7a78c081cf2768fc66ffd0403e5abf581ed703f39858ad1aab14cea84ed7482"
+    },
+    "ledger": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/rebased-held-flow-ledger.npz",
+      "sha256": "0ee4e4909740e0029a10cb0019a531652b90c882226a0212f6d688f0bbf405fc"
+    },
+    "producer_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-held-exchange-031/rebase-current-406/fat-run-002-current-region/ledger-report.json",
+      "sha256": "345475d282817d9adff518ac1e4f07182454a26ba4224a0a4e1bc9266cad63ba"
+    },
+    "source_parent_csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fractional-semantic-support-090-sparse-graph/fat-853406-carrier-run-009-partial-flow-export/partial-flow-008/transport-source-parent.csv",
+      "sha256": "c217761c82e7bf4b10f823cddd8a4b2bf7a933081f33d6728fe2d4833c7d3dc3"
+    }
+  },
+  "limitations": [
+    "Retained historical rows were not redistributed; this subset does not meet full per-parent M/4 accounting.",
+    "Low-density recipients remain underfilled; the deficit is not repaired.",
+    "Candidate 406 has physical_admission=false and a residual boundary mismatch."
+  ],
+  "mass": {
+    "cells_over_950": 387,
+    "maximum_density_kg_m3": 950.0000000084268,
+    "minimum_positive_density_kg_m3": 2.8369888724356276e-10,
+    "positive_mass_cells_below_850": 98339,
+    "released_kg": 0.5139150102557986,
+    "retained_kg": 9.307850188419508,
+    "source_parent_total_kg": 10.487108517986506,
+    "unallocated_source_kg": 1.1792583295669985,
+    "under_850_deficit_kg": 0.535371428266022
+  },
+  "mass_transport": "NOT_ADMITTED",
+  "measurements": {
+    "max_barycentric_sum_error": 3.3306690738754696e-16,
+    "max_relative_child_mass_reaggregation_error": 0.0,
+    "max_relative_density_recomputation_error": 1.2315027436361505e-08,
+    "max_relative_parent_corner_reaggregation_error": 0.0,
+    "max_relative_source_parent_mass_error": 0.0,
+    "max_retained_distance_m": 0.019353,
+    "min_current_float32_determinant_volume_m3": 2.757268708510092e-25,
+    "radius_limit_m": 0.019353,
+    "retained_rows_allowed_by_current_region_support": 754841
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "producer_max_relative_M4_residual": 1.0,
+  "producer_released_mass_by_reason_kg": {
+    "0": 9.307850188419508,
+    "1": 6.192157394678586e-05,
+    "2": 0.0,
+    "3": 0.06923909304545116,
+    "4": 0.44460563682346044,
+    "5": 8.358812940288744e-06
+  },
+  "producer_releases_by_reason": {
+    "0": 754841,
+    "1": 7603,
+    "2": 0,
+    "3": 1752,
+    "4": 87815,
+    "5": 36
+  },
+  "schema": "numi.human.current-volume-held-ledger-independent-replay.v1",
+  "scope": "Independent replay of retained historical Fat held-flow rows against current 406 geometry and independently verified current 143 semantic-region support; not a complete allocation.",
+  "status": "PASS_INDEPENDENT_CURRENT_HELD_LEDGER_REPLAY_SOURCE_ONLY"
+}
