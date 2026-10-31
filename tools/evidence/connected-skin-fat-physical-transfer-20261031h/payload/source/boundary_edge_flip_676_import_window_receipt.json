@@ -1,0 +1,91 @@
+{
+  "claim_boundary": "Do not claim v1 powered all rounds. Rounds 2 and 3 record/load v2, but the v2-only one-cell branch was unreachable under driver len(rr)<2 prefilter; accepted operations in those rounds all have nonempty replacements. Round 1 retains its separate 30b4 recorded owner provenance.",
+  "driver": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/batch_paired_boundary_diagonal_quality_679_root.py",
+    "sha256": "c25f2ddcc152eb2a3abd91878d91ee346a037715a240d6a6ec0b6404641a249f",
+    "single_cell_prefilter": "volume edge star len(rr)<2 is rejected before propose_boundary_flip is called"
+  },
+  "frozen_sources": [
+    {
+      "label": "v1",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/boundary_edge_flip_676_local.py",
+      "sha256": "4f1fc00a95b3caaca947fcc8fd3c13cb76b4ef6d968892d5bafdfced6e85739d",
+      "status": "restored and frozen import path"
+    },
+    {
+      "label": "v2",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/boundary_edge_flip_676_v2_local.py",
+      "sha256": "bed62614a829d0e8e06dd82822052b758a2390c78694de18e697865afb264945",
+      "status": "separate frozen one-cell empty-target implementation"
+    }
+  ],
+  "mutation_window_local_mac_time": {
+    "legacy_import_path_became_v2": "2026-10-31 11:28:01",
+    "temporary_restore_intermediate_hash": "4305f2206953cfa8ae83a8588fd7fae4e87483c39cc0d05e14d1dab84bc1afe9 at 11:29:16",
+    "v1_exact_hash_restore_tool_utc": "2026-10-31T18:29:37.830Z",
+    "v1_exact_hash_restored": "2026-10-31 11:29:38; verified 4f1fc00a95b3caaca947fcc8fd3c13cb76b4ef6d968892d5bafdfced6e85739d",
+    "v1_exact_hash_restored_host_mtime_local": "2026-10-31 11:29:38",
+    "v2_separate_copy_created": "2026-10-31 11:28:52"
+  },
+  "n_ge_2_equivalence": {
+    "checked_equal": [
+      "acceptance/reason",
+      "replacement tetrahedra",
+      "new source faces",
+      "exact target chain",
+      "source patch edge chain",
+      "native quality counts",
+      "source triangle metrics",
+      "exact det6 sums/delta",
+      "common quality score fields"
+    ],
+    "fixture_cell_count": 2,
+    "status": "PASS_676_V1_V2_NONEMPTY_STAR_EQUIVALENCE",
+    "summary": "The v2 diff changes the one-cell empty-target path and empty-array result handling. For n>=2, the same nonempty polygon-DP path and quality/exact predicates return identical common geometry/metrics."
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "run_attribution": [
+    {
+      "accepted_empty_replacements": 0,
+      "attribution": "started before the v2 mutation; recorded owner hash is neither frozen 4f1 v1 nor bed626 v2, so do not relabel it as either",
+      "recorded_local_owner_sha256": "30b4fe3ac7508181c5cadea70476e96c78df8a86d1e07e03155276840297b37b",
+      "round": 1,
+      "start_local": "11:27:23",
+      "verified_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-681-root/round001/trial01/verified-state.json",
+      "verified_state_sha256": "c11f9f6166b3144437cee9364ff2ddd857213bf566efa1ea49f15a8a0ba4d41f"
+    },
+    {
+      "accepted_empty_replacements": 0,
+      "accepted_operations": 32,
+      "attribution": "v2 was loaded during the source-window; no accepted operation emitted an empty replacement; driver prefilter rejects len(rr)<2 before API call",
+      "recorded_local_owner_sha256": "bed62614a829d0e8e06dd82822052b758a2390c78694de18e697865afb264945",
+      "round": 2,
+      "start_local_approx": "11:28:09; first candidate artifact 11:28:20",
+      "verified_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-681-root/round002/trial01/verified-state.json",
+      "verified_state_sha256": "361ed350ddd39bed6d6c916d02d91b000c8b2f8e4bdb00cd9a8a518346580c8b"
+    },
+    {
+      "accepted_empty_replacements": 0,
+      "accepted_operations": 23,
+      "attribution": "v2 was loaded during the source-window; no accepted operation emitted an empty replacement; driver prefilter rejects len(rr)<2 before API call",
+      "draft_state_mtime_local": "11:29:17",
+      "pin_timing_note": "The path restore and round state write are about one second apart in host mtimes; preserve the recorded v2 pin and flag a potential import/final-pin timing race",
+      "recorded_local_owner_sha256": "bed62614a829d0e8e06dd82822052b758a2390c78694de18e697865afb264945",
+      "round": 3,
+      "start_local_approx": "11:28:54; first candidate artifact 11:29:06",
+      "verified_state_mtime_local": "11:29:41",
+      "verified_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-681-root/round003/trial01/verified-state.json",
+      "verified_state_sha256": "3217b1cf0be4dc29694e2460373fc210ff1b7665500d564d0267325c59270ed6"
+    },
+    {
+      "accepted_empty_replacements_so_far": 0,
+      "input_path_is_frozen_v1": true,
+      "recorded_draft_local_owner_sha256": "4f1fc00a95b3caaca947fcc8fd3c13cb76b4ef6d968892d5bafdfced6e85739d",
+      "round": 4,
+      "start_local": "11:29:41; source path v1 mtime 11:29:38",
+      "status": "in progress at receipt creation"
+    }
+  ],
+  "schema": "h706.boundary-edge-flip-676-import-window.v1"
+}

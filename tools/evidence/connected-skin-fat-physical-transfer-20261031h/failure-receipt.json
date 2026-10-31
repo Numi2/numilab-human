@@ -1,0 +1,167 @@
+{
+  "failed_or_incomplete_gates": [
+    {
+      "gate": "native quality",
+      "reason": "448 Skin and 2531 Fat cells remain below the unchanged native thresholds.",
+      "status": "FAIL"
+    },
+    {
+      "gate": "physical admission",
+      "reason": "native quality and mass qualification remain incomplete.",
+      "status": "NOT_ADMITTED"
+    },
+    {
+      "gate": "regional mass allocation",
+      "reason": "not established by this snapshot.",
+      "status": "PENDING"
+    },
+    {
+      "diagnostic": "Only the Skin candidate artifact remains in the failed attempt directory; no paired Fat artifact or passing finalizer receipt was emitted. The later 678 v2 metadata finalizer is a distinct geometry-preserving success.",
+      "gate": "metadata-finalization attempt 677",
+      "sha256": "643f16a70715dede58c31c720b06ba905fc45d6ac5645e56ffcf961de8724d77",
+      "size_bytes": 25645866,
+      "source_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/metadata-finalized-677-001/skin-paired-target-metadata-finalized.npz",
+      "status": "INCOMPLETE_PARTIAL_ARTIFACT"
+    }
+  ],
+  "historical_676_import_window": {
+    "claim_boundary": "Do not claim v1 powered all rounds. Rounds 2 and 3 record/load v2, but the v2-only one-cell branch was unreachable under driver len(rr)<2 prefilter; accepted operations in those rounds all have nonempty replacements. Round 1 retains its separate 30b4 recorded owner provenance.",
+    "interpretation": "This historical 681 import-window ambiguity is not attributed to the accepted 678 state, which pins v1 exactly.",
+    "receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/boundary_edge_flip_676_import_window_receipt.json",
+    "receipt_sha256": "db2be25e05662cb175836aeb0a533a47c55265df805cf3b980259ed1402baeca",
+    "rounds": [
+      {
+        "accepted_empty_replacements": 0,
+        "attribution": "started before the v2 mutation; recorded owner hash is neither frozen 4f1 v1 nor bed626 v2, so do not relabel it as either",
+        "recorded_local_owner_sha256": "30b4fe3ac7508181c5cadea70476e96c78df8a86d1e07e03155276840297b37b",
+        "round": 1,
+        "start_local": "11:27:23",
+        "verified_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-681-root/round001/trial01/verified-state.json",
+        "verified_state_sha256": "c11f9f6166b3144437cee9364ff2ddd857213bf566efa1ea49f15a8a0ba4d41f"
+      },
+      {
+        "accepted_empty_replacements": 0,
+        "accepted_operations": 32,
+        "attribution": "v2 was loaded during the source-window; no accepted operation emitted an empty replacement; driver prefilter rejects len(rr)<2 before API call",
+        "recorded_local_owner_sha256": "bed62614a829d0e8e06dd82822052b758a2390c78694de18e697865afb264945",
+        "round": 2,
+        "start_local_approx": "11:28:09; first candidate artifact 11:28:20",
+        "verified_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-681-root/round002/trial01/verified-state.json",
+        "verified_state_sha256": "361ed350ddd39bed6d6c916d02d91b000c8b2f8e4bdb00cd9a8a518346580c8b"
+      },
+      {
+        "accepted_empty_replacements": 0,
+        "accepted_operations": 23,
+        "attribution": "v2 was loaded during the source-window; no accepted operation emitted an empty replacement; driver prefilter rejects len(rr)<2 before API call",
+        "draft_state_mtime_local": "11:29:17",
+        "pin_timing_note": "The path restore and round state write are about one second apart in host mtimes; preserve the recorded v2 pin and flag a potential import/final-pin timing race",
+        "recorded_local_owner_sha256": "bed62614a829d0e8e06dd82822052b758a2390c78694de18e697865afb264945",
+        "round": 3,
+        "start_local_approx": "11:28:54; first candidate artifact 11:29:06",
+        "verified_state_mtime_local": "11:29:41",
+        "verified_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-681-root/round003/trial01/verified-state.json",
+        "verified_state_sha256": "3217b1cf0be4dc29694e2460373fc210ff1b7665500d564d0267325c59270ed6"
+      },
+      {
+        "accepted_empty_replacements_so_far": 0,
+        "input_path_is_frozen_v1": true,
+        "recorded_draft_local_owner_sha256": "4f1fc00a95b3caaca947fcc8fd3c13cb76b4ef6d968892d5bafdfced6e85739d",
+        "round": 4,
+        "start_local": "11:29:41; source path v1 mtime 11:29:38",
+        "status": "in progress at receipt creation"
+      }
+    ]
+  },
+  "note": "No failed or incomplete check is converted into a pass by this receipt.",
+  "preserved_passes": {
+    "exact_context_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-678-root/round001/trial01/context001/report.json",
+      "sha256": "78744569c4a214bd1db58948544f3a1a1c2e8fc180147154a136f5147bbe2d73"
+    },
+    "independent_replay": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-678-root/round001/trial01/independent-replay-v2.json",
+      "sha256": "97c15d321b31e4bc6987b84f0706df46e54725c3e6bcdf17c7bb19ede025188a"
+    },
+    "metadata_finalizer_readback_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/metadata-finalized-678-v2-001/finalizer-readback.json",
+    "metadata_finalizer_readback_sha256": "48dd1afe1dc4b694dc60a5ea81b210a0f3cd7827e1dce71f2deb8065c83f7ca3"
+  },
+  "rejected_candidate_operation_counts": {
+    "by_role": {
+      "D": 21373,
+      "I": 16538,
+      "O": 2121
+    },
+    "counters": {
+      "D:dependent_or_back_quad": 7908,
+      "D:empty_large_or_dependent_volume_star": 542,
+      "D:external_volume_budget": 233,
+      "D:local:exact_target_chain_mismatch": 5,
+      "D:local:native_quality_count_regressed": 246,
+      "D:local:native_quality_score_regressed_at_tied_count": 53,
+      "D:local:no_positive_ring_triangulation": 304,
+      "D:local:replacement_not_manifold": 15,
+      "D:local:source_min_angle_not_improved": 20,
+      "D:native_source_apex": 166,
+      "D:no_lexicographic_gain": 987,
+      "D:nonplanar_or_projected_fold": 2838,
+      "D:source_new_diagonal_exists": 821,
+      "D:source_shape_no_improvement": 7235,
+      "I:dependent_or_back_quad": 2933,
+      "I:empty_large_or_dependent_volume_star": 1044,
+      "I:local:exact_target_chain_mismatch": 5,
+      "I:local:native_quality_count_regressed": 140,
+      "I:local:native_quality_score_regressed_at_tied_count": 26,
+      "I:local:no_positive_ring_triangulation": 406,
+      "I:local:replacement_not_manifold": 9,
+      "I:local:source_min_angle_not_improved": 22,
+      "I:native_source_apex": 3,
+      "I:no_lexicographic_gain": 760,
+      "I:nonplanar_or_projected_fold": 2878,
+      "I:source_new_diagonal_exists": 222,
+      "I:source_shape_no_improvement": 8090,
+      "O:dependent_or_back_quad": 327,
+      "O:empty_large_or_dependent_volume_star": 55,
+      "O:external_volume_budget": 61,
+      "O:local:exact_target_chain_mismatch": 1,
+      "O:local:native_quality_count_regressed": 33,
+      "O:local:native_quality_score_regressed_at_tied_count": 3,
+      "O:local:no_positive_ring_triangulation": 45,
+      "O:local:replacement_not_manifold": 3,
+      "O:local:source_min_angle_not_improved": 5,
+      "O:native_source_apex": 7,
+      "O:no_lexicographic_gain": 113,
+      "O:nonplanar_or_projected_fold": 456,
+      "O:source_new_diagonal_exists": 65,
+      "O:source_shape_no_improvement": 947
+    },
+    "interpretation": "Rejected trial counts, retained without filtering; these are not physical-admission checks.",
+    "source_state_sha256": "83d59946ec126671c88ac84dd168a396fc0ce2b0a751880afd84914ea7d9c722",
+    "total": 40032
+  },
+  "schema": "numi-human.quality678.failure-receipt.v1",
+  "snapshot_state": {
+    "native_steps": 0,
+    "nonpositive": {
+      "Fat": 0,
+      "Skin": 0
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-678-root/round001/trial01/verified-state.json",
+    "physical_admission": false,
+    "quality_failures": {
+      "Fat": 2531,
+      "Skin": 448
+    },
+    "sha256": "83d59946ec126671c88ac84dd168a396fc0ce2b0a751880afd84914ea7d9c722",
+    "surface_crossings": 0,
+    "target_boundary": {
+      "Fat": {
+        "extra": 0,
+        "missing": 0
+      },
+      "Skin": {
+        "extra": 0,
+        "missing": 0
+      }
+    }
+  }
+}

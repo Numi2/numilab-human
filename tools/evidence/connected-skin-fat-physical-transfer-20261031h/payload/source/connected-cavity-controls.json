@@ -1,0 +1,75 @@
+{
+  "status": "PASS_CONNECTED_CAVITY_625_SYNTHETIC_CONTROLS",
+  "controls": {
+    "bounded_230_220_fixed_vertex_milp": {
+      "native_bad_before": 1,
+      "native_bad_after": 0,
+      "replacement_cells": 3,
+      "coverage": {
+        "candidate_count": 4,
+        "missing_faces": 0,
+        "first_missing_faces": []
+      },
+      "solver_status": "PASS_EXACT_ORIENTED_CAVITY_TETRAHEDRALIZATION"
+    },
+    "303_style_steiner_replacement": {
+      "native_bad_before": 1,
+      "native_bad_after": 0,
+      "replacement_cells": 6,
+      "new_points": 1,
+      "complete_parent_union_rows": [
+        0,
+        1
+      ]
+    },
+    "fail_closed": {
+      "missing_point_location": "exact point-location callback required for Steiner points",
+      "retained_sat_failure": "exact replacement/retained intersection"
+    },
+    "candidate_budget": "5 choose 4 admitted; 5 choose 4 with cap 4 rejected before solver"
+  },
+  "api": {
+    "evaluate_connected_cavity": "owner, points, tetrahedra, materials, old_rows, replacement_tetrahedra; optional output_points/new_point_rows/point_inside; mandatory exact_replacement_self_check(points,new_tets) and exact_retained_intersection_check(points,parent_tets,old_rows,new_tets,prior_replacements); optional complete parent CSR.",
+    "solve_bounded_fixed_vertex_milp": "owner, points, tetrahedra, materials, old_rows; caller supplies existing 230 coverage_fn and 220 solve_fn; hard limits of 36 points, 60,000 candidate tets, 50,000 cavity cells and 20 seconds then runs the same evaluator."
+  },
+  "thresholds_changed": false,
+  "surface_or_point_prefix_changed": false,
+  "exact_local_volume_and_oriented_chain": "existing owner.certify plus owner.chain",
+  "source_context_and_full_target_checks": "external required gates",
+  "physical_admission": false,
+  "native_steps": 0,
+  "source_pins": {
+    "625_adapter": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/connected_cavity_candidate_625.py",
+      "sha256": "be501b96d14d356bb3235d26e9f93edc8178c526981f1ad9a63750739bfadaad"
+    },
+    "220_solver": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/complete-surface-cavity-220-root/solve_oriented_cavity_milp_220.py",
+      "sha256": "46118c71630ba64e9384a05b4f6c08b55b65ce80b05fbbbbed82a5aa28a54923"
+    },
+    "230_bounded_driver": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/batch_fixed_boundary_quality_milp_230_root.py",
+      "sha256": "7b3a353489fd9ad6f4efc1e8d29556196af3529f18df6e71f1f663dcf88a654e"
+    },
+    "303_connected_remesher": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_quality_witness_cavities_303_root.py",
+      "sha256": "577dc0ee0422812c52c600ef6e634a422d71796768ba52a3d835c205fafbb0d1"
+    },
+    "251_polygon_replay": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/replay_current_polygon_quality_251_root.py",
+      "sha256": "bcfeb11f693e7e4478e70108a67fe5a427e8bdeae75f2d8807b5805e49711e1d"
+    },
+    "261_lazy_ears": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality_floor_lazy_ears_261_root.py",
+      "sha256": "2a2ac9df6edfd758b97cdee8f322db745081f9761dedb94b1edada440d44c8cf"
+    },
+    "198_exact_volume_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_flip_198_root.py",
+      "sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0"
+    },
+    "349_exact_intersection_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    }
+  }
+}

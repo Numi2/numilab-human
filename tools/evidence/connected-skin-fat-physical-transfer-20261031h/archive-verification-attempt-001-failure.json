@@ -1,0 +1,12 @@
+{
+  "attempt": "archive verification v1",
+  "status": "FAIL_VERIFIER_REJECTED_EXPECTED_DIRECTORY_ENTRY",
+  "archive_sha256": "961782f9d81eaee069049b10a9f29fc7c8b9dc339593209ff775bdc7a090c54d",
+  "archive_size_bytes": 1173309994,
+  "failed_source": "restore_archive_v1_failed.py",
+  "failed_source_sha256": "3f9fccb0ca4b6888b6ffec9c07e2ffd45fa2fe478baa1a6180fbae66ac38db03",
+  "failure": "RuntimeError: unreadable archive member blobs; tarfile stream exposed the intentional blobs directory entry and v1 called extractfile() on it.",
+  "corrective_source": "restore_archive.py",
+  "corrective_source_sha256": "6e4b7460a2a611e95bdd94a38f014a7ee617dc4126728678b67c7d07b9f1fc58",
+  "disposition": "Preserved the failed script and failure record; v2 now accepts only the expected blobs directory entry and still rejects all unexpected paths or file hashes."
+}
