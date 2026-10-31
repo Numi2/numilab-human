@@ -1,0 +1,52 @@
+{
+  "archive_asset": {
+    "asset_id": "RA_kwDOUElluM4pho7d",
+    "asset_name": "quality-volume-archive-chunk-001.tar.zst",
+    "download_url": "https://github.com/Numi2/numilab-human/releases/download/human-quality-volume-archive-20261031-chunk-001/quality-volume-archive-chunk-001.tar.zst",
+    "release_label": "quality-volume-proposals-792-794r001-795-chunk-001.tar.zst",
+    "release_tag": "human-quality-volume-archive-20261031-chunk-001",
+    "release_url": "https://github.com/Numi2/numilab-human/releases/tag/human-quality-volume-archive-20261031-chunk-001",
+    "repository": "Numi2/numilab-human",
+    "sha256": "9cb2e55a4bba2f5272aea543cdf62791650b0e0045fc2d453317b4e69bcb954d",
+    "size_bytes": 176553369
+  },
+  "chronology_note": "The initial build receipt predates upload and records independent_release_download_verified=false and source_retirement_performed=false. Later remote verification/readback, retirement, post-retirement, local-copy cleanup, and lane-release receipts record the subsequent passing steps.",
+  "cleanup": {
+    "cleanup_receipts_retained": true,
+    "github_release_asset_retained": true,
+    "removed_local_archive_download_restore_bytes": 378997470,
+    "removed_local_archive_download_restore_files": 3,
+    "retired_original_bytes": 284767322,
+    "retired_original_volume_files": 12
+  },
+  "limits": {
+    "geometry_qualification_claimed": false,
+    "mass_reconciliation": "NOT_ESTABLISHED_BY_ARCHIVE_PROOF",
+    "native_steps": 0,
+    "physical_admission": false
+  },
+  "post_retirement_current_state_reference_note": "Current-state hashes in the post-retirement input proof are protection pins only; they do not establish state qualification or native execution.",
+  "schema": "numi-human.quality-volume-archive-publication-proof.v1",
+  "scope": "archive_and_cleanup_proof_only",
+  "source_selection": {
+    "archive_index_sha256": "c2d0f74ead6de4527fab2e7082a79fb3a7e9012ef32cc61f5031f5deb2bff4ab",
+    "scope_note": "Pre-824 historical volume proposal arrays only; source state/report JSON, typed source arrays, current inputs, and post-824 volumes were protected.",
+    "selected_file_count": 12,
+    "selected_historical_volume_bytes": 284767322,
+    "selection_plan_sha256": "0f936d87d1b307bcf099f80888432be098dc6d82c4b68fac9b0def22e89cfaf9",
+    "unique_blob_bytes": 284767322,
+    "unique_blob_count": 12
+  },
+  "verification_results": {
+    "all_12_archive_blob_hashes_and_sizes": "PASS",
+    "archive_index_mapping": "PASS",
+    "independent_download_sha256": "PASS_MATCHES_LOCAL_BUILD_AND_GITHUB_DIGEST",
+    "live_github_release_metadata": "PASS_ASSET_NAME_DIGEST_SIZE_MATCH_RETAINED_RECEIPT",
+    "npy_array_headers_read": 1167,
+    "post_retirement_protected_inputs": "PASS",
+    "retired_paths_absent": "PASS",
+    "selected_restore": "PASS_STREAMED_ARCHIVE_AND_SELECTED_RESTORE",
+    "selected_restore_sha256": "e91725a84af66a40bdb7395678df105615da1bfa983ac8d86676ef2f0a1661bc",
+    "zip_crc_checks": "PASS"
+  }
+}

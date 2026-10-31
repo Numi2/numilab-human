@@ -1,0 +1,69 @@
+{
+  "asset_name_note": "gh release create stored the uploaded source basename as asset name and the requested # string as its display label; the archive and index hashes are content-identical. Independent download used the authoritative asset name.",
+  "current_input_proof": {
+    "current_best_850_round02": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-02/verified-state.json",
+      "sha256": "4b94a2281222f31acd0ea3612c42d4093282bb8d621540c9970be463632e7058"
+    },
+    "historical_references_require_rehydration": 10,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001-plan/current-input-proof-prebuild.json",
+    "sha256": "350e75fd09cd392c28a6c35a771eda25b24b5968307a3a783aae8b5dc4eff105",
+    "status": "PASS_DIRECT_CURRENT_INPUTS_DISJOINT; HISTORICAL_ANCESTRY_PATHS_INDEXED_FOR_REHYDRATION"
+  },
+  "github_asset": {
+    "digest": "sha256:9cb2e55a4bba2f5272aea543cdf62791650b0e0045fc2d453317b4e69bcb954d",
+    "id": "RA_kwDOUElluM4pho7d",
+    "label": "quality-volume-proposals-792-794r001-795-chunk-001.tar.zst",
+    "name": "quality-volume-archive-chunk-001.tar.zst",
+    "size_bytes": 176553369,
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-quality-volume-archive-20261031-chunk-001/quality-volume-archive-chunk-001.tar.zst"
+  },
+  "independent_download": {
+    "path": "/Users/numi/Work/.quality-volume-archive-chunk-001-independent-download/quality-volume-archive-chunk-001.tar.zst",
+    "sha256_from_restore_verifier": "9cb2e55a4bba2f5272aea543cdf62791650b0e0045fc2d453317b4e69bcb954d",
+    "size_bytes": 176553369
+  },
+  "local_archives_removed": false,
+  "local_build": {
+    "archive_index_sha256": "c2d0f74ead6de4527fab2e7082a79fb3a7e9012ef32cc61f5031f5deb2bff4ab",
+    "archive_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001.tar.zst",
+    "archive_sha256": "9cb2e55a4bba2f5272aea543cdf62791650b0e0045fc2d453317b4e69bcb954d",
+    "archive_size_bytes": 176553369,
+    "selection_plan_sha256": "0f936d87d1b307bcf099f80888432be098dc6d82c4b68fac9b0def22e89cfaf9"
+  },
+  "npz_readback": {
+    "all_zip_crcs_passed": true,
+    "file_count": 12,
+    "npy_array_headers_read": 1167,
+    "report_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001-plan/npz-readback-report.json",
+    "report_sha256": "908e0af50234988b9a9c7f448e3a4c90a93964570b88d3ee6d9c7049e72dc3cf",
+    "status": "PASS_ALL_SOURCE_NPZ_ZIP_CRC_AND_NPY_HEADERS; PASS_ARCHIVE_INDEX_MAP; PASS_GITHUB_DIGEST"
+  },
+  "recorded_utc": "2026-10-31T22:51:56.751214+00:00",
+  "release": {
+    "repository": "Numi2/numilab-human",
+    "source_only": true,
+    "tag": "human-quality-volume-archive-20261031-chunk-001"
+  },
+  "restore_tool": {
+    "captured_stdout": {
+      "archive_sha256": "9cb2e55a4bba2f5272aea543cdf62791650b0e0045fc2d453317b4e69bcb954d",
+      "native_steps": 0,
+      "physical_admission": false,
+      "restore_root": "/Users/numi/Work/.quality-volume-archive-chunk-001-restore-smoke",
+      "restored_paths": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/fat-coupled-quality-point-proposal.npz"
+      ],
+      "status": "PASS_STREAMED_ARCHIVE_AND_SELECTED_RESTORE",
+      "verified_blob_bytes": 284767322,
+      "verified_blob_count": 12
+    },
+    "command": "python3 restore_archive.py --archive <independent-download> --restore-root /Users/numi/Work/.quality-volume-archive-chunk-001-restore-smoke --restore-path /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/fat-coupled-quality-point-proposal.npz",
+    "exit_code": 0,
+    "source_commit": "a7f784ecdd99f8b4ea70219304fff15b8d36cf85",
+    "source_path": "/Users/numi/Work/human-quality-trials-695-publish-20261031i/tools/evidence/connected-skin-fat-quality-trials-695-20261031i/restore_archive.py"
+  },
+  "schema": "numi-human.quality-volume-archive-remote-verification.v1",
+  "source_retirement_performed": false,
+  "status": "PASS_LOCAL_BUILD_AND_GITHUB_ASSET_RESTORE_VERIFICATION"
+}

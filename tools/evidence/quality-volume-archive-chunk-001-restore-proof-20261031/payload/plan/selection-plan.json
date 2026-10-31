@@ -1,0 +1,218 @@
+{
+  "chunk": {
+    "approx_mib": 271.575,
+    "file_count": 12,
+    "id": "quality-volume-chunk-001",
+    "of_selected_roster_chunks": 2,
+    "ordinal": 1,
+    "original_bytes": 284767322,
+    "remaining_files_for_later_chunk": 12,
+    "selected_roster_total_count": 24
+  },
+  "commands_after_lane_clearance": {
+    "local_build": "/Users/numi/numi-human-prep-venv-20261005/bin/python3 /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001-plan/build_volume_chunk.py --plan /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001-plan/selection-plan.json --archive /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001.tar.zst --build",
+    "retirement_rule": "Only after GitHub asset digest equals local build digest, independent download SHA-256 equals both, restore_archive.py reports PASS_STREAMED_ARCHIVE_AND_SELECTED_RESTORE for every blob plus the selected restore, and restored NPZ SHA matches its receipt may root remove exactly these 12 originals.",
+    "stream_verify_and_restore": "python3 /Users/numi/Work/human-quality-trials-695-publish-20261031i/tools/evidence/connected-skin-fat-quality-trials-695-20261031i/restore_archive.py --archive /Users/numi/Work/.quality-volume-archive-chunk-001-independent-download/quality-volume-proposals-792-794r001-795-chunk-001.tar.zst --restore-root /Users/numi/Work/.quality-volume-archive-chunk-001-restore --restore-path /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/fat-coupled-quality-point-proposal.npz"
+  },
+  "current_input_proof": {
+    "direct_current_assets_checked": 6,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001-plan/current-input-proof-prebuild.json",
+    "selected_path_historical_references": 10,
+    "sha256": "350e75fd09cd392c28a6c35a771eda25b24b5968307a3a783aae8b5dc4eff105",
+    "status": "PASS_DIRECT_CURRENT_INPUTS_DISJOINT; HISTORICAL_ANCESTRY_PATHS_INDEXED_FOR_REHYDRATION"
+  },
+  "files": [
+    {
+      "archive_member": "blobs/e91725a84af66a40bdb7395678df105615da1bfa983ac8d86676ef2f0a1661bc",
+      "expected_sha256_from_source_receipt": "e91725a84af66a40bdb7395678df105615da1bfa983ac8d86676ef2f0a1661bc",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/fat-coupled-quality-point-proposal.npz",
+      "size_bytes_from_stat": 25890732,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-792-root/round-01/proposal/fat-coupled-quality-point-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/df63cd07846938ea0bc2a84f5b354978bf6c529786013fc5eeaffe68019c1c5b",
+      "expected_sha256_from_source_receipt": "df63cd07846938ea0bc2a84f5b354978bf6c529786013fc5eeaffe68019c1c5b",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/skin-coupled-quality-point-proposal.npz",
+      "size_bytes_from_stat": 21516400,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/proposal/state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-792-root/round-01/proposal/skin-coupled-quality-point-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/f3fd1ba5aba3b119e5bfdde67206aef8a2c210a5728175e23e52cddbd9572420",
+      "expected_sha256_from_source_receipt": "f3fd1ba5aba3b119e5bfdde67206aef8a2c210a5728175e23e52cddbd9572420",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/witness-component-rollback/fat-coupled-quality-point-rollback-proposal.npz",
+      "size_bytes_from_stat": 25890688,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/witness-component-rollback/state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-792-root/round-01/witness-component-rollback/fat-coupled-quality-point-rollback-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/5472235b9fef7a225286e971cf3ab854759f3cf73d546e6593ac56a22d1b5975",
+      "expected_sha256_from_source_receipt": "5472235b9fef7a225286e971cf3ab854759f3cf73d546e6593ac56a22d1b5975",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/witness-component-rollback/skin-coupled-quality-point-rollback-proposal.npz",
+      "size_bytes_from_stat": 21516398,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-01/witness-component-rollback/state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-792-root/round-01/witness-component-rollback/skin-coupled-quality-point-rollback-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/392ff9c759dfe789acd4e5d5deeb9abb023c792e0442aba7526c90b25fbdfe40",
+      "expected_sha256_from_source_receipt": "392ff9c759dfe789acd4e5d5deeb9abb023c792e0442aba7526c90b25fbdfe40",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-02/proposal/fat-coupled-quality-point-proposal.npz",
+      "size_bytes_from_stat": 25890765,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-02/proposal/state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-792-root/round-02/proposal/fat-coupled-quality-point-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/074d57a9635010be7d3b5122f817911937fe3a83a5b2f0d9f1b3b4dcd903a8a4",
+      "expected_sha256_from_source_receipt": "074d57a9635010be7d3b5122f817911937fe3a83a5b2f0d9f1b3b4dcd903a8a4",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-02/proposal/skin-coupled-quality-point-proposal.npz",
+      "size_bytes_from_stat": 21516409,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-792-root/round-02/proposal/state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-792-root/round-02/proposal/skin-coupled-quality-point-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/754df30eed3cebd2c378ca793674ee6c086c91cef6cc72703f4981b7ce144cd1",
+      "expected_sha256_from_source_receipt": "754df30eed3cebd2c378ca793674ee6c086c91cef6cc72703f4981b7ce144cd1",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/points/fat-coupled-quality-point-proposal.npz",
+      "size_bytes_from_stat": 25890739,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/points/verified-state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-794-root/round001/points/fat-coupled-quality-point-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/7620bd388fb880b5e5a29d39e90d67eb7f72ff14e61940ae948c93d09fa43fa4",
+      "expected_sha256_from_source_receipt": "7620bd388fb880b5e5a29d39e90d67eb7f72ff14e61940ae948c93d09fa43fa4",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/points/skin-coupled-quality-point-proposal.npz",
+      "size_bytes_from_stat": 21516393,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/points/verified-state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-794-root/round001/points/skin-coupled-quality-point-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/f27d54275356ce8e718e91db62e957ea067b64280f86e32aa7b7c41cd069319b",
+      "expected_sha256_from_source_receipt": "f27d54275356ce8e718e91db62e957ea067b64280f86e32aa7b7c41cd069319b",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/flips/fat-fixed-boundary-quality-queue.npz",
+      "size_bytes_from_stat": 25891130,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/flips/verified-state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-794-root/round001/flips/fat-fixed-boundary-quality-queue.npz"
+    },
+    {
+      "archive_member": "blobs/d4d263b930745196dc257bc0f866bbed494caf320ef5ed47e39746c96e7b00db",
+      "expected_sha256_from_source_receipt": "d4d263b930745196dc257bc0f866bbed494caf320ef5ed47e39746c96e7b00db",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/flips/skin-fixed-boundary-quality-queue.npz",
+      "size_bytes_from_stat": 21516399,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-794-root/round001/flips/verified-state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-794-root/round001/flips/skin-fixed-boundary-quality-queue.npz"
+    },
+    {
+      "archive_member": "blobs/65fb260e2ce3245751379226084f1f16ecdf6e56008c4c6fdf154324aaca33eb",
+      "expected_sha256_from_source_receipt": "65fb260e2ce3245751379226084f1f16ecdf6e56008c4c6fdf154324aaca33eb",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-795-root/fat-complete-vertex-star-quality-proposal.npz",
+      "size_bytes_from_stat": 25894316,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-795-root/verified-state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-795-root/fat-complete-vertex-star-quality-proposal.npz"
+    },
+    {
+      "archive_member": "blobs/3dfb422230d40a21663aec552c90cefcac33fb80f8870816bfa6cea5e3cb7578",
+      "expected_sha256_from_source_receipt": "3dfb422230d40a21663aec552c90cefcac33fb80f8870816bfa6cea5e3cb7578",
+      "live_sha256_validation": "PENDING_CLEARANCE_AND_REHASH",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-795-root/skin-complete-vertex-star-quality-proposal.npz",
+      "size_bytes_from_stat": 21836953,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-795-root/verified-state.json",
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-795-root/skin-complete-vertex-star-quality-proposal.npz"
+    }
+  ],
+  "preparation_status": "READY_FOR_REVIEW_LIVE_PAYLOAD_HASH_PENDING",
+  "protected_boundary": [
+    {
+      "expected_sha256": "4b94a2281222f31acd0ea3612c42d4093282bb8d621540c9970be463632e7058",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-02/verified-state.json",
+      "role": "current best source-state tip"
+    },
+    {
+      "expected_sha256": "ad6423debc7483090ba62bab2134545761de6c68f8f3158949138acb39d618af",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-844-root/quality-working-state.json",
+      "role": "protected current-source lineage"
+    },
+    {
+      "expected_sha256": "e24ecae28ba963fa6135273f8c95a3badcea4440cb43b66c6854fc9426f6d7cf",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/v24d-preflight-only/verified-state.json",
+      "role": "protected preflight lineage"
+    },
+    {
+      "expected_sha256": "ab9b1c01ddf3ac486b296d74bf56cd923370a7892ba66732968abf677817a4a5",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-848-root/proposal/state.json",
+      "role": "protected proposal lineage"
+    },
+    {
+      "expected_sha256": "fe8895ee25a434138157cef2ae90491e3be0a623688870c97397654492235129",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-848-audit-root/proposal-exact-805/report.json",
+      "role": "protected audit"
+    },
+    {
+      "expected_sha256": "c89b2ff77ca9c95cbe528c929415e5e0c45a9986a83c89131b57bf83517431a1",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-821-root/round001/flips/verified-state.json",
+      "role": "earlier current-ancestry checkpoint"
+    }
+  ],
+  "purpose": "Bounded archive plan for historical volume proposal NPZs only; not a current-input or qualification record.",
+  "release_target": {
+    "asset_filename": "quality-volume-proposals-792-794r001-795-chunk-001.tar.zst",
+    "independent_download_command_template": "gh release download human-quality-volume-archive-20261031-chunk-001 --repo Numi2/numilab-human --pattern quality-volume-proposals-792-794r001-795-chunk-001.tar.zst --dir /Users/numi/Work/.quality-volume-archive-chunk-001-independent-download",
+    "independent_download_directory": "/Users/numi/Work/.quality-volume-archive-chunk-001-independent-download",
+    "local_archive_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001.tar.zst",
+    "release_upload_command_template": "gh release create human-quality-volume-archive-20261031-chunk-001 /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-001.tar.zst --repo Numi2/numilab-human --title 'Historical quality volume proposals, chunk 001' --notes 'Source-only archive of receipt-pinned historical volume proposal NPZs. This is not current state or admission evidence.'",
+    "repository": "Numi2/numilab-human",
+    "retirement_enabled": false,
+    "tag": "human-quality-volume-archive-20261031-chunk-001"
+  },
+  "retirement_rule": "Do not remove or alter originals until a source-only GitHub release asset is independently downloaded, archive digest is checked against GitHub, every blob hash and size is verified by restore_archive.py, and at least one selected NPZ is restored and rehashed.",
+  "schema": "numi-human.quality-volume-archive-chunk-plan.v1",
+  "selection": {
+    "artifact_kind": "historical volume proposal/queue NPZ",
+    "families": [
+      "all-quality-792-root",
+      "all-quality-794-root round001",
+      "all-quality-795-root"
+    ],
+    "include_current_state_inputs": false,
+    "include_state_or_report_json": false,
+    "include_typed_source_arrays": false,
+    "live_hashing_performed": false,
+    "live_hashing_required_before_build": true,
+    "post824_volume_policy": "Protect all volume geometry at and after canonical base 824; this chunk contains only pre-824 792/794/795 historical proposals. Preserve all state/JSON references and rely on independently verified archive-index rehydration for archived historical paths.",
+    "source_receipt_hashes_are_expected_pins_not_current_rehashes": true
+  },
+  "source_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706",
+  "source_workflow": {
+    "archive_layout": "content-addressed blobs/<sha256> with archive-index.json",
+    "builder_reuse": "The committed builder is hardcoded to the prior 40-file 695 set; do not invoke it for this chunk unchanged. The committed restore verifier consumes the generic archive-index/blob layout.",
+    "evidence_path": "tools/evidence/connected-skin-fat-quality-trials-695-20261031i",
+    "prior_builder": "build_failed_trials_archive.py",
+    "prior_release_tag_for_workflow_reference_only": "human-connected-quality-trials-695-20261031",
+    "prior_verifier": "restore_archive.py",
+    "repository": "Numi2/numilab-human",
+    "workflow_commit": "a7f784ecdd99f8b4ea70219304fff15b8d36cf85"
+  }
+}
