@@ -1,0 +1,2363 @@
+#pragma once
+
+// Optional semantic receiver partition for changed-topology child cells.
+// The legacy conservative spatial transport remains the underlying solver.
+// A supported real child is split into colocated virtual mass receivers whose
+// reference volumes sum to the real cell volume; returned flows are aggregated
+// back to the real child row before leaving this API.
+#include "NumiHumanConservativeSpatialMassTransport.hpp"
+
+namespace metalrobo::human::coarse_tissue {
+
+struct ConservativeSpatialChildSemanticSupport {
+    // Child CSR addresses support slots; each slot references one global group.
+    std::span<const std::uint32_t> childOffsets;
+    std::span<const std::uint32_t> slotGroupIndices;
+    std::span<const double> volumeFractions;
+
+    // Global semantic-group registry, keyed by (material, donor, region).
+    std::span<const std::uint32_t> groupMaterialIndices;
+    std::span<const std::uint32_t> donorBodyIndices;
+    std::span<const std::uint32_t> anatomicalRegionIndices;
+    std::span<const std::uint64_t> derivedGroupIdentityIDs;
+
+    // Complete source-330 parent-tet and stable-face unions, once per group.
+    std::span<const std::uint32_t> parentStableSourceFaceIdentities;
+    std::span<const std::uint32_t> sourceParentTetOffsets;
+    std::span<const std::uint32_t> sourceParentTetRows;
+    std::span<const std::uint32_t> sourceStableFaceOffsets;
+    std::span<const std::uint32_t> sourceStableFaceRows;
+    std::string_view typedSupportSHA256;
+
+    // Optional one-hop, same-material source-region adjacency prepared from
+    // authenticated shared source-tet faces. P1 support remains unchanged and
+    // supplies a soft preference; these rows extend admissible mass ancestry.
+    std::span<const std::uint32_t> cellAdmissibleRegionOffsets;
+    std::span<const std::uint32_t> cellAdmissibleRegionIds;
+    std::string_view admissibilitySourceSupportSHA256;
+    std::uint32_t admissibilityMaximumSourceRegionHops = 0u;
+};
+
+// Owning counterpart for imported/compiled bundles. Keep the large source-parent
+// unions global; a per-child duplicate would multiply 330 rows by every child.
+struct ConservativeSpatialChildSemanticSupportData {
+    std::vector<std::uint32_t> childOffsets, slotGroupIndices;
+    std::vector<double> volumeFractions;
+    std::vector<std::uint32_t> groupMaterialIndices, donorBodyIndices, anatomicalRegionIndices;
+    std::vector<std::uint64_t> derivedGroupIdentityIDs;
+    std::vector<std::uint32_t> parentStableSourceFaceIdentities;
+    std::vector<std::uint32_t> sourceParentTetOffsets, sourceParentTetRows;
+    std::vector<std::uint32_t> sourceStableFaceOffsets, sourceStableFaceRows;
+    std::string typedSupportSHA256;
+    std::vector<std::uint32_t> cellAdmissibleRegionOffsets, cellAdmissibleRegionIds;
+    std::string admissibilitySourceSupportSHA256;
+    std::uint32_t admissibilityMaximumSourceRegionHops = 0u;
+
+    [[nodiscard]] ConservativeSpatialChildSemanticSupport view() const {
+        return {childOffsets, slotGroupIndices, volumeFractions, groupMaterialIndices,
+            donorBodyIndices, anatomicalRegionIndices, derivedGroupIdentityIDs,
+            parentStableSourceFaceIdentities, sourceParentTetOffsets, sourceParentTetRows,
+            sourceStableFaceOffsets, sourceStableFaceRows, typedSupportSHA256,
+            cellAdmissibleRegionOffsets, cellAdmissibleRegionIds,
+            admissibilitySourceSupportSHA256, admissibilityMaximumSourceRegionHops};
+    }
+    [[nodiscard]] bool empty() const { return childOffsets.empty() && slotGroupIndices.empty(); }
+};
+
+namespace fractional_semantic_transport_detail {
+
+using Group = std::pair<std::uint32_t, std::uint32_t>;
+
+struct ExpandedInput {
+    std::vector<SpatialMassTransportPoint> centroids;
+    std::vector<double> volumes;
+    std::vector<std::uint32_t> materials, donors, regions;
+    ConservativeSpatialMassTransportInput input;
+    std::string supportSHA256;
+};
+
+inline std::string supportDigest(const ConservativeSpatialChildSemanticSupport& support) {
+    spatial_mass_transport_detail::SHA256Builder hash;
+    hash.string("conservativeSpatialMassTransport.sharedCapacitySemanticSupport.v4");
+    hash.string(support.typedSupportSHA256);
+    hash.u64(support.childOffsets.size());
+    for (auto value : support.childOffsets) hash.u32(value);
+    hash.u64(support.slotGroupIndices.size());
+    for (auto value : support.slotGroupIndices) hash.u32(value);
+    for (auto value : support.volumeFractions) hash.real(value);
+    hash.u64(support.groupMaterialIndices.size());
+    for (auto value : support.groupMaterialIndices) hash.u32(value);
+    for (auto value : support.donorBodyIndices) hash.u32(value);
+    for (auto value : support.anatomicalRegionIndices) hash.u32(value);
+    for (auto value : support.derivedGroupIdentityIDs) hash.u64(value);
+    hash.u64(support.parentStableSourceFaceIdentities.size());
+    for (auto value : support.parentStableSourceFaceIdentities) hash.u32(value);
+    hash.u64(support.sourceParentTetOffsets.size());
+    for (auto value : support.sourceParentTetOffsets) hash.u32(value);
+    for (auto value : support.sourceParentTetRows) hash.u32(value);
+    hash.u64(support.sourceStableFaceOffsets.size());
+    for (auto value : support.sourceStableFaceOffsets) hash.u32(value);
+    for (auto value : support.sourceStableFaceRows) hash.u32(value);
+    hash.u64(support.cellAdmissibleRegionOffsets.size());
+    for (auto value : support.cellAdmissibleRegionOffsets) hash.u32(value);
+    hash.u64(support.cellAdmissibleRegionIds.size());
+    for (auto value : support.cellAdmissibleRegionIds) hash.u32(value);
+    hash.string(support.admissibilitySourceSupportSHA256);
+    hash.u32(support.admissibilityMaximumSourceRegionHops);
+    return hash.finish();
+}
+
+inline std::string bindSupportToChildHash(std::string_view childHash,
+                                          std::string_view supportHash) {
+    spatial_mass_transport_detail::SHA256Builder hash;
+    hash.string("conservativeSpatialMassTransport.fractional-child-data.v1");
+    hash.string(childHash);
+    hash.string(supportHash);
+    return hash.finish();
+}
+
+inline std::string semanticReceipt(std::string_view baseReceipt,
+                                   std::string_view supportHash) {
+    spatial_mass_transport_detail::SHA256Builder hash;
+    hash.string("conservativeSpatialMassTransport.fractional-receipt.v1");
+    hash.string(baseReceipt);
+    hash.string(supportHash);
+    return hash.finish();
+}
+
+inline bool expandInput(const ConservativeSpatialMassTransportInput& in,
+                        const ConservativeSpatialChildSemanticSupport& support,
+                        ExpandedInput& expanded,
+                        std::string& error) {
+    using namespace spatial_mass_transport_detail;
+    const auto fail = [&](std::string message) {
+        error = std::move(message);
+        return false;
+    };
+    const std::size_t nc = in.childReferenceVolumeM3.size();
+    const std::size_t np = in.parentMassKg.size();
+    const std::size_t ng = support.groupMaterialIndices.size();
+    constexpr auto invalid = std::numeric_limits<std::uint32_t>::max();
+    if (nc == 0u || np == 0u || ng == 0u || nc > invalid || np > invalid || ng > invalid ||
+        in.childCentroidsWorld.size() != nc || in.childMaterialIndices.size() != nc ||
+        in.childDonorBodyIndices.size() != nc || in.childAnatomicalRegionIndices.size() != nc ||
+        in.parentMaterialIndices.size() != np || in.parentDonorBodyIndices.size() != np ||
+        in.parentAnatomicalRegionIndices.size() != np ||
+        support.childOffsets.size() != nc + 1u || support.childOffsets.empty() ||
+        support.childOffsets.front() != 0u ||
+        support.childOffsets.back() != support.slotGroupIndices.size() ||
+        support.slotGroupIndices.size() != support.volumeFractions.size() ||
+        support.slotGroupIndices.empty() || support.groupMaterialIndices.size() != ng ||
+        support.donorBodyIndices.size() != ng || support.anatomicalRegionIndices.size() != ng ||
+        support.derivedGroupIdentityIDs.size() != ng ||
+        support.parentStableSourceFaceIdentities.size() != np ||
+        support.sourceParentTetOffsets.size() != ng + 1u ||
+        support.sourceParentTetOffsets.empty() || support.sourceParentTetOffsets.front() != 0u ||
+        support.sourceParentTetOffsets.back() != support.sourceParentTetRows.size() ||
+        support.sourceStableFaceOffsets.size() != ng + 1u ||
+        support.sourceStableFaceOffsets.empty() || support.sourceStableFaceOffsets.front() != 0u ||
+        support.sourceStableFaceOffsets.back() != support.sourceStableFaceRows.size() ||
+        !validSHA256(support.typedSupportSHA256))
+        return fail("fractional semantic support arrays, provenance CSR or proof digest are missing or malformed");
+    if (support.childOffsets.back() > invalid ||
+        support.sourceParentTetRows.empty() || support.sourceStableFaceRows.empty())
+        return fail("fractional semantic support exceeds bounded index range or lacks source ancestry");
+    for (std::size_t i = 1u; i < support.childOffsets.size(); ++i)
+        if (support.childOffsets[i] < support.childOffsets[i - 1u] ||
+            support.childOffsets[i] == support.childOffsets[i - 1u])
+            return fail("fractional semantic child support CSR contains an empty or reversed child row");
+    for (std::size_t i = 1u; i < support.sourceParentTetOffsets.size(); ++i)
+        if (support.sourceParentTetOffsets[i] < support.sourceParentTetOffsets[i - 1u])
+            return fail("fractional semantic group parent-tet CSR offsets are reversed");
+    for (std::size_t i = 1u; i < support.sourceStableFaceOffsets.size(); ++i)
+        if (support.sourceStableFaceOffsets[i] < support.sourceStableFaceOffsets[i - 1u])
+            return fail("fractional semantic group stable-face CSR offsets are reversed");
+
+    using SemanticTuple = std::tuple<std::uint32_t, std::uint32_t, std::uint32_t>;
+    std::set<SemanticTuple> uniqueTuples;
+    std::set<std::uint64_t> uniqueIdentities;
+    std::unordered_set<std::uint64_t> registeredMaterialRegions;
+    registeredMaterialRegions.reserve(ng*2u);
+    for (std::size_t group = 0u; group < ng; ++group) {
+        const auto material = support.groupMaterialIndices[group];
+        const auto donor = support.donorBodyIndices[group];
+        const auto region = support.anatomicalRegionIndices[group];
+        const auto identity = support.derivedGroupIdentityIDs[group];
+        const auto pb = support.sourceParentTetOffsets[group];
+        const auto pe = support.sourceParentTetOffsets[group + 1u];
+        const auto fb = support.sourceStableFaceOffsets[group];
+        const auto fe = support.sourceStableFaceOffsets[group + 1u];
+        if (material == invalid || donor == invalid || region == invalid || identity == 0u ||
+            material >= in.materialDensityLowerKgM3.size() || pb >= pe ||
+            pe > support.sourceParentTetRows.size() || fb >= fe ||
+            fe > support.sourceStableFaceRows.size() ||
+            !uniqueTuples.emplace(material, donor, region).second ||
+            !uniqueIdentities.insert(identity).second)
+            return fail("fractional semantic group identity or complete source-tet/face CSR is invalid");
+        std::set<std::uint32_t> expectedFaces;
+        std::uint32_t priorParent = 0u;
+        for (std::uint32_t row = pb; row < pe; ++row) {
+            const auto parent = support.sourceParentTetRows[row];
+            // Check membership before indexing any source-parent array.
+            if (parent >= np || (row > pb && parent <= priorParent))
+                return fail("fractional semantic source-tet CSR is out of range, repeated, or noncanonical");
+            if (in.parentMaterialIndices[parent] != material ||
+                in.parentDonorBodyIndices[parent] != donor ||
+                in.parentAnatomicalRegionIndices[parent] != region ||
+                support.parentStableSourceFaceIdentities[parent] == invalid)
+                return fail("fractional semantic source-tet CSR crosses its registered material/donor/region group");
+            priorParent = parent;
+            expectedFaces.insert(support.parentStableSourceFaceIdentities[parent]);
+        }
+        if (expectedFaces.size() != static_cast<std::size_t>(fe - fb))
+            return fail("fractional semantic stable-face CSR is not the complete source-tet face union");
+        std::uint32_t priorFace = 0u;
+        auto expected = expectedFaces.begin();
+        for (std::uint32_t row = fb; row < fe; ++row) {
+            const auto face = support.sourceStableFaceRows[row];
+            if (face == invalid || (row > fb && face <= priorFace) ||
+                expected == expectedFaces.end() || face != *expected)
+                return fail("fractional semantic stable-face CSR differs from the complete source-tet face union");
+            priorFace = face;
+            ++expected;
+        }
+    }
+
+    std::size_t slotCount = 0u;
+    for (std::size_t child = 0u; child < nc; ++child) {
+        const auto begin = support.childOffsets[child];
+        const auto end = support.childOffsets[child + 1u];
+        if (begin >= end || end > support.slotGroupIndices.size() ||
+            in.childMaterialIndices[child] == invalid ||
+            in.childDonorBodyIndices[child] == invalid ||
+            in.childAnatomicalRegionIndices[child] == invalid ||
+            !std::isfinite(in.childReferenceVolumeM3[child]) ||
+            in.childReferenceVolumeM3[child] <= 0.0)
+            return fail("fractional semantic child row has invalid labels, volume or support range");
+        double fractionSum = 0.0;
+        double maximumFraction = -1.0;
+        bool foundPrimary = false;
+        Group previous{};
+        bool havePrevious = false;
+        for (std::uint32_t slot = begin; slot < end; ++slot) {
+            const auto group = support.slotGroupIndices[slot];
+            if (group >= ng || support.groupMaterialIndices[group] != in.childMaterialIndices[child])
+                return fail("fractional semantic child support references a missing or cross-material group");
+            const Group key{support.donorBodyIndices[group], support.anatomicalRegionIndices[group]};
+            if (havePrevious && !(previous < key))
+                return fail("fractional semantic child support repeats or reorders a donor/region group");
+            previous = key;
+            havePrevious = true;
+            const double fraction = support.volumeFractions[slot];
+            if (!std::isfinite(fraction) || fraction <= 0.0 || fraction > 1.0)
+                return fail("fractional semantic receiver volume share is not finite and strictly positive");
+            fractionSum += fraction;
+            maximumFraction = std::max(maximumFraction, fraction);
+            if (key == Group{in.childDonorBodyIndices[child],
+                             in.childAnatomicalRegionIndices[child]})
+                foundPrimary = true;
+            ++slotCount;
+        }
+        if (!foundPrimary)
+            return fail("fractional semantic primary child label is absent from its registered support groups");
+        if (fractionSum < 1.0 - 1.0e-12 || fractionSum > 1.0 + 1.0e-12)
+            return fail("fractional semantic child volume shares do not sum to one");
+        for (std::uint32_t slot = begin; slot < end; ++slot) {
+            const auto group = support.slotGroupIndices[slot];
+            if (support.donorBodyIndices[group] == in.childDonorBodyIndices[child] &&
+                support.anatomicalRegionIndices[group] == in.childAnatomicalRegionIndices[child] &&
+                support.volumeFractions[slot] != maximumFraction)
+                return fail("fractional semantic primary child label is not a maximum-support group");
+        }
+    }
+    if (slotCount != support.slotGroupIndices.size())
+        return fail("fractional semantic support contains an unowned virtual receiver slot");
+
+    expanded.centroids.reserve(slotCount);
+    expanded.volumes.reserve(slotCount);
+    expanded.materials.reserve(slotCount);
+    expanded.donors.reserve(slotCount);
+    expanded.regions.reserve(slotCount);
+    for (std::size_t child = 0u; child < nc; ++child) {
+        for (std::uint32_t slot = support.childOffsets[child];
+             slot < support.childOffsets[child + 1u]; ++slot) {
+            const auto group = support.slotGroupIndices[slot];
+            expanded.centroids.push_back(in.childCentroidsWorld[child]);
+            expanded.volumes.push_back(in.childReferenceVolumeM3[child] * support.volumeFractions[slot]);
+            expanded.materials.push_back(support.groupMaterialIndices[group]);
+            expanded.donors.push_back(support.donorBodyIndices[group]);
+            expanded.regions.push_back(support.anatomicalRegionIndices[group]);
+        }
+    }
+    expanded.input = in;
+    expanded.input.childCentroidsWorld = expanded.centroids;
+    expanded.input.childReferenceVolumeM3 = expanded.volumes;
+    expanded.input.childMaterialIndices = expanded.materials;
+    expanded.input.childDonorBodyIndices = expanded.donors;
+    expanded.input.childAnatomicalRegionIndices = expanded.regions;
+    expanded.supportSHA256 = supportDigest(support);
+    error.clear();
+    return true;
+}
+
+struct FlowRow {
+    std::uint32_t parent = 0u;
+    double mass = 0.0;
+    double measure = 0.0;
+    double distance = 0.0;
+};
+
+inline bool aggregateVirtualResult(const ConservativeSpatialMassTransportInput& realInput,
+                                   const ConservativeSpatialChildSemanticSupport& support,
+                                   const ExpandedInput& expanded,
+                                   const ConservativeSpatialMassTransportResult& virtualResult,
+                                   ConservativeSpatialMassTransportResult& out,
+                                   std::string& error) {
+    using namespace spatial_mass_transport_detail;
+    const auto fail = [&](std::string message) { error = std::move(message); return false; };
+    const std::size_t nc = realInput.childReferenceVolumeM3.size();
+    out = virtualResult;
+    out.childParentOffsets.assign(nc + 1u, 0u);
+    out.childParentRows.clear();
+    out.childParentTransportMassKg.clear();
+    out.childParentTransportMeasureM3.clear();
+    out.childParentTransportDistanceM.clear();
+    out.childParentVolumeFractions.clear();
+    out.childAncestryMeasureVolumeM3.assign(nc, 0.0);
+    out.childMassKg.assign(nc, 0.0);
+    out.childImpliedDensityKgM3.assign(nc, 0.0);
+    out.childDominantParentRows.assign(nc, kInvalid);
+    out.childSourceDonorOffsets.assign(nc + 1u, 0u);
+    out.childSourceDonorBodyIndices.clear();
+    out.childSourceDonorMassKg.clear();
+    out.maximumChildFractionSumError = 0.0;
+    out.minimumChildImpliedDensityKgM3 = std::numeric_limits<double>::infinity();
+    out.maximumChildImpliedDensityKgM3 = 0.0;
+    std::size_t slot = 0u;
+    for (std::size_t child = 0; child < nc; ++child) {
+        std::vector<FlowRow> rows;
+        for (std::uint32_t supportSlot = support.childOffsets[child];
+             supportSlot < support.childOffsets[child + 1u]; ++supportSlot, ++slot) {
+            const auto begin = virtualResult.childParentOffsets[slot];
+            const auto end = virtualResult.childParentOffsets[slot + 1u];
+            for (std::uint32_t edge = begin; edge < end; ++edge)
+                rows.push_back({virtualResult.childParentRows[edge],
+                    virtualResult.childParentTransportMassKg[edge],
+                    virtualResult.childParentTransportMeasureM3[edge],
+                    virtualResult.childParentTransportDistanceM[edge]});
+        }
+        std::sort(rows.begin(), rows.end(), [](const FlowRow& a, const FlowRow& b) {
+            return a.parent < b.parent;
+        });
+        if (rows.empty())
+            return fail("fractional semantic aggregation produced a child without transported mass");
+        for (std::size_t i = 1u; i < rows.size(); ++i)
+            if (rows[i - 1u].parent == rows[i].parent)
+                return fail("one source parent row was transported through multiple semantic slots of one child");
+        out.childParentOffsets[child] = static_cast<std::uint32_t>(out.childParentRows.size());
+        double mass = 0.0, measure = 0.0, fractionSum = 0.0, bestMeasure = -1.0;
+        std::uint32_t dominant = kInvalid;
+        std::map<std::uint32_t, double> sourceByDonor;
+        for (const auto& row : rows) {
+            if (row.parent >= realInput.parentMassKg.size())
+                return fail("fractional semantic flow references an invalid parent row");
+            mass += row.mass;
+            measure += row.measure;
+            out.childParentRows.push_back(row.parent);
+            out.childParentTransportMassKg.push_back(row.mass);
+            out.childParentTransportMeasureM3.push_back(row.measure);
+            out.childParentTransportDistanceM.push_back(row.distance);
+            if (row.measure > bestMeasure ||
+                (row.measure == bestMeasure && row.parent < dominant)) {
+                bestMeasure = row.measure;
+                dominant = row.parent;
+            }
+            for (std::uint32_t source = realInput.parentSourceDonorOffsets[row.parent];
+                 source < realInput.parentSourceDonorOffsets[row.parent + 1u]; ++source) {
+                sourceByDonor[realInput.parentSourceDonorBodyIndices[source]] +=
+                    row.mass * (realInput.parentSourceDonorMassKg[source] /
+                                realInput.parentMassKg[row.parent]);
+            }
+        }
+        for (std::size_t i = out.childParentRows.size() - rows.size();
+             i < out.childParentRows.size(); ++i) {
+            const double fraction = out.childParentTransportMeasureM3[i] / measure;
+            if (!std::isfinite(fraction) || fraction <= 0.0)
+                return fail("fractional semantic aggregate flow measure fraction is invalid");
+            out.childParentVolumeFractions.push_back(fraction);
+            fractionSum += fraction;
+        }
+        if (!std::isfinite(mass) || mass <= 0.0 || !std::isfinite(measure) || measure <= 0.0 ||
+            std::abs(fractionSum - 1.0) > 5.0e-13)
+            return fail("fractional semantic aggregate child flow fails mass/measure closure");
+        out.childMassKg[child] = mass;
+        out.childAncestryMeasureVolumeM3[child] = measure;
+        out.childDominantParentRows[child] = dominant;
+        out.maximumChildFractionSumError = std::max(out.maximumChildFractionSumError,
+                                                     std::abs(fractionSum - 1.0));
+        const auto material = realInput.childMaterialIndices[child];
+        if (material >= realInput.materialDensityLowerKgM3.size())
+            return fail("fractional semantic aggregate child material is outside the density domain");
+        const double density = mass / realInput.childReferenceVolumeM3[child];
+        const double lower = realInput.materialDensityLowerKgM3[material];
+        const double upper = realInput.materialDensityUpperKgM3[material];
+        const double tolerance = densityBoundRoundoff(lower, upper, density);
+        if (!std::isfinite(density) || density < lower - tolerance || density > upper + tolerance)
+            return fail("fractional semantic aggregate cell density is outside its actual material bounds");
+        out.childImpliedDensityKgM3[child] = density;
+        out.minimumChildImpliedDensityKgM3 =
+            std::min(out.minimumChildImpliedDensityKgM3, density);
+        out.maximumChildImpliedDensityKgM3 =
+            std::max(out.maximumChildImpliedDensityKgM3, density);
+        out.childSourceDonorOffsets[child] =
+            static_cast<std::uint32_t>(out.childSourceDonorBodyIndices.size());
+        double donorTotal = 0.0;
+        for (const auto& [donor, donorMass] : sourceByDonor) {
+            if (donor == kInvalid || !std::isfinite(donorMass) || donorMass <= 0.0)
+                return fail("fractional semantic aggregate source-donor row is invalid");
+            out.childSourceDonorBodyIndices.push_back(donor);
+            out.childSourceDonorMassKg.push_back(donorMass);
+            donorTotal += donorMass;
+        }
+        out.childSourceDonorOffsets[child + 1u] =
+            static_cast<std::uint32_t>(out.childSourceDonorBodyIndices.size());
+        if (std::abs(donorTotal - mass) >
+            std::max(realInput.absoluteMassToleranceKg,
+                     realInput.relativeClosureTolerance * mass))
+            return fail("fractional semantic aggregate source-donor mass does not close cell mass");
+    }
+    out.childParentOffsets[nc] = static_cast<std::uint32_t>(out.childParentRows.size());
+    out.childSourceDonorOffsets[nc] =
+        static_cast<std::uint32_t>(out.childSourceDonorBodyIndices.size());
+    out.transportEdgeCount = out.childParentRows.size();
+
+    std::string parentHash, realChildHash, boundsHash;
+    hashInputArrays(realInput, parentHash, realChildHash, boundsHash);
+    out.parentDataSHA256 = std::move(parentHash);
+    out.childDataSHA256 = bindSupportToChildHash(realChildHash, expanded.supportSHA256);
+    out.materialBoundsSHA256 = std::move(boundsHash);
+    const auto baseReceipt = receiptSHA256(realInput, out);
+    out.receiptSHA256 = semanticReceipt(baseReceipt, expanded.supportSHA256);
+    error.clear();
+    return true;
+}
+
+inline bool inflateAggregatedResult(const ConservativeSpatialMassTransportInput& realInput,
+                                    const ConservativeSpatialChildSemanticSupport& support,
+                                    const ExpandedInput& expanded,
+                                    const ConservativeSpatialMassTransportResult& supplied,
+                                    ConservativeSpatialMassTransportResult& virtualResult,
+                                    std::string& error) {
+    using namespace spatial_mass_transport_detail;
+    const auto fail = [&](std::string message) { error = std::move(message); return false; };
+    const std::size_t nc = realInput.childReferenceVolumeM3.size();
+    const std::size_t slotCount = expanded.volumes.size();
+    if (supplied.childParentOffsets.size() != nc + 1u ||
+        supplied.childParentOffsets.empty() || supplied.childParentOffsets.front() != 0u ||
+        supplied.childParentOffsets.back() != supplied.childParentRows.size() ||
+        supplied.childParentRows.empty() ||
+        supplied.childParentTransportMassKg.size() != supplied.childParentRows.size() ||
+        supplied.childParentTransportMeasureM3.size() != supplied.childParentRows.size() ||
+        supplied.childParentTransportDistanceM.size() != supplied.childParentRows.size() ||
+        supplied.childParentVolumeFractions.size() != supplied.childParentRows.size() ||
+        supplied.childMassKg.size() != nc ||
+        supplied.childAncestryMeasureVolumeM3.size() != nc ||
+        supplied.childDominantParentRows.size() != nc)
+        return fail("fractional semantic recorded aggregate flow CSR is incomplete or malformed");
+
+    std::vector<std::vector<FlowRow>> rowsBySlot(slotCount);
+    std::size_t slot = 0u;
+    std::vector<std::map<Group, std::uint32_t>> groupToSlot(nc);
+    for (std::size_t child = 0; child < nc; ++child) {
+        for (std::uint32_t supportSlot = support.childOffsets[child];
+             supportSlot < support.childOffsets[child + 1u]; ++supportSlot, ++slot) {
+            const auto group = support.slotGroupIndices[supportSlot];
+            groupToSlot[child].emplace(Group{support.donorBodyIndices[group],
+                                             support.anatomicalRegionIndices[group]},
+                                      static_cast<std::uint32_t>(slot));
+        }
+    }
+    for (std::size_t child = 0; child < nc; ++child) {
+        const auto begin = supplied.childParentOffsets[child];
+        const auto end = supplied.childParentOffsets[child + 1u];
+        if (begin >= end || end > supplied.childParentRows.size())
+            return fail("fractional semantic real-child flow row is empty or out of range");
+        std::uint32_t prior = 0u;
+        double aggregateMass = 0.0, aggregateMeasure = 0.0, fractionSum = 0.0;
+        std::uint32_t dominant = kInvalid;
+        double bestMeasure = -1.0;
+        for (std::uint32_t edge = begin; edge < end; ++edge) {
+            const auto parent = supplied.childParentRows[edge];
+            const double mass = supplied.childParentTransportMassKg[edge];
+            const double measure = supplied.childParentTransportMeasureM3[edge];
+            const double distanceValue = supplied.childParentTransportDistanceM[edge];
+            if (parent >= realInput.parentMassKg.size() ||
+                (edge > begin && parent <= prior) ||
+                realInput.parentMaterialIndices[parent] != realInput.childMaterialIndices[child] ||
+                !std::isfinite(mass) || mass <= 0.0 ||
+                !std::isfinite(measure) || measure <= 0.0 ||
+                !std::isfinite(distanceValue))
+                return fail("fractional semantic recorded flow contains invalid ancestry or values");
+            prior = parent;
+            const Group group{realInput.parentDonorBodyIndices[parent],
+                              realInput.parentAnatomicalRegionIndices[parent]};
+            const auto found = groupToSlot[child].find(group);
+            if (found == groupToSlot[child].end())
+                return fail("fractional semantic recorded parent group is absent from the child support CSR");
+            rowsBySlot[found->second].push_back({parent, mass, measure, distanceValue});
+            aggregateMass += mass;
+            aggregateMeasure += measure;
+            fractionSum += supplied.childParentVolumeFractions[edge];
+            if (measure > bestMeasure || (measure == bestMeasure && parent < dominant)) {
+                bestMeasure = measure;
+                dominant = parent;
+            }
+        }
+        if (std::abs(aggregateMass - supplied.childMassKg[child]) >
+                std::max(realInput.absoluteMassToleranceKg,
+                         realInput.relativeClosureTolerance * aggregateMass) ||
+            std::abs(aggregateMeasure - supplied.childAncestryMeasureVolumeM3[child]) >
+                std::max(realInput.absoluteMeasureToleranceM3,
+                         realInput.relativeClosureTolerance * aggregateMeasure) ||
+            std::abs(fractionSum - 1.0) > 5.0e-13 ||
+            supplied.childDominantParentRows[child] != dominant)
+            return fail("fractional semantic aggregate mass, measure, fraction or dominant-parent summary differs from its flows");
+    }
+
+    virtualResult = supplied;
+    virtualResult.childParentOffsets.assign(slotCount + 1u, 0u);
+    virtualResult.childParentRows.clear();
+    virtualResult.childParentTransportMassKg.clear();
+    virtualResult.childParentTransportMeasureM3.clear();
+    virtualResult.childParentTransportDistanceM.clear();
+    virtualResult.childParentVolumeFractions.clear();
+    virtualResult.childAncestryMeasureVolumeM3.assign(slotCount, 0.0);
+    virtualResult.childMassKg.assign(slotCount, 0.0);
+    virtualResult.childImpliedDensityKgM3.assign(slotCount, 0.0);
+    virtualResult.childDominantParentRows.assign(slotCount, kInvalid);
+    virtualResult.childSourceDonorOffsets.assign(slotCount + 1u, 0u);
+    virtualResult.childSourceDonorBodyIndices.clear();
+    virtualResult.childSourceDonorMassKg.clear();
+    virtualResult.maximumChildFractionSumError = 0.0;
+    virtualResult.minimumChildImpliedDensityKgM3 = std::numeric_limits<double>::infinity();
+    virtualResult.maximumChildImpliedDensityKgM3 = 0.0;
+
+    double maximumDistance = 0.0;
+    long double weightedDistance = 0.0L, totalMass = 0.0L;
+    std::size_t edgeCount = 0u;
+    for (std::size_t s = 0; s < slotCount; ++s) {
+        auto& rows = rowsBySlot[s];
+        std::sort(rows.begin(), rows.end(), [](const FlowRow& a, const FlowRow& b) {
+            return a.parent < b.parent;
+        });
+        if (rows.empty())
+            return fail("fractional semantic recorded support slot has no source mass flow");
+        for (std::size_t i = 1u; i < rows.size(); ++i)
+            if (rows[i - 1u].parent == rows[i].parent)
+                return fail("fractional semantic recorded support slot repeats a parent flow");
+        virtualResult.childParentOffsets[s] =
+            static_cast<std::uint32_t>(virtualResult.childParentRows.size());
+        double mass = 0.0, measure = 0.0, fractionSum = 0.0, bestMeasure = -1.0;
+        std::uint32_t dominant = kInvalid;
+        std::map<std::uint32_t, double> sourceByDonor;
+        for (const auto& row : rows) {
+            mass += row.mass;
+            measure += row.measure;
+            virtualResult.childParentRows.push_back(row.parent);
+            virtualResult.childParentTransportMassKg.push_back(row.mass);
+            virtualResult.childParentTransportMeasureM3.push_back(row.measure);
+            virtualResult.childParentTransportDistanceM.push_back(row.distance);
+            if (row.measure > bestMeasure ||
+                (row.measure == bestMeasure && row.parent < dominant)) {
+                bestMeasure = row.measure;
+                dominant = row.parent;
+            }
+            for (std::uint32_t source = realInput.parentSourceDonorOffsets[row.parent];
+                 source < realInput.parentSourceDonorOffsets[row.parent + 1u]; ++source)
+                sourceByDonor[realInput.parentSourceDonorBodyIndices[source]] +=
+                    row.mass * (realInput.parentSourceDonorMassKg[source] /
+                                realInput.parentMassKg[row.parent]);
+            maximumDistance = std::max(maximumDistance, row.distance);
+            weightedDistance += static_cast<long double>(row.mass) * row.distance;
+            totalMass += row.mass;
+            ++edgeCount;
+        }
+        for (const auto& row : rows) {
+            const double fraction = row.measure / measure;
+            virtualResult.childParentVolumeFractions.push_back(fraction);
+            fractionSum += fraction;
+        }
+        virtualResult.childParentOffsets[s + 1u] =
+            static_cast<std::uint32_t>(virtualResult.childParentRows.size());
+        virtualResult.childAncestryMeasureVolumeM3[s] = measure;
+        virtualResult.childMassKg[s] = mass;
+        virtualResult.childDominantParentRows[s] = dominant;
+        virtualResult.maximumChildFractionSumError =
+            std::max(virtualResult.maximumChildFractionSumError, std::abs(fractionSum - 1.0));
+        const double density = mass / expanded.volumes[s];
+        virtualResult.childImpliedDensityKgM3[s] = density;
+        virtualResult.minimumChildImpliedDensityKgM3 =
+            std::min(virtualResult.minimumChildImpliedDensityKgM3, density);
+        virtualResult.maximumChildImpliedDensityKgM3 =
+            std::max(virtualResult.maximumChildImpliedDensityKgM3, density);
+        virtualResult.childSourceDonorOffsets[s] =
+            static_cast<std::uint32_t>(virtualResult.childSourceDonorBodyIndices.size());
+        double donorTotal = 0.0;
+        for (const auto& [donor, donorMass] : sourceByDonor) {
+            virtualResult.childSourceDonorBodyIndices.push_back(donor);
+            virtualResult.childSourceDonorMassKg.push_back(donorMass);
+            donorTotal += donorMass;
+        }
+        if (std::abs(donorTotal - mass) >
+            std::max(realInput.absoluteMassToleranceKg,
+                     realInput.relativeClosureTolerance * mass))
+            return fail("fractional semantic virtual source-donor mass does not close");
+        virtualResult.childSourceDonorOffsets[s + 1u] =
+            static_cast<std::uint32_t>(virtualResult.childSourceDonorBodyIndices.size());
+    }
+    virtualResult.childParentOffsets[slotCount] =
+        static_cast<std::uint32_t>(virtualResult.childParentRows.size());
+    virtualResult.childSourceDonorOffsets[slotCount] =
+        static_cast<std::uint32_t>(virtualResult.childSourceDonorBodyIndices.size());
+    virtualResult.transportEdgeCount = edgeCount;
+    virtualResult.maximumTransportDistanceUsedM = maximumDistance;
+    virtualResult.massWeightedMeanTransportDistanceM = totalMass > 0.0L
+        ? static_cast<double>(weightedDistance / totalMass) : 0.0;
+    std::string parentHash, childHash, boundsHash;
+    hashInputArrays(expanded.input, parentHash, childHash, boundsHash);
+    virtualResult.parentDataSHA256 = std::move(parentHash);
+    virtualResult.childDataSHA256 = std::move(childHash);
+    virtualResult.materialBoundsSHA256 = std::move(boundsHash);
+    virtualResult.receiptSHA256 = receiptSHA256(expanded.input, virtualResult);
+    error.clear();
+    return true;
+}
+
+inline bool sameResult(const ConservativeSpatialMassTransportResult& a,
+                       const ConservativeSpatialMassTransportResult& b) {
+    if (a.method != b.method ||
+        a.childParentOffsets != b.childParentOffsets ||
+        a.childParentRows != b.childParentRows ||
+        a.childParentTransportMassKg != b.childParentTransportMassKg ||
+        a.childParentTransportMeasureM3 != b.childParentTransportMeasureM3 ||
+        a.childParentTransportDistanceM != b.childParentTransportDistanceM ||
+        a.childParentVolumeFractions != b.childParentVolumeFractions ||
+        a.childAncestryMeasureVolumeM3 != b.childAncestryMeasureVolumeM3 ||
+        a.childMassKg != b.childMassKg ||
+        a.childImpliedDensityKgM3 != b.childImpliedDensityKgM3 ||
+        a.childDominantParentRows != b.childDominantParentRows ||
+        a.parentMassTransferredKg != b.parentMassTransferredKg ||
+        a.parentMeasureTransferredM3 != b.parentMeasureTransferredM3 ||
+        a.childSourceDonorOffsets != b.childSourceDonorOffsets ||
+        a.childSourceDonorBodyIndices != b.childSourceDonorBodyIndices ||
+        a.childSourceDonorMassKg != b.childSourceDonorMassKg ||
+        a.transportEdgeCount != b.transportEdgeCount ||
+        a.augmentationCount != b.augmentationCount ||
+        a.maximumParentMassClosureErrorKg != b.maximumParentMassClosureErrorKg ||
+        a.maximumParentMeasureClosureErrorM3 != b.maximumParentMeasureClosureErrorM3 ||
+        a.maximumSourceDonorMassClosureErrorKg != b.maximumSourceDonorMassClosureErrorKg ||
+        a.maximumChildFractionSumError != b.maximumChildFractionSumError ||
+        a.maximumTransportDistanceUsedM != b.maximumTransportDistanceUsedM ||
+        a.massWeightedMeanTransportDistanceM != b.massWeightedMeanTransportDistanceM ||
+        a.minimumChildImpliedDensityKgM3 != b.minimumChildImpliedDensityKgM3 ||
+        a.maximumChildImpliedDensityKgM3 != b.maximumChildImpliedDensityKgM3 ||
+        a.parentDataSHA256 != b.parentDataSHA256 ||
+        a.childDataSHA256 != b.childDataSHA256 ||
+        a.materialBoundsSHA256 != b.materialBoundsSHA256 ||
+        a.parentMassPacketSHA256 != b.parentMassPacketSHA256 ||
+        a.parentSourceContributionSHA256 != b.parentSourceContributionSHA256 ||
+        a.childMeshSHA256 != b.childMeshSHA256 ||
+        a.regionLabelSHA256 != b.regionLabelSHA256 ||
+        a.coordinateFrameSHA256 != b.coordinateFrameSHA256 ||
+        a.maximumTransportDistanceM != b.maximumTransportDistanceM ||
+        a.relativeClosureTolerance != b.relativeClosureTolerance ||
+        a.absoluteMassToleranceKg != b.absoluteMassToleranceKg ||
+        a.absoluteMeasureToleranceM3 != b.absoluteMeasureToleranceM3 ||
+        a.maximumAllowedEdges != b.maximumAllowedEdges ||
+        a.maximumAugmentations != b.maximumAugmentations ||
+        a.receiptSHA256 != b.receiptSHA256 ||
+        a.semanticCandidateEdgeCount != b.semanticCandidateEdgeCount ||
+        a.usesFractionalSemanticSupport != b.usesFractionalSemanticSupport ||
+        a.allocationSolver != b.allocationSolver ||
+        a.semanticSupportSHA256 != b.semanticSupportSHA256 ||
+        a.childSemanticGroupOffsets != b.childSemanticGroupOffsets ||
+        a.childSemanticGroupIndices != b.childSemanticGroupIndices ||
+        a.childSemanticVolumeFractions != b.childSemanticVolumeFractions ||
+        a.groupClosure.size() != b.groupClosure.size() ||
+        a.sourceDonorClosure.size() != b.sourceDonorClosure.size())
+        return false;
+    for (std::size_t i = 0; i < a.groupClosure.size(); ++i) {
+        const auto& x = a.groupClosure[i]; const auto& y = b.groupClosure[i];
+        if (x.materialIndex != y.materialIndex || x.donorBodyIndex != y.donorBodyIndex ||
+            x.anatomicalRegionIndex != y.anatomicalRegionIndex ||
+            x.parentMassKg != y.parentMassKg || x.childMassKg != y.childMassKg ||
+            x.childMinimumCapacityKg != y.childMinimumCapacityKg ||
+            x.childMaximumCapacityKg != y.childMaximumCapacityKg) return false;
+    }
+    for (std::size_t i = 0; i < a.sourceDonorClosure.size(); ++i) {
+        const auto& x = a.sourceDonorClosure[i]; const auto& y = b.sourceDonorClosure[i];
+        if (x.materialIndex != y.materialIndex ||
+            x.sourceDonorBodyIndex != y.sourceDonorBodyIndex ||
+            x.parentMassKg != y.parentMassKg || x.childMassKg != y.childMassKg) return false;
+    }
+    return true;
+}
+inline bool validateSharedCapacitySupport(
+        const ConservativeSpatialMassTransportInput& in,
+        const ConservativeSpatialChildSemanticSupport& support,
+        std::vector<std::uint32_t>& parentGroup,
+        std::vector<std::map<std::uint32_t,double>>& childRegionPreference,
+        std::vector<std::vector<std::uint32_t>>& childAdmissibleRegions,
+        std::string& error) {
+    using namespace spatial_mass_transport_detail;
+    const auto fail=[&](std::string message){error=std::move(message);return false;};
+    constexpr std::uint32_t invalid=std::numeric_limits<std::uint32_t>::max();
+    const std::size_t np=in.parentMassKg.size(), nc=in.childReferenceVolumeM3.size();
+    const std::size_t ng=support.groupMaterialIndices.size();
+    if(np==0u||nc==0u||ng==0u||np>invalid||nc>invalid||ng>invalid||
+       in.parentCentroidsWorld.size()!=np||in.parentReferenceVolumeM3.size()!=np||
+       in.parentMaterialIndices.size()!=np||in.parentDonorBodyIndices.size()!=np||
+       in.parentAnatomicalRegionIndices.size()!=np||
+       in.parentSourceDonorOffsets.size()!=np+1u||in.parentSourceDonorOffsets.empty()||
+       in.parentSourceDonorOffsets.front()!=0u||
+       in.parentSourceDonorOffsets.back()!=in.parentSourceDonorBodyIndices.size()||
+       in.parentSourceDonorBodyIndices.size()!=in.parentSourceDonorMassKg.size()||
+       in.childCentroidsWorld.size()!=nc||in.childMaterialIndices.size()!=nc||
+       in.childDonorBodyIndices.size()!=nc||in.childAnatomicalRegionIndices.size()!=nc||
+       in.materialDensityLowerKgM3.empty()||
+       in.materialDensityUpperKgM3.size()!=in.materialDensityLowerKgM3.size()||
+       support.childOffsets.size()!=nc+1u||support.childOffsets.empty()||
+       support.childOffsets.front()!=0u||
+       support.childOffsets.back()!=support.slotGroupIndices.size()||
+       support.slotGroupIndices.empty()||
+       support.slotGroupIndices.size()!=support.volumeFractions.size()||
+       support.groupMaterialIndices.size()!=ng||support.donorBodyIndices.size()!=ng||
+       support.anatomicalRegionIndices.size()!=ng||support.derivedGroupIdentityIDs.size()!=ng||
+       support.parentStableSourceFaceIdentities.size()!=np||
+       support.sourceParentTetOffsets.size()!=ng+1u||support.sourceParentTetOffsets.empty()||
+       support.sourceParentTetOffsets.front()!=0u||
+       support.sourceParentTetOffsets.back()!=support.sourceParentTetRows.size()||
+       support.sourceStableFaceOffsets.size()!=ng+1u||support.sourceStableFaceOffsets.empty()||
+       support.sourceStableFaceOffsets.front()!=0u||
+       support.sourceStableFaceOffsets.back()!=support.sourceStableFaceRows.size()||
+       !validSHA256(support.typedSupportSHA256))
+        return fail("shared-capacity semantic input arrays, source CSR or typed proof digest are malformed");
+    if(!validSHA256(in.parentMassPacketSHA256)||
+       !validSHA256(in.parentSourceContributionSHA256)||
+       !validSHA256(in.childMeshSHA256)||!validSHA256(in.regionLabelSHA256)||
+       !validSHA256(in.coordinateFrameSHA256)||
+       !std::isfinite(in.maximumTransportDistanceM)||in.maximumTransportDistanceM<=0.0||
+       !std::isfinite(in.relativeClosureTolerance)||in.relativeClosureTolerance<0.0||
+       !std::isfinite(in.absoluteMassToleranceKg)||in.absoluteMassToleranceKg<0.0||
+       !std::isfinite(in.absoluteMeasureToleranceM3)||in.absoluteMeasureToleranceM3<0.0||
+       in.maximumAllowedEdges==0u||in.maximumAugmentations==0u)
+        return fail("shared-capacity semantic input hashes, distance, tolerances or budgets are invalid");
+    if(support.childOffsets.back()>invalid||
+       support.sourceParentTetRows.empty()||support.sourceStableFaceRows.empty())
+        return fail("shared-capacity semantic CSR exceeds the bounded index range or lacks parent ancestry");
+    for(std::size_t i=1;i<support.childOffsets.size();++i)
+        if(support.childOffsets[i]<=support.childOffsets[i-1u])
+            return fail("shared-capacity child preference CSR has an empty, repeated or reversed row");
+    for(std::size_t i=1;i<support.sourceParentTetOffsets.size();++i)
+        if(support.sourceParentTetOffsets[i]<support.sourceParentTetOffsets[i-1u])
+            return fail("shared-capacity source-parent offsets are reversed");
+    for(std::size_t i=1;i<support.sourceStableFaceOffsets.size();++i)
+        if(support.sourceStableFaceOffsets[i]<support.sourceStableFaceOffsets[i-1u])
+            return fail("shared-capacity stable-face offsets are reversed");
+
+    using SemanticTuple=std::tuple<std::uint32_t,std::uint32_t,std::uint32_t>;
+    std::set<SemanticTuple> uniqueTuples;
+    std::set<std::uint64_t> uniqueIdentities;
+    std::unordered_set<std::uint64_t> registeredMaterialRegions;
+    registeredMaterialRegions.reserve(ng);
+    parentGroup.assign(np,invalid);
+    for(std::size_t g=0;g<ng;++g){
+        const auto material=support.groupMaterialIndices[g];
+        const auto donor=support.donorBodyIndices[g];
+        const auto region=support.anatomicalRegionIndices[g];
+        const auto identity=support.derivedGroupIdentityIDs[g];
+        const auto pb=support.sourceParentTetOffsets[g],pe=support.sourceParentTetOffsets[g+1u];
+        const auto fb=support.sourceStableFaceOffsets[g],fe=support.sourceStableFaceOffsets[g+1u];
+        if(material==invalid||donor==invalid||region==invalid||identity==0u||
+           material>=in.materialDensityLowerKgM3.size()||pb>=pe||pe>support.sourceParentTetRows.size()||
+           fb>=fe||fe>support.sourceStableFaceRows.size()||
+           !uniqueTuples.emplace(material,donor,region).second||
+           !uniqueIdentities.insert(identity).second)
+            return fail("shared-capacity semantic group identity or complete ancestry row is invalid");
+        registeredMaterialRegions.insert((static_cast<std::uint64_t>(material)<<32u)|region);
+        std::set<std::uint32_t> expectedFaces;
+        std::uint32_t previousParent=0u;
+        for(std::uint32_t row=pb;row<pe;++row){
+            const auto p=support.sourceParentTetRows[row];
+            if(p>=np||(row>pb&&p<=previousParent)||parentGroup[p]!=invalid)
+                return fail("shared-capacity source-parent CSR is out of range, repeated or noncanonical");
+            if(in.parentMaterialIndices[p]!=material||in.parentDonorBodyIndices[p]!=donor||
+               in.parentAnatomicalRegionIndices[p]!=region||
+               support.parentStableSourceFaceIdentities[p]==invalid)
+                return fail("shared-capacity source-parent row crosses its typed material/donor/region group");
+            parentGroup[p]=static_cast<std::uint32_t>(g);
+            previousParent=p;
+            expectedFaces.insert(support.parentStableSourceFaceIdentities[p]);
+        }
+        if(expectedFaces.size()!=static_cast<std::size_t>(fe-fb))
+            return fail("shared-capacity stable-face CSR is not the complete parent-face union");
+        auto face=expectedFaces.begin();
+        std::uint32_t previousFace=0u;
+        for(std::uint32_t row=fb;row<fe;++row){
+            const auto value=support.sourceStableFaceRows[row];
+            if(value==invalid||(row>fb&&value<=previousFace)||
+               face==expectedFaces.end()||value!=*face)
+                return fail("shared-capacity stable-face CSR differs from the complete parent-face union");
+            previousFace=value;++face;
+        }
+    }
+    for(std::size_t p=0;p<np;++p){
+        const auto material=in.parentMaterialIndices[p];
+        if(parentGroup[p]==invalid||material>=in.materialDensityLowerKgM3.size()||
+           in.parentDonorBodyIndices[p]==invalid||in.parentAnatomicalRegionIndices[p]==invalid||
+           !std::isfinite(in.parentReferenceVolumeM3[p])||in.parentReferenceVolumeM3[p]<=0.0||
+           !std::isfinite(in.parentMassKg[p])||in.parentMassKg[p]<=0.0||
+           !std::all_of(in.parentCentroidsWorld[p].begin(),in.parentCentroidsWorld[p].end(),
+                        [](double x){return std::isfinite(x);}))
+            return fail("shared-capacity source parent has invalid mass, volume, label, centroid or group");
+        const double lower=in.materialDensityLowerKgM3[material];
+        const double upper=in.materialDensityUpperKgM3[material];
+        const double density=in.parentMassKg[p]/in.parentReferenceVolumeM3[p];
+        const double tol=densityBoundRoundoff(lower,upper,density);
+        if(!std::isfinite(lower)||!std::isfinite(upper)||lower<=0.0||lower>upper||
+           !std::isfinite(density)||density<lower-tol||density>upper+tol)
+            return fail("shared-capacity authoritative source-parent density is outside material bounds");
+        const auto begin=in.parentSourceDonorOffsets[p],end=in.parentSourceDonorOffsets[p+1u];
+        if(begin>=end||end>in.parentSourceDonorBodyIndices.size())
+            return fail("shared-capacity parent source-donor CSR row is empty or out of range");
+        std::uint32_t previousDonor=0u;double split=0.0;
+        for(std::uint32_t row=begin;row<end;++row){
+            const auto donor=in.parentSourceDonorBodyIndices[row];
+            const double mass=in.parentSourceDonorMassKg[row];
+            if(donor==invalid||(row>begin&&donor<=previousDonor)||
+               !std::isfinite(mass)||mass<=0.0)
+                return fail("shared-capacity source-donor contribution row is invalid or noncanonical");
+            previousDonor=donor;split+=mass;
+        }
+        if(std::abs(split-in.parentMassKg[p])>
+           std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*in.parentMassKg[p]))
+            return fail("shared-capacity source-donor contributions do not close the source-parent mass");
+    }
+
+    childRegionPreference.assign(nc,{});
+    for(std::size_t c=0;c<nc;++c){
+        const auto material=in.childMaterialIndices[c];
+        const auto begin=support.childOffsets[c],end=support.childOffsets[c+1u];
+        if(begin>=end||end>support.slotGroupIndices.size()||
+           material>=in.materialDensityLowerKgM3.size()||
+           in.childDonorBodyIndices[c]==invalid||in.childAnatomicalRegionIndices[c]==invalid||
+           !std::isfinite(in.childReferenceVolumeM3[c])||in.childReferenceVolumeM3[c]<=0.0||
+           !std::all_of(in.childCentroidsWorld[c].begin(),in.childCentroidsWorld[c].end(),
+                        [](double x){return std::isfinite(x);}))
+            return fail("shared-capacity child has invalid material, region, volume or centroid");
+        const double lower=in.materialDensityLowerKgM3[material];
+        const double upper=in.materialDensityUpperKgM3[material];
+        if(!std::isfinite(lower)||!std::isfinite(upper)||lower<=0.0||lower>upper)
+            return fail("shared-capacity child material density bounds are invalid");
+        std::uint32_t previousGroup=0u;bool havePrevious=false;
+        double scoreSum=0.0;
+        for(std::uint32_t row=begin;row<end;++row){
+            const auto g=support.slotGroupIndices[row];
+            const double score=support.volumeFractions[row];
+            if(g>=ng||support.groupMaterialIndices[g]!=material||
+               (havePrevious&&g<=previousGroup)||!std::isfinite(score)||score<=0.0||score>1.0)
+                return fail("shared-capacity child P1 region-support score/group row is invalid");
+            previousGroup=g;havePrevious=true;
+            childRegionPreference[c][support.anatomicalRegionIndices[g]]+=score;
+            scoreSum+=score;
+        }
+        if(std::abs(scoreSum-1.0)>1.0e-12||
+           !childRegionPreference[c].contains(in.childAnatomicalRegionIndices[c]))
+            return fail("shared-capacity child P1 region support does not sum to one or omit its primary region");
+    }
+
+    const bool hasAdmissibility = !support.cellAdmissibleRegionOffsets.empty() ||
+        !support.cellAdmissibleRegionIds.empty() ||
+        !support.admissibilitySourceSupportSHA256.empty() ||
+        support.admissibilityMaximumSourceRegionHops != 0u;
+    childAdmissibleRegions.assign(nc,{});
+    if(hasAdmissibility){
+        if(support.cellAdmissibleRegionOffsets.size()!=nc+1u ||
+           support.cellAdmissibleRegionOffsets.empty() ||
+           support.cellAdmissibleRegionOffsets.front()!=0u ||
+           support.cellAdmissibleRegionOffsets.back()!=support.cellAdmissibleRegionIds.size() ||
+           support.cellAdmissibleRegionIds.empty() ||
+           !validSHA256(support.admissibilitySourceSupportSHA256) ||
+           support.admissibilityMaximumSourceRegionHops!=1u)
+            return fail("shared-capacity one-hop admissibility CSR or source proof is malformed");
+        for(std::size_t c=0;c<nc;++c){
+            const auto begin=support.cellAdmissibleRegionOffsets[c];
+            const auto end=support.cellAdmissibleRegionOffsets[c+1u];
+            if(begin>=end||end>support.cellAdmissibleRegionIds.size())
+                return fail("shared-capacity admissible-region row is empty or out of range");
+            auto& allowed=childAdmissibleRegions[c];
+            allowed.reserve(end-begin);
+            std::uint32_t previous=0u;
+            for(std::uint32_t row=begin;row<end;++row){
+                const auto region=support.cellAdmissibleRegionIds[row];
+                if(region==invalid||(row>begin&&region<=previous))
+                    return fail("shared-capacity admissible-region CSR is not sorted unique");
+                const auto material=in.childMaterialIndices[c];
+                const auto key=(static_cast<std::uint64_t>(material)<<32u)|region;
+                if(!registeredMaterialRegions.contains(key))
+                    return fail("shared-capacity admissible region has no same-material source semantic group");
+                allowed.push_back(region);previous=region;
+            }
+            for(const auto& [p1Region,score]:childRegionPreference[c]){
+                (void)score;
+                if(!std::binary_search(allowed.begin(),allowed.end(),p1Region))
+                    return fail("shared-capacity admissible-region CSR omits an original P1 preference region");
+            }
+        }
+    }else{
+        if(!support.admissibilitySourceSupportSHA256.empty()||
+           support.admissibilityMaximumSourceRegionHops!=0u)
+            return fail("shared-capacity legacy P1 support has stray adjacency proof metadata");
+        for(std::size_t c=0;c<nc;++c){
+            auto& allowed=childAdmissibleRegions[c];
+            for(const auto& [region,score]:childRegionPreference[c]){(void)score;allowed.push_back(region);}
+        }
+    }
+    error.clear();return true;
+}
+
+struct SharedCapacityFlowTelemetry {
+    spatial_mass_transport_detail::FeasibleFlowTelemetry feasibleFlow;
+    std::chrono::steady_clock::time_point deadline=std::chrono::steady_clock::time_point::max();
+    std::chrono::duration<double> feasibleFlowBudget{0.0};
+    double graphConstructionSeconds=0.0;
+    double feasibleSolverSeconds=0.0;
+    std::uint64_t feasibleFlowCalls=0u;
+    std::uint64_t initialSeedEdges=0u;
+    std::uint64_t residualCutExpansionCalls=0u;
+    std::uint64_t minimumDensityExpansionCalls=0u;
+    std::uint64_t maximumDensityExpansionCalls=0u;
+    std::uint64_t residualCutEdgesAdded=0u;
+    bool candidateNeighborEdgeKeysCaptured=false;
+    std::vector<std::uint64_t> candidateNeighborEdgeKeys;
+    std::uint64_t receiverSignatureGroupCount=0u;
+    std::uint64_t receiverSignatureGroupedChildRows=0u;
+    std::uint64_t receiverSignatureGroupedEdgeCount=0u;
+    std::uint64_t receiverSignatureExpansionRounds=0u;
+    std::uint64_t receiverSignatureExpandedEdges=0u;
+    std::uint64_t receiverSignatureCutCandidatesScanned=0u;
+    bool receiverSignatureCutEnumerationComplete=false;
+    std::uint64_t receiverSignatureWarmRoundoffCorrections=0u;
+    double receiverSignatureWarmRoundoffReleasedKg=0.0;
+    std::string allocationSolver="deterministic_dinic_feasibility";
+    bool deadlineReached=false;
+    bool partialFlowCaptured=false;
+    std::uint32_t partialPhase=0u;
+    double partialSourceSentKg=0.0;
+    std::vector<std::uint32_t> partialExpandedParentRows,partialChildRows;
+    std::vector<double> partialMassKg,partialMeasureM3,partialDistanceM;
+    std::vector<std::uint32_t> residualReachableExpandedParentRows,residualReachableChildRows;
+    std::vector<std::uint32_t> partialExpandedParentRoleRows,partialExpandedParentCarrierRows;
+};
+
+struct SharedCapacityFlow {
+    std::uint32_t parent=0u,child=0u;
+    double mass=0.0,measure=0.0,distance=0.0;
+};
+struct SharedCapacityWarmStartFlow {
+    std::uint32_t parentRow=0u;
+    std::uint32_t childRow=0u;
+    double massKg=0.0;
+    std::uint32_t sourceRoleParentRow=std::numeric_limits<std::uint32_t>::max();
+    std::uint32_t globalSource330TetRow=std::numeric_limits<std::uint32_t>::max();
+    std::uint32_t sourceCarrierRow=std::numeric_limits<std::uint32_t>::max();
+};
+struct SharedCapacityWarmStart {
+    std::span<const SharedCapacityWarmStartFlow> flows;
+    std::string_view parentMassPacketSHA256;
+    std::string_view parentSourceContributionSHA256;
+    std::string_view childMeshSHA256;
+    std::string_view regionLabelSHA256;
+    std::string_view coordinateFrameSHA256;
+    std::string_view typedSupportSHA256;
+    std::string_view sourceCarrierPacketSHA256;
+    std::string_view sourceCarrierArraySHA256;
+    bool useHighestLabelPushRelabel=false;
+    bool captureCandidateNeighborEdges=false;
+    bool useExactReceiverSignatureQuotient=false;
+    std::span<const std::uint64_t> exactCandidateNeighborEdgeKeys{};
+    std::uint32_t exactReceiverSignatureExpansionDepth=0u;
+    std::uint64_t exactReceiverSignaturePriorAugmentations=0u;
+};
+
+inline std::string sharedCapacityReceipt(
+        const ConservativeSpatialMassTransportInput& in,
+        const ConservativeSpatialMassTransportResult& result,
+        const std::string_view supportHash) {
+    spatial_mass_transport_detail::SHA256Builder hash;
+    hash.string("conservativeSpatialMassTransport.sharedRealChildCapacity.sparseDinicFeasibility.v2");
+    hash.string(spatial_mass_transport_detail::receiptSHA256(in,result));
+    hash.string(supportHash);
+    hash.string(std::string("allocation_solver=")+result.allocationSolver);
+    hash.string("cost_optimality_certified=false");
+    hash.u64(result.semanticCandidateEdgeCount);
+    hash.u64(result.childSemanticGroupIndices.size());
+    for(std::size_t c=0;c+1u<result.childSemanticGroupOffsets.size();++c){
+        hash.u32(result.childSemanticGroupOffsets[c]);
+        hash.u32(result.childSemanticGroupOffsets[c+1u]);
+        for(std::uint32_t row=result.childSemanticGroupOffsets[c];
+            row<result.childSemanticGroupOffsets[c+1u];++row){
+            hash.u32(result.childSemanticGroupIndices[row]);
+            hash.real(result.childSemanticVolumeFractions[row]);
+        }
+    }
+    return hash.finish();
+}
+
+inline bool assembleSharedRealChildCapacity(
+        const ConservativeSpatialMassTransportInput& in,
+        const ConservativeSpatialChildSemanticSupport& support,
+        ConservativeSpatialMassTransportResult& out,
+        std::string& error,
+        SharedCapacityFlowTelemetry* telemetry=nullptr,
+        const SharedCapacityWarmStart* warmStart=nullptr) {
+    using namespace spatial_mass_transport_detail;
+    const auto fail=[&](std::string message){error=std::move(message);return false;};
+    const auto assemblyStartedAt=std::chrono::steady_clock::now();
+    auto deadline=telemetry?telemetry->deadline:std::chrono::steady_clock::time_point::max();
+    const auto configuredFlowBudget=telemetry?telemetry->feasibleFlowBudget:std::chrono::duration<double>{0.0};
+    const bool quotientContinuation=warmStart&&warmStart->exactReceiverSignatureExpansionDepth>0u;
+    const auto feasibleFlowBudget=quotientContinuation?std::chrono::duration<double>{0.0}:configuredFlowBudget;
+    const bool useHighestLabelPushRelabel=warmStart&&warmStart->useHighestLabelPushRelabel;
+    const std::string solverName=useHighestLabelPushRelabel?"highest_label_push_relabel_feasibility":"deterministic_dinic_feasibility";
+    if(telemetry)telemetry->allocationSolver=solverName;
+    if(!std::isfinite(configuredFlowBudget.count())||configuredFlowBudget.count()<0.0)
+        return fail("shared-capacity feasible-flow deadline budget is invalid");
+    if(configuredFlowBudget.count()>0.0&&deadline!=std::chrono::steady_clock::time_point::max()&&!quotientContinuation)
+        return fail("shared-capacity feasible-flow absolute deadline and duration budget are both set");
+    if (telemetry) {
+        if(!quotientContinuation){
+            *telemetry=SharedCapacityFlowTelemetry{};
+            telemetry->deadline=deadline;
+            telemetry->feasibleFlowBudget=configuredFlowBudget;
+        }
+    }
+    constexpr std::uint32_t invalid=std::numeric_limits<std::uint32_t>::max();
+    std::vector<std::uint32_t> parentGroup;
+    std::vector<std::map<std::uint32_t,double>> regionPreference;
+    std::vector<std::vector<std::uint32_t>> childAdmissibleRegions;
+    if(!validateSharedCapacitySupport(in,support,parentGroup,regionPreference,
+                                      childAdmissibleRegions,error))return false;
+    if(warmStart &&
+       (warmStart->parentMassPacketSHA256!=in.parentMassPacketSHA256 ||
+        warmStart->parentSourceContributionSHA256!=in.parentSourceContributionSHA256 ||
+        warmStart->childMeshSHA256!=in.childMeshSHA256 ||
+        warmStart->regionLabelSHA256!=in.regionLabelSHA256 ||
+        warmStart->coordinateFrameSHA256!=in.coordinateFrameSHA256 ||
+        warmStart->typedSupportSHA256!=support.typedSupportSHA256))
+        return fail("shared-capacity warm-start input/support hash pins do not match current inputs");
+    const std::size_t np=in.parentMassKg.size(),nc=in.childReferenceVolumeM3.size();
+    if(np+nc+3u>std::numeric_limits<std::uint32_t>::max())
+        return fail("shared-capacity flow node count exceeds its bounded index range");
+    const std::uint32_t parentBase=0u;
+    const std::uint32_t childBase=static_cast<std::uint32_t>(np);
+    const std::uint32_t sink=static_cast<std::uint32_t>(np+nc);
+    const std::uint32_t superSource=sink+1u,superSink=sink+2u;
+    const double radiusSquared=in.maximumTransportDistanceM*in.maximumTransportDistanceM;
+    if(!std::isfinite(radiusSquared)||radiusSquared<=0.0)
+        return fail("shared-capacity transport radius squared is invalid");
+
+    using Bucket=std::tuple<std::uint32_t,std::uint32_t,GridKey>;
+    std::map<Bucket,std::vector<std::uint32_t>> childrenByRegionBucket;
+    std::map<Bucket,std::vector<std::uint32_t>> parentsByRegionBucket;
+    std::vector<GridKey> parentGrid(np),childGrid(nc);
+    for(std::size_t p=0;p<np;++p){
+        if(!gridKey(in.parentCentroidsWorld[p],in.maximumTransportDistanceM,parentGrid[p]))
+            return fail("shared-capacity parent centroid cannot be indexed by the bounded search grid");
+        parentsByRegionBucket[{in.parentMaterialIndices[p],in.parentAnatomicalRegionIndices[p],parentGrid[p]}]
+            .push_back(static_cast<std::uint32_t>(p));
+    }
+    for(std::size_t c=0;c<nc;++c){
+        if(!gridKey(in.childCentroidsWorld[c],in.maximumTransportDistanceM,childGrid[c]))
+            return fail("shared-capacity child centroid cannot be indexed by the bounded search grid");
+        for(const auto region:childAdmissibleRegions[c])
+            childrenByRegionBucket[{in.childMaterialIndices[c],region,childGrid[c]}]
+                .push_back(static_cast<std::uint32_t>(c));
+    }
+
+    ExactDoubleSum totalSupplyExact,totalMinimumExact,totalMaximumExact;
+    long double supplyLong=0.0L,minimumLong=0.0L,maximumLong=0.0L;
+    std::vector<double> childMinimum(nc),childMaximum(nc);
+    for(double mass:in.parentMassKg){supplyLong+=mass;totalSupplyExact.add(mass);}
+    for(std::size_t c=0;c<nc;++c){
+        const auto material=in.childMaterialIndices[c];
+        childMinimum[c]=in.childReferenceVolumeM3[c]*in.materialDensityLowerKgM3[material];
+        childMaximum[c]=in.childReferenceVolumeM3[c]*in.materialDensityUpperKgM3[material];
+        if(!std::isfinite(childMinimum[c])||!std::isfinite(childMaximum[c])||
+           childMinimum[c]<=0.0||childMaximum[c]<childMinimum[c])
+            return fail("shared-capacity real-child density capacity is invalid");
+        minimumLong+=childMinimum[c];maximumLong+=childMaximum[c];
+        totalMinimumExact.add(childMinimum[c]);totalMaximumExact.add(childMaximum[c]);
+    }
+    const double supply=static_cast<double>(supplyLong);
+    const double minimum=static_cast<double>(minimumLong);
+    const double maximum=static_cast<double>(maximumLong);
+    auto supplyMinusMinimum=totalSupplyExact;
+    auto supplyMinusMaximum=totalSupplyExact;
+    for(std::size_t c=0;c<nc;++c){
+        supplyMinusMinimum.add(-childMinimum[c]);
+        supplyMinusMaximum.add(-childMaximum[c]);
+    }
+    if(!totalSupplyExact.valid()||!totalMinimumExact.valid()||!totalMaximumExact.valid()||
+       !supplyMinusMinimum.valid()||!supplyMinusMaximum.valid()||
+       supplyMinusMinimum.sign()<0||supplyMinusMaximum.sign()>0)
+        return fail("shared-capacity total source mass is outside the real-child density capacity bounds");
+    const double residualCapacity=supplyMinusMinimum.roundedDownPositive();
+    const bool useReceiverSignatureQuotient=warmStart&&warmStart->useExactReceiverSignatureQuotient;
+    const bool useExactCandidateGraph=warmStart&&!warmStart->exactCandidateNeighborEdgeKeys.empty();
+    if(useReceiverSignatureQuotient!=useExactCandidateGraph)
+        return fail("exact receiver-signature quotient requires an explicit nonempty candidate-neighbor graph");
+
+    struct PendingEdge {std::uint32_t parent,child;double distance,cost;double initialFlowKg=0.0;};
+    std::vector<PendingEdge> pending;
+    pending.reserve(std::min(in.maximumAllowedEdges,nc+np*2u));
+    std::vector<std::vector<std::uint32_t>> activeChildrenByParent(np);
+    std::vector<std::vector<std::uint32_t>> reachableChildren(support.groupMaterialIndices.size());
+    const double semanticPreferenceWeight=1.0e-5;
+    constexpr std::size_t initialNearestK=1u;
+    constexpr std::size_t cutExpansionBatch=4096u;
+    const auto candidateLess=[](const Candidate& a,const Candidate& b){
+        return a.distanceM!=b.distanceM?a.distanceM<b.distanceM:a.child<b.child;
+    };
+    const auto keepNearest=[&](std::vector<Candidate>& row,const Candidate& value,
+                               const std::size_t limit){
+        const auto duplicate=std::find_if(row.begin(),row.end(),[&](const Candidate& x){
+            return x.child==value.child;
+        });
+        if(duplicate!=row.end()){
+            if(candidateLess(value,*duplicate))*duplicate=value;
+            std::sort(row.begin(),row.end(),candidateLess);
+            return;
+        }
+        const auto position=std::lower_bound(row.begin(),row.end(),value,candidateLess);
+        row.insert(position,value);
+        if(row.size()>limit)row.pop_back();
+    };
+    const auto addSeed=[&](const std::uint32_t p,const Candidate& candidate){
+        const auto c=candidate.child;
+        const auto region=in.parentAnatomicalRegionIndices[p];
+        const auto found=regionPreference[c].find(region);
+        const double preference=found==regionPreference[c].end()?1.0e-12:found->second;
+        const double penalty=semanticPreferenceWeight*(-std::log(preference));
+        const double cost=(candidate.distanceM*candidate.distanceM)/radiusSquared+penalty;
+        if(!std::isfinite(cost)||cost<0.0)return false;
+        pending.push_back({p,c,candidate.distanceM,cost});
+        return true;
+    };
+    const auto scanNearestChildForParent=[&](const std::uint32_t p,const std::size_t k){
+        std::vector<Candidate> nearest;
+        const auto material=in.parentMaterialIndices[p];
+        const auto region=in.parentAnatomicalRegionIndices[p];
+        const auto base=parentGrid[p];
+        for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy)for(int dz=-1;dz<=1;++dz){
+            const GridKey key{base.x+dx,base.y+dy,base.z+dz};
+            const auto found=childrenByRegionBucket.find({material,region,key});
+            if(found==childrenByRegionBucket.end())continue;
+            for(const auto c:found->second){
+                const double d=distance(in.parentCentroidsWorld[p],in.childCentroidsWorld[c]);
+                if(d<=in.maximumTransportDistanceM&&d*d<=radiusSquared*(1.0+1.0e-14))
+                    keepNearest(nearest,Candidate{c,d},k);
+            }
+        }
+        return nearest;
+    };
+    const auto scanNearestParentForChildRegion=[&](const std::uint32_t c,
+                                                    const std::uint32_t region,
+                                                    const std::size_t k){
+        std::vector<Candidate> nearest;
+        const auto material=in.childMaterialIndices[c];
+        const auto base=childGrid[c];
+        for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy)for(int dz=-1;dz<=1;++dz){
+            const GridKey key{base.x+dx,base.y+dy,base.z+dz};
+            const auto found=parentsByRegionBucket.find({material,region,key});
+            if(found==parentsByRegionBucket.end())continue;
+            for(const auto p:found->second){
+                const double d=distance(in.parentCentroidsWorld[p],in.childCentroidsWorld[c]);
+                if(d<=in.maximumTransportDistanceM&&d*d<=radiusSquared*(1.0+1.0e-14))
+                    keepNearest(nearest,Candidate{p,d},k);
+            }
+        }
+        return nearest;
+    };
+
+    // The opt-in quotient consumes a pinned exact candidate graph. The ordinary
+    // route below still constructs its nearest-neighbor seed graph unchanged.
+    if(useExactCandidateGraph){
+        const auto keys=warmStart->exactCandidateNeighborEdgeKeys;
+        std::uint64_t prior=0u;bool havePrior=false;
+        if(keys.size()>in.maximumAllowedEdges)
+            return fail("INCONCLUSIVE exact receiver-signature candidate graph exceeds the pinned edge budget");
+        for(const auto key:keys){
+            if(havePrior&&key<=prior)
+                return fail("exact receiver-signature candidate graph keys are not strictly sorted unique");
+            havePrior=true;prior=key;
+            const auto c=static_cast<std::uint32_t>(key>>32u);
+            const auto p=static_cast<std::uint32_t>(key&0xffffffffu);
+            if(c>=nc||p>=np)
+                return fail("exact receiver-signature candidate graph key is outside the pinned parent/child row domains");
+            if(in.parentMaterialIndices[p]!=in.childMaterialIndices[c]||
+               !std::binary_search(childAdmissibleRegions[c].begin(),childAdmissibleRegions[c].end(),
+                                   in.parentAnatomicalRegionIndices[p]))
+                return fail("exact receiver-signature candidate edge violates material or authenticated region support");
+            const double d=distance(in.parentCentroidsWorld[p],in.childCentroidsWorld[c]);
+            if(!std::isfinite(d)||d>in.maximumTransportDistanceM||d*d>radiusSquared*(1.0+1.0e-14))
+                return fail("exact receiver-signature candidate edge violates the original transport radius");
+            const auto pref=regionPreference[c].find(in.parentAnatomicalRegionIndices[p]);
+            const double preference=pref==regionPreference[c].end()?1.0e-12:pref->second;
+            const double cost=(d*d)/radiusSquared+semanticPreferenceWeight*(-std::log(preference));
+            if(!std::isfinite(cost)||cost<0.0)
+                return fail("exact receiver-signature candidate edge has an invalid deterministic preference score");
+            pending.push_back({p,c,d,cost});
+        }
+        if(pending.empty())return fail("INCONCLUSIVE exact receiver-signature candidate graph is empty");
+    }else{
+        // Sparse seed: each source parent receives its nearest admissible child,
+        // and each real child receives its nearest admissible parent in every
+        // authenticated material/region support row. All child minimum-density
+        // demand is therefore represented before any flow attempt.
+        for(std::size_t p=0;p<np;++p){
+            const auto nearest=scanNearestChildForParent(static_cast<std::uint32_t>(p),initialNearestK);
+            if(nearest.empty()){
+                std::ostringstream witness;
+                witness<<"INFEASIBLE shared-capacity parent has no same-material admissible child within distance bound"
+                    <<" parent="<<p<<" material="<<in.parentMaterialIndices[p]
+                    <<" region="<<in.parentAnatomicalRegionIndices[p]
+                    <<" radius_m="<<in.maximumTransportDistanceM;
+                return fail(witness.str());
+            }
+            for(const auto& candidate:nearest)
+                if(!addSeed(static_cast<std::uint32_t>(p),candidate))
+                    return fail("shared-capacity sparse seed cost is invalid");
+        }
+        std::vector<bool> childHasSeed(nc,false);
+        for(std::size_t c=0;c<nc;++c){
+            for(const auto region:childAdmissibleRegions[c]){
+                const auto nearest=scanNearestParentForChildRegion(static_cast<std::uint32_t>(c),region,
+                                                                   initialNearestK);
+                for(const auto& candidate:nearest){
+                    childHasSeed[c]=true;
+                    if(!addSeed(candidate.child,Candidate{static_cast<std::uint32_t>(c),candidate.distanceM}))
+                        return fail("shared-capacity sparse reverse seed cost is invalid");
+                }
+            }
+            if(!childHasSeed[c]){
+                std::ostringstream witness;
+                witness<<"INFEASIBLE shared-capacity real child has no same-material admissible parent within distance bound"
+                    <<" child="<<c<<" material="<<in.childMaterialIndices[c]
+                    <<" allowed_regions="<<childAdmissibleRegions[c].size()
+                    <<" radius_m="<<in.maximumTransportDistanceM;
+                return fail(witness.str());
+            }
+        }
+    }
+    std::vector<double> warmByParent(np,0.0),warmByChild(nc,0.0),warmExtraByChild(nc,0.0);
+    std::vector<SharedCapacityWarmStartFlow> normalizedWarmRows;
+    double warmExtraTotal=0.0;
+    if(warmStart){
+        if(warmStart->flows.empty()&&!(useReceiverSignatureQuotient&&
+             warmStart->exactReceiverSignatureExpansionDepth>0u))
+            return fail("shared-capacity warm-start flow list is empty");
+        std::vector<SharedCapacityWarmStartFlow> rows(warmStart->flows.begin(),warmStart->flows.end());
+        std::sort(rows.begin(),rows.end(),[](const auto& a,const auto& b){
+            return a.parentRow!=b.parentRow?a.parentRow<b.parentRow:a.childRow<b.childRow;
+        });
+        for(auto& row:rows){
+            if(row.parentRow>=np||row.childRow>=nc||!std::isfinite(row.massKg)||row.massKg<=0.0)
+                return fail("shared-capacity warm-start flow row is invalid or outside the pinned row domains");
+            const auto p=row.parentRow,c=row.childRow;
+            if(in.parentMaterialIndices[p]!=in.childMaterialIndices[c]||
+               !std::binary_search(childAdmissibleRegions[c].begin(),childAdmissibleRegions[c].end(),
+                                   in.parentAnatomicalRegionIndices[p]))
+                return fail("shared-capacity warm-start edge violates current material or authenticated region support");
+            if(useExactCandidateGraph){
+                const std::uint64_t key=(static_cast<std::uint64_t>(c)<<32u)|p;
+                if(!std::binary_search(warmStart->exactCandidateNeighborEdgeKeys.begin(),
+                                       warmStart->exactCandidateNeighborEdgeKeys.end(),key))
+                    return fail("exact receiver-signature graph omits a retained warm-start edge");
+            }
+            const double d=distance(in.parentCentroidsWorld[p],in.childCentroidsWorld[c]);
+            if(!std::isfinite(d)||d>in.maximumTransportDistanceM||d*d>radiusSquared*(1.0+1.0e-14))
+                return fail("shared-capacity warm-start edge violates current transport radius");
+            const auto pref=regionPreference[c].find(in.parentAnatomicalRegionIndices[p]);
+            const double preference=pref==regionPreference[c].end()?1.0e-12:pref->second;
+            const double cost=(d*d)/radiusSquared+semanticPreferenceWeight*(-std::log(preference));
+            if(!std::isfinite(cost)||cost<0.0)return fail("shared-capacity warm-start edge cost is invalid");
+            pending.push_back({p,c,d,cost,row.massKg});
+            warmByParent[p]+=row.massKg;warmByChild[c]+=row.massKg;
+        }
+        if(quotientContinuation){
+            const double roundoffScale=64.0*std::numeric_limits<double>::epsilon();
+            const auto correctTinyOverage=[&](const bool byParent,const std::size_t rowIndex,
+                                               const double capacity)->bool{
+                const double value=byParent?warmByParent[rowIndex]:warmByChild[rowIndex];
+                if(!std::isfinite(value)||!std::isfinite(capacity))return false;
+                if(value<=capacity)return true;
+                const double excess=value-capacity;
+                const double tol=roundoffScale*std::max(std::abs(value),std::abs(capacity));
+                if(excess>tol)return false;
+                auto best=rows.end();
+                for(auto it=rows.begin();it!=rows.end();++it)
+                    if((byParent?it->parentRow:it->childRow)==rowIndex&&
+                       (best==rows.end()||it->massKg>best->massKg))best=it;
+                const double release=excess+8.0*std::numeric_limits<double>::epsilon()*std::abs(capacity);
+                if(best==rows.end()||best->massKg<=release)return false;
+                best->massKg-=release;
+                if(byParent)warmByParent[rowIndex]-=release;
+                else warmByChild[rowIndex]-=release;
+                if(telemetry){++telemetry->receiverSignatureWarmRoundoffCorrections;
+                    telemetry->receiverSignatureWarmRoundoffReleasedKg+=release;}
+                return true;
+            };
+            for(std::size_t p=0;p<np;++p)
+                if(!correctTinyOverage(true,p,in.parentMassKg[p]))
+                    return fail("INCONCLUSIVE receiver-signature recursive warm flow exceeds source capacity beyond 64-epsilon summation roundoff");
+            for(std::size_t c=0;c<nc;++c)
+                if(!correctTinyOverage(false,c,childMaximum[c]))
+                    return fail("INCONCLUSIVE receiver-signature recursive warm flow exceeds child capacity beyond 64-epsilon summation roundoff");
+            std::fill(warmByParent.begin(),warmByParent.end(),0.0);
+            std::fill(warmByChild.begin(),warmByChild.end(),0.0);
+            for(const auto& row:rows){warmByParent[row.parentRow]+=row.massKg;warmByChild[row.childRow]+=row.massKg;}
+        }
+        for(std::size_t p=0;p<np;++p)
+            if(!std::isfinite(warmByParent[p])||warmByParent[p]>in.parentMassKg[p]){
+                std::ostringstream witness;witness<<"shared-capacity warm-start exceeds an unchanged source-parent capacity row="<<p
+                    <<" flow="<<std::setprecision(17)<<warmByParent[p]<<" capacity="<<in.parentMassKg[p];
+                return fail(witness.str());
+            }
+        for(std::size_t c=0;c<nc;++c){
+            if(!std::isfinite(warmByChild[c])||warmByChild[c]>childMaximum[c]){
+                std::ostringstream witness;witness<<"shared-capacity warm-start exceeds an unchanged child upper-density capacity row="<<c
+                    <<" flow="<<std::setprecision(17)<<warmByChild[c]<<" capacity="<<childMaximum[c];
+                return fail(witness.str());
+            }
+            warmExtraByChild[c]=std::max(0.0,warmByChild[c]-childMinimum[c]);
+            warmExtraTotal+=warmExtraByChild[c];
+        }
+        normalizedWarmRows=std::move(rows);
+        if(!std::isfinite(warmExtraTotal)||
+           (!useReceiverSignatureQuotient&&warmExtraTotal>residualCapacity))
+            return fail("shared-capacity warm-start extra flow exceeds the unchanged global residual capacity");
+    }
+    std::sort(pending.begin(),pending.end(),[](const auto& a,const auto& b){
+        return a.parent!=b.parent?a.parent<b.parent:a.child<b.child;
+    });
+    std::vector<PendingEdge> uniquePending;uniquePending.reserve(pending.size());
+    for(const auto& edge:pending){
+        if(!uniquePending.empty()&&uniquePending.back().parent==edge.parent&&
+           uniquePending.back().child==edge.child){
+            auto& previous=uniquePending.back();
+            previous.initialFlowKg+=edge.initialFlowKg;
+            if(edge.cost<previous.cost){previous.cost=edge.cost;previous.distance=edge.distance;}
+        }else uniquePending.push_back(edge);
+    }
+    pending.swap(uniquePending);
+    // Dinic is feasibility-only; deterministic edge insertion order keeps the
+    // distance/P1 penalty as a preference without claiming a global optimum.
+    std::sort(pending.begin(),pending.end(),[](const auto& a,const auto& b){
+        if(a.cost!=b.cost)return a.cost<b.cost;
+        if(a.parent!=b.parent)return a.parent<b.parent;
+        return a.child<b.child;
+    });
+    // Feasibility Dinic is deterministic but not cost-optimal. Insert seeded
+    // candidate edges in distance/P1 preference order, then parent/child order.
+    std::sort(pending.begin(),pending.end(),[](const auto& a,const auto& b){
+        if(a.cost!=b.cost)return a.cost<b.cost;
+        if(a.parent!=b.parent)return a.parent<b.parent;
+        return a.child<b.child;
+    });
+    if(pending.size()>in.maximumAllowedEdges)
+        return fail("INCONCLUSIVE shared-capacity sparse seed graph exceeds pinned edge budget");
+    if (telemetry&&(!quotientContinuation||telemetry->initialSeedEdges==0u))
+        telemetry->initialSeedEdges=pending.size();
+
+    std::vector<EdgeRef> references;
+    references.reserve(std::min(in.maximumAllowedEdges,nc+np*2u));
+    std::vector<SharedCapacityFlow> flows;
+    std::size_t augmentationCount=useReceiverSignatureQuotient&&warmStart
+        ?static_cast<std::size_t>(warmStart->exactReceiverSignaturePriorAugmentations):0u;
+    if(augmentationCount>in.maximumAugmentations)
+        return fail("INCONCLUSIVE receiver-signature quotient exhausted the cumulative augmentation budget");
+    if(useReceiverSignatureQuotient){
+        struct ReceiverSignatureGroup {
+            std::vector<std::uint32_t> parents;
+            std::vector<std::uint32_t> children;
+            double minimum=0.0,maximum=0.0,warmMass=0.0,warmExtra=0.0;
+        };
+        std::vector<std::vector<std::uint32_t>> neighborsByChild(nc);
+        for(const auto& edge:pending)neighborsByChild[edge.child].push_back(edge.parent);
+        for(auto& neighbors:neighborsByChild){
+            std::sort(neighbors.begin(),neighbors.end());
+            neighbors.erase(std::unique(neighbors.begin(),neighbors.end()),neighbors.end());
+        }
+        std::map<std::vector<std::uint32_t>,std::uint32_t> groupByNeighbors;
+        std::vector<ReceiverSignatureGroup> receiverGroups;
+        std::vector<std::uint32_t> childToSignature(nc,invalid);
+        for(std::size_t c=0;c<nc;++c){
+            const auto& neighbors=neighborsByChild[c];
+            if(neighbors.empty())return fail("INCONCLUSIVE exact receiver-signature graph leaves a child without a candidate source");
+            auto [it,inserted]=groupByNeighbors.emplace(neighbors,static_cast<std::uint32_t>(receiverGroups.size()));
+            if(inserted)receiverGroups.push_back(ReceiverSignatureGroup{.parents=neighbors});
+            const auto g=it->second;childToSignature[c]=g;
+            auto& group=receiverGroups[g];group.children.push_back(static_cast<std::uint32_t>(c));
+            group.minimum+=childMinimum[c];group.maximum+=childMaximum[c];group.warmMass+=warmByChild[c];
+            if(!std::isfinite(group.minimum)||!std::isfinite(group.maximum)||!std::isfinite(group.warmMass))
+                return fail("INCONCLUSIVE receiver-signature aggregate capacity overflowed");
+        }
+        if(receiverGroups.empty())return fail("INCONCLUSIVE exact receiver-signature quotient produced no receiver groups");
+        std::uint64_t groupedEdgeCount=0u;
+        for(const auto& group:receiverGroups)groupedEdgeCount+=group.parents.size();
+        if(groupedEdgeCount>in.maximumAllowedEdges)
+            return fail("INCONCLUSIVE exact receiver-signature quotient graph exceeds the pinned edge budget");
+        for(auto& group:receiverGroups)
+            group.warmExtra=std::max(0.0,group.warmMass-group.minimum);
+        double quotientWarmExtraTotal=0.0;
+        for(const auto& group:receiverGroups)quotientWarmExtraTotal+=group.warmExtra;
+        if(!std::isfinite(quotientWarmExtraTotal))
+            return fail("receiver-signature warm-start extra-flow aggregate is non-finite");
+
+        struct QuotientArc {
+            std::uint32_t parent=0u,signature=0u,from=0u,arc=0u;
+            double initialFlow=0.0;
+        };
+        std::vector<QuotientArc> quotientArcs;
+        quotientArcs.reserve(static_cast<std::size_t>(groupedEdgeCount));
+        std::vector<std::vector<std::uint32_t>> signaturesByParent(np);
+        for(std::size_t g=0;g<receiverGroups.size();++g)
+            for(const auto p:receiverGroups[g].parents)
+                signaturesByParent[p].push_back(static_cast<std::uint32_t>(g));
+        for(std::size_t p=0;p<np;++p){
+            auto& signatures=signaturesByParent[p];
+            std::sort(signatures.begin(),signatures.end());
+            signatures.erase(std::unique(signatures.begin(),signatures.end()),signatures.end());
+            for(const auto g:signatures)quotientArcs.push_back({static_cast<std::uint32_t>(p),g,0u,0u,0.0});
+        }
+        const auto findQuotientArc=[&](const std::uint32_t p,const std::uint32_t g){
+            return std::lower_bound(quotientArcs.begin(),quotientArcs.end(),std::pair{p,g},
+                [](const QuotientArc& a,const std::pair<std::uint32_t,std::uint32_t>& key){
+                    return a.parent!=key.first?a.parent<key.first:a.signature<key.second;
+                });
+        };
+        std::vector<double> retainedWarmByParent(np,0.0),retainedWarmBySignature(receiverGroups.size(),0.0);
+        std::vector<double> warmFloorRemaining(receiverGroups.size(),0.0);
+        for(std::size_t g=0;g<receiverGroups.size();++g)
+            warmFloorRemaining[g]=std::min(receiverGroups[g].warmMass,receiverGroups[g].minimum);
+        // Retain only warm flow needed to seed already-satisfied receiver
+        // floors. Warm amounts above a group's minimum are construction
+        // choices and must remain available to reverse-residual rerouting.
+        for(const auto& row:normalizedWarmRows){
+            const auto g=childToSignature[row.childRow];
+            auto it=findQuotientArc(row.parentRow,g);
+            if(it==quotientArcs.end()||it->parent!=row.parentRow||it->signature!=g)
+                return fail("shared-capacity warm-start edge is absent from the receiver-signature graph");
+            const double retained=std::min(row.massKg,warmFloorRemaining[g]);
+            if(retained>0.0){
+                it->initialFlow+=retained;
+                retainedWarmByParent[row.parentRow]+=retained;
+                retainedWarmBySignature[g]+=retained;
+                warmFloorRemaining[g]-=retained;
+            }
+            if(!std::isfinite(it->initialFlow)||!std::isfinite(retainedWarmByParent[row.parentRow]))
+                return fail("receiver-signature floor warm-start aggregation overflowed");
+        }
+
+        const std::uint32_t quotientParentBase=0u;
+        const std::uint32_t quotientReceiverBase=static_cast<std::uint32_t>(np);
+        const std::uint32_t quotientSink=static_cast<std::uint32_t>(np+receiverGroups.size());
+        const std::uint32_t quotientSource=quotientSink+1u,quotientSuperSink=quotientSink+2u;
+        if(static_cast<std::size_t>(quotientSuperSink)>=std::numeric_limits<std::uint32_t>::max())
+            return fail("INCONCLUSIVE exact receiver-signature quotient node count exceeds its bounded index range");
+        MinCostFlow quotientNetwork(static_cast<std::size_t>(quotientSuperSink)+1u);
+        std::vector<std::uint32_t> quotientSourceArcs(np),quotientMinimumArcs(receiverGroups.size());
+        for(std::size_t p=0;p<np;++p)
+            quotientSourceArcs[p]=quotientNetwork.addEdge(quotientSource,quotientParentBase+static_cast<std::uint32_t>(p),
+                                                         in.parentMassKg[p],0.0);
+        for(std::size_t g=0;g<receiverGroups.size();++g)
+            quotientMinimumArcs[g]=quotientNetwork.addEdge(quotientReceiverBase+static_cast<std::uint32_t>(g),
+                                                           quotientSuperSink,receiverGroups[g].minimum,0.0);
+        for(auto& arc:quotientArcs){
+            arc.from=quotientParentBase+arc.parent;
+            arc.arc=quotientNetwork.addEdge(arc.from,quotientReceiverBase+arc.signature,
+                                            in.parentMassKg[arc.parent],0.0);
+            if(arc.initialFlow>0.0){
+                std::string seedError;
+                if(!quotientNetwork.seedExistingFlow(arc.from,arc.arc,arc.initialFlow,seedError))
+                    return fail("receiver-signature warm-start source flow seeding failed: "+seedError);
+            }
+        }
+        for(std::size_t p=0;p<np;++p)if(retainedWarmByParent[p]>0.0){
+            std::string seedError;
+            if(!quotientNetwork.seedExistingFlow(quotientSource,quotientSourceArcs[p],retainedWarmByParent[p],seedError))
+                return fail("receiver-signature warm-start parent-capacity seeding failed: "+seedError);
+        }
+        for(std::size_t g=0;g<receiverGroups.size();++g){
+            const double floorFlow=retainedWarmBySignature[g];
+            if(floorFlow>0.0){
+                std::string seedError;
+                if(!quotientNetwork.seedExistingFlow(quotientReceiverBase+static_cast<std::uint32_t>(g),
+                                                      quotientMinimumArcs[g],floorFlow,seedError))
+                    return fail("receiver-signature warm-start floor seeding failed: "+seedError);
+            }
+        }
+        for(const auto& arc:quotientArcs)
+            for(const auto c:receiverGroups[arc.signature].children)
+                reachableChildren[parentGroup[arc.parent]].push_back(c);
+        for(auto& row:reachableChildren){std::sort(row.begin(),row.end());row.erase(std::unique(row.begin(),row.end()),row.end());}
+        if(telemetry){
+            telemetry->receiverSignatureGroupCount=receiverGroups.size();
+            telemetry->receiverSignatureGroupedChildRows=nc-receiverGroups.size();
+            telemetry->receiverSignatureGroupedEdgeCount=groupedEdgeCount;
+            telemetry->allocationSolver=solverName+"_exact_receiver_signature_quotient";
+        }
+
+        bool deadlineStarted=false;
+        std::uint32_t phase=1u;
+        const auto runQuotientFlow=[&](){
+            if(!deadlineStarted){
+                deadlineStarted=true;
+                const auto flowStart=std::chrono::steady_clock::now();
+                if(feasibleFlowBudget.count()>0.0)
+                    deadline=flowStart+std::chrono::duration_cast<std::chrono::steady_clock::duration>(feasibleFlowBudget);
+                if(telemetry){telemetry->deadline=deadline;
+                    telemetry->graphConstructionSeconds+=std::chrono::duration<double>(flowStart-assemblyStartedAt).count();}
+            }
+            const auto started=std::chrono::steady_clock::now();
+            std::size_t roundAugmentations=0u;double sent=0.0;std::string solverError;
+            if(telemetry)++telemetry->feasibleFlowCalls;
+            const bool ok=useHighestLabelPushRelabel
+                ? quotientNetwork.runFeasibleHighestLabel(quotientSource,quotientSuperSink,
+                    in.maximumAugmentations-augmentationCount,roundAugmentations,sent,solverError,
+                    telemetry?&telemetry->feasibleFlow:nullptr,deadline)
+                : quotientNetwork.runFeasible(quotientSource,quotientSuperSink,
+                    in.maximumAugmentations-augmentationCount,roundAugmentations,sent,solverError,
+                    telemetry?&telemetry->feasibleFlow:nullptr,deadline);
+            if(telemetry)telemetry->feasibleSolverSeconds+=
+                std::chrono::duration<double>(std::chrono::steady_clock::now()-started).count();
+            if(!ok){
+                if(telemetry){telemetry->deadlineReached=solverError.find("deadline reached")!=std::string::npos;
+                    telemetry->partialPhase=phase;telemetry->partialFlowCaptured=false;
+                    telemetry->partialSourceSentKg=quotientNetwork.sentFromSource(quotientSource);}
+                return fail("INCONCLUSIVE exact receiver-signature graph solver stopped before completion: "+solverError);
+            }
+            augmentationCount+=roundAugmentations;
+            return true;
+        };
+        const auto expandReceiverSignatureAcrossCut=[&](const bool minimumPhase)->bool{
+            constexpr std::uint32_t maximumExpansionRounds=32u;
+            if(warmStart->exactReceiverSignatureExpansionDepth>=maximumExpansionRounds)
+                return fail("INCONCLUSIVE exact receiver-signature quotient reached its bounded cut-expansion round limit");
+            const auto reached=quotientNetwork.residualReachable(quotientSource,true);
+            std::vector<PendingEdge> additions;
+            const std::size_t remainingEdgeBudget=in.maximumAllowedEdges-
+                std::min(in.maximumAllowedEdges,pending.size());
+            if(remainingEdgeBudget==0u)
+                return fail("INCONCLUSIVE exact receiver-signature edge budget is exhausted before cut expansion");
+            additions.reserve(std::min(remainingEdgeBudget,np*8u));
+            std::uint64_t reachedParentCount=0u,reachedSignatureCount=0u,reachedChildCount=0u;
+            std::uint64_t cutCandidateRowsScanned=0u;
+            bool edgeBudgetSaturated=false,cutEnumerationDeadlineReached=false;
+            for(std::size_t p=0;p<np;++p)if(reached[quotientParentBase+p])++reachedParentCount;
+            for(std::size_t g=0;g<receiverGroups.size();++g)if(reached[quotientReceiverBase+g]){
+                ++reachedSignatureCount;reachedChildCount+=receiverGroups[g].children.size();
+            }
+            if(telemetry){
+                telemetry->residualReachableExpandedParentRows.clear();
+                telemetry->residualReachableChildRows.clear();
+                for(std::size_t p=0;p<np;++p)if(reached[quotientParentBase+p])
+                    telemetry->residualReachableExpandedParentRows.push_back(static_cast<std::uint32_t>(p));
+                for(std::size_t g=0;g<receiverGroups.size();++g)if(reached[quotientReceiverBase+g])
+                    telemetry->residualReachableChildRows.insert(telemetry->residualReachableChildRows.end(),
+                        receiverGroups[g].children.begin(),receiverGroups[g].children.end());
+                std::sort(telemetry->residualReachableChildRows.begin(),telemetry->residualReachableChildRows.end());
+                telemetry->residualReachableChildRows.erase(std::unique(
+                    telemetry->residualReachableChildRows.begin(),telemetry->residualReachableChildRows.end()),
+                    telemetry->residualReachableChildRows.end());
+            }
+            for(std::size_t p=0;p<np;++p){
+                if(!reached[quotientParentBase+p])continue;
+                const auto material=in.parentMaterialIndices[p];
+                const auto region=in.parentAnatomicalRegionIndices[p];
+                const auto base=parentGrid[p];
+                for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy)for(int dz=-1;dz<=1;++dz){
+                    const GridKey key{base.x+dx,base.y+dy,base.z+dz};
+                    const auto found=childrenByRegionBucket.find({material,region,key});
+                    if(found==childrenByRegionBucket.end())continue;
+                    for(const auto c:found->second){
+                        ++cutCandidateRowsScanned;
+                        if((cutCandidateRowsScanned&65535u)==0u&&
+                           deadline!=std::chrono::steady_clock::time_point::max()&&
+                           std::chrono::steady_clock::now()>=deadline){
+                            cutEnumerationDeadlineReached=true;break;
+                        }
+                        const auto g=childToSignature[c];
+                        const auto& group=receiverGroups[g];
+                        // A cut edge is omitted only when this target child's
+                        // CURRENT receiver signature is on the source side.
+                        // An expanded signature matching some other reached
+                        // group says nothing about the target child's cut side.
+                        if(reached[quotientReceiverBase+g])continue;
+                        if(std::binary_search(group.parents.begin(),group.parents.end(),static_cast<std::uint32_t>(p)))continue;
+                        const double d=distance(in.parentCentroidsWorld[p],in.childCentroidsWorld[c]);
+                        if(!std::isfinite(d)||d>in.maximumTransportDistanceM||
+                           d*d>radiusSquared*(1.0+1.0e-14))continue;
+                        const auto pref=regionPreference[c].find(region);
+                        const double preference=pref==regionPreference[c].end()?1.0e-12:pref->second;
+                        const double cost=(d*d)/radiusSquared+
+                            semanticPreferenceWeight*(-std::log(preference));
+                        if(!std::isfinite(cost)||cost<0.0)
+                            return fail("exact receiver-signature cut expansion preference is invalid");
+                        additions.push_back({static_cast<std::uint32_t>(p),c,d,cost});
+                        if(additions.size()>=remainingEdgeBudget){edgeBudgetSaturated=true;break;}
+                    }
+                    if(edgeBudgetSaturated||cutEnumerationDeadlineReached)break;
+                }
+                if(edgeBudgetSaturated||cutEnumerationDeadlineReached)break;
+            }
+            if(telemetry){
+                telemetry->receiverSignatureCutCandidatesScanned+=cutCandidateRowsScanned;
+                telemetry->receiverSignatureCutEnumerationComplete=!edgeBudgetSaturated&&!cutEnumerationDeadlineReached;
+            }
+            if(cutEnumerationDeadlineReached)
+                return fail("INCONCLUSIVE receiver-signature residual-cut edge enumeration reached the shared solver deadline before completing the cut");
+            if(additions.empty()){
+                std::ostringstream witness;
+                witness<<(minimumPhase?
+                    "INFEASIBLE complete same-material, authenticated-region, radius-bounded receiver graph cannot satisfy all child minimum capacities":
+                    "INFEASIBLE complete same-material, authenticated-region, radius-bounded receiver graph cannot transfer all source mass")
+                    <<" source_sent_kg="<<std::setprecision(17)<<quotientNetwork.sentFromSource(quotientSource)
+                    <<" source_total_kg="<<supply<<" child_minimum_kg="<<minimum
+                    <<" reached_parent_rows="<<reachedParentCount<<" reached_signature_groups="<<reachedSignatureCount
+                    <<" reached_child_rows="<<reachedChildCount
+                    <<" candidate_edges="<<pending.size()<<" expansion_rounds="
+                    <<warmStart->exactReceiverSignatureExpansionDepth;
+                return fail(witness.str());
+            }
+            const std::size_t remainingEdges=remainingEdgeBudget;
+            if(remainingEdges==0u)
+                return fail("INCONCLUSIVE exact receiver-signature residual cut needs more edges than the pinned graph budget permits");
+            const std::size_t addCount=std::min(additions.size(),remainingEdges);
+            additions.resize(addCount);
+
+            std::vector<double> childRoom=childMaximum,parentFlowRoom(np,0.0);
+            std::vector<SharedCapacityWarmStartFlow> retryFlows;
+            retryFlows.reserve(quotientArcs.size());
+            for(std::size_t p=0;p<np;++p)
+                parentFlowRoom[p]=std::min(in.parentMassKg[p],quotientNetwork.reverseFlow(
+                    EdgeRef{static_cast<std::uint32_t>(p),0u,quotientSource,quotientSourceArcs[p],0.0}));
+            for(const auto& arc:quotientArcs){
+                double remaining=quotientNetwork.reverseFlow(EdgeRef{arc.parent,arc.signature,arc.from,arc.arc,0.0});
+                if(!std::isfinite(remaining)||remaining<0.0)
+                    return fail("INCONCLUSIVE receiver-signature partial flow cannot be disaggregated for cut expansion");
+                remaining=std::min(remaining,parentFlowRoom[arc.parent]);
+                for(const auto c:receiverGroups[arc.signature].children){
+                    if(remaining<=0.0)break;
+                    const double take=std::min(remaining,childRoom[c]);
+                    if(take<=0.0)continue;
+                    retryFlows.push_back({arc.parent,c,take});
+                    childRoom[c]-=take;parentFlowRoom[arc.parent]-=take;remaining-=take;
+                }
+                const double rowTol=std::max(in.absoluteMassToleranceKg,
+                    in.relativeClosureTolerance*std::max(1.0,in.parentMassKg[arc.parent]));
+                if(remaining>rowTol)
+                    return fail("INCONCLUSIVE receiver-signature partial flow exceeds child capacities during cut expansion");
+            }
+            std::vector<std::uint64_t> retryKeys;
+            retryKeys.reserve(pending.size()+addCount);
+            for(const auto& edge:pending)
+                retryKeys.push_back((static_cast<std::uint64_t>(edge.child)<<32u)|edge.parent);
+            for(const auto& edge:additions)
+                retryKeys.push_back((static_cast<std::uint64_t>(edge.child)<<32u)|edge.parent);
+            std::sort(retryKeys.begin(),retryKeys.end());
+            retryKeys.erase(std::unique(retryKeys.begin(),retryKeys.end()),retryKeys.end());
+            if(retryKeys.size()>in.maximumAllowedEdges)
+                return fail("INCONCLUSIVE exact receiver-signature expanded candidate graph exceeds the pinned edge budget");
+            if(telemetry){
+                ++telemetry->receiverSignatureExpansionRounds;
+                telemetry->receiverSignatureExpandedEdges+=addCount;
+                ++telemetry->residualCutExpansionCalls;
+                ++telemetry->feasibleFlow.cutExpansionCalls;
+                if(minimumPhase){++telemetry->minimumDensityExpansionCalls;
+}
+                else{++telemetry->maximumDensityExpansionCalls;
+}
+                telemetry->residualCutEdgesAdded+=addCount;
+                telemetry->feasibleFlow.cutExpansionEdgesAdded+=addCount;
+                telemetry->partialFlowCaptured=true;
+                telemetry->partialPhase=minimumPhase?1u:2u;
+                telemetry->partialSourceSentKg=0.0;
+                telemetry->partialExpandedParentRows.clear();
+                telemetry->partialChildRows.clear();
+                telemetry->partialMassKg.clear();
+                telemetry->partialMeasureM3.clear();
+                telemetry->partialDistanceM.clear();
+                for(const auto& row:retryFlows){
+                    const double density=in.parentMassKg[row.parentRow]/in.parentReferenceVolumeM3[row.parentRow];
+                    telemetry->partialExpandedParentRows.push_back(row.parentRow);
+                    telemetry->partialChildRows.push_back(row.childRow);
+                    telemetry->partialMassKg.push_back(row.massKg);
+                    telemetry->partialSourceSentKg+=row.massKg;
+                    telemetry->partialMeasureM3.push_back(row.massKg/density);
+                    telemetry->partialDistanceM.push_back(distance(in.parentCentroidsWorld[row.parentRow],
+                                                                    in.childCentroidsWorld[row.childRow]));
+                }
+            }
+            auto retry=*warmStart;
+            retry.flows=retryFlows;
+            retry.exactCandidateNeighborEdgeKeys=retryKeys;
+            retry.exactReceiverSignatureExpansionDepth=warmStart->exactReceiverSignatureExpansionDepth+1u;
+            retry.exactReceiverSignaturePriorAugmentations=augmentationCount;
+
+            // Release this frame graph/index buffers before rebuilding.
+            quotientNetwork=MinCostFlow(0u);
+            std::vector<ReceiverSignatureGroup>().swap(receiverGroups);
+            decltype(groupByNeighbors){}.swap(groupByNeighbors);
+            decltype(neighborsByChild){}.swap(neighborsByChild);
+            decltype(childToSignature){}.swap(childToSignature);
+            decltype(quotientArcs){}.swap(quotientArcs);
+            decltype(signaturesByParent){}.swap(signaturesByParent);
+            decltype(pending){}.swap(pending);
+            decltype(uniquePending){}.swap(uniquePending);
+            decltype(activeChildrenByParent){}.swap(activeChildrenByParent);
+            decltype(reachableChildren){}.swap(reachableChildren);
+            decltype(references){}.swap(references);
+            decltype(flows){}.swap(flows);
+            decltype(warmByParent){}.swap(warmByParent);
+            decltype(warmByChild){}.swap(warmByChild);
+            decltype(warmExtraByChild){}.swap(warmExtraByChild);
+            decltype(normalizedWarmRows){}.swap(normalizedWarmRows);
+            decltype(childMinimum){}.swap(childMinimum);
+            decltype(childMaximum){}.swap(childMaximum);
+            decltype(parentGroup){}.swap(parentGroup);
+            decltype(regionPreference){}.swap(regionPreference);
+            decltype(childAdmissibleRegions){}.swap(childAdmissibleRegions);
+            decltype(childrenByRegionBucket){}.swap(childrenByRegionBucket);
+            decltype(parentsByRegionBucket){}.swap(parentsByRegionBucket);
+            decltype(parentGrid){}.swap(parentGrid);
+            decltype(childGrid){}.swap(childGrid);
+            return assembleSharedRealChildCapacity(in,support,out,error,telemetry,&retry);
+        };
+
+        if(!runQuotientFlow())return false;
+        bool minimumsSatisfied=true;
+        for(std::size_t g=0;g<receiverGroups.size();++g)
+            if(quotientNetwork.hasResidualCapacity(quotientReceiverBase+static_cast<std::uint32_t>(g),
+                                                   quotientMinimumArcs[g])){minimumsSatisfied=false;break;}
+        if(!minimumsSatisfied)return expandReceiverSignatureAcrossCut(true);
+
+        for(std::size_t g=0;g<receiverGroups.size();++g){
+            const auto from=quotientReceiverBase+static_cast<std::uint32_t>(g);
+            const double remainder=receiverGroups[g].maximum-receiverGroups[g].minimum;
+            if(remainder<0.0)return fail("receiver-signature warm-start extra capacity exceeds the unchanged group upper bound");
+            if(remainder>0.0)quotientNetwork.addEdge(from,quotientSink,remainder,0.0);
+        }
+        const double remainingGlobalExtra=residualCapacity;
+        if(remainingGlobalExtra<0.0)return fail("receiver-signature warm-start extra flow exceeds unchanged global density capacity");
+        if(remainingGlobalExtra>0.0)quotientNetwork.addEdge(quotientSink,quotientSuperSink,remainingGlobalExtra,0.0);
+        phase=2u;
+        if(!runQuotientFlow())return false;
+        const double quotientSourceUnsent=std::max(0.0,supply-quotientNetwork.sentFromSource(quotientSource));
+        double quotientSourceClosureTolerance=std::numeric_limits<double>::infinity();
+        for(std::size_t p=0;p<np;++p)
+            quotientSourceClosureTolerance=std::min(quotientSourceClosureTolerance,
+                std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*in.parentMassKg[p]));
+        // The residual network may retain a signed low-part capacity correction
+        // after the compensated sent-flow sum already closes within the same
+        // source tolerance used by the ordinary allocator. Do not call cut
+        // expansion (and report an empty cut as infeasible) for that residue.
+        if(quotientNetwork.hasResidualSourceCapacity(quotientSource)&&
+           quotientSourceUnsent>quotientSourceClosureTolerance)
+            return expandReceiverSignatureAcrossCut(false);
+        if(augmentationCount>in.maximumAugmentations)
+            return fail("INCONCLUSIVE receiver-signature quotient exceeded the pinned augmentation budget");
+
+        std::vector<double> remainingChild(nc,0.0),groupFlowBySignature(receiverGroups.size(),0.0);
+        for(const auto& arc:quotientArcs)
+            groupFlowBySignature[arc.signature]+=quotientNetwork.reverseFlow(
+                EdgeRef{arc.parent,arc.signature,arc.from,arc.arc,0.0});
+        for(std::size_t g=0;g<receiverGroups.size();++g){
+            auto& group=receiverGroups[g];
+            const double groupFlow=groupFlowBySignature[g];
+            long double groupMinimum=0.0L;
+            for(const auto c:group.children)groupMinimum+=childMinimum[c];
+            long double extra=static_cast<long double>(groupFlow)-groupMinimum;
+            if(!std::isfinite(groupFlow)||extra< -std::max(in.absoluteMassToleranceKg,
+                    in.relativeClosureTolerance*group.minimum))
+                return fail("receiver-signature solved group flow is below its summed lower density capacity");
+            extra=std::max(0.0L,extra);
+            long double assigned=0.0L;
+            for(std::size_t k=0;k<group.children.size();++k){
+                const auto c=group.children[k];
+                if(k+1u==group.children.size()){
+                    remainingChild[c]=groupFlow-static_cast<double>(assigned);
+                }else{
+                    const long double add=std::min(extra,static_cast<long double>(childMaximum[c]-childMinimum[c]));
+                    remainingChild[c]=childMinimum[c]+static_cast<double>(add);
+                    extra-=add;assigned+=remainingChild[c];
+                }
+            }
+            const auto last=group.children.back();
+            const double boundTol=std::max(in.absoluteMassToleranceKg,
+                in.relativeClosureTolerance*std::max(childMaximum[last],remainingChild[last]));
+            if(remainingChild[last]<childMinimum[last]-boundTol||remainingChild[last]>childMaximum[last]+boundTol)
+                return fail("receiver-signature deterministic child-bound disaggregation failed its last-member interval");
+        }
+        for(const auto& arc:quotientArcs){
+            const double mass=quotientNetwork.reverseFlow(EdgeRef{arc.parent,arc.signature,arc.from,arc.arc,0.0});
+            if(mass<=0.0)continue;
+            double remaining=mass;
+            for(const auto c:receiverGroups[arc.signature].children){
+                if(remaining<=0.0)break;
+                const double take=std::min(remaining,remainingChild[c]);
+                if(take<=0.0)continue;
+                const double parentDensity=in.parentMassKg[arc.parent]/in.parentReferenceVolumeM3[arc.parent];
+                const double d=distance(in.parentCentroidsWorld[arc.parent],in.childCentroidsWorld[c]);
+                const double measure=take/parentDensity;
+                if(!std::isfinite(take)||!std::isfinite(d)||d>in.maximumTransportDistanceM||
+                   !std::isfinite(measure)||measure<=0.0)
+                    return fail("receiver-signature disaggregation emitted an invalid original parent-child flow");
+                flows.push_back({arc.parent,c,take,measure,d});
+                remainingChild[c]-=take;remaining-=take;
+            }
+            const double rowTol=std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*mass);
+            if(remaining>rowTol)
+                return fail("receiver-signature deterministic source-flow disaggregation left an unassigned parent row");
+        }
+        for(std::size_t c=0;c<nc;++c){
+            const double tol=std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*childMaximum[c]);
+            if(remainingChild[c]>tol||remainingChild[c]<-tol)
+                return fail("receiver-signature deterministic source-flow disaggregation left an unmet or overfilled child bound");
+        }
+        std::sort(flows.begin(),flows.end(),[](const auto& a,const auto& b){
+            return a.child!=b.child?a.child<b.child:a.parent<b.parent;
+        });
+    }else{
+        MinCostFlow network(static_cast<std::size_t>(superSink)+1u);
+        std::vector<std::uint32_t> sourceArcs(np);
+        for(std::size_t p=0;p<np;++p)
+            sourceArcs[p]=network.addEdge(superSource,parentBase+static_cast<std::uint32_t>(p),in.parentMassKg[p],0.0);
+        std::vector<std::uint32_t> minimumArcs(nc);
+        for(std::size_t c=0;c<nc;++c)
+            minimumArcs[c]=network.addEdge(childBase+static_cast<std::uint32_t>(c),superSink,
+                                          childMinimum[c],0.0);
+    for(std::size_t p=0;p<np;++p)if(warmByParent[p]>0.0){
+        std::string seedError;
+        if(!network.seedExistingFlow(superSource,sourceArcs[p],warmByParent[p],seedError))
+            return fail("shared-capacity warm-start source seeding failed: "+seedError);
+    }
+    for(const auto& edge:pending){
+        const auto from=parentBase+edge.parent;
+        const auto arc=network.addEdge(from,childBase+edge.child,in.parentMassKg[edge.parent],edge.cost);
+        references.push_back({edge.parent,edge.child,from,arc,edge.distance});
+        if(edge.initialFlowKg>0.0){
+            std::string seedError;
+            if(!network.seedExistingFlow(from,arc,edge.initialFlowKg,seedError))
+                return fail("shared-capacity warm-start source-child seeding failed: "+seedError);
+        }
+        activeChildrenByParent[edge.parent].push_back(edge.child);
+        reachableChildren[parentGroup[edge.parent]].push_back(edge.child);
+    }
+    for(std::size_t c=0;c<nc;++c){
+        const double floorFlow=std::min(warmByChild[c],childMinimum[c]);
+        if(floorFlow>0.0){
+            std::string seedError;
+            if(!network.seedExistingFlow(childBase+static_cast<std::uint32_t>(c),minimumArcs[c],floorFlow,seedError))
+                return fail("shared-capacity warm-start child-floor seeding failed: "+seedError);
+        }
+    }
+    if(warmStart && warmExtraTotal>0.0){
+        for(std::size_t c=0;c<nc;++c)if(warmExtraByChild[c]>0.0){
+            const auto arc=network.addEdge(childBase+static_cast<std::uint32_t>(c),sink,
+                                           warmExtraByChild[c],0.0);
+            std::string seedError;
+            if(!network.seedExistingFlow(childBase+static_cast<std::uint32_t>(c),arc,
+                                         warmExtraByChild[c],seedError))
+                return fail("shared-capacity warm-start child-extra seeding failed: "+seedError);
+        }
+        const auto arc=network.addEdge(sink,superSink,warmExtraTotal,0.0);
+        std::string seedError;
+        if(!network.seedExistingFlow(sink,arc,warmExtraTotal,seedError))
+            return fail("shared-capacity warm-start aggregate-extra seeding failed: "+seedError);
+    }
+    for(auto& row:activeChildrenByParent){
+        std::sort(row.begin(),row.end());
+        row.erase(std::unique(row.begin(),row.end()),row.end());
+    }
+
+
+    std::uint32_t currentPhase=1u;
+    std::string flowError;
+    bool feasibleFlowDeadlineStarted=false;
+    const auto augmentToMaximum=[&](){
+        if(!feasibleFlowDeadlineStarted){
+            feasibleFlowDeadlineStarted=true;
+            const auto flowStart=std::chrono::steady_clock::now();
+            if(feasibleFlowBudget.count()>0.0)
+                deadline=flowStart+std::chrono::duration_cast<std::chrono::steady_clock::duration>(feasibleFlowBudget);
+            if(telemetry){
+                telemetry->deadline=deadline;
+                telemetry->graphConstructionSeconds=std::chrono::duration<double>(flowStart-assemblyStartedAt).count();
+            }
+        }
+        const auto flowCallStartedAt=std::chrono::steady_clock::now();
+        std::size_t roundAugmentations=0u;double sent=0.0;
+        if (telemetry) ++telemetry->feasibleFlowCalls;
+        const bool flowSolved=useHighestLabelPushRelabel
+            ? network.runFeasibleHighestLabel(superSource,superSink,
+                in.maximumAugmentations-augmentationCount,roundAugmentations,sent,flowError,
+                telemetry?&telemetry->feasibleFlow:nullptr,deadline)
+            : network.runFeasible(superSource,superSink,
+                in.maximumAugmentations-augmentationCount,roundAugmentations,sent,flowError,
+                telemetry?&telemetry->feasibleFlow:nullptr,deadline);
+        if(!flowSolved) {
+            if (telemetry) {
+                telemetry->feasibleSolverSeconds+=std::chrono::duration<double>(std::chrono::steady_clock::now()-flowCallStartedAt).count();
+                if(warmStart&&warmStart->captureCandidateNeighborEdges&&!telemetry->candidateNeighborEdgeKeysCaptured){
+                    telemetry->candidateNeighborEdgeKeys.reserve(pending.size());
+                    for(const auto& candidate:pending)
+                        telemetry->candidateNeighborEdgeKeys.push_back(
+                            (static_cast<std::uint64_t>(candidate.child)<<32u)|candidate.parent);
+                    std::sort(telemetry->candidateNeighborEdgeKeys.begin(),telemetry->candidateNeighborEdgeKeys.end());
+                    telemetry->candidateNeighborEdgeKeysCaptured=true;
+                }
+                telemetry->deadlineReached=flowError.find("deadline reached")!=std::string::npos;
+                telemetry->partialPhase=currentPhase;
+                telemetry->partialFlowCaptured=true;
+                telemetry->partialSourceSentKg=network.sentFromSource(superSource);
+                for (const auto& ref:references) {
+                    const double mass=network.reverseFlow(ref);
+                    if (!std::isfinite(mass)||mass<=0.0) continue;
+                    const double density=in.parentMassKg[ref.parent]/in.parentReferenceVolumeM3[ref.parent];
+                    if (!std::isfinite(density)||density<=0.0) continue;
+                    telemetry->partialExpandedParentRows.push_back(ref.parent);
+                    telemetry->partialChildRows.push_back(ref.child);
+                    telemetry->partialMassKg.push_back(mass);
+                    telemetry->partialMeasureM3.push_back(mass/density);
+                    telemetry->partialDistanceM.push_back(ref.distanceM);
+                }
+                const auto reached=network.residualReachable(superSource,true);
+                for (std::size_t p=0;p<np;++p) if(reached[parentBase+p])
+                    telemetry->residualReachableExpandedParentRows.push_back(static_cast<std::uint32_t>(p));
+                for (std::size_t c=0;c<nc;++c) if(reached[childBase+c])
+                    telemetry->residualReachableChildRows.push_back(static_cast<std::uint32_t>(c));
+            }
+            return fail("shared-capacity sparse feasible-flow failed: "+flowError);
+        }
+        if(telemetry)
+            telemetry->feasibleSolverSeconds+=std::chrono::duration<double>(std::chrono::steady_clock::now()-flowCallStartedAt).count();
+        augmentationCount+=roundAugmentations;
+        return true;
+    };
+    const auto allMinimumsSatisfied=[&](){
+        for(std::size_t c=0;c<nc;++c)
+            if(network.hasResidualCapacity(childBase+static_cast<std::uint32_t>(c),minimumArcs[c]))
+                return false;
+        return true;
+    };
+    const auto expandAcrossResidualCut=[&](const bool minimumPhase){
+        if (telemetry) {
+            ++telemetry->residualCutExpansionCalls;
+            ++telemetry->feasibleFlow.cutExpansionCalls;
+            if (minimumPhase) ++telemetry->minimumDensityExpansionCalls;
+            else ++telemetry->maximumDensityExpansionCalls;
+        }
+        const auto reached=network.residualReachable(superSource,true);
+        std::vector<PendingEdge> additions;
+        additions.reserve(std::min(np,cutExpansionBatch));
+        for(std::size_t p=0;p<np;++p){
+            if(!reached[parentBase+p])continue;
+            const auto material=in.parentMaterialIndices[p];
+            const auto region=in.parentAnatomicalRegionIndices[p];
+            const auto base=parentGrid[p];
+            Candidate best{invalid,std::numeric_limits<double>::infinity()};
+            for(int dx=-1;dx<=1;++dx)for(int dy=-1;dy<=1;++dy)for(int dz=-1;dz<=1;++dz){
+                const GridKey key{base.x+dx,base.y+dy,base.z+dz};
+                const auto found=childrenByRegionBucket.find({material,region,key});
+                if(found==childrenByRegionBucket.end())continue;
+                for(const auto c:found->second){
+                    if(reached[childBase+c]||
+                       std::binary_search(activeChildrenByParent[p].begin(),
+                                          activeChildrenByParent[p].end(),c))continue;
+                    const double d=distance(in.parentCentroidsWorld[p],in.childCentroidsWorld[c]);
+                    if(d>in.maximumTransportDistanceM||d*d>radiusSquared*(1.0+1.0e-14))continue;
+                    Candidate candidate{c,d};
+                    if(best.child==invalid||candidateLess(candidate,best))best=candidate;
+                }
+            }
+            if(best.child==invalid)continue;
+            const auto pref=regionPreference[best.child].find(region);
+            const double preference=pref==regionPreference[best.child].end()?1.0e-12:pref->second;
+            const double penalty=semanticPreferenceWeight*(-std::log(preference));
+            const double cost=(best.distanceM*best.distanceM)/radiusSquared+penalty;
+            if(!std::isfinite(cost)||cost<0.0)return fail("shared-capacity cut expansion preference is invalid");
+            additions.push_back({static_cast<std::uint32_t>(p),best.child,best.distanceM,cost});
+        }
+        if(additions.empty()){
+            std::size_t cutParents=0u,cutChildren=0u;
+            for(std::size_t p=0;p<np;++p)if(reached[parentBase+p])++cutParents;
+            for(std::size_t c=0;c<nc;++c)if(reached[childBase+c])++cutChildren;
+            std::ostringstream witness;
+            witness<<(minimumPhase?
+                "INFEASIBLE full admissible shared-capacity graph cannot satisfy every child minimum density":
+                "INFEASIBLE full admissible shared-capacity graph cannot transfer all source mass within child maximum densities")
+                <<" sent_kg="<<std::setprecision(17)<<network.sentFromSource(superSource)
+                <<" supply_kg="<<supply<<" density_min_kg="<<minimum<<" density_max_kg="<<maximum
+                <<" cut_parent_rows="<<cutParents<<" cut_child_rows="<<cutChildren;
+            for(std::size_t p=0;p<np;++p)if(reached[parentBase+p]){
+                witness<<" first_parent="<<p<<" material="<<in.parentMaterialIndices[p]
+                    <<" donor="<<in.parentDonorBodyIndices[p]
+                    <<" region="<<in.parentAnatomicalRegionIndices[p];break;
+            }
+            return fail(witness.str());
+        }
+        const std::size_t remainingEdges=in.maximumAllowedEdges-
+            std::min(in.maximumAllowedEdges,pending.size());
+        if(remainingEdges==0u){
+            std::ostringstream witness;
+            witness<<"INCONCLUSIVE shared-capacity sparse edge budget prevents min-cut expansion"
+                <<" sent_kg="<<std::setprecision(17)<<network.sentFromSource(superSource)
+                <<" supply_kg="<<supply<<" candidate_edges="<<pending.size()
+                <<" cut_edges_found="<<additions.size();
+            return fail(witness.str());
+        }
+        std::sort(additions.begin(),additions.end(),[](const auto& a,const auto& b){
+            if(a.cost!=b.cost)return a.cost<b.cost;
+            if(a.parent!=b.parent)return a.parent<b.parent;
+            return a.child<b.child;
+        });
+        const std::size_t addCount=std::min({additions.size(),remainingEdges,cutExpansionBatch});
+        additions.resize(addCount);
+        if (telemetry) {
+            telemetry->residualCutEdgesAdded+=addCount;
+            telemetry->feasibleFlow.cutExpansionEdgesAdded+=addCount;
+        }
+        for(const auto& edge:additions){
+            const auto from=parentBase+edge.parent;
+            const auto arc=network.addEdge(from,childBase+edge.child,
+                                           in.parentMassKg[edge.parent],edge.cost);
+            references.push_back({edge.parent,edge.child,from,arc,edge.distance});
+            pending.push_back(edge);
+            auto& active=activeChildrenByParent[edge.parent];
+            active.insert(std::lower_bound(active.begin(),active.end(),edge.child),edge.child);
+            reachableChildren[parentGroup[edge.parent]].push_back(edge.child);
+        }
+        return augmentToMaximum();
+    };
+    currentPhase=1u;
+    if(!augmentToMaximum())return false;
+    while(!allMinimumsSatisfied())
+        if(!expandAcrossResidualCut(true))return false;
+
+    // Minimum density is pinned in every real child before extra capacity is
+    // exposed. This prevents source mass from bypassing tiny child floors.
+    for(std::size_t c=0;c<nc;++c){
+        const double represented=warmStart?warmExtraByChild[c]:0.0;
+        const double remainder=childMaximum[c]-childMinimum[c]-represented;
+        if(remainder<0.0)return fail("shared-capacity warm-start child extra capacity exceeds unchanged upper bound");
+        if(remainder>0.0)network.addEdge(childBase+static_cast<std::uint32_t>(c),sink,remainder,0.0);
+    }
+    const double representedExtra=warmStart?warmExtraTotal:0.0;
+    const double remainingGlobalExtra=residualCapacity-representedExtra;
+    if(remainingGlobalExtra<0.0)return fail("shared-capacity warm-start aggregate extra capacity exceeds unchanged global bound");
+    if(remainingGlobalExtra>0.0)network.addEdge(sink,superSink,remainingGlobalExtra,0.0);
+    currentPhase=2u;
+    if(!augmentToMaximum())return false;
+    double sourceClosureTolerance=std::numeric_limits<double>::infinity();
+    for(std::size_t p=0;p<np;++p)
+        sourceClosureTolerance=std::min(sourceClosureTolerance,
+            std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*in.parentMassKg[p]));
+    for(;;){
+        const double unsent=std::max(0.0,supply-network.sentFromSource(superSource));
+        if(!network.hasResidualSourceCapacity(superSource)||unsent<=sourceClosureTolerance)break;
+        if(!expandAcrossResidualCut(false))return false;
+    }
+    if(augmentationCount==0u||augmentationCount>in.maximumAugmentations)
+        return fail("shared-capacity sparse feasible-flow augmentation count is outside its pinned budget");
+
+    if(augmentationCount==0u||augmentationCount>in.maximumAugmentations)
+        return fail("shared-capacity sparse flow augmentation count is outside its pinned budget");
+
+    flows.reserve(references.size());
+    for(const auto& ref:references){
+        const double mass=network.reverseFlow(ref);
+        if(mass<=0.0)continue;
+        const auto p=ref.parent,c=ref.child;
+        const double parentDensity=in.parentMassKg[p]/in.parentReferenceVolumeM3[p];
+        const double measure=mass/parentDensity;
+        if(!std::isfinite(mass)||mass<=0.0||!std::isfinite(measure)||measure<=0.0||
+           ref.distanceM>in.maximumTransportDistanceM)
+            return fail("shared-capacity min-cost flow produced invalid mass, measure or transport distance");
+        flows.push_back({p,c,mass,measure,ref.distanceM});
+    }
+    std::sort(flows.begin(),flows.end(),[](const auto& a,const auto& b){
+        return a.child!=b.child?a.child<b.child:a.parent<b.parent;
+    });
+
+    }
+    for(std::size_t i=1;i<flows.size();++i)
+        if(flows[i-1u].child==flows[i].child&&flows[i-1u].parent==flows[i].parent)
+            return fail("shared-capacity graph produced a duplicate parent/child edge");
+
+    ConservativeSpatialMassTransportResult next;
+    next.allocationSolver=useReceiverSignatureQuotient?
+        solverName+"_exact_receiver_signature_quotient":solverName;
+    next.method=UnpairedVolumeMassTransferKind::conservativeSpatialMassTransport;
+    next.parentMassPacketSHA256=std::string(in.parentMassPacketSHA256);
+    next.parentSourceContributionSHA256=std::string(in.parentSourceContributionSHA256);
+    next.childMeshSHA256=std::string(in.childMeshSHA256);
+    next.regionLabelSHA256=std::string(in.regionLabelSHA256);
+    next.coordinateFrameSHA256=std::string(in.coordinateFrameSHA256);
+    next.maximumTransportDistanceM=in.maximumTransportDistanceM;
+    next.relativeClosureTolerance=in.relativeClosureTolerance;
+    next.absoluteMassToleranceKg=in.absoluteMassToleranceKg;
+    next.absoluteMeasureToleranceM3=in.absoluteMeasureToleranceM3;
+    next.maximumAllowedEdges=in.maximumAllowedEdges;
+    next.maximumAugmentations=in.maximumAugmentations;
+    next.augmentationCount=augmentationCount;
+    next.semanticCandidateEdgeCount=pending.size();
+    next.usesFractionalSemanticSupport=true;
+    next.semanticSupportSHA256=supportDigest(support);
+    hashInputArrays(in,next.parentDataSHA256,next.childDataSHA256,next.materialBoundsSHA256);
+    next.childDataSHA256=bindSupportToChildHash(next.childDataSHA256,next.semanticSupportSHA256);
+    next.parentMassTransferredKg.assign(np,0.0);
+    next.parentMeasureTransferredM3.assign(np,0.0);
+    next.childMassKg.assign(nc,0.0);
+    next.childAncestryMeasureVolumeM3.assign(nc,0.0);
+    next.childImpliedDensityKgM3.assign(nc,0.0);
+    next.childDominantParentRows.assign(nc,invalid);
+    next.childSourceDonorOffsets.assign(nc+1u,0u);
+    next.childSemanticGroupOffsets.assign(nc+1u,0u);
+    std::vector<std::map<std::uint32_t,double>> sourceMassByChild(nc);
+    std::vector<std::map<std::uint32_t,double>> semanticMassByChild(nc);
+    std::vector<double> groupParentMass(support.groupMaterialIndices.size(),0.0);
+    std::vector<double> groupChildMass(support.groupMaterialIndices.size(),0.0);
+    std::vector<double> groupReachableCapacity(support.groupMaterialIndices.size(),0.0);
+    std::map<std::pair<std::uint32_t,std::uint32_t>,double> parentSourceByDonor,childSourceByDonor;
+    for(std::size_t p=0;p<np;++p){
+        const auto g=parentGroup[p];
+        groupParentMass[g]+=in.parentMassKg[p];
+        const auto material=in.parentMaterialIndices[p];
+        for(std::uint32_t r=in.parentSourceDonorOffsets[p];r<in.parentSourceDonorOffsets[p+1u];++r)
+            parentSourceByDonor[{material,in.parentSourceDonorBodyIndices[r]}]+=
+                in.parentSourceDonorMassKg[r];
+    }
+    for(std::size_t g=0;g<reachableChildren.size();++g){
+        auto& children=reachableChildren[g];
+        std::sort(children.begin(),children.end());
+        children.erase(std::unique(children.begin(),children.end()),children.end());
+        for(const auto c:children)groupReachableCapacity[g]+=childMaximum[c];
+    }
+    for(std::size_t p=0;p<np;++p){
+        // groupChildMass is populated below from the canonical flow order.
+        (void)p;
+    }
+    for(const auto& flow:flows){
+        const auto p=flow.parent,c=flow.child,g=parentGroup[p];
+        const double parentFraction=flow.mass/in.parentMassKg[p];
+        next.parentMassTransferredKg[p]+=flow.mass;
+        next.parentMeasureTransferredM3[p]+=flow.measure;
+        next.childMassKg[c]+=flow.mass;
+        next.childAncestryMeasureVolumeM3[c]+=flow.measure;
+        groupChildMass[g]+=flow.mass;
+        semanticMassByChild[c][g]+=flow.mass;
+        for(std::uint32_t r=in.parentSourceDonorOffsets[p];r<in.parentSourceDonorOffsets[p+1u];++r){
+            const auto donor=in.parentSourceDonorBodyIndices[r];
+            const double sourceMass=in.parentSourceDonorMassKg[r]*parentFraction;
+            sourceMassByChild[c][donor]+=sourceMass;
+            childSourceByDonor[{in.parentMaterialIndices[p],donor}]+=sourceMass;
+        }
+        next.maximumTransportDistanceUsedM=std::max(next.maximumTransportDistanceUsedM,flow.distance);
+    }
+    next.childParentOffsets.assign(nc+1u,0u);
+    next.childParentRows.reserve(flows.size());
+    next.childParentTransportMassKg.reserve(flows.size());
+    next.childParentTransportMeasureM3.reserve(flows.size());
+    next.childParentTransportDistanceM.reserve(flows.size());
+    next.childParentVolumeFractions.reserve(flows.size());
+    std::vector<std::uint32_t> flowCountByChild(nc,0u);
+    for(const auto& flow:flows)++flowCountByChild[flow.child];
+    long double weightedDistance=0.0L,totalMass=0.0L;
+    std::size_t at=0u;
+    for(std::size_t c=0;c<nc;++c){
+        if(flowCountByChild[c]==0u||next.childMassKg[c]<=0.0||
+           next.childAncestryMeasureVolumeM3[c]<=0.0)
+            return fail("shared-capacity flow left a real child without positive mass");
+        next.childParentOffsets[c]=static_cast<std::uint32_t>(next.childParentRows.size());
+        double measureSum=0.0,bestMeasure=-1.0;std::uint32_t dominant=invalid;
+        while(at<flows.size()&&flows[at].child==c){
+            const auto& flow=flows[at++];
+            next.childParentRows.push_back(flow.parent);
+            next.childParentTransportMassKg.push_back(flow.mass);
+            next.childParentTransportMeasureM3.push_back(flow.measure);
+            next.childParentTransportDistanceM.push_back(flow.distance);
+            const double fraction=flow.measure/next.childAncestryMeasureVolumeM3[c];
+            if(!std::isfinite(fraction)||fraction<=0.0)
+                return fail("shared-capacity child parent-measure fraction is invalid");
+            next.childParentVolumeFractions.push_back(fraction);
+            measureSum+=flow.measure;
+            if(flow.measure>bestMeasure||(flow.measure==bestMeasure&&flow.parent<dominant)){
+                bestMeasure=flow.measure;dominant=flow.parent;
+            }
+            weightedDistance+=static_cast<long double>(flow.mass)*flow.distance;
+            totalMass+=flow.mass;
+        }
+        next.childParentOffsets[c+1u]=static_cast<std::uint32_t>(next.childParentRows.size());
+        next.childDominantParentRows[c]=dominant;
+        if(std::abs(measureSum/next.childAncestryMeasureVolumeM3[c]-1.0)>5.0e-13)
+            return fail("shared-capacity child parent measures do not close");
+        const auto material=in.childMaterialIndices[c];
+        const double density=next.childMassKg[c]/in.childReferenceVolumeM3[c];
+        const double tol=densityBoundRoundoff(in.materialDensityLowerKgM3[material],
+                                               in.materialDensityUpperKgM3[material],density);
+        if(!std::isfinite(density)||density<in.materialDensityLowerKgM3[material]-tol||
+           density>in.materialDensityUpperKgM3[material]+tol){
+            std::ostringstream witness;
+            witness<<"shared-capacity real child density is outside its material bounds"
+                <<" child_row="<<c<<" material="<<material
+                <<" mass_kg="<<std::setprecision(17)<<next.childMassKg[c]
+                <<" volume_m3="<<in.childReferenceVolumeM3[c]
+                <<" density_kg_m3="<<density
+                <<" lower="<<in.materialDensityLowerKgM3[material]
+                <<" upper="<<in.materialDensityUpperKgM3[material];
+            return fail(witness.str());
+        }
+        next.childImpliedDensityKgM3[c]=density;
+        next.minimumChildImpliedDensityKgM3=
+            c==0u?density:std::min(next.minimumChildImpliedDensityKgM3,density);
+        next.maximumChildImpliedDensityKgM3=std::max(next.maximumChildImpliedDensityKgM3,density);
+        next.childSourceDonorOffsets[c]=static_cast<std::uint32_t>(next.childSourceDonorBodyIndices.size());
+        double sourceTotal=0.0;
+        for(const auto& [donor,mass]:sourceMassByChild[c]){
+            if(donor==invalid||!std::isfinite(mass)||mass<=0.0)
+                return fail("shared-capacity child source-donor contribution is invalid");
+            next.childSourceDonorBodyIndices.push_back(donor);
+            next.childSourceDonorMassKg.push_back(mass);
+            sourceTotal+=mass;
+        }
+        next.childSourceDonorOffsets[c+1u]=
+            static_cast<std::uint32_t>(next.childSourceDonorBodyIndices.size());
+        if(std::abs(sourceTotal-next.childMassKg[c])>
+           std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*next.childMassKg[c]))
+            return fail("shared-capacity child source-donor mass does not close");
+
+        next.childSemanticGroupOffsets[c]=
+            static_cast<std::uint32_t>(next.childSemanticGroupIndices.size());
+        double semanticSum=0.0;
+        for(const auto& [g,mass]:semanticMassByChild[c]){
+            const double fraction=mass/next.childMassKg[c];
+            if(g>=support.groupMaterialIndices.size()||!std::isfinite(fraction)||fraction<=0.0)
+                return fail("shared-capacity realized semantic group fraction is invalid");
+            next.childSemanticGroupIndices.push_back(g);
+            next.childSemanticVolumeFractions.push_back(fraction);
+            semanticSum+=fraction;
+        }
+        next.childSemanticGroupOffsets[c+1u]=
+            static_cast<std::uint32_t>(next.childSemanticGroupIndices.size());
+        if(std::abs(semanticSum-1.0)>1.0e-12)
+            return fail("shared-capacity realized semantic fractions do not sum to one");
+    }
+    next.childParentOffsets[nc]=static_cast<std::uint32_t>(next.childParentRows.size());
+    next.childSourceDonorOffsets[nc]=
+        static_cast<std::uint32_t>(next.childSourceDonorBodyIndices.size());
+    next.transportEdgeCount=flows.size();
+    next.massWeightedMeanTransportDistanceM=totalMass>0.0L?
+        static_cast<double>(weightedDistance/totalMass):0.0;
+    for(std::size_t p=0;p<np;++p){
+        const double massError=std::abs(next.parentMassTransferredKg[p]-in.parentMassKg[p]);
+        const double measureError=std::abs(next.parentMeasureTransferredM3[p]-in.parentReferenceVolumeM3[p]);
+        next.maximumParentMassClosureErrorKg=std::max(next.maximumParentMassClosureErrorKg,massError);
+        next.maximumParentMeasureClosureErrorM3=std::max(next.maximumParentMeasureClosureErrorM3,measureError);
+        if(massError>std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*in.parentMassKg[p])||
+           measureError>std::max(in.absoluteMeasureToleranceM3,
+                                 in.relativeClosureTolerance*in.parentReferenceVolumeM3[p]))
+            return fail("shared-capacity parent mass or source measure does not close");
+    }
+    for(std::size_t g=0;g<groupParentMass.size();++g){
+        if(std::abs(groupParentMass[g]-groupChildMass[g])>
+           std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*groupParentMass[g]))
+            return fail("shared-capacity semantic source group mass does not close");
+        next.groupClosure.push_back({
+            .materialIndex=support.groupMaterialIndices[g],
+            .donorBodyIndex=support.donorBodyIndices[g],
+            .anatomicalRegionIndex=support.anatomicalRegionIndices[g],
+            .parentMassKg=groupParentMass[g],
+            .childMassKg=groupChildMass[g],
+            .childMinimumCapacityKg=0.0,
+            .childMaximumCapacityKg=groupReachableCapacity[g]});
+    }
+    std::set<std::pair<std::uint32_t,std::uint32_t>> sourceKeys;
+    for(const auto& [key,mass]:parentSourceByDonor){(void)mass;sourceKeys.insert(key);}
+    for(const auto& [key,mass]:childSourceByDonor){(void)mass;sourceKeys.insert(key);}
+    for(const auto& key:sourceKeys){
+        const double parentMass=parentSourceByDonor[key],childMass=childSourceByDonor[key];
+        const double closure=std::abs(parentMass-childMass);
+        next.maximumSourceDonorMassClosureErrorKg=
+            std::max(next.maximumSourceDonorMassClosureErrorKg,closure);
+        if(closure>std::max(in.absoluteMassToleranceKg,in.relativeClosureTolerance*parentMass))
+            return fail("shared-capacity source donor contribution mass does not close");
+        next.sourceDonorClosure.push_back({.materialIndex=key.first,
+            .sourceDonorBodyIndex=key.second,.parentMassKg=parentMass,.childMassKg=childMass});
+    }
+    next.maximumChildFractionSumError=0.0;
+    next.receiptSHA256=sharedCapacityReceipt(in,next,next.semanticSupportSHA256);
+    out=std::move(next);
+    if(telemetry){
+        telemetry->partialFlowCaptured=false;
+        telemetry->partialExpandedParentRows.clear();telemetry->partialChildRows.clear();
+        telemetry->partialMassKg.clear();telemetry->partialMeasureM3.clear();telemetry->partialDistanceM.clear();
+        telemetry->partialSourceSentKg=0.0;telemetry->partialPhase=0u;
+    }
+    error.clear();return true;
+}
+
+
+} // namespace fractional_semantic_transport_detail
+
+[[nodiscard]] inline bool assembleConservativeSpatialMassTransportWithSemanticSupport(
+        const ConservativeSpatialMassTransportInput& realInput,
+        const ConservativeSpatialChildSemanticSupport& support,
+        ConservativeSpatialMassTransportResult& out,
+        std::string& error,
+        fractional_semantic_transport_detail::SharedCapacityFlowTelemetry* telemetry=nullptr,
+        const fractional_semantic_transport_detail::SharedCapacityWarmStart* warmStart=nullptr) {
+    return fractional_semantic_transport_detail::assembleSharedRealChildCapacity(
+        realInput,support,out,error,telemetry,warmStart);
+}
+
+[[nodiscard]] inline bool verifyRecordedConservativeSpatialMassTransportWithSemanticSupport(
+        const ConservativeSpatialMassTransportInput& realInput,
+        const ConservativeSpatialChildSemanticSupport& support,
+        const ConservativeSpatialMassTransportResult& supplied,
+        std::string& error) {
+    ConservativeSpatialMassTransportResult expected;
+    if(!fractional_semantic_transport_detail::assembleSharedRealChildCapacity(
+            realInput,support,expected,error))return false;
+    if(!fractional_semantic_transport_detail::sameResult(expected,supplied))
+        return (error="shared-capacity semantic receipt differs from deterministic current-input replay",false);
+    error.clear();return true;
+}
+
+[[nodiscard]] inline bool verifyRecordedConservativeSpatialMassTransportWithSemanticSupport(
+        const ConservativeSpatialMassTransportInput& realInput,
+        const ConservativeSpatialChildSemanticSupport& support,
+        const ConservativeSpatialMassTransportResult& supplied,
+        const fractional_semantic_transport_detail::SharedCapacityWarmStart& exactWarmStart,
+        std::string& error) {
+    ConservativeSpatialMassTransportResult expected;
+    if(!fractional_semantic_transport_detail::assembleSharedRealChildCapacity(
+            realInput,support,expected,error,nullptr,&exactWarmStart))return false;
+    if(!fractional_semantic_transport_detail::sameResult(expected,supplied))
+        return (error="shared-capacity receiver-signature receipt differs from exact graph-and-warm-flow replay",false);
+    error.clear();return true;
+}
+
+} // namespace metalrobo::human::coarse_tissue
+

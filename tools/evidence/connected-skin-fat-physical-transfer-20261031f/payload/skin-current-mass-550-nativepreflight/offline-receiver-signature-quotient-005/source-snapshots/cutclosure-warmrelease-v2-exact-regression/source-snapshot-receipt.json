@@ -1,0 +1,283 @@
+{
+  "build_artifacts": {
+    "build/carrier-check": {
+      "sha256": "b80472eac20f6c2f3fa3f1593250dda211e0e95e3ffacdc264e1e2a70fca6f0b",
+      "size_bytes": 342320
+    },
+    "build/semantic-check": {
+      "sha256": "0021836fb977f35eaf9f3fdfe32c427ae44dcdc6e6a88a2bd1a073239c889150",
+      "size_bytes": 427472
+    },
+    "build/skin-source-carrier-driver": {
+      "sha256": "a47f9fabc57d99832ca623e9a2079cb114e80905dd9ad341cb22492ccb57cdba",
+      "size_bytes": 466760
+    },
+    "build/wall-check": {
+      "sha256": "5cbb29f041c98aeee5a52904b289c2457cd5e79c732ff61dc7c10a65bb18403c",
+      "size_bytes": 263400
+    },
+    "legacy-control/build/legacy-warm-control": {
+      "sha256": "a3fcf0850387ffe1a39c4d671682a45c2d752418f56a9c7f9bd585defabad124",
+      "size_bytes": 195136
+    }
+  },
+  "code_changes": [
+    "cut closure skips only a target whose current receiver signature is reached",
+    "quotient warm extra above receiver floor is released before the floor phase",
+    "source residual cut expansion uses the minimum existing per-parent mass-closure tolerance, then existing per-parent/source-donor/child replay gates remain mandatory"
+  ],
+  "compiler": {
+    "driver_command": [
+      "/usr/bin/clang++",
+      "-std=c++23",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-Werror",
+      "-isysroot",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-DNUMI_HUMAN_FULL_REFERENCE_SKIN_CAPACITY=1",
+      "-I",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/source/apps",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/apps",
+      "-I",
+      "/Users/numi/Work/numi-human-connected-surface-069/publication-140/work/transfer",
+      "-I",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/canonical-attachment-native-integration-688/publication-source/apps",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/include",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+      "-I",
+      "/Users/numi/numi-human-resting-integration-20261005/numi-brain/Sources/NumiBrainABI/include",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/skin_source_carrier_driver.cpp",
+      "-o",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/build/skin-source-carrier-driver"
+    ],
+    "driver_compile_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "path": "/usr/bin/clang++",
+    "sdk": "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+    "semantic_command": [
+      "/usr/bin/clang++",
+      "-std=c++20",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-isysroot",
+      "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk",
+      "-I",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/source/apps",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/tests/ConservativeSpatialFractionalSemanticSupportCheck.cpp",
+      "-o",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression/build/semantic-check"
+    ],
+    "version": "Apple clang version 21.0.0 (clang-2100.3.34.2)"
+  },
+  "created_utc": "2026-10-31T15:51:23Z",
+  "legacy_control_files": [
+    {
+      "path": "legacy-control/source/apps/ConservativeSpatialFractionalSemanticSupport.hpp",
+      "sha256": "5ba00c3a4e0873c78d99862b762d915b81ea9d18d4267d57e93653a8baa04652",
+      "size_bytes": 103051
+    },
+    {
+      "path": "legacy-control/source/apps/NumiHumanConservativeSpatialMassTransport.hpp",
+      "sha256": "37d53f8d9a9149ef62432e3cf64f3c8c04391c4dfc83739afc0ec97b98ac0b6b",
+      "size_bytes": 145049
+    },
+    {
+      "path": "legacy-control/tests/LegacyWarmExtraLockControl.cpp",
+      "sha256": "81739fda4e7079a512be40fa3b6aa9c5bfad3f2e019ae5a75f4be3cb006e43ef",
+      "size_bytes": 3463
+    }
+  ],
+  "native_steps": 0,
+  "physical_admission": false,
+  "physical_mass_allocation_run": false,
+  "retained_source_variant_hashes": [
+    {
+      "name": "offline-deadline-001",
+      "sha256": "1052b22af7b52d23f67e418a333b1e5f3afeb1f0374aab59cb94fce49629e7fc"
+    },
+    {
+      "name": "offline-residual-warmstart-002",
+      "sha256": "5ba00c3a4e0873c78d99862b762d915b81ea9d18d4267d57e93653a8baa04652"
+    },
+    {
+      "name": "offline-residual-pushrelabel-003",
+      "sha256": "cb88b27e806942e8727b184e448480e230ff4819677cd99696aa6796171cc75c"
+    },
+    {
+      "name": "offline-receiver-signature-census-004",
+      "sha256": "483005ffd59db7dd7e73e07a983c989bce4d9b7bdc9191ca8f87c5f3fc1ae8e8"
+    },
+    {
+      "name": "v1-snapshot",
+      "sha256": "7dc68c40a30c636ce4b7df91302f60bb02dcd8beb7b01c50e47778bf1a76fb8c"
+    },
+    {
+      "name": "v2-snapshot",
+      "sha256": "6d85314fe316aa921d109c4a83c0d0b0ccc1f6e8a5c259a2990dc2caf65b9b6b"
+    }
+  ],
+  "run009_contradiction": {
+    "old_result": {
+      "flow_csv_sha256": "a49b1cdc15d9c097754e995ab45c1baadb406f18f37774add568dbf751454e63",
+      "frontier_csv_sha256": "e896773c979053d0529d45db59c1cf3e415cc6df093606fdd6a2c680ee0a584d",
+      "path": "run009-skin538-all-cut-crossings-60s/result.json.partial.receipt.json",
+      "physical_infeasibility_claim": false,
+      "receipt_sha256": "84664ecb0e980ce17e49f8507daaac4009709189ffd409ff27a72b7bf99bbfa4",
+      "status": "CONTRADICTED_CUT_CLOSURE_DIAGNOSTIC"
+    },
+    "old_source_header_sha256": "a36dd63c9a3cf612d3ff59ac4e41fa161b90f206fe846fc3df2c008266c20bc5",
+    "old_source_snapshot_available": false,
+    "result_retained_unmodified": true,
+    "review_conclusion": "cut expansion skipped omitted edges using an unrelated reached signature; run009 is not a valid infeasibility certificate"
+  },
+  "schema": "numi.human.offline-receiver-signature-quotient-source-snapshot.v2",
+  "source_files": [
+    {
+      "path": "source/apps/ConservativeSpatialFractionalSemanticSupport.hpp",
+      "sha256": "6d85314fe316aa921d109c4a83c0d0b0ccc1f6e8a5c259a2990dc2caf65b9b6b",
+      "size_bytes": 144140
+    },
+    {
+      "path": "source/apps/ConservativeSpatialSourceCarrierQuadrature.hpp",
+      "sha256": "57461492daa0f5813e59805637f446f5924f61a9c54f9aa05a5dc126245e9af9",
+      "size_bytes": 38275
+    },
+    {
+      "path": "source/apps/NumiHumanConservativeSpatialMassTransport.hpp",
+      "sha256": "5f1f25b079a681beb3b3e2bea3c48dde5bbf3c43ae7c90afd60478b015b057d3",
+      "size_bytes": 160125
+    },
+    {
+      "path": "source/apps/NumiHumanParentReferenceMassTransfer.hpp",
+      "sha256": "9a188f98b93ea480ffd6de7fbb522e2e3ca5ee6b6a262a2b26a6ed721eb7eee5",
+      "size_bytes": 37744
+    },
+    {
+      "path": "source/apps/NumiHumanPhysicalSkinChildMassMapping.hpp",
+      "sha256": "8df1774de61ac59ea1d5b73bdf035191ac5291a9ed4bb53cd4fbfdf8273b8537",
+      "size_bytes": 95242
+    },
+    {
+      "path": "source/apps/NumiHumanPhysicalSkinChildTetGen.hpp",
+      "sha256": "995c21a0a18b5d7d90eac72519f10a8dfe41deaed799587d3aed1b3e2949374c",
+      "size_bytes": 9527
+    },
+    {
+      "path": "source/apps/NumiHumanUnpairedSkinFatVolume.hpp",
+      "sha256": "c5b4197037d1d043c25fb81a20e4940d36479b9a6fd7fa58047e51ea75d1233c",
+      "size_bytes": 94304
+    },
+    {
+      "path": "tests/ConservativeSpatialDeadlineWallControl.cpp",
+      "sha256": "54503ac844c7c19cb00802acc9f13608f381340206d821f9b3f74b493d99a70f",
+      "size_bytes": 9297
+    },
+    {
+      "path": "tests/ConservativeSpatialFractionalSemanticSupportCheck.cpp",
+      "sha256": "3c47f52876718fd6fa7d5abc877772a3971d0fc99e6c8c22ca91c2e201bec7a7",
+      "size_bytes": 54812
+    },
+    {
+      "path": "tests/ConservativeSpatialSourceCarrierQuadratureCheck.cpp",
+      "sha256": "8013ebfc8b397df11cf8c570856d28fe7d18586fce64554fdfb1c790ce4fadb2",
+      "size_bytes": 23064
+    },
+    {
+      "path": "skin_source_carrier_driver.cpp",
+      "sha256": "2af0a1a9bcc15eda7f7a88e7fa6286b4ce23aa5a11f84a9b4e6487b567c08469",
+      "size_bytes": 62747
+    }
+  ],
+  "source_snapshot_directory": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/offline-receiver-signature-quotient-005/source-snapshots/cutclosure-warmrelease-v2-exact-regression",
+  "status": "PASS_SOURCE_ONLY_QUOTIENT_REGRESSIONS_AND_DRIVER_BUILD",
+  "tests": {
+    "carrier": {
+      "exit_code": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "PASS alternating carrier warm start: Dinic and highest-label push-relabel reallocated occupied edges through reverse residuals; source/child density/radius checks passed; bounded preflow rollback and stale-input rejection passed\\nbounded carrier partial PASS: source row, carrier sites, child rows, measures, and capacities accounted\nPASS source carrier quadrature: 1 parent, 4 carriers, 4 real cells; aggregate mass/density/measure and replay verified; legacy route unchanged; 7 tamper/eligibility controls rejected; explicit quadrature may also split a centroid-reachable source cell\n",
+      "stdout_sha256": "5c91b64158edf9a66e380033a205802fe5ac4e1a4a1489dcf84a9a2e2d8fc013"
+    },
+    "deadline_wall": {
+      "exit_code": 0,
+      "status": "INCONCLUSIVE_PARTIAL_FLOW_DIAGNOSTIC; exercised deadline control only",
+      "stderr_sha256": "a3a0e3e1aa5e3cd50564b80804fd66c875d25f63ed219b3d16d89b7ed0084439",
+      "stdout_sha256": "9e3cd6a09182750864b51f9886b9ced11b9dc94c07649650fbd6f8629f89a6d3"
+    },
+    "legacy_warm_lock": {
+      "expected_exit_code": 0,
+      "stderr_sha256": "565148f20cc6bae2983d057a1f282bd0caab694f61f3fab944eb14e55343f495",
+      "stdout": "legacy warm-extra policy rejected the feasible control as expected: INFEASIBLE full admissible shared-capacity graph cannot satisfy every child minimum density sent_kg=2.6000000000000001 supply_kg=3.1000000000000001 density_min_kg=2.5 density_max_kg=5 cut_parent_rows=1 cut_child_rows=1 first_parent=1 material=15 donor=1 region=10\n",
+      "stdout_sha256": "ecb35dd45c737eec359c9687f7f35c1b3571b0fabfb754e3611a6df844f9e0f9"
+    },
+    "semantic": {
+      "exit_code": 0,
+      "stderr_sha256": "19dd9e8b6f30f08358c1d7e19c591d445ac0349275fc06e8a04b561ff3895f76",
+      "stdout": "receiver-signature cut expansion PASS: incomplete exact subset -> one crossing edge -> complete original-row replay\ncurrent-signature cut closure regression PASS: reached {p,q}, unreached {q}, omitted legal p->B restored; full-graph feasibility matched\nwarm-extra floor-release regression PASS: q-to-A 1.5 released for q-to-B floor; full-graph feasibility matched\nexact receiver-signature quotient PASS: 3 receivers -> 2 signatures, 5 edges -> 3, warm reroute and original child/source replay\nDinic telemetry: calls=2 bfs_phases=4 bfs_edge_scans=35 path_searches=5 dfs_edge_scans=24 augmentations=3 max_path_edges=4\ndeadline controls PASS: no-deadline parity, partial budget capture, expired deadline capture\nheld-flow reuse PASS: parent rows, donor contributions, child capacities, and original density bounds close after residual solve\nshared real-child semantic capacity controls PASS\n",
+      "stdout_sha256": "d844ed168110267ddc16dad13363f82169b5679c07bf1ebcadbd5bdb155c210b"
+    }
+  },
+  "warm_extra_regression": {
+    "case": {
+      "actual_receiver_capacities_kg": {
+        "A": [
+          1.0,
+          2.0
+        ],
+        "B": [
+          1.0,
+          2.0
+        ],
+        "C": [
+          0.5,
+          1.0
+        ]
+      },
+      "material_15_density_band_kg_m3": [
+        500.0,
+        1000.0
+      ],
+      "note": "The shared per-material density-band API cannot express the original different upper ratios per receiver. This case preserves the requested source masses, signatures, floors, and warm amounts; the same-band API gives B a wider upper bound and C a tighter upper bound, neither of which changes the warm-lock cut.",
+      "parent_masses_kg": {
+        "p": 1.0,
+        "q": 2.0,
+        "r": 0.1
+      },
+      "receiver_floor_kg": {
+        "A": 1.0,
+        "B": 1.0,
+        "C": 0.5
+      },
+      "receiver_signatures": {
+        "A": [
+          "q",
+          "r"
+        ],
+        "B": [
+          "q"
+        ],
+        "C": [
+          "p"
+        ]
+      },
+      "warm_flows_kg": {
+        "p_to_C": 0.5,
+        "q_to_A": 1.5
+      }
+    },
+    "corrected_result": "PASS; source parent totals q=2, p=1, r=0.1; child densities A=550, B=500, C=1000 kg/m3; default full-graph aggregate matched",
+    "exact_run009_header_sha256": "a36dd63c9a3cf612d3ff59ac4e41fa161b90f206fe846fc3df2c008266c20bc5",
+    "exact_run009_header_snapshot_retained": false,
+    "legacy_behavior": "FAILS_FEASIBLE_CASE_AS_EXPECTED",
+    "legacy_header_scope": "pre-quotient warm-start implementation; this is a behavior control, not the missing exact run009 source",
+    "legacy_result": "expected INFEASIBLE minimum-density cut; sent 2.6 kg of 3.1 kg supply",
+    "legacy_test_header_sha256": "5ba00c3a4e0873c78d99862b762d915b81ea9d18d4267d57e93653a8baa04652",
+    "search_scope": "all retained receiver-signature header variants under this fine-physical-volume owner were hashed; no file matched the run009 a36dd6... pin"
+  }
+}

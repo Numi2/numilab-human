@@ -1,0 +1,8 @@
+receiver-signature cut expansion PASS: incomplete exact subset -> one crossing edge -> complete original-row replay
+current-signature cut closure regression PASS: reached {p,q}, unreached {q}, omitted legal p->B restored; full-graph feasibility matched
+warm-extra floor-release regression PASS: q-to-A 1.5 released for q-to-B floor; full-graph feasibility matched
+exact receiver-signature quotient PASS: 3 receivers -> 2 signatures, 5 edges -> 3, warm reroute and original child/source replay
+Dinic telemetry: calls=2 bfs_phases=4 bfs_edge_scans=35 path_searches=5 dfs_edge_scans=24 augmentations=3 max_path_edges=4
+deadline controls PASS: no-deadline parity, partial budget capture, expired deadline capture
+held-flow reuse PASS: parent rows, donor contributions, child capacities, and original density bounds close after residual solve
+shared real-child semantic capacity controls PASS

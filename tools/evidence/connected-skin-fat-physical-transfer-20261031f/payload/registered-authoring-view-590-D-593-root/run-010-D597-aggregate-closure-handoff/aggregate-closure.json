@@ -1,0 +1,200 @@
+{
+  "schema": "d597-source-authoring-closure-handoff.v1",
+  "date": "2026-10-31",
+  "status": "FROZEN_HANDOFF_NOT_QUALIFIED",
+  "scope": "Read-only aggregate ancestry/source-metadata handoff. No physical candidate arrays were edited.",
+  "activity": {
+    "new_geometry_jobs": 0,
+    "new_tests": 0,
+    "new_actual230_runs": 0,
+    "D597_actual230": "NOT_RUN",
+    "owned_active_jobs": 0,
+    "global_process_inventory": "not claimed"
+  },
+  "D597": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run009-typed-bind-D597-current-D558-v1/candidate-D-typed-current.npz",
+    "sha256": "97eb4720ebb09d62659aa03f6c4f86482f9cf0e949101f636f6d1fff0e1daa89",
+    "points": 120648,
+    "faces": 215031,
+    "active_ids": 470,
+    "active_derived_D_ids": 353
+  },
+  "registry": [
+    {
+      "name": "D128 typed registry candidate",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-D-refinement-128-v2/candidate-D-inferred-boundary-refined-typed.npz",
+      "sha256": "ff73291bce77dda81eff985fecdbba1b198f24e95a7f8f9af1d6058172d4da45"
+    },
+    {
+      "name": "D128 original registry snapshot",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-005-D-derived-authoring-layer3/D128-original-source-registry.json",
+      "sha256": "c1bc2dd4c22f13421dac7910860c17eb5f3b31c5904ed51b8a7780c614e7484c"
+    },
+    {
+      "name": "D128 original primary and CSR tuple arrays plus ancestry",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-005-D-derived-authoring-layer3/original-primary-csr-tuples-and-patch-ancestry.npz",
+      "sha256": "638fe74109c86e9ae06287086aca0410ea3ac36e1d4f1ed246c8e1a90682b474"
+    },
+    {
+      "name": "Aggregate census",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-007-D-source-metadata-census.json",
+      "sha256": "9b28e763937059c69f97612551b7ae963bdfa3292ec227bf743572c294c178ea"
+    }
+  ],
+  "closure": {
+    "active_derived_D_ids_with_parent_lists": 353,
+    "active_derived_D_ids_with_null_registry_layer": [
+      100000185,
+      100000186,
+      62000204
+    ],
+    "D128_only_ids_absent_from_D597_and_parent_closure": [
+      704001247,
+      704001248,
+      704001249,
+      704001250,
+      704001251,
+      704001252,
+      704001253,
+      704001254
+    ],
+    "reachable_parent_union": 153,
+    "missing_registry_parent_ids": 0,
+    "resolution_counts": {
+      "current_typed_rows": 119,
+      "BONE_layer3": 29,
+      "D202_crosswalk_layer2": 4,
+      "D200_producer_parent_layer2": 1
+    },
+    "caution": "Parent-ID presence is closed; role and asset evidence qualification is not."
+  },
+  "D200": {
+    "source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-connected-patch-filter-375/D-derived-source-62000200.npz",
+      "sha256": "d002ed31ec560c324dad0b29f5286de36da5e70d12a828811a619026a28100ee"
+    },
+    "producer": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-connected-patch-filter-375/candidate-f32-typed.npz",
+      "sha256": "4291970cf747616cad0a9cc9ae07cfc287a9f6515f80c11b2e7c89e51123f434"
+    },
+    "receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-connected-patch-filter-375/receipt.json",
+      "sha256": "f332c304eda11d18c2228ea09557968744d60c3ce534591f66c064d6996db889"
+    },
+    "parent": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-void-coalescence-366/candidate-f32-typed.npz",
+      "sha256": "adff0c84a943db27d94f97a5762121591b27ac2d196a74f7b3e6d179b6b0dfa6"
+    },
+    "parent_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-core-void-coalescence-366/receipt.json",
+      "sha256": "ebe8eab2d2f6b3259355948d244e093766191a81d4d49f47a2c69dafc8cf1511"
+    },
+    "checks": {
+      "unique_F32_vertices": 245,
+      "directed_faces": 190,
+      "producer_layer2": true,
+      "CSR_ancestry_entries": 1048,
+      "parent_ids": 30,
+      "parent_layer_union": [
+        2,
+        3
+      ]
+    },
+    "interpretation": "D200 authoring source is layer 2. Preserve raw null registry layer and layer-3 BONE ancestry.",
+    "discrepancy": "Registry face_count 96; pinned source and producer each have 190."
+  },
+  "D202": {
+    "source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-006-emitted-face-lineage/D-derived-62000202-typed-lineage-source.npz",
+      "sha256": "9fe4046ccdfa2663b60d032666a3f57ad5c3193671b873432370230981bdd5d3"
+    },
+    "parent": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-006-emitted-face-lineage/parent-run003-candidate-f32.npz",
+      "sha256": "ed7017881078cf7784df42e9bdfbea69db40fb2a76ae57f2bed4f691a1a04225"
+    },
+    "report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/cube2um-union/conditioning-run-006-emitted-face-lineage/report.json",
+      "sha256": "4f1d61f25f6319e3284169a8d3882a4b31e297ff92d161cc132f77a1fe608227"
+    },
+    "proof": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-009-D-parent-semantics-and-cap-audit/62000202-parent-lineage-proof.json",
+      "sha256": "397a3ecbb86baf3971cfde90f6e7a3ea47a7ff056fb7d2750e103958ba2de5ae"
+    },
+    "crosswalk": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-009-D-parent-semantics-and-cap-audit/62000202-run003-parent-face-row-crosswalk.npz",
+      "sha256": "925d2b811d52b7a914b4aed003b058c814a502402247e7b47917975bb8b9ddd2"
+    },
+    "true_parent_ids": [
+      62000100,
+      62000106,
+      62000107,
+      62000108,
+      100000061
+    ],
+    "parent_layers": [
+      2,
+      2,
+      2,
+      2,
+      3
+    ],
+    "rule": "Keep mixed producer namespace separately."
+  },
+  "D204": {
+    "filtered_source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-005-D-derived-authoring-layer3/D-derived-source-62000204-filtered-D128-existing230.npz",
+      "sha256": "e5386ab7a4b5fc9478fc97ba8f6ca67b383af6b9f36261a21b525b7585945b9a"
+    },
+    "face_source_face_id": "Preserve -1; identity0 distinguishes source rows 0..14."
+  },
+  "adapter": {
+    "v9": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/prepare_registered_deep_authoring_view_593_v9.py",
+      "sha256": "031c11d515f64bac6c5f9d084aeb14f2c0c3fd7e20002ded7b1fec7b63bbbedd",
+      "status": "not compiled, tested, or run on D597; inherited evidence is D202-only and D200 overlay is absent"
+    },
+    "helper590": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-root/prepare_registered_skin_authoring_view.py",
+      "sha256": "7cbf1b8365ba28956ad739eee0cd3752a188cc584c91316b331f5fbb39ec8e21"
+    },
+    "exporter230": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-schema-validation-592-root/existing230-source/export_authoring_registered_surface_sidecars_230.py",
+      "sha256": "18fbc383044c18f29d7fd7dccf822cc5b65957bc75aca0f4b6ac964ea27cb74a",
+      "source_commit": "e962da30203adf7a83bf751f5fa169f439006f56"
+    },
+    "test_sources_not_run_on_v9": [
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/test_registered_deep_authoring_view_593_projection_v7.py",
+        "sha256": "51b700e0227cf3f487a1678bb4334558ed6a88420fda8a07038ba9117443c05d"
+      },
+      {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/test_registered_deep_authoring_view_590_D_593_v4.py",
+        "sha256": "af7838b9f91e3ddf4b8766afe982a2ebddc6057f0f198bf2ccb7dd60e540fb2d"
+      }
+    ],
+    "historical_D128_actual230_failure": {
+      "candidate": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-005-D-derived-authoring-layer3/candidate-D-590-derived-authoring.npz",
+        "sha256": "486ff8ed8c2a8dcfc38ea8b776d771bdde8a73b80bf1d505f76dff02e4015380"
+      },
+      "receipt": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-005-D-derived-authoring-layer3/actual-existing230-D-validation-receipt.json",
+        "sha256": "895dd11b1fc3d98a8c2bd30ebc53e4b392019062874c74f00bbb8bf58f8713a0"
+      },
+      "status": "FAIL",
+      "errors": [
+        "100000185 wrong layer role",
+        "100000186 has no pinned parent asset/source hash"
+      ],
+      "scope": "Historical D128 authoring candidate; not D597 qualification."
+    }
+  },
+  "unresolved": [
+    "Write a versioned v10 pinned to D597 with the authenticated D200 layer-2 authoring evidence, preserving raw null registry layer and BONE layer-3 ancestry.",
+    "Resolve or explicitly leave 100000185 and 100000186 NOT_QUALIFIED.",
+    "Keep the D200 face_count discrepancy 96 versus 190 explicit.",
+    "Do not require the eight inactive D128-only IDs in D597."
+  ],
+  "next_command_after_v10_exists": "ssh numi '/Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_geometry_serial.py /Users/numi/numi-human-prep-venv-20261005/bin/python /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/prepare_registered_deep_authoring_view_593_v10.py --candidate /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run009-typed-bind-D597-current-D558-v1/candidate-D-typed-current.npz --registry-source /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-inferred-boundary-D-refinement-128-v2/candidate-D-inferred-boundary-refined-typed.npz --filtered-source /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-005-D-derived-authoring-layer3/D-derived-source-62000204-filtered-D128-existing230.npz --helper590 /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-root/prepare_registered_skin_authoring_view.py --exporter230 /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-schema-validation-592-root/existing230-source/export_authoring_registered_surface_sidecars_230.py --out-dir /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/registered-authoring-view-590-D-593-root/run-011-D597-authoring-validation'",
+  "next_command_note": "Do not execute until v10 is written and pinned and the 100000185/100000186 dispositions are explicit. Intended CLI follows v9."
+}

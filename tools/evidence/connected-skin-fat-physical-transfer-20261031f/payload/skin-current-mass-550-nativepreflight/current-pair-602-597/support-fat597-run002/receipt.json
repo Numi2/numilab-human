@@ -1,0 +1,407 @@
+{
+  "counts": {
+    "admissible_region_slots": 3818645,
+    "cells": 789327,
+    "direct_region_slots": 868835,
+    "max_regions_per_cell": 21,
+    "nodes": 253712,
+    "p1_group_slots": 997702,
+    "queried_new_points": 774,
+    "reused_exact_points": 252938,
+    "same_material_source_region_edges": 140,
+    "source_groups": 314,
+    "tie_cells": 45521,
+    "unique_max_cells": 743806,
+    "unsupported_cells": 0,
+    "unsupported_nodes": 0
+  },
+  "elapsed_s": 21.00543445907533,
+  "inputs": {
+    "geometry": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-paired-fixed-boundary-composition-597-root/fat-current-connected-volume-proposal.npz",
+      "sha256": "6677a4bbc53637617cebaf9e74d7b0dfd9c775d0d5e64d7050bf4741f8e35054"
+    },
+    "geometry_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-paired-fixed-boundary-composition-597-root/receipt.json",
+      "sha256": "33500dfec20e553c31a4a5e1f50f2ee35b19ba9288469b7f24061ac94007ca0d"
+    },
+    "prior_geometry_406": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-D309-I399-target-406-root/target397/fat-current-typed-target-rebound.npz",
+      "sha256": "5dcebfd751dedcb1891559352e9d0e673ea3a8e15a8edeae8179c6d04e847211"
+    },
+    "prior_support_406": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-semantic-support-406-root-run002/fat-current-semantic-support.npz",
+      "sha256": "c16f2ff3cd6e30df365ed1418ca385db58cc76403b57359f3effdd1ac3381efc"
+    },
+    "prior_support_receipt_406": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-semantic-support-406-root-run002/receipt.json",
+      "sha256": "16667c9d91e78a230f41b433093939d05ef9b6da4eca66407041c0d9708123f7"
+    },
+    "semantic_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-semantic-atlas-088/export_authoring_registered_surface_sidecars_230_semantic_088.py",
+      "sha256": "121e3bf44d90ba3d7b82ccaa40a26a92d1675c6d277a4409ae95f8c05ad2485d"
+    },
+    "source330_mass": {
+      "labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+      "node_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+      "tet_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "limitations": [
+    "Source-only current Fat597 support; no mass flow, native steps or physical admission.",
+    "Exact F32 point matches reuse 406 support; unmatched current coordinates were queried with the pinned 230 owner.",
+    "Regenerate if target cell topology or point coordinates change."
+  ],
+  "limits": {
+    "mass_region_policy": "separate143authenticated1hop",
+    "mass_transport_NOT_evaluated": true,
+    "mass_transport_radius_m": 0.019353,
+    "node_projection_distance_m_max": 0.02,
+    "same_material": 16,
+    "tie_tolerance_m": 1e-08
+  },
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "new_point_witnesses": [
+    {
+      "chosen_parent_row": 26572,
+      "distance_m": 1.3877787807814457e-17,
+      "node_row": 246002,
+      "tie_rows": [
+        26572
+      ]
+    },
+    {
+      "chosen_parent_row": 28060,
+      "distance_m": 1.734723475976807e-18,
+      "node_row": 246010,
+      "tie_rows": [
+        28060
+      ]
+    },
+    {
+      "chosen_parent_row": 26622,
+      "distance_m": 0.0,
+      "node_row": 246030,
+      "tie_rows": [
+        26622
+      ]
+    },
+    {
+      "chosen_parent_row": 28392,
+      "distance_m": 0.0010705014805891932,
+      "node_row": 246045,
+      "tie_rows": [
+        28392
+      ]
+    },
+    {
+      "chosen_parent_row": 26769,
+      "distance_m": 6.938893903907228e-18,
+      "node_row": 246095,
+      "tie_rows": [
+        26769
+      ]
+    },
+    {
+      "chosen_parent_row": 25667,
+      "distance_m": 2.0117125933250414e-08,
+      "node_row": 246101,
+      "tie_rows": [
+        25667
+      ]
+    },
+    {
+      "chosen_parent_row": 27363,
+      "distance_m": 2.943923360032078e-17,
+      "node_row": 246131,
+      "tie_rows": [
+        27363
+      ]
+    },
+    {
+      "chosen_parent_row": 28051,
+      "distance_m": 3.469446951953614e-18,
+      "node_row": 246143,
+      "tie_rows": [
+        28051
+      ]
+    },
+    {
+      "chosen_parent_row": 27904,
+      "distance_m": 3.469446951953614e-18,
+      "node_row": 246160,
+      "tie_rows": [
+        27904
+      ]
+    },
+    {
+      "chosen_parent_row": 18808,
+      "distance_m": 2.220446049250313e-16,
+      "node_row": 246171,
+      "tie_rows": [
+        18808
+      ]
+    },
+    {
+      "chosen_parent_row": 28033,
+      "distance_m": 1.4304896245381992e-17,
+      "node_row": 246173,
+      "tie_rows": [
+        28033
+      ]
+    },
+    {
+      "chosen_parent_row": 26572,
+      "distance_m": 3.1031676915590914e-17,
+      "node_row": 246174,
+      "tie_rows": [
+        26572
+      ]
+    },
+    {
+      "chosen_parent_row": 26035,
+      "distance_m": 0.0,
+      "node_row": 246202,
+      "tie_rows": [
+        26035
+      ]
+    },
+    {
+      "chosen_parent_row": 27850,
+      "distance_m": 0.0,
+      "node_row": 246206,
+      "tie_rows": [
+        27850
+      ]
+    },
+    {
+      "chosen_parent_row": 28189,
+      "distance_m": 2.6020852139652106e-18,
+      "node_row": 246216,
+      "tie_rows": [
+        28189
+      ]
+    },
+    {
+      "chosen_parent_row": 28008,
+      "distance_m": 1.3877787807814457e-17,
+      "node_row": 246225,
+      "tie_rows": [
+        28008
+      ]
+    },
+    {
+      "chosen_parent_row": 28008,
+      "distance_m": 0.0,
+      "node_row": 246234,
+      "tie_rows": [
+        28008
+      ]
+    },
+    {
+      "chosen_parent_row": 26928,
+      "distance_m": 3.7367087251761353e-17,
+      "node_row": 246242,
+      "tie_rows": [
+        26928
+      ]
+    },
+    {
+      "chosen_parent_row": 28528,
+      "distance_m": 0.0,
+      "node_row": 246266,
+      "tie_rows": [
+        28528
+      ]
+    },
+    {
+      "chosen_parent_row": 26622,
+      "distance_m": 6.938893903907228e-18,
+      "node_row": 246267,
+      "tie_rows": [
+        26622
+      ]
+    },
+    {
+      "chosen_parent_row": 26571,
+      "distance_m": 0.0,
+      "node_row": 246269,
+      "tie_rows": [
+        26571
+      ]
+    },
+    {
+      "chosen_parent_row": 27904,
+      "distance_m": 6.938893903907228e-18,
+      "node_row": 246272,
+      "tie_rows": [
+        27904
+      ]
+    },
+    {
+      "chosen_parent_row": 26605,
+      "distance_m": 0.0,
+      "node_row": 246276,
+      "tie_rows": [
+        26605
+      ]
+    },
+    {
+      "chosen_parent_row": 27904,
+      "distance_m": 7.757919228897728e-18,
+      "node_row": 246281,
+      "tie_rows": [
+        27904
+      ]
+    },
+    {
+      "chosen_parent_row": 14320,
+      "distance_m": 0.0,
+      "node_row": 246289,
+      "tie_rows": [
+        14320
+      ]
+    },
+    {
+      "chosen_parent_row": 28008,
+      "distance_m": 6.938893903907228e-18,
+      "node_row": 246290,
+      "tie_rows": [
+        28008
+      ]
+    },
+    {
+      "chosen_parent_row": 26571,
+      "distance_m": 0.0,
+      "node_row": 246395,
+      "tie_rows": [
+        26571
+      ]
+    },
+    {
+      "chosen_parent_row": 26919,
+      "distance_m": 1.3877787807814457e-17,
+      "node_row": 246398,
+      "tie_rows": [
+        26919
+      ]
+    },
+    {
+      "chosen_parent_row": 28499,
+      "distance_m": 6.938893903907228e-18,
+      "node_row": 246400,
+      "tie_rows": [
+        28499
+      ]
+    },
+    {
+      "chosen_parent_row": 26441,
+      "distance_m": 1.3877787807814457e-17,
+      "node_row": 246402,
+      "tie_rows": [
+        26441
+      ]
+    },
+    {
+      "chosen_parent_row": 28033,
+      "distance_m": 1.4304896245381992e-17,
+      "node_row": 246405,
+      "tie_rows": [
+        28033
+      ]
+    },
+    {
+      "chosen_parent_row": 23902,
+      "distance_m": 0.0,
+      "node_row": 246437,
+      "tie_rows": [
+        23902
+      ]
+    },
+    {
+      "chosen_parent_row": 19281,
+      "distance_m": 0.0,
+      "node_row": 246498,
+      "tie_rows": [
+        19281
+      ]
+    },
+    {
+      "chosen_parent_row": 28005,
+      "distance_m": 8.673617379884035e-18,
+      "node_row": 246525,
+      "tie_rows": [
+        28005
+      ]
+    },
+    {
+      "chosen_parent_row": 26439,
+      "distance_m": 1.3877787807814457e-17,
+      "node_row": 246553,
+      "tie_rows": [
+        26439
+      ]
+    },
+    {
+      "chosen_parent_row": 16397,
+      "distance_m": 2.7755575615628914e-17,
+      "node_row": 246554,
+      "tie_rows": [
+        16397
+      ]
+    },
+    {
+      "chosen_parent_row": 26788,
+      "distance_m": 0.0,
+      "node_row": 246558,
+      "tie_rows": [
+        26788
+      ]
+    },
+    {
+      "chosen_parent_row": 28556,
+      "distance_m": 1.993045536433795e-17,
+      "node_row": 246596,
+      "tie_rows": [
+        28556
+      ]
+    },
+    {
+      "chosen_parent_row": 18545,
+      "distance_m": 0.0,
+      "node_row": 246612,
+      "tie_rows": [
+        18545
+      ]
+    },
+    {
+      "chosen_parent_row": 28008,
+      "distance_m": 1.4304896245381992e-17,
+      "node_row": 246664,
+      "tie_rows": [
+        28008
+      ]
+    }
+  ],
+  "outputs": {
+    "base_p1": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-fat597-run002/fat-current-semantic-support-597-p1.npz",
+      "sha256": "45341053d1f73e171b1e0924499e6449d8efbe2134c001a0c19373f1d7183d6a"
+    },
+    "p1_143": {
+      "admissibility_source_support_sha256": "45341053d1f73e171b1e0924499e6449d8efbe2134c001a0c19373f1d7183d6a",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-fat597-run002/fat-current-semantic-support-597-p1-143.npz",
+      "sha256": "6779cbaae6c7c041f536a347150079c172423cddae6de9fcaec1a821e30035d4"
+    }
+  },
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-fat597-run002-source-freeze/build_fat_597_support.py",
+    "sha256": "a2319ee2ccf4532faba118e99f8a08807392a356f284f95298360b148c938d91"
+  },
+  "schema": "numi.human.current-fat-p1-semantic-onehop-support.v1",
+  "status": "PASS_SOURCE_ONLY_CURRENT_FAT_P1_AND_AUTHENTICATED_ONE_HOP_SUPPORT"
+}

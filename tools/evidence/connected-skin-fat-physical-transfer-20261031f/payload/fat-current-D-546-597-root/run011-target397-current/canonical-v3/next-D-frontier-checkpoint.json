@@ -1,0 +1,106 @@
+{
+  "D597_transfer_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run007-transfer-379-001/report.json",
+    "sha256": "2ecb1c6dbaf081a9716e4f993b36afc4a3485a35969a73df12a2a35fa79d020a"
+  },
+  "active_processes_for_this_work": [],
+  "canonical_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run011-target397-current/canonical-v3/receipt.json",
+    "sha256": "85678c5817fc928afdb18739ba9e3402cc298670487ebe78d682d8bcc362178d"
+  },
+  "canonicalizer_source": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run011-target397-current/canonicalize_D597_parent_unions_v1.py",
+    "sha256": "d48cadc774668d59283fd81fbfbaaf9d13f7f947e7546f212c4aa1fb55ea503f"
+  },
+  "created_utc": "2026-10-31T16:03:37Z",
+  "current_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run011-target397-current/canonical-v3/fat-current-O612-D597-I50-canonical-parent-unions.npz",
+    "sha256": "474f98724b2c8cd6bbdbe3dd46ab6402250b1f613ecbaeec58feb1453d802d11"
+  },
+  "current_surfaces": {
+    "D597_sha256": "97eb4720ebb09d62659aa03f6c4f86482f9cf0e949101f636f6d1fff0e1daa89",
+    "I50_sha256": "e7d76ae905c15ae3ad5c5dda7603cfdd18399934c12721b942fc4903571970a6",
+    "O612_sha256": "0f08ff28a4c5cc06e8667c35a1557843372a7c7e3d32f7281bb14b5fce11dc96"
+  },
+  "independent_transfer_replay": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run008-independent-379-001/independent-verification.json",
+    "sha256": "b64944d49d02bc0e8bd8a81e8a9e1cffde6d7d2d3b019e7828c3bd45a2073e30"
+  },
+  "joint_context_613": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-current-O612-D597-context-613-root/audit354/report.json",
+    "sha256": "4f457bbbab1d858061ac141b383cff5648ff5d2080a2a39cc4b39853b6fdb73c"
+  },
+  "next_D_frontier": {
+    "accepted_and_transferred_operations": 152,
+    "authorized_edge_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run002-preflight-001/allowed-D-edge-map.npz",
+      "sha256": "1d93a630b97c0d5c7e516308c3578cc6bcf01b976563b777c172bc9f12780471"
+    },
+    "census_edges_over_edge_cap": 76057,
+    "census_edges_under_edge_cap": 246968,
+    "current_D_edges_evaluated": 22792,
+    "incomplete_budget": true,
+    "measured_positive_edge_map": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run003-measured-positive-subset-001/allowed-D-positive-gain-edge-map.npz",
+      "sha256": "89dc816c1fad4c5650a5b19ec0731e26999dd7f9287d4ee9b6ab4176a4b1782a"
+    },
+    "measured_positive_subset": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run003-measured-positive-subset-001/measured-positive-subset-preflight.json",
+      "sha256": "10808e94819d373a19c5e9bd0864d03cd75d25e7383fa7cc578e6db587ec6465"
+    },
+    "positive_measured_edges": 278,
+    "positive_measured_orientation_sum_gain": 448,
+    "preflight_status": "INCOMPLETE_PREFLIGHT_BUDGET",
+    "resume_cursor_present": false,
+    "safe_continuation": "Reuse the saved positive measured map as proposals, rekey each edge by exact F32 endpoints against the next frozen current D target, then recompute full endpoint stars and reject already-used/conflicting operations before transfer. Do not rerun run002 unchanged or claim its incomplete preflight is exhaustive.",
+    "selected_allowed_orientations": 2252,
+    "selected_disjoint_edges": 1401,
+    "source_preflight": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run002-preflight-001/preflight.json",
+      "sha256": "5668cc4159a5b53268ede0af41b0564305bb55dfae079a5d1a48eb9e907e149a"
+    },
+    "source_trial_budget": 100000,
+    "source_trials_consumed": 100000,
+    "specific_failure": "INCOMPLETE_PREFLIGHT_BUDGET: 100000 max source trials consumed; 22792 current D edges evaluated; timed_out=true. The receipts store no resumable trial cursor.",
+    "subset_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run003-measured-positive-subset-001/receipt.json",
+      "sha256": "ea86df4113e0101fbaacc7447808ccaa794bf74e9a2ed1e7bcb6548fbf527b4e"
+    }
+  },
+  "result": {
+    "all_152_parent_unions_rederived_and_sidecar_matched": true,
+    "cells": 788760,
+    "changed_output_cells": 1120,
+    "direct_parent_cells": 785610,
+    "full_endpoint_star_operations": 152,
+    "mass_mapping": "NOT_RUN",
+    "measured_gain": 249,
+    "native_quality_failures": 10345,
+    "native_steps": 0,
+    "nonpositive_cells": 0,
+    "output_cells_in_full_stars": 2563,
+    "parent_references": 113920,
+    "physical_admission": false,
+    "point_and_geometry_arrays_bit_identical_to_target397": true,
+    "points": 253712,
+    "prior_native_quality_failures": 10594,
+    "removed_source_cells": 567,
+    "replacement_cells": 3150,
+    "source_cells_in_full_stars": 3130,
+    "target_boundary_mismatch": {
+      "extra": 0,
+      "missing": 0
+    }
+  },
+  "schema": "numi.run011.D597-session-checkpoint.v1",
+  "status": "CHECKPOINT_CANONICAL_D597_LINEAGE_COMPLETE_NO_FURTHER_BATCH_STARTED",
+  "stop_boundary": "No new D batch, search, geometry run, mass allocation, or native admission was started after the parent requested session conclusion.",
+  "target397_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run011-target397-current/rebound-v4/fat-current-typed-target-rebound.npz",
+    "sha256": "7cab00129163160a5b8ce2e860d098798aca6ac30ca1255429d23d80c0ef30d0"
+  },
+  "target397_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fat-current-D-546-597-root/run011-target397-current/rebound-v4/report.json",
+    "sha256": "2a9bad7a89c94339ecd2345edd3fb38477a2c40fe59735d89cec06f626cf24a1"
+  }
+}

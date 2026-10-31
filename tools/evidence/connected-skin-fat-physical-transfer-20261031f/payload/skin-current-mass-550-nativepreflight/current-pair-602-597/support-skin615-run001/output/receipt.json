@@ -1,0 +1,71 @@
+{
+  "counts": {
+    "admissible_region_slots": 3778277,
+    "cells": 729600,
+    "direct_region_slots": 807777,
+    "max_regions_per_cell": 21,
+    "nodes": 210298,
+    "p1_group_slots": 926459,
+    "queried_new_points": 0,
+    "reused_exact_points": 210298,
+    "same_material_source_region_edges": 140,
+    "source_groups": 314,
+    "tie_cells": 44507,
+    "unique_max_cells": 685093
+  },
+  "elapsed_s": 17.411490709055215,
+  "inputs": {
+    "geometry": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-current612-canonical615-root/skin-current-O612-canonical-parent-unions.npz",
+      "sha256": "075a323111aea265b88d07eb12f83aa7902e7dd6323d86082f8a8828cbb492f9"
+    },
+    "geometry_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/outer-O-current612-canonical615-root/receipt.json",
+      "sha256": "19286108e445df9ffca6bf7c793b2f2095f486b014dea62a171172daac17f292"
+    },
+    "old_geometry_602": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-interior-fixed-boundary-quotient-602-root/skin-interior-quotient-volume-proposal.npz",
+      "sha256": "1d6e1070b5da38e4f9e57ad3ad1fe9aa9ae488cacc04ee22df8eeb2da79341f0"
+    },
+    "old_node_support_602": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-skin602-run003/output/skin-current-semantic-support-602-p1-143.npz",
+      "sha256": "4b36c7da9ceabe1f3333c4d9043adb9a049616f80fab9d144287f13e74d7b104"
+    },
+    "old_node_support_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-skin602-run003/output/receipt.json",
+      "sha256": "9d5c1ac0428f53845864f918c265c63bf9a90d1c50155ff4312698bddfa6292c"
+    },
+    "semantic_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-semantic-atlas-088/export_authoring_registered_surface_sidecars_230_semantic_088.py",
+      "sha256": "121e3bf44d90ba3d7b82ccaa40a26a92d1675c6d277a4409ae95f8c05ad2485d"
+    },
+    "source330_mass": {
+      "labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+      "node_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+      "tet_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "limitations": [
+    "Source-only current Skin602 support; no mass flow, native steps or physical admission.",
+    "Requires regeneration if current target geometry changes."
+  ],
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "new_point_witnesses": [],
+  "outputs": {
+    "base_p1": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-skin615-run001/output/skin-current-semantic-support-615-p1.npz",
+      "sha256": "f28084cd68e43b439d95bd4f8a2ef4b03e4f1aec00750421dda012cfa9b4876a"
+    },
+    "p1_143": {
+      "admissibility_source_support_sha256": "f28084cd68e43b439d95bd4f8a2ef4b03e4f1aec00750421dda012cfa9b4876a",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/skin-current-mass-550-nativepreflight/current-pair-602-597/support-skin615-run001/output/skin-current-semantic-support-615-p1-143.npz",
+      "sha256": "e73399859c1fa1e0bd47f60c3b551c13b405ea0f06a147daccf0738e3ee42f52"
+    }
+  },
+  "physical_admission": false,
+  "schema": "numi.human.current-skin-p1-semantic-onehop-support.v1",
+  "status": "PASS_SOURCE_ONLY_CURRENT_SKIN_P1_AND_AUTHENTICATED_ONE_HOP_SUPPORT"
+}
