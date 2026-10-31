@@ -1,0 +1,66 @@
+{
+  "actual_geometry_batch": false,
+  "all_four_mutations_rejected": true,
+  "baseline": {
+    "all_operation_and_point_parent_csr_reconstructed": true,
+    "all_untouched_source_and_typed_bindings_equal": true,
+    "cells": 4,
+    "native_bad_after": 0,
+    "native_bad_before": 1,
+    "native_steps": 0,
+    "new_steiner_points": 1,
+    "nodes": 6,
+    "nonpositive": 0,
+    "oriented_boundary_unchanged": true,
+    "physical_admission": false,
+    "proposal": {
+      "path": "/Users/numi/Work/human-quality-767-771-publication-20261031k/tools/evidence/connected-skin-fat-quality-767-771-20261031k/payload/controls/771-fixture/baseline-producer/skin-interior-steiner-quality-proposal.npz",
+      "sha256": "7f60b8c20029a68bb1a5b120fd777c55b297d0975c40e4aa607dd724354463ec"
+    },
+    "proposal_replayed": true,
+    "readback": {
+      "path": "/Users/numi/Work/human-quality-767-771-publication-20261031k/tools/evidence/connected-skin-fat-quality-767-771-20261031k/payload/controls/771-fixture/baseline-producer/skin-independent-steiner-readback.json",
+      "sha256": "cbce7330b27c4ba71c1d97a4dad4da31daa022b50ab6c9757036719c36326e72"
+    },
+    "role": "Skin",
+    "source": {
+      "path": "/Users/numi/Work/human-quality-767-771-publication-20261031k/tools/evidence/connected-skin-fat-quality-767-771-20261031k/payload/controls/771-fixture/fixture-source.npz",
+      "sha256": "f9d09596d284b6ded84fb1098ca3eddc1f98896b1461aedb0b01f5c81f3ca1db"
+    },
+    "source_crosswalk": null,
+    "status": "PASS_EXTERNAL_INDEPENDENT_REPLAY",
+    "target_boundary_key": "desired_boundary_faces"
+  },
+  "native_steps": 0,
+  "negative_controls": [
+    {
+      "name": "mutated-old-prefix-csr",
+      "reason": "Steiner point parent CSR shape mismatch",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "name": "mutated-unrelated-source-binding",
+      "reason": "readback changed or dropped immutable parent binding: typed_I_candidate_sha256",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "name": "mutated-one-point",
+      "reason": "Skin journal operation 0 Steiner point differs from NPZ",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "name": "mutated-one-ancestry-union",
+      "reason": "replacement tet parent CSR does not reconstruct complete cavity unions",
+      "status": "REJECTED_AS_EXPECTED"
+    }
+  ],
+  "physical_admission": false,
+  "promotion": {
+    "reason": "state lacks exact D/I/O source surface pins",
+    "status": "PASS_REJECTED_SYNTHETIC_MISSING_SOURCE_PROOF"
+  },
+  "schema": "h706.independent-external-steiner-promoter-controls.v1",
+  "source_zero_and_boundary_inherited": true,
+  "status": "PASS_EXTERNAL_PROMOTER_NEGATIVE_CONTROLS_AND_MISSING_PROOF_REJECTION",
+  "synthetic_missing_source_proof_rejected": true
+}
