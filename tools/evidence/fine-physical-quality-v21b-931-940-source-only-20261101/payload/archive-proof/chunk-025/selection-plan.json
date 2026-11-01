@@ -1,0 +1,84 @@
+{
+  "chunk": {
+    "approx_mib": 63.7352352142334,
+    "file_count": 2,
+    "id": "quality-volume-chunk-025",
+    "ordinal": 25,
+    "original_bytes": 66831238,
+    "roster_chunk_id": "failed-unqualified-volume-roster-018"
+  },
+  "created_utc": "2026-11-01T02:36:35.649403Z",
+  "current_direct_path_proof": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-failed-proposals-current-path-proof-025.json",
+    "sha256": "e62240c563bb1d8e095c410f4b8ec3407a1e2ecd30f1cf3a3afad4c33e6f53de",
+    "status": "PASS_CURRENT_EXACT_PATHS_ABSENT; 873 Skin SHA resolves to preserved live rollback alias"
+  },
+  "files": [
+    {
+      "current_direct_input_overlap": false,
+      "expected_sha256_from_source_receipt": "990d2241920ddc9019537da941a8e26b3f63a709d8c32f6c7ea52e04d38edeea",
+      "live_sha256_validation": "PENDING_FRESH_HASH_DURING_BUILD",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/fat-coupled-quality-point-proposal.npz",
+      "role": "Fat",
+      "size_bytes_from_stat": 36117470,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/state.json",
+      "source_receipt_role_match": [
+        "Fat_current"
+      ],
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-873-root/round-02/proposal/fat-coupled-quality-point-proposal.npz"
+    },
+    {
+      "current_direct_input_overlap": false,
+      "expected_sha256_from_source_receipt": "ffc9b583a5bbcc43b62730d93e8c503691ff7fb128ba6e50ea20bab75d79cacc",
+      "live_sha256_validation": "PENDING_FRESH_HASH_DURING_BUILD",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/skin-coupled-quality-point-proposal.npz",
+      "role": "Skin",
+      "size_bytes_from_stat": 30713768,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/state.json",
+      "source_receipt_role_match": [
+        "Skin_current"
+      ],
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-873-root/round-02/proposal/skin-coupled-quality-point-proposal.npz"
+    }
+  ],
+  "preparation_status": "READY_FOR_REVIEW_LIVE_PAYLOAD_HASH_PENDING",
+  "purpose": "Archive only two receipt-pinned failed/unqualified 873 round-02 Fat/Skin volume proposals. The referenced Skin SHA remains at its verified rollback alias. Historical recovery only, not current quality or physical admission.",
+  "release_target": {
+    "asset_label": "failed-unadmitted-volume-proposals-20261101-chunk-025.tar.zst",
+    "asset_name": "quality-volume-archive-chunk-025.tar.zst",
+    "independent_download_directory": "/Users/numi/Work/.quality-volume-archive-chunk-025-independent-download",
+    "local_archive_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-025-plan/quality-volume-archive-chunk-025.tar.zst",
+    "repository": "Numi2/numilab-human",
+    "retirement_enabled": false,
+    "tag": "human-quality-volume-failed-unadmitted-20261101-chunk-025"
+  },
+  "schema": "numi-human.quality-volume-archive-chunk-plan.v1",
+  "selection": {
+    "artifact_kind": "unqualified Fat or Skin volume proposal NPZ",
+    "include_current_state_inputs": false,
+    "include_primary_source_arrays": false,
+    "include_replay_npz": false,
+    "include_state_or_report_json": false,
+    "protection": "Preserve the verified 873 rollback alias, typed sources, witnesses, state/reports, current/passing volumes; archive only original proposal NPZ paths.",
+    "selected_statuses": "Unqualified/unadmitted only; native_steps=0 and physical_admission=false."
+  },
+  "source_inventory": {
+    "candidate_count": 2,
+    "scope": "Exact failed 873 round-02 pair from approved roster; preserve alias and all nonvolume evidence.",
+    "selected_paths": [
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/fat-coupled-quality-point-proposal.npz",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/skin-coupled-quality-point-proposal.npz"
+    ]
+  },
+  "source_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706",
+  "source_workflow": {
+    "archive_layout": "content-addressed blobs/<sha256> with archive-index.json",
+    "builder_reuse_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-017-plan/build_volume_chunk_fast.py",
+    "repository": "Numi2/numilab-human",
+    "restore_verifier_path": "/Users/numi/Work/human-quality-trials-695-publish-20261031i/tools/evidence/connected-skin-fat-quality-trials-695-20261031i/restore_archive.py",
+    "verified_workflow_reference": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-019-plan/retirement-receipt.json",
+    "workflow_commit": "a7f784ecdd99f8b4ea70219304fff15b8d36cf85"
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "archive_sha256": "42001c612a4cacdebab1b12bfa6eeefb036626850d460c31ada4f0149d6d9f8a",
+  "created_utc": "2026-11-01T02:37:33.844682Z",
+  "expected_source_sha256": "990d2241920ddc9019537da941a8e26b3f63a709d8c32f6c7ea52e04d38edeea",
+  "filesystem_restore_performed": false,
+  "native_steps": 0,
+  "physical_admission": false,
+  "remote_download_method": "gh release download --output - captured in RAM; full blob SHA verified",
+  "restore_method": "fresh BytesIO copy, full SHA/size check, ZIP CRC, NPY headers, and required array loads",
+  "restored_npy_header_count": 135,
+  "restored_npy_header_summary_sha256": "fe7219bb9f7c675212d9c74ed99c9035ad070b0292cac54154e6113d13356346",
+  "restored_original_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-02/proposal/fat-coupled-quality-point-proposal.npz",
+  "restored_path": null,
+  "restored_required_array_readback": {
+    "boundary_faces": {
+      "array_bytes_sha256": "10f77b6872014f7b59a9a249de8856c1a98efd750c021adb687d22146ccb9d61",
+      "dtype": "<i8",
+      "shape": [
+        444472,
+        3
+      ]
+    },
+    "material_indices": {
+      "array_bytes_sha256": "6119a13af235133ea6dcd7c16fe7c27be1ad08fc0f0fc1e41dde33e86bc07fc3",
+      "dtype": "<i4",
+      "shape": [
+        770603
+      ]
+    },
+    "points_world_m": {
+      "array_bytes_sha256": "a74ab34a04f58013054920507cf50813f64898666740b8ca29a17adc1c806865",
+      "dtype": "<f4",
+      "shape": [
+        253887,
+        3
+      ]
+    },
+    "points_world_m_f32": {
+      "array_bytes_sha256": "a74ab34a04f58013054920507cf50813f64898666740b8ca29a17adc1c806865",
+      "dtype": "<f4",
+      "shape": [
+        253887,
+        3
+      ]
+    },
+    "tetrahedra": {
+      "array_bytes_sha256": "f7c5985e2c6456ad6cde54f42b9ffec43d3a9ef212c2830b9b5451ed191e1408",
+      "dtype": "<i8",
+      "shape": [
+        770603,
+        4
+      ]
+    }
+  },
+  "restored_sha256": "990d2241920ddc9019537da941a8e26b3f63a709d8c32f6c7ea52e04d38edeea",
+  "restored_size_bytes": 36117470,
+  "restored_zip_crc": "PASS",
+  "schema": "numi-human.volume-archive-one-npz-restore-receipt.v1",
+  "status": "PASS_EXACT_IN_MEMORY_NPZ_RESTORE_AND_READBACK"
+}
