@@ -1,0 +1,13 @@
+from pathlib import Path
+import hashlib,subprocess,sys
+H=Path("/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706")
+p=H/"coupled-anchor-collapse-780-root/ordinary-allrole-v25h-unified-mixed/repair_coupled_quality_points_722_v25h_unified_inner_back_ordinary.py"
+assert hashlib.sha256(p.read_bytes()).hexdigest()=="6e285a7bc64afdaaf94b7075f0f2fb46d6f36671d058151d8b32c78e30e5ab4c"
+cmd=[sys.executable,str(p),"--state",str(H/"all-quality-892-qualified-root/verified-state.json"),"--output",str(H/"all-quality-894-unified-root"),"--trust-cap-m",".00005","--seconds","30","--patch-seconds","1.5","--node-fallbacks-per-patch","8","--objective-mode","role_equal_nearpass","--unified-inner-back-ordinary-local-repair","--ordinary-block-local-quality"]
+for w in ["/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-847-root/round-01/proposal-exact-805/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-850-root/round-01/proposal-exact-805/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-858-audit775-root/proposal-exact-775/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-866-audit805b-root/proposal-exact-805/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-867-audit805b-root/proposal-exact-805/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-871-root/round-01/proposal-exact-775/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-873-root/round-01/proposal-exact-775/report.json","/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-875-root/round-01/proposal-exact-805/report.json"]:
+ assert Path(w).is_file(),w
+ cmd+=["--witness-report",w]
+cmd+=["--witness-report",str(H/"all-quality-883-audit805-root/proposal-exact-805/report.json")]
+cmd+=["--witness-report",str(H/"all-quality-886-audit805-root/proposal-exact-805/report.json")]
+print(cmd,flush=True)
+raise SystemExit(subprocess.run(cmd).returncode)

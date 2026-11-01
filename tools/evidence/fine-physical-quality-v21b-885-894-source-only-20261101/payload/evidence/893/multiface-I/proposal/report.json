@@ -1,0 +1,388 @@
+{
+  "accepted_patches": 0,
+  "bad_edge_incidence": 95,
+  "candidate_edges": 22,
+  "elapsed_s": 15.972270125057548,
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "parent_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-892-qualified-root/verified-state.json",
+    "sha256": "1156b04b362edb27d47f423cd9cceb0a33bd232d1c04653924862fd15f57dc45"
+  },
+  "physical_admission": false,
+  "rejection_counts": {
+    "quad_overlay_hausdorff_unproven:old/new triangulation is not a nonfolded projected cover": 13,
+    "quad_overlay_hausdorff_unproven:quad projection is not strictly convex": 64,
+    "replacement_diagonal_already_surface_edge": 8
+  },
+  "role": "I",
+  "schema": "h706.connected-boundary-patch-batch.v1",
+  "selection_witnesses": [],
+  "solver_rejections": [
+    {
+      "patch_seed_edges": [
+        [
+          58481,
+          59758
+        ]
+      ],
+      "reason": "ValueError: MILP_NO_FEASIBLE_INCUMBENT {\"cumulative_global_volume_fraction_from_flux\": 7.933937868620531e-10, \"edge_face_rows\": [[52406, 52407]], \"exact_det6_delta_from_flux\": \"-6271646057396521046006664140790704776117715551273323364745067693526445808316802885597573232902221049279313620179418175504384\", \"input_cell_rows\": [704875, 724512, 724513], \"local_volume_fraction_from_flux\": 0.001133168673185948, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 2, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 4.288729204229433, \"new_oriented_boundary_det6\": \"5528337813065351651348018683662134504791247096855930224305813682073048093432678398749985643363198010762560990607159846613549056\", \"old_exact_cell_det6_sum\": \"5534609459122748172394025347802925209567364812407203547670558749766574539240995201635583216596100231811840304227339264789053440\", \"old_quality_q_range\": [2.398787779794062e-07, 3.5683404121230177e-05], \"old_signed_det6_range\": [8.77053967574314e-11, 1.3046702765748359e-08], \"solver\": {\"elapsed_s\": null, \"stage1_message\": \"The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)\", \"stage1_status\": 2, \"stage2_status\": null, \"status\": \"NO_FEASIBLE_STAGE1_INCUMBENT_WITHIN_BOUND\"}, \"source_edges\": [[58481, 59758]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52406,
+          52407
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          58481,
+          59753
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.1870083935343753e-09, \"edge_face_rows\": [[52407, 52408]], \"exact_det6_delta_from_flux\": \"9383104121410032121491196631101178218299003653051744298894725189737797802426682268409051090585370005140954085644399896690688\", \"input_cell_rows\": [704874, 704875], \"local_volume_fraction_from_flux\": 0.02281774799373786, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 2, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 4.98325773704927, \"new_oriented_boundary_det6\": \"420602656725161622367863558001587667808479727792141993931858309876314748707078555856300290645408641462639490295058590106386432\", \"old_exact_cell_det6_sum\": \"411219552603751590246372361370486489590180724139090249632963584686576950904651873587891239554823271457498536209414190209695744\", \"old_quality_q_range\": [2.398787779794062e-07, 2.8563198312330142e-06], \"old_signed_det6_range\": [8.77053967574314e-11, 1.0438236174740855e-09], \"source_edges\": [[58481, 59753]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52407,
+          52408
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          58481,
+          59741
+        ]
+      ],
+      "reason": "ValueError: replacement cavity boundary is empty; expected a nonempty closed 2-manifold",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52408,
+          52409
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          58784,
+          60174
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 7.604666611508827e-08, \"edge_face_rows\": [[52341, 52342, 52380]], \"exact_det6_delta_from_flux\": \"601136259971453330268421566072201006953895168171222473405979385284530521395806332627046025345174240677672463413445947610365952\", \"input_cell_rows\": [675275, 675276, 724417, 724424, 724425], \"local_volume_fraction_from_flux\": 0.16450563301052576, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 1, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 1.7969183941546059, \"new_oriented_boundary_det6\": \"4255334897248452046726925131605830277348161712783308457188031001288035837920673131795541282858660014421254915145553204830273536\", \"old_exact_cell_det6_sum\": \"3654198637276998716458503565533629270394266544612085983782051616003505316524866799168495257513485773743582451732107257219907584\", \"old_quality_q_range\": [1.658090599120708e-06, 4.6822112405082285e-05], \"old_signed_det6_range\": [2.6946597272742783e-10, 7.609334538823928e-09], \"source_edges\": [[58784, 60174]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52341,
+          52342,
+          52380
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          58784,
+          60174
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 2.871781196061313e-07, \"edge_face_rows\": [[52340, 52341, 52380]], \"exact_det6_delta_from_flux\": \"-2270095318898044761475847542587673401436175233919653244965260755244689761918651613385117540059917879777346977715310292323270656\", \"input_cell_rows\": [675275, 675276, 675279, 724417, 724425], \"local_volume_fraction_from_flux\": 0.2796125116075735, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"5848623353047669719024383572660374184539477745827421211440319557176194553907993005661071082442657682456432373327736629232664576\", \"old_exact_cell_det6_sum\": \"8118718671945714480500231115248047585975652979747074456405580312420884315826644619046188622502575562233779351043046921555935232\", \"old_quality_q_range\": [1.7552092866067962e-05, 0.0005768025919973285], \"old_signed_det6_range\": [3.8648517227334603e-10, 1.2554227049527144e-08], \"source_edges\": [[58784, 60174]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52340,
+          52341,
+          52380
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          57482,
+          60138
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.0026855544033775e-07, \"edge_face_rows\": [[52342, 52343, 52380]], \"exact_det6_delta_from_flux\": \"792606270456685981399616786649717640029886590140723878341862429259465572697050140308499421459703814248833945132091033222381568\", \"input_cell_rows\": [724417, 724423, 724424], \"local_volume_fraction_from_flux\": 0.2751666771687259, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 2, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 5.3101543641799935, \"new_oriented_boundary_det6\": \"3673065047704186696975694134876603041999011197185391653249143536412483813989393478342980244447390500669429628021986027506761728\", \"old_exact_cell_det6_sum\": \"2880458777247500715576077348226885401969124607044667774907281107153018241292343338034480822987686686420595682889894994284380160\", \"old_quality_q_range\": [2.9800325282047946e-07, 4.6822112405082285e-05], \"old_signed_det6_range\": [4.719099375543574e-11, 7.609334538823928e-09], \"source_edges\": [[57482, 60138]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52342,
+          52343,
+          52380
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          55291,
+          55592
+        ]
+      ],
+      "reason": "ValueError: replacement cavity boundary is empty; expected a nonempty closed 2-manifold",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          51767,
+          51769
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          58481,
+          59803
+        ]
+      ],
+      "reason": "ValueError: LOCAL_NATIVE_QUALITY_NO_PROGRESS {\"cumulative_global_volume_fraction_from_flux\": 8.84546852559315e-09, \"edge_face_rows\": [[52405, 52411]], \"exact_det6_delta_from_flux\": \"69921958960345141652851276307063173652825556700631525554501645922955754614315262220996726389137945600483416451371551915245568\", \"input_cell_rows\": [323435, 722788, 722789], \"local_volume_fraction_from_flux\": 0.001528934657456645, \"material\": 15, \"native_bad_new\": 2, \"native_bad_old\": 1, \"native_log_deficit_new\": 4.461091872348437, \"native_log_deficit_old\": 1.490978518776757, \"new_oriented_boundary_det6\": \"45802392355477521593698290314206834953070208939175310808528365196851522315225186515374329208842189734992338138763597775313567744\", \"new_quality_q_range\": [5.129749524804659e-07, 0.0001678554195840586], \"new_signed_det6_range\": [1.9240020274953795e-10, 6.599613126996412e-08], \"old_exact_cell_det6_sum\": \"45732470396517176452045439037899771779417383382474679282973863550928566560610871253153332482453051789391854722312226223398322176\", \"old_quality_q_range\": [2.251522320260871e-06, 0.00016785541958405864], \"old_signed_det6_range\": [8.444727151269589e-10, 6.599613126996415e-08], \"solver\": {\"elapsed_s\": null, \"stage1_message\": \"Optimization terminated successfully. (HiGHS Status 7: Optimal)\", \"stage1_status\": 0, \"stage2_status\": \"Optimization terminated successfully. (HiGHS Status 7: Optimal)\", \"status\": \"PASS_PARTIAL_POSITIVE_CAVITY_MILP\"}, \"source_edges\": [[58481, 59803]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52405,
+          52411
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          33005,
+          34957
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 2.507067555951518e-09, \"edge_face_rows\": [[16073, 16074, 235024]], \"exact_det6_delta_from_flux\": \"-19817952463552495464653988981692784788344233101250898966314959657445097937075776289396892094189107196584595014337960620326912\", \"input_cell_rows\": [724134, 724135, 724137, 724138], \"local_volume_fraction_from_flux\": 0.24605009576025802, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 2, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 2.707294526750286, \"new_oriented_boundary_det6\": \"60726427746168558484173694204766395813734190049449550229198354956673967505012340699176069467000892864973762431157451085578240\", \"old_exact_cell_det6_sum\": \"80544380209721053948827683186459180602078423150700449195513314614119065442088116988572961561190000061558357445495411705905152\", \"old_quality_q_range\": [1.2394480574579787e-06, 1.0202110405792042e-05], \"old_signed_det6_range\": [1.0236616663669979e-11, 8.425935460233871e-11], \"source_edges\": [[33005, 34957]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          16073,
+          16074,
+          235024
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          33005,
+          34957
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 2.507400612841205e-09, \"edge_face_rows\": [[16073, 16074, 235024]], \"exact_det6_delta_from_flux\": \"-19820585222925815092092221819315765236978463760224762251238041915775706108496545138767142790307519724632125350736638259494912\", \"input_cell_rows\": [724134, 724135, 724137, 724138], \"local_volume_fraction_from_flux\": 0.24608278282503476, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 2, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 2.707294526750286, \"new_oriented_boundary_det6\": \"60723794986795238856735461367143415365099959390475686944275272698343359333591571849805818770882480336926232094758773446410240\", \"old_exact_cell_det6_sum\": \"80544380209721053948827683186459180602078423150700449195513314614119065442088116988572961561190000061558357445495411705905152\", \"old_quality_q_range\": [1.2394480574579787e-06, 1.0202110405792042e-05], \"old_signed_det6_range\": [1.0236616663669979e-11, 8.425935460233871e-11], \"source_edges\": [[33005, 34957]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          16073,
+          16074,
+          235024
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          55299,
+          55592
+        ]
+      ],
+      "reason": "ValueError: LOCAL_NATIVE_QUALITY_NO_PROGRESS {\"cumulative_global_volume_fraction_from_flux\": 2.0482679003356843e-11, \"edge_face_rows\": [[51770, 51771]], \"exact_det6_delta_from_flux\": \"161912174185776326912980914244375029415180021370416193166863857665848053552456321464544478281345988734127456437587928940544\", \"input_cell_rows\": [440231, 440232], \"local_volume_fraction_from_flux\": 0.0001367012778040698, \"material\": 15, \"native_bad_new\": 1, \"native_bad_old\": 0, \"native_log_deficit_new\": 2.64229102483222, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"1184585180095943050977070143008601654452305007310440046963233367438282473031809205816604317873509864471476648030445377691844608\", \"new_quality_q_range\": [7.119796625316386e-07, 2.010470352560211e-05], \"new_signed_det6_range\": [1.927417022024474e-12, 3.2576269806717607e-09], \"old_exact_cell_det6_sum\": \"1184423267921757274650157162094357279422889827289069630770066503580616624978256749495139773395228518482742520574007789762904064\", \"old_quality_q_range\": [1.0034870272054374e-05, 1.0078978871830077e-05], \"old_signed_det6_range\": [1.625980910594218e-09, 1.6331279627517393e-09], \"solver\": {\"elapsed_s\": null, \"stage1_message\": \"Optimization terminated successfully. (HiGHS Status 7: Optimal)\", \"stage1_status\": 0, \"stage2_status\": \"Optimization terminated successfully. (HiGHS Status 7: Optimal)\", \"status\": \"PASS_PARTIAL_POSITIVE_CAVITY_MILP\"}, \"source_edges\": [[55299, 55592]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          51770,
+          51771
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          58481,
+          59704
+        ]
+      ],
+      "reason": "ValueError: MILP_NO_FEASIBLE_INCUMBENT {\"cumulative_global_volume_fraction_from_flux\": 8.592413794403947e-09, \"edge_face_rows\": [[52402, 52403]], \"exact_det6_delta_from_flux\": \"-67921603357050955660303952853433087459180245024673405406536030920347144694448001188170116154983098394604098096735678602674176\", \"input_cell_rows\": [704871, 724502, 724503], \"local_volume_fraction_from_flux\": 0.001103233854921509, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 1, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 1.8271576752099932, \"new_oriented_boundary_det6\": \"61497994864900106457750498064968253009163514467868528877573384151152225122658164424656733233866829269809799294359826953177923584\", \"old_exact_cell_det6_sum\": \"61565916468257157413410802017821686096622694712893202282979920182072572267352612425844903350021812368204403392456562631780597760\", \"old_quality_q_range\": [1.6087016382525363e-06, 0.0004652138223452071], \"old_signed_det6_range\": [5.724658862600525e-10, 1.6526549872867764e-07], \"solver\": {\"elapsed_s\": null, \"stage1_message\": \"The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)\", \"stage1_status\": 2, \"stage2_status\": null, \"status\": \"NO_FEASIBLE_STAGE1_INCUMBENT_WITHIN_BOUND\"}, \"source_edges\": [[58481, 59704]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52402,
+          52403
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          59741,
+          59753
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.545924777948445e-09, \"edge_face_rows\": [[52397, 52408]], \"exact_det6_delta_from_flux\": \"-12220278503816549836856268002930467834745399292278432028513596874960543178384711503537317144965573477454703406851956907442176\", \"input_cell_rows\": [18198, 484236, 704874, 704880], \"local_volume_fraction_from_flux\": 0.03205677299816852, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 1, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 1.2530510690607959, \"new_oriented_boundary_det6\": \"368987103303289363450302723384619704696357624491161665099984304681935389238985877211142079630498808171282655330031798998532096\", \"old_exact_cell_det6_sum\": \"381207381807105913287158991387550172531103023783440097128497901556895932417370588714679396775464381648737358736883755905974272\", \"old_quality_q_range\": [2.8563198312330142e-06, 0.040037357618098096], \"old_signed_det6_range\": [9.272623771881552e-14, 1.0438236174740855e-09], \"source_edges\": [[59741, 59753]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52397,
+          52408
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          59961,
+          60059
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.5931675965721165e-08, \"edge_face_rows\": [[52160, 52345, 52347]], \"exact_det6_delta_from_flux\": \"-125937251353225821110134712538907468942687776602574047888900139838820812689486197392667530269116604628696043782272786070765568\", \"input_cell_rows\": [724345, 724346, 724348, 724353], \"local_volume_fraction_from_flux\": 0.8084042613104195, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 2, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 8.128089029211067, \"new_oriented_boundary_det6\": \"29847740612405494042029374245601597424976276802577080603761872809088579007318497941541577281506943064942752873720162275033088\", \"old_exact_cell_det6_sum\": \"155784991965631315152164086784509066367664053405151128492662012647909391696804695334209107550623547693638796655992948345798656\", \"old_quality_q_range\": [1.2459404841627867e-08, 0.0018937818538810106], \"old_signed_det6_range\": [1.878857718595221e-12, 3.577073568555153e-10], \"source_edges\": [[59961, 60059]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52160,
+          52345,
+          52347
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          65823,
+          66707
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.5771890757465068e-09, \"edge_face_rows\": [[47256, 47258, 47259]], \"exact_det6_delta_from_flux\": \"12467417583135528486167728501838857678037143799443078959966467936474067668914440200589326578109922303849520884008509669113856\", \"input_cell_rows\": [710678, 721711, 724302], \"local_volume_fraction_from_flux\": 0.010813883350223123, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"1165375876030515475139977315082062600199694271842313515563430441471534960709687706721244273815338008915441683221893986507554816\", \"old_exact_cell_det6_sum\": \"1152908458447379946653809586580223742521657128042870436603463973535060893040773266520654947237228086611592162337885476838440960\", \"old_quality_q_range\": [1.4165734362347375e-05, 3.246688357193117e-05], \"old_signed_det6_range\": [6.131960811981168e-10, 1.402904910540538e-09], \"source_edges\": [[65823, 66707]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          47256,
+          47258,
+          47259
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          65823,
+          66707
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.6150728059853992e-09, \"edge_face_rows\": [[47256, 47258, 47259]], \"exact_det6_delta_from_flux\": \"12766882176035765691782211682556302583635886077211236503970933693188432931200890600733758439234734659696339999671200006537216\", \"input_cell_rows\": [710678, 721711, 724302], \"local_volume_fraction_from_flux\": 0.011073630419217243, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"1165675340623415712345591798262780045105293014120081673107434907228249325971974157121388705676462821271288502337556676844978176\", \"old_exact_cell_det6_sum\": \"1152908458447379946653809586580223742521657128042870436603463973535060893040773266520654947237228086611592162337885476838440960\", \"old_quality_q_range\": [1.4165734362347375e-05, 3.246688357193117e-05], \"old_signed_det6_range\": [6.131960811981168e-10, 1.402904910540538e-09], \"source_edges\": [[65823, 66707]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          47256,
+          47258,
+          47259
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          57482,
+          60174
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 7.491938863248872e-08, \"edge_face_rows\": [[52342, 52380]], \"exact_det6_delta_from_flux\": \"592225318776287823631284460841310324026065872324046753067059910564054908283025052410121208911449270172193350257053033306259456\", \"input_cell_rows\": [724417, 724424], \"local_volume_fraction_from_flux\": 0.20683251086222196, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 1, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 1.7969183941546059, \"new_oriented_boundary_det6\": \"3455533975174067106849152825076653126685201647590908608635397268851081765137205149656415006520784220651011057459552203659280384\", \"old_exact_cell_det6_sum\": \"2863308656397779283217868364235342802659135775266861855568337358287026856854180097246293797609334950478817707202499170353020928\", \"old_quality_q_range\": [1.658090599120708e-06, 4.6822112405082285e-05], \"old_signed_det6_range\": [2.6946597272742783e-10, 7.609334538823928e-09], \"source_edges\": [[57482, 60174]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          52342,
+          52380
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          65823,
+          66707
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 2.847647571462192e-09, \"edge_face_rows\": [[47255, 47256, 47259]], \"exact_det6_delta_from_flux\": \"22510180896489480704070725189854248879404193433099004954112816278341848100520122231271126435514011356996395899677804108709888\", \"input_cell_rows\": [721711, 724302, 724303], \"local_volume_fraction_from_flux\": 0.02415664398150337, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"954352406734044589024875617536004580623044928843120045801270194320289657350434994571492864670553152252890761489996012383633408\", \"old_exact_cell_det6_sum\": \"931842225837555108320804892346150331743640735410021040847157378041947809249914872340221738235039140895894365590318208274923520\", \"old_quality_q_range\": [1.0066315989703838e-05, 3.246688357193117e-05], \"old_signed_det6_range\": [4.900938904854128e-12, 1.402904910540538e-09], \"source_edges\": [[65823, 66707]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          47255,
+          47256,
+          47259
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          65829,
+          66707
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 1.3226154233863029e-09, \"edge_face_rows\": [[47258, 47259, 164264]], \"exact_det6_delta_from_flux\": \"-10455055160363612958299699334574426352266591505401708733585641680289075740154963693177951892725515322361159940397768034484224\", \"input_cell_rows\": [2374, 695785, 707010, 707011, 710678, 721711], \"local_volume_fraction_from_flux\": 0.014122123063821114, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"729876629609328645059076072276304659135348721534431611938709376615442373902105793785061038721933842006081869139264019342819328\", \"old_exact_cell_det6_sum\": \"740331684769692258017375771610879085487615313039833320672295018295731449642260757478238990614659357328443029079661787377303552\", \"old_quality_q_range\": [1.0385384549149954e-05, 0.003252407704748431], \"old_signed_det6_range\": [2.9862847146988944e-13, 1.402904910540538e-09], \"source_edges\": [[65829, 66707]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          47258,
+          47259,
+          164264
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          55291,
+          55297
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 4.327893498670383e-10, \"edge_face_rows\": [[51769, 169865, 169872]], \"exact_det6_delta_from_flux\": \"-10808748492828081938522168648478712770109782393161308490649864764186050684540938455959501249392941151866143972829212243394560\", \"input_cell_rows\": [46619, 126696, 244795, 365011, 439932, 478797, 769105, 769106], \"local_volume_fraction_from_flux\": 0.18403325878448257, \"material\": 16, \"native_bad_new\": null, \"native_bad_old\": 1, \"native_log_deficit_new\": null, \"native_log_deficit_old\": 2.474506534600464, \"new_oriented_boundary_det6\": \"47923833673126918513800341927323355437864059986009266078931657527232728926008146776554774230090729027583766400784752990748672\", \"old_exact_cell_det6_sum\": \"58732582165955000452322510575802068207973842379170574569581522291418779610549085232514275479483670179449910373613965234143232\", \"old_quality_q_range\": [8.420453202979453e-07, 0.06838967624704621], \"old_signed_det6_range\": [2.096980534123588e-12, 9.215202177133474e-11], \"source_edges\": [[55291, 55297]], \"volume_role\": \"Fat\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          51769,
+          169865,
+          169872
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          65823,
+          66707
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 3.3836967508548184e-09, \"edge_face_rows\": [[47255, 47256, 47259]], \"exact_det6_delta_from_flux\": \"26747560591388628063091924454627767574336734725563250516852292718176695931053145890765440171727474550153631228131848585478144\", \"input_cell_rows\": [721711, 724302, 724303], \"local_volume_fraction_from_flux\": 0.028703958513306777, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"958589786428943736383896816800778099317977470135584291364009670760124505180968018230987178406766615446047996818450056860401664\", \"old_exact_cell_det6_sum\": \"931842225837555108320804892346150331743640735410021040847157378041947809249914872340221738235039140895894365590318208274923520\", \"old_quality_q_range\": [1.0066315989703838e-05, 3.246688357193117e-05], \"old_signed_det6_range\": [4.900938904854128e-12, 1.402904910540538e-09], \"source_edges\": [[65823, 66707]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          47255,
+          47256,
+          47259
+        ]
+      ]
+    },
+    {
+      "patch_seed_edges": [
+        [
+          65823,
+          65928
+        ]
+      ],
+      "reason": "ValueError: PREMILP_REJECT_LOCAL_VOLUME_BUDGET {\"cumulative_global_volume_fraction_from_flux\": 9.211857212603723e-10, \"edge_face_rows\": [[47255, 47256]], \"exact_det6_delta_from_flux\": \"7281820065320336117639889455563905264577627145635163069060640780475393517804587696472278654958747429919484432426438756401152\", \"input_cell_rows\": [724302, 724303], \"local_volume_fraction_from_flux\": 0.017255521579138608, \"material\": 15, \"native_bad_new\": null, \"native_bad_old\": 0, \"native_log_deficit_new\": null, \"native_log_deficit_old\": -0.0, \"new_oriented_boundary_det6\": \"429281238160211846635245636829364312265877413609958722045981787604294928730361100882095464337781419608735235136422583046504448\", \"old_exact_cell_det6_sum\": \"421999418094891510517605747373800407001299786464323558976921146823819535212556513185623185682822672178815750703996144290103296\", \"old_quality_q_range\": [1.0066315989703838e-05, 2.7190247310226262e-05], \"old_signed_det6_range\": [4.900938904854128e-12, 1.1562904065448785e-09], \"source_edges\": [[65823, 65928]], \"volume_role\": \"Skin\"}",
+      "reserved_after_failure": false,
+      "source_face_rows": [
+        [
+          47255,
+          47256
+        ]
+      ]
+    }
+  ],
+  "status": "NO_PATCH_PASSED_LOCAL_SOLVER_AND_QUALITY_GATES"
+}

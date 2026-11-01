@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+"""Read-only all-short-edge census with active-row mapping and exclusion reasons."""
+from pathlib import Path
+from itertools import combinations
+import argparse, hashlib, importlib.util, json, sys, time
+import numpy as np
+HERE=Path(__file__).resolve().parent
+WRAPPER=HERE/'endpoint_quotient_state_proposal_002.py'
+WRAPPER_SHA='4ccb80efcab5e986e1ac8da46d4ab39de8b8d0d956dd945ae0f8a4fe0bfb1709'
+CORE=HERE/'inner_endpoint_quotient_001.py'
+CORE_SHA='87f7e980ce80a84a5380cec5c840e924489fa221ab0f435bcd91490c394054a5'
+def sha(p):return hashlib.file_digest(Path(p).open('rb'),'sha256').hexdigest()
+def imp(name,path,expected=None):
+ p=Path(path).resolve()
+ if expected and sha(p)!=expected:raise ValueError(name+' SHA mismatch')
+ spec=importlib.util.spec_from_file_location(name,p);m=importlib.util.module_from_spec(spec);sys.modules[name]=m;spec.loader.exec_module(m);return m
+def load(path):
+ with np.load(path,allow_pickle=False) as z:return {k:np.array(z[k],copy=True) for k in z.files}
+def fkey(x):return np.ascontiguousarray(np.asarray(x,np.float32).reshape(3)).view(np.uint32).tobytes()
+def _edges(faces):
+ d={};nbr={}
+ for fi,(a,b,c) in enumerate(np.asarray(faces,np.int64)):
+  a,b,c=int(a),int(b),int(c)
+  for x,y,w in ((a,b,c),(b,c,a),(c,a,b)):
+   e=tuple(sorted((x,y)));d.setdefault(e,[]).append((fi,w));nbr.setdefault(x,set()).add(y);nbr.setdefault(y,set()).add(x)
+ if any(len(v)>2 for v in d.values()):raise ValueError('nonmanifold source edge')
+ return d,nbr
+def _source_to_volume_active(Pmod,source,volume):
+ sp=np.asarray(source['points_world_m_f32'],np.float32);sf=np.asarray(source['faces'],np.int64)
+ active=np.unique(sf.reshape(-1)).astype(np.int64)
+ vp=np.asarray(volume['points_world_m_f32'] if 'points_world_m_f32' in volume else volume['points_world_m'],np.float32)
+ lookup={};vol_amb=set()
+ for i,x in enumerate(vp):
+  k=fkey(x)
+  if k in lookup:vol_amb.add(k)
+  else:lookup[k]=int(i)
+ bykey={};src_amb=set()
+ for row in active:
+  k=fkey(sp[int(row)])
+  if k in bykey:src_amb.add(k)
+  else:bykey[k]=int(row)
+ reverse=np.full(len(vp),-1,np.int64);unmapped=[]
+ for k,row in bykey.items():
+  if k in src_amb or k in vol_amb or k not in lookup:
+   unmapped.append(row);continue
+  vr=int(lookup[k])
+  if reverse[vr]>=0:
+   src_amb.add(k);reverse[vr]=-1;unmapped.extend((row,int(reverse[vr])))
+  else:reverse[vr]=row
+ return reverse,{'active_source_points':int(len(active)),'active_source_coordinate_collisions':int(len(src_amb)),
+  'volume_coordinate_collisions':int(len(vol_amb)),'active_unmapped_rows':int(len(unmapped))}
+def _bad_hits(core,role,source,volumes,max_edge):
+ F=np.asarray(source['faces'],np.int64);P=np.asarray(source['points_world_m_f32'],np.float32)
+ edge_rows,nbr=_edges(F);interior={e:rows for e,rows in edge_rows.items() if len(rows)==2}
+ targets=('Skin','Fat') if role=='I' else ('Fat',)
+ hits={};target_detail={};maps={};source_to_volume_by_role={}
+ for vr in targets:
+  v=volumes[vr];vp=np.asarray(v['points_world_m_f32'] if 'points_world_m_f32' in v else v['points_world_m'],np.float32)
+  reverse,mapdoc=_source_to_volume_active(None,source,v)
+  src_to_vol=np.full(len(source['points_world_m_f32']),-1,np.int64)
+  use=np.flatnonzero(reverse>=0)
+  src_to_vol[reverse[use]]=use
+  source_to_volume_by_role[vr]=src_to_vol
+  t=np.asarray(v['tetrahedra'],np.int64)
+  det,q=core.M.measurements(vp,t);bad=np.flatnonzero(~core.M.passes(det,q))
+  vh={};unmappedbad=0;source_corner_hist={0:0,1:0,2:0,3:0,4:0}
+  for cr in bad:
+   sr=reverse[t[int(cr)]]
+   mapped=sr[sr>=0]
+   source_corner_hist[int(len(mapped))]+=1
+   if len(mapped)<2:unmappedbad+=1;continue
+   if len(np.unique(mapped))!=len(mapped):unmappedbad+=1;continue
+   # Boundary tets commonly have one interior apex. Count every edge whose
+   # endpoints are actual active source corners; do not require all four tet
+   # vertices to lie on the source surface.
+   for a,b in combinations(map(int,mapped),2):
+    e=tuple(sorted((a,b)))
+    if e not in interior:continue
+    L=float(np.linalg.norm(P[e[0]].astype(np.float64)-P[e[1]].astype(np.float64)))
+    if L>max_edge:continue
+    vh[e]=vh.get(e,0)+1
+  maps[vr]=mapdoc
+  target_detail[vr]={'native_bad_cells':int(len(bad)),'bad_cells_with_fewer_than_two_active_source_corners':int(unmappedbad),
+                     'bad_cell_source_corner_histogram':{str(k):int(v) for k,v in source_corner_hist.items()},
+                     'candidate_edges_with_bad_cell_hit':int(len(vh)),'bad_cell_edge_hits':int(sum(vh.values()))}
+  for e,n in vh.items():hits[e]=hits.get(e,0)+n
+ return interior,nbr,hits,target_detail,maps,targets,source_to_volume_by_role
+
+def roster(core,role,source,volumes,max_edge,immutable_rows):
+ interior,nbr,hits,vol_detail,map_detail,targets,source_to_volume=_bad_hits(core,role,source,volumes,max_edge)
+ P=np.asarray(source['points_world_m_f32'],np.float32);F=np.asarray(source['faces'],np.int64)
+ rows=[]
+ for e,fr in interior.items():
+  L=float(np.linalg.norm(P[e[0]].astype(np.float64)-P[e[1]].astype(np.float64)))
+  if L>max_edge:continue
+  common=(nbr[e[0]]&nbr[e[1]])-{e[0],e[1]}
+  opposite={int(x) for fi,_ in interior[e] for x in F[int(fi)] if int(x) not in e}
+  link=(common==opposite)
+  fixed={x for x in e if int(x) in immutable_rows}
+  directions=[{'drop':int(a),'keep':int(b),'eligible_endpoint':int(a) not in immutable_rows} for a,b in (e,e[::-1])]
+  eligible=[d for d in directions if d['eligible_endpoint']]
+  h=int(hits.get(e,0))
+  mapped_by_volume={vr:bool(np.all(source_to_volume[vr][np.asarray(e,np.int64)]>=0)) for vr in targets}
+  endpoints_mapped=all(mapped_by_volume.values())
+  reasons=[]
+  if not link:reasons.append('surface_link_condition_fail')
+  if h==0:reasons.append('no_current_bad_tet_edge_hit')
+  if not eligible:reasons.append('both_endpoints_are_immutable_rim_or_route')
+  if not endpoints_mapped:reasons.append('source_endpoint_missing_from_target_volume')
+  row={'role':role,'edge_rows':list(e),'length_m':L,'source_face_rows':[int(x[0]) for x in interior[e]],
+       'link_condition_pass':bool(link),'bad_cell_edge_hits':h,'directions':directions,
+       'target_volume_endpoint_map':mapped_by_volume,'eligible_directions':eligible,'excluded_reasons':reasons}
+  rows.append(row)
+ rows.sort(key=lambda x:(x['length_m'],-x['bad_cell_edge_hits'],x['edge_rows']))
+ accepted=[r for r in rows if r['link_condition_pass'] and r['bad_cell_edge_hits']>0 and r['eligible_directions'] and all(r['target_volume_endpoint_map'].values())]
+ return accepted,rows,vol_detail,map_detail,targets
+
+def self_test(core):
+ # A valid three-cell edge quotient with an inactive duplicate source row.
+ p=np.asarray(((0.,0.,0.),(1.e-7,0.,0.),(0.,1.,0.),(0.,0.,1.),(-1.,-1.,-1.),(1.,-1.,-1.),(0.,0.,0.)),np.float32)
+ tbase=np.asarray(((0,1,2,3),(2,0,3,4),(1,2,3,5)),np.int64);tbase=core.M.orient(p[:6],tbase)
+ b=core.boundary_faces(tbase);source={'points_world_m_f32':p,'faces':b}
+ # Replace one boundary tetra's apex with a volume-interior point while
+ # retaining a very short source edge; the roster must still see its two
+ # mapped source corners and must ignore the inactive duplicate source row 6.
+ vp=np.vstack((p[:6],np.asarray([[.25,.25,1.e-7]],np.float32)))
+ t=np.asarray(((0,1,2,6),(2,0,3,4),(1,2,3,5)),np.int64);t=core.M.orient(vp,t)
+ volume={'points_world_m_f32':vp,'tetrahedra':t}
+ interior,nbr,hits,vd,md,targets,source_to_volume=_bad_hits(core,'D',source,{'Fat':volume},50e-6)
+ edge=(0,1)
+ assert edge in interior and hits.get(edge,0)>0,(interior,hits)
+ assert 6 not in np.unique(source['faces'])
+ assert md['Fat']['active_source_coordinate_collisions']==0
+ assert vd['Fat']['bad_cell_source_corner_histogram']['3']>=1,(vd,hits)
+ # The inactive duplicate must not overwrite active point row 0 in reverse map.
+ wrapper=imp('endpoint_state_wrapper_fixture',WRAPPER,WRAPPER_SHA)
+ Pmod=imp('endpoint_protection_fixture',wrapper.PROTECTION,wrapper.PROTECTION_SHA)
+ rev,_=_source_to_volume_active(Pmod,source,volume)
+ assert rev[0]==0,(rev.tolist())
+ assert source_to_volume['Fat'][0]>=0 and source_to_volume['Fat'][1]>=0
+ return {'inactive_duplicate_does_not_overwrite_active_row':True,'bad_edge_retained':True,
+         'bad_hit_count':hits[edge],'source_link_condition':True}
+
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--state',type=Path);ap.add_argument('--role',choices=('I','D'));ap.add_argument('--max-edge-m',type=float,default=50e-6);ap.add_argument('--output',type=Path);ap.add_argument('--self-test',action='store_true');a=ap.parse_args()
+ wrapper=imp('endpoint_state_wrapper_004',WRAPPER,WRAPPER_SHA);core=imp('endpoint_core_004',CORE,CORE_SHA)
+ if a.self_test:
+  print(json.dumps({'status':'PASS_READ_ONLY_SHORT_EDGE_ROSTER_CONTROLS','controls':self_test(core)},indent=2));return
+ if not(a.state and a.role and a.output):ap.error('--state --role and --output required')
+ stpath=a.state.resolve();st=json.loads(stpath.read_text());refs={r:wrapper.check_ref(st['source_surfaces'][r],r+' source') for r in ('O','I','D')}
+ source=load(refs[a.role]);targets=('Skin','Fat') if a.role=='I' else ('Fat',)
+ volumes={vr:load(wrapper.check_ref(st[vr+'_current'],vr+' volume')) for vr in targets}
+ # Derive exact 795 rim/route rows; actual inner-back endpoints are bounded by L<=50um.
+ vc={vr:wrapper.point_cache(wrapper.imp('endpoint_protection_004',wrapper.PROTECTION,wrapper.PROTECTION_SHA),volumes[vr]) for vr in targets}
+ Pmod=wrapper.imp('endpoint_protection_masks_004',wrapper.PROTECTION,wrapper.PROTECTION_SHA)
+ protections=Pmod.protected_scope(stpath,st,a.role,vc,a.output.parent)
+ src=protections[targets[-1]]['report']['sources'][a.role]
+ immutable=set(map(int,src['rim_rows']))|set(map(int,src['route_rows']))
+ accepted,allshort,vd,md,targets=roster(core,a.role,source,volumes,a.max_edge_m,immutable)
+ # Highlight any queried source edge even when not in eligible list.
+ facet_edge=[102734,102735] if a.role=='D' else None
+ report={'schema':'h706.bad-short-endpoint-edge-roster.v2','status':'PASS_READ_ONLY_ACTIVE_ROW_BAD_CELL_CENSUS',
+  'physical_admission':False,'native_steps':0,'input_state':{'path':str(stpath),'sha256':sha(stpath)},
+  'role':a.role,'maximum_edge_m':a.max_edge_m,'target_volumes':vd,'active_coordinate_mapping':md,
+  'protected_scope':{'helper_path':str(wrapper.PROTECTION),'helper_sha256':wrapper.PROTECTION_SHA,
+      'immutable_rim_route_source_rows':len(immutable),'back_source_rows':len(src['back_rows']),
+      'back_endpoints_allowed_with_distance_bound':True},
+  'eligible_bad_cell_hit_edges':accepted,'eligible_count':len(accepted),
+  'excluded_short_edges':allshort,'excluded_count':len(allshort)-len(accepted),
+  'known_facet_edge_diagnostic':None if facet_edge is None else next((x for x in allshort if x['edge_rows']==facet_edge),None),
+  'full_source_audit':'NOT_RUN','mass_mapping':'PENDING','elapsed_s':time.monotonic()-tic}
+ a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2,sort_keys=True)+'\n')
+ print(json.dumps({'status':report['status'],'role':a.role,'eligible_count':len(accepted),
+  'excluded_count':report['excluded_count'],'known_edge':report['known_facet_edge_diagnostic'],
+  'shortest':accepted[:5],'elapsed_s':report['elapsed_s']},indent=2))
+if __name__=='__main__':
+ tic=time.monotonic();main()
