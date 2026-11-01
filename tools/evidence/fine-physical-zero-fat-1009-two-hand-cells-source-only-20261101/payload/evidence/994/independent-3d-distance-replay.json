@@ -1,0 +1,296 @@
+{
+  "candidate_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/candidate-state-proposal.json",
+    "sha256": "b9a45bb0b1a467839dd6ca0f7abe049453d28ffe0a343d368778d41958bc9733"
+  },
+  "candidate_surface": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/candidate-I-typed-current.npz",
+    "sha256": "e12a028f2c52260b96d7630a128fa7a4635d073cb157b7d17ae6ff4b2b77588d"
+  },
+  "controls": {
+    "folded_patch": {
+      "known_reverse_distance_m": 1.0,
+      "source_flat_to_target_folded": {
+        "lattice_n": 64,
+        "microtriangle_diameter_upper_m": 0.022097086914079613,
+        "sample_count": 2145,
+        "sample_float64_outward_pad_m": 5e-09,
+        "sampled_max_distance_m": 0.0,
+        "sampled_max_point_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_triangle_bounds": [
+          {
+            "lattice_n": 64,
+            "microtriangle_diameter_upper_m": 0.022097086914079613,
+            "sample_count": 2145,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 0.0,
+            "sampled_max_point_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "source_triangle_index": 0,
+            "upper_bound_m": 0.022097091914079617
+          }
+        ],
+        "upper_bound_m": 0.022097091914079617
+      },
+      "source_folded_to_target_flat": {
+        "lattice_n": 64,
+        "microtriangle_diameter_upper_m": 0.022097086914079613,
+        "sample_count": 4290,
+        "sample_float64_outward_pad_m": 5e-09,
+        "sampled_max_distance_m": 1.0,
+        "sampled_max_point_m": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "source_triangle_bounds": [
+          {
+            "lattice_n": 64,
+            "microtriangle_diameter_upper_m": 0.022097086914079613,
+            "sample_count": 2145,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 0.0,
+            "sampled_max_point_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "source_triangle_index": 0,
+            "upper_bound_m": 0.022097091914079617
+          },
+          {
+            "lattice_n": 64,
+            "microtriangle_diameter_upper_m": 0.022097086914079613,
+            "sample_count": 2145,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 1.0,
+            "sampled_max_point_m": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "source_triangle_index": 1,
+            "upper_bound_m": 1.0220970919140797
+          }
+        ],
+        "upper_bound_m": 1.0220970919140797
+      }
+    },
+    "parallel_planes": {
+      "expected_distance_m": 2e-05,
+      "forward": {
+        "lattice_n": 64,
+        "microtriangle_diameter_upper_m": 2.209708891207961e-05,
+        "sample_count": 2145,
+        "sample_float64_outward_pad_m": 5e-09,
+        "sampled_max_distance_m": 2e-05,
+        "sampled_max_point_m": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "source_triangle_bounds": [
+          {
+            "lattice_n": 64,
+            "microtriangle_diameter_upper_m": 2.209708891207961e-05,
+            "sample_count": 2145,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 2e-05,
+            "sampled_max_point_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "source_triangle_index": 0,
+            "upper_bound_m": 4.2102088912079614e-05
+          }
+        ],
+        "upper_bound_m": 4.2102088912079614e-05
+      },
+      "reverse": {
+        "lattice_n": 64,
+        "microtriangle_diameter_upper_m": 2.209708891207961e-05,
+        "sample_count": 2145,
+        "sample_float64_outward_pad_m": 5e-09,
+        "sampled_max_distance_m": 2e-05,
+        "sampled_max_point_m": [
+          0.0,
+          0.0,
+          2e-05
+        ],
+        "source_triangle_bounds": [
+          {
+            "lattice_n": 64,
+            "microtriangle_diameter_upper_m": 2.209708891207961e-05,
+            "sample_count": 2145,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 2e-05,
+            "sampled_max_point_m": [
+              0.0,
+              0.0,
+              2e-05
+            ],
+            "source_triangle_index": 0,
+            "upper_bound_m": 4.2102088912079614e-05
+          }
+        ],
+        "upper_bound_m": 4.2102088912079614e-05
+      }
+    },
+    "status": "PASS"
+  },
+  "face_rows": [
+    52337,
+    52342
+  ],
+  "method": {
+    "attempted_n": [
+      512,
+      1024,
+      2048
+    ],
+    "candidate_lattice_n": 2048,
+    "cap_m": 5e-05,
+    "description": "Independent uniform barycentric triangular lattice. Distance to the target triangle union is 1-Lipschitz. Every source microtriangle has diameter at most the source triangle longest edge divided by n; upper bound is maximum sampled point-to-target-union distance plus that diameter and explicit outward float64 padding.",
+    "directional_results": {
+      "new_to_old": {
+        "lattice_n": 2048,
+        "microtriangle_diameter_upper_m": 2.567295245002757e-05,
+        "sample_count": 4200450,
+        "sample_float64_outward_pad_m": 5e-09,
+        "sampled_max_distance_m": 1.4405508945121842e-05,
+        "sampled_max_point_m": [
+          0.046875165739038493,
+          -0.1385584713134449,
+          0.11106141694472171
+        ],
+        "source_triangle_bounds": [
+          {
+            "lattice_n": 2048,
+            "microtriangle_diameter_upper_m": 2.567295245002757e-05,
+            "sample_count": 2100225,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 1.4405508945121842e-05,
+            "sampled_max_point_m": [
+              0.046875165739038493,
+              -0.1385584713134449,
+              0.11106141694472171
+            ],
+            "source_triangle_index": 0,
+            "upper_bound_m": 4.008346139514942e-05
+          },
+          {
+            "lattice_n": 2048,
+            "microtriangle_diameter_upper_m": 1.6245547822053453e-06,
+            "sample_count": 2100225,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 1.4405508945121842e-05,
+            "sampled_max_point_m": [
+              0.046875165739038493,
+              -0.1385584713134449,
+              0.11106141694472171
+            ],
+            "source_triangle_index": 1,
+            "upper_bound_m": 1.6035063727327192e-05
+          }
+        ],
+        "upper_bound_m": 4.008346139514942e-05
+      },
+      "old_to_new": {
+        "lattice_n": 2048,
+        "microtriangle_diameter_upper_m": 2.567295245002757e-05,
+        "sample_count": 4200450,
+        "sample_float64_outward_pad_m": 5e-09,
+        "sampled_max_distance_m": 1.4417310651395993e-05,
+        "sampled_max_point_m": [
+          0.046854801394147216,
+          -0.1385758210599306,
+          0.11107329703008872
+        ],
+        "source_triangle_bounds": [
+          {
+            "lattice_n": 2048,
+            "microtriangle_diameter_upper_m": 2.567295245002757e-05,
+            "sample_count": 2100225,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 1.4417310651395993e-05,
+            "sampled_max_point_m": [
+              0.046854801394147216,
+              -0.1385758210599306,
+              0.11107329703008872
+            ],
+            "source_triangle_index": 0,
+            "upper_bound_m": 4.009526310142357e-05
+          },
+          {
+            "lattice_n": 2048,
+            "microtriangle_diameter_upper_m": 2.4693592144696875e-05,
+            "sample_count": 2100225,
+            "sample_float64_outward_pad_m": 5e-09,
+            "sampled_max_distance_m": 1.4417310651395993e-05,
+            "sampled_max_point_m": [
+              0.046854801394147216,
+              -0.1385758210599306,
+              0.11107329703008872
+            ],
+            "source_triangle_index": 1,
+            "upper_bound_m": 3.9115902796092875e-05
+          }
+        ],
+        "upper_bound_m": 4.009526310142357e-05
+      }
+    },
+    "distance_function": "orthogonal plane projection when barycentrically inside, otherwise minimum clamped point-to-edge-segment distance; minimum across both target triangles",
+    "maximum_batch_points": 64000,
+    "radius_outward_pad_m": 2e-12,
+    "sample_float64_outward_pad_m": 5e-09
+  },
+  "new_faces": [
+    [
+      57482,
+      60059,
+      59941
+    ],
+    [
+      59961,
+      59941,
+      60059
+    ]
+  ],
+  "old_faces": [
+    [
+      57482,
+      60059,
+      59961
+    ],
+    [
+      57482,
+      59961,
+      59941
+    ]
+  ],
+  "parent_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-984-retained-I-quad-qualified-root/verified-state.json",
+    "sha256": "ff37d39728b34d91887060f8742d54121a4ecb69c76dbc2f89f2b88bb9e0781c"
+  },
+  "parent_surface": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-982-retained-I-quad-root/candidate-I-typed-current.npz",
+    "sha256": "47899d3bfd0ec0b698aa346a6b37241281fabdbd38b258985c2eb1e2823137a1"
+  },
+  "points_world_m_f32_sha256": "d34d1144c0e949fe9c2629b881888780e68bbf8c1cf811f7065001a1de04728f",
+  "points_world_m_f64_sha256": "4ba2c5cc52c43610a092fe16beb22c7a6169d76439cee413f57b03822dfddd93",
+  "schema": "independent_backskin_patch_3d_lattice_lipschitz_replay_v1",
+  "source_face_arrays_changed_rows": [
+    52337,
+    52342
+  ],
+  "source_point_arrays_bitwise_identical": true,
+  "status": "PASS"
+}

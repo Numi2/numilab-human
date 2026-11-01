@@ -1,0 +1,75 @@
+{
+  "actual_candidate": {
+    "exact_paired_delta_det6": "0",
+    "fresh_all185": "PENDING",
+    "independent_replay_status": "PASS_INDEPENDENT_BACKSKIN_CAP_REPLAY",
+    "mass_mapping": "NOT_RUN",
+    "physical_admission": false,
+    "report_status": "PASS_INDEPENDENT_REPLAY_PENDING_FRESH_775_808",
+    "source_candidate": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/candidate-I-typed-current.npz",
+      "sha256": "e12a028f2c52260b96d7630a128fa7a4635d073cb157b7d17ae6ff4b2b77588d"
+    }
+  },
+  "distance": {
+    "cap_m": 5e-05,
+    "new_to_old_upper_m": 4.008346139514942e-05,
+    "old_to_new_upper_m": 4.009526310142357e-05,
+    "source": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/independent-3d-distance-replay-994.json",
+      "sha256": "ec10bce966ab1c13ee9527587c18bdc2d89a3d1d1d1d00bcbd51db49740e8e05"
+    },
+    "status": "PASS"
+  },
+  "geometry_files_written": false,
+  "inputs": {
+    "controls983": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/retained_cap_transfer_983_controls.json",
+      "sha256": "4b34446cfd42fbce234c4350a8893fc6627173e3fb431f7d890900bb7f740ef0"
+    },
+    "distance994": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/independent-3d-distance-replay-994.json",
+      "sha256": "ec10bce966ab1c13ee9527587c18bdc2d89a3d1d1d1d00bcbd51db49740e8e05"
+    },
+    "journal992": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/operation-journal.json",
+      "sha256": "50ee0410380ca8dfbc850358eee1aa2820c2e3c64c8b97e19eebf5f11d776f61"
+    },
+    "replay993": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/independent-replay.json",
+      "sha256": "14f5194975ea933205a8cb459b07723e8aa38451f521cca25726bcb1f99835c3"
+    },
+    "report993": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-992-backskin-cap-candidate-root/report.json",
+      "sha256": "6f8cec52b9cfea4046ba820291491b2875398b0b4d6ecd4409a97b3f053849c5"
+    }
+  },
+  "native_steps": 0,
+  "new_boundary_alias_empty_seed_controls": {
+    "cyclic_face_orientation_chain_equivalence": "PASS",
+    "empty_entire_material_domain_rejected": "PASS",
+    "exact_boundary_alias_required": "PASS_REJECTS_MISMATCH",
+    "formerly_good_regression_rejected": "PASS",
+    "incomplete_parent_union_rejected": "PASS",
+    "positive_full_domain_after_empty_seed_retirement": "PASS",
+    "reversed_target_facet_rejected": "PASS",
+    "wrong_retired_cell_rejected": "PASS"
+  },
+  "reused_983_negative_controls": {
+    "changed_source_ancestry_mutation_rejected": "typed-I changed face ancestry mismatch",
+    "empty_entire_material_domain_rejected": "empty cap would remove the entire material domain",
+    "former_good_quality_regression_rejected": "formerly-good retained material cell regressed",
+    "full_domain_target_mutation_rejected": "full target differs from exact changed-target construction",
+    "synthetic_empty_cap_full_domain_positive_exact_target": "PASS",
+    "wrong_changed_target_rejected": "empty local target is not exactly the source-flip cap shell",
+    "wrong_retired_cell_rejected": "wrong retired cell row",
+    "wrong_retirement_source_face_rejected": "empty retirement source-face identity mismatch",
+    "wrong_tet_cap_rejected": "changed source face is not on retired cap boundary"
+  },
+  "schema": "h706.retained-cap-transfer-995-controls.v1",
+  "source": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/retained_cap_transfer_995_controls.py",
+    "sha256": "7baffdeb0cb2c7800de6f3f3a8f86112522cda23c1bc4e6dda94f871502792c1"
+  },
+  "status": "PASS_RETAINED_CAP_TRANSFER_995"
+}
