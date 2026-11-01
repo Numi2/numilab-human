@@ -1,0 +1,4711 @@
+{
+  "status": "CONSTRUCTION_INCOMPLETE",
+  "input": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-cap-interior-fit-019/actual-001/linearization-debug.npz",
+    "sha256": "7743fef4a72bfe1d776cbd1d65206fd68d5b1c729d8350b21a18ba3ae386c18e"
+  },
+  "resume": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/integer-f32-quality-1013-root/actual-001/report.json",
+    "sha256": "53aa638b416995e20aaae49b171628d374ff377eb17328674fecf7b6187ff503"
+  },
+  "producer_sha256": "6b7748e9413556dc5fd5148cba919474489fa3273e2deb4abe784e097066a0a4",
+  "initial_deficit": 0.615337038483917,
+  "final_deficit": 0.5088658119962594,
+  "final_roles": {
+    "Skin": {
+      "bad": 2,
+      "qmin": 4.911341880037407e-06,
+      "det6min": 1.6477067225141888e-17,
+      "oldgood_regressions": 0
+    },
+    "Fat": {
+      "bad": 0,
+      "qmin": 1.0001586407140936e-05,
+      "det6min": 2.5078369167154087e-17,
+      "oldgood_regressions": 0
+    }
+  },
+  "positive": true,
+  "history": [
+    {
+      "iteration": 0,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.536828458550913,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 5354.02809176643,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.64676166662586e-06,
+              "det6min": 1.6501525301493855e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 9,
+              "qmin": -0.0040841905130699074,
+              "det6min": -7.29864344762914e-15,
+              "oldgood_regressions": 9
+            }
+          },
+          "max_move_m": 8.58306884765625e-06
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 83.78366340094679,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.242872045291863e-06,
+              "det6min": 1.644731519286958e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 4,
+              "qmin": -2.529607073238585e-05,
+              "det6min": -3.671141378562624e-16,
+              "oldgood_regressions": 4
+            }
+          },
+          "max_move_m": 4.291534423828125e-06
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.5958437366338742,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.041562633661257e-06,
+              "det6min": 1.6420210138557443e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0016121019928528e-05,
+              "det6min": 2.472213887327445e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.1457672119140625e-06,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 1,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5330329094439601,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 1156.0803721326874,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.684444905863355e-06,
+              "det6min": 1.6528630355805993e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 8,
+              "qmin": -0.0007917887879242844,
+              "det6min": -6.513701019728564e-15,
+              "oldgood_regressions": 8
+            }
+          },
+          "max_move_m": 1.0728836059570312e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 58.706480020438185,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.369126930662987e-06,
+              "det6min": 1.6474420247181718e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -1.6318398270368974e-05,
+              "det6min": -1.0438796190177167e-15,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 6.4373016357421875e-06
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 12.22554752195154,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.217865563617114e-06,
+              "det6min": 1.644731519286958e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": 2.381316723058491e-06,
+              "det6min": 1.296325692257583e-17,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 4.291534423828125e-06
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 0.5867688604405883,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.1323113955941175e-06,
+              "det6min": 1.643376266571351e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0016362798626269e-05,
+              "det6min": 2.469278388769617e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.2186508178710938e-06,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 2,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5313280864567717,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 673.8482251398283,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.701197934184563e-06,
+              "det6min": 1.6542182882962062e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 7,
+              "qmin": -0.0004969966482428139,
+              "det6min": -1.7532304179553745e-15,
+              "oldgood_regressions": 7
+            }
+          },
+          "max_move_m": 1.1801719665527344e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 22.00745404390045,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.433782016951488e-06,
+              "det6min": 1.6487972774337787e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -1.1936942652766962e-06,
+              "det6min": -6.5384987827621604e-18,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 7.510185241699219e-06
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.5715286776009482,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.284713223990519e-06,
+              "det6min": 1.646086772002565e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0019633519726457e-05,
+              "det6min": 2.4685663516983312e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.364418029785156e-06,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 3,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5279632262913189,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 1375.56324020656,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.7339349662776164e-06,
+              "det6min": 1.65692879372742e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 7,
+              "qmin": -0.0008901899049652105,
+              "det6min": -1.7907773238643487e-15,
+              "oldgood_regressions": 7
+            }
+          },
+          "max_move_m": 1.3947486877441406e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 6.60420415093071,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.505756884162964e-06,
+              "det6min": 1.6515077828649924e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": 7.180662297899603e-06,
+              "det6min": 2.508964529326441e-17,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 9.655952453613281e-06
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 1.1840469545476249,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.4052211485125556e-06,
+              "det6min": 1.6487972774337787e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.37543093060112e-06,
+              "det6min": 2.4901286341618735e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 7.510185241699219e-06
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 0.5654450231000934,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.345549768999067e-06,
+              "det6min": 1.6474420247181718e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0008620541644213e-05,
+              "det6min": 2.4793474929301024e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 6.4373016357421875e-06,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 4,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5265319660518818,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 712.4304807717186,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.747293284623438e-06,
+              "det6min": 1.6582840464430268e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 6,
+              "qmin": -0.0004884070216275968,
+              "det6min": -1.992322474151295e-15,
+              "oldgood_regressions": 6
+            }
+          },
+          "max_move_m": 1.5020370483398438e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 6.42669700339448,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.546575417799813e-06,
+              "det6min": 1.6528630355805993e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 4.118645454825539e-06,
+              "det6min": 2.4704165892924898e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.0728836059570312e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.5550526744280064,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.449473255719935e-06,
+              "det6min": 1.6501525301493855e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0006349069574507e-05,
+              "det6min": 2.4735188474618087e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 8.58306884765625e-06,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 5,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5240329940038589,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 1063.7672508894198,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.771528673290208e-06,
+              "det6min": 1.6406657611401374e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 6,
+              "qmin": -0.000629297787905694,
+              "det6min": -2.9161102648331093e-15,
+              "oldgood_regressions": 6
+            }
+          },
+          "max_move_m": 1.71661376953125e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 55.26039431992845,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.623302200441635e-06,
+              "det6min": 1.6454091456447615e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -2.6206746683687123e-05,
+              "det6min": -3.472187368235778e-16,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.2874603271484375e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.5464326223556943,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.535673776443057e-06,
+              "det6min": 1.6477808378970735e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000574408833875e-05,
+              "det6min": 2.475911715537802e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.0728836059570312e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 6,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5211344217885436,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 948.4625595223929,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.800896291408306e-06,
+              "det6min": 1.6382940688878253e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 5,
+              "qmin": -0.0008240346322262929,
+              "det6min": -1.022374312754767e-15,
+              "oldgood_regressions": 5
+            }
+          },
+          "max_move_m": 1.9311904907226562e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 47.19439025722343,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.671326768436494e-06,
+              "det6min": 1.6430374533924494e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 4,
+              "qmin": -1.9822501127652657e-05,
+              "det6min": -8.960261270168771e-17,
+              "oldgood_regressions": 4
+            }
+          },
+          "max_move_m": 1.5020370483398438e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.7471090702541362,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.603472991630887e-06,
+              "det6min": 1.6454091456447615e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000546979806394e-05,
+              "det6min": 2.558380960864849e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.2874603271484375e-05
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 32.6557290077601,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.572397978337756e-06,
+              "det6min": 1.6465949917709175e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -1.6247543457050922e-05,
+              "det6min": -2.3579562895833324e-16,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.1801719665527344e-05
+        },
+        {
+          "alpha": 0.0625,
+          "deficit": 16.44087077612355,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.551767700601721e-06,
+              "det6min": 1.6471879148339955e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": -5.893629308079612e-06,
+              "det6min": -3.2441388349619305e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.1265277862548828e-05
+        },
+        {
+          "alpha": 0.03125,
+          "deficit": 10.573747111141197,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.5433400130154714e-06,
+              "det6min": 1.6474843763655345e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": -2.808111244274467e-08,
+              "det6min": -1.5453057331470642e-19,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.099705696105957e-05
+        },
+        {
+          "alpha": 0.015625,
+          "deficit": 3.681628510539177,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.5364821533549005e-06,
+              "det6min": 1.647632607131304e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 6.864723274125334e-06,
+              "det6min": 2.4814068417831144e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.0862946510314941e-05
+        },
+        {
+          "alpha": 0.0078125,
+          "deficit": 0.5463543504927921,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.53645649507208e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001653561192197e-05,
+              "det6min": 2.4786592786604582e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.0795891284942627e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 7,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5210597158488375,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 967.5139237780605,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.801775240684284e-06,
+              "det6min": 1.6382199535049406e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 7,
+              "qmin": -0.0007859999866695892,
+              "det6min": -1.94143914036692e-15,
+              "oldgood_regressions": 7
+            }
+          },
+          "max_move_m": 1.9378960132598877e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 54.339662776527746,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.672199187787274e-06,
+              "det6min": 1.6429633380095647e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": -1.9854169430247284e-05,
+              "det6min": -1.824508703687967e-16,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.5087425708770752e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 1.510381426911611,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.604341970755282e-06,
+              "det6min": 1.6453350302618767e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.178810871049631e-06,
+              "det6min": 2.4920423992270762e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.294165849685669e-05
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 38.170059011409464,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.573180907583378e-06,
+              "det6min": 1.6465208763880327e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -1.3091972089214183e-05,
+              "det6min": -1.8999978681340463e-16,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.1868774890899658e-05
+        },
+        {
+          "alpha": 0.0625,
+          "deficit": 15.520450581329722,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.552550519216873e-06,
+              "det6min": 1.6471137994511107e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": -4.969196801451504e-06,
+              "det6min": -2.7352864388768697e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.1332333087921143e-05
+        },
+        {
+          "alpha": 0.03125,
+          "deficit": 9.649798943918563,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.544122778613124e-06,
+              "det6min": 1.6474102609826497e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": 8.961424691260686e-07,
+              "det6min": 4.93147875847374e-18,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.1064112186431885e-05
+        },
+        {
+          "alpha": 0.015625,
+          "deficit": 2.757326655736069,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.5372648856978435e-06,
+              "det6min": 1.6475584917484193e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 7.788946855694147e-06,
+              "det6min": 2.4841544049057705e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.0930001735687256e-05
+        },
+        {
+          "alpha": 0.0078125,
+          "deficit": 0.5487130618525116,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.537239222782799e-06,
+              "det6min": 1.647632607131304e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.997563015869209e-06,
+              "det6min": 2.4814068417831144e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.0862946510314941e-05
+        }
+      ],
+      "accepted": false
+    },
+    {
+      "iteration": 8,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5261590017295179,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 2.4592140781589595,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.743528178004683e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": 8.587034013937531e-06,
+              "det6min": 9.693749450843633e-18,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.5087425708770752e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 77.83195276723424,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.6513971857919134e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": -6.710599400431481e-05,
+              "det6min": -3.033357068317862e-16,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.294165849685669e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 13.21876165175558,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 3,
+              "qmin": 4.593938107320077e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 1
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": -2.611838571831643e-06,
+              "det6min": -1.1806156977067252e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.1868774890899658e-05
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 13.33032852689569,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.58002294447046e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": -2.7837164853328654e-06,
+              "det6min": -1.5327034710786963e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.1332333087921143e-05
+        },
+        {
+          "alpha": 0.0625,
+          "deficit": 25.621256720123775,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.548200154998059e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -3.801310443559698e-06,
+              "det6min": -5.516725585467258e-17,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.1064112186431885e-05
+        },
+        {
+          "alpha": 0.03125,
+          "deficit": 2.7578615540108737,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.53665565833765e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": 7.788946855694147e-06,
+              "det6min": 2.4814068417831144e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 1.0930001735687256e-05
+        },
+        {
+          "alpha": 0.015625,
+          "deficit": 3.6815528035963876,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.537239222782799e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 6.864723274125334e-06,
+              "det6min": 2.4814068417831144e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.0862946510314941e-05
+        },
+        {
+          "alpha": 0.0078125,
+          "deficit": 0.5463543504927921,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.53645649507208e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001653561192197e-05,
+              "det6min": 2.4786592786604582e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.0795891284942627e-05
+        }
+      ],
+      "accepted": false
+    },
+    {
+      "iteration": 9,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5287218062914871,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 2.844727652202706,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.714984101650412e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 7.683773937632254e-06,
+              "det6min": 5.675848665542859e-18,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.294165849685669e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 0.5374933365596,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.6250666344040015e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0004279413917752e-05,
+              "det6min": 2.4956052315614646e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.1868774890899658e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 10,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5272631844930129,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 162.57875269071837,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.7296434686092066e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -9.484911158630234e-05,
+              "det6min": -2.285774391749587e-16,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.401454210281372e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 0.5383932708136463,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.680906895630856e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.993516039623268e-06,
+              "det6min": 1.8890317031428593e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.294165849685669e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 35.09988114847963,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.655997711549332e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -1.8374714974706302e-05,
+              "det6min": -1.0151296796615704e-16,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.2405216693878174e-05
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 37.37105365146729,
+          "positive": false,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.6354183933675655e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": -1.846765386599444e-05,
+              "det6min": -2.6801541231312714e-16,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 1.2136995792388916e-05
+        },
+        {
+          "alpha": 0.0625,
+          "deficit": 1.9439882090245406,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.623892603081963e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 8.593622530667263e-06,
+              "det6min": 2.4901101053161523e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.2002885341644287e-05
+        },
+        {
+          "alpha": 0.03125,
+          "deficit": 2.887927984765647,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.624479962211057e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 7.649624019013248e-06,
+              "det6min": 2.4928576684388084e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.1935830116271973e-05
+        },
+        {
+          "alpha": 0.015625,
+          "deficit": 0.5374933365596,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.6250666344040015e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0004279413917752e-05,
+              "det6min": 2.4956052315614646e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.1868774890899658e-05
+        },
+        {
+          "alpha": 0.0078125,
+          "deficit": 0.5374933365596,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.6250666344040015e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0004279413917752e-05,
+              "det6min": 2.4956052315614646e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.1868774890899658e-05
+        }
+      ],
+      "accepted": false
+    },
+    {
+      "iteration": 11,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5285974758055033,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5285015898349589,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.714984101650412e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0005504564892471e-05,
+              "det6min": 8.597741756655771e-18,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.294165849685669e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 12,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5272140915770802,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5271219630073373,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.7287803699266276e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001109467272759e-05,
+              "det6min": 2.8487517961175036e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.401454210281372e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 13,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.526180803320684,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5260814598601609,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.739185401398391e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0003917836679839e-05,
+              "det6min": 2.821612331091884e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.5087425708770752e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 14,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5253156326684477,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5252161674783205,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.747838325216796e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0002188688548654e-05,
+              "det6min": 2.5145205360648372e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.6160309314727783e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 15,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5244884619012407,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 1.1724894611154277,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.755934222116237e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.35191711667295e-06,
+              "det6min": 2.5178345524709696e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.7233192920684814e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 1.4847353466618172,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.751027349755958e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.040161918362588e-06,
+              "det6min": 2.514814350618416e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 1.66967511177063e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.5250316824563896,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.7496831754361035e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0002892146530357e-05,
+              "det6min": 2.498077508976263e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.642853021621704e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 16,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5242803433080778,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5241989657525784,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.758010342474216e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0004127185031386e-05,
+              "det6min": 2.4482005032727856e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.7501413822174072e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 17,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5234274941734043,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5233439143413867,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.766560856586133e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0002935997898017e-05,
+              "det6min": 2.93511739300192e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.8574297428131104e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 18,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5221570172461416,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5220711935086402,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.779288064913599e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001505338108135e-05,
+              "det6min": 2.786164002249291e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 1.9647181034088135e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 19,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.520871656338413,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5207997874830055,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.792002125169946e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000434334702497e-05,
+              "det6min": 2.642663386094612e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.0720064640045166e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 20,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5198836759235685,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.51980165127635,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8019834872365e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000091463676068e-05,
+              "det6min": 2.5655225074013867e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.1792948246002197e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 21,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5190656539462362,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5189845397388617,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.810154602611383e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001883270093125e-05,
+              "det6min": 2.4883816287081615e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.286583185195923e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 22,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5183538328088753,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5182614442029323,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.817385557970677e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001029485953363e-05,
+              "det6min": 2.975298518437296e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.393871545791626e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 23,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5177743394104499,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.517689222514048,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.82310777485952e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000158556069468e-05,
+              "det6min": 2.444759431924565e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.501159906387329e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 24,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5168093534782275,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5167279664530906,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.832720335469094e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001355035549008e-05,
+              "det6min": 2.4328030324784785e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.6084482669830322e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 25,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5162658371862692,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5161851207221972,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.838148792778027e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0007596919875e-05,
+              "det6min": 2.9033615984137644e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.7157366275787354e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 26,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5159476738356352,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5158670991896057,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8413290081039436e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000421482315466e-05,
+              "det6min": 2.4277923031998773e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.8230249881744385e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 27,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5155883222435793,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 1.451029933457407,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.844909881126284e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.064479078429966e-06,
+              "det6min": 2.442011868801909e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 2.9303133487701416e-05
+        },
+        {
+          "alpha": 0.5,
+          "deficit": 3.341497287170989,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.842000677015627e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": 8.181330514419548e-06,
+              "det6min": 2.4335388923514057e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 2.87666916847229e-05
+        },
+        {
+          "alpha": 0.25,
+          "deficit": 0.9562653647899944,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.841694820788902e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 2,
+              "qmin": 9.592249406954688e-06,
+              "det6min": 2.414075663410278e-17,
+              "oldgood_regressions": 2
+            }
+          },
+          "max_move_m": 2.8498470783233643e-05
+        },
+        {
+          "alpha": 0.125,
+          "deficit": 2.286018279426245,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8415419017784584e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 3,
+              "qmin": 8.24513912512034e-06,
+              "det6min": 2.422297176954565e-17,
+              "oldgood_regressions": 3
+            }
+          },
+          "max_move_m": 2.8364360332489014e-05
+        },
+        {
+          "alpha": 0.0625,
+          "deficit": 0.516349326595767,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.84152620984913e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 1,
+              "qmin": 9.999498052419321e-06,
+              "det6min": 2.4250447400772212e-17,
+              "oldgood_regressions": 1
+            }
+          },
+          "max_move_m": 2.82973051071167e-05
+        },
+        {
+          "alpha": 0.03125,
+          "deficit": 0.5158670991896057,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8413290081039436e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000421482315466e-05,
+              "det6min": 2.4277923031998773e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.8230249881744385e-05
+        },
+        {
+          "alpha": 0.015625,
+          "deficit": 0.5158670991896057,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8413290081039436e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000421482315466e-05,
+              "det6min": 2.4277923031998773e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.8230249881744385e-05
+        },
+        {
+          "alpha": 0.0078125,
+          "deficit": 0.5158670991896057,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8413290081039436e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000421482315466e-05,
+              "det6min": 2.4277923031998773e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.8230249881744385e-05
+        }
+      ],
+      "accepted": false
+    },
+    {
+      "iteration": 28,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5157559726948894,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5157224328355576,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8427756716444235e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0014909380384234e-05,
+              "det6min": 2.4608027653411535e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.87666916847229e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 29,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.51554101988646,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5155090118873716,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.844909881126284e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0002832302033802e-05,
+              "det6min": 2.4388222603599044e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.9303133487701416e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 30,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5154541656431172,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.515421995161716,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.845780048382839e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0013738072177576e-05,
+              "det6min": 2.566382775238442e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 2.983957529067993e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 31,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5152480566804213,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5152171544457501,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.847828455542499e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000307580766132e-05,
+              "det6min": 2.566213368648991e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.031008364708816e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 32,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5151386343891555,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5151064639141125,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.848935360858875e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0009572486091798e-05,
+              "det6min": 2.410925759637676e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.084652033831279e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 33,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5149705664318014,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5149357618968009,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.850642381031992e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000463258936434e-05,
+              "det6min": 2.579845305143865e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.138295720429122e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 34,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5148931951390161,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5148627906034797,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8513720939652035e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0014381730812305e-05,
+              "det6min": 2.601656403535663e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.19193942362127e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 35,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5147885071445322,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5147572985597766,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.852427014402235e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000724792945705e-05,
+              "det6min": 2.850443215034052e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.2455831425849026e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 36,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5147169096095229,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5146843050727041,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.853156949272959e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.001455625162438e-05,
+              "det6min": 2.571202922103911e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.29922687655071e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 37,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5146430070486336,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5146113025112791,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.85388697488721e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0008849579802305e-05,
+              "det6min": 2.6655835682517213e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.352870624798618e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 38,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5145399756350966,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5145057670472597,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.854942329527403e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000202491982655e-05,
+              "det6min": 2.4032706993768653e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.406514386653908e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 39,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5144714100026266,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5144357082408111,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.85564291759189e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000034623640542e-05,
+              "det6min": 2.430828386920192e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.452310033094797e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 40,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5144054264261784,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5143750215889462,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.856249784110539e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000497081134168e-05,
+              "det6min": 2.3979423327430438e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.505952302226312e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 41,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.51429744665251,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5142635499004176,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.857364500995824e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001055183589973e-05,
+              "det6min": 2.43095279488432e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.542833804870362e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 42,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5142322488929382,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.514201844757565,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.85798155242435e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001253045966088e-05,
+              "det6min": 2.4089722899030708e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.596469342427031e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 43,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5141627932616046,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5141287887212325,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.858712112787676e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001197562954502e-05,
+              "det6min": 2.384265397622847e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.650105134001278e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 44,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5140992734780425,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5140680686386867,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8593193136131336e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000079719121596e-05,
+              "det6min": 2.3814331312054654e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.703741168557425e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 45,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5139914840626966,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5139560864131694,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.860439135868307e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000045659805087e-05,
+              "det6min": 2.3814331312054654e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.7421709053892647e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 46,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.513928752511303,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5138943483740208,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.861056516259792e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000843122983551e-05,
+              "det6min": 2.4703610027553263e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.795797640720594e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 47,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5138446255876746,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5138092506697192,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.861907493302808e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0013754603954559e-05,
+              "det6min": 2.4340762288773202e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.849424862186272e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 48,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5134351031078229,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5134004574416651,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.86599542558335e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0002003667354796e-05,
+              "det6min": 2.3814331312054654e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.903052549748111e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 49,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5132018810728471,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5131688977915991,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.868311022084009e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0002995275069256e-05,
+              "det6min": 2.54217351481473e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 3.95668068445412e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 50,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5130846930182436,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5130519882241074,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.869480117758927e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0009842221312606e-05,
+              "det6min": 2.610110851140445e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.0103092483658995e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 51,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5130122553353645,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.512977863760662,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8702213623933805e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001370807025208e-05,
+              "det6min": 2.459455453559427e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.058908435180481e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 52,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5128150535982124,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5127845226539921,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.872154773460079e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0010525561474788e-05,
+              "det6min": 2.409959612682214e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.1125342882590915e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 53,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5126634629095793,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5126250080305405,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.873749919694596e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001904686445855e-05,
+              "det6min": 2.4097902060927633e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.1661606132257816e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 54,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5125203020037091,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5124822977115875,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.875177022884125e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.001188183088374e-05,
+              "det6min": 2.423591549177088e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.2197873920898656e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 55,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5123445222694251,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5123084367550672,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.876915632449328e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000215053215775e-05,
+              "det6min": 2.4234221425876372e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.273414607763563e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 56,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5122371410150547,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5121969366598196,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.878030633401804e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0010164272469968e-05,
+              "det6min": 2.381893705370535e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.32704224400607e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 57,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5121032389010177,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5120591534178818,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.879408465821183e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001525179014371e-05,
+              "det6min": 2.3761471162190065e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.3806702853717285e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 58,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5119537622107065,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.51191225718371,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8808774281629e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.00271958449482e-05,
+              "det6min": 2.4318951190381403e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.434298717161961e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 59,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5117834858362192,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5117430490964199,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.882569509035802e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.000186146402791e-05,
+              "det6min": 2.5290021524849255e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.487927525380647e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 60,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5116586363058939,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5116245391992827,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.883754608007173e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000502255486725e-05,
+              "det6min": 2.5508132508767238e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.521580579863892e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 61,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5114689878970407,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5114330024441218,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.885669975558781e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000144294955742e-05,
+              "det6min": 2.4074820413114953e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.5751957724027745e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 62,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.511313448753444,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5112749983825344,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.887250016174656e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0005797600865698e-05,
+              "det6min": 2.4073126347220444e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.628811636649499e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 63,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5111716921492023,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5111336885470401,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8886631145296e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.001253070746249e-05,
+              "det6min": 2.3853321297407954e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.682428149530012e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 64,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5110314702226892,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5109937847793038,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.890062152206962e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0003107580861763e-05,
+              "det6min": 2.5319773557121563e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.736045289014871e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 65,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5109286914140937,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5108846881429259,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.891153118570741e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0009841214457254e-05,
+              "det6min": 2.488185752339109e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.7896630340608e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 66,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5107552129549536,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.510712827527366,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.892871724726341e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000417143738274e-05,
+              "det6min": 2.5099968507309072e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.843281364556133e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 67,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5105993383966851,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5105567305619869,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.894432694380132e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0005637680806303e-05,
+              "det6min": 2.543470534015213e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.8969002612698366e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 68,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5105060785461757,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5104648081901496,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.895351918098504e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0011626354522952e-05,
+              "det6min": 2.4490687120437213e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.9505197058038386e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 69,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5103349605311552,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5102933597462813,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.8970664025371866e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000029301716345e-05,
+              "det6min": 2.6707160585164903e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 4.986865058523559e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 70,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5102128731829165,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5101722877827464,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.898277122172537e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001083293012298e-05,
+              "det6min": 2.386171221754169e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.040471959381372e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 71,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5100554666685553,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5100123591658428,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.899876408341573e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000152123039535e-05,
+              "det6min": 2.352991353023442e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.0940796451229793e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 72,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5098487113747104,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5098071566641122,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.901928433358877e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0014714222340966e-05,
+              "det6min": 2.386171221754169e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.1476880912271954e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 73,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5096978340200413,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5096577336052017,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.903422663947982e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000605175865196e-05,
+              "det6min": 2.352991353023442e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.201297274183429e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 74,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5096157325278308,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5095727292791634,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.904272707208367e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001478427307722e-05,
+              "det6min": 2.352991353023442e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.251227187414744e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 75,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5094222347252736,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5093794305039163,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.906205694960838e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001595789947093e-05,
+              "det6min": 2.386171221754169e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.303609906479462e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 76,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5093246926249252,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5092838072542206,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.907161927457794e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000625853666723e-05,
+              "det6min": 2.352991353023442e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.353547846913428e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 77,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5091866265296494,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5091431567246256,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.908568432753745e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0000203908088521e-05,
+              "det6min": 2.352991353023442e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.407152857453325e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 78,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5090716275192717,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5090293194963096,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.909706805036905e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0003672371921051e-05,
+              "det6min": 2.386171221754169e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.4607586372865405e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    },
+    {
+      "iteration": 79,
+      "solver_status": 0,
+      "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "objective": 0.5089078823410035,
+      "trials": [
+        {
+          "alpha": 1.0,
+          "deficit": 0.5088658119962594,
+          "positive": true,
+          "roles": {
+            "Skin": {
+              "bad": 2,
+              "qmin": 4.911341880037407e-06,
+              "det6min": 1.6477067225141888e-17,
+              "oldgood_regressions": 0
+            },
+            "Fat": {
+              "bad": 0,
+              "qmin": 1.0001586407140936e-05,
+              "det6min": 2.5078369167154087e-17,
+              "oldgood_regressions": 0
+            }
+          },
+          "max_move_m": 5.507044673329567e-05,
+          "accepted": true
+        }
+      ],
+      "accepted": true
+    }
+  ],
+  "variable_records": [
+    {
+      "base": [
+        -0.27570977807044983,
+        -0.8670249581336975,
+        0.11565372347831726
+      ],
+      "cap_m": 0.00025,
+      "current": [
+        -0.2757098376750946,
+        -0.8670249581336975,
+        0.11565351486206055
+      ],
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role_rows": {
+        "Fat": 33002,
+        "Skin": 109671
+      },
+      "source_row": 33002
+    },
+    {
+      "base": [
+        -0.27571266889572144,
+        -0.8670029044151306,
+        0.1156349703669548
+      ],
+      "cap_m": 0.00025,
+      "current": [
+        -0.2757126986980438,
+        -0.8670029044151306,
+        0.11563485115766525
+      ],
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role_rows": {
+        "Fat": 33004,
+        "Skin": 109673
+      },
+      "source_row": 33004
+    },
+    {
+      "base": [
+        -0.2756253778934479,
+        -0.8669858574867249,
+        0.11579511314630508
+      ],
+      "cap_m": 0.00025,
+      "current": [
+        -0.2756253778934479,
+        -0.8669858574867249,
+        0.11579510569572449
+      ],
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role_rows": {
+        "Fat": 33033,
+        "Skin": 109702
+      },
+      "source_row": 33033
+    },
+    {
+      "base": [
+        -0.2756180465221405,
+        -0.866975724697113,
+        0.1157948300242424
+      ],
+      "cap_m": 0.00025,
+      "current": [
+        -0.27561813592910767,
+        -0.8669757843017578,
+        0.11579474806785583
+      ],
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role_rows": {
+        "Fat": 33035,
+        "Skin": 109704
+      },
+      "source_row": 33035
+    },
+    {
+      "base": [
+        -0.2756180167198181,
+        -0.8669690489768982,
+        0.11578558385372162
+      ],
+      "cap_m": 0.00025,
+      "current": [
+        -0.2756180167198181,
+        -0.8669690489768982,
+        0.11578555405139923
+      ],
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role_rows": {
+        "Fat": 33036,
+        "Skin": 109705
+      },
+      "source_row": 33036
+    },
+    {
+      "base": [
+        -0.2662501335144043,
+        -0.8795203566551208,
+        0.10314576327800751
+      ],
+      "cap_m": 0.00025,
+      "current": [
+        -0.26625069975852966,
+        -0.8795197606086731,
+        0.10314632952213287
+      ],
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role_rows": {
+        "Fat": 34957,
+        "Skin": 111626
+      },
+      "source_row": 34957
+    },
+    {
+      "base": [
+        -0.2754218280315399,
+        -0.8669241070747375,
+        0.11581968516111374
+      ],
+      "cap_m": 0.00010658681396429904,
+      "current": [
+        -0.2754218280315399,
+        -0.8669241070747375,
+        0.11581968516111374
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00021317362792859808,
+      "role": "Skin",
+      "volume_row": 206563
+    },
+    {
+      "base": [
+        -0.27345702052116394,
+        -0.8692223429679871,
+        0.11418189108371735
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.2734575867652893,
+        -0.8692217469215393,
+        0.11418245732784271
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.003562119566148468,
+      "role": "Skin",
+      "volume_row": 206904
+    },
+    {
+      "base": [
+        -0.2755666673183441,
+        -0.8669655919075012,
+        0.1158042773604393
+      ],
+      "cap_m": 5.062008034630723e-05,
+      "current": [
+        -0.2755666673183441,
+        -0.8669655919075012,
+        0.1158042773604393
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00010124016069261446,
+      "role": "Skin",
+      "volume_row": 207497
+    },
+    {
+      "base": [
+        -0.27559536695480347,
+        -0.8669365048408508,
+        0.11557511240243912
+      ],
+      "cap_m": 0.00015007106381460296,
+      "current": [
+        -0.27559536695480347,
+        -0.8669365048408508,
+        0.11557511240243912
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0003001421276292059,
+      "role": "Skin",
+      "volume_row": 207755
+    },
+    {
+      "base": [
+        -0.27641570568084717,
+        -0.8669720888137817,
+        0.1181652769446373
+      ],
+      "cap_m": 0.0003086492651755381,
+      "current": [
+        -0.27641570568084717,
+        -0.8669720888137817,
+        0.1181652769446373
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0006172985303510762,
+      "role": "Skin",
+      "volume_row": 208489
+    },
+    {
+      "base": [
+        -0.276640385389328,
+        -0.8667893409729004,
+        0.11854460090398788
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.276640385389328,
+        -0.8667893409729004,
+        0.11854460090398788
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0023902420819522105,
+      "role": "Skin",
+      "volume_row": 209144
+    },
+    {
+      "base": [
+        -0.26752540469169617,
+        -0.8520979881286621,
+        0.12339403480291367
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.26752540469169617,
+        -0.8520979881286621,
+        0.12339403480291367
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0035721999707513117,
+      "role": "Skin",
+      "volume_row": 209147
+    },
+    {
+      "base": [
+        -0.2663978636264801,
+        -0.8540836572647095,
+        0.12128535658121109
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.2663978636264801,
+        -0.8540836572647095,
+        0.12128543108701706
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.010464610183296084,
+      "role": "Skin",
+      "volume_row": 210269
+    },
+    {
+      "base": [
+        -0.27646932005882263,
+        -0.8675263524055481,
+        0.11836446076631546
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.27646932005882263,
+        -0.8675263524055481,
+        0.11836446076631546
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.003667662020377082,
+      "role": "Fat",
+      "volume_row": 253233
+    },
+    {
+      "base": [
+        -0.27727511525154114,
+        -0.8674885034561157,
+        0.120309017598629
+      ],
+      "cap_m": 0.0009365321623607488,
+      "current": [
+        -0.27727511525154114,
+        -0.8674885034561157,
+        0.120309017598629
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0018730643247214975,
+      "role": "Fat",
+      "volume_row": 253241
+    },
+    {
+      "base": [
+        -0.27334487438201904,
+        -0.8604229092597961,
+        0.11700046062469482
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.27334487438201904,
+        -0.8604229092597961,
+        0.11700046062469482
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0040352965710488,
+      "role": "Fat",
+      "volume_row": 253250
+    },
+    {
+      "base": [
+        -0.2699104845523834,
+        -0.8529685139656067,
+        0.11913582682609558
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.2699104845523834,
+        -0.8529685139656067,
+        0.11913582682609558
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00552061429884283,
+      "role": "Fat",
+      "volume_row": 253262
+    },
+    {
+      "base": [
+        -0.27504321932792664,
+        -0.8685140013694763,
+        0.1123136356472969
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.27504321932792664,
+        -0.8685140013694763,
+        0.1123136356472969
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00364662781087252,
+      "role": "Fat",
+      "volume_row": 253269
+    },
+    {
+      "base": [
+        -0.27566805481910706,
+        -0.8669886589050293,
+        0.1158936396241188
+      ],
+      "cap_m": 5.38033979178987e-05,
+      "current": [
+        -0.27566805481910706,
+        -0.8669886589050293,
+        0.1158936396241188
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001076067958357974,
+      "role": "Fat",
+      "volume_row": 253301
+    },
+    {
+      "base": [
+        -0.2757636606693268,
+        -0.8670788407325745,
+        0.11561383306980133
+      ],
+      "cap_m": 0.0006505933317859825,
+      "current": [
+        -0.2757638096809387,
+        -0.8670790791511536,
+        0.11561398953199387
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.001301186663571965,
+      "role": "Fat",
+      "volume_row": 253302
+    },
+    {
+      "base": [
+        -0.2679230272769928,
+        -0.8798356652259827,
+        0.10290095210075378
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.2679230272769928,
+        -0.8798356652259827,
+        0.10290095210075378
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.007367852048532957,
+      "role": "Fat",
+      "volume_row": 253305
+    },
+    {
+      "base": [
+        -0.27573955059051514,
+        -0.8670426607131958,
+        0.11579994112253189
+      ],
+      "cap_m": 6.289921921761832e-05,
+      "current": [
+        -0.2757395803928375,
+        -0.8670426607131958,
+        0.1158001571893692
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00012579843843523665,
+      "role": "Fat",
+      "volume_row": 253329
+    },
+    {
+      "base": [
+        -0.2757224142551422,
+        -0.8670104146003723,
+        0.11567310988903046
+      ],
+      "cap_m": 6.94553588126124e-05,
+      "current": [
+        -0.2757224142551422,
+        -0.8670104146003723,
+        0.11567308753728867
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001389107176252248,
+      "role": "Fat",
+      "volume_row": 253355
+    },
+    {
+      "base": [
+        -0.2757625877857208,
+        -0.8670536279678345,
+        0.11577629297971725
+      ],
+      "cap_m": 6.371764508980303e-05,
+      "current": [
+        -0.2757627069950104,
+        -0.8670536279678345,
+        0.11577640473842621
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00012743529017960605,
+      "role": "Fat",
+      "volume_row": 253388
+    },
+    {
+      "base": [
+        -0.27361130714416504,
+        -0.8636322617530823,
+        0.11323633044958115
+      ],
+      "cap_m": 0.0006551684223041675,
+      "current": [
+        -0.27361130714416504,
+        -0.8636322617530823,
+        0.11323633044958115
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.001310336844608335,
+      "role": "Fat",
+      "volume_row": 253417
+    },
+    {
+      "base": [
+        -0.27023181319236755,
+        -0.8781485557556152,
+        0.09611063450574875
+      ],
+      "cap_m": 0.0007389591186450721,
+      "current": [
+        -0.27023181319236755,
+        -0.8781485557556152,
+        0.09611063450574875
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0014779182372901443,
+      "role": "Fat",
+      "volume_row": 253439
+    },
+    {
+      "base": [
+        -0.27582141757011414,
+        -0.8670560121536255,
+        0.11566177755594254
+      ],
+      "cap_m": 0.00025801108691632434,
+      "current": [
+        -0.2758217453956604,
+        -0.8670560121536255,
+        0.11566177755594254
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0005160221738326487,
+      "role": "Fat",
+      "volume_row": 253440
+    },
+    {
+      "base": [
+        -0.26981762051582336,
+        -0.8505990505218506,
+        0.12050378322601318
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.26981762051582336,
+        -0.8505990505218506,
+        0.12050378322601318
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00455006214455231,
+      "role": "Fat",
+      "volume_row": 253442
+    },
+    {
+      "base": [
+        -0.275745153427124,
+        -0.8670480251312256,
+        0.11581803858280182
+      ],
+      "cap_m": 2.603635105398288e-05,
+      "current": [
+        -0.275745153427124,
+        -0.8670480251312256,
+        0.11581803858280182
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 5.207270210796576e-05,
+      "role": "Fat",
+      "volume_row": 253513
+    },
+    {
+      "base": [
+        -0.275768518447876,
+        -0.8670345544815063,
+        0.11586171388626099
+      ],
+      "cap_m": 8.215066665309147e-05,
+      "current": [
+        -0.275768518447876,
+        -0.8670345544815063,
+        0.11586171388626099
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00016430133330618294,
+      "role": "Fat",
+      "volume_row": 253521
+    },
+    {
+      "base": [
+        -0.27569472789764404,
+        -0.8669728636741638,
+        0.11563491076231003
+      ],
+      "cap_m": 0.00011774231882021602,
+      "current": [
+        -0.27569472789764404,
+        -0.8669728636741638,
+        0.11563491076231003
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00023548463764043204,
+      "role": "Fat",
+      "volume_row": 253552
+    },
+    {
+      "base": [
+        -0.2734939157962799,
+        -0.8648567199707031,
+        0.11216946691274643
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.2734939157962799,
+        -0.8648567199707031,
+        0.11216946691274643
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.002558034910528445,
+      "role": "Fat",
+      "volume_row": 253570
+    },
+    {
+      "base": [
+        -0.27340248227119446,
+        -0.8649970293045044,
+        0.11335983872413635
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.27340248227119446,
+        -0.8649970293045044,
+        0.11335983872413635
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.002882186500247992,
+      "role": "Fat",
+      "volume_row": 253579
+    },
+    {
+      "base": [
+        -0.27575862407684326,
+        -0.8670408725738525,
+        0.11586184799671173
+      ],
+      "cap_m": 9.427966755480925e-05,
+      "current": [
+        -0.27575862407684326,
+        -0.8670408725738525,
+        0.11586184799671173
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001885593351096185,
+      "role": "Fat",
+      "volume_row": 253598
+    },
+    {
+      "base": [
+        -0.2757187485694885,
+        -0.8670192956924438,
+        0.1156824380159378
+      ],
+      "cap_m": 6.99797173620739e-05,
+      "current": [
+        -0.2757187485694885,
+        -0.8670192956924438,
+        0.11568235605955124
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001399594347241478,
+      "role": "Fat",
+      "volume_row": 253611
+    },
+    {
+      "base": [
+        -0.2692696452140808,
+        -0.8729375004768372,
+        0.10720045119524002
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.26926982402801514,
+        -0.8729375004768372,
+        0.10720045119524002
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.013697336436264822,
+      "role": "Fat",
+      "volume_row": 253640
+    },
+    {
+      "base": [
+        -0.2756945490837097,
+        -0.8669775724411011,
+        0.11562462896108627
+      ],
+      "cap_m": 7.957898197405883e-05,
+      "current": [
+        -0.2756945490837097,
+        -0.8669775724411011,
+        0.11562462896108627
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00015915796394811766,
+      "role": "Fat",
+      "volume_row": 253643
+    },
+    {
+      "base": [
+        -0.27573737502098083,
+        -0.8666449785232544,
+        0.11603997647762299
+      ],
+      "cap_m": 0.00021956494219700163,
+      "current": [
+        -0.27573737502098083,
+        -0.8666449785232544,
+        0.11603997647762299
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00043912988439400325,
+      "role": "Fat",
+      "volume_row": 253659
+    },
+    {
+      "base": [
+        -0.2702723741531372,
+        -0.8776895999908447,
+        0.0973781943321228
+      ],
+      "cap_m": 0.0002442134694615466,
+      "current": [
+        -0.2702723741531372,
+        -0.8776895999908447,
+        0.0973781943321228
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0004884269389230932,
+      "role": "Fat",
+      "volume_row": 253661
+    },
+    {
+      "base": [
+        -0.27574652433395386,
+        -0.867021918296814,
+        0.11566166579723358
+      ],
+      "cap_m": 2.1798912067826277e-05,
+      "current": [
+        -0.27574652433395386,
+        -0.867021918296814,
+        0.1156616359949112
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 4.3597824135652554e-05,
+      "role": "Fat",
+      "volume_row": 253683
+    },
+    {
+      "base": [
+        -0.26453515887260437,
+        -0.8460806608200073,
+        0.12394551932811737
+      ],
+      "cap_m": 0.001,
+      "current": [
+        -0.26453515887260437,
+        -0.8460806608200073,
+        0.12394551932811737
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.02825383431504136,
+      "role": "Fat",
+      "volume_row": 253697
+    },
+    {
+      "base": [
+        -0.275790274143219,
+        -0.8670540452003479,
+        0.11584332585334778
+      ],
+      "cap_m": 5.8078821883234594e-05,
+      "current": [
+        -0.275790274143219,
+        -0.8670540452003479,
+        0.11584332585334778
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00011615764376646919,
+      "role": "Fat",
+      "volume_row": 253705
+    },
+    {
+      "base": [
+        -0.2757219076156616,
+        -0.8670125603675842,
+        0.11567907780408859
+      ],
+      "cap_m": 6.672540769803246e-05,
+      "current": [
+        -0.2757219076156616,
+        -0.8670125603675842,
+        0.11567907780408859
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00013345081539606492,
+      "role": "Fat",
+      "volume_row": 253710
+    },
+    {
+      "base": [
+        -0.27559420466423035,
+        -0.8669121861457825,
+        0.11572998017072678
+      ],
+      "cap_m": 4.597237068336356e-05,
+      "current": [
+        -0.27559420466423035,
+        -0.8669121861457825,
+        0.11572998017072678
+      ],
+      "kind": "interior_volume",
+      "median_incident_edge_m": 9.194474136672712e-05,
+      "role": "Fat",
+      "volume_row": 253711
+    }
+  ],
+  "final_variables_f32": [
+    [
+      -0.27571845054626465,
+      -0.8670265078544617,
+      0.11564819514751434
+    ],
+    [
+      -0.275721937417984,
+      -0.8669903874397278,
+      0.1156291663646698
+    ],
+    [
+      -0.2756267189979553,
+      -0.8669867515563965,
+      0.115793377161026
+    ],
+    [
+      -0.2756207287311554,
+      -0.8669748902320862,
+      0.11579201370477676
+    ],
+    [
+      -0.27561652660369873,
+      -0.8669672012329102,
+      0.11578455567359924
+    ],
+    [
+      -0.2662726044654846,
+      -0.8794704675674438,
+      0.10315199941396713
+    ],
+    [
+      -0.2754184603691101,
+      -0.8669344782829285,
+      0.11582065373659134
+    ],
+    [
+      -0.27347779273986816,
+      -0.8691724538803101,
+      0.11418736726045609
+    ],
+    [
+      -0.2755632698535919,
+      -0.8669685125350952,
+      0.11580470949411392
+    ],
+    [
+      -0.27559056878089905,
+      -0.8669365048408508,
+      0.11557486653327942
+    ],
+    [
+      -0.27641570568084717,
+      -0.8669720888137817,
+      0.1181652769446373
+    ],
+    [
+      -0.276640385389328,
+      -0.8667893409729004,
+      0.11854460090398788
+    ],
+    [
+      -0.26752060651779175,
+      -0.8520974516868591,
+      0.12339283525943756
+    ],
+    [
+      -0.26639309525489807,
+      -0.8540884256362915,
+      0.1212863102555275
+    ],
+    [
+      -0.27646932005882263,
+      -0.8675263524055481,
+      0.11836446076631546
+    ],
+    [
+      -0.27727511525154114,
+      -0.8674885034561157,
+      0.120309017598629
+    ],
+    [
+      -0.2733400762081146,
+      -0.8604133129119873,
+      0.11699926108121872
+    ],
+    [
+      -0.2699104845523834,
+      -0.8529685139656067,
+      0.11913582682609558
+    ],
+    [
+      -0.27504321932792664,
+      -0.8685140013694763,
+      0.1123136356472969
+    ],
+    [
+      -0.2756761312484741,
+      -0.8669886589050293,
+      0.11589677631855011
+    ],
+    [
+      -0.2757885456085205,
+      -0.8671005368232727,
+      0.11562003195285797
+    ],
+    [
+      -0.2679230272769928,
+      -0.8798356652259827,
+      0.10290095210075378
+    ],
+    [
+      -0.2757369875907898,
+      -0.8670411109924316,
+      0.11579708755016327
+    ],
+    [
+      -0.27572691440582275,
+      -0.8670124411582947,
+      0.11567278951406479
+    ],
+    [
+      -0.2757650911808014,
+      -0.8670632243156433,
+      0.11577509343624115
+    ],
+    [
+      -0.27361610531806946,
+      -0.8636305332183838,
+      0.11323752999305725
+    ],
+    [
+      -0.27023181319236755,
+      -0.8781485557556152,
+      0.09611063450574875
+    ],
+    [
+      -0.27582088112831116,
+      -0.8670418858528137,
+      0.1156635731458664
+    ],
+    [
+      -0.2698182463645935,
+      -0.8506001234054565,
+      0.12050163745880127
+    ],
+    [
+      -0.2757437527179718,
+      -0.8670477867126465,
+      0.11581609398126602
+    ],
+    [
+      -0.27575892210006714,
+      -0.8670430183410645,
+      0.11586177349090576
+    ],
+    [
+      -0.2756917476654053,
+      -0.8669630885124207,
+      0.11563676595687866
+    ],
+    [
+      -0.2734939157962799,
+      -0.8648567199707031,
+      0.11216946691274643
+    ],
+    [
+      -0.27340248227119446,
+      -0.8649970293045044,
+      0.11335983872413635
+    ],
+    [
+      -0.2757589817047119,
+      -0.8670414686203003,
+      0.1158628836274147
+    ],
+    [
+      -0.27571311593055725,
+      -0.8670045137405396,
+      0.1156824454665184
+    ],
+    [
+      -0.26927247643470764,
+      -0.8729375004768372,
+      0.10720165073871613
+    ],
+    [
+      -0.2756864130496979,
+      -0.8669590353965759,
+      0.11562785506248474
+    ],
+    [
+      -0.2757471799850464,
+      -0.8666462302207947,
+      0.1160413846373558
+    ],
+    [
+      -0.27028265595436096,
+      -0.8776895999908447,
+      0.09738076478242874
+    ],
+    [
+      -0.2757393419742584,
+      -0.8670162558555603,
+      0.11565995216369629
+    ],
+    [
+      -0.26453515887260437,
+      -0.8460806608200073,
+      0.12394551932811737
+    ],
+    [
+      -0.2757833003997803,
+      -0.8670608401298523,
+      0.11584442108869553
+    ],
+    [
+      -0.275708943605423,
+      -0.8669983744621277,
+      0.11568085104227066
+    ],
+    [
+      -0.2755855619907379,
+      -0.8669038414955139,
+      0.11573231220245361
+    ]
+  ],
+  "base_variables_f32": [
+    [
+      -0.27570977807044983,
+      -0.8670249581336975,
+      0.11565372347831726
+    ],
+    [
+      -0.27571266889572144,
+      -0.8670029044151306,
+      0.1156349703669548
+    ],
+    [
+      -0.2756253778934479,
+      -0.8669858574867249,
+      0.11579511314630508
+    ],
+    [
+      -0.2756180465221405,
+      -0.866975724697113,
+      0.1157948300242424
+    ],
+    [
+      -0.2756180167198181,
+      -0.8669690489768982,
+      0.11578558385372162
+    ],
+    [
+      -0.2662501335144043,
+      -0.8795203566551208,
+      0.10314576327800751
+    ],
+    [
+      -0.2754218280315399,
+      -0.8669241070747375,
+      0.11581968516111374
+    ],
+    [
+      -0.27345702052116394,
+      -0.8692223429679871,
+      0.11418189108371735
+    ],
+    [
+      -0.2755666673183441,
+      -0.8669655919075012,
+      0.1158042773604393
+    ],
+    [
+      -0.27559536695480347,
+      -0.8669365048408508,
+      0.11557511240243912
+    ],
+    [
+      -0.27641570568084717,
+      -0.8669720888137817,
+      0.1181652769446373
+    ],
+    [
+      -0.276640385389328,
+      -0.8667893409729004,
+      0.11854460090398788
+    ],
+    [
+      -0.26752540469169617,
+      -0.8520979881286621,
+      0.12339403480291367
+    ],
+    [
+      -0.2663978636264801,
+      -0.8540836572647095,
+      0.12128535658121109
+    ],
+    [
+      -0.27646932005882263,
+      -0.8675263524055481,
+      0.11836446076631546
+    ],
+    [
+      -0.27727511525154114,
+      -0.8674885034561157,
+      0.120309017598629
+    ],
+    [
+      -0.27334487438201904,
+      -0.8604229092597961,
+      0.11700046062469482
+    ],
+    [
+      -0.2699104845523834,
+      -0.8529685139656067,
+      0.11913582682609558
+    ],
+    [
+      -0.27504321932792664,
+      -0.8685140013694763,
+      0.1123136356472969
+    ],
+    [
+      -0.27566805481910706,
+      -0.8669886589050293,
+      0.1158936396241188
+    ],
+    [
+      -0.2757636606693268,
+      -0.8670788407325745,
+      0.11561383306980133
+    ],
+    [
+      -0.2679230272769928,
+      -0.8798356652259827,
+      0.10290095210075378
+    ],
+    [
+      -0.27573955059051514,
+      -0.8670426607131958,
+      0.11579994112253189
+    ],
+    [
+      -0.2757224142551422,
+      -0.8670104146003723,
+      0.11567310988903046
+    ],
+    [
+      -0.2757625877857208,
+      -0.8670536279678345,
+      0.11577629297971725
+    ],
+    [
+      -0.27361130714416504,
+      -0.8636322617530823,
+      0.11323633044958115
+    ],
+    [
+      -0.27023181319236755,
+      -0.8781485557556152,
+      0.09611063450574875
+    ],
+    [
+      -0.27582141757011414,
+      -0.8670560121536255,
+      0.11566177755594254
+    ],
+    [
+      -0.26981762051582336,
+      -0.8505990505218506,
+      0.12050378322601318
+    ],
+    [
+      -0.275745153427124,
+      -0.8670480251312256,
+      0.11581803858280182
+    ],
+    [
+      -0.275768518447876,
+      -0.8670345544815063,
+      0.11586171388626099
+    ],
+    [
+      -0.27569472789764404,
+      -0.8669728636741638,
+      0.11563491076231003
+    ],
+    [
+      -0.2734939157962799,
+      -0.8648567199707031,
+      0.11216946691274643
+    ],
+    [
+      -0.27340248227119446,
+      -0.8649970293045044,
+      0.11335983872413635
+    ],
+    [
+      -0.27575862407684326,
+      -0.8670408725738525,
+      0.11586184799671173
+    ],
+    [
+      -0.2757187485694885,
+      -0.8670192956924438,
+      0.1156824380159378
+    ],
+    [
+      -0.2692696452140808,
+      -0.8729375004768372,
+      0.10720045119524002
+    ],
+    [
+      -0.2756945490837097,
+      -0.8669775724411011,
+      0.11562462896108627
+    ],
+    [
+      -0.27573737502098083,
+      -0.8666449785232544,
+      0.11603997647762299
+    ],
+    [
+      -0.2702723741531372,
+      -0.8776895999908447,
+      0.0973781943321228
+    ],
+    [
+      -0.27574652433395386,
+      -0.867021918296814,
+      0.11566166579723358
+    ],
+    [
+      -0.26453515887260437,
+      -0.8460806608200073,
+      0.12394551932811737
+    ],
+    [
+      -0.275790274143219,
+      -0.8670540452003479,
+      0.11584332585334778
+    ],
+    [
+      -0.2757219076156616,
+      -0.8670125603675842,
+      0.11567907780408859
+    ],
+    [
+      -0.27559420466423035,
+      -0.8669121861457825,
+      0.11572998017072678
+    ]
+  ],
+  "source_prefix_positions_unchanged_except_declared_I_updates": true,
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_mapping": "NOT_RUN",
+  "elapsed_s": 8.725123833166435
+}
