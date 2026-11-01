@@ -1,0 +1,19 @@
+
+==================================== ERRORS ====================================
+___________ ERROR collecting test_i_anchor_fit_015_run001_frozen.py ____________
+/tmp/quality-966-run001-test-20261101/source-freeze/test_i_anchor_fit_015_run001_frozen.py:18: in <module>
+    import i_anchor_fit_015 as ipair
+/tmp/quality-966-run001-test-20261101/source-freeze/i_anchor_fit_015.py:48: in <module>
+    if hashlib.sha256(COMMON_FIT_PATH.read_bytes()).hexdigest()!=COMMON_FIT_SHA:
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_abc.py:625: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/quality-966-run001-test-20261101/quality-endpoint-collapse-014-D-3d-fit/d_anchor_fit_014.py'
+=========================== short test summary info ============================
+ERROR ../../../../tmp/quality-966-run001-test-20261101/source-freeze/test_i_anchor_fit_015_run001_frozen.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.19s

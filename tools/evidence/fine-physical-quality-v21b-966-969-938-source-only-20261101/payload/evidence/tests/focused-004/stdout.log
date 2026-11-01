@@ -1,0 +1,53 @@
+
+==================================== ERRORS ====================================
+______ ERROR collecting 015/run001/test_i_anchor_fit_015_run001_frozen.py ______
+015/run001/test_i_anchor_fit_015_run001_frozen.py:17: in <module>
+    fit=load(FIT_PATH,"i015_fit_owner")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+015/run001/test_i_anchor_fit_015_run001_frozen.py:15: in load
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1027: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py:38: in <module>
+    V=import_pinned(BASE,BASE_SHA,'coupled_anchor_791_for_792')
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py:33: in import_pinned
+    if sha(path)!=digest: raise RuntimeError('pinned source changed: '+str(path))
+       ^^^^^^^^^
+015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py:28: in sha
+    with Path(p).open('rb') as f:
+         ^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/numi/Work/quality-v21b-908-913-publication-20261101/tools/evidence/fine-physical-quality-v21b-966-015-938-source-only-20261101/payload/source/015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_791_current_parent_root.py'
+_____________ ERROR collecting 015/run002/test_i_anchor_fit_015.py _____________
+015/run002/test_i_anchor_fit_015.py:17: in <module>
+    fit=load(FIT_PATH,"i015_fit_owner")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+015/run002/test_i_anchor_fit_015.py:15: in load
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1027: in exec_module
+    ???
+<frozen importlib._bootstrap>:488: in _call_with_frames_removed
+    ???
+015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py:38: in <module>
+    V=import_pinned(BASE,BASE_SHA,'coupled_anchor_791_for_792')
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py:33: in import_pinned
+    if sha(path)!=digest: raise RuntimeError('pinned source changed: '+str(path))
+       ^^^^^^^^^
+015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py:28: in sha
+    with Path(p).open('rb') as f:
+         ^^^^^^^^^^^^^^^^^^
+/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/pathlib/_local.py:537: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/numi/Work/quality-v21b-908-913-publication-20261101/tools/evidence/fine-physical-quality-v21b-966-015-938-source-only-20261101/payload/source/015/coupled-anchor-collapse-780-root/coupled_anchor_collapse_791_current_parent_root.py'
+=========================== short test summary info ============================
+ERROR 015/run001/test_i_anchor_fit_015_run001_frozen.py - FileNotFoundError: ...
+ERROR 015/run002/test_i_anchor_fit_015.py - FileNotFoundError: [Errno 2] No s...
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+2 errors in 0.24s

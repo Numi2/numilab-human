@@ -1,0 +1,74 @@
+{
+  "all_results": [
+    {
+      "attempt": "focused-001",
+      "exit_code": 2,
+      "exit_code_file_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "reason": "Publisher worktree lacked the lock wrapper; pytest did not start.",
+      "status": "SETUP_FAILED_BEFORE_TESTS",
+      "stderr_sha256": "d3f5d85aa3874dac9f816c4c19aea45edd15771ab4c9f5057e7b0adcf2d3caea",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempt": "focused-002",
+      "exit_code": 0,
+      "exit_code_file_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "passed_count": 17,
+      "reason": "Combined current 015 v2, 938 support and coordinate-alias controls in the retained H source tree.",
+      "status": "PASS",
+      "stderr_sha256": "267f1279b22f7f641bec389113152eb819ef56e0edb6afdd0333c1694e68f0cc",
+      "stdout_sha256": "f89b462592a43ec66d7888665a7512c7de1ac800037742c78d553527f8998824",
+      "wrapper_path": "/Users/numi/Work/quality-v21b-859-868-publication-20261101/tools/run_resting_job_exclusive.py",
+      "wrapper_sha256": "081073dd757e2ae8d11fc7635f571ed3be456f2dab180b3b610a78466b03b98e"
+    },
+    {
+      "attempt": "focused-003",
+      "exit_code": 2,
+      "exit_code_file_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "reason": "Frozen test sources expected their 795 sibling dependency path; it was absent from the original source-freeze directory.",
+      "status": "COLLECTION_FAILED_BEFORE_TESTS",
+      "stderr_sha256": "1db110cb46905e238a3acc534bfb277299751e574889ffc0ab2f5153f935bfb2",
+      "stdout_sha256": "7ca99b344fef9f59b7cd92c5ab25a0560958a70fb22c1128cc429ce184b51344"
+    },
+    {
+      "attempt": "focused-004",
+      "exit_code": 2,
+      "exit_code_file_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "reason": "First package-local mirror lacked the 795 dependency closure; no tests were collected.",
+      "status": "COLLECTION_FAILED_BEFORE_TESTS",
+      "stderr_sha256": "6bdd7a52f09dfc1571917b4bfdf3f773a03f729c835a2315b08e0c0dbac4fcfe",
+      "stdout_sha256": "2e47d6d2e7ce859af045f0e023596af27055935884b5d46a46330c3f57f5fe77"
+    },
+    {
+      "attempt": "focused-005",
+      "exit_code": 2,
+      "exit_code_file_sha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "reason": "Temporary run001 layout had the 795 owner but omitted its pinned d_anchor_fit_014 dependency; no tests were collected.",
+      "status": "COLLECTION_FAILED_BEFORE_TESTS",
+      "stderr_sha256": "2ac9fb9cd07857729d02b9d272ec5b0b389dee3939b8177debc113f154ca18d9",
+      "stdout_sha256": "fb8b442e1a5e52e720435cae04cfc428a65b25ab32662bf495f9cb5b1c02fbdc"
+    },
+    {
+      "attempt": "focused-006",
+      "exit_code": 0,
+      "exit_code_file_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "helper_sha256": "3338f77751440608b6b7eded377984beb18b0337cc30a8d802919d7da55a458d",
+      "passed_count": 4,
+      "reason": "Recovered run001 controls passed with exact H dependencies symlinked in a temporary layout.",
+      "source_test_sha256": "56e54c47ecab95191deb527bbfb7c8cf2cc6841db18408921585422d0e06c6a2",
+      "status": "PASS",
+      "stderr_sha256": "362ae2446aeb85820c667fb3bf6b6fcf3ee3eeaa62663861070f7029019ec818",
+      "stdout_sha256": "d07a1be384f84d9d95b6d48bfc797264bdf209a84dca560c1775e944c8887ef5",
+      "wrapper_path": "/Users/numi/Work/quality-v21b-859-868-publication-20261101/tools/run_resting_job_exclusive.py",
+      "wrapper_sha256": "081073dd757e2ae8d11fc7635f571ed3be456f2dab180b3b610a78466b03b98e"
+    }
+  ],
+  "python": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+    "3.13.16",
+    "pytest 9.1.1",
+    "NumPy 2.5.3"
+  ],
+  "schema": "h706.focused-controls-publication-summary.v1",
+  "scope": "Unit/control tests only; no solver, native simulation, source array load, or physical admission."
+}

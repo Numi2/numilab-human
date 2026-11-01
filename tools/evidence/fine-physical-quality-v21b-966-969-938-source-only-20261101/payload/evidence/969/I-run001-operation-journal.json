@@ -1,0 +1,608 @@
+{
+  "anchor_policy": {
+    "immediate_keep_l1_cap_m": 0.00025,
+    "inherited_I_D_transition_policy": "REPORT_ONLY; cap applies to each new immediate transition, not retroactively to accepted ancestors",
+    "moved_D_anchor_exact_volume_budget": {
+      "local_fraction": 0.01,
+      "regional_fraction": 0.0001
+    },
+    "moved_I_anchor_exact_paired_delta_det6_integer": "0",
+    "paired_I_fit_method": "3D minimum-displacement SLSQP with exact paired Skin+Fat signed-det6 delta zero and unchanged F32/canonical gates",
+    "paired_I_fit_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-015-paired-I/i_anchor_fit_015.py",
+      "sha256": "77189208924b9139bfaf9ed731d49d0cbcf546d1f65327f8c941d338973e3678"
+    },
+    "removed_endpoint_to_anchor_cap_m": 0.00025
+  },
+  "final_independent_readbacks": 3,
+  "final_source_alias_rebinds": 2,
+  "independent_surface_replay": {
+    "facet_bad_after": 0,
+    "facet_bad_before": 0,
+    "full_typed_union_and_ancestry_replayed": true,
+    "source_face_quotient_replayed": true,
+    "source_operation_rows_replayed": true,
+    "source_point_coordinates_replayed_from_anchors": true,
+    "typed_primary_lanes_replayed": true
+  },
+  "independent_volume_replay": {
+    "Fat": {
+      "all_exact_positive_changed_cells": true,
+      "exact_local_volume_deltas_det6": [
+        "26974462380675976200003527829101291262878472374280721192356890837896203495598214286893425769220188343820818423237896879210496"
+      ],
+      "final_target_chain_exact": true,
+      "final_tets_replayed_from_parent": true,
+      "full_native_gate_replayed": true,
+      "full_replacement_parent_union_replayed": true,
+      "log_deficit_after": 1.5951517152110057,
+      "log_deficit_before": 1.5951517152110057,
+      "native_bad_after": 1,
+      "native_bad_before": 1,
+      "one_sided_D_anchor_volume_budget_replay": [],
+      "paired_anchor_coordinates_replayed": true,
+      "rebinder_receipt": {
+        "ambiguous_target_rows": 0,
+        "geometry_and_target_bytes_unchanged": true,
+        "group_contract": {
+          "D": {
+            "group": 1,
+            "reverse_orientation": true
+          },
+          "I": {
+            "group": 0,
+            "reverse_orientation": false
+          }
+        },
+        "input_pins": {},
+        "mass_mapping": "NOT_RUN",
+        "native_steps": 0,
+        "new_alias_sha256": {
+          "desired_boundary_source_face_rows": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+          "desired_boundary_source_group": "216e65e20554004c7694282d8125cfd48b3572a3952b37f8c07f91d91ce24705",
+          "desired_boundary_source_rows": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+          "proposed_current_desired_boundary_source_face_rows": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+          "proposed_current_desired_boundary_source_group": "216e65e20554004c7694282d8125cfd48b3572a3952b37f8c07f91d91ce24705",
+          "proposed_current_desired_boundary_source_rows": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2"
+        },
+        "physical_admission": false,
+        "prior_aliases": {
+          "desired_boundary_source_face_rows": {
+            "sha256": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+            "shape": [
+              444382
+            ]
+          },
+          "desired_boundary_source_group": {
+            "sha256": "216e65e20554004c7694282d8125cfd48b3572a3952b37f8c07f91d91ce24705",
+            "shape": [
+              444382
+            ]
+          },
+          "desired_boundary_source_rows": {
+            "sha256": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+            "shape": [
+              444382
+            ]
+          },
+          "proposed_current_desired_boundary_source_face_rows": {
+            "sha256": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+            "shape": [
+              444382
+            ]
+          },
+          "proposed_current_desired_boundary_source_group": {
+            "sha256": "216e65e20554004c7694282d8125cfd48b3572a3952b37f8c07f91d91ce24705",
+            "shape": [
+              444382
+            ]
+          },
+          "proposed_current_desired_boundary_source_rows": {
+            "sha256": "64476628d79f0d396f72c1417b9ba79cc60e7aa2c56483b755ec09631b2b13d2",
+            "shape": [
+              444382
+            ]
+          }
+        },
+        "role": "Fat",
+        "schema": "numi.human.current-desired-boundary-source-alias-rebind.v1",
+        "source_group_counts": {
+          "0": 236391,
+          "1": 207901,
+          "2": 90
+        },
+        "status": "PASS_EXACT_CURRENT_TARGET_TYPED_SOURCE_ALIAS_REBIND",
+        "target_face_count": 444382,
+        "target_faces_exact_oriented_F32_matched": 444382,
+        "typed_source_face_counts": {
+          "D": 207901,
+          "I": 236391
+        },
+        "unmatched_target_rows": 0,
+        "unused_typed_source_faces": {
+          "D": 0,
+          "I": 0
+        },
+        "wall_face_count": 90,
+        "wall_rows_all_used_exactly_once": true
+      },
+      "source_aliases_reconstructed": true
+    },
+    "Skin": {
+      "all_exact_positive_changed_cells": true,
+      "exact_local_volume_deltas_det6": [
+        "-26974462380675976200003527829101291262878472374280721192356890837896203495598214286893425769220188343820818423237896879210496"
+      ],
+      "final_target_chain_exact": true,
+      "final_tets_replayed_from_parent": true,
+      "full_native_gate_replayed": true,
+      "full_replacement_parent_union_replayed": true,
+      "log_deficit_after": 3.9268621484594464,
+      "log_deficit_before": 4.020647546976309,
+      "native_bad_after": 4,
+      "native_bad_before": 5,
+      "one_sided_D_anchor_volume_budget_replay": [],
+      "paired_anchor_coordinates_replayed": true,
+      "rebinder_receipt": {
+        "ambiguous_target_rows": 0,
+        "geometry_and_target_bytes_unchanged": true,
+        "group_contract": {
+          "I": {
+            "group": 1,
+            "reverse_orientation": true
+          },
+          "O": {
+            "group": 0,
+            "reverse_orientation": false
+          }
+        },
+        "input_pins": {},
+        "mass_mapping": "NOT_RUN",
+        "native_steps": 0,
+        "new_alias_sha256": {
+          "desired_boundary_source_face_rows": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+          "desired_boundary_source_group": "8669705dad3bd7bf995802eb06983919fb1120480cc9e07cf367ce4d9563f805",
+          "desired_boundary_source_rows": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+          "proposed_current_desired_boundary_source_face_rows": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+          "proposed_current_desired_boundary_source_group": "8669705dad3bd7bf995802eb06983919fb1120480cc9e07cf367ce4d9563f805",
+          "proposed_current_desired_boundary_source_rows": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6"
+        },
+        "physical_admission": false,
+        "prior_aliases": {
+          "desired_boundary_source_face_rows": {
+            "sha256": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+            "shape": [
+              388822
+            ]
+          },
+          "desired_boundary_source_group": {
+            "sha256": "8669705dad3bd7bf995802eb06983919fb1120480cc9e07cf367ce4d9563f805",
+            "shape": [
+              388822
+            ]
+          },
+          "desired_boundary_source_rows": {
+            "sha256": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+            "shape": [
+              388822
+            ]
+          },
+          "proposed_current_desired_boundary_source_face_rows": {
+            "sha256": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+            "shape": [
+              388822
+            ]
+          },
+          "proposed_current_desired_boundary_source_group": {
+            "sha256": "8669705dad3bd7bf995802eb06983919fb1120480cc9e07cf367ce4d9563f805",
+            "shape": [
+              388822
+            ]
+          },
+          "proposed_current_desired_boundary_source_rows": {
+            "sha256": "2eb5dd5e80c29068d2ca39935d7ad4dd06b18e1c16c06b0fad9d7aef410e5bd6",
+            "shape": [
+              388822
+            ]
+          }
+        },
+        "role": "Skin",
+        "schema": "numi.human.current-desired-boundary-source-alias-rebind.v1",
+        "source_group_counts": {
+          "0": 152341,
+          "1": 236391,
+          "2": 90
+        },
+        "status": "PASS_EXACT_CURRENT_TARGET_TYPED_SOURCE_ALIAS_REBIND",
+        "target_face_count": 388822,
+        "target_faces_exact_oriented_F32_matched": 388822,
+        "typed_source_face_counts": {
+          "I": 236391,
+          "O": 152341
+        },
+        "unmatched_target_rows": 0,
+        "unused_typed_source_faces": {
+          "I": 0,
+          "O": 0
+        },
+        "wall_face_count": 90,
+        "wall_rows_all_used_exactly_once": true
+      },
+      "source_aliases_reconstructed": true
+    }
+  },
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-fixed-775-qualified-root/verified-state.json",
+    "sha256": "96143888a02e9a9cbe54c0176e2430963179ed28892fafd0f63c5491463281ec"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "operation_parent_lineage": [
+    {
+      "affected_base_cells": {
+        "Fat": [
+          770372,
+          770373,
+          770374,
+          770375,
+          770376,
+          770377,
+          770396,
+          770397,
+          770398,
+          770399,
+          770400,
+          770414,
+          770415,
+          770416,
+          770417,
+          770418,
+          770419,
+          770420,
+          770421,
+          770422,
+          770427,
+          770428,
+          770429,
+          770430,
+          770431,
+          770432,
+          770433,
+          770434,
+          770435,
+          770436,
+          770437,
+          770438,
+          770439,
+          770440,
+          770441,
+          770442,
+          770443,
+          770444,
+          770445,
+          770446,
+          770447,
+          770448,
+          770449,
+          770450,
+          770451
+        ],
+        "Skin": [
+          724861,
+          724862
+        ]
+      },
+      "anchor_displacement_l1_m": 0.0,
+      "anchor_fit": {},
+      "anchor_moved": false,
+      "anchor_strategy": "kept_endpoint",
+      "anchor_world_m_f32": [
+        -0.27571266889572144,
+        -0.8670029044151306,
+        0.1156349703669548
+      ],
+      "changed_base_cells": {
+        "Fat": [
+          770372,
+          770373,
+          770374,
+          770375,
+          770376,
+          770377,
+          770449,
+          770450,
+          770451
+        ],
+        "Skin": []
+      },
+      "changed_face_base_rows": [
+        236319
+      ],
+      "drop_source_row": 33006,
+      "drop_volume_rows": {
+        "Fat": 33006,
+        "Skin": 109675
+      },
+      "edge_length_m": 2.6838906632564538e-05,
+      "edge_rows": [
+        33004,
+        33006
+      ],
+      "keep_source_row": 33004,
+      "keep_volume_rows": {
+        "Fat": 33004,
+        "Skin": 109673
+      },
+      "one_sided_D_anchor_volume_budget": null,
+      "operation_id": 6,
+      "removed_endpoint_to_anchor_m": 2.6838906632564538e-05,
+      "role": "I",
+      "star_face_base_rows": [
+        16071,
+        121022,
+        121055,
+        235002,
+        236319
+      ],
+      "volume_delta_det6_integer": {
+        "Fat": "26974462380675976200003527829101291262878472374280721192356890837896203495598214286893425769220188343820818423237896879210496",
+        "Skin": "-26974462380675976200003527829101291262878472374280721192356890837896203495598214286893425769220188343820818423237896879210496"
+      }
+    }
+  ],
+  "operations": [
+    {
+      "anchor_displacement_l1_m": 0.0,
+      "anchor_moved": false,
+      "anchor_strategy": "kept_endpoint",
+      "anchor_world_m_f32": [
+        -0.27571266889572144,
+        -0.8670029044151306,
+        0.1156349703669548
+      ],
+      "combined_quality": {
+        "combined_log_deficit_after": 5.522013863670452,
+        "combined_log_deficit_before": 5.6157992621873145,
+        "combined_native_bad_after": 5,
+        "combined_native_bad_before": 6
+      },
+      "drop_source_row": 33006,
+      "edge_length_m": 2.6838906632564538e-05,
+      "edge_rows": [
+        33004,
+        33006
+      ],
+      "keep_source_row": 33004,
+      "local_direction_evaluation_s": 0.04409533063881099,
+      "one_sided_D_anchor_volume_budget": null,
+      "operation_id": 6,
+      "per_operation_external_audit": "PENDING_FINAL_775_805_ALL185",
+      "protected_back_endpoint_dropped": false,
+      "rejected_direction_reasons": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33006,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        }
+      ],
+      "source_star_face_count": 5,
+      "source_star_vertex_count": 5,
+      "surface_metrics": {
+        "facet_bad_after": 0,
+        "facet_bad_before": 0,
+        "minimum_facet_q_after": 0.008263028876929066,
+        "minimum_facet_q_before": 0.001259502599777344
+      },
+      "volume_metrics": {
+        "Fat": {
+          "anchor_world_m_f32": [
+            -0.27571266889572144,
+            -0.8670029044151306,
+            0.1156349703669548
+          ],
+          "changed_cell_count": 9,
+          "drop_volume_row": 33006,
+          "exact_signed_volume_delta_det6_integer": "26974462380675976200003527829101291262878472374280721192356890837896203495598214286893425769220188343820818423237896879210496",
+          "keep_volume_row": 33004,
+          "minimum_normalized_det_after": 1.0013685745647584e-05,
+          "minimum_volume_m3_after": 5.364583468598611e-17,
+          "native_bad_after": 0,
+          "native_bad_before": 0,
+          "native_bad_by_material_after": {
+            "16": 0
+          },
+          "native_bad_by_material_before": {
+            "16": 0
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.0
+        },
+        "Skin": {
+          "anchor_world_m_f32": [
+            -0.27571266889572144,
+            -0.8670029044151306,
+            0.1156349703669548
+          ],
+          "changed_cell_count": 0,
+          "drop_volume_row": 109675,
+          "exact_signed_volume_delta_det6_integer": "-26974462380675976200003527829101291262878472374280721192356890837896203495598214286893425769220188343820818423237896879210496",
+          "keep_volume_row": 109673,
+          "minimum_normalized_det_after": 3.846629615160831e-06,
+          "minimum_volume_m3_after": 5.227714262447144e-12,
+          "native_bad_after": 1,
+          "native_bad_before": 2,
+          "native_bad_by_material_after": {
+            "15": 1
+          },
+          "native_bad_by_material_before": {
+            "15": 2
+          },
+          "native_deficit_after": 0.9553877527358272,
+          "native_deficit_before": 1.0491731512526896
+        }
+      },
+      "volume_star_vertex_counts": {
+        "Fat": 23,
+        "Skin": 5
+      }
+    }
+  ],
+  "paired_I_anchor_fit_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-015-paired-I/i_anchor_fit_015.py",
+    "sha256": "77189208924b9139bfaf9ed731d49d0cbcf546d1f65327f8c941d338973e3678"
+  },
+  "paired_anchor_independent_replay": {
+    "all_moved_anchors_exactly_paired": true,
+    "maximum_keep_anchor_l1_m": 0.0,
+    "maximum_removed_endpoint_to_anchor_m": 2.6838906632564538e-05,
+    "paired_anchor_records_replayed": [
+      {
+        "anchor_f32": [
+          -0.27571266889572144,
+          -0.8670029044151306,
+          0.1156349703669548
+        ],
+        "anchor_moved": false,
+        "drop_source_row": 33006,
+        "drop_to_anchor_m": 2.6838906632564538e-05,
+        "keep_l1_m": 0.0,
+        "keep_source_row": 33004,
+        "operation_id": 6,
+        "paired_exact_delta_det6_integer": "0"
+      }
+    ]
+  },
+  "per_trial_global_measurement_passes": 0,
+  "physical_admission": false,
+  "precomputed_full_mesh_quality_and_incidence_once": true,
+  "protection_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_856_extended_250um_construction.py",
+    "sha256": "25a2bf8cbb2ff776745cb3a68bb3ffdfe4b294d8a555f247ce1bc53b476c4897"
+  },
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "paired_I_3d_minimum_displacement",
+          "drop": 65823,
+          "fit": {
+            "continuous_anchor_world_m": [
+              0.10244513303041458,
+              -1.7280960083007812,
+              0.26072171330451965
+            ],
+            "continuous_l1_m": 0.0,
+            "continuous_removed_endpoint_m": 0.00022573295919911217,
+            "minimum_linear_quality_slack": -1.7820984618361957e-08,
+            "minimum_winding_slack": 2.783561723402888e-06,
+            "solver_message": "Singular matrix C in LSQ subproblem",
+            "solver_success": false,
+            "status": "REJECT_NO_F32_CANDIDATE"
+          },
+          "reason": "REJECT_NO_F32_CANDIDATE"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Fat local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "paired_I_3d_minimum_displacement",
+          "drop": 65829,
+          "fit": {
+            "continuous_anchor_world_m": [
+              0.10241436958312988,
+              -1.728134274482727,
+              0.2605013847351074
+            ],
+            "continuous_l1_m": 0.0,
+            "continuous_removed_endpoint_m": 0.00022573295919911217,
+            "minimum_linear_quality_slack": -8.81698199133954e-06,
+            "minimum_winding_slack": 2.63908911750168e-06,
+            "solver_message": "Singular matrix C in LSQ subproblem",
+            "solver_success": false,
+            "status": "REJECT_NO_F32_CANDIDATE"
+          },
+          "reason": "REJECT_NO_F32_CANDIDATE"
+        }
+      ],
+      "edge_rows": [
+        65823,
+        65829
+      ],
+      "length_m": 0.00022573295919911217
+    }
+  ],
+  "role": "I",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-paired-root/roster.json",
+    "sha256": "f94b572ac5df2c15aacc912658e94bbdf74dc20ba6cd72dace656963d8095196"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-journal.v3",
+  "stage_seconds": {
+    "cache_setup": 4.793153959093615,
+    "final_alias_rebinding": 7.576321290805936,
+    "final_independent_readback": 13.067440416896716,
+    "final_serialization": 10.19743045908399,
+    "local_direction_evaluations": 0.06779316230677068,
+    "output_build": 2.248886751011014,
+    "post_loop_finalization_total": 33.390447499928996
+  },
+  "status": "PASS_FINAL_READBACK_PENDING_EXTERNAL_QUALIFICATION"
+}

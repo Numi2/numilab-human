@@ -1,0 +1,33 @@
+
+==================================== ERRORS ====================================
+_ ERROR collecting all-quality-959-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015_run001_frozen.py _
+all-quality-959-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015_run001_frozen.py:17: in <module>
+    fit=load(FIT_PATH,"i015_fit_owner")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+all-quality-959-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015_run001_frozen.py:15: in load
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1160: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1218: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-959-I015-paired-root/run001/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py'
+_ ERROR collecting all-quality-966-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015.py _
+all-quality-966-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015.py:17: in <module>
+    fit=load(FIT_PATH,"i015_fit_owner")
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+all-quality-966-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015.py:15: in load
+    spec.loader.exec_module(module)
+<frozen importlib._bootstrap_external>:1023: in exec_module
+    ???
+<frozen importlib._bootstrap_external>:1160: in get_code
+    ???
+<frozen importlib._bootstrap_external>:1218: in get_data
+    ???
+E   FileNotFoundError: [Errno 2] No such file or directory: '/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-paired-root/run001/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py'
+=========================== short test summary info ============================
+ERROR all-quality-959-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015_run001_frozen.py
+ERROR all-quality-966-I015-paired-root/run001/source-freeze/test_i_anchor_fit_015.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!!
+2 errors in 0.13s

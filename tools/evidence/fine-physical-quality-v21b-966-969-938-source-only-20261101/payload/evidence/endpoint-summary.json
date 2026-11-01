@@ -1,0 +1,74 @@
+{
+  "I_lineage": [
+    {
+      "driver_sha256": "ff57d577a6d37f90d5954327799929916cd2f26bddf5b0e14bb686b85586a7c2",
+      "helper_sha256": "3338f77751440608b6b7eded377984beb18b0337cc30a8d802919d7da55a458d",
+      "journal_sha256": "38a918de5a001a1d57c0bba6ccfcef1801dc1ee907192afbd52f42a21ea01c9f",
+      "qualifying_endpoint": "966",
+      "report_sha256": "a2b83a378c09534603cb5dd6186e8c8202c457d1b16bf8238fe6831aa8e12ffe",
+      "result": "2 accepted operations / 17 trials; source manifest records that the 3D optimizer was not invoked.",
+      "source_manifest_sha256": "e4fac2ae06e762bb5318327a9a757d3fc421e495c8fe769a2f403ff5ab0eeacd",
+      "source_run_path": "all-quality-959-I015-paired-root/run001"
+    },
+    {
+      "driver_sha256": "d900231764ad59ebabe512bdd5c51f074551840508613bd453b7f1cdf24e1236",
+      "helper_sha256": "77189208924b9139bfaf9ed731d49d0cbcf546d1f65327f8c941d338973e3678",
+      "journal_sha256": "c7747233d2f012b42261d2b46ee9f4c0f1b0eed512e38f9b3add5839019310cf",
+      "qualifying_endpoint": "969",
+      "report_sha256": "45e4a5e54c27b0f5adc08906cecd10395c2ad46b6d16bbf15e36c661ead8cea8",
+      "result": "1 accepted operation / 18 trials; anchor did not move and 3D helper was not invoked.",
+      "source_manifest_sha256": "b6fc0823fe75d7288ee35b9531bf7fc634038cf9f146a04af58fa2df7aea03e8",
+      "source_run_path": "all-quality-966-I015-paired-root/run001"
+    }
+  ],
+  "endpoints": [
+    {
+      "counts": {
+        "Fat": 4,
+        "Skin": 5
+      },
+      "label": "959 parent",
+      "mass_reconciliation": "PENDING",
+      "native_steps": 0,
+      "physical_admission": false,
+      "receipt_sha256": "42b7af5c46d97d93d7d218afbf4351d20d9d6c4aa887de68b93e685a8d0b79b8",
+      "state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-959-remesh-883h-fixed-775-qualified-root/verified-state.json",
+      "state_sha256": "c3e51d1d4b1c9c15f639b564c677c57c13d3361803f6289b2c4ac34d55ee487e",
+      "status": "PASS_ENDPOINT_CAVITY_EXACT_REPLAY_775_808_SOURCE_ONLY",
+      "surface_crossings": 0
+    },
+    {
+      "counts": {
+        "Fat": 1,
+        "Skin": 5
+      },
+      "label": "966 selected",
+      "mass_reconciliation": "PENDING",
+      "native_steps": 0,
+      "physical_admission": false,
+      "receipt_sha256": "eea0dad235506a5471d2c18459de0a25fafb03ab022e2d31ead6c169eb71f71f",
+      "state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-fixed-775-qualified-root/verified-state.json",
+      "state_sha256": "96143888a02e9a9cbe54c0176e2430963179ed28892fafd0f63c5491463281ec",
+      "status": "PASS_NATIVE_CELL_QUOTIENT_REPLAY_775_AND_808_SOURCE_ONLY",
+      "surface_crossings": 0
+    },
+    {
+      "counts": {
+        "Fat": 1,
+        "Skin": 4
+      },
+      "label": "969 selected",
+      "mass_reconciliation": "PENDING",
+      "native_steps": 0,
+      "physical_admission": false,
+      "receipt_sha256": "0561acb50f07aedf0e18260c11af13e9ec8f03e314a57412a12927657ecf6e23",
+      "state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-969-I015-fixed-775-qualified-root/verified-state.json",
+      "state_sha256": "346cf49a8f1c079703a688bf23ae6a00bfa794dfc012c7470c5ad804b5a4c09c",
+      "status": "PASS_NATIVE_CELL_QUOTIENT_REPLAY_775_AND_808_SOURCE_ONLY",
+      "surface_crossings": 0
+    }
+  ],
+  "note": "The separate 015 unit controls exercise the fitter; those controls do not imply it ran on either selected source candidate.",
+  "schema": "h706.quality-endpoint-summary.v1",
+  "source_only": true
+}

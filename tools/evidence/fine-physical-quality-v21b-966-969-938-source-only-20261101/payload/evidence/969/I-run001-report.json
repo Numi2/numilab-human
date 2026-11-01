@@ -1,0 +1,186 @@
+{
+  "accepted_count": 1,
+  "all185_intersection_audit": "PENDING",
+  "anchor_policy": {
+    "immediate_keep_l1_cap_m": 0.00025,
+    "inherited_I_D_transition_policy": "REPORT_ONLY; cap applies to each new immediate transition, not retroactively to accepted ancestors",
+    "moved_D_anchor_exact_volume_budget": {
+      "local_fraction": 0.01,
+      "regional_fraction": 0.0001
+    },
+    "moved_I_anchor_exact_paired_delta_det6_integer": "0",
+    "paired_I_fit_method": "3D minimum-displacement SLSQP with exact paired Skin+Fat signed-det6 delta zero and unchanged F32/canonical gates",
+    "paired_I_fit_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-015-paired-I/i_anchor_fit_015.py",
+      "sha256": "77189208924b9139bfaf9ed731d49d0cbcf546d1f65327f8c941d338973e3678"
+    },
+    "removed_endpoint_to_anchor_cap_m": 0.00025
+  },
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-paired-root/run001/candidate-state-proposal.json",
+    "sha256": "f3da2ddcc7ef04ea3da77efaf038aadf7f8d6dd52a4c4c11482b124019c772f4"
+  },
+  "elapsed_s": 52.289679459063336,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-fixed-775-qualified-root/verified-state.json",
+    "sha256": "96143888a02e9a9cbe54c0176e2430963179ed28892fafd0f63c5491463281ec"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 0.00025,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-paired-root/run001/operation-journal.json",
+    "sha256": "c7747233d2f012b42261d2b46ee9f4c0f1b0eed512e38f9b3add5839019310cf"
+  },
+  "paired_I_anchor_fit_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-015-paired-I/i_anchor_fit_015.py",
+    "sha256": "77189208924b9139bfaf9ed731d49d0cbcf546d1f65327f8c941d338973e3678"
+  },
+  "paired_anchor_independent_replay": {
+    "all_moved_anchors_exactly_paired": true,
+    "maximum_keep_anchor_l1_m": 0.0,
+    "maximum_removed_endpoint_to_anchor_m": 2.6838906632564538e-05,
+    "paired_anchor_records_replayed": [
+      {
+        "anchor_f32": [
+          -0.27571266889572144,
+          -0.8670029044151306,
+          0.1156349703669548
+        ],
+        "anchor_moved": false,
+        "drop_source_row": 33006,
+        "drop_to_anchor_m": 2.6838906632564538e-05,
+        "keep_l1_m": 0.0,
+        "keep_source_row": 33004,
+        "operation_id": 6,
+        "paired_exact_delta_det6_integer": "0"
+      }
+    ]
+  },
+  "physical_admission": false,
+  "protection_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_856_extended_250um_construction.py",
+    "sha256": "25a2bf8cbb2ff776745cb3a68bb3ffdfe4b294d8a555f247ce1bc53b476c4897"
+  },
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "paired_I_3d_minimum_displacement",
+          "drop": 65823,
+          "fit": {
+            "continuous_anchor_world_m": [
+              0.10244513303041458,
+              -1.7280960083007812,
+              0.26072171330451965
+            ],
+            "continuous_l1_m": 0.0,
+            "continuous_removed_endpoint_m": 0.00022573295919911217,
+            "minimum_linear_quality_slack": -1.7820984618361957e-08,
+            "minimum_winding_slack": 2.783561723402888e-06,
+            "solver_message": "Singular matrix C in LSQ subproblem",
+            "solver_success": false,
+            "status": "REJECT_NO_F32_CANDIDATE"
+          },
+          "reason": "REJECT_NO_F32_CANDIDATE"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Fat local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "paired_I_3d_minimum_displacement",
+          "drop": 65829,
+          "fit": {
+            "continuous_anchor_world_m": [
+              0.10241436958312988,
+              -1.728134274482727,
+              0.2605013847351074
+            ],
+            "continuous_l1_m": 0.0,
+            "continuous_removed_endpoint_m": 0.00022573295919911217,
+            "minimum_linear_quality_slack": -8.81698199133954e-06,
+            "minimum_winding_slack": 2.63908911750168e-06,
+            "solver_message": "Singular matrix C in LSQ subproblem",
+            "solver_success": false,
+            "status": "REJECT_NO_F32_CANDIDATE"
+          },
+          "reason": "REJECT_NO_F32_CANDIDATE"
+        }
+      ],
+      "edge_rows": [
+        65823,
+        65829
+      ],
+      "length_m": 0.00022573295919911217
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 1,
+    "overlapping_source_star": 4
+  },
+  "role": "I",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-966-I015-paired-root/roster.json",
+    "sha256": "f94b572ac5df2c15aacc912658e94bbdf74dc20ba6cd72dace656963d8095196"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v3",
+  "seconds_budget": 60.0,
+  "stage_seconds": {
+    "cache_setup": 4.793153959093615,
+    "final_alias_rebinding": 7.576321290805936,
+    "final_independent_readback": 13.067440416896716,
+    "final_serialization": 10.19743045908399,
+    "local_direction_evaluations": 0.06779316230677068,
+    "output_build": 2.248886751011014
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 18
+}

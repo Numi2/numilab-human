@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+    "/Users/numi/Work/quality-v21b-859-868-publication-20261101/tools/run_resting_job_exclusive.py",
+    "--",
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "-p",
+    "no:cacheprovider",
+    "--disable-warnings",
+    "--tb=short",
+    "/tmp/quality-966-run001-test-20261101b/source-freeze/test_i_anchor_fit_015_run001_frozen.py"
+  ],
+  "cwd": "/tmp/quality-966-run001-test-20261101b/source-freeze",
+  "helper_sha256": "3338f77751440608b6b7eded377984beb18b0337cc30a8d802919d7da55a458d",
+  "schema": "h706.publication-focused-test-command.v1",
+  "temporary_layout": {
+    "dependencies_sha256_manifest": "payload/evidence/tests/015-run001-external-dependency-pins.json",
+    "run001_helper_copy": "payload/source/015/run001/i_anchor_fit_015.py",
+    "run001_test_copy": "payload/source/015/run001/test_i_anchor_fit_015_run001_frozen.py",
+    "symlink_795_owner_to": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root",
+    "symlink_common_fit_to": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-014-D-3d-fit"
+  },
+  "test_source_sha256": "56e54c47ecab95191deb527bbfb7c8cf2cc6841db18408921585422d0e06c6a2",
+  "wrapper_sha256": "081073dd757e2ae8d11fc7635f571ed3be456f2dab180b3b610a78466b03b98e"
+}

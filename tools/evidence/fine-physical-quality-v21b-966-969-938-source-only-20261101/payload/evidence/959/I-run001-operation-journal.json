@@ -1,0 +1,838 @@
+{
+  "anchor_policy": {
+    "immediate_keep_l1_cap_m": 0.00025,
+    "inherited_I_D_transition_policy": "REPORT_ONLY; cap applies to each new immediate transition, not retroactively to accepted ancestors",
+    "moved_D_anchor_exact_volume_budget": {
+      "local_fraction": 0.01,
+      "regional_fraction": 0.0001
+    },
+    "moved_I_anchor_exact_paired_delta_det6_integer": "0",
+    "paired_I_fit_method": "3D minimum-displacement SLSQP with exact paired Skin+Fat signed-det6 delta zero and unchanged F32/canonical gates",
+    "paired_I_fit_owner": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-015-paired-I/i_anchor_fit_015.py",
+      "sha256": "3338f77751440608b6b7eded377984beb18b0337cc30a8d802919d7da55a458d"
+    },
+    "removed_endpoint_to_anchor_cap_m": 0.00025
+  },
+  "final_independent_readbacks": 3,
+  "final_source_alias_rebinds": 2,
+  "independent_surface_replay": {
+    "facet_bad_after": 0,
+    "facet_bad_before": 0,
+    "full_typed_union_and_ancestry_replayed": true,
+    "source_face_quotient_replayed": true,
+    "source_operation_rows_replayed": true,
+    "source_point_coordinates_replayed_from_anchors": true,
+    "typed_primary_lanes_replayed": true
+  },
+  "independent_volume_replay": {
+    "Fat": {
+      "all_exact_positive_changed_cells": true,
+      "exact_local_volume_deltas_det6": [
+        "9734945241398278004425155023186759735984849898552365662483844079225614180187579000289195217101842623937412337407612715794432",
+        "19909058228998961352980369910307896937007440105113992961347544563857775304453826375761651633040458998048743798850195158361702400"
+      ],
+      "final_target_chain_exact": true,
+      "final_tets_replayed_from_parent": true,
+      "full_native_gate_replayed": true,
+      "full_replacement_parent_union_replayed": true,
+      "log_deficit_after": 1.5951517152110057,
+      "log_deficit_before": 4.77318866463981,
+      "native_bad_after": 1,
+      "native_bad_before": 4,
+      "one_sided_D_anchor_volume_budget_replay": [],
+      "paired_anchor_coordinates_replayed": true,
+      "rebinder_receipt": {
+        "ambiguous_target_rows": 0,
+        "geometry_and_target_bytes_unchanged": true,
+        "group_contract": {
+          "D": {
+            "group": 1,
+            "reverse_orientation": true
+          },
+          "I": {
+            "group": 0,
+            "reverse_orientation": false
+          }
+        },
+        "input_pins": {},
+        "mass_mapping": "NOT_RUN",
+        "native_steps": 0,
+        "new_alias_sha256": {
+          "desired_boundary_source_face_rows": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+          "desired_boundary_source_group": "e53b7175d2f0011e2583d54f3246b7bec19e41b76d3fe4c671b09e155c4644fa",
+          "desired_boundary_source_rows": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+          "proposed_current_desired_boundary_source_face_rows": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+          "proposed_current_desired_boundary_source_group": "e53b7175d2f0011e2583d54f3246b7bec19e41b76d3fe4c671b09e155c4644fa",
+          "proposed_current_desired_boundary_source_rows": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70"
+        },
+        "physical_admission": false,
+        "prior_aliases": {
+          "desired_boundary_source_face_rows": {
+            "sha256": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+            "shape": [
+              444384
+            ]
+          },
+          "desired_boundary_source_group": {
+            "sha256": "e53b7175d2f0011e2583d54f3246b7bec19e41b76d3fe4c671b09e155c4644fa",
+            "shape": [
+              444384
+            ]
+          },
+          "desired_boundary_source_rows": {
+            "sha256": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+            "shape": [
+              444384
+            ]
+          },
+          "proposed_current_desired_boundary_source_face_rows": {
+            "sha256": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+            "shape": [
+              444384
+            ]
+          },
+          "proposed_current_desired_boundary_source_group": {
+            "sha256": "e53b7175d2f0011e2583d54f3246b7bec19e41b76d3fe4c671b09e155c4644fa",
+            "shape": [
+              444384
+            ]
+          },
+          "proposed_current_desired_boundary_source_rows": {
+            "sha256": "c4393d009c6536e7bee959d8b4323b03f4a7a488e94b27ec8efcabae05538f70",
+            "shape": [
+              444384
+            ]
+          }
+        },
+        "role": "Fat",
+        "schema": "numi.human.current-desired-boundary-source-alias-rebind.v1",
+        "source_group_counts": {
+          "0": 236393,
+          "1": 207901,
+          "2": 90
+        },
+        "status": "PASS_EXACT_CURRENT_TARGET_TYPED_SOURCE_ALIAS_REBIND",
+        "target_face_count": 444384,
+        "target_faces_exact_oriented_F32_matched": 444384,
+        "typed_source_face_counts": {
+          "D": 207901,
+          "I": 236393
+        },
+        "unmatched_target_rows": 0,
+        "unused_typed_source_faces": {
+          "D": 0,
+          "I": 0
+        },
+        "wall_face_count": 90,
+        "wall_rows_all_used_exactly_once": true
+      },
+      "source_aliases_reconstructed": true
+    },
+    "Skin": {
+      "all_exact_positive_changed_cells": true,
+      "exact_local_volume_deltas_det6": [
+        "-9734945241398278004425155023186759735984849898552365662483844079225614180187579000289195217101842623937412337407612715794432",
+        "-19909058228998961352980369910307896937007440105113992961347544563857775304453826375761651633040458998048743798850195158361702400"
+      ],
+      "final_target_chain_exact": true,
+      "final_tets_replayed_from_parent": true,
+      "full_native_gate_replayed": true,
+      "full_replacement_parent_union_replayed": true,
+      "log_deficit_after": 4.020647546976309,
+      "log_deficit_before": 4.020647546976309,
+      "native_bad_after": 5,
+      "native_bad_before": 5,
+      "one_sided_D_anchor_volume_budget_replay": [],
+      "paired_anchor_coordinates_replayed": true,
+      "rebinder_receipt": {
+        "ambiguous_target_rows": 0,
+        "geometry_and_target_bytes_unchanged": true,
+        "group_contract": {
+          "I": {
+            "group": 1,
+            "reverse_orientation": true
+          },
+          "O": {
+            "group": 0,
+            "reverse_orientation": false
+          }
+        },
+        "input_pins": {},
+        "mass_mapping": "NOT_RUN",
+        "native_steps": 0,
+        "new_alias_sha256": {
+          "desired_boundary_source_face_rows": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+          "desired_boundary_source_group": "e3811affc3436e62d2cd89e19391983a058ffc0f4af26d6d5c4f60d77173ab94",
+          "desired_boundary_source_rows": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+          "proposed_current_desired_boundary_source_face_rows": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+          "proposed_current_desired_boundary_source_group": "e3811affc3436e62d2cd89e19391983a058ffc0f4af26d6d5c4f60d77173ab94",
+          "proposed_current_desired_boundary_source_rows": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87"
+        },
+        "physical_admission": false,
+        "prior_aliases": {
+          "desired_boundary_source_face_rows": {
+            "sha256": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+            "shape": [
+              388824
+            ]
+          },
+          "desired_boundary_source_group": {
+            "sha256": "e3811affc3436e62d2cd89e19391983a058ffc0f4af26d6d5c4f60d77173ab94",
+            "shape": [
+              388824
+            ]
+          },
+          "desired_boundary_source_rows": {
+            "sha256": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+            "shape": [
+              388824
+            ]
+          },
+          "proposed_current_desired_boundary_source_face_rows": {
+            "sha256": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+            "shape": [
+              388824
+            ]
+          },
+          "proposed_current_desired_boundary_source_group": {
+            "sha256": "e3811affc3436e62d2cd89e19391983a058ffc0f4af26d6d5c4f60d77173ab94",
+            "shape": [
+              388824
+            ]
+          },
+          "proposed_current_desired_boundary_source_rows": {
+            "sha256": "8db625ddf9e7761ebd38ea67a369536242ca12f283a0f5920a4e164a41ad2c87",
+            "shape": [
+              388824
+            ]
+          }
+        },
+        "role": "Skin",
+        "schema": "numi.human.current-desired-boundary-source-alias-rebind.v1",
+        "source_group_counts": {
+          "0": 152341,
+          "1": 236393,
+          "2": 90
+        },
+        "status": "PASS_EXACT_CURRENT_TARGET_TYPED_SOURCE_ALIAS_REBIND",
+        "target_face_count": 388824,
+        "target_faces_exact_oriented_F32_matched": 388824,
+        "typed_source_face_counts": {
+          "I": 236393,
+          "O": 152341
+        },
+        "unmatched_target_rows": 0,
+        "unused_typed_source_faces": {
+          "I": 0,
+          "O": 0
+        },
+        "wall_face_count": 90,
+        "wall_rows_all_used_exactly_once": true
+      },
+      "source_aliases_reconstructed": true
+    }
+  },
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-959-remesh-883h-fixed-775-qualified-root/verified-state.json",
+    "sha256": "c3e51d1d4b1c9c15f639b564c677c57c13d3361803f6289b2c4ac34d55ee487e"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "operation_parent_lineage": [
+    {
+      "affected_base_cells": {
+        "Fat": [
+          746109,
+          746385,
+          748594,
+          751286,
+          754080,
+          755049,
+          756507,
+          756508,
+          756867,
+          756868,
+          757297,
+          757298,
+          758387,
+          758388,
+          758389,
+          758390,
+          758766,
+          758767,
+          758768,
+          758980,
+          758981,
+          758982,
+          759301,
+          770377,
+          770378,
+          770379,
+          770380,
+          770381,
+          770382,
+          770383,
+          770384,
+          770385,
+          770386,
+          770387,
+          770388,
+          770389,
+          770390,
+          770391,
+          770392,
+          770393,
+          770394,
+          770395,
+          770396,
+          770397,
+          770398,
+          770459,
+          770460,
+          770461,
+          770462,
+          770463,
+          770464,
+          770465,
+          770466,
+          770467,
+          770468,
+          770469
+        ],
+        "Skin": [
+          697554,
+          724853,
+          724854,
+          724855,
+          724856,
+          724857,
+          724858,
+          724859,
+          724860,
+          724861,
+          724862,
+          724870
+        ]
+      },
+      "anchor_displacement_l1_m": 0.0,
+      "anchor_fit": {},
+      "anchor_moved": false,
+      "anchor_strategy": "kept_endpoint",
+      "anchor_world_m_f32": [
+        -0.27570196986198425,
+        -0.8669732809066772,
+        0.11558782309293747
+      ],
+      "changed_base_cells": {
+        "Fat": [
+          770379,
+          770380,
+          770381,
+          770388,
+          770389,
+          770390,
+          770391,
+          770459,
+          770460,
+          770461,
+          770465
+        ],
+        "Skin": [
+          724857,
+          724858,
+          724870
+        ]
+      },
+      "changed_face_base_rows": [
+        121025,
+        121059,
+        236322
+      ],
+      "drop_source_row": 33008,
+      "drop_volume_rows": {
+        "Fat": 33008,
+        "Skin": 109677
+      },
+      "edge_length_m": 2.055954337011105e-05,
+      "edge_rows": [
+        33008,
+        33010
+      ],
+      "keep_source_row": 33010,
+      "keep_volume_rows": {
+        "Fat": 33010,
+        "Skin": 109679
+      },
+      "one_sided_D_anchor_volume_budget": null,
+      "operation_id": 4,
+      "removed_endpoint_to_anchor_m": 2.055954337011105e-05,
+      "role": "I",
+      "star_face_base_rows": [
+        16070,
+        16071,
+        121019,
+        121020,
+        121025,
+        121026,
+        121059,
+        236322
+      ],
+      "volume_delta_det6_integer": {
+        "Fat": "9734945241398278004425155023186759735984849898552365662483844079225614180187579000289195217101842623937412337407612715794432",
+        "Skin": "-9734945241398278004425155023186759735984849898552365662483844079225614180187579000289195217101842623937412337407612715794432"
+      }
+    },
+    {
+      "affected_base_cells": {
+        "Fat": [
+          44702,
+          46616,
+          50149,
+          56838,
+          125887,
+          126687,
+          126691,
+          244786,
+          329123,
+          357117,
+          363798,
+          363965,
+          364931,
+          364987,
+          364993,
+          365010,
+          365020,
+          365022,
+          365023,
+          431745,
+          439913,
+          460152,
+          478776,
+          485878,
+          490125,
+          507741,
+          768871,
+          768872,
+          768873,
+          768874,
+          768875,
+          768876,
+          768877,
+          768878,
+          768879,
+          768880,
+          768881,
+          768882,
+          768883,
+          768884,
+          768885,
+          768886
+        ],
+        "Skin": [
+          342387,
+          342388,
+          342389,
+          436750,
+          440229,
+          506823,
+          665297,
+          665298,
+          665304,
+          665305
+        ]
+      },
+      "anchor_displacement_l1_m": 0.0,
+      "anchor_fit": {},
+      "anchor_moved": false,
+      "anchor_strategy": "kept_endpoint",
+      "anchor_world_m_f32": [
+        -0.007246882189065218,
+        -0.1471618413925171,
+        0.03698326274752617
+      ],
+      "changed_base_cells": {
+        "Fat": [
+          44702,
+          50149,
+          56838,
+          125887,
+          126687,
+          126691,
+          244786,
+          329123,
+          357117,
+          363798,
+          363965,
+          364931,
+          365010,
+          365020,
+          365022,
+          365023,
+          431745,
+          460152,
+          478776,
+          485878,
+          490125,
+          507741,
+          768873,
+          768874,
+          768875,
+          768876,
+          768877,
+          768878,
+          768879,
+          768880
+        ],
+        "Skin": [
+          342387,
+          342389
+        ]
+      },
+      "changed_face_base_rows": [
+        51674,
+        51765,
+        169858
+      ],
+      "drop_source_row": 55291,
+      "drop_volume_rows": {
+        "Fat": 55291,
+        "Skin": 131960
+      },
+      "edge_length_m": 0.00012524371946450255,
+      "edge_rows": [
+        55291,
+        55297
+      ],
+      "keep_source_row": 55297,
+      "keep_volume_rows": {
+        "Fat": 55297,
+        "Skin": 131966
+      },
+      "one_sided_D_anchor_volume_budget": null,
+      "operation_id": 5,
+      "removed_endpoint_to_anchor_m": 0.00012524371946450255,
+      "role": "I",
+      "star_face_base_rows": [
+        51674,
+        51765,
+        51767,
+        51768,
+        169851,
+        169852,
+        169856,
+        169857,
+        169858
+      ],
+      "volume_delta_det6_integer": {
+        "Fat": "19909058228998961352980369910307896937007440105113992961347544563857775304453826375761651633040458998048743798850195158361702400",
+        "Skin": "-19909058228998961352980369910307896937007440105113992961347544563857775304453826375761651633040458998048743798850195158361702400"
+      }
+    }
+  ],
+  "operations": [
+    {
+      "anchor_displacement_l1_m": 0.0,
+      "anchor_moved": false,
+      "anchor_strategy": "kept_endpoint",
+      "anchor_world_m_f32": [
+        -0.27570196986198425,
+        -0.8669732809066772,
+        0.11558782309293747
+      ],
+      "combined_quality": {
+        "combined_log_deficit_after": 5.751974430155419,
+        "combined_log_deficit_before": 8.793836211616119,
+        "combined_native_bad_after": 7,
+        "combined_native_bad_before": 9
+      },
+      "drop_source_row": 33008,
+      "edge_length_m": 2.055954337011105e-05,
+      "edge_rows": [
+        33008,
+        33010
+      ],
+      "keep_source_row": 33010,
+      "local_direction_evaluation_s": 0.041092082392424345,
+      "one_sided_D_anchor_volume_budget": null,
+      "operation_id": 4,
+      "per_operation_external_audit": "PENDING_FINAL_775_805_ALL185",
+      "protected_back_endpoint_dropped": false,
+      "rejected_direction_reasons": [
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33010,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33010,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33010,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33010,
+          "fit": {},
+          "reason": "Fat local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "paired_I_3d_minimum_displacement",
+          "drop": 33010,
+          "fit": {
+            "continuous_anchor_world_m": [
+              -0.27570003271102905,
+              -0.8669764995574951,
+              0.11560803651809692
+            ],
+            "continuous_l1_m": 0.0,
+            "continuous_removed_endpoint_m": 2.055954337011105e-05,
+            "minimum_linear_quality_slack": -0.00013028360211949307,
+            "minimum_winding_slack": 5.6968162884788345e-06,
+            "solver_message": "Singular matrix C in LSQ subproblem",
+            "solver_success": false,
+            "status": "REJECT_NO_F32_CANDIDATE"
+          },
+          "reason": "REJECT_NO_F32_CANDIDATE"
+        }
+      ],
+      "source_star_face_count": 8,
+      "source_star_vertex_count": 8,
+      "surface_metrics": {
+        "facet_bad_after": 0,
+        "facet_bad_before": 0,
+        "minimum_facet_q_after": 0.0011074692788059345,
+        "minimum_facet_q_before": 0.0009058195336082623
+      },
+      "volume_metrics": {
+        "Fat": {
+          "anchor_world_m_f32": [
+            -0.27570196986198425,
+            -0.8669732809066772,
+            0.11558782309293747
+          ],
+          "changed_cell_count": 11,
+          "drop_volume_row": 33008,
+          "exact_signed_volume_delta_det6_integer": "9734945241398278004425155023186759735984849898552365662483844079225614180187579000289195217101842623937412337407612715794432",
+          "keep_volume_row": 33010,
+          "minimum_normalized_det_after": 1.1152351234725506e-05,
+          "minimum_volume_m3_after": 1.4852303625260462e-18,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "native_bad_by_material_after": {
+            "16": 0
+          },
+          "native_bad_by_material_before": {
+            "16": 2
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 3.041861781460699
+        },
+        "Skin": {
+          "anchor_world_m_f32": [
+            -0.27570196986198425,
+            -0.8669732809066772,
+            0.11558782309293747
+          ],
+          "changed_cell_count": 3,
+          "drop_volume_row": 109677,
+          "exact_signed_volume_delta_det6_integer": "-9734945241398278004425155023186759735984849898552365662483844079225614180187579000289195217101842623937412337407612715794432",
+          "keep_volume_row": 109679,
+          "minimum_normalized_det_after": 3.997112753228494e-05,
+          "minimum_volume_m3_after": 1.060587098395102e-14,
+          "native_bad_after": 0,
+          "native_bad_before": 0,
+          "native_bad_by_material_after": {
+            "15": 0
+          },
+          "native_bad_by_material_before": {
+            "15": 0
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.0
+        }
+      },
+      "volume_star_vertex_counts": {
+        "Fat": 30,
+        "Skin": 10
+      }
+    },
+    {
+      "anchor_displacement_l1_m": 0.0,
+      "anchor_moved": false,
+      "anchor_strategy": "kept_endpoint",
+      "anchor_world_m_f32": [
+        -0.007246882189065218,
+        -0.1471618413925171,
+        0.03698326274752617
+      ],
+      "combined_quality": {
+        "combined_log_deficit_after": 5.615799262187314,
+        "combined_log_deficit_before": 5.751974430155419,
+        "combined_native_bad_after": 6,
+        "combined_native_bad_before": 7
+      },
+      "drop_source_row": 55291,
+      "edge_length_m": 0.00012524371946450255,
+      "edge_rows": [
+        55291,
+        55297
+      ],
+      "keep_source_row": 55297,
+      "local_direction_evaluation_s": 0.04943050071597099,
+      "one_sided_D_anchor_volume_budget": null,
+      "operation_id": 5,
+      "per_operation_external_audit": "PENDING_FINAL_775_805_ALL185",
+      "protected_back_endpoint_dropped": true,
+      "rejected_direction_reasons": [],
+      "source_star_face_count": 9,
+      "source_star_vertex_count": 9,
+      "surface_metrics": {
+        "facet_bad_after": 0,
+        "facet_bad_before": 0,
+        "minimum_facet_q_after": 0.004429335378581398,
+        "minimum_facet_q_before": 0.002347145103965794
+      },
+      "volume_metrics": {
+        "Fat": {
+          "anchor_world_m_f32": [
+            -0.007246882189065218,
+            -0.1471618413925171,
+            0.03698326274752617
+          ],
+          "changed_cell_count": 30,
+          "drop_volume_row": 55291,
+          "exact_signed_volume_delta_det6_integer": "19909058228998961352980369910307896937007440105113992961347544563857775304453826375761651633040458998048743798850195158361702400",
+          "keep_volume_row": 55297,
+          "minimum_normalized_det_after": 0.00013687592380989705,
+          "minimum_volume_m3_after": 6.838697978669038e-14,
+          "native_bad_after": 0,
+          "native_bad_before": 1,
+          "native_bad_by_material_after": {
+            "16": 0
+          },
+          "native_bad_by_material_before": {
+            "16": 1
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.13617516796810558
+        },
+        "Skin": {
+          "anchor_world_m_f32": [
+            -0.007246882189065218,
+            -0.1471618413925171,
+            0.03698326274752617
+          ],
+          "changed_cell_count": 2,
+          "drop_volume_row": 131960,
+          "exact_signed_volume_delta_det6_integer": "-19909058228998961352980369910307896937007440105113992961347544563857775304453826375761651633040458998048743798850195158361702400",
+          "keep_volume_row": 131966,
+          "minimum_normalized_det_after": 1.9952979709363174e-05,
+          "minimum_volume_m3_after": 3.6560610700773305e-13,
+          "native_bad_after": 0,
+          "native_bad_before": 0,
+          "native_bad_by_material_after": {
+            "15": 0
+          },
+          "native_bad_by_material_before": {
+            "15": 0
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.0
+        }
+      },
+      "volume_star_vertex_counts": {
+        "Fat": 25,
+        "Skin": 10
+      }
+    }
+  ],
+  "paired_I_anchor_fit_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-015-paired-I/i_anchor_fit_015.py",
+    "sha256": "3338f77751440608b6b7eded377984beb18b0337cc30a8d802919d7da55a458d"
+  },
+  "paired_anchor_independent_replay": {
+    "all_moved_anchors_exactly_paired": true,
+    "maximum_keep_anchor_l1_m": 0.0,
+    "maximum_removed_endpoint_to_anchor_m": 0.00012524371946450255,
+    "paired_anchor_records_replayed": [
+      {
+        "anchor_f32": [
+          -0.27570196986198425,
+          -0.8669732809066772,
+          0.11558782309293747
+        ],
+        "anchor_moved": false,
+        "drop_source_row": 33008,
+        "drop_to_anchor_m": 2.055954337011105e-05,
+        "keep_l1_m": 0.0,
+        "keep_source_row": 33010,
+        "operation_id": 4,
+        "paired_exact_delta_det6_integer": "0"
+      },
+      {
+        "anchor_f32": [
+          -0.007246882189065218,
+          -0.1471618413925171,
+          0.03698326274752617
+        ],
+        "anchor_moved": false,
+        "drop_source_row": 55291,
+        "drop_to_anchor_m": 0.00012524371946450255,
+        "keep_l1_m": 0.0,
+        "keep_source_row": 55297,
+        "operation_id": 5,
+        "paired_exact_delta_det6_integer": "0"
+      }
+    ]
+  },
+  "per_trial_global_measurement_passes": 0,
+  "physical_admission": false,
+  "precomputed_full_mesh_quality_and_incidence_once": true,
+  "protection_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_856_extended_250um_construction.py",
+    "sha256": "25a2bf8cbb2ff776745cb3a68bb3ffdfe4b294d8a555f247ce1bc53b476c4897"
+  },
+  "rejected_directions": [],
+  "role": "I",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-959-I015-paired-root/roster.json",
+    "sha256": "5c64afd36445439e39357519adcb0cde166c1ef31fe1900dc5430426fe5c62a7"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-journal.v3",
+  "stage_seconds": {
+    "cache_setup": 5.143422707915306,
+    "final_alias_rebinding": 8.133047542069107,
+    "final_independent_readback": 13.468356124823913,
+    "final_serialization": 10.462192416889593,
+    "local_direction_evaluations": 0.09052258310839534,
+    "output_build": 2.3238405419979244,
+    "post_loop_finalization_total": 34.68905054195784
+  },
+  "status": "PASS_FINAL_READBACK_PENDING_EXTERNAL_QUALIFICATION"
+}
