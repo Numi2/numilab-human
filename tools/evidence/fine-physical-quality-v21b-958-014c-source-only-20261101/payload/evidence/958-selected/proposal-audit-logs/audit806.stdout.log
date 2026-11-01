@@ -1,0 +1,65 @@
+{
+  "schema": "h706.combined-current-exact-surface-diff-audit.v1",
+  "status": "PASS_EXACT_JOINT_CHANGED_OID_VS_RETAINED_WALLS_ALL185",
+  "physical_admission": false,
+  "native_steps": 0,
+  "construction_policy_controls": {
+    "legacy_50um_unchanged": true,
+    "extended_I_D_250um_explicit_only": true,
+    "extended_O_rejected": true,
+    "mixed_policy_rejected": true,
+    "ordinary_outer_policy_keeps_existing_cap_rules": true
+  },
+  "config": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-958-qualified-root/context-config.json",
+    "sha256": "67878ecc8282d26f55b233b2f81a7809f5a40870990215876b5dd7283a2f4299"
+  },
+  "paired_D_retirement": null,
+  "changed_face_total": 7,
+  "removed_baseline_face_total": 9,
+  "inner_back_layer_repair_policy": {
+    "declared_roles": [],
+    "maximum_inner_displacement_m": 5e-05,
+    "outer_back_scope_points_fixed": true,
+    "source_rims_and_all149_routes_fixed": true,
+    "classification": "explicit inner layer reconstruction, not unchanged inner-back geometry"
+  },
+  "inner_back_layer_extended_construction_trial_policy": {
+    "declared_roles": [
+      "D"
+    ],
+    "maximum_declared_construction_displacement_m": 0.00025,
+    "outer_back_scope_points_fixed": true,
+    "source_rims_and_all149_routes_fixed": true,
+    "physical_admission": false,
+    "classification": "separate construction-only I/D trial; unchanged exact source, closure and all185 checks still apply"
+  },
+  "candidate_changed_record_count_by_role": {
+    "O": 0,
+    "I": 0,
+    "D": 7
+  },
+  "point_namespace": {
+    "role_order": [
+      "D",
+      "O",
+      "I"
+    ],
+    "point_base": {
+      "D": 0,
+      "O": 120648,
+      "I": 197317
+    },
+    "total_points": 322685,
+    "mapping": "explicit bounded point repair retains authenticated row IDs; unchanged roles map by exact F32 bytes"
+  },
+  "exact_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/publication-206-stage-001/tools/cardiac_cavity_intersections.py",
+    "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "expected_sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d",
+    "filtered_owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-exact-filter-adapter-030/filtered_prepared_exact_owner.py",
+    "filtered_owner_sha256": "c3f427432096719b9fe3b91cbd2fc1a6f779228c03456cef85dc8bbbae9da16d"
+  },
+  "elapsed_s": 20.07077591586858
+}
+against_count 0 joint_self_count 0 report_sha256 7ec0b507c660786b449fff8aa413a8985e8206f09144336a422fd01bb3db56a1

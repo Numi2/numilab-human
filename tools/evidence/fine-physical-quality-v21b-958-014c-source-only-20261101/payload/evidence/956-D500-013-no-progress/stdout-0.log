@@ -1,0 +1,57 @@
+{
+  "status": "PASS_READ_ONLY_ACTIVE_ROW_BAD_CELL_CENSUS",
+  "role": "D",
+  "eligible_count": 1,
+  "all_short_interior_edge_count": 113637,
+  "excluded_count": 113636,
+  "excluded_reason_counts": {
+    "no_current_bad_tet_edge_hit": 113636,
+    "surface_link_condition_fail": 13962
+  },
+  "known_edge": null,
+  "shortest": [
+    {
+      "role": "D",
+      "edge_rows": [
+        29618,
+        29619
+      ],
+      "length_m": 0.00029129384916829664,
+      "source_face_rows": [
+        26468,
+        53899
+      ],
+      "link_condition_pass": true,
+      "bad_cell_edge_hits": 1,
+      "directions": [
+        {
+          "drop": 29618,
+          "keep": 29619,
+          "eligible_endpoint": true
+        },
+        {
+          "drop": 29619,
+          "keep": 29618,
+          "eligible_endpoint": true
+        }
+      ],
+      "target_volume_endpoint_map": {
+        "Fat": true
+      },
+      "eligible_directions": [
+        {
+          "drop": 29618,
+          "keep": 29619,
+          "eligible_endpoint": true
+        },
+        {
+          "drop": 29619,
+          "keep": 29618,
+          "eligible_endpoint": true
+        }
+      ],
+      "excluded_reasons": []
+    }
+  ],
+  "elapsed_s": 14.895805625012144
+}

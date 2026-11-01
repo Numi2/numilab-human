@@ -1,0 +1,146 @@
+{
+  "accepted_count": 0,
+  "elapsed_s": 16.63961562491022,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-954-remesh-883g-fixed-775-qualified-root/verified-state.json",
+    "sha256": "0b4cc4d9e4ef95d4d64f33bb08cf32da3d7bb3246b7fa853dfc8447e7d46f16b"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "physical_admission": false,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 29618,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 29618,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 29618,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 29618,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 29618,
+          "fit": {
+            "anchor_l1_m": 0.0,
+            "drop_to_anchor_m": 0.00029129384916829664,
+            "edge_fraction": 0.0,
+            "fit": {
+              "anchor_displacement_m": 0.0002499703239930947,
+              "anchor_point_f32": [
+                -0.08889564126729965,
+                -0.13570840656757355,
+                0.10405359417200089
+              ],
+              "construction_q_margin_multiplier": 1.01,
+              "delta_volume_m3": 9.659229408061932e-12,
+              "exact_det_delta_integer": "21062105941903033231462246545392337144071382343917413854612052854486534100475612862515126422161087247608888188030486489071616",
+              "minimum_cell_volume_m3_unchanged": 1e-18,
+              "minimum_new_native_q": 1.3386389256538546e-05,
+              "move_cap_m": 0.00025,
+              "native_q_gate_unchanged": 1e-05,
+              "role": "D",
+              "solver_message": "Optimization terminated successfully",
+              "solver_success": true,
+              "status": "PASS",
+              "volume_policy": "single-role signed delta, no paired-zero equation"
+            },
+            "projection_off_edge_m": 0.0002499703239930947,
+            "status": "REJECT_PROJECTED_FIT_CAP"
+          },
+          "reason": "REJECT_PROJECTED_FIT_CAP"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 29619,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 29619,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 29619,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 29619,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 29619,
+          "fit": {
+            "anchor_l1_m": 0.00027989596128463745,
+            "drop_to_anchor_m": 6.861206338591045e-05,
+            "edge_fraction": 0.7644448005850883,
+            "fit": {
+              "anchor_displacement_m": 0.000249987664580232,
+              "anchor_point_f32": [
+                -0.08897417038679123,
+                -0.1356581747531891,
+                0.10424840450286865
+              ],
+              "construction_q_margin_multiplier": 1.01,
+              "delta_volume_m3": 9.648221023201386e-12,
+              "exact_det_delta_integer": "21038101980677254185496581240920590587937797615362095216014966120138699082082837560365815132265627220413121024570128773152768",
+              "minimum_cell_volume_m3_unchanged": 1e-18,
+              "minimum_new_native_q": 1.4902825847311791e-05,
+              "move_cap_m": 0.00025,
+              "native_q_gate_unchanged": 1e-05,
+              "role": "D",
+              "solver_message": "Optimization terminated successfully",
+              "solver_success": true,
+              "status": "PASS",
+              "volume_policy": "single-role signed delta, no paired-zero equation"
+            },
+            "projection_off_edge_m": 0.0001136147449871805,
+            "status": "REJECT_PROJECTED_FIT_CAP"
+          },
+          "reason": "REJECT_PROJECTED_FIT_CAP"
+        }
+      ],
+      "edge_rows": [
+        29618,
+        29619
+      ],
+      "length_m": 0.00029129384916829664
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 1
+  },
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-956-D500-013-root/roster.json",
+    "sha256": "01ce243eb3cc466092937a758832cc2f1f16c7ee74b8d06ac93b685cce858c9f"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v3",
+  "status": "NO_QUALIFIED_ENDPOINT_QUOTIENT_PROGRESS",
+  "trial_count": 10
+}

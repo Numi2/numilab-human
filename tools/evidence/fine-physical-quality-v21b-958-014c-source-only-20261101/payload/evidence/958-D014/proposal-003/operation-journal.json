@@ -1,0 +1,446 @@
+{
+  "anchor_policy": {
+    "immediate_keep_l1_cap_m": 0.00025,
+    "inherited_I_D_transition_policy": "REPORT_ONLY; cap applies to each new immediate transition, not retroactively to accepted ancestors",
+    "moved_D_anchor_exact_volume_budget": {
+      "local_fraction": 0.01,
+      "regional_fraction": 0.0001
+    },
+    "moved_I_anchor_exact_paired_delta_det6_integer": "0",
+    "removed_endpoint_to_anchor_cap_m": 0.00025
+  },
+  "d_3d_anchor_fit_owner": {
+    "method": "minimize 3D displacement with native q margin 1.01, eight L1 sign planes, removed-endpoint sphere, linear source-face winding",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-014-D-3d-fit/d_anchor_fit_014.py",
+    "sha256": "ca08765b296a980862dcb041edabd73536f5f87e3405fbedb39286b1c0cdb403"
+  },
+  "final_independent_readbacks": 2,
+  "final_source_alias_rebinds": 1,
+  "independent_surface_replay": {
+    "facet_bad_after": 0,
+    "facet_bad_before": 0,
+    "full_typed_union_and_ancestry_replayed": true,
+    "source_face_quotient_replayed": true,
+    "source_operation_rows_replayed": true,
+    "source_point_coordinates_replayed_from_anchors": true,
+    "typed_primary_lanes_replayed": true
+  },
+  "independent_volume_replay": {
+    "Fat": {
+      "all_exact_positive_changed_cells": true,
+      "exact_local_volume_deltas_det6": [
+        "20775662980331412282672362365178753555997843309892640062381828600064158894172873418267600918404752259563883911636223283691520"
+      ],
+      "final_target_chain_exact": true,
+      "final_tets_replayed_from_parent": true,
+      "full_native_gate_replayed": true,
+      "full_replacement_parent_union_replayed": true,
+      "log_deficit_after": 4.77318866463981,
+      "log_deficit_before": 5.223010564038363,
+      "native_bad_after": 4,
+      "native_bad_before": 5,
+      "one_sided_D_anchor_volume_budget_replay": [
+        {
+          "budget_m3": 9.659893144020484e-12,
+          "exact_abs_delta_m3": 9.527864658222725e-12,
+          "operation_id": 0,
+          "passed": true
+        }
+      ],
+      "paired_anchor_coordinates_replayed": true,
+      "rebinder_receipt": {
+        "ambiguous_target_rows": 0,
+        "geometry_and_target_bytes_unchanged": true,
+        "group_contract": {
+          "D": {
+            "group": 1,
+            "reverse_orientation": true
+          },
+          "I": {
+            "group": 0,
+            "reverse_orientation": false
+          }
+        },
+        "input_pins": {},
+        "mass_mapping": "NOT_RUN",
+        "native_steps": 0,
+        "new_alias_sha256": {
+          "desired_boundary_source_face_rows": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+          "desired_boundary_source_group": "a5c619e73f6c558eb61ae4124d73e8d66b5fde9099878c7d9191a8d57dba42d5",
+          "desired_boundary_source_rows": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+          "proposed_current_desired_boundary_source_face_rows": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+          "proposed_current_desired_boundary_source_group": "a5c619e73f6c558eb61ae4124d73e8d66b5fde9099878c7d9191a8d57dba42d5",
+          "proposed_current_desired_boundary_source_rows": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7"
+        },
+        "physical_admission": false,
+        "prior_aliases": {
+          "desired_boundary_source_face_rows": {
+            "sha256": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+            "shape": [
+              444390
+            ]
+          },
+          "desired_boundary_source_group": {
+            "sha256": "a5c619e73f6c558eb61ae4124d73e8d66b5fde9099878c7d9191a8d57dba42d5",
+            "shape": [
+              444390
+            ]
+          },
+          "desired_boundary_source_rows": {
+            "sha256": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+            "shape": [
+              444390
+            ]
+          },
+          "proposed_current_desired_boundary_source_face_rows": {
+            "sha256": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+            "shape": [
+              444390
+            ]
+          },
+          "proposed_current_desired_boundary_source_group": {
+            "sha256": "a5c619e73f6c558eb61ae4124d73e8d66b5fde9099878c7d9191a8d57dba42d5",
+            "shape": [
+              444390
+            ]
+          },
+          "proposed_current_desired_boundary_source_rows": {
+            "sha256": "f1fa0c6650bbb389cea52b50cad4be91b59f3631e036f8c4f416e04c538493e7",
+            "shape": [
+              444390
+            ]
+          }
+        },
+        "role": "Fat",
+        "schema": "numi.human.current-desired-boundary-source-alias-rebind.v1",
+        "source_group_counts": {
+          "0": 236399,
+          "1": 207901,
+          "2": 90
+        },
+        "status": "PASS_EXACT_CURRENT_TARGET_TYPED_SOURCE_ALIAS_REBIND",
+        "target_face_count": 444390,
+        "target_faces_exact_oriented_F32_matched": 444390,
+        "typed_source_face_counts": {
+          "D": 207901,
+          "I": 236399
+        },
+        "unmatched_target_rows": 0,
+        "unused_typed_source_faces": {
+          "D": 0,
+          "I": 0
+        },
+        "wall_face_count": 90,
+        "wall_rows_all_used_exactly_once": true
+      },
+      "source_aliases_reconstructed": true
+    }
+  },
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-954-remesh-883g-fixed-775-qualified-root/verified-state.json",
+    "sha256": "0b4cc4d9e4ef95d4d64f33bb08cf32da3d7bb3246b7fa853dfc8447e7d46f16b"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "operation_parent_lineage": [
+    {
+      "affected_base_cells": {
+        "Fat": [
+          70531,
+          174249,
+          350631,
+          479455,
+          480164,
+          509383,
+          546054,
+          579981,
+          579982,
+          579983,
+          579984,
+          694272,
+          694598,
+          694747,
+          694759,
+          694764,
+          694804,
+          694808,
+          761832
+        ]
+      },
+      "anchor_displacement_l1_m": 5.1684677600860596e-05,
+      "anchor_fit": {
+        "anchor_displacement_m": 4.272309805391645e-05,
+        "anchor_fit_method": "3D minimum-displacement with L1 sign, removed-endpoint sphere and source-winding constraints",
+        "anchor_l1_m": 5.1684677600860596e-05,
+        "candidate_count": 14,
+        "construction_q_margin_multiplier": 1.01,
+        "continuous_anchor_world_m": [
+          -0.08905073121807604,
+          -0.13560859686714966,
+          0.10443606183284965
+        ],
+        "delta_volume_m3": 9.527864658222725e-12,
+        "drop_to_anchor_m": 0.0002499974276174899,
+        "edge_rows": [
+          29619,
+          29618
+        ],
+        "exact_det_delta_integer": "20775662980331412282672362365178753555997843309892640062381828600064158894172873418267600918404752259563883911636223283691520",
+        "l1_cap_slack_m": 0.0001983153223991394,
+        "minimum_cell_volume_m3_unchanged": 1e-18,
+        "minimum_linear_winding_slack": 5.12684551731101e-10,
+        "minimum_new_native_q": 1.6261356022016785e-05,
+        "minimum_new_source_face_q": 0.0011166252867873053,
+        "move_cap_m": 0.00025,
+        "native_q_gate_unchanged": 1e-05,
+        "removed_endpoint_cap_slack_m": 2.572382510127036e-09,
+        "role": "D",
+        "solver_message": "Optimization terminated successfully",
+        "solver_success": true,
+        "status": "PASS_D_3D_FEASIBLE_EDGE_FIT"
+      },
+      "anchor_moved": true,
+      "anchor_strategy": "feasible_3d_D_anchor_fit_014",
+      "anchor_world_m_f32": [
+        -0.08905074000358582,
+        -0.13560861349105835,
+        0.10443605482578278
+      ],
+      "changed_base_cells": {
+        "Fat": [
+          174249,
+          350631,
+          479455,
+          480164,
+          509383,
+          546054,
+          579981,
+          579982,
+          579983,
+          579984,
+          694272,
+          694764,
+          694804,
+          694808,
+          761832
+        ]
+      },
+      "changed_face_base_rows": [
+        26469,
+        53897,
+        53898,
+        205540,
+        205541,
+        205542,
+        205543
+      ],
+      "drop_source_row": 29619,
+      "drop_volume_rows": {
+        "Fat": 154987
+      },
+      "edge_length_m": 0.00029129384916829664,
+      "edge_rows": [
+        29618,
+        29619
+      ],
+      "keep_source_row": 29618,
+      "keep_volume_rows": {
+        "Fat": 154986
+      },
+      "one_sided_D_anchor_volume_budget": {
+        "absolute_exact_delta_m3": 9.527864658222725e-12,
+        "budget_m3": 9.659893144020484e-12,
+        "local_fraction": 0.01,
+        "local_old_det6_m3": 5.795935886412291e-09,
+        "regional_fraction": 0.0001,
+        "regional_old_det6_m3": 0.06872741864867467
+      },
+      "operation_id": 0,
+      "removed_endpoint_to_anchor_m": 0.0002499974276174899,
+      "role": "D",
+      "star_face_base_rows": [
+        26468,
+        26469,
+        53897,
+        53898,
+        53899,
+        205540,
+        205541,
+        205542,
+        205543
+      ],
+      "volume_delta_det6_integer": {
+        "Fat": "20775662980331412282672362365178753555997843309892640062381828600064158894172873418267600918404752259563883911636223283691520"
+      }
+    }
+  ],
+  "operations": [
+    {
+      "anchor_displacement_l1_m": 5.1684677600860596e-05,
+      "anchor_moved": true,
+      "anchor_strategy": "feasible_3d_D_anchor_fit_014",
+      "anchor_world_m_f32": [
+        -0.08905074000358582,
+        -0.13560861349105835,
+        0.10443605482578278
+      ],
+      "combined_quality": {
+        "combined_log_deficit_after": 4.77318866463981,
+        "combined_log_deficit_before": 5.223010564038363,
+        "combined_native_bad_after": 4,
+        "combined_native_bad_before": 5
+      },
+      "drop_source_row": 29619,
+      "edge_length_m": 0.00029129384916829664,
+      "edge_rows": [
+        29618,
+        29619
+      ],
+      "keep_source_row": 29618,
+      "local_direction_evaluation_s": 0.012733999639749527,
+      "one_sided_D_anchor_volume_budget": {
+        "absolute_exact_delta_m3": 9.527864658222725e-12,
+        "budget_m3": 9.659893144020484e-12,
+        "local_fraction": 0.01,
+        "local_old_det6_m3": 5.795935886412291e-09,
+        "regional_fraction": 0.0001,
+        "regional_old_det6_m3": 0.06872741864867467
+      },
+      "operation_id": 0,
+      "per_operation_external_audit": "PENDING_FINAL_775_805_ALL185",
+      "protected_back_endpoint_dropped": false,
+      "rejected_direction_reasons": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 29618,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 29618,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 29618,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 29618,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "feasible_3d_D_anchor_fit_014",
+          "drop": 29618,
+          "fit": {
+            "continuous_anchor_world_m": [
+              -0.08898266045183129,
+              -0.13564575833356424,
+              0.10424304744132416
+            ],
+            "continuous_l1_m": 0.00019381170346254029,
+            "continuous_removed_endpoint_m": 0.0002500000000001025,
+            "minimum_linear_quality_slack": 1.6753329963422302e-08,
+            "minimum_winding_slack": -2.710505431213761e-20,
+            "solver_message": "Optimization terminated successfully",
+            "solver_success": true,
+            "status": "REJECT_NO_F32_CANDIDATE"
+          },
+          "reason": "REJECT_NO_F32_CANDIDATE"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 29619,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 29619,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 29619,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 29619,
+          "fit": {},
+          "reason": "anchor movement exceeds declared L1/removed-endpoint cap"
+        }
+      ],
+      "source_star_face_count": 9,
+      "source_star_vertex_count": 9,
+      "surface_metrics": {
+        "facet_bad_after": 0,
+        "facet_bad_before": 0,
+        "minimum_facet_q_after": 0.0012893678198211873,
+        "minimum_facet_q_before": 0.0008407320162572992
+      },
+      "volume_metrics": {
+        "Fat": {
+          "anchor_world_m_f32": [
+            -0.08905074000358582,
+            -0.13560861349105835,
+            0.10443605482578278
+          ],
+          "changed_cell_count": 15,
+          "drop_volume_row": 154987,
+          "exact_signed_volume_delta_det6_integer": "20775662980331412282672362365178753555997843309892640062381828600064158894172873418267600918404752259563883911636223283691520",
+          "keep_volume_row": 154986,
+          "minimum_normalized_det_after": 1.6261356022016934e-05,
+          "minimum_volume_m3_after": 2.145835116366866e-13,
+          "native_bad_after": 0,
+          "native_bad_before": 1,
+          "native_bad_by_material_after": {
+            "16": 0
+          },
+          "native_bad_by_material_before": {
+            "16": 1
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.44982189939855305
+        }
+      },
+      "volume_star_vertex_counts": {
+        "Fat": 14
+      }
+    }
+  ],
+  "paired_anchor_independent_replay": {
+    "status": "NOT_APPLICABLE_ONE_SIDED_D"
+  },
+  "per_trial_global_measurement_passes": 0,
+  "physical_admission": false,
+  "precomputed_full_mesh_quality_and_incidence_once": true,
+  "protection_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_856_extended_250um_construction.py",
+    "sha256": "25a2bf8cbb2ff776745cb3a68bb3ffdfe4b294d8a555f247ce1bc53b476c4897"
+  },
+  "rejected_directions": [],
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-956-D500-013-root/roster.json",
+    "sha256": "01ce243eb3cc466092937a758832cc2f1f16c7ee74b8d06ac93b685cce858c9f"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-journal.v3",
+  "stage_seconds": {
+    "cache_setup": 2.716995917027816,
+    "final_alias_rebinding": 4.033342625014484,
+    "final_independent_readback": 7.493770583998412,
+    "final_serialization": 6.396799582988024,
+    "local_direction_evaluations": 0.012733999639749527,
+    "output_build": 1.8404602922964841,
+    "post_loop_finalization_total": 19.95360108301975
+  },
+  "status": "PASS_FINAL_READBACK_PENDING_EXTERNAL_QUALIFICATION"
+}
