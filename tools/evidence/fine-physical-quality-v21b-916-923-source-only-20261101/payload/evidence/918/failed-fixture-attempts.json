@@ -1,0 +1,18 @@
+{
+  "fixture_source_sha256": "not retained; fixture was edited after the diagnostic failure",
+  "joint_helper_source_sha256_before_doc_correction": "404a2548c8cdae7e4edf9ea6deb1cd6ba7c4f93ee9cc9442d68fc62c24596f96",
+  "native_steps": 0,
+  "observation": "This specific Float32 seed landed on a no-move SLSQP result. The passing control uses z=1.5e-9 and separately verifies that the producer preserves an accepted score-only node step before invoking joint fitting.",
+  "physical_admission": false,
+  "producer_source_sha256_before_final_pin": "455a8981fe504538883bd899f2aecaa6dd971e93c994534fbe4f5396e0852d99",
+  "schema": "h706.v25o-development-failure-record.v1",
+  "scope": "Tiny local optimizer control only; no full scene run or qualification.",
+  "status": "RETAINED_FAILED_FIXTURE_ATTEMPT",
+  "trial": {
+    "final_native_bad_cells": 1,
+    "initial_bad_apex_z_m": 1e-09,
+    "iterations": 5,
+    "joint_helper_status": "REJECT_NO_F32_MOVE",
+    "score_only_node_z_m": 2e-09
+  }
+}

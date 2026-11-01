@@ -1,0 +1,22 @@
+{
+  "receipt_type": "uv_cache_cleanup_and_runtime_survival",
+  "recorded_at_utc": "2026-11-01T01:34:46Z",
+  "host": "numi",
+  "cleanup": {
+    "command": "uv cache clean",
+    "command_output_observed": "Clearing cache at: .cache/uv\nRemoved 6284 files (222.9MiB)",
+    "output_provenance": "Captured directly from the command result in this session; no separate remote stdout log was retained.",
+    "scope": "/Users/numi/.cache/uv",
+    "homebrew_cache_touched": false,
+    "project_or_runtime_files_touched": false
+  },
+  "current_verification": {
+    "cache_directory": "/Users/numi/.cache/uv",
+    "cache_directory_absent": true,
+    "python_venv": "/Users/numi/numi-human-prep-venv-20261005",
+    "python_executable": "/Users/numi/numi-human-prep-venv-20261005/bin/python3.13",
+    "python_version_output": "Python 3.13.16",
+    "available_disk_at_verification": "373MiB"
+  },
+  "note": "Disk availability is a current observation and may include subsequent geometry output writes; it is not attributed solely to the cache cleanup."
+}
