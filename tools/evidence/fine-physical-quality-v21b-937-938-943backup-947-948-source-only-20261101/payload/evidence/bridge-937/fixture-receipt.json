@@ -1,0 +1,91 @@
+{
+  "checks": [
+    "existing-format 217 role .node/.ele exact Float32/tet/material roundtrip",
+    "217 paired combiner exact shared-I identity and registered-interface audit",
+    "original source node row IDs retained across active-node compaction",
+    "canonical CSR and 834/849/818b current-state bindings",
+    "role/material mismatch rejection",
+    "shared-I namespace mismatch rejection",
+    "selected 217 capacity rejection",
+    "P1 current-state/volume/support/map config pin acceptance and stale pin rejection",
+    "direct and nested paired-current-state parsing"
+  ],
+  "command": "python run_geometry_serial.py python test_current_fine_217_bridge_937.py",
+  "inputs_and_owners": {
+    "bridge": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fine-217-bridge-937/current_fine_volume_to_217_937.py",
+      "sha256": "6edf8dc76c9e0007f15b8d9d4cf4dc7e443a10cff5af59522e9069469724a1ed",
+      "size_bytes": 30097
+    },
+    "fixture": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fine-217-bridge-937/test_current_fine_217_bridge_937.py",
+      "sha256": "4f14b40626b70e952385eb5c5b07dfaacfc0ccf05848d18a7f34f421381ab5d6",
+      "size_bytes": 24953
+    },
+    "owners": {
+      "217_source003": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/build_native_domain_217.py",
+        "sha256": "d7f411c18f91905c6e1d91ab75592ec5782a8852892ac8a1fdb566ee2206df09",
+        "size_bytes": 110376
+      },
+      "818b": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/bounded625-local-cavity-repair/finalize_818b_volume_only_current_source_prefix.py",
+        "sha256": "9b157b92721867465b1d9439846ee6f2c317c31816abaddc91e6ef766a39bdf4",
+        "size_bytes": 32055
+      },
+      "834": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/canonical-volume-parent-unions-834-nativepreflight/canonical_volume_parent_unions_834.py",
+        "sha256": "02120822bb280cc96b312a14f47b26ecaec275f5fcb50e82c2d2ec6c5f92b0f3",
+        "size_bytes": 32208
+      },
+      "849": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/canonical-volume-parent-unions-849-nativepreflight/build_current_manifest_849.py",
+        "sha256": "860c1eba9ef9158a3fc5f5dd4fad5883bc9a43b9f4b3cf9a389bfe66c86636ce",
+        "size_bytes": 16983
+      },
+      "full86_weights": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.weights.csv",
+        "sha256": "98205ae7de44401544b7969184788f5c2ee39cd4404cd34b8037377e7ae63a76",
+        "size_bytes": 14034485
+      },
+      "p1_label_exporter_source007": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/downstream-004-same-material-current-reference-229/native-domain-217-source-007/export_child_semantic_labels_217.py",
+        "sha256": "e2075c47e867dc56629d066db8b4409c557b0b8bf1069ba192aa2108355c7910",
+        "size_bytes": 65783
+      },
+      "p1_source007": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/downstream-004-same-material-current-reference-229/native-domain-217-source-007/p1_reference_anchor_217.py",
+        "sha256": "67d6a0f3dd4f345433305e154e906f73b4f24633d9f3805103f496ce164846f8",
+        "size_bytes": 108421
+      },
+      "projection_helper": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/batched_reference_tet_projection_149_root.py",
+        "sha256": "02b04cff325b4adea24d055fdfd2121ab4d596a3c075ab6fe8183094eb46e1d6",
+        "size_bytes": 2358
+      }
+    },
+    "p1_config_adapter": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fine-217-bridge-937/current_domain_p1_export_937.py",
+      "sha256": "ba5f2ba47ad77f2c4b72a7a30d959153813234362a2f0ac5e35455cdb763686b",
+      "size_bytes": 16937
+    }
+  },
+  "limitations": [
+    "No actual current quality-zero fine volume or paired current shell inputs were used.",
+    "Canonical parent CSR rows remain in explicit 834 base-volume row domain; original source330 ancestry is not asserted.",
+    "No full P1 export, physical admission, mass transfer, or native execution was performed."
+  ],
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "numi.current-fine-217-bridge-937.fixture.v1",
+  "source330_cell_ancestry_claim": false,
+  "status": "PASS_SOURCE_ONLY_ADAPTER_CONTROLS",
+  "tests": {
+    "count": 6,
+    "failed": 0,
+    "passed": 6,
+    "py_compile": "PASS"
+  },
+  "tetgen_invoked": false
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "numi.h706.long-edge-refinement-batch-944.v1",
+  "status": "NO_ALL_PASS_COMPLETION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_transport": "NOT_RUN",
+  "source_audit": "PENDING_EXTERNAL_FULL_185_CONTEXT",
+  "construction_scope": "I_AND_D_SOURCE_BOUNDARY_EDGES_ONLY; O_SURFACE_AND_O_BACK_ROWS_FIXED",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/qualified/verified-state.json",
+    "sha256": "093cbef3d1d379852cecac183a15b04d286974b5e8b82f2420479d10c39f1c7e"
+  },
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/long_edge_refinement_944.py",
+    "sha256": "eb15f8c4f44b98c84bec835404c36859f61d048b14cb90a4b1ad41d8163aa2ec"
+  },
+  "independent_verifier": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/verify_long_edge_refinement_944.py",
+    "sha256": "4e6e748fc234cad59393158be183853f0be3dda65a2a173feafaab0fd6261901"
+  },
+  "operation_count": 0,
+  "steps": [
+    {
+      "step": 1,
+      "status": "PRODUCER_NO_REPORT",
+      "exit_code": 1,
+      "stderr_tail": "Traceback (most recent call last):\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/long_edge_refinement_944.py\", line 981, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/long_edge_refinement_944.py\", line 529, in main\n    invs[role][sname] = surface_inverse(surfaces[sname], len(p), z[mapkey])\n                        ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/long_edge_refinement_944.py\", line 180, in surface_inverse\n    raise ValueError(\"surface-to-volume map has missing/out-of-range rows\")\nValueError: surface-to-volume map has missing/out-of-range rows\n"
+    }
+  ],
+  "final_metrics": {},
+  "elapsed_s": 1.4702092499937862,
+  "promotion_ready": false,
+  "last_candidate_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/qualified/verified-state.json",
+    "sha256": "093cbef3d1d379852cecac183a15b04d286974b5e8b82f2420479d10c39f1c7e"
+  }
+}

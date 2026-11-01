@@ -1,0 +1,469 @@
+{
+  "schema": "numi.h706.coupled-source-volume-edge-bisection.v1",
+  "status": "NO_VALID_COUPLED_EDGE_BISECTION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "mass_transport": "NOT_RUN",
+  "quality_gate_mode": "INTERMEDIATE_STEP_FINAL_BATCH_GATE_REQUIRED",
+  "construction_scope": "I_AND_D_SOURCE_BOUNDARY_EDGES_ONLY; O_SURFACE_AND_O_BACK_ROWS_FIXED",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/qualified/verified-state.json",
+    "sha256": "093cbef3d1d379852cecac183a15b04d286974b5e8b82f2420479d10c39f1c7e"
+  },
+  "helper": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-948-root/quality_edge_refinement_944_helper.py",
+    "sha256": "1bd0ebb1f4d5d4c2467db716e3570bf1b50924f4f643ee25a099e768789efc95"
+  },
+  "time_budget_s": 20.0,
+  "fractions_tested": [
+    0.5,
+    0.375,
+    0.625
+  ],
+  "rejections": {
+    "NO_VALID_LOCAL_EDGE_BISECTION": 30
+  },
+  "operations": [],
+  "tested_candidate_edges": 10,
+  "reject_examples": [],
+  "helper_trial_rejections": {
+    "REJECT_SUPPORT_DEVIATION_BUDGET": 30
+  },
+  "helper_trial_examples": [
+    {
+      "role": "Fat_current",
+      "edge": [
+        55291,
+        55592
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        55291,
+        55592
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        55291,
+        55592
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        109704,
+        111626
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        109704,
+        111626
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        109704,
+        111626
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        135103,
+        135278
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        135103,
+        135278
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        135103,
+        135278
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        134151,
+        136843
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        134151,
+        136843
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        134151,
+        136843
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        134151,
+        136728
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        134151,
+        136728
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        134151,
+        136728
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        154986,
+        169456
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        154986,
+        169456
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        154986,
+        169456
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        65829,
+        66707
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        65829,
+        66707
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        65829,
+        66707
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        33036,
+        34957
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        33036,
+        34957
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        33036,
+        34957
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        109705,
+        111626
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        109705,
+        111626
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Skin_current",
+      "edge": [
+        109705,
+        111626
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        33008,
+        34957
+      ],
+      "fraction": 0.5,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        33008,
+        34957
+      ],
+      "fraction": 0.375,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    },
+    {
+      "role": "Fat_current",
+      "edge": [
+        33008,
+        34957
+      ],
+      "fraction": 0.625,
+      "status": "REJECT_SUPPORT_DEVIATION_BUDGET",
+      "old_bad": null,
+      "new_bad": null,
+      "gain": null,
+      "exact_det6_delta_integer": null
+    }
+  ],
+  "input_pins": {
+    "volumes": {
+      "Skin_current": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/skin-coupled-quality-point-proposal.npz",
+        "sha256": "f78f009f9c0f528b020d599cc0c26ff8ba9337747666dfcc8d5afe90848dbbad"
+      },
+      "Fat_current": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/fat-coupled-quality-point-proposal.npz",
+        "sha256": "cdbb97557137f0ae7b6c062f4bae1345a303c4ac3dccc7dd40e9a2901cf81a2c"
+      }
+    },
+    "surfaces": {
+      "D": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-939-b5-backtracking-root/proposal/candidate-D-typed-current.npz",
+        "sha256": "6bd80621c0bcdb7ba2770cb8747889fc5dc99ff6ba82451f8b5234c9fa5ba1d1"
+      },
+      "I": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/candidate-I-typed-current.npz",
+        "sha256": "0dd1cc9fd297d91a9f86f7aa8feeffedb6a8580166b113fc55c7e75ca8bc5f43"
+      },
+      "O": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz",
+        "sha256": "10169962e298586d63794bf94515ecc3a9b1ce91e66cc60566a6919d7c856ac3"
+      }
+    }
+  },
+  "baseline_quality": {
+    "Skin_current": {
+      "cells": 724884,
+      "nodes": 210314,
+      "bad_by_material": {
+        "15": 6
+      },
+      "bad_cells": 6
+    },
+    "Fat_current": {
+      "cells": 770516,
+      "nodes": 253887,
+      "bad_by_material": {
+        "16": 6
+      },
+      "bad_cells": 6
+    }
+  },
+  "elapsed_s": 1.6114115838427097
+}
