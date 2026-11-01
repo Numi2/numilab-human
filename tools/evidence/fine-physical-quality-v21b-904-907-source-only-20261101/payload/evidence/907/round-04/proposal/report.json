@@ -1,0 +1,63 @@
+{
+  "accepted_count": 1,
+  "all185_intersection_audit": "PENDING",
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-04/proposal/candidate-state-proposal.json",
+    "sha256": "b83c21e8969417fb684194eecf1c3072909066209f902b1b4c29dad43c33bfb9"
+  },
+  "elapsed_s": 35.01590008311905,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-03/qualified/verified-state.json",
+    "sha256": "a0f87ada4947e37a0376da7960ab2198d094fd2a7fe8a65c8f938131da7f1579"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 5e-05,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-04/proposal/operation-journal.json",
+    "sha256": "b31a40601c1688112600c54d6e0e556e7e65b2073f7c15d53f8ad3d8c0900a77"
+  },
+  "physical_admission": false,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "drop": 94609,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "drop": 94612,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        94609,
+        94612
+      ],
+      "length_m": 6.321482856399514e-06
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 1
+  },
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-04/roster.json",
+    "sha256": "3d434af37fa3ccf291277833620198dd9d46b5830c22141c609b452ab0e91bdc"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v1",
+  "seconds_budget": 90.0,
+  "stage_seconds": {
+    "cache_setup": 2.796052541118115,
+    "final_alias_rebinding": 4.046772832982242,
+    "final_independent_readback": 7.506884250091389,
+    "final_serialization": 6.522506415843964,
+    "local_direction_evaluations": 0.007021958939731121,
+    "output_build": 1.850939208175987
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 4
+}

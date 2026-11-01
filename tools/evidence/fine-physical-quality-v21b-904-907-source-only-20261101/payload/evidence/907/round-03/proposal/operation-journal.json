@@ -1,0 +1,359 @@
+{
+  "final_independent_readbacks": 2,
+  "final_source_alias_rebinds": 1,
+  "independent_surface_replay": {
+    "facet_bad_after": 0,
+    "facet_bad_before": 0,
+    "full_typed_union_and_ancestry_replayed": true,
+    "source_face_quotient_replayed": true,
+    "source_operation_rows_replayed": true,
+    "source_point_bytes_identical": true,
+    "typed_primary_lanes_replayed": true
+  },
+  "independent_volume_replay": {
+    "Fat": {
+      "all_exact_positive_changed_cells": true,
+      "exact_local_volume_deltas_det6": [
+        "-923627746088838585415233898705970321058083393675912590228935659913567798322712989577328407430526131504652109848666861207552",
+        "-6872109218651678819631016546687670418495617273644564858926667796281342568352931603748777806897239959389009750528985885835264"
+      ],
+      "final_target_chain_exact": true,
+      "final_tets_replayed_from_parent": true,
+      "full_native_gate_replayed": true,
+      "full_replacement_parent_union_replayed": true,
+      "log_deficit_after": 44.79267272849729,
+      "log_deficit_before": 44.88228511073968,
+      "native_bad_after": 26,
+      "native_bad_before": 28,
+      "rebinder_receipt": {
+        "ambiguous_target_rows": 0,
+        "geometry_and_target_bytes_unchanged": true,
+        "group_contract": {
+          "D": {
+            "group": 1,
+            "reverse_orientation": true
+          },
+          "I": {
+            "group": 0,
+            "reverse_orientation": false
+          }
+        },
+        "input_pins": {},
+        "mass_mapping": "NOT_RUN",
+        "native_steps": 0,
+        "new_alias_sha256": {
+          "desired_boundary_source_face_rows": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+          "desired_boundary_source_group": "164a4e20ee183ee2ad300466b99e9778158209a346898a061320b297dc279bf9",
+          "desired_boundary_source_rows": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+          "proposed_current_desired_boundary_source_face_rows": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+          "proposed_current_desired_boundary_source_group": "164a4e20ee183ee2ad300466b99e9778158209a346898a061320b297dc279bf9",
+          "proposed_current_desired_boundary_source_rows": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19"
+        },
+        "physical_admission": false,
+        "prior_aliases": {
+          "desired_boundary_source_face_rows": {
+            "sha256": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+            "shape": [
+              444406
+            ]
+          },
+          "desired_boundary_source_group": {
+            "sha256": "164a4e20ee183ee2ad300466b99e9778158209a346898a061320b297dc279bf9",
+            "shape": [
+              444406
+            ]
+          },
+          "desired_boundary_source_rows": {
+            "sha256": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+            "shape": [
+              444406
+            ]
+          },
+          "proposed_current_desired_boundary_source_face_rows": {
+            "sha256": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+            "shape": [
+              444406
+            ]
+          },
+          "proposed_current_desired_boundary_source_group": {
+            "sha256": "164a4e20ee183ee2ad300466b99e9778158209a346898a061320b297dc279bf9",
+            "shape": [
+              444406
+            ]
+          },
+          "proposed_current_desired_boundary_source_rows": {
+            "sha256": "6170e160a56ae2d87e8be8930a7daac979730d5a75fce4db48b9c44d8797ba19",
+            "shape": [
+              444406
+            ]
+          }
+        },
+        "role": "Fat",
+        "schema": "numi.human.current-desired-boundary-source-alias-rebind.v1",
+        "source_group_counts": {
+          "0": 236409,
+          "1": 207907,
+          "2": 90
+        },
+        "status": "PASS_EXACT_CURRENT_TARGET_TYPED_SOURCE_ALIAS_REBIND",
+        "target_face_count": 444406,
+        "target_faces_exact_oriented_F32_matched": 444406,
+        "typed_source_face_counts": {
+          "D": 207907,
+          "I": 236409
+        },
+        "unmatched_target_rows": 0,
+        "unused_typed_source_faces": {
+          "D": 0,
+          "I": 0
+        },
+        "wall_face_count": 90,
+        "wall_rows_all_used_exactly_once": true
+      },
+      "source_aliases_reconstructed": true
+    }
+  },
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-02/qualified/verified-state.json",
+    "sha256": "e336e3c2f3375a5b0b2871f091dc462cab123d2100b2493d98e2c6b076696b1c"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "operation_parent_lineage": [
+    {
+      "affected_base_cells": {
+        "Fat": [
+          769780,
+          769781,
+          769784,
+          769785
+        ]
+      },
+      "changed_base_cells": {
+        "Fat": [
+          769780,
+          769784
+        ]
+      },
+      "changed_face_base_rows": [
+        107909,
+        178828
+      ],
+      "drop_source_row": 96156,
+      "drop_volume_rows": {
+        "Fat": 221524
+      },
+      "edge_length_m": 2.768481460755464e-05,
+      "edge_rows": [
+        96156,
+        96158
+      ],
+      "keep_source_row": 96158,
+      "keep_volume_rows": {
+        "Fat": 221526
+      },
+      "operation_id": 27,
+      "role": "D",
+      "star_face_base_rows": [
+        107906,
+        107907,
+        107908,
+        107909,
+        178826,
+        178827,
+        178828
+      ],
+      "volume_delta_det6_integer": {
+        "Fat": "-923627746088838585415233898705970321058083393675912590228935659913567798322712989577328407430526131504652109848666861207552"
+      }
+    },
+    {
+      "affected_base_cells": {
+        "Fat": [
+          769361,
+          769362,
+          769363,
+          769364
+        ]
+      },
+      "changed_base_cells": {
+        "Fat": [
+          769361,
+          769362
+        ]
+      },
+      "changed_face_base_rows": [
+        16927,
+        204600
+      ],
+      "drop_source_row": 102732,
+      "drop_volume_rows": {
+        "Fat": 228100
+      },
+      "edge_length_m": 3.402495805995231e-05,
+      "edge_rows": [
+        102732,
+        102733
+      ],
+      "keep_source_row": 102733,
+      "keep_volume_rows": {
+        "Fat": 228101
+      },
+      "operation_id": 28,
+      "role": "D",
+      "star_face_base_rows": [
+        16927,
+        16928,
+        36189,
+        149560,
+        204600,
+        204604
+      ],
+      "volume_delta_det6_integer": {
+        "Fat": "-6872109218651678819631016546687670418495617273644564858926667796281342568352931603748777806897239959389009750528985885835264"
+      }
+    }
+  ],
+  "operations": [
+    {
+      "combined_quality": {
+        "combined_log_deficit_after": 44.860079112534144,
+        "combined_log_deficit_before": 44.88228511073968,
+        "combined_native_bad_after": 27,
+        "combined_native_bad_before": 28
+      },
+      "drop_source_row": 96156,
+      "edge_length_m": 2.768481460755464e-05,
+      "edge_rows": [
+        96156,
+        96158
+      ],
+      "keep_source_row": 96158,
+      "local_direction_evaluation_s": 0.006721375742927194,
+      "operation_id": 27,
+      "per_operation_external_audit": "PENDING_FINAL_775_805_ALL185",
+      "protected_back_endpoint_dropped": true,
+      "rejected_direction_reasons": [],
+      "source_star_face_count": 7,
+      "source_star_vertex_count": 7,
+      "surface_metrics": {
+        "facet_bad_after": 0,
+        "facet_bad_before": 0,
+        "minimum_facet_q_after": 0.0009166278165297677,
+        "minimum_facet_q_before": 0.00037049573861623776
+      },
+      "volume_metrics": {
+        "Fat": {
+          "changed_cell_count": 2,
+          "drop_volume_row": 221524,
+          "exact_signed_volume_delta_det6_integer": "-923627746088838585415233898705970321058083393675912590228935659913567798322712989577328407430526131504652109848666861207552",
+          "keep_volume_row": 221526,
+          "minimum_normalized_det_after": 1.001052154367928e-05,
+          "minimum_volume_m3_after": 4.0621478195552976e-13,
+          "native_bad_after": 0,
+          "native_bad_before": 1,
+          "native_bad_by_material_after": {
+            "16": 0
+          },
+          "native_bad_by_material_before": {
+            "16": 1
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.022205998205534334
+        }
+      },
+      "volume_star_vertex_counts": {
+        "Fat": 9
+      }
+    },
+    {
+      "combined_quality": {
+        "combined_log_deficit_after": 44.79267272849728,
+        "combined_log_deficit_before": 44.860079112534144,
+        "combined_native_bad_after": 26,
+        "combined_native_bad_before": 27
+      },
+      "drop_source_row": 102732,
+      "edge_length_m": 3.402495805995231e-05,
+      "edge_rows": [
+        102732,
+        102733
+      ],
+      "keep_source_row": 102733,
+      "local_direction_evaluation_s": 0.006614833138883114,
+      "operation_id": 28,
+      "per_operation_external_audit": "PENDING_FINAL_775_805_ALL185",
+      "protected_back_endpoint_dropped": true,
+      "rejected_direction_reasons": [],
+      "source_star_face_count": 6,
+      "source_star_vertex_count": 6,
+      "surface_metrics": {
+        "facet_bad_after": 0,
+        "facet_bad_before": 0,
+        "minimum_facet_q_after": 0.00043421813631525227,
+        "minimum_facet_q_before": 0.00015385923138784075
+      },
+      "volume_metrics": {
+        "Fat": {
+          "changed_cell_count": 2,
+          "drop_volume_row": 228100,
+          "exact_signed_volume_delta_det6_integer": "-6872109218651678819631016546687670418495617273644564858926667796281342568352931603748777806897239959389009750528985885835264",
+          "keep_volume_row": 228101,
+          "minimum_normalized_det_after": 1.9044419122958374e-05,
+          "minimum_volume_m3_after": 1.7924567069721123e-14,
+          "native_bad_after": 0,
+          "native_bad_before": 1,
+          "native_bad_by_material_after": {
+            "16": 0
+          },
+          "native_bad_by_material_before": {
+            "16": 1
+          },
+          "native_deficit_after": 0.0,
+          "native_deficit_before": 0.06740638403686317
+        }
+      },
+      "volume_star_vertex_counts": {
+        "Fat": 7
+      }
+    }
+  ],
+  "per_trial_global_measurement_passes": 0,
+  "physical_admission": false,
+  "precomputed_full_mesh_quality_and_incidence_once": true,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "drop": 94609,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "drop": 94612,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        94609,
+        94612
+      ],
+      "length_m": 6.321482856399514e-06
+    }
+  ],
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-03/roster.json",
+    "sha256": "a142753580617062c4279b032908e661e50375e940940f969ff2f34f65a6ad85"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-journal.v1",
+  "stage_seconds": {
+    "cache_setup": 2.7956820419058204,
+    "final_alias_rebinding": 4.064242624910548,
+    "final_independent_readback": 7.499987750081345,
+    "final_serialization": 6.517163750017062,
+    "local_direction_evaluations": 0.013881917810067534,
+    "output_build": 1.8401332078501582,
+    "post_loop_finalization_total": 20.110766749829054
+  },
+  "status": "PASS_FINAL_READBACK_PENDING_EXTERNAL_QUALIFICATION"
+}

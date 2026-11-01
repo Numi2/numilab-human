@@ -1,0 +1,64 @@
+{
+  "accepted_count": 3,
+  "all185_intersection_audit": "PENDING",
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-01/proposal/candidate-state-proposal.json",
+    "sha256": "86731c16d3a4a671561e457474f0d90c865e4cc981c6f565299c4d38ef63091f"
+  },
+  "elapsed_s": 34.44860487501137,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-903-qualified-root/verified-state.json",
+    "sha256": "2ff3a7a19a0abf3a93cc4dfc35c40cd803a83c632ece67069aa0f75114904d94"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 5e-05,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-01/proposal/operation-journal.json",
+    "sha256": "64f915b950f0b43bf4444fb6ab93c8e901a1f20c9d7b6d27c0cd74ea2e1712b8"
+  },
+  "physical_admission": false,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "drop": 94609,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "drop": 94612,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        94609,
+        94612
+      ],
+      "length_m": 6.321482856399514e-06
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 1,
+    "overlapping_source_star": 19
+  },
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-01/roster.json",
+    "sha256": "b77efe8a4005f26500586327e4a6cec48673157f5b0f39c81c5f0803f8525865"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v1",
+  "seconds_budget": 90.0,
+  "stage_seconds": {
+    "cache_setup": 2.746129750041291,
+    "final_alias_rebinding": 3.962572541087866,
+    "final_independent_readback": 7.451362167019397,
+    "final_serialization": 6.572095498908311,
+    "local_direction_evaluations": 0.010640790918841958,
+    "output_build": 1.818206581985578
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 8
+}

@@ -1,0 +1,44 @@
+{
+  "batch_report": "NOT_WRITTEN_BECAUSE_SELECTED_MATERIALIZATION_RAISED",
+  "candidate_state": "NOT_WRITTEN",
+  "direction_roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/direction-roster-904r3-D-94609-94612.json",
+    "sha256": "196cf73a8d0f3c149fc8bfba3c2fe4dd5f78e54c324568a7bec1e430d3d66f6b"
+  },
+  "error": "desired boundary faces lack exact typed-source/rim match; first 8 target rows [0..7] include volume triples [20618,17463,20380], [20618,20380,21079], [20618,21423,17463], [21079,20380,20871], [20618,21079,21714], [21079,20871,21714], [20380,20308,20702], [20380,20702,20871].",
+  "error_type": "ValueError",
+  "failure_stage": "materialize_volume -> desired_boundary_source_rebind_877.rebind_source_aliases",
+  "fat_volume_candidate": "NOT_WRITTEN",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-905-qualified-root/verified-state.json",
+    "sha256": "b31e20c0f68f7163410e71305169b46860c02f7bb14b3db5b130db3817d9c9d4"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "note": "The source quotient was generated before alias rebind failed. No volume/state candidate was promoted; the source NPZ is retained as diagnostic evidence.",
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/postquotient_cavity_remesh_883b_root.py",
+    "sha256": "67a5100a86f4faefbb8213bd9e0f3a5be2aa4a813a7d665ff32bbee53f7fb2cf"
+  },
+  "protection_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_855_active_rows_lineage.py",
+    "sha256": "5645dbfda4312b6df81b31bca03ba75fdf16af4f4956540c3b92f66b67eb101d"
+  },
+  "schema": "h706.883b.actual-D-cavity-batch-failure.v1",
+  "selected_operation": {
+    "drop_source_row": 94609,
+    "edge_rows": [
+      94609,
+      94612
+    ],
+    "keep_source_row": 94612,
+    "parent_source_sha256": "51db29f4ca46d577e81782b0206c3c43f4c02e1830592032e6ae4ae490aed025",
+    "source_role": "D"
+  },
+  "selected_source_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-906-D-cavity883b-root/selected/candidate-D-typed-current.npz",
+    "sha256": "1ba6b2c9e8d695e9908d797f9573f74f469faf403695cacfe2061b5316e62038"
+  },
+  "status": "FAILED_AT_CURRENT_TARGET_ALIAS_REBIND_BEFORE_FAT_VOLUME_OUTPUT"
+}

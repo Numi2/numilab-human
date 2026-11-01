@@ -1,0 +1,64 @@
+{
+  "accepted_count": 5,
+  "all185_intersection_audit": "PENDING",
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-03/proposal/candidate-state-proposal.json",
+    "sha256": "93fa6ea46df5ae207df675f5d721954dac2cecd2e2765facb77308176ccd1a34"
+  },
+  "elapsed_s": 34.88085941714235,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-02/qualified/verified-state.json",
+    "sha256": "cabe709f22bf0494c6ffacbe9879559b4ac6d359c973cfead697e8db6a233a3d"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 5e-05,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-03/proposal/operation-journal.json",
+    "sha256": "a375ac7337f333553eca4a386d7a32816149cb6ebe19b00e0a477f4e4ebb1779"
+  },
+  "physical_admission": false,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "drop": 94609,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "drop": 94612,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        94609,
+        94612
+      ],
+      "length_m": 6.321482856399514e-06
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 1,
+    "overlapping_source_star": 9
+  },
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-03/roster.json",
+    "sha256": "2e27a2fc7ee8f2f5c5866b8c38b71282e0e074acad365d1fa5bb908817b0a9b0"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v1",
+  "seconds_budget": 90.0,
+  "stage_seconds": {
+    "cache_setup": 2.803062167018652,
+    "final_alias_rebinding": 4.090548458043486,
+    "final_independent_readback": 7.528247792040929,
+    "final_serialization": 6.539993875194341,
+    "local_direction_evaluations": 0.025814209133386612,
+    "output_build": 1.8431913752574474
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 12
+}

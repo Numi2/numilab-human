@@ -1,0 +1,64 @@
+{
+  "accepted_count": 2,
+  "all185_intersection_audit": "PENDING",
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-03/proposal/candidate-state-proposal.json",
+    "sha256": "c09f526371d981f6e9be6893ed281e555a51064957690302003b7be101369dc4"
+  },
+  "elapsed_s": 34.979914707830176,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-02/qualified/verified-state.json",
+    "sha256": "e336e3c2f3375a5b0b2871f091dc462cab123d2100b2493d98e2c6b076696b1c"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 5e-05,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-03/proposal/operation-journal.json",
+    "sha256": "61ce50a5a794f9d7622ad8ebb233f3a20b92374dc606cb6b1a8c664f6d9299ef"
+  },
+  "physical_admission": false,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "drop": 94609,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "drop": 94612,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        94609,
+        94612
+      ],
+      "length_m": 6.321482856399514e-06
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 1,
+    "overlapping_source_star": 1
+  },
+  "role": "D",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-907-fat-only-root/round-03/roster.json",
+    "sha256": "a142753580617062c4279b032908e661e50375e940940f969ff2f34f65a6ad85"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v1",
+  "seconds_budget": 90.0,
+  "stage_seconds": {
+    "cache_setup": 2.7956820419058204,
+    "final_alias_rebinding": 4.064242624910548,
+    "final_independent_readback": 7.499987750081345,
+    "final_serialization": 6.517163750017062,
+    "local_direction_evaluations": 0.013881917810067534,
+    "output_build": 1.8401332078501582
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 6
+}
