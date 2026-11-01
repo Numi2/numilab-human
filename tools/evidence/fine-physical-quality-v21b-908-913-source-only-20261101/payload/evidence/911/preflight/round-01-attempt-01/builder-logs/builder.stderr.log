@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25m-back-rowfix/repair_coupled_quality_points_722_v25m_back_rowfix.py", line 2508, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25m-back-rowfix/repair_coupled_quality_points_722_v25m_back_rowfix.py", line 2315, in main
+    separation_rows,witness_info=_witness_separation_rows(args.witness_report,st,surfaces,smap,p,out,pin(args.state),skip_fixed_o_pairs=bool((args.inner_back_layer_repair or args.inner_back_remainder_repair) and not args.ordinary_outer_o_local_repair and not args.unified_inner_back_ordinary_local_repair))
+                                 ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25m-back-rowfix/repair_coupled_quality_points_722_v25m_back_rowfix.py", line 550, in _witness_separation_rows
+    raise ValueError(role + ": frozen witness must be a point-only report with identical baseline/candidate face rows")
+ValueError: D: frozen witness must be a point-only report with identical baseline/candidate face rows
