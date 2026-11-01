@@ -1,0 +1,130 @@
+{
+  "schema": "numi.h706.long-edge-refinement-batch-948.v1",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/qualified/verified-state.json",
+    "sha256": "093cbef3d1d379852cecac183a15b04d286974b5e8b82f2420479d10c39f1c7e"
+  },
+  "operations": [
+    {
+      "primary_role": "Skin_current",
+      "edge_volume_rows_by_role": {
+        "Skin_current": [
+          134151,
+          136843
+        ],
+        "Fat_current": [
+          57482,
+          60174
+        ]
+      },
+      "longest_bad_cell_rows": [
+        724396
+      ],
+      "longest_bad_cell_count": 1,
+      "surface_edge_rows": {
+        "I": [
+          57482,
+          60174
+        ]
+      },
+      "fraction": 0.625,
+      "fraction_by_role": {
+        "Skin_current": 0.625,
+        "Fat_current": 0.625
+      },
+      "fraction_by_surface": {
+        "I": 0.625
+      },
+      "new_point_world_m_f32": [
+        0.04271352291107178,
+        -0.1525627225637436,
+        0.11821199208498001
+      ],
+      "new_point_bits": [
+        "0x3d2ef460",
+        "0xbe1c3967",
+        "0x3df21921"
+      ],
+      "support_residual_m": 4.170784195665875e-09,
+      "surface_parent_face_rows": {
+        "I": [
+          52342,
+          52378
+        ]
+      },
+      "volume_parent_cell_rows": {
+        "Skin_current": [
+          724390,
+          724396
+        ],
+        "Fat_current": [
+          762592
+        ]
+      },
+      "before_bad_cells": 12,
+      "after_bad_cells": 12,
+      "aggregate_log_deficit_gain": -0.43584959029103465,
+      "exact_volume_det6_delta_by_role": {
+        "Skin_current": "-213922554606831702098664355534841546670726624776007936013400150467754117153930090906061411401824339893093855980794815709184",
+        "Fat_current": "213922554606831702098664355534841546670726624776007936013400150467754117153930090906061411401824339893093855980794815709184"
+      },
+      "all_children_exact_positive": true,
+      "complete_edge_stars": true,
+      "operation_index": 0,
+      "input_array_digests": {
+        "Skin_current": "array-sha256:06fd8d1afe0f4f257f0553f8883f9bc4857e00e4fccd85cdeb583b90747d825c",
+        "Fat_current": "array-sha256:cb0a16f7491dbf84c5406ff6297cb5958aa05ab15b733a8af533bc6e91cfe731",
+        "D": "array-sha256:ade68894f6be0d55b3c2e4068f965db031fe6ec5c17064540588109282f86667",
+        "I": "array-sha256:a084c80904f4dd91c353680fcfb65d0e5a3b8786c74a3510848aab43d04d6bc1",
+        "O": "array-sha256:ec38c5f151226b542b01c271dd94be962985b6b19b4883779b3f3176d23a45e4"
+      },
+      "input_array_paths": {
+        "Skin_current": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/skin-coupled-quality-point-proposal.npz",
+        "Fat_current": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/fat-coupled-quality-point-proposal.npz",
+        "D": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-939-b5-backtracking-root/proposal/candidate-D-typed-current.npz",
+        "I": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/candidate-I-typed-current.npz",
+        "O": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz"
+      },
+      "input_asset_pins": {
+        "volumes": {
+          "Skin_current": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/skin-coupled-quality-point-proposal.npz",
+            "sha256": "f78f009f9c0f528b020d599cc0c26ff8ba9337747666dfcc8d5afe90848dbbad"
+          },
+          "Fat_current": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/fat-coupled-quality-point-proposal.npz",
+            "sha256": "cdbb97557137f0ae7b6c062f4bae1345a303c4ac3dccc7dd40e9a2901cf81a2c"
+          }
+        },
+        "surfaces": {
+          "D": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-939-b5-backtracking-root/proposal/candidate-D-typed-current.npz",
+            "sha256": "6bd80621c0bcdb7ba2770cb8747889fc5dc99ff6ba82451f8b5234c9fa5ba1d1"
+          },
+          "I": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-943-expanded-joint-root/proposal/candidate-I-typed-current.npz",
+            "sha256": "0dd1cc9fd297d91a9f86f7aa8feeffedb6a8580166b113fc55c7e75ca8bc5f43"
+          },
+          "O": {
+            "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz",
+            "sha256": "10169962e298586d63794bf94515ecc3a9b1ce91e66cc60566a6919d7c856ac3"
+          }
+        }
+      },
+      "output_array_digests": {
+        "Skin_current": {
+          "virtual_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-952-refinement-batch-root/proposal/virtual-step-001/skin_current-edge-bisected.npz",
+          "array_digest": "array-sha256:37ff49d4408e00d473b790a9bbc98f50ac5a2c07c4a6dcbcdb49f72dd7e76213"
+        },
+        "Fat_current": {
+          "virtual_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-952-refinement-batch-root/proposal/virtual-step-001/fat_current-edge-bisected.npz",
+          "array_digest": "array-sha256:cb4c6371d347b5a18b4d28c82887214bdd8da8beea1a75b3c2ad2c20d2a2590f"
+        },
+        "I": {
+          "virtual_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-952-refinement-batch-root/proposal/virtual-step-001/i-typed-edge-bisected.npz",
+          "array_digest": "array-sha256:53c76326382283a4c457ff136c791a63d3546fdffa2e98dd279f5535ec3b6201"
+        }
+      }
+    }
+  ]
+}

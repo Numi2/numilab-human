@@ -1,0 +1,158 @@
+{
+  "backtracking_helper": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-f32-backtracking-923-root/quality_f32_backtracking_923.py",
+    "sha256": "8e7959e82ffc5adddf2dd24dcdcbb1b4550dbce81d62ca628f4f389688860a4c"
+  },
+  "cases": [
+    {
+      "alpha": 0.5,
+      "attempts": 2,
+      "bad_after": 1,
+      "independent": "PASS",
+      "kind": "one-node"
+    },
+    {
+      "alpha": 0.5,
+      "attempts": 2,
+      "bad_after": 1,
+      "independent": "PASS",
+      "kind": "joint-seed-4-plus-expanded-10-node"
+    },
+    {
+      "kind": "actual-regressed-good-cell-witness-row-selection",
+      "old_nearest_rows_replaced": [
+        2,
+        3
+      ],
+      "selected_witness_rows": [
+        7,
+        8,
+        9
+      ],
+      "status": "PASS"
+    },
+    {
+      "changed_coordinates": 1,
+      "exact_positive": "PASS",
+      "kind": "raw-F64-pass-rounded-F32-fail-one-ULP-restoration",
+      "native": "PASS",
+      "q32": 9.526852116090775e-06,
+      "q64": 1.00031947201208e-05,
+      "qcorrected": 1.190856514511347e-05
+    },
+    {
+      "changed": [
+        {
+          "axis": 2,
+          "direction": "up",
+          "from_bits": 1036831953,
+          "point_row": 0,
+          "to_bits": 1036831954
+        }
+      ],
+      "kind": "row0-z-axis-ULP-control",
+      "status": "PASS"
+    },
+    {
+      "budget": {
+        "explored": 1,
+        "limit": 1
+      },
+      "kind": "strict-budget-and-explicit-nonpositive-start-control",
+      "status": "PASS",
+      "unsupported_start": "UNSUPPORTED_ROUNDED_START_NONPOSITIVE"
+    },
+    {
+      "corrected_changed_coordinate": {
+        "axis": 0,
+        "direction": "down",
+        "from_bits": 1232423403,
+        "point_row": 3,
+        "to_bits": 1232423402
+      },
+      "corrected_free_point_l1_m": 2.2351741790771484e-08,
+      "corrected_good_q": 1.0000162838162775e-05,
+      "exact_positive": "PASS",
+      "independent_verifier": true,
+      "initial_good_mask": [
+        true,
+        false
+      ],
+      "kind": "producer-event-raw-F64-pass-rounded-F32-fail-witness-ULP-correction",
+      "native_and_good_star": "PASS",
+      "nonempty_separation_rows_independently_replayed": 1,
+      "raw_good_q": 1.000003595665535e-05,
+      "rounded_good_q": 9.999964431292935e-06
+    }
+  ],
+  "cow_emitter": {
+    "apfs_clonefile_used": true,
+    "archive_diffs": [
+      {
+        "deleted_members": 1,
+        "full_copy_fallback": false,
+        "key": "source_D",
+        "new_members": 1,
+        "output_members": 3,
+        "replaced_members": 1,
+        "unchanged_members_verified": 1
+      },
+      {
+        "deleted_members": 1,
+        "full_copy_fallback": false,
+        "key": "volume_Skin",
+        "new_members": 1,
+        "output_members": 3,
+        "replaced_members": 1,
+        "unchanged_members_verified": 1
+      },
+      {
+        "deleted_members": 1,
+        "full_copy_fallback": false,
+        "key": "volume_Fat",
+        "new_members": 1,
+        "output_members": 3,
+        "replaced_members": 1,
+        "unchanged_members_verified": 1
+      }
+    ],
+    "full_copy_fallback": false,
+    "independent_receipt_verifier": "PASS",
+    "no_op_delta_control": {
+      "empty_delta": true,
+      "status": "PASS",
+      "unchanged_members": 3
+    },
+    "parent_unchanged": true,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/npz-cow-append-926b-root/npz_cow_append_complete_926b.py",
+    "readback_exact": true,
+    "sha256": "98dd06cafb9a38af4a8c1c7a803ed967d6effff73fd7d1528df7bedcfb40418f",
+    "underlying_writer_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/npz-cow-append-925-root/npz_cow_append_925.py",
+    "underlying_writer_sha256": "4799f33d73a37072498565b6ff9c20d181916f0158e253fe5c7e9056ba2c0270",
+    "verified_archive_count": 3,
+    "zip_crc": "PASS"
+  },
+  "expanded_seed_vertex_star_policy": "PASS",
+  "full_global_star_connectivity_control": "PASS",
+  "full_star_f32_exact_and_native_gates": "PASS",
+  "joint_acceptance_derived_from_independent_nested_f32_replay": "PASS",
+  "joint_helper": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/joint_small_patch_slsqp_936_v26e_witness_ulp.py",
+    "sha256": "6422b020e80d6518655acea2581228c78c04e36fab2cdb7edd29bea981588dfe"
+  },
+  "native_steps": 0,
+  "native_thresholds_caps_and_source_policy_unchanged": true,
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/repair_coupled_quality_points_722_v26e_witness_ulp.py",
+    "sha256": "d2bfc0e590d8b0d44110007e0c0f2468490e095423b36cc65aedeac35aac32b5"
+  },
+  "rejected_alpha_full_good_regression_then_half_alpha_progress": "PASS",
+  "scene_trial": "NOT_RUN",
+  "schema": "h706.v26e-expanded-joint-star-ulp-replay-fixture.v1",
+  "status": "PASS_EXPANDED_STAR_INDEPENDENT_ALPHA_REPLAY_AND_COW",
+  "verifier": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/verify_ordinary_allrole_v26e_witness_ulp.py",
+    "sha256": "eaf1514917b673777021a89baa8d1d76c17acc0844543eb7d43a4421799765aa"
+  }
+}

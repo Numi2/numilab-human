@@ -1,0 +1,64 @@
+{
+  "candidate_audit": "NOT_RUN_NO_FINAL_STATE",
+  "compile": "PASS",
+  "controls": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-949-root/test_949_append_controls.py",
+    "result": "PASS: append/midpoint/parent/O controls; multi-op face/CSR replay; volume-map suffix, source crosswalk, and inherited-quotient controls",
+    "sha256": "8c6e30a0e3bc0a3dfb013d952157dcc0db22e9e713c6681594ee2458decf08e6"
+  },
+  "frozen_dependencies": {
+    "808": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/verify_current_source_evidence_808_validation_v26a.py",
+      "sha256": "6daa77251509436219b9ad4cb710ccaf4e4cf527a55358ad400c0b71e8881ef0"
+    },
+    "944_independent_replay": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/verify_long_edge_refinement_944.py",
+      "sha256": "4e6e748fc234cad59393158be183853f0be3dda65a2a173feafaab0fd6261901"
+    },
+    "944_producer": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-944-root/long_edge_refinement_944.py",
+      "sha256": "eb15f8c4f44b98c84bec835404c36859f61d048b14cb90a4b1ad41d8163aa2ec"
+    },
+    "948_core": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-948-root/long_edge_refinement_948_batch_core.py",
+      "sha256": "503c882af6989ca9cd35f95b7976debca0c35761a80e2f9b7ab207006e7532b7"
+    },
+    "948_driver": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-948-root/refine_long_edge_batch_948.py",
+      "sha256": "4e92a4d968e6419fc4414e3f2289b7589d8aa4674d8f9241866c90bca46da548"
+    },
+    "948_helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-948-root/quality_edge_refinement_948_batch_helper.py",
+      "sha256": "f6d93351ea91a7407416124fb20c14aa46522b20e28e2a4386823cb7ac33bbe4"
+    },
+    "948_independent_replay": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-948-root/verify_long_edge_refinement_948.py",
+      "sha256": "a407d459deadfe20ea54b41eec3ae82d10764137fa70c52ccc4884213d2efaa6"
+    },
+    "948_synthetic_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-948-root/synthetic-control-001/receipt.json",
+      "sha256": "22e180b724ba6924a98834a174cbb05c479e7e3d2ea12ee145c77c1b713749bb"
+    }
+  },
+  "known_dependency_issue": "The pinned 948 surface builder currently appears to pass source_input_vertex_quotient through the generic vertex-lane interpolation path. The 949 checker requires this input-domain map to remain byte-identical. No final candidate exists from attempt 952, so this issue has not been exercised against serialized output.",
+  "latest_948_attempt": {
+    "final_arrays": "ABSENT",
+    "final_state": "ABSENT",
+    "journal_sha256": "f13c5c3edab6b2929352b65ea2b273918f84f79b32f87b17c27eacf0ae2a9358",
+    "native_bad_count": "12_to_12",
+    "operation_count": 1,
+    "report_sha256": "d42e063ad01a2a940e1d0dfe80c7dc630a761d6c9cfe69ee77687d2f8a2f4e98",
+    "result": "PARTIAL_NO_PROMOTABLE_FINAL_STATE"
+  },
+  "mass_transport": "NOT_RUN",
+  "native_steps": 0,
+  "owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-long-edge-refinement-949-root/verify_current_source_evidence_949_append.py",
+    "sha256": "b165eb27e07830f72494f3c9c1772e2f04d2ec37f91fbee3e4076a4ef583bf60"
+  },
+  "physical_admission": false,
+  "promotion_ready": false,
+  "runtime": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+  "schema": "numi.h706.append-aware-source-evidence-949-implementation-status.v1",
+  "status": "PASS_FOCUSED_FIXTURES_ONLY_NO_SCENE_CANDIDATE"
+}

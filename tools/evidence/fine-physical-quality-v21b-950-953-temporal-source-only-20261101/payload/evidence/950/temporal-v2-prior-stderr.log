@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/verify_ordinary_allrole_v26e_witness_ulp_temporal.py", line 1257, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/verify_ordinary_allrole_v26e_witness_ulp_temporal.py", line 1095, in main
+    joint_validation=verify_joint_fallback_diagnostics(meta,producer_diag,verified_f32_record_ids,tets,patches)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/verify_ordinary_allrole_v26e_witness_ulp_temporal.py", line 773, in verify_joint_fallback_diagnostics
+    verify_witness_selection_from_previous_report(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        selection,prior_row,free,patch_free,star_vertices,full_tetrahedra,verified_f32_record_ids)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26e-witness-ulp-replay-controls/verify_ordinary_allrole_v26e_witness_ulp_temporal.py", line 638, in verify_witness_selection_from_previous_report
+    raise ValueError("preceding witness local cell row is outside its replay snapshot")
+ValueError: preceding witness local cell row is outside its replay snapshot

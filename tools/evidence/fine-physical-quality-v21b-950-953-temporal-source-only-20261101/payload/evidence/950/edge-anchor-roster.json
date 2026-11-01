@@ -1,0 +1,845 @@
+{
+  "active_coordinate_mapping": {
+    "Fat": {
+      "active_coordinate_collisions": 0,
+      "active_source_points": 118205,
+      "active_unmapped_rows": 0,
+      "mapping_lane": "fat_current_target_rebind_I_point_to_volume_rows",
+      "volume_coordinate_collisions_among_active_source_points": 0
+    },
+    "Skin": {
+      "active_coordinate_collisions": 0,
+      "active_source_points": 118205,
+      "active_unmapped_rows": 0,
+      "mapping_lane": "skin_current_target_rebind_I_point_to_volume_rows",
+      "volume_coordinate_collisions_among_active_source_points": 0
+    }
+  },
+  "candidate_edge_count_from_bad_cells_only": 6,
+  "candidate_star_sidecar": {
+    "domain": "current 950 input source and volume row domains",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-950-I-edge-anchor-roster-root/candidate-full-stars.npz",
+    "sha256": "b543fd96219fcbfa9369aec9aec424535a1f1b6e84669e86fd01103ac4e2789c"
+  },
+  "elapsed_s": 14.73364416602999,
+  "eligible_bad_cell_hit_edges": [
+    {
+      "bad_cell_hits": 1,
+      "bad_cells_by_volume_role": {
+        "Skin": [
+          724110
+        ]
+      },
+      "directions": [
+        {
+          "drop": 33005,
+          "eligible_endpoint": true,
+          "keep": 33006
+        },
+        {
+          "drop": 33006,
+          "eligible_endpoint": true,
+          "keep": 33005
+        }
+      ],
+      "edge_rows": [
+        33005,
+        33006
+      ],
+      "eligible_directions": [
+        {
+          "drop": 33005,
+          "eligible_endpoint": true,
+          "keep": 33006
+        },
+        {
+          "drop": 33006,
+          "eligible_endpoint": true,
+          "keep": 33005
+        }
+      ],
+      "excluded_reasons": [],
+      "length_m": 8.627839888051254e-06,
+      "link_condition_pass": true,
+      "role": "I",
+      "source_edge_incidence": 2,
+      "source_face_rows": [
+        16073,
+        121029
+      ],
+      "target_volume_endpoint_map": {
+        "Fat": true,
+        "Skin": true
+      },
+      "volume_stars": {
+        "Fat": {
+          "cell_count": 58,
+          "endpoint_volume_rows": [
+            33005,
+            33006
+          ],
+          "point_count": 30
+        },
+        "Skin": {
+          "cell_count": 6,
+          "endpoint_volume_rows": [
+            109674,
+            109675
+          ],
+          "point_count": 7
+        }
+      }
+    },
+    {
+      "bad_cell_hits": 1,
+      "bad_cells_by_volume_role": {
+        "Fat": [
+          747397
+        ]
+      },
+      "directions": [
+        {
+          "drop": 33008,
+          "eligible_endpoint": true,
+          "keep": 33009
+        },
+        {
+          "drop": 33009,
+          "eligible_endpoint": true,
+          "keep": 33008
+        }
+      ],
+      "edge_rows": [
+        33008,
+        33009
+      ],
+      "eligible_directions": [
+        {
+          "drop": 33008,
+          "eligible_endpoint": true,
+          "keep": 33009
+        },
+        {
+          "drop": 33009,
+          "eligible_endpoint": true,
+          "keep": 33008
+        }
+      ],
+      "excluded_reasons": [],
+      "length_m": 1.3907184768494683e-05,
+      "link_condition_pass": true,
+      "role": "I",
+      "source_edge_incidence": 2,
+      "source_face_rows": [
+        16070,
+        121033
+      ],
+      "target_volume_endpoint_map": {
+        "Fat": true,
+        "Skin": true
+      },
+      "volume_stars": {
+        "Fat": {
+          "cell_count": 50,
+          "endpoint_volume_rows": [
+            33008,
+            33009
+          ],
+          "point_count": 25
+        },
+        "Skin": {
+          "cell_count": 12,
+          "endpoint_volume_rows": [
+            109677,
+            109678
+          ],
+          "point_count": 10
+        }
+      }
+    },
+    {
+      "bad_cell_hits": 1,
+      "bad_cells_by_volume_role": {
+        "Skin": [
+          724109
+        ]
+      },
+      "directions": [
+        {
+          "drop": 33004,
+          "eligible_endpoint": true,
+          "keep": 33005
+        },
+        {
+          "drop": 33005,
+          "eligible_endpoint": true,
+          "keep": 33004
+        }
+      ],
+      "edge_rows": [
+        33004,
+        33005
+      ],
+      "eligible_directions": [
+        {
+          "drop": 33004,
+          "eligible_endpoint": true,
+          "keep": 33005
+        },
+        {
+          "drop": 33005,
+          "eligible_endpoint": true,
+          "keep": 33004
+        }
+      ],
+      "excluded_reasons": [],
+      "length_m": 1.8371954909319305e-05,
+      "link_condition_pass": true,
+      "role": "I",
+      "source_edge_incidence": 2,
+      "source_face_rows": [
+        16074,
+        121030
+      ],
+      "target_volume_endpoint_map": {
+        "Fat": true,
+        "Skin": true
+      },
+      "volume_stars": {
+        "Fat": {
+          "cell_count": 80,
+          "endpoint_volume_rows": [
+            33004,
+            33005
+          ],
+          "point_count": 39
+        },
+        "Skin": {
+          "cell_count": 6,
+          "endpoint_volume_rows": [
+            109673,
+            109674
+          ],
+          "point_count": 7
+        }
+      }
+    }
+  ],
+  "eligible_count": 3,
+  "excluded_candidate_edges": [
+    {
+      "bad_cell_hits": 1,
+      "bad_cells_by_volume_role": {
+        "Skin": [
+          724107
+        ]
+      },
+      "directions": [
+        {
+          "drop": 33033,
+          "eligible_endpoint": true,
+          "keep": 33035
+        },
+        {
+          "drop": 33035,
+          "eligible_endpoint": true,
+          "keep": 33033
+        }
+      ],
+      "edge_rows": [
+        33033,
+        33035
+      ],
+      "eligible_directions": [
+        {
+          "drop": 33033,
+          "eligible_endpoint": true,
+          "keep": 33035
+        },
+        {
+          "drop": 33035,
+          "eligible_endpoint": true,
+          "keep": 33033
+        }
+      ],
+      "excluded_reasons": [
+        "source_link_condition_fail"
+      ],
+      "length_m": 1.2510099466682317e-05,
+      "link_condition_pass": false,
+      "role": "I",
+      "source_edge_incidence": 2,
+      "source_face_rows": [
+        121070,
+        235012
+      ],
+      "target_volume_endpoint_map": {
+        "Fat": true,
+        "Skin": true
+      },
+      "volume_stars": {
+        "Fat": {
+          "cell_count": 16,
+          "endpoint_volume_rows": [
+            33033,
+            33035
+          ],
+          "point_count": 13
+        },
+        "Skin": {
+          "cell_count": 18,
+          "endpoint_volume_rows": [
+            109702,
+            109704
+          ],
+          "point_count": 15
+        }
+      }
+    },
+    {
+      "bad_cell_hits": 2,
+      "bad_cells_by_volume_role": {
+        "Fat": [
+          747397,
+          752959
+        ]
+      },
+      "directions": [
+        {
+          "drop": 33006,
+          "eligible_endpoint": true,
+          "keep": 33008
+        },
+        {
+          "drop": 33008,
+          "eligible_endpoint": true,
+          "keep": 33006
+        }
+      ],
+      "edge_rows": [
+        33006,
+        33008
+      ],
+      "eligible_directions": [
+        {
+          "drop": 33006,
+          "eligible_endpoint": true,
+          "keep": 33008
+        },
+        {
+          "drop": 33008,
+          "eligible_endpoint": true,
+          "keep": 33006
+        }
+      ],
+      "excluded_reasons": [
+        "not_an_interior_I_source_edge",
+        "source_link_condition_fail"
+      ],
+      "length_m": 1.6536397049188973e-05,
+      "link_condition_pass": false,
+      "role": "I",
+      "source_edge_incidence": 0,
+      "source_face_rows": [],
+      "target_volume_endpoint_map": {
+        "Fat": true,
+        "Skin": true
+      },
+      "volume_stars": {
+        "Fat": {
+          "cell_count": 46,
+          "endpoint_volume_rows": [
+            33006,
+            33008
+          ],
+          "point_count": 25
+        },
+        "Skin": {
+          "cell_count": 9,
+          "endpoint_volume_rows": [
+            109675,
+            109677
+          ],
+          "point_count": 10
+        }
+      }
+    },
+    {
+      "bad_cell_hits": 1,
+      "bad_cells_by_volume_role": {
+        "Fat": [
+          747397
+        ]
+      },
+      "directions": [
+        {
+          "drop": 33006,
+          "eligible_endpoint": true,
+          "keep": 33009
+        },
+        {
+          "drop": 33009,
+          "eligible_endpoint": true,
+          "keep": 33006
+        }
+      ],
+      "edge_rows": [
+        33006,
+        33009
+      ],
+      "eligible_directions": [
+        {
+          "drop": 33006,
+          "eligible_endpoint": true,
+          "keep": 33009
+        },
+        {
+          "drop": 33009,
+          "eligible_endpoint": true,
+          "keep": 33006
+        }
+      ],
+      "excluded_reasons": [
+        "not_an_interior_I_source_edge",
+        "source_link_condition_fail"
+      ],
+      "length_m": 2.3529197762052276e-05,
+      "link_condition_pass": false,
+      "role": "I",
+      "source_edge_incidence": 0,
+      "source_face_rows": [],
+      "target_volume_endpoint_map": {
+        "Fat": true,
+        "Skin": true
+      },
+      "volume_stars": {
+        "Fat": {
+          "cell_count": 31,
+          "endpoint_volume_rows": [
+            33006,
+            33009
+          ],
+          "point_count": 19
+        },
+        "Skin": {
+          "cell_count": 8,
+          "endpoint_volume_rows": [
+            109675,
+            109678
+          ],
+          "point_count": 11
+        }
+      }
+    }
+  ],
+  "excluded_count": 3,
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-950-witness-ulp-root/qualified/verified-state.json",
+    "sha256": "9cd8980fa04681ec821ea7cdd7e9b49ccac8d8e18ba94e00ace4361f3d6f5db3"
+  },
+  "mass_mapping": "PENDING",
+  "maximum_edge_m": 5e-05,
+  "native_quality_census": {
+    "Fat": {
+      "bad_cell_rows_sha256": "dd864e956987be504c21d55dba1e978981132ff2bc4846bd8023e9fe7b00d0ef",
+      "cell_count": 770516,
+      "minimum_native_q": 4.4257446659961237e-07,
+      "minimum_volume_m3": 1.000290144947699e-18,
+      "native_bad_cell_count": 6,
+      "quality_owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/inner_endpoint_quotient_002.py",
+      "quality_owner_sha256": "e6ce2c436ce0a4ca700e2a4b1be524403576a066c42efe6c945c6c5cb87cea36"
+    },
+    "Skin": {
+      "bad_cell_rows_sha256": "2e7edd92ec78692184cf06e41d905e131c72813a1c2f77dad8b74a40aee7a74b",
+      "cell_count": 724884,
+      "minimum_native_q": 2.6671611806575668e-06,
+      "minimum_volume_m3": 1.0012811762532554e-18,
+      "native_bad_cell_count": 6,
+      "quality_owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/inner_endpoint_quotient_002.py",
+      "quality_owner_sha256": "e6ce2c436ce0a4ca700e2a4b1be524403576a066c42efe6c945c6c5cb87cea36"
+    }
+  },
+  "native_steps": 0,
+  "next_driver": {
+    "command_template": "PY RUNNER --state STATE --roster ROSTER --role I --max-edge-m 5e-5 --output FRESH_OUT --max-ops 3 --max-trials 100 --max-anchor-fits 6 --seconds 90",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/batch_inner_endpoint_quotient_009.py",
+    "sha256": "0e57fbb984c07ea2ed2b47957176be7b1d6a3b8729402ba323ea24c238461cf0"
+  },
+  "pairwise_star_overlap": [
+    {
+      "edge_rows": [
+        [
+          33005,
+          33006
+        ],
+        [
+          33033,
+          33035
+        ]
+      ],
+      "shared_source_faces": 0,
+      "shared_source_vertices": 3,
+      "shared_volume_cells": {
+        "Fat": 0,
+        "Skin": 4
+      },
+      "shared_volume_points": {
+        "Fat": 4,
+        "Skin": 6
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33005,
+          33006
+        ],
+        [
+          33008,
+          33009
+        ]
+      ],
+      "shared_source_faces": 0,
+      "shared_source_vertices": 2,
+      "shared_volume_cells": {
+        "Fat": 17,
+        "Skin": 0
+      },
+      "shared_volume_points": {
+        "Fat": 18,
+        "Skin": 3
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33005,
+          33006
+        ],
+        [
+          33006,
+          33008
+        ]
+      ],
+      "shared_source_faces": 3,
+      "shared_source_vertices": 4,
+      "shared_volume_cells": {
+        "Fat": 22,
+        "Skin": 1
+      },
+      "shared_volume_points": {
+        "Fat": 18,
+        "Skin": 5
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33005,
+          33006
+        ],
+        [
+          33004,
+          33005
+        ]
+      ],
+      "shared_source_faces": 4,
+      "shared_source_vertices": 5,
+      "shared_volume_cells": {
+        "Fat": 50,
+        "Skin": 6
+      },
+      "shared_volume_points": {
+        "Fat": 29,
+        "Skin": 7
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33005,
+          33006
+        ],
+        [
+          33006,
+          33009
+        ]
+      ],
+      "shared_source_faces": 3,
+      "shared_source_vertices": 4,
+      "shared_volume_cells": {
+        "Fat": 15,
+        "Skin": 1
+      },
+      "shared_volume_points": {
+        "Fat": 14,
+        "Skin": 5
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33033,
+          33035
+        ],
+        [
+          33008,
+          33009
+        ]
+      ],
+      "shared_source_faces": 0,
+      "shared_source_vertices": 2,
+      "shared_volume_cells": {
+        "Fat": 0,
+        "Skin": 0
+      },
+      "shared_volume_points": {
+        "Fat": 2,
+        "Skin": 4
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33033,
+          33035
+        ],
+        [
+          33006,
+          33008
+        ]
+      ],
+      "shared_source_faces": 0,
+      "shared_source_vertices": 2,
+      "shared_volume_cells": {
+        "Fat": 0,
+        "Skin": 0
+      },
+      "shared_volume_points": {
+        "Fat": 2,
+        "Skin": 5
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33033,
+          33035
+        ],
+        [
+          33004,
+          33005
+        ]
+      ],
+      "shared_source_faces": 2,
+      "shared_source_vertices": 4,
+      "shared_volume_cells": {
+        "Fat": 3,
+        "Skin": 4
+      },
+      "shared_volume_points": {
+        "Fat": 6,
+        "Skin": 6
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33033,
+          33035
+        ],
+        [
+          33006,
+          33009
+        ]
+      ],
+      "shared_source_faces": 0,
+      "shared_source_vertices": 2,
+      "shared_volume_cells": {
+        "Fat": 0,
+        "Skin": 0
+      },
+      "shared_volume_points": {
+        "Fat": 2,
+        "Skin": 4
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33008,
+          33009
+        ],
+        [
+          33006,
+          33008
+        ]
+      ],
+      "shared_source_faces": 4,
+      "shared_source_vertices": 5,
+      "shared_volume_cells": {
+        "Fat": 41,
+        "Skin": 8
+      },
+      "shared_volume_points": {
+        "Fat": 25,
+        "Skin": 8
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33008,
+          33009
+        ],
+        [
+          33004,
+          33005
+        ]
+      ],
+      "shared_source_faces": 0,
+      "shared_source_vertices": 2,
+      "shared_volume_cells": {
+        "Fat": 9,
+        "Skin": 0
+      },
+      "shared_volume_points": {
+        "Fat": 17,
+        "Skin": 3
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33008,
+          33009
+        ],
+        [
+          33006,
+          33009
+        ]
+      ],
+      "shared_source_faces": 5,
+      "shared_source_vertices": 7,
+      "shared_volume_cells": {
+        "Fat": 26,
+        "Skin": 7
+      },
+      "shared_volume_points": {
+        "Fat": 19,
+        "Skin": 9
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33006,
+          33008
+        ],
+        [
+          33004,
+          33005
+        ]
+      ],
+      "shared_source_faces": 2,
+      "shared_source_vertices": 4,
+      "shared_volume_cells": {
+        "Fat": 14,
+        "Skin": 1
+      },
+      "shared_volume_points": {
+        "Fat": 17,
+        "Skin": 5
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33006,
+          33008
+        ],
+        [
+          33006,
+          33009
+        ]
+      ],
+      "shared_source_faces": 5,
+      "shared_source_vertices": 7,
+      "shared_volume_cells": {
+        "Fat": 22,
+        "Skin": 4
+      },
+      "shared_volume_points": {
+        "Fat": 19,
+        "Skin": 9
+      }
+    },
+    {
+      "edge_rows": [
+        [
+          33004,
+          33005
+        ],
+        [
+          33006,
+          33009
+        ]
+      ],
+      "shared_source_faces": 2,
+      "shared_source_vertices": 4,
+      "shared_volume_cells": {
+        "Fat": 7,
+        "Skin": 1
+      },
+      "shared_volume_points": {
+        "Fat": 13,
+        "Skin": 5
+      }
+    }
+  ],
+  "physical_admission": false,
+  "protected_scope": {
+    "actual_back_source_rows": 772,
+    "back_endpoints_distance_capped_by_existing_50um_guard": true,
+    "immutable_rim_route_source_rows": 45,
+    "owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/batch_inner_endpoint_quotient_010_prepared_guard.py",
+    "owner_sha256": "8da4676413c2801c896d386454978c0517d16c0b1e6c25bd0f7591ef8367d343"
+  },
+  "role": "I",
+  "schema": "h706.bad-cell-focused-I-edge-anchor-roster.v1",
+  "source_edge_scan": "candidate pairs came only from exact current bad-cell corners; incidence/link checked in incident source-face subset",
+  "source_quality_measurement": "fresh pinned native measurement on exact 950 input arrays; bad rows not inherited from earlier state",
+  "source_surface": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-950-witness-ulp-root/proposal/candidate-I-typed-current.npz",
+    "sha256": "9a26356066cdd501929ee1b91cd1760e629d0c015e2fd47c804222a8674fd8f9"
+  },
+  "status": "PASS_READ_ONLY_ACTIVE_ROW_BAD_CELL_CENSUS",
+  "target_volumes": {
+    "Fat": {
+      "bad_cell_rows": [
+        694764,
+        747397,
+        752959,
+        768797,
+        769006,
+        769007
+      ],
+      "native_bad_cells": 6,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-950-witness-ulp-root/proposal/fat-coupled-quality-point-proposal.npz",
+      "sha256": "a66e4a84fd131016b851213d38b68a800f1039e38dae2b6ccfd82d5ab4e43ceb"
+    },
+    "Skin": {
+      "bad_cell_rows": [
+        724107,
+        724109,
+        724110,
+        724294,
+        724320,
+        724396
+      ],
+      "native_bad_cells": 6,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-950-witness-ulp-root/proposal/skin-coupled-quality-point-proposal.npz",
+      "sha256": "d67e15aefd5871f8f06b667651242b9bea693bfe35f2142b8047ef78ec08d354"
+    }
+  }
+}
