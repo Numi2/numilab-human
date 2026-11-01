@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-o-endpoint-quotient-008-nativepreflight/census_o_endpoint_edges_008.py", line 184, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-o-endpoint-quotient-008-nativepreflight/census_o_endpoint_edges_008.py", line 163, in main
+    fixed,back,protection,_=pm.protected_rows(stpath,state,'O',surfaces,volumes,prot_dir,COREMOD)
+                            ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-o-endpoint-quotient-008-nativepreflight/o_skin_only_protection_008.py", line 111, in protected_rows
+    result=protected_rows_with_owner(state_path,state,role,surfaces,volumes,out,coremod,owner)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-o-endpoint-quotient-008-nativepreflight/o_skin_only_protection_008.py", line 93, in protected_rows_with_owner
+    skin_cache={'points':volume_points,'coordinate_index':owner.P.point_key_index(volume_points)}
+                                                          ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'paired_boundary_patch_protection795' has no attribute 'point_key_index'
+

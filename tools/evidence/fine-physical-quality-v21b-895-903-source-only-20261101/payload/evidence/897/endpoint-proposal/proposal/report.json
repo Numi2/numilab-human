@@ -1,0 +1,115 @@
+{
+  "accepted_count": 3,
+  "all185_intersection_audit": "PENDING",
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-897-I-endpoint007-root/proposal/candidate-state-proposal.json",
+    "sha256": "20b609f92c4c9399c58112bcdbe701894a764522b13bb4497be9e901f456b409"
+  },
+  "elapsed_s": 48.471768625080585,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-895-connected-root/round-02-attempt-02/qualified/verified-state.json",
+    "sha256": "e8f4e3c324f1dcb2c303d0d84e063d6c82fe53380bcc5dbf9826e9255377550a"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 5e-05,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-897-I-endpoint007-root/proposal/operation-journal.json",
+    "sha256": "059e99d1ecc85839a01072011a8c7f6aa99f5c6b4f6a5c184142da25f80a8b25"
+  },
+  "physical_admission": false,
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "drop": 33005,
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "drop": 33006,
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        33005,
+        33006
+      ],
+      "length_m": 5.718319394689301e-06
+    },
+    {
+      "directions": [
+        {
+          "drop": 33008,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "drop": 33009,
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        33008,
+        33009
+      ],
+      "length_m": 1.3936706831690295e-05
+    },
+    {
+      "directions": [
+        {
+          "drop": 33004,
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "drop": 33005,
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        33004,
+        33005
+      ],
+      "length_m": 1.6552542604925546e-05
+    },
+    {
+      "directions": [
+        {
+          "drop": 59753,
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "drop": 59758,
+          "reason": "Fat local quotient regresses a previously good tetrahedron"
+        }
+      ],
+      "edge_rows": [
+        59753,
+        59758
+      ],
+      "length_m": 2.867470622456505e-05
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 4,
+    "overlapping_source_star": 2
+  },
+  "role": "I",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-896-I-roster-root.json",
+    "sha256": "7a4daa8cefb57afc97c502c83b1bfb243d973ac08145bea9ba1aa6b6a27b66d5"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v1",
+  "seconds_budget": 90.0,
+  "stage_seconds": {
+    "cache_setup": 4.827957917004824,
+    "final_alias_rebinding": 7.586711541982368,
+    "final_independent_readback": 12.866433167131618,
+    "final_serialization": 10.316258917097002,
+    "local_direction_evaluations": 0.04371433216147125,
+    "output_build": 2.2538599162362516
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 14
+}

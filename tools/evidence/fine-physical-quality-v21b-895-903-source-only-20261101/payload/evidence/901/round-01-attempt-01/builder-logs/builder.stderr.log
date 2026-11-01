@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25j-authenticated-back/repair_coupled_quality_points_722_v25j_authenticated_back.py", line 2413, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25j-authenticated-back/repair_coupled_quality_points_722_v25j_authenticated_back.py", line 2181, in main
+    back_receipt=authenticated_actual_back_fat_rows(args.state,st,surfaces,volumes,out)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25j-authenticated-back/repair_coupled_quality_points_722_v25j_authenticated_back.py", line 53, in authenticated_actual_back_fat_rows
+    protected=BACK_PROTECTION.protected_scope(Path(state_path),state,"I",volume_caches,Path(outdir),fixture=False)
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_854_active_rows_lineage.py", line 232, in protected_scope
+    rr,proof,motion,immediate,final_motion=lineage_rows_with_cumulative_l1(current_refs[r],ref_by_role[r],sources[r],reference_data,
+                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        np.asarray(scope[r+"_vertex_rows"],np.int64),r+" current back rows",allow_collapsed=allow)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_854_active_rows_lineage.py", line 176, in lineage_rows_with_cumulative_l1
+    rr,proof=P.map_rows_by_lineage(current_ref,reference_ref,current_data,rows,label,allow_collapsed=allow_collapsed)
+             ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/coupled_anchor_collapse_795_outer_role.py", line 258, in map_rows_by_lineage
+    if not allow_collapsed and len(np.unique(out))!=len(out):raise ValueError(label+' protected rows were collapsed in current lineage')
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: D current back rows protected rows were collapsed in current lineage
