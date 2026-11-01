@@ -1,0 +1,65 @@
+{
+  "status": "PASS_VERIFIER_CONTRACT_REGRESSION_TESTS_ONLY",
+  "timestamp_utc": "2026-11-01T23:23:41.516658+00:00",
+  "native_steps": 0,
+  "physical_admission": false,
+  "inputs": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/verify_current_motion_geometry_1026_v15.py",
+      "sha256": "f673bfcdc422a8aee7c986303c6a77256526bf79909e59f6db0eb2a7ba4d3df8",
+      "bytes": 76911
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/test_motion_observer_route_v15.py",
+      "sha256": "e5c59e768eeabadc686eea231cc46d3c6ca972c327796cf03216b2cf55ce6d46",
+      "bytes": 2475
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/run_current_native_1025_winning_1047_p029_postpass_010_route_compat.sh",
+      "sha256": "4f24d06e5931348e0a970f0cb9cd341c6ae997a2f33646302527af86d7de5a51",
+      "bytes": 5542
+    }
+  ],
+  "tests": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/test_motion_observer_route_v15.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/v15-route-compat-tests-001/test-0.log",
+        "sha256": "593e6863be7bffca3f2d78faf3ce95bf2d0b77ac828b8cf83a6ce3b4b801df1a",
+        "bytes": 386
+      }
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/verify_current_motion_geometry_1026_v15.py",
+        "--self-test"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/v15-route-compat-tests-001/test-1.log",
+        "sha256": "7c0e67297751d3784e6339e6fae4188cfc400d7018c651422a68da0c5a82bb0f",
+        "bytes": 433
+      }
+    },
+    {
+      "argv": [
+        "bash",
+        "-n",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/run_current_native_1025_winning_1047_p029_postpass_010_route_compat.sh"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-motion-1026-verifier/v15-route-compat-tests-001/test-2.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "limits": "Checks direct-O/legacy observer-route compatibility and existing verifier controls; no native run, tissue motion, or new geometry qualification."
+}

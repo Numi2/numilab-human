@@ -1,0 +1,82 @@
+{
+  "schema": "numi.h706.current-motion-v15-publication-rerun.v1",
+  "status": "PASS_VERIFIER_COMPATIBILITY_CONTROLS_ONLY",
+  "native_steps": 0,
+  "physical_admission": false,
+  "inputs": [
+    {
+      "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/tests/verify_current_motion_geometry_1026_v15.py",
+      "sha256": "f673bfcdc422a8aee7c986303c6a77256526bf79909e59f6db0eb2a7ba4d3df8",
+      "bytes": 76911,
+      "frozen_expected_sha256": "f673bfcdc422a8aee7c986303c6a77256526bf79909e59f6db0eb2a7ba4d3df8"
+    },
+    {
+      "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/tests/test_motion_observer_route_v15.py",
+      "sha256": "e5c59e768eeabadc686eea231cc46d3c6ca972c327796cf03216b2cf55ce6d46",
+      "bytes": 2475,
+      "frozen_expected_sha256": "e5c59e768eeabadc686eea231cc46d3c6ca972c327796cf03216b2cf55ce6d46"
+    },
+    {
+      "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/route/run_current_native_1025_winning_1047_p029_postpass_010_route_compat.sh",
+      "sha256": "4f24d06e5931348e0a970f0cb9cd341c6ae997a2f33646302527af86d7de5a51",
+      "bytes": 5542,
+      "frozen_expected_sha256": "4f24d06e5931348e0a970f0cb9cd341c6ae997a2f33646302527af86d7de5a51"
+    },
+    {
+      "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/evidence/original/receipt.json",
+      "sha256": "b7ee6599a7ceb90ea6df1bc70b45737001339c16ac1ef242fe5e7aad78ce7df5",
+      "bytes": 3489,
+      "frozen_expected_sha256": "b7ee6599a7ceb90ea6df1bc70b45737001339c16ac1ef242fe5e7aad78ce7df5"
+    }
+  ],
+  "tests": [
+    {
+      "name": "route_contract_unittest",
+      "argv": [
+        "numi-human-prep-venv-20261005/bin/python",
+        "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/tests/test_motion_observer_route_v15.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "test_methods": 4,
+      "negative_variants": 16,
+      "log": {
+        "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/evidence/publication-rerun/test.log",
+        "sha256": "593e6863be7bffca3f2d78faf3ce95bf2d0b77ac828b8cf83a6ce3b4b801df1a",
+        "bytes": 386
+      }
+    },
+    {
+      "name": "verifier_self_test",
+      "argv": [
+        "verify_current_motion_geometry_1026_v15.py",
+        "--self-test"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/evidence/publication-rerun/self-test.log",
+        "sha256": "7c0e67297751d3784e6339e6fae4188cfc400d7018c651422a68da0c5a82bb0f",
+        "bytes": 433
+      }
+    },
+    {
+      "name": "route_shell_syntax",
+      "argv": [
+        "bash",
+        "-n",
+        "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/route/run_current_native_1025_winning_1047_p029_postpass_010_route_compat.sh"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "/Users/numi/Work/current-physical-transfer-publication-20261101/tools/evidence/current-motion-1026-v15-route-compat-20261102/evidence/publication-rerun/shell-syntax.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    }
+  ],
+  "preserved_failed_packaging_attempts": [
+    "direct wrapper invocation was not executable (permission denied); retried using Python wrapper",
+    "initial test placement split verifier from sibling test and failed import; corrected package layout, rerun passed"
+  ],
+  "limits": "No native execution, motion, tissue qualification, physical admission, or new geometry qualification."
+}
