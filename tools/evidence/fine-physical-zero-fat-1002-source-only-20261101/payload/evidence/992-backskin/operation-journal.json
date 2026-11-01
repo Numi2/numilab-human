@@ -1,0 +1,277 @@
+{
+  "closure_plan": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/backskin_cap_domains_990_linkclosure.json",
+    "sha256": "182ad2537eebb2f3bf638a187ac63f5917a47e1e9ede23c87b464b09547ec0d7"
+  },
+  "distance_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-backskin-cap-localproof-983/surface-distance.json",
+    "sha256": "7f5b9bc7788577f4a35581900f091495dde93e91f368983b6edcb2861968e1de"
+  },
+  "local_feasibility_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-backskin-cap-localproof-983/local-feasibility-receipt.json",
+    "sha256": "271aca93297c86b0b3c205731dc3d27ae820398ba84206599cca513a956a061c"
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "operation": {
+    "3d_cap_m": 0.00025,
+    "distance_method": "Adaptive subdivision; distance-to-triangle-union is 1-Lipschitz. Every leaf upper is minimum sampled vertex distance upper plus leaf diameter upper; float64 evaluations are padded outward by 5e-10 m.",
+    "distance_samples": {
+      "new_to_old": 33289,
+      "old_to_new": 66049
+    },
+    "face_rows": [
+      52337,
+      52342
+    ],
+    "kind": "2-to-2 source edge flip",
+    "new_source_faces": [
+      [
+        57482,
+        60059,
+        59941
+      ],
+      [
+        59961,
+        59941,
+        60059
+      ]
+    ],
+    "old_source_faces": [
+      [
+        57482,
+        60059,
+        59961
+      ],
+      [
+        57482,
+        59961,
+        59941
+      ]
+    ],
+    "outer_O_back_fixed": true,
+    "role": "I",
+    "source_edge": [
+      57482,
+      59961
+    ],
+    "source_points_fixed": true,
+    "symmetric_3d_upper_m": 0.00022114644093118441
+  },
+  "oriented_equivalence_receipt": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-backskin-cap-localproof-983/oriented-equivalence-receipt.json",
+    "sha256": "9b15f20ace703aecf31796de647a96387817367bcd852126d7cf44c11e80d13c"
+  },
+  "paired_exact_delta_det6": "0",
+  "parent_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-984-retained-I-quad-qualified-root/verified-state.json",
+    "sha256": "ff37d39728b34d91887060f8742d54121a4ecb69c76dbc2f89f2b88bb9e0781c"
+  },
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/compose_backskin_cap_992_root.py",
+    "sha256": "8e27bf9bddf835c2fb26214b17753dc8805dba7cdd58ab90f7b027ec4a63ed99"
+  },
+  "roles": {
+    "Fat": {
+      "empty_target_retirement": false,
+      "exact_delta_det6": "212023817255255017447814163097733128077153980693500517324768044100026642613972296625841515758627521732788256798372796462792704",
+      "full_closed_region_cell_count": 14,
+      "full_closed_region_rows": [
+        735709,
+        762607,
+        768784,
+        768809,
+        768811,
+        769699,
+        769711,
+        769712,
+        769713,
+        769732,
+        769733,
+        770320,
+        770322,
+        770323
+      ],
+      "global_fraction": 8.488798608307305e-09,
+      "local_fraction": 0.008499146732952488,
+      "native_bad_after": 1,
+      "native_bad_before": 1,
+      "new_tets": [
+        [
+          57482,
+          58784,
+          59941,
+          60059
+        ],
+        [
+          59941,
+          58784,
+          59961,
+          60059
+        ]
+      ],
+      "old_tets": [
+        [
+          58784,
+          57482,
+          60059,
+          59961
+        ],
+        [
+          58784,
+          59941,
+          57482,
+          59961
+        ]
+      ],
+      "retired_seed_rows": [
+        735709,
+        769732
+      ],
+      "target_row_replacements": [
+        {
+          "new": [
+            57482,
+            60059,
+            59941
+          ],
+          "old": [
+            57482,
+            60059,
+            59961
+          ],
+          "row": 52337
+        },
+        {
+          "new": [
+            59961,
+            59941,
+            60059
+          ],
+          "old": [
+            57482,
+            59961,
+            59941
+          ],
+          "row": 52342
+        }
+      ]
+    },
+    "Skin": {
+      "empty_target_retirement": true,
+      "exact_delta_det6": "-212023817255255017447814163097733128077153980693500517324768044100026642613972296625841515758627521732788256798372796462792704",
+      "full_closed_region_cell_count": 58,
+      "full_closed_region_rows": [
+        26802,
+        49591,
+        139955,
+        144412,
+        322296,
+        322348,
+        322396,
+        328947,
+        329263,
+        329313,
+        329323,
+        338721,
+        346609,
+        423764,
+        452793,
+        458100,
+        518676,
+        554093,
+        554094,
+        576508,
+        576509,
+        576510,
+        594694,
+        723966,
+        723967,
+        723968,
+        723969,
+        724251,
+        724252,
+        724253,
+        724254,
+        724255,
+        724256,
+        724257,
+        724258,
+        724259,
+        724260,
+        724261,
+        724262,
+        724301,
+        724302,
+        724303,
+        724304,
+        724323,
+        724325,
+        724327,
+        724328,
+        724329,
+        724330,
+        724333,
+        724334,
+        724335,
+        724336,
+        724337,
+        724338,
+        724339,
+        724342,
+        724855
+      ],
+      "global_fraction": 2.6824986262881264e-08,
+      "local_fraction": 0.006522501618921299,
+      "native_bad_after": 2,
+      "native_bad_before": 3,
+      "new_tets": [],
+      "old_tets": [
+        [
+          136610,
+          134151,
+          136630,
+          136728
+        ]
+      ],
+      "retired_seed_rows": [
+        724256
+      ],
+      "target_row_replacements": [
+        {
+          "new": [
+            134151,
+            136610,
+            136728
+          ],
+          "old": [
+            134151,
+            136630,
+            136728
+          ],
+          "row": 204678
+        },
+        {
+          "new": [
+            136630,
+            136728,
+            136610
+          ],
+          "old": [
+            134151,
+            136610,
+            136630
+          ],
+          "row": 204683
+        }
+      ]
+    }
+  },
+  "schema": "h706.backskin-cap-retained-domain-operation.v1",
+  "source_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_883_targeted_source_edge_innerflip_root.py",
+    "sha256": "7bde558d69512ab9edc41748ccda728ee510c75c4ec840a297eae65345385c54"
+  },
+  "status": "PASS_LOCAL_AND_FULL_DOMAIN_REPLAY_PENDING_775_808"
+}
