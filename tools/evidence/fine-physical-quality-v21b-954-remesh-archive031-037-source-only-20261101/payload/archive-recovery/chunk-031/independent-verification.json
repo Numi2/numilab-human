@@ -1,0 +1,4368 @@
+{
+  "archive_index_canonical_sha256": "494d3f3025db7ec0d498e8b33c54e340a7d758063ee256f7e2abb1e1acfb82aa",
+  "asset_bytes": 222361600,
+  "asset_id": 697225728,
+  "asset_name": "quality-volume-archive-chunk-031.tar.zst",
+  "asset_node_id": "RA_kwDOUElluM4pjtIA",
+  "asset_sha256": "7cadcba547783b7c377cb39fa6c5f52da468b7f42ee0461f85562f5f87ffbecc",
+  "blob_count": 10,
+  "embedded_plan_sha256": "b5691a3cd048c8274e5d7a6aeeab8af423dd679f59b9395d080891d21c3ea4a0",
+  "exact_ram_restore_per_file": true,
+  "files": [
+    {
+      "array_records": [
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "c79bbe0ed6928ec1952d257e88769c8611e48f6684feffd92a4d17ee6526303d",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 25065888,
+          "shape": [
+            783309,
+            4
+          ]
+        },
+        {
+          "array_sha256": "afed37cce3747ea4ef55ea4f0b6efbb469851efe3294de1d2a83909083b8e672",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 3133236,
+          "shape": [
+            783309
+          ]
+        },
+        {
+          "array_sha256": "a1349d4d9ee52d5ce9da19b4f1e220f767265df25970764d8f0c2a113b075cd3",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 10844592,
+          "shape": [
+            451858,
+            3
+          ]
+        },
+        {
+          "array_sha256": "273553ef5d719e4da94d9c712b9107a4146d2159f6ba8146dcd771a48415bf92",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 6215200,
+          "shape": [
+            776900
+          ]
+        },
+        {
+          "array_sha256": "46b06ce9c15fae87479cb10c8f5b5703e23bef93df6b57a2cbe7fb8b5e6afc89",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 6289784,
+          "shape": [
+            786223
+          ]
+        },
+        {
+          "array_sha256": "4f3a45674f9532197a2c779902fce0c2c2ceffdd82b3ee10e73138f80d25fcbd",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 6266472,
+          "shape": [
+            783309
+          ]
+        },
+        {
+          "array_sha256": "c5809c6583a0d5077659f83be9f5361c897063ccd4b018e9d8e8d63c578c051c",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "377870a8b42a585794c89093d5e1afad0b947b22d94159d47098f5705d089957",
+          "dtype": "<i8",
+          "name": "mapped_current_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5db1ddd17b5ceeb9cc0093bb5ae9fd08cdc76f78a9e12d0af7e03e8d1d62b96d",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "4fbcd124d0c75e4c42356259f6137fdee33112b8e1ce38f9dbe2f45aa31a3fcf",
+          "dtype": "|i1",
+          "name": "proposed_current_desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "f9e16acf535e9ed33abb3642efcb683dd181c6937dcbe1c37c727fa9b04ca132",
+          "dtype": "<i8",
+          "name": "operation_cell_star_offsets.npy",
+          "nbytes": 1224,
+          "shape": [
+            153
+          ]
+        },
+        {
+          "array_sha256": "d637a85dcad5ba673cfe580711de81ba0d58df75020cb1730b761f9d44a81177",
+          "dtype": "<i8",
+          "name": "operation_cell_star_input_rows.npy",
+          "nbytes": 13496,
+          "shape": [
+            1687
+          ]
+        },
+        {
+          "array_sha256": "9d496052d764cb951a00293717ce92d8474fa235519e7e0fa6ffd8c06b03c246",
+          "dtype": "<i8",
+          "name": "operation_surface_ledger_indices.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "5777698d86d2806b5f9b5bf594e64672e32c6941b3bed7219a38a58b094fb55e",
+          "dtype": "<i8",
+          "name": "operation_retired_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "54213f039b93a02e79b9e5d4c535e87163325af885402cbae6becb81b6a23827",
+          "dtype": "<i8",
+          "name": "operation_kept_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "8941257e45b63be9d7eddfbbf11d178063e9ba6e0f6028397cbf15c35693426f",
+          "dtype": "<U256",
+          "name": "operation_exact_det6_delta_integer.npy",
+          "nbytes": 155648,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_faces.npy",
+          "nbytes": 0,
+          "shape": [
+            0,
+            3
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "34c47d0bc5df8557a5ab33c857918a21b5747749131aa6216df9b1038977ce66",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 10844592,
+          "shape": [
+            451858,
+            3
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "desired_boundary_degenerate_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "032991179539fe16ab152979134133a9c0f0759220dd40f52a4cb525209edbe8",
+          "dtype": "|i1",
+          "name": "desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "d208673dec674654b5c560c250e181d9207c80819821290df31a3cfe0546efdd",
+          "dtype": "<U53",
+          "name": "fat_current_target_rebind_schema.npy",
+          "nbytes": 212,
+          "shape": []
+        },
+        {
+          "array_sha256": "d79a69925a335cc548ae0563d7aaeca673dfda559e255aa35dae09536ac48088",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_I_point_to_volume_rows.npy",
+          "nbytes": 1002944,
+          "shape": [
+            125368
+          ]
+        },
+        {
+          "array_sha256": "6bb8df3710f913d8feb8c8b779668711cc687209c7a3e9a25b11c12e09ac58ae",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_D_point_to_volume_rows.npy",
+          "nbytes": 965184,
+          "shape": [
+            120648
+          ]
+        },
+        {
+          "array_sha256": "c7343e06f46ed0c339a67d9bb178dc3b095307f9cebef49d5a4491a2788dba8d",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_volume_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "bcd750208488958260e5543076d73d2c80ba07c846522eb1c96cee090b92d29c",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_collar_point_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2ea4bd33fed69022bf01e997eafa103e83519b201713ca94095d117f612c179a",
+          "dtype": "<f4",
+          "name": "fat_current_target_rebind_wall_face_points_world_m_f32.npy",
+          "nbytes": 3240,
+          "shape": [
+            90,
+            3,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5c5c56f9b6a5af6c68755ed56a288ed4d557256460267498880ac983275f9c49",
+          "dtype": "<U747",
+          "name": "fat_current_target_rebind_source_asset_sha256_json.npy",
+          "nbytes": 2988,
+          "shape": []
+        },
+        {
+          "array_sha256": "baaf9d0bb09257e2686f89e16b50e4985d31400e31de212ecfa997389fe2afed",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 51280,
+          "shape": [
+            6410
+          ]
+        },
+        {
+          "array_sha256": "f78d88c21ab56d716fb385dbea349baadf317bb5e37a3ba8fe3de6e9f008075f",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 1822536,
+          "shape": [
+            227817
+          ]
+        },
+        {
+          "array_sha256": "0e7d17fccba1b3c43e79481e1707f095f0b9261468c39539c35da871d19a55ed",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "4246788e639b653f84fd944228a6a1a6a41ce546189436f739974a887ac37f31",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 205088,
+          "shape": [
+            6409,
+            4
+          ]
+        },
+        {
+          "array_sha256": "606a33e8c16a33ed77a0d5fe66d4cc98ef40d52b4f6dcb1f3797d2917daf9b6b",
+          "dtype": "<U206",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 824,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "10921708960191fd30475a1012ec3b127e5995d35ae7686de9ac81ab2d09c10f",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "dff1b729f3671fc6ece252bb5df740843a9ae22a111c9cb3943a08465efe4164",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 2029704,
+          "shape": [
+            253713
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "55395eed5f1af9c992bc90b3bf633a9a0f958171a52719400ea24256b2cf8eb1",
+          "dtype": "<U225",
+          "name": "canonical_D597_full_endpoint_star_sidecar_path.npy",
+          "nbytes": 900,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7fe1c2d1fd9701924aef15cfc2dad4b694c080c1be350f5acfd5e4146bb2a268",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_sidecar_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0ed09fb26bd5c7bae7e46f2674aeaaed2762187f240329ee1a7dafa22be47d16",
+          "dtype": "<U226",
+          "name": "canonical_D597_full_endpoint_star_report_path.npy",
+          "nbytes": 904,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "1b65a7044b357aa196ad9e6500943ab771f93354fe312aa182326331611d8bad",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0953677ebff07b665c73347387eb6164d3e95e866b1be2127e20dd8abd74e6b4",
+          "dtype": "<U184",
+          "name": "canonical_D597_transfer_report_path.npy",
+          "nbytes": 736,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9489206e8493c1424df715fb74581b6c69dc3e74718eaf039994fba28b2f5f83",
+          "dtype": "<U64",
+          "name": "canonical_D597_transfer_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "67e1320a01555a615bfa031839aad0577b75967c50a8624a782c44c613c736e6",
+          "dtype": "<U205",
+          "name": "canonical_D597_independent_replay_path.npy",
+          "nbytes": 820,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d23f8938832e58a81b7d7506cb247c0bc8778768acc31d3c003cfbb3eb603655",
+          "dtype": "<U64",
+          "name": "canonical_D597_independent_replay_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bbb29647d675ac1302ef7610134dc7b5aacc8ade682be67eac3ab60e7f22c9db",
+          "dtype": "<U196",
+          "name": "canonical_target397_report_path.npy",
+          "nbytes": 784,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d5e392ae7ecff968a5fd16ba7c9515d4685520768d9c217b74b5b3d6e9c2b58e",
+          "dtype": "<U64",
+          "name": "canonical_target397_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "501a4b750bf8016248ee353bde058ace92aaa21a93f289343fce65ac8c0bd280",
+          "dtype": "<U183",
+          "name": "canonical_joint_context_report_path.npy",
+          "nbytes": 732,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "ad2c9d6cd9b552ff30417a004ab2722b7f39a374955724496aa06651c4f5fe4d",
+          "dtype": "<U64",
+          "name": "canonical_joint_context_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b5f65c49742ea268605515d2c2465a1de7c9932460cf4d980054f807322785be",
+          "dtype": "<U36",
+          "name": "canonical_parent_union_physical_status.npy",
+          "nbytes": 144,
+          "shape": []
+        },
+        {
+          "array_sha256": "e266b0d15507a68240848d9a040f44c0d234e129c62bf72af6b61c8a8bb5b3fa",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "74cd0b7c1dc4b48295af7f86fe0cde0c5782c20b37aa10986f74144c8cbbf426",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "41a2b49996f517177343f5027265649b75bafe3639c7d9c15e50949faa3a5df8",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d7203e01cfe7448dd2c140c60780c68d49b7bc499fa6c03e4f031dc234858a9b",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "4228643314280a10d642bc6712dd71afac8ffc6e2f8dcc45874860e7f5fc9d2b",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "73abaf0f3dd223b1c8dd60cd8a407701890a355f8573e628323132a8cabecc72",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 65,
+      "ram_exact_restore_sha256": "f0f0af85a7e45e2a637aa9650216b98fb5bdc1ecaa7c4483f7ea18f97d4df124",
+      "sha256": "f0f0af85a7e45e2a637aa9650216b98fb5bdc1ecaa7c4483f7ea18f97d4df124",
+      "size_bytes": 26734320,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "9c616619b68bfe3c95b943914d1f0912062e6fcc2c08f275f2da2b9450bd282b",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 23283328,
+          "shape": [
+            727604,
+            4
+          ]
+        },
+        {
+          "array_sha256": "6f80544b57c3fb3b157fea85425b1e0e74fb863716fda72a1796d376dc2ad2d5",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 2910416,
+          "shape": [
+            727604
+          ]
+        },
+        {
+          "array_sha256": "d06f0c8a11c9d0422f43efbfdc8aa8d3fa046d23c16ca100014a54aaaf34474b",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 9372912,
+          "shape": [
+            390538,
+            3
+          ]
+        },
+        {
+          "array_sha256": "605b2ae8dd06e0fb64aa7e3412cd8e21309a80af21f38878308a7dc79328f306",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 9372912,
+          "shape": [
+            390538,
+            3
+          ]
+        },
+        {
+          "array_sha256": "7780f17c2a1ca166f04795a714a3afce7ef7bd789a9ee1bdab729c659c696ef8",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 5811840,
+          "shape": [
+            726480
+          ]
+        },
+        {
+          "array_sha256": "41a2b49996f517177343f5027265649b75bafe3639c7d9c15e50949faa3a5df8",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d7203e01cfe7448dd2c140c60780c68d49b7bc499fa6c03e4f031dc234858a9b",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "5d878244be86df2345090bec2fb9db73f647c0d11602bf12c0098fb759a2bfee",
+          "dtype": "<U207",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 828,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "70533ac42905e61713fbe40bce19ea72bb24931401d78a1640d7a3b70798ceb3",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "faea122438da9a27794330d2ad9eb7dcd6f1c37105fa0ba4723e1390773690ec",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 5820832,
+          "shape": [
+            727604
+          ]
+        },
+        {
+          "array_sha256": "862203e3ef392ea38a84cf062bed68959b5ffbbd59d4a69e035626e5eb232dc4",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 5825328,
+          "shape": [
+            728166
+          ]
+        },
+        {
+          "array_sha256": "90c1267dbd6f68e89792b9fb2e869099f73498e686c39d4f2280ea334876c37a",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 9000,
+          "shape": [
+            1125
+          ]
+        },
+        {
+          "array_sha256": "5430d940e05d52b76f5124a6e7b84dc290a0bb22d7c4ba17a6299c55d50ed6ea",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 230216,
+          "shape": [
+            28777
+          ]
+        },
+        {
+          "array_sha256": "ef478df1e9a8536c2b0c4106d8abe45fff29a525f81d19db21c6935f94654640",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "35525eac6adfdd6416c2e802ec4f559cf14fa0101210a9812132ae9410ee02bc",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 35968,
+          "shape": [
+            1124,
+            4
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "21932a5b5aeb94bfa7dbe33e91aa60f58729086b6b07fd004ac8a0324640e652",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 1682392,
+          "shape": [
+            210299
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "4228643314280a10d642bc6712dd71afac8ffc6e2f8dcc45874860e7f5fc9d2b",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "73abaf0f3dd223b1c8dd60cd8a407701890a355f8573e628323132a8cabecc72",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "e266b0d15507a68240848d9a040f44c0d234e129c62bf72af6b61c8a8bb5b3fa",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "74cd0b7c1dc4b48295af7f86fe0cde0c5782c20b37aa10986f74144c8cbbf426",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "e8e54954461e4eec1ecba5b1029631a279f041ab0c0e3d8bf97af345d4d0c5bb",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "67bae483b67bc3d99b728312ec06ffaffc59403f7eaa35022c7428eac8e64c86",
+          "dtype": "<i8",
+          "name": "source_interior_vertex_quotient.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 29,
+      "ram_exact_restore_sha256": "76b02932700cd31456c31537326abb0301833d6bae973c88964a6f786934cfcf",
+      "sha256": "76b02932700cd31456c31537326abb0301833d6bae973c88964a6f786934cfcf",
+      "size_bytes": 17904218,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2730ebcad9c1c7d866b2c5ac78cf594d64dd563d7d2d1215f1e49873d65dcaed",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 24996000,
+          "shape": [
+            781125,
+            4
+          ]
+        },
+        {
+          "array_sha256": "a2d082f0da164f0a0e267932783ca43fc63647f089e35092b0435aa3375e53d5",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 3124500,
+          "shape": [
+            781125
+          ]
+        },
+        {
+          "array_sha256": "414f9bcd5e9b72b61ae333584acc042ef00f2fe84be50476f2a6597de7cae5d5",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 10815888,
+          "shape": [
+            450662,
+            3
+          ]
+        },
+        {
+          "array_sha256": "20aa8bd726bac9b6f21dda5e9743d8fdb64e2474aab069ec115e39f16495ce92",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 6208216,
+          "shape": [
+            776027
+          ]
+        },
+        {
+          "array_sha256": "9e537015ac8a162ad4e52f99aa100ce593a751dd386892b5c1165a316c69cdf8",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 6266472,
+          "shape": [
+            783309
+          ]
+        },
+        {
+          "array_sha256": "540defbdddaec2c6007786913ca6275125f617fb5a2067013ca653fcdde3ab47",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 6249000,
+          "shape": [
+            781125
+          ]
+        },
+        {
+          "array_sha256": "bcb7b65d58e7c4b7d9fb0789cbb0d2aae74bebe0adf1cf6ba55f299a74a8f9d5",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "377870a8b42a585794c89093d5e1afad0b947b22d94159d47098f5705d089957",
+          "dtype": "<i8",
+          "name": "mapped_current_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5db1ddd17b5ceeb9cc0093bb5ae9fd08cdc76f78a9e12d0af7e03e8d1d62b96d",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "4fbcd124d0c75e4c42356259f6137fdee33112b8e1ce38f9dbe2f45aa31a3fcf",
+          "dtype": "|i1",
+          "name": "proposed_current_desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "f9e16acf535e9ed33abb3642efcb683dd181c6937dcbe1c37c727fa9b04ca132",
+          "dtype": "<i8",
+          "name": "operation_cell_star_offsets.npy",
+          "nbytes": 1224,
+          "shape": [
+            153
+          ]
+        },
+        {
+          "array_sha256": "d637a85dcad5ba673cfe580711de81ba0d58df75020cb1730b761f9d44a81177",
+          "dtype": "<i8",
+          "name": "operation_cell_star_input_rows.npy",
+          "nbytes": 13496,
+          "shape": [
+            1687
+          ]
+        },
+        {
+          "array_sha256": "9d496052d764cb951a00293717ce92d8474fa235519e7e0fa6ffd8c06b03c246",
+          "dtype": "<i8",
+          "name": "operation_surface_ledger_indices.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "5777698d86d2806b5f9b5bf594e64672e32c6941b3bed7219a38a58b094fb55e",
+          "dtype": "<i8",
+          "name": "operation_retired_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "54213f039b93a02e79b9e5d4c535e87163325af885402cbae6becb81b6a23827",
+          "dtype": "<i8",
+          "name": "operation_kept_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "8941257e45b63be9d7eddfbbf11d178063e9ba6e0f6028397cbf15c35693426f",
+          "dtype": "<U256",
+          "name": "operation_exact_det6_delta_integer.npy",
+          "nbytes": 155648,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_faces.npy",
+          "nbytes": 0,
+          "shape": [
+            0,
+            3
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "0ed822ebc7b5489961365357f6b025798a7b8463dbfd467f17d301f3b1d5c130",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 10815888,
+          "shape": [
+            450662,
+            3
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "desired_boundary_degenerate_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "032991179539fe16ab152979134133a9c0f0759220dd40f52a4cb525209edbe8",
+          "dtype": "|i1",
+          "name": "desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "d208673dec674654b5c560c250e181d9207c80819821290df31a3cfe0546efdd",
+          "dtype": "<U53",
+          "name": "fat_current_target_rebind_schema.npy",
+          "nbytes": 212,
+          "shape": []
+        },
+        {
+          "array_sha256": "d79a69925a335cc548ae0563d7aaeca673dfda559e255aa35dae09536ac48088",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_I_point_to_volume_rows.npy",
+          "nbytes": 1002944,
+          "shape": [
+            125368
+          ]
+        },
+        {
+          "array_sha256": "6bb8df3710f913d8feb8c8b779668711cc687209c7a3e9a25b11c12e09ac58ae",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_D_point_to_volume_rows.npy",
+          "nbytes": 965184,
+          "shape": [
+            120648
+          ]
+        },
+        {
+          "array_sha256": "c7343e06f46ed0c339a67d9bb178dc3b095307f9cebef49d5a4491a2788dba8d",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_volume_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "bcd750208488958260e5543076d73d2c80ba07c846522eb1c96cee090b92d29c",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_collar_point_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2ea4bd33fed69022bf01e997eafa103e83519b201713ca94095d117f612c179a",
+          "dtype": "<f4",
+          "name": "fat_current_target_rebind_wall_face_points_world_m_f32.npy",
+          "nbytes": 3240,
+          "shape": [
+            90,
+            3,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5c5c56f9b6a5af6c68755ed56a288ed4d557256460267498880ac983275f9c49",
+          "dtype": "<U747",
+          "name": "fat_current_target_rebind_source_asset_sha256_json.npy",
+          "nbytes": 2988,
+          "shape": []
+        },
+        {
+          "array_sha256": "1fc3ba443631b556425379bef627c4953aaa9f011b36b5295247468a9822f8b7",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 40792,
+          "shape": [
+            5099
+          ]
+        },
+        {
+          "array_sha256": "2c22e714caaab66e7e0ea20b7b97b776ede07266bea220ec27624528c71d4aa3",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 1521240,
+          "shape": [
+            190155
+          ]
+        },
+        {
+          "array_sha256": "76d5c64527be49e4865fc904c1965648172b7c8660fb9b90d2574f3b1801a989",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "f3928751bec04b02b22aeb95ebd7d2025069b7263b7098911208ac0e393c3b00",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 163136,
+          "shape": [
+            5098,
+            4
+          ]
+        },
+        {
+          "array_sha256": "fa81d494f29e1c6870e81ba25ed251f6f2401bec3eb87f5abe807213b553e8de",
+          "dtype": "<U201",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 804,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "70a539587a3c3fcbc84522aa9deec25322a69f4ef7a9a56fe5c908f54abcf4ae",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "dff1b729f3671fc6ece252bb5df740843a9ae22a111c9cb3943a08465efe4164",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 2029704,
+          "shape": [
+            253713
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "55395eed5f1af9c992bc90b3bf633a9a0f958171a52719400ea24256b2cf8eb1",
+          "dtype": "<U225",
+          "name": "canonical_D597_full_endpoint_star_sidecar_path.npy",
+          "nbytes": 900,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7fe1c2d1fd9701924aef15cfc2dad4b694c080c1be350f5acfd5e4146bb2a268",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_sidecar_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0ed09fb26bd5c7bae7e46f2674aeaaed2762187f240329ee1a7dafa22be47d16",
+          "dtype": "<U226",
+          "name": "canonical_D597_full_endpoint_star_report_path.npy",
+          "nbytes": 904,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "1b65a7044b357aa196ad9e6500943ab771f93354fe312aa182326331611d8bad",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0953677ebff07b665c73347387eb6164d3e95e866b1be2127e20dd8abd74e6b4",
+          "dtype": "<U184",
+          "name": "canonical_D597_transfer_report_path.npy",
+          "nbytes": 736,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9489206e8493c1424df715fb74581b6c69dc3e74718eaf039994fba28b2f5f83",
+          "dtype": "<U64",
+          "name": "canonical_D597_transfer_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "67e1320a01555a615bfa031839aad0577b75967c50a8624a782c44c613c736e6",
+          "dtype": "<U205",
+          "name": "canonical_D597_independent_replay_path.npy",
+          "nbytes": 820,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d23f8938832e58a81b7d7506cb247c0bc8778768acc31d3c003cfbb3eb603655",
+          "dtype": "<U64",
+          "name": "canonical_D597_independent_replay_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bbb29647d675ac1302ef7610134dc7b5aacc8ade682be67eac3ab60e7f22c9db",
+          "dtype": "<U196",
+          "name": "canonical_target397_report_path.npy",
+          "nbytes": 784,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d5e392ae7ecff968a5fd16ba7c9515d4685520768d9c217b74b5b3d6e9c2b58e",
+          "dtype": "<U64",
+          "name": "canonical_target397_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "501a4b750bf8016248ee353bde058ace92aaa21a93f289343fce65ac8c0bd280",
+          "dtype": "<U183",
+          "name": "canonical_joint_context_report_path.npy",
+          "nbytes": 732,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "ad2c9d6cd9b552ff30417a004ab2722b7f39a374955724496aa06651c4f5fe4d",
+          "dtype": "<U64",
+          "name": "canonical_joint_context_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b5f65c49742ea268605515d2c2465a1de7c9932460cf4d980054f807322785be",
+          "dtype": "<U36",
+          "name": "canonical_parent_union_physical_status.npy",
+          "nbytes": 144,
+          "shape": []
+        },
+        {
+          "array_sha256": "7e370e0caf68a00261fd7343dcae18f9eec1c8295759a96ab89745bc99ecac60",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d7eb298394c6003f3525440626556ccadae51c20586d368b50cf560942959daf",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "991e3f5cbcdf3e8866610e5eb6b996e21e53094436cd43d40552cdedc77ffb2b",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7e9d071f49ef759620ef2d606dae430d5a590caeb2f514749353e30e25af961a",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "8e35018d930d9cdf52d1befd1434dc34f1482db12359dd8f77a7acc17a0d0294",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "564fddf866e76fa4505da3a656c8b4f5493ecea1b4b0c0d68693e4947306d043",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 65,
+      "ram_exact_restore_sha256": "e14167ac7b9473bf0c4539d7cf14f2a4f34ed93d5bb0f621f92da5b364103716",
+      "sha256": "e14167ac7b9473bf0c4539d7cf14f2a4f34ed93d5bb0f621f92da5b364103716",
+      "size_bytes": 26597278,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "d85d604f3768d7065832f2b2a50d075a04183d99b17162fa58fff0acafc3862f",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 23271680,
+          "shape": [
+            727240,
+            4
+          ]
+        },
+        {
+          "array_sha256": "e381388aca6e3f36914a0faf7031f95d2c430e1aa6a762636bf654623265a6c9",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 2908960,
+          "shape": [
+            727240
+          ]
+        },
+        {
+          "array_sha256": "93366283298e1bf86ae8b650bb9f674f51041a0dd5eea90665e1adf7851ffea3",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 9367824,
+          "shape": [
+            390326,
+            3
+          ]
+        },
+        {
+          "array_sha256": "abff372c3af88ba84339a6cd95a5cb9c2266b4cc7fec06b317ddffaa95a183f0",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 9367824,
+          "shape": [
+            390326,
+            3
+          ]
+        },
+        {
+          "array_sha256": "e1e48f5da901c98d38ef50a5d04c12174344d8db6abcb9b33b9a27cab3779741",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 5811840,
+          "shape": [
+            726480
+          ]
+        },
+        {
+          "array_sha256": "991e3f5cbcdf3e8866610e5eb6b996e21e53094436cd43d40552cdedc77ffb2b",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7e9d071f49ef759620ef2d606dae430d5a590caeb2f514749353e30e25af961a",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b015bb6268328cd4f4b33360e57a1efc5d2671576ef648c93c4461b3659a0ee8",
+          "dtype": "<U202",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 808,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "da67fb8655c0d18c88d04344546d5c720afab2bb55375132acddd6742dc1a997",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "04585f4df9329cc5ae2e45279649d2e0fad7809d990eeb0b74c1c1336e2deab4",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 5817920,
+          "shape": [
+            727240
+          ]
+        },
+        {
+          "array_sha256": "8f8031f38845e607356e4e8e2521a5fca9bdf6f7824a33a4256bb8e812ec3a60",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 5820832,
+          "shape": [
+            727604
+          ]
+        },
+        {
+          "array_sha256": "5a2a264d7a868f5de54e440f7e56eb8771112f79d11bd45ba4132d8328ac79c3",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 6088,
+          "shape": [
+            761
+          ]
+        },
+        {
+          "array_sha256": "038ae1811f0b2a51e09d995d4931a626d22c4f34591305a2a093217812a111fd",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 154424,
+          "shape": [
+            19303
+          ]
+        },
+        {
+          "array_sha256": "4afc9d598e562041d27a90c2015c34450a592a6e394c470b722319340977f643",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "b6e912b88fc8733ef35d73c0d7c49003cd5b251a8667a04768cafd041c5fe79a",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 24320,
+          "shape": [
+            760,
+            4
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "21932a5b5aeb94bfa7dbe33e91aa60f58729086b6b07fd004ac8a0324640e652",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 1682392,
+          "shape": [
+            210299
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "8e35018d930d9cdf52d1befd1434dc34f1482db12359dd8f77a7acc17a0d0294",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "564fddf866e76fa4505da3a656c8b4f5493ecea1b4b0c0d68693e4947306d043",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7e370e0caf68a00261fd7343dcae18f9eec1c8295759a96ab89745bc99ecac60",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d7eb298394c6003f3525440626556ccadae51c20586d368b50cf560942959daf",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "ca7b66a7cbcd688f780c866dabb0490f21c906559067e0f7a78a993a023fe7bd",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "67bae483b67bc3d99b728312ec06ffaffc59403f7eaa35022c7428eac8e64c86",
+          "dtype": "<i8",
+          "name": "source_interior_vertex_quotient.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 29,
+      "ram_exact_restore_sha256": "816a9d2531db5e24e3a1b38a4273c6c4955ff92d2186ebd4735b746021987436",
+      "sha256": "816a9d2531db5e24e3a1b38a4273c6c4955ff92d2186ebd4735b746021987436",
+      "size_bytes": 17884753,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "fc39575e7d3a96744bcc5153a26d4a8c720e7c59a2ff88e30fa743bdcf127bcc",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 25001760,
+          "shape": [
+            781305,
+            4
+          ]
+        },
+        {
+          "array_sha256": "9342065656b7a4efe6f19028998dc290d5923a433b63afa2d8d4561de3c7b137",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 3125220,
+          "shape": [
+            781305
+          ]
+        },
+        {
+          "array_sha256": "f29d69b1ddf9261c46f164bae6b209dc77ce3507d3fb0b743b053e7f269a3023",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 10818288,
+          "shape": [
+            450762,
+            3
+          ]
+        },
+        {
+          "array_sha256": "d7b4df9ffd7b73538a1fe1c1378abe15b148a51116f900471eaa6649d2d28df6",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 6214032,
+          "shape": [
+            776754
+          ]
+        },
+        {
+          "array_sha256": "98651414324b39f45b5f98a95cc9d74140bb9367d40823fbb9cacb19a3d6d648",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 6266472,
+          "shape": [
+            783309
+          ]
+        },
+        {
+          "array_sha256": "f97556b0601507ecd855bccc0dcbdbf53fff8afe48279da4e971eebd10730a5b",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 6250440,
+          "shape": [
+            781305
+          ]
+        },
+        {
+          "array_sha256": "da8a31ccec3cecac897c8a5b649f6146097c2e83a44d9ea569cac9f6a77b6acd",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "377870a8b42a585794c89093d5e1afad0b947b22d94159d47098f5705d089957",
+          "dtype": "<i8",
+          "name": "mapped_current_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5db1ddd17b5ceeb9cc0093bb5ae9fd08cdc76f78a9e12d0af7e03e8d1d62b96d",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "4fbcd124d0c75e4c42356259f6137fdee33112b8e1ce38f9dbe2f45aa31a3fcf",
+          "dtype": "|i1",
+          "name": "proposed_current_desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "f9e16acf535e9ed33abb3642efcb683dd181c6937dcbe1c37c727fa9b04ca132",
+          "dtype": "<i8",
+          "name": "operation_cell_star_offsets.npy",
+          "nbytes": 1224,
+          "shape": [
+            153
+          ]
+        },
+        {
+          "array_sha256": "d637a85dcad5ba673cfe580711de81ba0d58df75020cb1730b761f9d44a81177",
+          "dtype": "<i8",
+          "name": "operation_cell_star_input_rows.npy",
+          "nbytes": 13496,
+          "shape": [
+            1687
+          ]
+        },
+        {
+          "array_sha256": "9d496052d764cb951a00293717ce92d8474fa235519e7e0fa6ffd8c06b03c246",
+          "dtype": "<i8",
+          "name": "operation_surface_ledger_indices.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "5777698d86d2806b5f9b5bf594e64672e32c6941b3bed7219a38a58b094fb55e",
+          "dtype": "<i8",
+          "name": "operation_retired_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "54213f039b93a02e79b9e5d4c535e87163325af885402cbae6becb81b6a23827",
+          "dtype": "<i8",
+          "name": "operation_kept_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "8941257e45b63be9d7eddfbbf11d178063e9ba6e0f6028397cbf15c35693426f",
+          "dtype": "<U256",
+          "name": "operation_exact_det6_delta_integer.npy",
+          "nbytes": 155648,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_faces.npy",
+          "nbytes": 0,
+          "shape": [
+            0,
+            3
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "fde92433f8258f759b98c206d0662514a6b3e2c686bd11fd4049bcd8407b496d",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 10818288,
+          "shape": [
+            450762,
+            3
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "desired_boundary_degenerate_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "032991179539fe16ab152979134133a9c0f0759220dd40f52a4cb525209edbe8",
+          "dtype": "|i1",
+          "name": "desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "d208673dec674654b5c560c250e181d9207c80819821290df31a3cfe0546efdd",
+          "dtype": "<U53",
+          "name": "fat_current_target_rebind_schema.npy",
+          "nbytes": 212,
+          "shape": []
+        },
+        {
+          "array_sha256": "d79a69925a335cc548ae0563d7aaeca673dfda559e255aa35dae09536ac48088",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_I_point_to_volume_rows.npy",
+          "nbytes": 1002944,
+          "shape": [
+            125368
+          ]
+        },
+        {
+          "array_sha256": "6bb8df3710f913d8feb8c8b779668711cc687209c7a3e9a25b11c12e09ac58ae",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_D_point_to_volume_rows.npy",
+          "nbytes": 965184,
+          "shape": [
+            120648
+          ]
+        },
+        {
+          "array_sha256": "c7343e06f46ed0c339a67d9bb178dc3b095307f9cebef49d5a4491a2788dba8d",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_volume_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "bcd750208488958260e5543076d73d2c80ba07c846522eb1c96cee090b92d29c",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_collar_point_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2ea4bd33fed69022bf01e997eafa103e83519b201713ca94095d117f612c179a",
+          "dtype": "<f4",
+          "name": "fat_current_target_rebind_wall_face_points_world_m_f32.npy",
+          "nbytes": 3240,
+          "shape": [
+            90,
+            3,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5c5c56f9b6a5af6c68755ed56a288ed4d557256460267498880ac983275f9c49",
+          "dtype": "<U747",
+          "name": "fat_current_target_rebind_source_asset_sha256_json.npy",
+          "nbytes": 2988,
+          "shape": []
+        },
+        {
+          "array_sha256": "5553ec4271d2dc220c6892b3ab1b90bee5d82df22e47925a8dfdeb1363caeb07",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 36416,
+          "shape": [
+            4552
+          ]
+        },
+        {
+          "array_sha256": "dd10031cc92edaa9f2aaaa9dd6c004b69562451f7e0cebf8b4eed2d6d9eab6a9",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 1267056,
+          "shape": [
+            158382
+          ]
+        },
+        {
+          "array_sha256": "b10b0201e2246c198b712a06b22a5fa8d447c83116ca331f71d3923a7e02c21f",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "f8f7927b963c7695abe60b957f456923677b55195a69976d45adb09a12494998",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 145632,
+          "shape": [
+            4551,
+            4
+          ]
+        },
+        {
+          "array_sha256": "fa81d494f29e1c6870e81ba25ed251f6f2401bec3eb87f5abe807213b553e8de",
+          "dtype": "<U201",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 804,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "70a539587a3c3fcbc84522aa9deec25322a69f4ef7a9a56fe5c908f54abcf4ae",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "dff1b729f3671fc6ece252bb5df740843a9ae22a111c9cb3943a08465efe4164",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 2029704,
+          "shape": [
+            253713
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "55395eed5f1af9c992bc90b3bf633a9a0f958171a52719400ea24256b2cf8eb1",
+          "dtype": "<U225",
+          "name": "canonical_D597_full_endpoint_star_sidecar_path.npy",
+          "nbytes": 900,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7fe1c2d1fd9701924aef15cfc2dad4b694c080c1be350f5acfd5e4146bb2a268",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_sidecar_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0ed09fb26bd5c7bae7e46f2674aeaaed2762187f240329ee1a7dafa22be47d16",
+          "dtype": "<U226",
+          "name": "canonical_D597_full_endpoint_star_report_path.npy",
+          "nbytes": 904,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "1b65a7044b357aa196ad9e6500943ab771f93354fe312aa182326331611d8bad",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0953677ebff07b665c73347387eb6164d3e95e866b1be2127e20dd8abd74e6b4",
+          "dtype": "<U184",
+          "name": "canonical_D597_transfer_report_path.npy",
+          "nbytes": 736,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9489206e8493c1424df715fb74581b6c69dc3e74718eaf039994fba28b2f5f83",
+          "dtype": "<U64",
+          "name": "canonical_D597_transfer_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "67e1320a01555a615bfa031839aad0577b75967c50a8624a782c44c613c736e6",
+          "dtype": "<U205",
+          "name": "canonical_D597_independent_replay_path.npy",
+          "nbytes": 820,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d23f8938832e58a81b7d7506cb247c0bc8778768acc31d3c003cfbb3eb603655",
+          "dtype": "<U64",
+          "name": "canonical_D597_independent_replay_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bbb29647d675ac1302ef7610134dc7b5aacc8ade682be67eac3ab60e7f22c9db",
+          "dtype": "<U196",
+          "name": "canonical_target397_report_path.npy",
+          "nbytes": 784,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d5e392ae7ecff968a5fd16ba7c9515d4685520768d9c217b74b5b3d6e9c2b58e",
+          "dtype": "<U64",
+          "name": "canonical_target397_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "501a4b750bf8016248ee353bde058ace92aaa21a93f289343fce65ac8c0bd280",
+          "dtype": "<U183",
+          "name": "canonical_joint_context_report_path.npy",
+          "nbytes": 732,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "ad2c9d6cd9b552ff30417a004ab2722b7f39a374955724496aa06651c4f5fe4d",
+          "dtype": "<U64",
+          "name": "canonical_joint_context_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b5f65c49742ea268605515d2c2465a1de7c9932460cf4d980054f807322785be",
+          "dtype": "<U36",
+          "name": "canonical_parent_union_physical_status.npy",
+          "nbytes": 144,
+          "shape": []
+        },
+        {
+          "array_sha256": "1957113d312b07ab9ec36a719e8b528f1d65f90e26d95a539dd43de770bb71ec",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "52fa7a3e293f5ede734e36f9b7df0f818e3d9d42ec4fba2f3074d59a61e7c9a1",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "48a7822a501065b11b014297e4709e2102b874d0e4eeabd4d1230330639926d5",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7e9d071f49ef759620ef2d606dae430d5a590caeb2f514749353e30e25af961a",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "92069b0db20c37f10fc797d060b90c7b8a8921b39f2e3fafa6009d6ad9c2e1fd",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "289417b1ab75d1d651514b2534d77a83129984b2c7f57650eb69578d41aa942c",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 65,
+      "ram_exact_restore_sha256": "f509397527aeca1555c8a70195b389006b8ad7a2f868c40790c96485eda43c90",
+      "sha256": "f509397527aeca1555c8a70195b389006b8ad7a2f868c40790c96485eda43c90",
+      "size_bytes": 26568177,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "d29a460440d521de0af67bf9a0359a778a8033bd055e9ead8f560f9954e01b51",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 23272000,
+          "shape": [
+            727250,
+            4
+          ]
+        },
+        {
+          "array_sha256": "af1b705b9c3f81f44978ba4cb21d92c60adf84fe7576ce51b7325bb21d718979",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 2909000,
+          "shape": [
+            727250
+          ]
+        },
+        {
+          "array_sha256": "3d12eb5dddb4a8e2c8d283f93a42ba70ca3bbe8b23a95b6f592bcb5ff3312412",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 9367920,
+          "shape": [
+            390330,
+            3
+          ]
+        },
+        {
+          "array_sha256": "ccffa8ef89749e2daa9d35cd774e69287ed0042bd98a4401f3d6a805f15e87c7",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 9367920,
+          "shape": [
+            390330,
+            3
+          ]
+        },
+        {
+          "array_sha256": "3b129f580f821d31e6d6cff8d926702568badf7786edf2dbbf23d91349c99fe7",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 5812160,
+          "shape": [
+            726520
+          ]
+        },
+        {
+          "array_sha256": "48a7822a501065b11b014297e4709e2102b874d0e4eeabd4d1230330639926d5",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7e9d071f49ef759620ef2d606dae430d5a590caeb2f514749353e30e25af961a",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b015bb6268328cd4f4b33360e57a1efc5d2671576ef648c93c4461b3659a0ee8",
+          "dtype": "<U202",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 808,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "da67fb8655c0d18c88d04344546d5c720afab2bb55375132acddd6742dc1a997",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d2f72cf2306f6c6e9dc6f21efd4f803a65c9d639c7c518757fb93f095d7d5675",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 5818000,
+          "shape": [
+            727250
+          ]
+        },
+        {
+          "array_sha256": "1eaeb97222c1e38491d5168bfbd473325ef992e9388ea2a30ec0bb4dfba40d24",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 5820832,
+          "shape": [
+            727604
+          ]
+        },
+        {
+          "array_sha256": "589dc7967b255ad5b353c58a28133b73c36103f2a7c28596810cf43d2117eb2b",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 5848,
+          "shape": [
+            731
+          ]
+        },
+        {
+          "array_sha256": "92180ddca549ccd28edeac742b7e72b463c3f7e9e89b18cc7db96896f0cf6990",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 147464,
+          "shape": [
+            18433
+          ]
+        },
+        {
+          "array_sha256": "5bb16c9b4613beed38df849a470e558bbb978c24e83066127d3e22a296cb82e6",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "f360d0742f462870578dd2442cc29bd340c9c054c8655aa01210af889ca7cbc6",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 23360,
+          "shape": [
+            730,
+            4
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "21932a5b5aeb94bfa7dbe33e91aa60f58729086b6b07fd004ac8a0324640e652",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 1682392,
+          "shape": [
+            210299
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "92069b0db20c37f10fc797d060b90c7b8a8921b39f2e3fafa6009d6ad9c2e1fd",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "289417b1ab75d1d651514b2534d77a83129984b2c7f57650eb69578d41aa942c",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "1957113d312b07ab9ec36a719e8b528f1d65f90e26d95a539dd43de770bb71ec",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "52fa7a3e293f5ede734e36f9b7df0f818e3d9d42ec4fba2f3074d59a61e7c9a1",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0051f09f53101921678eb2c23a352bff07fb5edc68bd7bffcca0fa69855b8065",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "67bae483b67bc3d99b728312ec06ffaffc59403f7eaa35022c7428eac8e64c86",
+          "dtype": "<i8",
+          "name": "source_interior_vertex_quotient.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 29,
+      "ram_exact_restore_sha256": "1cbac1da96f6887bbfea4c22a0dd8492b85ecc59265b4185ef71e56c07da0502",
+      "sha256": "1cbac1da96f6887bbfea4c22a0dd8492b85ecc59265b4185ef71e56c07da0502",
+      "size_bytes": 17883974,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "80bd2376f6ec8eb256cd1e01d1d18a09cb98d46f83a5813661232b1cc0c273c5",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 24946624,
+          "shape": [
+            779582,
+            4
+          ]
+        },
+        {
+          "array_sha256": "676f720be00b549994f62149efa87e2e6fd07fc83bbae0fd54a624b8edb26e91",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 3118328,
+          "shape": [
+            779582
+          ]
+        },
+        {
+          "array_sha256": "4ecb864202ba6e2687163da317b1c63ae5213611b211fccd00484531e0884e0f",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 10794864,
+          "shape": [
+            449786,
+            3
+          ]
+        },
+        {
+          "array_sha256": "752ce64b1f0860f961ed77ecb7aac2e6c983756cf4370e60860f7cd8321e7abe",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 6205056,
+          "shape": [
+            775632
+          ]
+        },
+        {
+          "array_sha256": "d58191c096b41d183131ded3bd7bb417acbf2b5368e3a247efda53416cefbd78",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 6250440,
+          "shape": [
+            781305
+          ]
+        },
+        {
+          "array_sha256": "000c506427cc86741a84697e5b93a07efa82d87eca856c62dcf00cd10cd7c769",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 6236656,
+          "shape": [
+            779582
+          ]
+        },
+        {
+          "array_sha256": "bc5644a792a4403efe2a972f55cde4da146642c8faac39a62d0c8cc1bcd86535",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "377870a8b42a585794c89093d5e1afad0b947b22d94159d47098f5705d089957",
+          "dtype": "<i8",
+          "name": "mapped_current_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5db1ddd17b5ceeb9cc0093bb5ae9fd08cdc76f78a9e12d0af7e03e8d1d62b96d",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "4fbcd124d0c75e4c42356259f6137fdee33112b8e1ce38f9dbe2f45aa31a3fcf",
+          "dtype": "|i1",
+          "name": "proposed_current_desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "f9e16acf535e9ed33abb3642efcb683dd181c6937dcbe1c37c727fa9b04ca132",
+          "dtype": "<i8",
+          "name": "operation_cell_star_offsets.npy",
+          "nbytes": 1224,
+          "shape": [
+            153
+          ]
+        },
+        {
+          "array_sha256": "d637a85dcad5ba673cfe580711de81ba0d58df75020cb1730b761f9d44a81177",
+          "dtype": "<i8",
+          "name": "operation_cell_star_input_rows.npy",
+          "nbytes": 13496,
+          "shape": [
+            1687
+          ]
+        },
+        {
+          "array_sha256": "9d496052d764cb951a00293717ce92d8474fa235519e7e0fa6ffd8c06b03c246",
+          "dtype": "<i8",
+          "name": "operation_surface_ledger_indices.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "5777698d86d2806b5f9b5bf594e64672e32c6941b3bed7219a38a58b094fb55e",
+          "dtype": "<i8",
+          "name": "operation_retired_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "54213f039b93a02e79b9e5d4c535e87163325af885402cbae6becb81b6a23827",
+          "dtype": "<i8",
+          "name": "operation_kept_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "8941257e45b63be9d7eddfbbf11d178063e9ba6e0f6028397cbf15c35693426f",
+          "dtype": "<U256",
+          "name": "operation_exact_det6_delta_integer.npy",
+          "nbytes": 155648,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_faces.npy",
+          "nbytes": 0,
+          "shape": [
+            0,
+            3
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "2f70329f8b187a6666f83650aa7d1f4a809cb0811836c376fac0c2058c92cc8b",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 10794864,
+          "shape": [
+            449786,
+            3
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "desired_boundary_degenerate_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "032991179539fe16ab152979134133a9c0f0759220dd40f52a4cb525209edbe8",
+          "dtype": "|i1",
+          "name": "desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "d208673dec674654b5c560c250e181d9207c80819821290df31a3cfe0546efdd",
+          "dtype": "<U53",
+          "name": "fat_current_target_rebind_schema.npy",
+          "nbytes": 212,
+          "shape": []
+        },
+        {
+          "array_sha256": "d79a69925a335cc548ae0563d7aaeca673dfda559e255aa35dae09536ac48088",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_I_point_to_volume_rows.npy",
+          "nbytes": 1002944,
+          "shape": [
+            125368
+          ]
+        },
+        {
+          "array_sha256": "6bb8df3710f913d8feb8c8b779668711cc687209c7a3e9a25b11c12e09ac58ae",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_D_point_to_volume_rows.npy",
+          "nbytes": 965184,
+          "shape": [
+            120648
+          ]
+        },
+        {
+          "array_sha256": "c7343e06f46ed0c339a67d9bb178dc3b095307f9cebef49d5a4491a2788dba8d",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_volume_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "bcd750208488958260e5543076d73d2c80ba07c846522eb1c96cee090b92d29c",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_collar_point_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2ea4bd33fed69022bf01e997eafa103e83519b201713ca94095d117f612c179a",
+          "dtype": "<f4",
+          "name": "fat_current_target_rebind_wall_face_points_world_m_f32.npy",
+          "nbytes": 3240,
+          "shape": [
+            90,
+            3,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5c5c56f9b6a5af6c68755ed56a288ed4d557256460267498880ac983275f9c49",
+          "dtype": "<U747",
+          "name": "fat_current_target_rebind_source_asset_sha256_json.npy",
+          "nbytes": 2988,
+          "shape": []
+        },
+        {
+          "array_sha256": "08c618683f551f844d29647a6708939375f0dfbc4f9a6aa54ad618eec8fceed9",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 31608,
+          "shape": [
+            3951
+          ]
+        },
+        {
+          "array_sha256": "645453fba5a8828bd9ef7a862a0a53c49598a2c6868b84dcf12c4d4f5b39bffd",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 1067808,
+          "shape": [
+            133476
+          ]
+        },
+        {
+          "array_sha256": "1cb1e813cd869df5eb991cbc66014628b9c3ef342bbb5daebf09ac0290937807",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "ab321f6f28f0dd9d70f3adad7b92b4231b6fbee23414b9277c4eaa5f21eff085",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 126400,
+          "shape": [
+            3950,
+            4
+          ]
+        },
+        {
+          "array_sha256": "81995b5417fde8baa9374acbbf3823489c1440047dfee2fd871a75d6cdf528e3",
+          "dtype": "<U201",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 804,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "4a855db2219fda594b3c1ca4ae75713527e245facc49295a30f2800309574061",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "dff1b729f3671fc6ece252bb5df740843a9ae22a111c9cb3943a08465efe4164",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 2029704,
+          "shape": [
+            253713
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "55395eed5f1af9c992bc90b3bf633a9a0f958171a52719400ea24256b2cf8eb1",
+          "dtype": "<U225",
+          "name": "canonical_D597_full_endpoint_star_sidecar_path.npy",
+          "nbytes": 900,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7fe1c2d1fd9701924aef15cfc2dad4b694c080c1be350f5acfd5e4146bb2a268",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_sidecar_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0ed09fb26bd5c7bae7e46f2674aeaaed2762187f240329ee1a7dafa22be47d16",
+          "dtype": "<U226",
+          "name": "canonical_D597_full_endpoint_star_report_path.npy",
+          "nbytes": 904,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "1b65a7044b357aa196ad9e6500943ab771f93354fe312aa182326331611d8bad",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0953677ebff07b665c73347387eb6164d3e95e866b1be2127e20dd8abd74e6b4",
+          "dtype": "<U184",
+          "name": "canonical_D597_transfer_report_path.npy",
+          "nbytes": 736,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9489206e8493c1424df715fb74581b6c69dc3e74718eaf039994fba28b2f5f83",
+          "dtype": "<U64",
+          "name": "canonical_D597_transfer_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "67e1320a01555a615bfa031839aad0577b75967c50a8624a782c44c613c736e6",
+          "dtype": "<U205",
+          "name": "canonical_D597_independent_replay_path.npy",
+          "nbytes": 820,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d23f8938832e58a81b7d7506cb247c0bc8778768acc31d3c003cfbb3eb603655",
+          "dtype": "<U64",
+          "name": "canonical_D597_independent_replay_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bbb29647d675ac1302ef7610134dc7b5aacc8ade682be67eac3ab60e7f22c9db",
+          "dtype": "<U196",
+          "name": "canonical_target397_report_path.npy",
+          "nbytes": 784,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d5e392ae7ecff968a5fd16ba7c9515d4685520768d9c217b74b5b3d6e9c2b58e",
+          "dtype": "<U64",
+          "name": "canonical_target397_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "501a4b750bf8016248ee353bde058ace92aaa21a93f289343fce65ac8c0bd280",
+          "dtype": "<U183",
+          "name": "canonical_joint_context_report_path.npy",
+          "nbytes": 732,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "ad2c9d6cd9b552ff30417a004ab2722b7f39a374955724496aa06651c4f5fe4d",
+          "dtype": "<U64",
+          "name": "canonical_joint_context_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b5f65c49742ea268605515d2c2465a1de7c9932460cf4d980054f807322785be",
+          "dtype": "<U36",
+          "name": "canonical_parent_union_physical_status.npy",
+          "nbytes": 144,
+          "shape": []
+        },
+        {
+          "array_sha256": "4b9487c5d7a0361c11f1f95e61a10448a68293683ec6eaaa44621ffd856ad099",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0abbe9ced42e8d075e8e3ee44daad658636110f392c1b66546b18b7d6a330d00",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9db05d776a06d30f95b158b1fc2898d0fea92579a5e208a4808b47cf0e1f899c",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "00361f00d476316f3e459fa7d8a2a734cd6b6c20e82c6c3779ba9ef6f64a6fbc",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "a555e888ccca6fedee8530458449dbd6952fd5cde64276d86b5e574a85994bdb",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "c07a864662774537dcbf6faa6398faf250a46560f9df65045df0762337c61909",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 65,
+      "ram_exact_restore_sha256": "2c4c460036325c90d328a6a71a7cc4e0c9061f03a8f6c0767d5c88d1a1dfeaac",
+      "sha256": "2c4c460036325c90d328a6a71a7cc4e0c9061f03a8f6c0767d5c88d1a1dfeaac",
+      "size_bytes": 26510494,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "bf4edd6b95b7245f952810f3dc87136f72f9934a955fd867ac5f932b4316447e",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 23260960,
+          "shape": [
+            726905,
+            4
+          ]
+        },
+        {
+          "array_sha256": "c057258189e7b9668785fed4fc2cf6f50a21e771481f16389a305d7858a2deb6",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 2907620,
+          "shape": [
+            726905
+          ]
+        },
+        {
+          "array_sha256": "0c49c793640ad5548f6fb400d507cd159e656dce831bb6eca8f52e7b3f9c8dd9",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 9363216,
+          "shape": [
+            390134,
+            3
+          ]
+        },
+        {
+          "array_sha256": "aed9a41c6dbf655503b27face94b3a2f429de43f32f8b4c81886d572e1fc52ff",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 9363216,
+          "shape": [
+            390134,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2e87eb69aa498b366c740af29d51ed8d037fdd8887874e9ee50e6318f97daa6f",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 5809800,
+          "shape": [
+            726225
+          ]
+        },
+        {
+          "array_sha256": "9db05d776a06d30f95b158b1fc2898d0fea92579a5e208a4808b47cf0e1f899c",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "00361f00d476316f3e459fa7d8a2a734cd6b6c20e82c6c3779ba9ef6f64a6fbc",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "298f1e2864327cefc88d47925b089326fc7aa219176a422cd7ea45f63a53f347",
+          "dtype": "<U202",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 808,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "cf23273174dde8dba2e66cad53c9565d5ac2a58d7e446171c8b5026484591e28",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "4f38281be8191c559ee3dfbfbb36fa7e87129ae56d9eb1099cc3b17277d89652",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 5815240,
+          "shape": [
+            726905
+          ]
+        },
+        {
+          "array_sha256": "0f5d13a550ed9dd20e0da41bbe785dcd6e94ed8a2c59a0a3752f74528afa0d12",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 5818000,
+          "shape": [
+            727250
+          ]
+        },
+        {
+          "array_sha256": "d90ed98003c89a9e48521b6eb44822671934b26d8d9875f00b9b6e8403b4d32c",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 5448,
+          "shape": [
+            681
+          ]
+        },
+        {
+          "array_sha256": "d86140fbcc6e3fc05204a846207314535871f93806d7085b3795e245961dcdae",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 140120,
+          "shape": [
+            17515
+          ]
+        },
+        {
+          "array_sha256": "a582d804af0352fe4d90df099248b5df867a323f755f56734651434dddb35d8c",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "0c8ab721d17c4c4aaa0629c36a807ee9e89e7267271c1e1b9d6de8c7d1b5a368",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 21760,
+          "shape": [
+            680,
+            4
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "21932a5b5aeb94bfa7dbe33e91aa60f58729086b6b07fd004ac8a0324640e652",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 1682392,
+          "shape": [
+            210299
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "a555e888ccca6fedee8530458449dbd6952fd5cde64276d86b5e574a85994bdb",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "c07a864662774537dcbf6faa6398faf250a46560f9df65045df0762337c61909",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "4b9487c5d7a0361c11f1f95e61a10448a68293683ec6eaaa44621ffd856ad099",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0abbe9ced42e8d075e8e3ee44daad658636110f392c1b66546b18b7d6a330d00",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9c6018e0f9ddcae171e5332831a6c14193bae28ae6329d9ba7a6aa0e32789964",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "67bae483b67bc3d99b728312ec06ffaffc59403f7eaa35022c7428eac8e64c86",
+          "dtype": "<i8",
+          "name": "source_interior_vertex_quotient.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 29,
+      "ram_exact_restore_sha256": "ed1c5ff2b849b5598551b39a2f49420bf7b51f593a103fdc633884a5013c7041",
+      "sha256": "ed1c5ff2b849b5598551b39a2f49420bf7b51f593a103fdc633884a5013c7041",
+      "size_bytes": 17876774,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "62e50a064e9b929b17ec881f43742cdd38347241cb6b8d15ef8ff0338fce6d9c",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 3044544,
+          "shape": [
+            253712,
+            3
+          ]
+        },
+        {
+          "array_sha256": "b59f6a25647a143e383abc6caadd840d189dcd7d102adfe1077409e66cf3a400",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 24953376,
+          "shape": [
+            779793,
+            4
+          ]
+        },
+        {
+          "array_sha256": "ab59e3315ddc52b14c95ab842fcb82109b6851dd413ee68f04a821244038a5e6",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 3119172,
+          "shape": [
+            779793
+          ]
+        },
+        {
+          "array_sha256": "2f7226dbd071b63c1faff7e2f536cb95760890b543b8fe4ebfbeaf64c3ad0b32",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 10797648,
+          "shape": [
+            449902,
+            3
+          ]
+        },
+        {
+          "array_sha256": "1aa332be9c6cad09aa51a56f2e8e9964d7068a40e2bee4f123fc918f458177d3",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 6211864,
+          "shape": [
+            776483
+          ]
+        },
+        {
+          "array_sha256": "e7283b33123b4cdd0b6722eaee6bb2ac993a8e9c260b367a8ec46fd337c21c0a",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 6250440,
+          "shape": [
+            781305
+          ]
+        },
+        {
+          "array_sha256": "eab819e63b14cbd4bbbd8ceac823917146d0efe9797a3ff0131c7bad4c2158af",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 6238344,
+          "shape": [
+            779793
+          ]
+        },
+        {
+          "array_sha256": "254fea75083a0798b98dc1b848363832a97b743654bbb78d653540c7c63b742b",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "377870a8b42a585794c89093d5e1afad0b947b22d94159d47098f5705d089957",
+          "dtype": "<i8",
+          "name": "mapped_current_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5db1ddd17b5ceeb9cc0093bb5ae9fd08cdc76f78a9e12d0af7e03e8d1d62b96d",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_faces.npy",
+          "nbytes": 10903536,
+          "shape": [
+            454314,
+            3
+          ]
+        },
+        {
+          "array_sha256": "4fbcd124d0c75e4c42356259f6137fdee33112b8e1ce38f9dbe2f45aa31a3fcf",
+          "dtype": "|i1",
+          "name": "proposed_current_desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "56138aa4822d39f9d9341096014bcf8aaa1330060dbe367f141108c4c93f1a78",
+          "dtype": "<i8",
+          "name": "proposed_current_desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "f9e16acf535e9ed33abb3642efcb683dd181c6937dcbe1c37c727fa9b04ca132",
+          "dtype": "<i8",
+          "name": "operation_cell_star_offsets.npy",
+          "nbytes": 1224,
+          "shape": [
+            153
+          ]
+        },
+        {
+          "array_sha256": "d637a85dcad5ba673cfe580711de81ba0d58df75020cb1730b761f9d44a81177",
+          "dtype": "<i8",
+          "name": "operation_cell_star_input_rows.npy",
+          "nbytes": 13496,
+          "shape": [
+            1687
+          ]
+        },
+        {
+          "array_sha256": "9d496052d764cb951a00293717ce92d8474fa235519e7e0fa6ffd8c06b03c246",
+          "dtype": "<i8",
+          "name": "operation_surface_ledger_indices.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "5777698d86d2806b5f9b5bf594e64672e32c6941b3bed7219a38a58b094fb55e",
+          "dtype": "<i8",
+          "name": "operation_retired_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "54213f039b93a02e79b9e5d4c535e87163325af885402cbae6becb81b6a23827",
+          "dtype": "<i8",
+          "name": "operation_kept_volume_point_rows.npy",
+          "nbytes": 1216,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "8941257e45b63be9d7eddfbbf11d178063e9ba6e0f6028397cbf15c35693426f",
+          "dtype": "<U256",
+          "name": "operation_exact_det6_delta_integer.npy",
+          "nbytes": 155648,
+          "shape": [
+            152
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_faces.npy",
+          "nbytes": 0,
+          "shape": [
+            0,
+            3
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "previous_desired_boundary_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "9e3d85fff4bd5351de43ea16365db27a9f43f4d92b5cf3372d5c2805de8c5e5e",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 10797648,
+          "shape": [
+            449902,
+            3
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "desired_boundary_degenerate_source_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "032991179539fe16ab152979134133a9c0f0759220dd40f52a4cb525209edbe8",
+          "dtype": "|i1",
+          "name": "desired_boundary_source_group.npy",
+          "nbytes": 454314,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "57a0523ff95ebacd4b44e3cf2fc613fe2ebd2c9353ebcc41e783b45da0a11e4b",
+          "dtype": "<i8",
+          "name": "desired_boundary_source_face_rows.npy",
+          "nbytes": 3634512,
+          "shape": [
+            454314
+          ]
+        },
+        {
+          "array_sha256": "d208673dec674654b5c560c250e181d9207c80819821290df31a3cfe0546efdd",
+          "dtype": "<U53",
+          "name": "fat_current_target_rebind_schema.npy",
+          "nbytes": 212,
+          "shape": []
+        },
+        {
+          "array_sha256": "d79a69925a335cc548ae0563d7aaeca673dfda559e255aa35dae09536ac48088",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_I_point_to_volume_rows.npy",
+          "nbytes": 1002944,
+          "shape": [
+            125368
+          ]
+        },
+        {
+          "array_sha256": "6bb8df3710f913d8feb8c8b779668711cc687209c7a3e9a25b11c12e09ac58ae",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_D_point_to_volume_rows.npy",
+          "nbytes": 965184,
+          "shape": [
+            120648
+          ]
+        },
+        {
+          "array_sha256": "c7343e06f46ed0c339a67d9bb178dc3b095307f9cebef49d5a4491a2788dba8d",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_volume_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "bcd750208488958260e5543076d73d2c80ba07c846522eb1c96cee090b92d29c",
+          "dtype": "<i8",
+          "name": "fat_current_target_rebind_wall_faces_collar_point_rows.npy",
+          "nbytes": 2160,
+          "shape": [
+            90,
+            3
+          ]
+        },
+        {
+          "array_sha256": "2ea4bd33fed69022bf01e997eafa103e83519b201713ca94095d117f612c179a",
+          "dtype": "<f4",
+          "name": "fat_current_target_rebind_wall_face_points_world_m_f32.npy",
+          "nbytes": 3240,
+          "shape": [
+            90,
+            3,
+            3
+          ]
+        },
+        {
+          "array_sha256": "5c5c56f9b6a5af6c68755ed56a288ed4d557256460267498880ac983275f9c49",
+          "dtype": "<U747",
+          "name": "fat_current_target_rebind_source_asset_sha256_json.npy",
+          "nbytes": 2988,
+          "shape": []
+        },
+        {
+          "array_sha256": "b41c937c34c2207025fbad08d9d7aae6faf062aac4f0fbe7571f46ca6d2edd68",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 26488,
+          "shape": [
+            3311
+          ]
+        },
+        {
+          "array_sha256": "e18e8cc07431ac13a314b329bcbfc31579e7cec71c43e2b77bb12a1d775e25a7",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 768616,
+          "shape": [
+            96077
+          ]
+        },
+        {
+          "array_sha256": "aae82b777580abeccca18deb9b8fd90db537d8635d5515d7024c2fd5d8b47c48",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "7e27ca0b790a2ea5e1037dcc91e4062426ae7a08ed7264f76bd2dce02bfc5800",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 105920,
+          "shape": [
+            3310,
+            4
+          ]
+        },
+        {
+          "array_sha256": "81995b5417fde8baa9374acbbf3823489c1440047dfee2fd871a75d6cdf528e3",
+          "dtype": "<U201",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 804,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "4a855db2219fda594b3c1ca4ae75713527e245facc49295a30f2800309574061",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bb76d19a0ecdfdb82bceef8c237907da27ba10a9fe6f249e14127a60ebdd543f",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 2029696,
+          "shape": [
+            253712
+          ]
+        },
+        {
+          "array_sha256": "dff1b729f3671fc6ece252bb5df740843a9ae22a111c9cb3943a08465efe4164",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 2029704,
+          "shape": [
+            253713
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "55395eed5f1af9c992bc90b3bf633a9a0f958171a52719400ea24256b2cf8eb1",
+          "dtype": "<U225",
+          "name": "canonical_D597_full_endpoint_star_sidecar_path.npy",
+          "nbytes": 900,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "7fe1c2d1fd9701924aef15cfc2dad4b694c080c1be350f5acfd5e4146bb2a268",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_sidecar_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0ed09fb26bd5c7bae7e46f2674aeaaed2762187f240329ee1a7dafa22be47d16",
+          "dtype": "<U226",
+          "name": "canonical_D597_full_endpoint_star_report_path.npy",
+          "nbytes": 904,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "1b65a7044b357aa196ad9e6500943ab771f93354fe312aa182326331611d8bad",
+          "dtype": "<U64",
+          "name": "canonical_D597_full_endpoint_star_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "0953677ebff07b665c73347387eb6164d3e95e866b1be2127e20dd8abd74e6b4",
+          "dtype": "<U184",
+          "name": "canonical_D597_transfer_report_path.npy",
+          "nbytes": 736,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "9489206e8493c1424df715fb74581b6c69dc3e74718eaf039994fba28b2f5f83",
+          "dtype": "<U64",
+          "name": "canonical_D597_transfer_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "67e1320a01555a615bfa031839aad0577b75967c50a8624a782c44c613c736e6",
+          "dtype": "<U205",
+          "name": "canonical_D597_independent_replay_path.npy",
+          "nbytes": 820,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d23f8938832e58a81b7d7506cb247c0bc8778768acc31d3c003cfbb3eb603655",
+          "dtype": "<U64",
+          "name": "canonical_D597_independent_replay_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "bbb29647d675ac1302ef7610134dc7b5aacc8ade682be67eac3ab60e7f22c9db",
+          "dtype": "<U196",
+          "name": "canonical_target397_report_path.npy",
+          "nbytes": 784,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "d5e392ae7ecff968a5fd16ba7c9515d4685520768d9c217b74b5b3d6e9c2b58e",
+          "dtype": "<U64",
+          "name": "canonical_target397_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "501a4b750bf8016248ee353bde058ace92aaa21a93f289343fce65ac8c0bd280",
+          "dtype": "<U183",
+          "name": "canonical_joint_context_report_path.npy",
+          "nbytes": 732,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "ad2c9d6cd9b552ff30417a004ab2722b7f39a374955724496aa06651c4f5fe4d",
+          "dtype": "<U64",
+          "name": "canonical_joint_context_report_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b5f65c49742ea268605515d2c2465a1de7c9932460cf4d980054f807322785be",
+          "dtype": "<U36",
+          "name": "canonical_parent_union_physical_status.npy",
+          "nbytes": 144,
+          "shape": []
+        },
+        {
+          "array_sha256": "abf1b535072c9b9fbe678480708fcbf8b675ca4af02ed830f40b6abdfe689827",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b88a7e2007964d43e4d44b5a55d404736350883ad49cf63bc0ed67f02f3e8734",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "541b884f3726e0bb00da607e0d4d6905bab05313db595c837c310edeebc9bae6",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "00361f00d476316f3e459fa7d8a2a734cd6b6c20e82c6c3779ba9ef6f64a6fbc",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "cabbc4747fda0c439974b25c65f1982d41c9882a211658f85f22d5f22a4ab229",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "c352b86352b025328b7bbef472476ca49be3f1241b18698d42aff4201c4fb095",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 65,
+      "ram_exact_restore_sha256": "4f2e59182e047a92072ed33d20193855d38361194decb11be81d4373a9c0775b",
+      "sha256": "4f2e59182e047a92072ed33d20193855d38361194decb11be81d4373a9c0775b",
+      "size_bytes": 26482276,
+      "zip_crc": "PASS"
+    },
+    {
+      "array_records": [
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "8db5adead067629cca17ba467a2780caabd9c0d782e8be3c40bc867fb9c5608d",
+          "dtype": "<f4",
+          "name": "points_world_m_f32.npy",
+          "nbytes": 2523576,
+          "shape": [
+            210298,
+            3
+          ]
+        },
+        {
+          "array_sha256": "cba7d36c0e6e5a97de4e832081dbd4ba9e99f63a7ff0bb783b059d743c02e4f4",
+          "dtype": "<i8",
+          "name": "tetrahedra.npy",
+          "nbytes": 23261280,
+          "shape": [
+            726915,
+            4
+          ]
+        },
+        {
+          "array_sha256": "1f383d34dc0b35561ce6f31b8bbd8420f2cd3c6793ca318780bb9598d9ce5497",
+          "dtype": "<i4",
+          "name": "material_indices.npy",
+          "nbytes": 2907660,
+          "shape": [
+            726915
+          ]
+        },
+        {
+          "array_sha256": "346085524ebbe89c6837aba24024322bdbfaea524a49597b1d0be18664cc127c",
+          "dtype": "<i8",
+          "name": "boundary_faces.npy",
+          "nbytes": 9363312,
+          "shape": [
+            390138,
+            3
+          ]
+        },
+        {
+          "array_sha256": "6e0536a08ffd79b2287815a6037db0358c8ab7b115715ceb44893906f9134d2e",
+          "dtype": "<i8",
+          "name": "desired_boundary_faces.npy",
+          "nbytes": 9363312,
+          "shape": [
+            390138,
+            3
+          ]
+        },
+        {
+          "array_sha256": "d1dba2de50d67d5edc216f552cb1a65d06946b6b0958ca1b4f9d616e03724ddb",
+          "dtype": "<i8",
+          "name": "retained_input_cell_rows.npy",
+          "nbytes": 5810120,
+          "shape": [
+            726265
+          ]
+        },
+        {
+          "array_sha256": "541b884f3726e0bb00da607e0d4d6905bab05313db595c837c310edeebc9bae6",
+          "dtype": "<U189",
+          "name": "typed_I_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "00361f00d476316f3e459fa7d8a2a734cd6b6c20e82c6c3779ba9ef6f64a6fbc",
+          "dtype": "<U64",
+          "name": "typed_I_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "298f1e2864327cefc88d47925b089326fc7aa219176a422cd7ea45f63a53f347",
+          "dtype": "<U202",
+          "name": "current_geometry_parent_path.npy",
+          "nbytes": 808,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "cf23273174dde8dba2e66cad53c9565d5ac2a58d7e446171c8b5026484591e28",
+          "dtype": "<U64",
+          "name": "current_geometry_parent_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "26a9ee54774e4db6a91931024485e998628677af201aa453d5f020ba98487c13",
+          "dtype": "<i8",
+          "name": "output_cell_to_input_cell.npy",
+          "nbytes": 5815320,
+          "shape": [
+            726915
+          ]
+        },
+        {
+          "array_sha256": "06d6c26b10f375e047b16af060236b9296a6c5d29c04d338a845018db45fcbb0",
+          "dtype": "<i8",
+          "name": "input_cell_to_output_cell.npy",
+          "nbytes": 5818000,
+          "shape": [
+            727250
+          ]
+        },
+        {
+          "array_sha256": "cb80c31185e0633882c5221b3a4ddbbf9a4fafb9079191ca201e492740af4bb0",
+          "dtype": "<i8",
+          "name": "replacement_parent_offsets.npy",
+          "nbytes": 5208,
+          "shape": [
+            651
+          ]
+        },
+        {
+          "array_sha256": "8e84db729f05a4f266babf996d52bdaad82a3eca2b33ac9847cd1764b6ff1d47",
+          "dtype": "<i8",
+          "name": "replacement_parent_cell_rows.npy",
+          "nbytes": 133160,
+          "shape": [
+            16645
+          ]
+        },
+        {
+          "array_sha256": "833252e5dc3fed510cbaa60465ff92184c7f7766bcaee2294b1f6bf6464b6938",
+          "dtype": "<i8",
+          "name": "replacement_tet_offsets.npy",
+          "nbytes": 16,
+          "shape": [
+            2
+          ]
+        },
+        {
+          "array_sha256": "9afdbb177c606dcfa125c09de6c2201cf97aaa42ae76bbbfe9a4263d3dd868e7",
+          "dtype": "<i8",
+          "name": "replacement_tetrahedra.npy",
+          "nbytes": 20800,
+          "shape": [
+            650,
+            4
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_point_to_input_point_row.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "21932a5b5aeb94bfa7dbe33e91aa60f58729086b6b07fd004ac8a0324640e652",
+          "dtype": "<i8",
+          "name": "output_point_parent_offsets.npy",
+          "nbytes": 1682392,
+          "shape": [
+            210299
+          ]
+        },
+        {
+          "array_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "dtype": "<i8",
+          "name": "output_point_parent_input_cell_rows.npy",
+          "nbytes": 0,
+          "shape": [
+            0
+          ]
+        },
+        {
+          "array_sha256": "cabbc4747fda0c439974b25c65f1982d41c9882a211658f85f22d5f22a4ab229",
+          "dtype": "<U189",
+          "name": "typed_O_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "c352b86352b025328b7bbef472476ca49be3f1241b18698d42aff4201c4fb095",
+          "dtype": "<U64",
+          "name": "typed_O_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "abf1b535072c9b9fbe678480708fcbf8b675ca4af02ed830f40b6abdfe689827",
+          "dtype": "<U189",
+          "name": "typed_D_candidate_path.npy",
+          "nbytes": 756,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "b88a7e2007964d43e4d44b5a55d404736350883ad49cf63bc0ed67f02f3e8734",
+          "dtype": "<U64",
+          "name": "typed_D_candidate_sha256.npy",
+          "nbytes": 256,
+          "shape": [
+            1
+          ]
+        },
+        {
+          "array_sha256": "82dd7e4e9f463b9dc05d7bee96aa943799b6423b774cf2d703f64c8ccc6c0529",
+          "dtype": "<i8",
+          "name": "input_node_to_output_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "11fdda60dd5332370c40fd3fe3dc50d06b06a93a67d4ab9d0e7c0465c2f5f61e",
+          "dtype": "<i8",
+          "name": "output_node_to_input_node.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        },
+        {
+          "array_sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+          "dtype": "<U46",
+          "name": "canonical_parent_union_schema.npy",
+          "nbytes": 184,
+          "shape": []
+        },
+        {
+          "array_sha256": "75819bca9ed8e1afa95cab401c8b85978bf6c76697f0ee8352f3d4ba18c72aa3",
+          "dtype": "<U28",
+          "name": "canonical_parent_union_operation_order.npy",
+          "nbytes": 112,
+          "shape": []
+        },
+        {
+          "array_sha256": "67bae483b67bc3d99b728312ec06ffaffc59403f7eaa35022c7428eac8e64c86",
+          "dtype": "<i8",
+          "name": "source_interior_vertex_quotient.npy",
+          "nbytes": 1682384,
+          "shape": [
+            210298
+          ]
+        }
+      ],
+      "npy_arrays_loaded": 29,
+      "ram_exact_restore_sha256": "673e053785bed70ec5d4c51bf0fbf20229b29df45169cc14817f24f837ac81dc",
+      "sha256": "673e053785bed70ec5d4c51bf0fbf20229b29df45169cc14817f24f837ac81dc",
+      "size_bytes": 17876078,
+      "zip_crc": "PASS"
+    }
+  ],
+  "filesystem_restore_performed": false,
+  "native_steps": 0,
+  "npy_arrays_loaded": 470,
+  "npy_header_count": 470,
+  "npz_crc_all_passed": true,
+  "original_volume_bytes": 222318342,
+  "physical_admission": false,
+  "schema": "numi-human.pre824-volume-archive-independent-readback.v1",
+  "status": "PASS_GH_DOWNLOAD_ARCHIVE_SHA_ALL_NPZ_CRC_AND_ALL_NPY_ARRAYS_LOADED_EXACT_RAM_RESTORE",
+  "tag": "human-quality-volume-pre824-intermediate-20261101-chunk-031"
+}

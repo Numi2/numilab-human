@@ -1,0 +1,920 @@
+{
+  "all_point_bytes_unchanged": true,
+  "attempt_count": 6,
+  "attempts": [
+    {
+      "attempt": 0,
+      "direction": {
+        "direction_id": "0",
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "keep": 5
+      },
+      "result": {
+        "all_role_gates_passed": true,
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "geometry_written": false,
+        "keep": 5,
+        "quality_objective": {
+          "bad_reduction": 2,
+          "deficit_tolerance": 1.0342377485390565e-05,
+          "log_deficit_after": 0.0,
+          "log_deficit_before": 10.342377485390566,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "progress_kind": "combined_bad_count",
+          "role_bad_counts": {
+            "Fat": {
+              "after": 0,
+              "before": 2
+            }
+          }
+        },
+        "role_metrics": {
+          "Fat": {
+            "cavity_selection": {
+              "cell_cap": 64,
+              "complete_endpoint_star_cell_count": 6,
+              "complete_endpoint_star_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "fallback_reasons": [],
+              "mode": "complete_endpoint_star_plus_full_material_face_ring",
+              "policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+              "ring_added_rows": [],
+              "ring_candidate_added_cell_count": 0,
+              "ring_candidate_cell_count": 6,
+              "ring_candidate_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "ring_diagnostics": {
+                "added_same_material_face_neighbors": 0,
+                "material_interface_frontier": [],
+                "material_interface_frontier_count": 0,
+                "required_target_faces_preserved": true,
+                "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+                "seed_cell_count": 6,
+                "target_boundary_faces_preserved": true
+              },
+              "selected_added_rows": [],
+              "selected_cell_count": 6,
+              "selected_face_connected_components": 1,
+              "selected_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "selected_solver_point_count_after_drop": 6,
+              "solver_point_cap_after_drop": 24
+            },
+            "exact_det6_delta": 0,
+            "log_deficit_after": -0.0,
+            "log_deficit_before": 10.342377485390566,
+            "native_bad_after": 0,
+            "native_bad_before": 2,
+            "ring_diagnostics": {
+              "added_same_material_face_neighbors": 0,
+              "material_interface_frontier": [],
+              "material_interface_frontier_count": 0,
+              "required_target_faces_preserved": true,
+              "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+              "seed_cell_count": 6,
+              "target_boundary_faces_preserved": true
+            },
+            "solver": {
+              "boundary_faces": 8,
+              "candidate_count_native_bad_allowed": 2,
+              "candidate_count_native_passing": 8,
+              "candidate_count_positive_exact_float32": 10,
+              "candidate_count_total_combinations": 15,
+              "exact_internal_face_crossings": 0,
+              "exact_oriented_boundary_preserved": true,
+              "exact_positive_cells": 4,
+              "exact_volume_conserved": true,
+              "material_index": 16,
+              "native_steps": 0,
+              "native_thresholds_unchanged": true,
+              "new_native_bad_cells": 0,
+              "new_native_good_cells": 4,
+              "objective": "feasible_bad_count_incumbent_then_log_deficit_at_same_count; exact replay authoritative",
+              "physical_admission": false,
+              "runtime_s": 0.0016950832214206457,
+              "selected_cells": 4,
+              "stage1_badcount_incumbent": 0,
+              "stage1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "stage1_min_badcount_optimal": true,
+              "stage1_optimal": true,
+              "stage1_runtime_s": 0.00043862522579729557,
+              "stage1_status": 0,
+              "stage2_deficit_objective": 0.0,
+              "stage2_optimal": true,
+              "stage2_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "status": "PASS_PARTIAL_POSITIVE_CAVITY_MILP"
+            }
+          }
+        },
+        "source_edge_length_m": 2.086162567138672e-07,
+        "source_role": "D",
+        "status": "PASS_LOCAL_CANDIDATE_EVALUATION"
+      }
+    },
+    {
+      "attempt": 1,
+      "direction": {
+        "direction_id": "1",
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "keep": 5
+      },
+      "result": {
+        "all_role_gates_passed": true,
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "geometry_written": false,
+        "keep": 5,
+        "quality_objective": {
+          "bad_reduction": 2,
+          "deficit_tolerance": 1.0342377485390565e-05,
+          "log_deficit_after": 0.0,
+          "log_deficit_before": 10.342377485390566,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "progress_kind": "combined_bad_count",
+          "role_bad_counts": {
+            "Fat": {
+              "after": 0,
+              "before": 2
+            }
+          }
+        },
+        "role_metrics": {
+          "Fat": {
+            "cavity_selection": {
+              "cell_cap": 64,
+              "complete_endpoint_star_cell_count": 6,
+              "complete_endpoint_star_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "fallback_reasons": [],
+              "mode": "complete_endpoint_star_plus_full_material_face_ring",
+              "policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+              "ring_added_rows": [],
+              "ring_candidate_added_cell_count": 0,
+              "ring_candidate_cell_count": 6,
+              "ring_candidate_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "ring_diagnostics": {
+                "added_same_material_face_neighbors": 0,
+                "material_interface_frontier": [],
+                "material_interface_frontier_count": 0,
+                "required_target_faces_preserved": true,
+                "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+                "seed_cell_count": 6,
+                "target_boundary_faces_preserved": true
+              },
+              "selected_added_rows": [],
+              "selected_cell_count": 6,
+              "selected_face_connected_components": 1,
+              "selected_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "selected_solver_point_count_after_drop": 6,
+              "solver_point_cap_after_drop": 24
+            },
+            "exact_det6_delta": 0,
+            "log_deficit_after": -0.0,
+            "log_deficit_before": 10.342377485390566,
+            "native_bad_after": 0,
+            "native_bad_before": 2,
+            "ring_diagnostics": {
+              "added_same_material_face_neighbors": 0,
+              "material_interface_frontier": [],
+              "material_interface_frontier_count": 0,
+              "required_target_faces_preserved": true,
+              "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+              "seed_cell_count": 6,
+              "target_boundary_faces_preserved": true
+            },
+            "solver": {
+              "boundary_faces": 8,
+              "candidate_count_native_bad_allowed": 2,
+              "candidate_count_native_passing": 8,
+              "candidate_count_positive_exact_float32": 10,
+              "candidate_count_total_combinations": 15,
+              "exact_internal_face_crossings": 0,
+              "exact_oriented_boundary_preserved": true,
+              "exact_positive_cells": 4,
+              "exact_volume_conserved": true,
+              "material_index": 16,
+              "native_steps": 0,
+              "native_thresholds_unchanged": true,
+              "new_native_bad_cells": 0,
+              "new_native_good_cells": 4,
+              "objective": "feasible_bad_count_incumbent_then_log_deficit_at_same_count; exact replay authoritative",
+              "physical_admission": false,
+              "runtime_s": 0.001641583163291216,
+              "selected_cells": 4,
+              "stage1_badcount_incumbent": 0,
+              "stage1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "stage1_min_badcount_optimal": true,
+              "stage1_optimal": true,
+              "stage1_runtime_s": 0.0003957911394536495,
+              "stage1_status": 0,
+              "stage2_deficit_objective": 0.0,
+              "stage2_optimal": true,
+              "stage2_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "status": "PASS_PARTIAL_POSITIVE_CAVITY_MILP"
+            }
+          }
+        },
+        "source_edge_length_m": 2.086162567138672e-07,
+        "source_role": "D",
+        "status": "PASS_LOCAL_CANDIDATE_EVALUATION"
+      }
+    },
+    {
+      "attempt": 2,
+      "direction": {
+        "direction_id": "2",
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "keep": 5
+      },
+      "result": {
+        "all_role_gates_passed": true,
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "geometry_written": false,
+        "keep": 5,
+        "quality_objective": {
+          "bad_reduction": 2,
+          "deficit_tolerance": 1.0342377485390565e-05,
+          "log_deficit_after": 0.0,
+          "log_deficit_before": 10.342377485390566,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "progress_kind": "combined_bad_count",
+          "role_bad_counts": {
+            "Fat": {
+              "after": 0,
+              "before": 2
+            }
+          }
+        },
+        "role_metrics": {
+          "Fat": {
+            "cavity_selection": {
+              "cell_cap": 64,
+              "complete_endpoint_star_cell_count": 6,
+              "complete_endpoint_star_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "fallback_reasons": [],
+              "mode": "complete_endpoint_star_plus_full_material_face_ring",
+              "policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+              "ring_added_rows": [],
+              "ring_candidate_added_cell_count": 0,
+              "ring_candidate_cell_count": 6,
+              "ring_candidate_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "ring_diagnostics": {
+                "added_same_material_face_neighbors": 0,
+                "material_interface_frontier": [],
+                "material_interface_frontier_count": 0,
+                "required_target_faces_preserved": true,
+                "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+                "seed_cell_count": 6,
+                "target_boundary_faces_preserved": true
+              },
+              "selected_added_rows": [],
+              "selected_cell_count": 6,
+              "selected_face_connected_components": 1,
+              "selected_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "selected_solver_point_count_after_drop": 6,
+              "solver_point_cap_after_drop": 24
+            },
+            "exact_det6_delta": 0,
+            "log_deficit_after": -0.0,
+            "log_deficit_before": 10.342377485390566,
+            "native_bad_after": 0,
+            "native_bad_before": 2,
+            "ring_diagnostics": {
+              "added_same_material_face_neighbors": 0,
+              "material_interface_frontier": [],
+              "material_interface_frontier_count": 0,
+              "required_target_faces_preserved": true,
+              "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+              "seed_cell_count": 6,
+              "target_boundary_faces_preserved": true
+            },
+            "solver": {
+              "boundary_faces": 8,
+              "candidate_count_native_bad_allowed": 2,
+              "candidate_count_native_passing": 8,
+              "candidate_count_positive_exact_float32": 10,
+              "candidate_count_total_combinations": 15,
+              "exact_internal_face_crossings": 0,
+              "exact_oriented_boundary_preserved": true,
+              "exact_positive_cells": 4,
+              "exact_volume_conserved": true,
+              "material_index": 16,
+              "native_steps": 0,
+              "native_thresholds_unchanged": true,
+              "new_native_bad_cells": 0,
+              "new_native_good_cells": 4,
+              "objective": "feasible_bad_count_incumbent_then_log_deficit_at_same_count; exact replay authoritative",
+              "physical_admission": false,
+              "runtime_s": 0.0017287079244852066,
+              "selected_cells": 4,
+              "stage1_badcount_incumbent": 0,
+              "stage1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "stage1_min_badcount_optimal": true,
+              "stage1_optimal": true,
+              "stage1_runtime_s": 0.0004788751248270273,
+              "stage1_status": 0,
+              "stage2_deficit_objective": 0.0,
+              "stage2_optimal": true,
+              "stage2_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "status": "PASS_PARTIAL_POSITIVE_CAVITY_MILP"
+            }
+          }
+        },
+        "source_edge_length_m": 2.086162567138672e-07,
+        "source_role": "D",
+        "status": "PASS_LOCAL_CANDIDATE_EVALUATION"
+      }
+    },
+    {
+      "attempt": 3,
+      "direction": {
+        "direction_id": "3",
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "keep": 5
+      },
+      "result": {
+        "all_role_gates_passed": true,
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "geometry_written": false,
+        "keep": 5,
+        "quality_objective": {
+          "bad_reduction": 2,
+          "deficit_tolerance": 1.0342377485390565e-05,
+          "log_deficit_after": 0.0,
+          "log_deficit_before": 10.342377485390566,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "progress_kind": "combined_bad_count",
+          "role_bad_counts": {
+            "Fat": {
+              "after": 0,
+              "before": 2
+            }
+          }
+        },
+        "role_metrics": {
+          "Fat": {
+            "cavity_selection": {
+              "cell_cap": 64,
+              "complete_endpoint_star_cell_count": 6,
+              "complete_endpoint_star_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "fallback_reasons": [],
+              "mode": "complete_endpoint_star_plus_full_material_face_ring",
+              "policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+              "ring_added_rows": [],
+              "ring_candidate_added_cell_count": 0,
+              "ring_candidate_cell_count": 6,
+              "ring_candidate_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "ring_diagnostics": {
+                "added_same_material_face_neighbors": 0,
+                "material_interface_frontier": [],
+                "material_interface_frontier_count": 0,
+                "required_target_faces_preserved": true,
+                "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+                "seed_cell_count": 6,
+                "target_boundary_faces_preserved": true
+              },
+              "selected_added_rows": [],
+              "selected_cell_count": 6,
+              "selected_face_connected_components": 1,
+              "selected_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "selected_solver_point_count_after_drop": 6,
+              "solver_point_cap_after_drop": 24
+            },
+            "exact_det6_delta": 0,
+            "log_deficit_after": -0.0,
+            "log_deficit_before": 10.342377485390566,
+            "native_bad_after": 0,
+            "native_bad_before": 2,
+            "ring_diagnostics": {
+              "added_same_material_face_neighbors": 0,
+              "material_interface_frontier": [],
+              "material_interface_frontier_count": 0,
+              "required_target_faces_preserved": true,
+              "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+              "seed_cell_count": 6,
+              "target_boundary_faces_preserved": true
+            },
+            "solver": {
+              "boundary_faces": 8,
+              "candidate_count_native_bad_allowed": 2,
+              "candidate_count_native_passing": 8,
+              "candidate_count_positive_exact_float32": 10,
+              "candidate_count_total_combinations": 15,
+              "exact_internal_face_crossings": 0,
+              "exact_oriented_boundary_preserved": true,
+              "exact_positive_cells": 4,
+              "exact_volume_conserved": true,
+              "material_index": 16,
+              "native_steps": 0,
+              "native_thresholds_unchanged": true,
+              "new_native_bad_cells": 0,
+              "new_native_good_cells": 4,
+              "objective": "feasible_bad_count_incumbent_then_log_deficit_at_same_count; exact replay authoritative",
+              "physical_admission": false,
+              "runtime_s": 0.0015807910822331905,
+              "selected_cells": 4,
+              "stage1_badcount_incumbent": 0,
+              "stage1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "stage1_min_badcount_optimal": true,
+              "stage1_optimal": true,
+              "stage1_runtime_s": 0.0003992910496890545,
+              "stage1_status": 0,
+              "stage2_deficit_objective": 0.0,
+              "stage2_optimal": true,
+              "stage2_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "status": "PASS_PARTIAL_POSITIVE_CAVITY_MILP"
+            }
+          }
+        },
+        "source_edge_length_m": 2.086162567138672e-07,
+        "source_role": "D",
+        "status": "PASS_LOCAL_CANDIDATE_EVALUATION"
+      }
+    },
+    {
+      "attempt": 4,
+      "direction": {
+        "direction_id": "4",
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "keep": 5
+      },
+      "result": {
+        "all_role_gates_passed": true,
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "geometry_written": false,
+        "keep": 5,
+        "quality_objective": {
+          "bad_reduction": 2,
+          "deficit_tolerance": 1.0342377485390565e-05,
+          "log_deficit_after": 0.0,
+          "log_deficit_before": 10.342377485390566,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "progress_kind": "combined_bad_count",
+          "role_bad_counts": {
+            "Fat": {
+              "after": 0,
+              "before": 2
+            }
+          }
+        },
+        "role_metrics": {
+          "Fat": {
+            "cavity_selection": {
+              "cell_cap": 64,
+              "complete_endpoint_star_cell_count": 6,
+              "complete_endpoint_star_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "fallback_reasons": [],
+              "mode": "complete_endpoint_star_plus_full_material_face_ring",
+              "policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+              "ring_added_rows": [],
+              "ring_candidate_added_cell_count": 0,
+              "ring_candidate_cell_count": 6,
+              "ring_candidate_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "ring_diagnostics": {
+                "added_same_material_face_neighbors": 0,
+                "material_interface_frontier": [],
+                "material_interface_frontier_count": 0,
+                "required_target_faces_preserved": true,
+                "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+                "seed_cell_count": 6,
+                "target_boundary_faces_preserved": true
+              },
+              "selected_added_rows": [],
+              "selected_cell_count": 6,
+              "selected_face_connected_components": 1,
+              "selected_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "selected_solver_point_count_after_drop": 6,
+              "solver_point_cap_after_drop": 24
+            },
+            "exact_det6_delta": 0,
+            "log_deficit_after": -0.0,
+            "log_deficit_before": 10.342377485390566,
+            "native_bad_after": 0,
+            "native_bad_before": 2,
+            "ring_diagnostics": {
+              "added_same_material_face_neighbors": 0,
+              "material_interface_frontier": [],
+              "material_interface_frontier_count": 0,
+              "required_target_faces_preserved": true,
+              "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+              "seed_cell_count": 6,
+              "target_boundary_faces_preserved": true
+            },
+            "solver": {
+              "boundary_faces": 8,
+              "candidate_count_native_bad_allowed": 2,
+              "candidate_count_native_passing": 8,
+              "candidate_count_positive_exact_float32": 10,
+              "candidate_count_total_combinations": 15,
+              "exact_internal_face_crossings": 0,
+              "exact_oriented_boundary_preserved": true,
+              "exact_positive_cells": 4,
+              "exact_volume_conserved": true,
+              "material_index": 16,
+              "native_steps": 0,
+              "native_thresholds_unchanged": true,
+              "new_native_bad_cells": 0,
+              "new_native_good_cells": 4,
+              "objective": "feasible_bad_count_incumbent_then_log_deficit_at_same_count; exact replay authoritative",
+              "physical_admission": false,
+              "runtime_s": 0.0015323339030146599,
+              "selected_cells": 4,
+              "stage1_badcount_incumbent": 0,
+              "stage1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "stage1_min_badcount_optimal": true,
+              "stage1_optimal": true,
+              "stage1_runtime_s": 0.0003788750618696213,
+              "stage1_status": 0,
+              "stage2_deficit_objective": 0.0,
+              "stage2_optimal": true,
+              "stage2_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "status": "PASS_PARTIAL_POSITIVE_CAVITY_MILP"
+            }
+          }
+        },
+        "source_edge_length_m": 2.086162567138672e-07,
+        "source_role": "D",
+        "status": "PASS_LOCAL_CANDIDATE_EVALUATION"
+      }
+    },
+    {
+      "attempt": 5,
+      "direction": {
+        "direction_id": "5",
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "keep": 5
+      },
+      "result": {
+        "all_role_gates_passed": true,
+        "drop": 4,
+        "edge": [
+          4,
+          5
+        ],
+        "geometry_written": false,
+        "keep": 5,
+        "quality_objective": {
+          "bad_reduction": 2,
+          "deficit_tolerance": 1.0342377485390565e-05,
+          "log_deficit_after": 0.0,
+          "log_deficit_before": 10.342377485390566,
+          "native_bad_after": 0,
+          "native_bad_before": 2,
+          "progress_kind": "combined_bad_count",
+          "role_bad_counts": {
+            "Fat": {
+              "after": 0,
+              "before": 2
+            }
+          }
+        },
+        "role_metrics": {
+          "Fat": {
+            "cavity_selection": {
+              "cell_cap": 64,
+              "complete_endpoint_star_cell_count": 6,
+              "complete_endpoint_star_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "fallback_reasons": [],
+              "mode": "complete_endpoint_star_plus_full_material_face_ring",
+              "policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+              "ring_added_rows": [],
+              "ring_candidate_added_cell_count": 0,
+              "ring_candidate_cell_count": 6,
+              "ring_candidate_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "ring_diagnostics": {
+                "added_same_material_face_neighbors": 0,
+                "material_interface_frontier": [],
+                "material_interface_frontier_count": 0,
+                "required_target_faces_preserved": true,
+                "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+                "seed_cell_count": 6,
+                "target_boundary_faces_preserved": true
+              },
+              "selected_added_rows": [],
+              "selected_cell_count": 6,
+              "selected_face_connected_components": 1,
+              "selected_rows": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5
+              ],
+              "selected_solver_point_count_after_drop": 6,
+              "solver_point_cap_after_drop": 24
+            },
+            "exact_det6_delta": 0,
+            "log_deficit_after": -0.0,
+            "log_deficit_before": 10.342377485390566,
+            "native_bad_after": 0,
+            "native_bad_before": 2,
+            "ring_diagnostics": {
+              "added_same_material_face_neighbors": 0,
+              "material_interface_frontier": [],
+              "material_interface_frontier_count": 0,
+              "required_target_faces_preserved": true,
+              "ring_definition": "all same-material cells across every non-target face on original seed cavity boundary; one layer only",
+              "seed_cell_count": 6,
+              "target_boundary_faces_preserved": true
+            },
+            "solver": {
+              "boundary_faces": 8,
+              "candidate_count_native_bad_allowed": 2,
+              "candidate_count_native_passing": 8,
+              "candidate_count_positive_exact_float32": 10,
+              "candidate_count_total_combinations": 15,
+              "exact_internal_face_crossings": 0,
+              "exact_oriented_boundary_preserved": true,
+              "exact_positive_cells": 4,
+              "exact_volume_conserved": true,
+              "material_index": 16,
+              "native_steps": 0,
+              "native_thresholds_unchanged": true,
+              "new_native_bad_cells": 0,
+              "new_native_good_cells": 4,
+              "objective": "feasible_bad_count_incumbent_then_log_deficit_at_same_count; exact replay authoritative",
+              "physical_admission": false,
+              "runtime_s": 0.0015810420736670494,
+              "selected_cells": 4,
+              "stage1_badcount_incumbent": 0,
+              "stage1_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "stage1_min_badcount_optimal": true,
+              "stage1_optimal": true,
+              "stage1_runtime_s": 0.00036791712045669556,
+              "stage1_status": 0,
+              "stage2_deficit_objective": 0.0,
+              "stage2_optimal": true,
+              "stage2_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+              "status": "PASS_PARTIAL_POSITIVE_CAVITY_MILP"
+            }
+          }
+        },
+        "source_edge_length_m": 2.086162567138672e-07,
+        "source_role": "D",
+        "status": "PASS_LOCAL_CANDIDATE_EVALUATION"
+      }
+    }
+  ],
+  "independent_replay": {
+    "all_point_bytes_unchanged": true,
+    "native_bad_counts_no_role_regression": true,
+    "native_steps": 0,
+    "paired_exact_det6_delta_sum": "NOT_APPLICABLE_SINGLE_FAT_ROLE",
+    "physical_admission": false,
+    "source_role": "D",
+    "source_surface": {
+      "complete_face_ancestry_replayed": true,
+      "complete_face_unions_replayed": true,
+      "point_arrays_byte_identical": true,
+      "source_faces_recomputed_from_parent_quotient": true,
+      "typed_primary_lanes_replayed": true
+    },
+    "status": "PASS_INDEPENDENT_ENDPOINT_CAVITY_REPLAY",
+    "volume_roles": {
+      "Fat": {
+        "all_exact_positive_changed_cells": true,
+        "cavity_old_cells": 6,
+        "cavity_selection_mode": "complete_endpoint_star_plus_full_material_face_ring",
+        "complete_current_target_boundary": true,
+        "full_parent_union_rows_per_new_cell": 6,
+        "independent_exact_det6_delta": "0",
+        "independent_exact_new_det6_sum": "726838724295606890549323807888004534353641360687318060281490199180639288113397923326191050713763565560762521606266177933534601628614656",
+        "independent_exact_old_det6_sum": "726838724295606890549323807888004534353641360687318060281490199180639288113397923326191050713763565560762521606266177933534601628614656",
+        "independent_global_delta_fraction": 0.0,
+        "independent_global_target_flux_det6": "726838724295606890549323807888004534353641360687318060281490199180639288113397923326191050713763565560762521606266177933534601628614656",
+        "independent_local_delta_fraction": 0.0,
+        "independent_new_cavity_flux_det6": "726838724295606890549323807888004534353641360687318060281490199180639288113397923326191050713763565560762521606266177933534601628614656",
+        "independent_old_cavity_flux_det6": "726838724295606890549323807888004534353641360687318060281490199180639288113397923326191050713763565560762521606266177933534601628614656",
+        "independent_volume_caps_pass": true,
+        "input_cells": 6,
+        "new_bad": 0,
+        "old_bad": 2,
+        "output_cells": 4,
+        "replacement_cells": 4,
+        "volume_alias_rebind": "NOT_APPLICABLE_SYNTHETIC"
+      }
+    }
+  },
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/inputs/state.json",
+    "sha256": "b8f62d95d542d84c9c91f28ad95ffe0a9f8f9847eefcb05e19c6aa6aab69c495"
+  },
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "h706.role-directed-cavity-direction-batch.v1",
+  "selected_attempt": 0,
+  "selected_direction": {
+    "direction_id": "0",
+    "drop": 4,
+    "edge": [
+      4,
+      5
+    ],
+    "keep": 5
+  },
+  "selected_quality_objective": {
+    "deficit_tolerance": 1.0342377485390565e-05,
+    "log_deficit_after": 0.0,
+    "log_deficit_before": 10.342377485390566,
+    "native_bad_after": 0,
+    "native_bad_before": 2,
+    "progress_kind": "combined_bad_count",
+    "role_bad_counts": {
+      "Fat": {
+        "after": 0,
+        "before": 2
+      }
+    }
+  },
+  "selected_rank": [
+    0,
+    0.0,
+    2.086162567138672e-07,
+    0
+  ],
+  "selected_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/batch-D/selected/report.json",
+    "sha256": "bf86b3e56ebb7357c864d21f0fe1657067f1cbd513d5cac0160a01a94004e357"
+  },
+  "selected_source": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/batch-D/selected/candidate-D-typed-current.npz",
+    "sha256": "7225eac706e8d63168c188a7cb65961e864f538e0a1effb34059c81d29ddbe21"
+  },
+  "selected_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/batch-D/selected/candidate-state-proposal.json",
+    "sha256": "1775ca12a4c7838bd01085ef408eb6129ae2cd7f3104579b1d68dff668064ec2"
+  },
+  "selected_volumes": {
+    "Fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/batch-D/selected/fat-cavity-remesh-volume-proposal.npz",
+      "sha256": "ed8f6732fb00545e8d42da6aad9433bd44c82a0fa82c2ad4912422caecb02392"
+    }
+  },
+  "source_role": "D",
+  "status": "PASS_SELECTED_DIRECTION_PENDING_EXTERNAL_QUALIFICATION"
+}

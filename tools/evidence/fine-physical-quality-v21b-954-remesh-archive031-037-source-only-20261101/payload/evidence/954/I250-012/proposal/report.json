@@ -1,0 +1,927 @@
+{
+  "accepted_count": 2,
+  "all185_intersection_audit": "PENDING",
+  "anchor_policy": {
+    "immediate_keep_l1_cap_m": 0.00025,
+    "inherited_I_D_transition_policy": "REPORT_ONLY; cap applies to each new immediate transition, not retroactively to accepted ancestors",
+    "moved_D_anchor_exact_volume_budget": {
+      "local_fraction": 0.01,
+      "regional_fraction": 0.0001
+    },
+    "moved_I_anchor_exact_paired_delta_det6_integer": "0",
+    "removed_endpoint_to_anchor_cap_m": 0.00025
+  },
+  "candidate_state_proposal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-954-I250-012-root/proposal/candidate-state-proposal.json",
+    "sha256": "fb24c563e3b14eb9f7a056704e4a31b377053555dcfaa6fc29c7e572aa124aa6"
+  },
+  "elapsed_s": 53.56808116706088,
+  "external_775_805_full_source_audit": "PENDING",
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-950-witness-ulp-root/qualified/verified-state.json",
+    "sha256": "9cd8980fa04681ec821ea7cdd7e9b49ccac8d8e18ba94e00ace4361f3d6f5db3"
+  },
+  "mass_conservation": "PENDING",
+  "mass_mapping": "PENDING",
+  "max_edge_m": 0.00025,
+  "native_quality_thresholds_unchanged": true,
+  "native_steps": 0,
+  "operation_journal": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-954-I250-012-root/proposal/operation-journal.json",
+    "sha256": "9fa4bcc410c0f862fdc7e08e9abc15a6854cbfd212c668ae787ac51909daf5e5"
+  },
+  "paired_anchor_independent_replay": {
+    "all_moved_anchors_exactly_paired": true,
+    "maximum_keep_anchor_l1_m": 8.700042963027954e-05,
+    "maximum_removed_endpoint_to_anchor_m": 0.00018684223460472052,
+    "paired_anchor_records_replayed": [
+      {
+        "anchor_f32": [
+          -0.007015915121883154,
+          -0.1473710685968399,
+          0.03716868907213211
+        ],
+        "anchor_moved": false,
+        "drop_source_row": 55299,
+        "drop_to_anchor_m": 0.00018684223460472052,
+        "keep_l1_m": 0.0,
+        "keep_source_row": 55303,
+        "operation_id": 0,
+        "paired_exact_delta_det6_integer": "0"
+      },
+      {
+        "anchor_f32": [
+          0.03846205025911331,
+          -0.09860794991254807,
+          0.17826426029205322
+        ],
+        "anchor_moved": true,
+        "drop_source_row": 58433,
+        "drop_to_anchor_m": 0.000175522808747062,
+        "keep_l1_m": 8.700042963027954e-05,
+        "keep_source_row": 58432,
+        "operation_id": 1,
+        "paired_exact_delta_det6_integer": "0"
+      }
+    ]
+  },
+  "physical_admission": false,
+  "protection_owner": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_856_extended_250um_construction.py",
+    "sha256": "25a2bf8cbb2ff776745cb3a68bb3ffdfe4b294d8a555f247ce1bc53b476c4897"
+  },
+  "rejected_directions": [
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33005,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.2758422781527784,
+                -0.8671022927120116,
+                0.11562533254797938
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33006,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33006,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33006,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33006,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33006,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.2758422781527781,
+                -0.8671022927120111,
+                0.11562533254797942
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        }
+      ],
+      "edge_rows": [
+        33005,
+        33006
+      ],
+      "length_m": 8.627839888051254e-06
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33008,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.2757030391603183,
+                -0.8669737855865016,
+                0.11559427442744319
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33009,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33009,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33009,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33009,
+          "fit": {},
+          "reason": "Fat local volume quotient creates duplicate tetrahedra"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33009,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.27570303916031824,
+                -0.8669737855865016,
+                0.11559427442744331
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        }
+      ],
+      "edge_rows": [
+        33008,
+        33009
+      ],
+      "length_m": 1.3907184768494683e-05
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33004,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.2757169957236274,
+                -0.867001660929017,
+                0.11561604553043221
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33005,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33005,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.27571699572362957,
+                -0.8670016609290141,
+                0.1156160455304351
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        }
+      ],
+      "edge_rows": [
+        33004,
+        33005
+      ],
+      "length_m": 1.8371954909319305e-05
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 55291,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 55291,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 55291,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 55291,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 55291,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.00736775807946199,
+                -0.14699060423313468,
+                0.0371195229925261
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 55297,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 55297,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 55297,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 55297,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 55297,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.007392462798720148,
+                -0.1469688917486269,
+                0.037105185906039985
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        }
+      ],
+      "edge_rows": [
+        55291,
+        55297
+      ],
+      "length_m": 0.00012524371946450255
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33002,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33002,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.2757014015213844,
+                -0.8670702013798973,
+                0.11573579739998964
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33033,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33033,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33033,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33033,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33033,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.27570140152145217,
+                -0.8670702013798164,
+                0.11573579740000356
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        }
+      ],
+      "edge_rows": [
+        33002,
+        33033
+      ],
+      "length_m": 0.00016924328254128217
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33002,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33002,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.2755987036607594,
+                -0.8669820394374673,
+                0.11567669637731452
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "projected_795_edge_fit",
+          "drop": 33035,
+          "fit": {
+            "fit": {
+              "continuous_anchor_world_m": [
+                -0.27559870366075767,
+                -0.8669820394374738,
+                0.11567669637731542
+              ],
+              "message": "Optimization terminated successfully",
+              "status": "REJECT_NO_F32_CANDIDATE"
+            },
+            "status": "REJECT_795_FIT"
+          },
+          "reason": "REJECT_795_FIT"
+        }
+      ],
+      "edge_rows": [
+        33002,
+        33035
+      ],
+      "length_m": 0.0001753558254979494
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33004,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33004,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33004,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33004,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33035,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        }
+      ],
+      "edge_rows": [
+        33004,
+        33035
+      ],
+      "length_m": 0.00018774248502060692
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat tetrahedral simplicial link condition fails"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33008,
+          "fit": {},
+          "reason": "Fat tetrahedral simplicial link condition fails"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33008,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33008,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33036,
+          "fit": {},
+          "reason": "Fat tetrahedral simplicial link condition fails"
+        }
+      ],
+      "edge_rows": [
+        33008,
+        33036
+      ],
+      "length_m": 0.00019571711819095402
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33006,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33006,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33006,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33006,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 33036,
+          "fit": {},
+          "reason": "local source face winding/area changed"
+        }
+      ],
+      "edge_rows": [
+        33006,
+        33036
+      ],
+      "length_m": 0.0001970312947077946
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 58433,
+          "fit": {},
+          "reason": "Fat local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 58433,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 58433,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 58433,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 58434,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 58434,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 58434,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 58434,
+          "fit": {},
+          "reason": "Skin local quotient regresses a previously good tetrahedron"
+        }
+      ],
+      "edge_rows": [
+        58433,
+        58434
+      ],
+      "length_m": 0.00020512305347961948
+    },
+    {
+      "directions": [
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 65823,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "kept_endpoint",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Fat local quotient regresses a previously good tetrahedron"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.25",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.5",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        },
+        {
+          "anchor_strategy": "edge_fraction_0.75",
+          "drop": 65829,
+          "fit": {},
+          "reason": "Skin local quotient creates nonpositive/subminimum tetrahedra"
+        }
+      ],
+      "edge_rows": [
+        65823,
+        65829
+      ],
+      "length_m": 0.00022573295919911217
+    }
+  ],
+  "rejection_counts": {
+    "no_orientation_passed": 11,
+    "overlapping_source_star": 1
+  },
+  "role": "I",
+  "roster": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/census-953-250um-I/roster.json",
+    "sha256": "368f47600f847b0d175fdfb9219a44aa97d135a4e8235f72e52391bc7495bfe8"
+  },
+  "schema": "h706.cached-local-endpoint-quotient-batch.v3",
+  "seconds_budget": 90.0,
+  "stage_seconds": {
+    "cache_setup": 5.182249625213444,
+    "final_alias_rebinding": 7.708048791857436,
+    "final_independent_readback": 12.974227458937094,
+    "final_serialization": 10.205019125016406,
+    "local_direction_evaluations": 0.1954570352099836,
+    "output_build": 2.2627846668474376
+  },
+  "status": "PASS_BOUNDED_ENDPOINT_QUOTIENT_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "trial_count": 116
+}

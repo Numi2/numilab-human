@@ -1,0 +1,64 @@
+{
+  "Fat_current": {
+    "boundary_source_binding_status": "PASS_LOCAL_CURRENT_SOURCE_ALIAS_REBIND_PENDING_EXTERNAL_CONTEXT",
+    "cells": 4,
+    "native_quality_failures": 0,
+    "nodes": 7,
+    "nonpositive": 0,
+    "oriented_volume_target_boundary_equal": true,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/batch-D/selected/fat-cavity-remesh-volume-proposal.npz",
+    "sha256": "ed8f6732fb00545e8d42da6aad9433bd44c82a0fa82c2ad4912422caecb02392"
+  },
+  "Skin_current": {
+    "cells": 6,
+    "native_quality_failures": 2,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/inputs/skin.npz",
+    "sha256": "8d0347f51ec2618579452697854d675ffa4048999687ba68955ceac192c62c55"
+  },
+  "actual_697_217": "PENDING",
+  "all185_775": "PENDING_FINAL_SOURCE_CONTEXT_AUDIT",
+  "construction_status": "POSTQUOTIENT_CAVITY_REMESH_PROPOSAL_PENDING_EXTERNAL_QUALIFICATION",
+  "mass_mapping": "PENDING",
+  "native_steps": 0,
+  "physical_admission": false,
+  "postquotient_source_cavity_remesh": {
+    "accepted_ring_policy": "prefer full same-material face ring; on existing cap overflow use intact complete endpoint-star union only if it fits",
+    "affected_volume_roles": [
+      "Fat"
+    ],
+    "cavity_selection_policy": "prefer_full_ring_else_intact_endpoint_star_v1",
+    "drop_source_row": 4,
+    "edge_rows": [
+      4,
+      5
+    ],
+    "external_context": "PENDING",
+    "keep_source_row": 5,
+    "native_admission": false,
+    "producer": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/postquotient_cavity_remesh_883g_seed_star_fallback_250um.py",
+      "sha256": "6c866ea36c11286bdf5d852410680fe898f44c95fbd454765ce0cf1677f23979"
+    },
+    "role": "D",
+    "source_coordinates_fixed": true
+  },
+  "source_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/inputs/state.json",
+    "sha256": "b8f62d95d542d84c9c91f28ad95ffe0a9f8f9847eefcb05e19c6aa6aab69c495"
+  },
+  "source_surfaces": {
+    "D": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/batch-D/selected/candidate-D-typed-current.npz",
+      "sha256": "7225eac706e8d63168c188a7cb65961e864f538e0a1effb34059c81d29ddbe21"
+    },
+    "I": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/inputs/I.npz",
+      "sha256": "eff7aa59e8fe5f052dbd7709603fce6d3790e01d0baa6fa6a19777f4bc29b595"
+    },
+    "O": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-endpoint-collapse-001/run-883g-synthetic-fixture-001/inputs/I.npz",
+      "sha256": "eff7aa59e8fe5f052dbd7709603fce6d3790e01d0baa6fa6a19777f4bc29b595"
+    }
+  },
+  "status": "SYNTHETIC_POSTQUOTIENT_CAVITY_FIXTURE"
+}
