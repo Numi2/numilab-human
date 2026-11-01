@@ -1,0 +1,89 @@
+{
+  "candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1037/candidate-current-typed-volume.npz",
+    "sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372"
+  },
+  "candidate_rows": {
+    "points": 311768,
+    "tetrahedra": 1495294
+  },
+  "current_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+    "sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078"
+  },
+  "export_receipt_433": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/receipt.json",
+    "sha256": "3eb750905bd61f855213b194c55a2bab2dda12b8bdc4ab3dc59c6456e4007b2c"
+  },
+  "exported_volume": {
+    "child.labels.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/child.labels.csv",
+      "sha256": "c48c944a0f4080ecc3df3d6430bf6f8ec8abca00c90c8b990ffbfdd72dc2156d"
+    },
+    "mesh.ele": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.ele",
+      "sha256": "ca1ec9c3ac3afc8964dbddf92bc6db5d1c854e0dc873ed8c4f3dfe4b0c6addeb"
+    },
+    "mesh.node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.node",
+      "sha256": "8f47890b86b3a71ce247caf69eff6e72cf4a7080af28a287b8f4cd40efa27424"
+    }
+  },
+  "limitations": [
+    "This preflight binds candidate arrays to the exact 433 exported TetGen mesh and semantic labels.",
+    "It does not execute the 436 mass mapper, native dynamics, or physical admission.",
+    "The 436 result must be reviewed independently and remains distinct from motion qualification."
+  ],
+  "mass_mapper_436": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/run_refined_mass_gate_436.py",
+    "sha256": "bb4900533bbd5f2e894ffd66cbd237e777f36a4dedd6fe0ba2a68cc27a4bf0ad"
+  },
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "numi.h706.current-mass-input-consistency-1023.v1",
+  "source330_control003": {
+    "control_result": {
+      "mass_mapping_pass": true,
+      "motion_qualified": false,
+      "physical_steps": 0,
+      "repaired_volume_admitted": false,
+      "source_capture_only": true,
+      "source_identity_remap_pass": true,
+      "source_prepared_replacement_pass": true
+    },
+    "directory": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003",
+    "files": {
+      "compiled-parent-cell-mass.csv": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+        "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+      },
+      "compiled-parent-cell-mass.csv.labels.csv": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+        "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+      },
+      "compiled-parent-cell-mass.csv.nodes.csv": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+        "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+      },
+      "compiled-parent-cell-mass.csv.tets.csv": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+        "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+      },
+      "compiled-parent-cell-mass.csv.weights.csv": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.weights.csv",
+        "sha256": "98205ae7de44401544b7969184788f5c2ee39cd4404cd34b8037377e7ae63a76"
+      },
+      "result.json": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/result.json",
+        "sha256": "ca2a67cc73af38f909dd978bc4fee519b8bf0895f22b60351c124d7523a5f442"
+      }
+    }
+  },
+  "source_proof_808": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/source-proof-808.json",
+    "sha256": "9df0a4d5d5900ac7ed5e8c62e01cdbf00517b958614d82da825282857302d569"
+  },
+  "source_proof_status": "PASS_CURRENT_EXACT_SOURCE_EVIDENCE",
+  "status": "PASS_433_MASS_INPUTS_BITWISE_BOUND_NOT_RUN"
+}

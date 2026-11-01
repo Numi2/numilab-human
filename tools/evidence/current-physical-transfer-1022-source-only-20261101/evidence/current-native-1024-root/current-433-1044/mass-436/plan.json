@@ -1,0 +1,24 @@
+{
+  "script_sha256": "bb4900533bbd5f2e894ffd66cbd237e777f36a4dedd6fe0ba2a68cc27a4bf0ad",
+  "topology_gate_sha256": "a2f97fd378c4e5df06a5dd9a1904be0e419fdcd90d80f41b81f898e4dc1c8c0e",
+  "connected_cell_preparation": "PASS",
+  "scope": "bounded conservative reference mass transport with declared source-cell ancestry; no native motion admission",
+  "candidate_sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372",
+  "binary_sha256": "422a6e093d45e1468d6a0d095098c5d4499b6a9b50ffb1d7b859d216f077fc36",
+  "source_parent_packet_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+  "parent_centroid_coordinate_source": "authoritative_rest_xyz_m_as_used_by_native_mass_mapper",
+  "child_volume_sha256": {
+    "mesh.node": "8f47890b86b3a71ce247caf69eff6e72cf4a7080af28a287b8f4cd40efa27424",
+    "mesh.ele": "ca1ec9c3ac3afc8964dbddf92bc6db5d1c854e0dc873ed8c4f3dfe4b0c6addeb",
+    "child.labels.csv": "c48c944a0f4080ecc3df3d6430bf6f8ec8abca00c90c8b990ffbfdd72dc2156d"
+  },
+  "maximum_declared_source_centroid_distance_m": 0.18744234145806365,
+  "predeclared_transport_envelope_m": 0.187444,
+  "rule": "ceil(max declared child-to-original-source-parent centroid displacement / 1um)*1um +1um, floor200um; no further enlargement after results",
+  "sensitivity_factors": [
+    0.5,
+    1.0
+  ],
+  "density_bounds_unchanged": true,
+  "physical_admission": false
+}

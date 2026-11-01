@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "scope": "status controls and hash-verified replay of retained 436 logs; NO new mass solve or native motion",
+  "control_count": 10,
+  "script_sha256": "ba6d51a73f780f32ad5cdf6649d2c1abdd678f145c1fa5d99679f13c56dbdd03",
+  "retained_result_sha256": "a613be07e8e797b092b1733818e1a5e79b2a512df5e7f9d3de55b68a764b6c9e",
+  "replayed_mass_mapping_status": "FAIL",
+  "trials": [
+    {
+      "factor": 0.5,
+      "bound_m": 0.093722,
+      "command": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/numi-human-physical-skin-child-mass-mapping-cli",
+        "--parent-mass-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+        "--labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+        "--child-node-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.node",
+        "--child-ele-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.ele",
+        "--child-labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/child.labels.csv",
+        "--coordinate-frame-sha256",
+        "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "--source-body-count",
+        "157",
+        "--maximum-transport-distance-m",
+        "0.093722"
+      ],
+      "exit_code": 6,
+      "wall_s": 1.6991399589460343,
+      "stdout_sha256": "fc2f0ef4d811502a02d0f161404766e048a11aadbd9f73a7c167cfa5b4b3f0e5",
+      "stderr_sha256": "4b7a89239de041e74d78467f73c19a2a90b29680f7a6ed427651dcbe840246e1",
+      "mass_mapping_pass": false
+    },
+    {
+      "factor": 1.0,
+      "bound_m": 0.187444,
+      "command": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/numi-human-physical-skin-child-mass-mapping-cli",
+        "--parent-mass-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+        "--labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+        "--child-node-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.node",
+        "--child-ele-file",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.ele",
+        "--child-labels-csv",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/child.labels.csv",
+        "--coordinate-frame-sha256",
+        "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "--source-body-count",
+        "157",
+        "--maximum-transport-distance-m",
+        "0.187444"
+      ],
+      "exit_code": 6,
+      "wall_s": 1.2366387080401182,
+      "stdout_sha256": "fc2f0ef4d811502a02d0f161404766e048a11aadbd9f73a7c167cfa5b4b3f0e5",
+      "stderr_sha256": "4b7a89239de041e74d78467f73c19a2a90b29680f7a6ed427651dcbe840246e1",
+      "mass_mapping_pass": false
+    }
+  ],
+  "physical_admission": false,
+  "native_steps": 0
+}
