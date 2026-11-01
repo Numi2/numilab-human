@@ -1,0 +1,92 @@
+{
+  "all_zip_crcs_passed": true,
+  "archive_index_canonical_sha256": "3ccaa7b98a3ba76d5b38b598ea56defe3efdfb5c195019ea46cde47b6e2736c3",
+  "files": [
+    {
+      "npy_header_count": 135,
+      "npy_header_summary_sha256": "de533e62cc05e06c4d17f7a811761b201ce98f44d99480115da55e72c65500db",
+      "ram_restore_npy_header_count": 135,
+      "ram_restore_npy_header_summary_sha256": "de533e62cc05e06c4d17f7a811761b201ce98f44d99480115da55e72c65500db",
+      "ram_restore_required_array_readback": {
+        "boundary_faces": {
+          "array_bytes_sha256": "10f77b6872014f7b59a9a249de8856c1a98efd750c021adb687d22146ccb9d61",
+          "dtype": "<i8",
+          "shape": [
+            444472,
+            3
+          ]
+        },
+        "material_indices": {
+          "array_bytes_sha256": "6119a13af235133ea6dcd7c16fe7c27be1ad08fc0f0fc1e41dde33e86bc07fc3",
+          "dtype": "<i4",
+          "shape": [
+            770603
+          ]
+        },
+        "points_world_m": {
+          "array_bytes_sha256": "21cead417faa5054ac7c106a2bbe18d7c1e3d95bebec2533d8851c4953190253",
+          "dtype": "<f4",
+          "shape": [
+            253887,
+            3
+          ]
+        },
+        "points_world_m_f32": {
+          "array_bytes_sha256": "21cead417faa5054ac7c106a2bbe18d7c1e3d95bebec2533d8851c4953190253",
+          "dtype": "<f4",
+          "shape": [
+            253887,
+            3
+          ]
+        },
+        "tetrahedra": {
+          "array_bytes_sha256": "f7c5985e2c6456ad6cde54f42b9ffec43d3a9ef212c2830b9b5451ed191e1408",
+          "dtype": "<i8",
+          "shape": [
+            770603,
+            4
+          ]
+        }
+      },
+      "ram_restore_sha256": "178df55695b71746125a0190bbe8f55c8c49e649f8218a9aedaebddc96c072f1",
+      "required_volume_arrays": [
+        "boundary_faces.npy",
+        "material_indices.npy",
+        "points_world_m.npy",
+        "points_world_m_f32.npy",
+        "tetrahedra.npy"
+      ],
+      "sha256": "178df55695b71746125a0190bbe8f55c8c49e649f8218a9aedaebddc96c072f1",
+      "size_bytes": 36117276,
+      "source_paths": [
+        "all-quality-858-root/fat-coupled-quality-point-proposal.npz"
+      ],
+      "zip_crc": "PASS"
+    },
+    {
+      "npy_header_count": 99,
+      "npy_header_summary_sha256": "7e564e9f8ba7b3baa66c626849eddd209af9fa5853fa502444da3ebfc7211d6f",
+      "required_volume_arrays": [
+        "boundary_faces.npy",
+        "material_indices.npy",
+        "points_world_m.npy",
+        "points_world_m_f32.npy",
+        "tetrahedra.npy"
+      ],
+      "sha256": "1fdbaf0bbef7efca6947279d1b71eef412ff2cd09ebf84c186b25b88369a4340",
+      "size_bytes": 30713709,
+      "source_paths": [
+        "all-quality-858-root/skin-coupled-quality-point-proposal.npz"
+      ],
+      "zip_crc": "PASS"
+    }
+  ],
+  "native_steps": 0,
+  "npy_array_headers_read": 234,
+  "npz_count": 2,
+  "physical_admission": false,
+  "remote_gh_asset_stdout_sha256": "ed0ef16587af1bbd58ca4b01ab951b87e6d978da3193f5a816dc1dca95bee027",
+  "schema": "numi-human.quality-volume-npz-readback.v1",
+  "status": "PASS_ALL_NPZ_ZIP_CRC_AND_NPY_HEADERS",
+  "uncompressed_blob_bytes": 66830985
+}
