@@ -1,0 +1,73 @@
+{
+  "schema": "numi.h706.current-physical-transfer-1046h-input-pins.v1",
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current_source_carrier_bridge_1046h.py",
+    "sha256": "947e3e9d9a4993be7e73c5f06a1f25d92721ceceed8f2e05cef751807b8d09ec"
+  },
+  "import_closure": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-bridge-1046.py",
+      "sha256": "31eca4ad846d5fb35228b9c26a378dc1dd81d6ea88e83ad26dfef2074b07656f",
+      "role": "1046 base producer"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/batched_reference_tet_projection_149_root.py",
+      "sha256": "02b04cff325b4adea24d055fdfd2121ab4d596a3c075ab6fe8183094eb46e1d6",
+      "role": "149 source-tetra projector"
+    }
+  ],
+  "role_receipts": {
+    "Skin": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-bridge-1046h/skin-current-source-quadrature-1046d-receipt.json",
+      "sha256": "8e83ac23ed7555dcadf0d21bf4b91f82b4e9a5c359ece8cdcceb63d704fb120d",
+      "status": "PASS_SOURCE_ONLY_CURRENT_433_EXACT_TUPLE_CARRIER_REBIND",
+      "native_steps": 0,
+      "physical_admission": false,
+      "inputs_sha256": {
+        "candidate_npz_sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372",
+        "candidate_receipt_sha256": "a8a1f368c1859065bd175b11977c8edc0e708a6d9495b052cd88be552f9d7f5e",
+        "current_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+        "old_extended_witness_sha256": "9e3f4882d618786a37b416b03ae589e8b701b524af855984c8977e2bffe9ad67",
+        "old_packet_parent_sha256": "e5e0edf9883f979ca2e06f55f831e7cc90576740be31c14f0e014f4439f1b0bd",
+        "old_packet_receipt_sha256": "f6bb5a8068c3e3885fa8baa3fad7d016a4b4af0f1e14b15ed8f17e98ff81e6bf",
+        "old_packet_sha256": "12af1b30eb5bf015a67f78b219c0d6aa0a28e3042f051520e960f18cb007e91e",
+        "p1_support_sha256": "4e0f5c54d114b79634d1dabf0fc7b195a67bb2d933685716e1b079a834ea87c1",
+        "projection_owner_sha256": "e3d2aae25ff1588ab34419e93b08a7dd492b34f90bf015e1736e61bffb523bb4",
+        "projection_report_sha256": "772bd092fae235a366de9683c584e1a6672e33f2bb07886bd4b4b511fbf418c4",
+        "projection_support_csv_sha256": "5c98209b92d4602015ad6b10ea5bd742a186c004040ea2e79ee7a95d3c138a21",
+        "source330_labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+        "source330_mass_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+        "source330_nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+        "source330_tets_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+      }
+    },
+    "Fat": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-bridge-1046h/fat-current-source-quadrature-1046d-receipt.json",
+      "sha256": "737a6a3b827c43c5729e6765412c639fb7cec3f20d58c3568adb92cc7d0df47e",
+      "status": "PASS_SOURCE_ONLY_CURRENT_433_EXACT_TUPLE_CARRIER_REBIND",
+      "native_steps": 0,
+      "physical_admission": false,
+      "inputs_sha256": {
+        "candidate_npz_sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372",
+        "candidate_receipt_sha256": "a8a1f368c1859065bd175b11977c8edc0e708a6d9495b052cd88be552f9d7f5e",
+        "current_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+        "old_extended_witness_sha256": "5b13685e14316a987168471f60d9438dd7b456273b2a330b40e19d848864cd80",
+        "old_packet_parent_sha256": "0cf2307a774d6a56b76bb7643bb37d7c842ab249c97f4470fb49cca5ed633bc6",
+        "old_packet_receipt_sha256": "5efd924d1ce8684cd5cff40a122f4226fa51213a44089ecb5fc34d96127b1f37",
+        "old_packet_sha256": "33aaf568d056248788d17d8e5b4f36f0c31a4dc3b362ff52c3339170d7f9546f",
+        "p1_support_sha256": "87ad4cd45719c66a53ece5f205f4a74d79121a8cf31241fab20fff891c706f40",
+        "projection_owner_sha256": "e3d2aae25ff1588ab34419e93b08a7dd492b34f90bf015e1736e61bffb523bb4",
+        "projection_report_sha256": "772bd092fae235a366de9683c584e1a6672e33f2bb07886bd4b4b511fbf418c4",
+        "projection_support_csv_sha256": "5c98209b92d4602015ad6b10ea5bd742a186c004040ea2e79ee7a95d3c138a21",
+        "source330_labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+        "source330_mass_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+        "source330_nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+        "source330_tets_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+      }
+    }
+  },
+  "data_policy": "Only small 1046h carrier outputs and receipts are copied. Historical geometry and input arrays remain referenced by original paths and hashes.",
+  "geometry_mutation": false,
+  "native_steps": 0,
+  "physical_admission": false
+}

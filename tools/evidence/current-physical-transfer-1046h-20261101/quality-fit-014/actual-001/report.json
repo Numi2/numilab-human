@@ -1,0 +1,1091 @@
+{
+  "argv": [
+    "--state",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-last-fat-fixed-775-qualified-root/verified-state.json",
+    "--output",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-cap-interior-fit-014/actual-001"
+  ],
+  "elapsed_s": 1.2362095001153648,
+  "final": {
+    "candidate_evaluation": null,
+    "global_bad_after_count": 5,
+    "global_bad_outside_complete_cavity_count": 3,
+    "source_surface_local_intersection_screen": null,
+    "status": "NO_ACCEPTED_F32_PROGRESS"
+  },
+  "initial": {
+    "global_bad": {
+      "Fat": {
+        "count": 1,
+        "min_q": 2.1880683886859052e-06,
+        "rows": [
+          770427
+        ]
+      },
+      "Skin": {
+        "count": 4,
+        "min_q": 3.0591275148997105e-06,
+        "rows": [
+          724056,
+          724256,
+          724332,
+          724831
+        ]
+      }
+    },
+    "local_q_deficit": 1.1981333841069726,
+    "local_star_bad_count": 2
+  },
+  "input": {
+    "assets": {
+      "D": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-958-D014-root/proposal-003/candidate-D-typed-current.npz",
+        "sha256": "63cec05102fd2dc670d9220ec6472cd7d9ffa7085b4694719c605947086c7da9"
+      },
+      "Fat": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-969-remesh-883j-65823-65829-root/run001/fat-cavity-remesh-volume-proposal.npz",
+        "sha256": "d42ff9936b4aaf72399e58ae3122655df0e02ccc7da05754652a30be487cd755"
+      },
+      "I": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-969-remesh-883j-65823-65829-root/run001/candidate-I-typed-current.npz",
+        "sha256": "3782b355a840ab325fed09e55b39e425b3165ea34aca78b18e09d1f8988681cd"
+      },
+      "O": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz",
+        "sha256": "10169962e298586d63794bf94515ecc3a9b1ce91e66cc60566a6919d7c856ac3"
+      },
+      "Skin": {
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-969-remesh-883j-65823-65829-root/run001/skin-cavity-remesh-volume-proposal.npz",
+        "sha256": "da3174ef6a3ce0ffb4570215fefee1fe88bfaa00f0318a2e025ce5391041e59d"
+      }
+    },
+    "back_scope_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-back412-scope-597-root/run003/output-001/protected-back412-aabb-current-O558-I50-D264-rows.npz",
+    "back_scope_sha256": "1abbf3c5887cfa507c303e845dafbb78d247e6b7a4893722a5d81ed202fd2676",
+    "state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-last-fat-fixed-775-qualified-root/verified-state.json",
+    "state_sha256": "e2c3882d0b25962cb811d69597de2d545528df5c75affa1b56d9963ffd080aa8"
+  },
+  "iterations": [
+    {
+      "current_bad_after": 2,
+      "current_deficit": 1.1981333841069726,
+      "iteration": 0,
+      "lp": {
+        "linearized_q_rows": 2,
+        "matrix_shape": [
+          818,
+          136
+        ],
+        "positive_det_rows": 816
+      },
+      "lp_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+      "lp_min_normalized_q_slack": -0.39993051324753826,
+      "status": "NO_ACCEPTABLE_LINE_SEARCH_STEP",
+      "trials": [
+        {
+          "alpha": 1.0,
+          "bad_after": 69,
+          "deficit": 14747.486231066941,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "STEP_CAP",
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "SOURCE_FACE_ORIENTATION_OR_AREA",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 48,
+              "exact_nonpositive_cells": [
+                751089,
+                751395,
+                751408,
+                752157,
+                752811,
+                754969,
+                756295,
+                758054,
+                758055,
+                758272,
+                758563,
+                758775,
+                759172,
+                759177,
+                759214,
+                770348,
+                770358,
+                770363,
+                770366,
+                770371,
+                770382,
+                770383,
+                770390,
+                770391,
+                770397,
+                770400,
+                770406
+              ],
+              "min_q_after": -0.0652958288035212,
+              "old_good_regression_count": 48
+            },
+            "Skin": {
+              "bad_after_count": 21,
+              "exact_nonpositive_cells": [
+                671150,
+                692197,
+                697494,
+                724826
+              ],
+              "min_q_after": -0.007041478439507918,
+              "old_good_regression_count": 19
+            }
+          },
+          "source_face_failures": [
+            {
+              "area_ratio": 0.2291573726318451,
+              "orientation_cosine": -0.9555300907124484,
+              "row": 121055
+            },
+            {
+              "area_ratio": 8.8740674481621,
+              "orientation_cosine": 0.9066063961769842,
+              "row": 121057
+            },
+            {
+              "area_ratio": 5.445804786452223,
+              "orientation_cosine": 0.539059287488678,
+              "row": 121058
+            },
+            {
+              "area_ratio": 0.018574921224532623,
+              "orientation_cosine": -0.9669839319553414,
+              "row": 235632
+            },
+            {
+              "area_ratio": 4.7833930885172995,
+              "orientation_cosine": 0.9878855685392377,
+              "row": 235633
+            }
+          ],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.5,
+          "bad_after": 19,
+          "deficit": 2934.272969477187,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "SOURCE_FACE_ORIENTATION_OR_AREA",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 12,
+              "exact_nonpositive_cells": [
+                751395,
+                758775,
+                759172,
+                759177,
+                759214,
+                770371
+              ],
+              "min_q_after": -0.027199330947431828,
+              "old_good_regression_count": 12
+            },
+            "Skin": {
+              "bad_after_count": 7,
+              "exact_nonpositive_cells": [
+                671150
+              ],
+              "min_q_after": -0.0006849224958779492,
+              "old_good_regression_count": 5
+            }
+          },
+          "source_face_failures": [
+            {
+              "area_ratio": 0.37946636829051866,
+              "orientation_cosine": 0.9940841720403872,
+              "row": 121055
+            },
+            {
+              "area_ratio": 4.769534412572802,
+              "orientation_cosine": 0.9228444434068062,
+              "row": 121057
+            },
+            {
+              "area_ratio": 3.023412244067648,
+              "orientation_cosine": 0.6512002630765474,
+              "row": 121058
+            },
+            {
+              "area_ratio": 0.493789520593722,
+              "orientation_cosine": 0.9999874524912211,
+              "row": 235632
+            },
+            {
+              "area_ratio": 2.887360533359688,
+              "orientation_cosine": 0.9917187670501189,
+              "row": 235633
+            }
+          ],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.25,
+          "bad_after": 12,
+          "deficit": 435.69446929500486,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "SOURCE_FACE_ORIENTATION_OR_AREA",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 7,
+              "exact_nonpositive_cells": [
+                751395,
+                758775,
+                759214
+              ],
+              "min_q_after": -0.0038843516264789137,
+              "old_good_regression_count": 7
+            },
+            "Skin": {
+              "bad_after_count": 5,
+              "exact_nonpositive_cells": [
+                671150
+              ],
+              "min_q_after": -4.059748722829038e-05,
+              "old_good_regression_count": 3
+            }
+          },
+          "source_face_failures": [
+            {
+              "area_ratio": 2.8282649692106574,
+              "orientation_cosine": 0.9480981851788435,
+              "row": 121057
+            }
+          ],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.125,
+          "bad_after": 9,
+          "deficit": 13.820682279098035,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 5,
+              "exact_nonpositive_cells": [
+                751395,
+                759214
+              ],
+              "min_q_after": -7.343533856792149e-05,
+              "old_good_regression_count": 5
+            },
+            "Skin": {
+              "bad_after_count": 4,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 4.136068932385923e-06,
+              "old_good_regression_count": 2
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.0625,
+          "bad_after": 7,
+          "deficit": 3.5696329202433223,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 4,
+              "exact_nonpositive_cells": [
+                751089
+              ],
+              "min_q_after": -7.3010199088130126e-06,
+              "old_good_regression_count": 4
+            },
+            "Skin": {
+              "bad_after_count": 3,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.977738330656767e-06,
+              "old_good_regression_count": 1
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.03125,
+          "bad_after": 7,
+          "deficit": 6.41440687426633,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 5,
+              "exact_nonpositive_cells": [
+                751089
+              ],
+              "min_q_after": -2.6410500573689175e-05,
+              "old_good_regression_count": 5
+            },
+            "Skin": {
+              "bad_after_count": 2,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.913785266667989e-06,
+              "old_good_regression_count": 0
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.015625,
+          "bad_after": 5,
+          "deficit": 3.149556187978178,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "EXACT_NONPOSITIVE",
+            "OLD_GOOD_REGRESSION",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 3,
+              "exact_nonpositive_cells": [
+                751089
+              ],
+              "min_q_after": -7.653124824524473e-06,
+              "old_good_regression_count": 3
+            },
+            "Skin": {
+              "bad_after_count": 2,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.876228585788767e-06,
+              "old_good_regression_count": 0
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.0078125,
+          "bad_after": 6,
+          "deficit": 1.5799602549894558,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "OLD_GOOD_REGRESSION",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 4,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 7.573812443498007e-06,
+              "old_good_regression_count": 4
+            },
+            "Skin": {
+              "bad_after_count": 2,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.859304168907504e-06,
+              "old_good_regression_count": 0
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.00390625,
+          "bad_after": 3,
+          "deficit": 1.2003084747136081,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "OLD_GOOD_REGRESSION",
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 1,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 9.973793568331218e-06,
+              "old_good_regression_count": 1
+            },
+            "Skin": {
+              "bad_after_count": 2,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.843044316172284e-06,
+              "old_good_regression_count": 0
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.001953125,
+          "bad_after": 3,
+          "deficit": 1.198049651195903,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "OLD_GOOD_REGRESSION"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 1,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 9.996881393568676e-06,
+              "old_good_regression_count": 1
+            },
+            "Skin": {
+              "bad_after_count": 2,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.847613645447207e-06,
+              "old_good_regression_count": 0
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        },
+        {
+          "alpha": 0.0009765625,
+          "bad_after": 2,
+          "deficit": 1.1981752448699816,
+          "paired_det6_delta": "0",
+          "reasons": [
+            "NO_NONLINEAR_DEFICIT_PROGRESS"
+          ],
+          "role_diagnostics": {
+            "Fat": {
+              "bad_after_count": 0,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 1.0009957568430179e-05,
+              "old_good_regression_count": 0
+            },
+            "Skin": {
+              "bad_after_count": 2,
+              "exact_nonpositive_cells": [],
+              "min_q_after": 3.84539358737782e-06,
+              "old_good_regression_count": 0
+            }
+          },
+          "source_face_failures": [],
+          "status": "REJECTED"
+        }
+      ]
+    }
+  ],
+  "policy": {
+    "all_affected_exact_determinants_positive": true,
+    "all_incident_cells_of_every_movable_point_in_constraints": true,
+    "all_old_good_cells_must_pass_final": true,
+    "final_native_q_gate": 1e-05,
+    "full_775_context": "NOT_RUN",
+    "interior_node_cap_m": "min(1mm, 0.5 * median edge length in the complete incident star)",
+    "intermediate_native_q_may_remain_below_gate": true,
+    "line_search_fractions": [
+      1.0,
+      0.5,
+      0.25,
+      0.125,
+      0.0625,
+      0.03125,
+      0.015625,
+      0.0078125,
+      0.00390625,
+      0.001953125,
+      0.0009765625
+    ],
+    "mass": "NOT_RUN",
+    "max_iterations": 8,
+    "native_steps": 0,
+    "objective": "maximize common linearized normalized q margin only over pinned baseline-bad cells; exact F32 line-search requires aggregate nonlinear deficit decrease and no baseline-good regression",
+    "other_boundary_source_back_route_nodes_fixed": true,
+    "paired_local_exact_det6_delta_must_cancel": true,
+    "per_node_step_cap_m": 0.0001,
+    "physical_admission": false,
+    "source_and_volume_arrays_written": false,
+    "source_face_area_ratio_bounds": [
+      0.5,
+      2.0
+    ],
+    "source_face_cosine_min": 0.5,
+    "source_surface_hausdorff_bound": "same indexed triangle correspondence; max six-I-vertex displacement bounds both directed distances",
+    "surface_I_move_cap_m": 0.00025,
+    "surface_I_rows": [
+      33002,
+      33004,
+      33033,
+      33035,
+      33036,
+      34957
+    ],
+    "wall_budget_s": 180.0
+  },
+  "producer_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-972-cap-interior-fit-014/fit_cap_and_interior_nodes_014.py",
+  "producer_sha256": "810854c27451840d2013f019917d8b701c0345f4e71e63fc3058cc9743462666",
+  "protected_and_star_census": {
+    "Fat": {
+      "back_map_count": 790,
+      "boundary_count": 221706,
+      "exact_source_alias_count": 246015,
+      "expanded_cells_added": 302,
+      "expanded_full_star_cell_count": 515,
+      "global_bad_before_count": 1,
+      "global_bad_rows_outside_cavity": [
+        770427
+      ],
+      "interior_candidate_count": 31,
+      "interior_candidate_rows": [
+        253233,
+        253241,
+        253250,
+        253262,
+        253269,
+        253301,
+        253302,
+        253305,
+        253329,
+        253355,
+        253388,
+        253417,
+        253439,
+        253440,
+        253442,
+        253513,
+        253521,
+        253552,
+        253570,
+        253579,
+        253598,
+        253611,
+        253640,
+        253643,
+        253659,
+        253661,
+        253683,
+        253697,
+        253705,
+        253710,
+        253711
+      ],
+      "seed_cell_count": 213,
+      "source_map_count": 246015
+    },
+    "Skin": {
+      "back_map_count": 790,
+      "boundary_count": 194390,
+      "exact_source_alias_count": 202037,
+      "expanded_cells_added": 197,
+      "expanded_full_star_cell_count": 301,
+      "global_bad_before_count": 4,
+      "global_bad_rows_outside_cavity": [
+        724256,
+        724332
+      ],
+      "interior_candidate_count": 8,
+      "interior_candidate_rows": [
+        206563,
+        206904,
+        207497,
+        207755,
+        208489,
+        209144,
+        209147,
+        210269
+      ],
+      "seed_cell_count": 104,
+      "source_map_count": 202037
+    }
+  },
+  "schema": "numi.h706.coupled_surface_cap_interior_point_fit.v3",
+  "variables": [
+    {
+      "cap_m": 0.00025,
+      "index": 0,
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role": null,
+      "role_rows": {
+        "Fat": 33002,
+        "Skin": 109671
+      },
+      "source_row": 33002,
+      "volume_row": null
+    },
+    {
+      "cap_m": 0.00025,
+      "index": 1,
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role": null,
+      "role_rows": {
+        "Fat": 33004,
+        "Skin": 109673
+      },
+      "source_row": 33004,
+      "volume_row": null
+    },
+    {
+      "cap_m": 0.00025,
+      "index": 2,
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role": null,
+      "role_rows": {
+        "Fat": 33033,
+        "Skin": 109702
+      },
+      "source_row": 33033,
+      "volume_row": null
+    },
+    {
+      "cap_m": 0.00025,
+      "index": 3,
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role": null,
+      "role_rows": {
+        "Fat": 33035,
+        "Skin": 109704
+      },
+      "source_row": 33035,
+      "volume_row": null
+    },
+    {
+      "cap_m": 0.00025,
+      "index": 4,
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role": null,
+      "role_rows": {
+        "Fat": 33036,
+        "Skin": 109705
+      },
+      "source_row": 33036,
+      "volume_row": null
+    },
+    {
+      "cap_m": 0.00025,
+      "index": 5,
+      "kind": "I_surface",
+      "median_incident_edge_m": null,
+      "role": null,
+      "role_rows": {
+        "Fat": 34957,
+        "Skin": 111626
+      },
+      "source_row": 34957,
+      "volume_row": null
+    },
+    {
+      "cap_m": 0.00010658681396429904,
+      "index": 6,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00021317362792859808,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 206563
+    },
+    {
+      "cap_m": 0.001,
+      "index": 7,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.003562119566148468,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 206904
+    },
+    {
+      "cap_m": 5.062008034630723e-05,
+      "index": 8,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00010124016069261446,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 207497
+    },
+    {
+      "cap_m": 0.00015007106381460296,
+      "index": 9,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0003001421276292059,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 207755
+    },
+    {
+      "cap_m": 0.0003086492651755381,
+      "index": 10,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0006172985303510762,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 208489
+    },
+    {
+      "cap_m": 0.001,
+      "index": 11,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0023902420819522105,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 209144
+    },
+    {
+      "cap_m": 0.001,
+      "index": 12,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0035721999707513117,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 209147
+    },
+    {
+      "cap_m": 0.001,
+      "index": 13,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.010464610183296084,
+      "role": "Skin",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 210269
+    },
+    {
+      "cap_m": 0.001,
+      "index": 14,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.003667662020377082,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253233
+    },
+    {
+      "cap_m": 0.0009365321623607488,
+      "index": 15,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0018730643247214975,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253241
+    },
+    {
+      "cap_m": 0.001,
+      "index": 16,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0040352965710488,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253250
+    },
+    {
+      "cap_m": 0.001,
+      "index": 17,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00552061429884283,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253262
+    },
+    {
+      "cap_m": 0.001,
+      "index": 18,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00364662781087252,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253269
+    },
+    {
+      "cap_m": 5.38033979178987e-05,
+      "index": 19,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001076067958357974,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253301
+    },
+    {
+      "cap_m": 0.0006505933317859825,
+      "index": 20,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.001301186663571965,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253302
+    },
+    {
+      "cap_m": 0.001,
+      "index": 21,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.007367852048532957,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253305
+    },
+    {
+      "cap_m": 6.289921921761832e-05,
+      "index": 22,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00012579843843523665,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253329
+    },
+    {
+      "cap_m": 6.94553588126124e-05,
+      "index": 23,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001389107176252248,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253355
+    },
+    {
+      "cap_m": 6.371764508980303e-05,
+      "index": 24,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00012743529017960605,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253388
+    },
+    {
+      "cap_m": 0.0006551684223041675,
+      "index": 25,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.001310336844608335,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253417
+    },
+    {
+      "cap_m": 0.0007389591186450721,
+      "index": 26,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0014779182372901443,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253439
+    },
+    {
+      "cap_m": 0.00025801108691632434,
+      "index": 27,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0005160221738326487,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253440
+    },
+    {
+      "cap_m": 0.001,
+      "index": 28,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00455006214455231,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253442
+    },
+    {
+      "cap_m": 2.603635105398288e-05,
+      "index": 29,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 5.207270210796576e-05,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253513
+    },
+    {
+      "cap_m": 8.215066665309147e-05,
+      "index": 30,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00016430133330618294,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253521
+    },
+    {
+      "cap_m": 0.00011774231882021602,
+      "index": 31,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00023548463764043204,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253552
+    },
+    {
+      "cap_m": 0.001,
+      "index": 32,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.002558034910528445,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253570
+    },
+    {
+      "cap_m": 0.001,
+      "index": 33,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.002882186500247992,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253579
+    },
+    {
+      "cap_m": 9.427966755480925e-05,
+      "index": 34,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001885593351096185,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253598
+    },
+    {
+      "cap_m": 6.99797173620739e-05,
+      "index": 35,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0001399594347241478,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253611
+    },
+    {
+      "cap_m": 0.001,
+      "index": 36,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.013697336436264822,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253640
+    },
+    {
+      "cap_m": 7.957898197405883e-05,
+      "index": 37,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00015915796394811766,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253643
+    },
+    {
+      "cap_m": 0.00021956494219700163,
+      "index": 38,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00043912988439400325,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253659
+    },
+    {
+      "cap_m": 0.0002442134694615466,
+      "index": 39,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.0004884269389230932,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253661
+    },
+    {
+      "cap_m": 2.1798912067826277e-05,
+      "index": 40,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 4.3597824135652554e-05,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253683
+    },
+    {
+      "cap_m": 0.001,
+      "index": 41,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.02825383431504136,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253697
+    },
+    {
+      "cap_m": 5.8078821883234594e-05,
+      "index": 42,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00011615764376646919,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253705
+    },
+    {
+      "cap_m": 6.672540769803246e-05,
+      "index": 43,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 0.00013345081539606492,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253710
+    },
+    {
+      "cap_m": 4.597237068336356e-05,
+      "index": 44,
+      "kind": "interior_volume",
+      "median_incident_edge_m": 9.194474136672712e-05,
+      "role": "Fat",
+      "role_rows": null,
+      "source_row": null,
+      "volume_row": 253711
+    }
+  ]
+}

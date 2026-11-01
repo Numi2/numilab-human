@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current_source_carrier_bridge_1046e.py", line 552, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current_source_carrier_bridge_1046e.py", line 548, in main
+    a.output.mkdir(parents=True,exist_ok=True);v={r:build(r,a.output) for r in ("Skin","Fat")}
+                                                    ~~~~~^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current_source_carrier_bridge_1046e.py", line 461, in build
+    row["distance_m"]=x["distance"]
+                      ~^^^^^^^^^^^^
+KeyError: 'distance'

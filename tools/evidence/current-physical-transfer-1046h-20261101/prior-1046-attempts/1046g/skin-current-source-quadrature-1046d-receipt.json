@@ -1,0 +1,291 @@
+{
+  "1044_projection_validation_basis": "pinned 217 read_parent_current from current_x/y/z_m; projection CSV replay remains on that basis",
+  "authenticated_projection_group_count": 28,
+  "carrier_count": 1414,
+  "carrier_geometry_basis": "source330 parent.referenceWorldPoints from rest_x/y/z_m",
+  "carrierized_parent_count": 63,
+  "centroid_fallbacks": [],
+  "geometry_basis": {
+    "1044_projection_replay": "pinned 217 read_parent_current from current_x/y/z_m",
+    "carrier_source": "source330 parent.referenceWorldPoints from rest_x/y/z_m"
+  },
+  "inputs_sha256": {
+    "candidate_npz_sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372",
+    "candidate_receipt_sha256": "a8a1f368c1859065bd175b11977c8edc0e708a6d9495b052cd88be552f9d7f5e",
+    "current_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+    "old_extended_witness_sha256": "9e3f4882d618786a37b416b03ae589e8b701b524af855984c8977e2bffe9ad67",
+    "old_packet_parent_sha256": "e5e0edf9883f979ca2e06f55f831e7cc90576740be31c14f0e014f4439f1b0bd",
+    "old_packet_receipt_sha256": "f6bb5a8068c3e3885fa8baa3fad7d016a4b4af0f1e14b15ed8f17e98ff81e6bf",
+    "old_packet_sha256": "12af1b30eb5bf015a67f78b219c0d6aa0a28e3042f051520e960f18cb007e91e",
+    "p1_support_sha256": "4e0f5c54d114b79634d1dabf0fc7b195a67bb2d933685716e1b079a834ea87c1",
+    "projection_owner_sha256": "e3d2aae25ff1588ab34419e93b08a7dd492b34f90bf015e1736e61bffb523bb4",
+    "projection_report_sha256": "772bd092fae235a366de9683c584e1a6672e33f2bb07886bd4b4b511fbf418c4",
+    "projection_support_csv_sha256": "5c98209b92d4602015ad6b10ea5bd742a186c004040ea2e79ee7a95d3c138a21",
+    "source330_labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "source330_mass_sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+    "source330_nodes_sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+    "source330_tets_sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "material_index": 15,
+  "max_distance_m": 0.01905900075200109,
+  "maximum_transport_distance_m": 0.019353,
+  "native_admission": "not claimed",
+  "native_steps": 0,
+  "outputs": {
+    "binary": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-bridge-1046g/skin-current-source-quadrature-1046d.bin",
+      "sha256": "03d83ee845fa1dfd0a950d23bbe7de0faf3cb96d4a3387c973d6ffa49d269eeb"
+    },
+    "npz": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-bridge-1046g/skin-current-source-quadrature-1046d.npz",
+      "sha256": "11ce31a1db7b6ad8824539b0c92ef98a01aa5cafc3fccc91ae80b9ec47079d0e"
+    }
+  },
+  "p1_slot_group_count": 286,
+  "physical_admission": false,
+  "preserved_old_extended_support_rows": 1006,
+  "projection_pair_count": 32774,
+  "receiver_provenance_carrier_counts": {
+    "CurrentCarrierPointProjection": 23,
+    "p1_exact_tuple_slot": 1391
+  },
+  "refined_source_parent_rows": [
+    9438,
+    9439,
+    9628
+  ],
+  "reprojected_parent_count": 3,
+  "reprojected_parent_rows": [
+    {
+      "construction": "source_tetra_anchor_refinement_1046d",
+      "global_source330_tet_row": 9438,
+      "local_parent_row": 9438,
+      "proof": {
+        "base_degree1": {
+          "active_sites": 4,
+          "barycentric_first_moment_error": 0.0,
+          "candidate_rows": 20836,
+          "generated_valid_sites": 14243,
+          "inside_cap_projection_sites": 1187,
+          "maximum_distance_m": 1.1443916996305594e-16,
+          "weight_sum_error": 0.0
+        },
+        "carrier_count": 5,
+        "degree1_anchor_count": 4,
+        "first_moment_max_error": 5.551115123125783e-17,
+        "max_transport_distance_m": 1.1443916996305594e-16,
+        "moment_split": {
+          "degree1_anchor_count": 4,
+          "first_moment_max_error": 5.551115123125783e-17,
+          "old_anchor_count": 0,
+          "old_anchor_minimum_share_per_row": null,
+          "old_anchor_weight_sum_after": 0.0,
+          "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "solver_status": 0,
+          "status": "PASS_POSITIVE_PARENT_MOMENT_SPLIT",
+          "target_anchor_count": 1,
+          "target_min_fractions": [
+            0.023843174979614638
+          ],
+          "target_weights": [
+            0.039344370871027524
+          ],
+          "weight_sum_error": 2.220446049250313e-16
+        },
+        "old_anchor_lower_bound_fraction": null,
+        "old_anchor_weight_sum_after": 0.0,
+        "parent_mass_kg": 0.0008973602782323953,
+        "preserved_old_anchor_count": 0,
+        "status": "PASS_SOURCE_TET_MOMENT_PRESERVING_REFINEMENT",
+        "target_anchor_count": 1,
+        "target_assigned_mass_kg": [
+          3.5306075591703805e-05
+        ],
+        "target_child_local_rows": [
+          637056
+        ],
+        "target_min_mass_kg": [
+          2.1395918133650678e-05
+        ],
+        "weight_sum_error": 2.220446049250313e-16
+      },
+      "tuple": [
+        15,
+        20,
+        128
+      ]
+    },
+    {
+      "construction": "source_tetra_anchor_refinement_1046d",
+      "global_source330_tet_row": 9439,
+      "local_parent_row": 9439,
+      "proof": {
+        "base_degree1": {
+          "active_sites": 4,
+          "barycentric_first_moment_error": 2.7755575615628914e-17,
+          "candidate_rows": 20836,
+          "generated_valid_sites": 14244,
+          "inside_cap_projection_sites": 1187,
+          "maximum_distance_m": 1.3877787807814457e-17,
+          "weight_sum_error": 0.0
+        },
+        "carrier_count": 5,
+        "degree1_anchor_count": 4,
+        "first_moment_max_error": 5.551115123125783e-17,
+        "max_transport_distance_m": 1.1102230246251565e-16,
+        "moment_split": {
+          "degree1_anchor_count": 4,
+          "first_moment_max_error": 5.551115123125783e-17,
+          "old_anchor_count": 0,
+          "old_anchor_minimum_share_per_row": null,
+          "old_anchor_weight_sum_after": 0.0,
+          "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "solver_status": 0,
+          "status": "PASS_POSITIVE_PARENT_MOMENT_SPLIT",
+          "target_anchor_count": 1,
+          "target_min_fractions": [
+            0.00758202075486876
+          ],
+          "target_weights": [
+            0.3087110557312336
+          ],
+          "weight_sum_error": 0.0
+        },
+        "old_anchor_lower_bound_fraction": null,
+        "old_anchor_weight_sum_after": 0.0,
+        "parent_mass_kg": 0.0012724760475925148,
+        "preserved_old_anchor_count": 0,
+        "status": "PASS_SOURCE_TET_MOMENT_PRESERVING_REFINEMENT",
+        "target_anchor_count": 1,
+        "target_assigned_mass_kg": [
+          0.0003928274240449927
+        ],
+        "target_child_local_rows": [
+          666620
+        ],
+        "target_min_mass_kg": [
+          9.647939802919815e-06
+        ],
+        "weight_sum_error": 0.0
+      },
+      "tuple": [
+        15,
+        128,
+        128
+      ]
+    },
+    {
+      "construction": "source_tetra_anchor_refinement_1046d",
+      "global_source330_tet_row": 9628,
+      "local_parent_row": 9628,
+      "proof": {
+        "base_degree1": {
+          "active_sites": 4,
+          "barycentric_first_moment_error": 2.7755575615628914e-17,
+          "candidate_rows": 20836,
+          "generated_valid_sites": 12883,
+          "inside_cap_projection_sites": 1076,
+          "maximum_distance_m": 1.1527756336890508e-16,
+          "weight_sum_error": 0.0
+        },
+        "carrier_count": 13,
+        "degree1_anchor_count": 4,
+        "first_moment_max_error": 4.440892098500626e-16,
+        "max_transport_distance_m": 1.1527756336890508e-16,
+        "moment_split": {
+          "degree1_anchor_count": 4,
+          "first_moment_max_error": 4.440892098500626e-16,
+          "old_anchor_count": 0,
+          "old_anchor_minimum_share_per_row": null,
+          "old_anchor_weight_sum_after": 0.0,
+          "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "solver_status": 0,
+          "status": "PASS_POSITIVE_PARENT_MOMENT_SPLIT",
+          "target_anchor_count": 9,
+          "target_min_fractions": [
+            0.03728357730333155,
+            0.001572630209215527,
+            0.002506289046165197,
+            0.0006117422353075227,
+            0.0021308255312435863,
+            0.0016003142276587088,
+            0.0011351802572426683,
+            0.0010090830630218308,
+            0.0020720623356464693
+          ],
+          "target_weights": [
+            0.03728357730333155,
+            0.001572630209215527,
+            0.002506289046165197,
+            0.0006117422353075227,
+            0.0021308255312435863,
+            0.0016003142276587088,
+            0.0011351802572426683,
+            0.0010090830630218308,
+            0.21835148967506976
+          ],
+          "weight_sum_error": 3.3306690738754696e-16
+        },
+        "old_anchor_lower_bound_fraction": null,
+        "old_anchor_weight_sum_after": 0.0,
+        "parent_mass_kg": 0.0010886809132536063,
+        "preserved_old_anchor_count": 0,
+        "status": "PASS_SOURCE_TET_MOMENT_PRESERVING_REFINEMENT",
+        "target_anchor_count": 9,
+        "target_assigned_mass_kg": [
+          4.058991898795242e-05,
+          1.71209249237897e-06,
+          2.728549047656637e-06,
+          6.659920954103963e-07,
+          2.3197890853383684e-06,
+          1.7422315548602227e-06,
+          1.235849079162412e-06,
+          1.098569470599353e-06,
+          0.00023771509918974032
+        ],
+        "target_child_local_rows": [
+          722355,
+          722356,
+          722358,
+          722363,
+          722365,
+          722366,
+          722367,
+          722369,
+          722372
+        ],
+        "target_min_mass_kg": [
+          4.058991898795242e-05,
+          1.71209249237897e-06,
+          2.728549047656637e-06,
+          6.659920954103963e-07,
+          2.3197890853383684e-06,
+          1.7422315548602227e-06,
+          1.2358490791624117e-06,
+          1.098569470599353e-06,
+          2.255814715889999e-06
+        ],
+        "weight_sum_error": 3.3306690738754696e-16
+      },
+      "tuple": [
+        15,
+        128,
+        128
+      ]
+    }
+  ],
+  "role": "Skin",
+  "schema": "numi.h706.current-source-carrier-rebind.1046g.v1",
+  "sidecar": {
+    "carrier_rows": 1414,
+    "extra_child_slot_rows": 11288,
+    "fallback_rows": 2,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-bridge-1046g/skin-witnesses-1046d.csv",
+    "rows": 12704,
+    "schema": "numi.h706.current-source-carrier-witness-tuples.1046g.csv.v1",
+    "sha256": "97c076f9a2f1a421fdcaed1660185a9be03fc61928926cc1bb5c3c8efeb9ca83"
+  },
+  "source_parent_count": 14316,
+  "status": "PASS_SOURCE_ONLY_CURRENT_433_EXACT_TUPLE_CARRIER_REBIND",
+  "witness_rule": "exact P1 admitted tuple slot or authenticated 1044 exact-tuple projection row when feasible; otherwise explicit CurrentCarrierPointProjection binds the exact source330 parent tuple and positive barycentric referenceWorldPoints carrier to a same-role-material child admitted by authenticated one-hop region CSR; every distance is recomputed in rest_x/y/z reference coordinates against current child centroid and remains <= unchanged cap"
+}

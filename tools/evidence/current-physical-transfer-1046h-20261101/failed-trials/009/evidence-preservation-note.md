@@ -1,0 +1,1 @@
+Preservation note: actual-009 was rejected before mass transfer. Its pinned log reports infeasibility because child 725040 had no same-material/donor/region exact-group-supported parent within the unchanged 0.019353 m bound. No candidate was promoted; this package includes only compact metadata and logs.
