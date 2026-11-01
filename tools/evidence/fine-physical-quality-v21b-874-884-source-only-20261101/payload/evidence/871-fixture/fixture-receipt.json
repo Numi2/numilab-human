@@ -1,0 +1,115 @@
+{
+  "Fat_side_strictly_improved": true,
+  "Fat_volume_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/run-871-permuted-global-id-fixture/paired-I-run/fat-batch-volume-proposal.npz",
+    "sha256": "eea93feef0ccc5cb90abdef28367d33ddf985786f6eeb4806d5f80379764b453"
+  },
+  "Skin_good_side_tied": true,
+  "Skin_volume_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/run-871-permuted-global-id-fixture/paired-I-run/skin-batch-volume-proposal.npz",
+    "sha256": "03a15769281102b1d06ecf99f3c9c61a2ba75e70ab33cc954a2bbcf30e74c221"
+  },
+  "all_coordinates_fixed": true,
+  "batch_report": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/run-871-permuted-global-id-fixture/paired-I-run/report.json",
+    "sha256": "6c8d8a7472cd5ac7b3923e38ca6d5d1a41b5d6d6e8b58cae96d385ba632d743c"
+  },
+  "external_all185": "NOT_RUN",
+  "global_point_permutation": [
+    3,
+    6,
+    1,
+    5,
+    2
+  ],
+  "independent_replay": {
+    "accepted_patches": 1,
+    "all_source_and_volume_point_coordinates_fixed": true,
+    "all_volume_roles": {
+      "Fat": {
+        "all_output_cells_positive": true,
+        "exact_global_det6_delta": "0",
+        "full_target_boundary": true,
+        "material_bad_counts": {
+          "16": {
+            "after": 2,
+            "before": 2
+          }
+        },
+        "native_bad_after": 2,
+        "native_bad_before": 2,
+        "native_log_deficit_after": 12.536891538210728,
+        "native_log_deficit_before": 13.122363324229813,
+        "new_cells": 2,
+        "patch_exact_deltas": [
+          "0"
+        ],
+        "retired_cells": 2
+      },
+      "Skin": {
+        "all_output_cells_positive": true,
+        "exact_global_det6_delta": "0",
+        "full_target_boundary": true,
+        "material_bad_counts": {
+          "16": {
+            "after": 0,
+            "before": 0
+          }
+        },
+        "native_bad_after": 0,
+        "native_bad_before": 0,
+        "native_log_deficit_after": -0.0,
+        "native_log_deficit_before": -0.0,
+        "new_cells": 2,
+        "patch_exact_deltas": [
+          "0"
+        ],
+        "retired_cells": 2
+      }
+    },
+    "changed_source_face_rows": [
+      0,
+      1
+    ],
+    "full_typed_patch_unions_and_ancestry": true,
+    "native_steps": 0,
+    "paired_I_exact_volume_cancellation": true,
+    "physical_admission": false,
+    "role": "I",
+    "source_topology_preserved": true,
+    "status": "PASS_INDEPENDENT_BATCH_REPLAY"
+  },
+  "input_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/run-871-permuted-global-id-fixture/inputs/state.json",
+    "sha256": "d76d0cebaa35437cfa088ca1024bb6d43735ba1b6bcdbd9413aa551cf6da9334"
+  },
+  "native_steps": 0,
+  "padded_permuted_global_point_ids": true,
+  "padding_point_rows": [
+    0,
+    4
+  ],
+  "paired_exact_det6_delta": "0",
+  "paired_exact_volume_cancellation": true,
+  "physical_admission": false,
+  "producer": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/paired_connected_boundary_patch_batch_871_replay_localids_staged_root.py",
+    "sha256": "8faaf716c17bac710a0ceed0ea836bd10c63b11148e21a953eb3b2a0758be21e"
+  },
+  "schema": "h706.paired-opposite-winding-quality-tie-fixture.v1",
+  "source_to_target_orientation_relations": {
+    "Fat": [
+      -1,
+      -1
+    ],
+    "Skin": [
+      1,
+      1
+    ]
+  },
+  "status": "PASS",
+  "typed_candidate": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/run-871-permuted-global-id-fixture/paired-I-run/candidate-I-typed-current.npz",
+    "sha256": "982d6c5ffdca5f4e1356bd57abfc161ae9ec7f583b0229b79ab02ab0678e12c9"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "python_compile": "PASS",
+  "schema": "h706.source-only-publication-checks.v1",
+  "scope": "source-only package compilation, hash closure, and retained compact evidence; no geometry job, native build, or current physical qualification",
+  "tests": [
+    {
+      "path": "payload/source/facet-bound-002/test_fixed_facet_quality_upperbound_001.py",
+      "result": "fixed-facet scalar upper-bound controls passed in the preceding source publication check",
+      "status": "PASS"
+    },
+    {
+      "path": "payload/source/facet-bound-002/test_fixed_facet_quality_upperbound_002_vectorized.py",
+      "result": "100 deterministic random triangles plus two degenerate controls matched scalar area, longest-edge, and q-upper-bound values",
+      "seed": 20261101,
+      "status": "PASS"
+    },
+    {
+      "exception": "AssertionError: paired tie fixture did not produce a replayed batch: NO_PATCH_PASSED_LOCAL_SOLVER_AND_QUALITY_GATES",
+      "path": "payload/source/871/test_replay_failure_staging_871.py",
+      "result": "initial fixture did not produce a candidate and stopped before staging assertions",
+      "status": "FAIL_BEFORE_STAGING_ASSERTIONS"
+    },
+    {
+      "path": "payload/evidence/871-fixture/872-staging-retest/control-receipt.json",
+      "result": "separate 872 retest passed the fail-closed staging control; retained independent replay failure output is the expected negative control",
+      "sha256": "9fc54fa4732bccbb8499248afbb5528587991839ce92c5b48431861816a48305",
+      "status": "PASS"
+    },
+    {
+      "path": "payload/source/884/test_v25h_unified_mixed_mask_fixture.py",
+      "result": "compiled only; not executed in this publication",
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "payload/source/884/qualify_unified_884_root.py",
+      "result": "retained first qualification attempt failed its pinned verifier source hash",
+      "status": "FAIL_RETAINED"
+    },
+    {
+      "path": "payload/source/884/qualify_unified_884_v2_root.py",
+      "result": "retained second qualification attempt failed the producer-mask count check",
+      "status": "FAIL_RETAINED"
+    },
+    {
+      "path": "payload/source/884/qualify_unified_884_v3_root.py",
+      "result": "retained final qualifier produced the 884 source-only receipt",
+      "status": "PASS_RETAINED"
+    }
+  ]
+}

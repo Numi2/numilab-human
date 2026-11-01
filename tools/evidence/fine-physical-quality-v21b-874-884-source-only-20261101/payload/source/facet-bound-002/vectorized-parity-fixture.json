@@ -1,0 +1,13 @@
+{
+  "schema": "h706.vectorized-facet-bound-parity-fixture.v1",
+  "kind": "deterministic synthetic unit-test input recipe",
+  "rng": "numpy.default_rng",
+  "seed": 20261101,
+  "random_triangle_count": 100,
+  "degenerate_controls": [
+    {"kind": "collinear", "points": [[0, 0, 0], [1, 0, 0], [2, 0, 0]]},
+    {"kind": "coincident", "points": [[0, 0, 0], [0, 0, 0], [0, 0, 0]]}
+  ],
+  "comparison": "vectorized area, longest-edge, and fixed-facet q upper-bound versus the retained scalar facet_upper_bound helper",
+  "status": "SYNTHETIC_TEST_REPRODUCTION; NOT THE ORIGINAL INLINE RUN RECEIPT"
+}

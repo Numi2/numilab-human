@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25h-unified-mixed/verify_ordinary_allrole_v25h1_legacy_volume_adapter_root.py", line 328, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v25h-unified-mixed/verify_ordinary_allrole_v25h1_legacy_volume_adapter_root.py", line 273, in main
+    if int(one.get("ordinary_mask",{}).get("final_movable_rows",-1))!=len(ordinary) or int(one.get("inner_mask",{}).get("free_global_rows",-1))!=len(inner):raise ValueError("producer mask counts differ from independent reconstruction")
+                                                                                                                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: producer mask counts differ from independent reconstruction
