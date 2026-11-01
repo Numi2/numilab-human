@@ -1,0 +1,63 @@
+{
+  "baseline_command_health_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/baseline-launch-integrity-003.json",
+  "baseline_command_health_sha256": "7e0e7ae6b022ed6da97040055b584339d7b74976d8b3e8ade4c660ee735d2267",
+  "captured_at_utc": "2026-11-01T12:09:48.007400+00:00",
+  "checks": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "-m",
+        "py_compile",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/prepare_current_native_1025_direct_o_005.py",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/test_current_native_1025_direct_o_005.py"
+      ],
+      "exit_code": 0,
+      "name": "py_compile",
+      "stderr_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/py_compile.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/py_compile.stdout.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "-m",
+        "ruff",
+        "check",
+        "--select",
+        "F821,F823",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/prepare_current_native_1025_direct_o_005.py",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/test_current_native_1025_direct_o_005.py"
+      ],
+      "exit_code": 0,
+      "name": "ruff",
+      "stderr_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/ruff.stderr.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/ruff.stdout.txt",
+      "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/test_current_native_1025_direct_o_005.py"
+      ],
+      "exit_code": 0,
+      "name": "focused_tests",
+      "stderr_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/focused_tests.stderr.txt",
+      "stderr_sha256": "65378dcad145da2497120819bebfc3c46534dce9714ce064b3d809a56654aca2",
+      "stdout_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/focused_tests.stdout.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "gpu_executed": false,
+  "native_launch_performed": false,
+  "native_runtime_executed": false,
+  "physical_admission_claimed": false,
+  "prior_004_failure_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-004/baseline-launch-integrity-001-failure.json",
+  "prior_004_failure_sha256": "bf2d1214902cc7fd32116a7cca7e45195e0e945bd42109b4abe91b43ee788c55",
+  "readiness_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/checks-direct-o-005/readiness-direct-o-005-001.json",
+  "readiness_sha256": "e8a933470a12cd40818b6db503f689900356e44e8352d3857714bf0771ccaa72",
+  "readiness_status": "WAITING_FOR_CURRENT_433_SOURCE_AND_ADMISSION_PINS",
+  "schema": "numi.human.direct-o-adapter-checks.v1",
+  "status": "PASS_NO_NATIVE_LAUNCH"
+}

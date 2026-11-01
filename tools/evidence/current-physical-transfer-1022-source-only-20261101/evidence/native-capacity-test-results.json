@@ -1,0 +1,44 @@
+[
+  {
+    "target": "numi-human-skin-fat-legacy-capacity-check",
+    "returncode": 0,
+    "stdout": "capacity_profile=legacy max_nodes=300000 max_cells=200000 max_candidate_edges=3000000 max_augmentations=300000 checks=10 passed\n",
+    "stderr": ""
+  },
+  {
+    "target": "numi-human-skin-fat-full-capacity-check",
+    "returncode": 0,
+    "stdout": "capacity_profile=full-reference-v1 max_nodes=500000 max_cells=2000000 max_candidate_edges=12000000 max_augmentations=4000000 checks=10 passed\n",
+    "stderr": ""
+  },
+  {
+    "target": "numi-human-physical-skin-authoring-role-consumer-check",
+    "returncode": 0,
+    "stdout": "authoring_role_consumer=pass rows=3/3/3 bindings=86 parent_geometric_donor=150 frame_owners=distinct role_consumer_transactional_failures=11 compact_source_identity=pass compact_source_failures=6 detail_bridge_failures=10 detail_bridge=pass identity_namespaces=separate face_bary=source_connected tet_transfer=affine_objective rigid_rotation=pass physical_admission=false\n",
+    "stderr": ""
+  },
+  {
+    "target": "numi-human-unpaired-skin-fat-volume-check",
+    "returncode": 0,
+    "stdout": "unpaired skin/fat volume owner tests passed\n",
+    "stderr": ""
+  },
+  {
+    "target": "numi-human-physical-skin-registered-volume-csv-check",
+    "returncode": 0,
+    "stdout": "physical_skin_registered_volume_csv=PASS shuffled_joint_rows=1 reciprocal_I_merge=1 corruptions_rejected=16 failure_transaction_preserved=1 physical_volume_admission=NOT_CLAIMED\n",
+    "stderr": ""
+  },
+  {
+    "target": "numi-human-physical-skin-registered-facet-maps-check",
+    "returncode": 0,
+    "stdout": "physical_skin_registered_facet_maps=PASS positive_prism_cells=6 exact_O_I_D_uses=1,2,1 retained_wall_faces=12 corruptions_rejected=10 failure_transaction_preserved=1 csv_quoted_ancestry_roundtrip=PASS csv_corruptions_rejected=4 full_scene_admission=NOT_CLAIMED\n",
+    "stderr": ""
+  },
+  {
+    "target": "numi-human-physical-skin-child-mass-mapping-check",
+    "returncode": 0,
+    "stdout": "physical_child_mass_mapping_fixture=PASS parent_csv_roundtrip=PASS exact_identity_receipt_replay=PASS measured_parent_rest_current_offset=PASS one_ulp_fallback=PASS strict_region_barrier=PASS duplicate_missing_inverted_tet_gates=PASS odd_orientation_parity=PASS truncated_path_receipt_rejections=PASS tetgen_reference_import=PASS transactional_import_rejections=PASS transfer=fixture_only\n",
+    "stderr": ""
+  }
+]

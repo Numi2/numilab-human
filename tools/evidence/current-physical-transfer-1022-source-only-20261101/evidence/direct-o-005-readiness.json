@@ -1,0 +1,24 @@
+{
+  "binary_sha256": "182fe702db9346d6de4dc66214cf8c366f5a26e3dcb80b4a2c97777ddff3bbe3",
+  "blockers": [
+    "current 433 direct-O environment missing 90 fields",
+    "current 433 input pins are absent",
+    "candidate-specific geometry admission receipt is absent",
+    "candidate-specific mass admission receipt is absent"
+  ],
+  "build_manifest_sha256": "41d29b3f850d374cecdc06a92ed310d781b509902e4b3e9a04da30551aac84af",
+  "gpu_executed": false,
+  "legacy_detail_bridge_required": false,
+  "native_launch_performed": false,
+  "native_runtime_executed": false,
+  "physical_admission_claimed": false,
+  "registered_surface_mode": "direct_o_without_legacy_detail_bridge_v1",
+  "route_contract": {
+    "accepted_geometry_steps": "initial, step 1, and terminal when distinct; maximum eight",
+    "geometry_and_mass_gates_required": true,
+    "motion": "existing install-plus-motion path, bounded to one or two accepted steps",
+    "source_preflight": "typed O/I/D import and direct-O one-hot render; no detail bridge"
+  },
+  "schema": "numi.human.current-native-direct-o-readiness.v1",
+  "status": "WAITING_FOR_CURRENT_433_SOURCE_AND_ADMISSION_PINS"
+}

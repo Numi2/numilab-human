@@ -1,0 +1,148 @@
+{
+  "active_source_rows": {
+    "D": 103509,
+    "I": 118197,
+    "O": 76193
+  },
+  "cells": 1495294,
+  "crosswalk_sha256": "4b98c0d437f9369b1ed07b2ef69138b3f0ccb5946631e4e0518e3bddfde986fa",
+  "fat_cells": 770438,
+  "handoff_sha256": "18005c7e503b1a81bc38e016591ffb0ef75d1d279ca8c739c1ef55eca83b08c8",
+  "heavy_surface_predicates_run": false,
+  "native_motion_run": false,
+  "nodes": 311768,
+  "paired_shell_input_coverage": {
+    "all_face_used_shell_vertices_map_to_active_OID_MRV_vertices": true,
+    "combined_external_boundary_topology": {
+      "bad_edges": 0,
+      "boundary_edges": 0,
+      "closed_oriented": true,
+      "edges": 540633,
+      "nonmanifold_edges": 0,
+      "orientation_conflict_edges": 0
+    },
+    "heavy_triangle_predicates_run": false,
+    "native_motion_run": false,
+    "physical_admission": false,
+    "shared_I_interface": {
+      "coincident_interface_faces_excluded_from_external_intersection_count": 236389,
+      "faces": 236389,
+      "opposite_winding_faces": 236389,
+      "same_winding_faces": 0,
+      "status": "PASS_EXACT_SHARED_I_INTERFACE_OPPOSITE_WINDING"
+    },
+    "shell_reference_F32_matches_joint_reference_F32": true,
+    "shells": {
+      "fat": {
+        "face_used_vertices": 221706,
+        "faces": 444380,
+        "joint_topology": {
+          "bad_edges": 0,
+          "boundary_edges": 0,
+          "closed_oriented": true,
+          "edges": 666570,
+          "nonmanifold_edges": 0,
+          "orientation_conflict_edges": 0
+        },
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-shell-1022-native/actual-001/fat-shell.npz",
+        "registered_typed_faces": {
+          "D": {
+            "mapped_source_vertex_rows": 103509,
+            "registered_shell_faces": 207901,
+            "source_faces": 207901,
+            "unused_unmapped_source_vertex_rows": 17139
+          },
+          "I": {
+            "mapped_source_vertex_rows": 118197,
+            "registered_shell_faces": 236389,
+            "source_faces": 236389,
+            "unused_unmapped_source_vertex_rows": 7171
+          }
+        },
+        "sha256": "2a97964d38c945836a4090a7c9580624b427a0163eda9932370cc6f77277ef66",
+        "unused_or_unmapped_point_rows": 24310,
+        "vertices": 246016,
+        "wall_faces": 90
+      },
+      "skin": {
+        "face_used_vertices": 194390,
+        "faces": 388820,
+        "joint_topology": {
+          "bad_edges": 0,
+          "boundary_edges": 0,
+          "closed_oriented": true,
+          "edges": 583230,
+          "nonmanifold_edges": 0,
+          "orientation_conflict_edges": 0
+        },
+        "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-shell-1022-native/actual-001/skin-shell.npz",
+        "registered_typed_faces": {
+          "I": {
+            "mapped_source_vertex_rows": 118197,
+            "registered_shell_faces": 236389,
+            "source_faces": 236389,
+            "unused_unmapped_source_vertex_rows": 7171
+          },
+          "O": {
+            "mapped_source_vertex_rows": 76193,
+            "registered_shell_faces": 152341,
+            "source_faces": 152341,
+            "unused_unmapped_source_vertex_rows": 476
+          }
+        },
+        "sha256": "1d29d3a07147ab7c7bcf45e017ee6515e0a4e7015dd236dbc7d07407c894c9cb",
+        "unused_or_unmapped_point_rows": 7647,
+        "vertices": 202037,
+        "wall_faces": 90
+      }
+    },
+    "status": "PASS_INPUT_SHELL_TO_JOINT_COVERAGE"
+  },
+  "physical_admission": false,
+  "skin_cells": 724856,
+  "source_surface_vertices_full": {
+    "D": 120648,
+    "I": 125368,
+    "O": 76669
+  },
+  "source_surface_vertices_rendered": {
+    "D": 103509,
+    "I": 118197,
+    "O": 76193
+  },
+  "state_sha256": "11044a88b2d45ab9a9625f9a2cac46b8a952032b9ac0a07274710c316f5a88a9",
+  "status": "PASS_INPUT_MAP_AND_CLOSED_PAIRED_SHELL_COVERAGE_ONLY",
+  "typed_role_sheet_topology": {
+    "D": {
+      "bad_edges": 45,
+      "boundary_edges": 45,
+      "class": "OPEN_SOURCE_SHEET",
+      "closed_oriented": false,
+      "edges": 311874,
+      "nonmanifold_edges": 0,
+      "orientation_conflict_edges": 0
+    },
+    "I": {
+      "bad_edges": 45,
+      "boundary_edges": 45,
+      "class": "OPEN_SOURCE_SHEET",
+      "closed_oriented": false,
+      "edges": 354606,
+      "nonmanifold_edges": 0,
+      "orientation_conflict_edges": 0
+    },
+    "O": {
+      "bad_edges": 45,
+      "boundary_edges": 45,
+      "class": "OPEN_SOURCE_SHEET",
+      "closed_oriented": false,
+      "edges": 228534,
+      "nonmanifold_edges": 0,
+      "orientation_conflict_edges": 0
+    }
+  },
+  "unmapped_unused_volume_point_rows": {
+    "fat": 25514,
+    "skin": 8722
+  }
+}

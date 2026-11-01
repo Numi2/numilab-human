@@ -1,0 +1,250 @@
+{
+  "canonical_parent_unions": {
+    "Fat": {
+      "base_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+      "base_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+      "cell_rows": 770438,
+      "offsets_sha256": "19bcff66cc04e2ae2318a82146f269e7d2869204ad184db92e2d20edb53a84bc",
+      "rows_sha256": "dc601cd0cc0f69b5e6e663426e5c984a65df6120e875432efecadd379af4cf86",
+      "source330_ancestry_claim": false
+    },
+    "Skin": {
+      "base_state_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+      "base_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+      "cell_rows": 724856,
+      "offsets_sha256": "2cea89704521129fef7a115c13c7e6fdddd570cc2c49d4fad23b116a186e0a13",
+      "rows_sha256": "8e046c8f0943967ee63479b36864104a68d03056cde5a348b2b1acb048caf60d",
+      "source330_ancestry_claim": false
+    }
+  },
+  "classification": "existing-format 217 child-volume handoff from canonical current NPZ; no TetGen run",
+  "combined_skin_fat_child_mesh": {
+    "capacity_profile": {
+      "max_cells_combined": 2000000,
+      "max_cells_per_child": 2000000,
+      "max_nodes_combined": 500000,
+      "max_nodes_per_child": 500000,
+      "name": "full-reference-500k-nodes-2m-cells"
+    },
+    "combined_cell_budget_200000_pass": false,
+    "combined_cell_budget_selected_profile_pass": true,
+    "combined_node_order": "face-active_registered_O_source_rows_then_remaining_TetGen_rows",
+    "combined_tetrahedra": 1495294,
+    "fat_tetrahedra": 770438,
+    "nodes": 311768,
+    "only_registered_I_nodes_merged": true,
+    "outputs": {
+      "skin-fat-combined-I-interface.csv.gz": "ab0a7781c89ea624ae8a6d1209f384e7866e32ef720ca23b39b220095db1c541",
+      "skin-fat-combined-element-map.csv.gz": "a67a84b916d62bdc4cee566828d113bb56e654d139a74213be718c534e8a6d1d",
+      "skin-fat-combined-facet-ancestry.csv.gz": "f03d236414e7ceb7c95d4f2117d8608915e90ecc2e8feae97409c4e7e1af0e7e",
+      "skin-fat-combined-node-map.csv.gz": "b27d52c13c2b01012ca818fb474bc2da1b3707709e045eb84dd230d7b613adaf",
+      "skin-fat-combined-registered-surface-node-map.npz": "4b98c0d437f9369b1ed07b2ef69138b3f0ccb5946631e4e0518e3bddfde986fa",
+      "skin-fat-combined.ele": "ca1ec9c3ac3afc8964dbddf92bc6db5d1c854e0dc873ed8c4f3dfe4b0c6addeb",
+      "skin-fat-combined.node": "f58cb0299e7a9c806ec141a051ca6b304fd05938d8168e2169655a4be708571e"
+    },
+    "physical_admission": false,
+    "positive_float32_cells": 1495294,
+    "registered_I_source_faces": 236389,
+    "registered_I_source_vertices": 118197,
+    "registered_outer_nodes_are_mechanical_prefix": true,
+    "registered_surface_active_node_rows": {
+      "D": 103509,
+      "I": 118197,
+      "O": 76193
+    },
+    "registered_surface_inactive_node_rows": {
+      "D": 17139,
+      "I": 7171,
+      "O": 476
+    },
+    "registered_surface_inactive_sentinel": -1,
+    "registered_surface_node_map_complete": true,
+    "registered_surface_node_map_file": "skin-fat-combined-registered-surface-node-map.npz",
+    "registered_surface_node_map_schema": "numi.h706.217-registered-surface-node-map.v1",
+    "registered_surface_node_map_scope": "full current typed source row domains; exact joint map for face-active rows; -1 only for rows absent from that role's source faces",
+    "registered_surface_node_rows": {
+      "D": 120648,
+      "I": 125368,
+      "O": 76669
+    },
+    "skin_tetrahedra": 724856,
+    "status": "COMBINED_POSITIVE_F32_CHILD_MESH_NOT_PHYSICAL_ADMISSION",
+    "unregistered_equal_coordinate_nodes_welded": false
+  },
+  "construction_method": "exact Float32 role NPZ to existing .node/.ele plus pinned 217 combiner",
+  "current_typed_surface_loader": {
+    "ancestry_lanes": [
+      "source_face_rows",
+      "source_original_ids",
+      "parent_face_rows"
+    ],
+    "function": "load_current_surface",
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-shell-1022-native/build_current_shell_1022.py",
+    "sha256": "7422d5641844a0f31067222a1eb70dbf66034323f34c6b2cf4101890a4bd5438"
+  },
+  "inputs": {
+    "canonical_834_manifest": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-base849d/manifest.json",
+      "sha256": "b44e9f622d7795b8f4a74e22dd5c3c04ee285429a01ecb2945907849d3e8c95f"
+    },
+    "canonical_834_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/canonical834-current-base-report.json",
+      "sha256": "6f7d1c36e1f8f95249bf7482611c7250204bc384a6f979d928a927e483305552",
+      "size_bytes": 6415
+    },
+    "canonical_849_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-base849d/report.json",
+      "sha256": "c443844df9420c991d644a25f815335e3c2ba2c47e766b98421659e55c6b2062",
+      "size_bytes": 2501
+    },
+    "current_state": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+      "sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+      "size_bytes": 1661970
+    },
+    "fat_shell": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-shell-1022-native/actual-001/fat-shell.npz",
+      "sha256": "2a97964d38c945836a4090a7c9580624b427a0163eda9932370cc6f77277ef66",
+      "size_bytes": 15461860
+    },
+    "fat_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/canonical834-current-base/fat-canonical-parent-union.npz",
+      "sha256": "22bd994eb8751b6ee4af5d3acd8bd13e1811ce87d2150d733ccac7d6c6650bc9",
+      "size_bytes": 40752198
+    },
+    "inner_source_surface": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-point-update-1018-root/actual-001/candidate-I-point-updated.npz",
+      "sha256": "5557cbb88b46ea83d7977d60e1d362a10c48c290b77afb39b273efa29d32e323",
+      "size_bytes": 8222673
+    },
+    "shell_assembly_receipt": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-shell-1022-native/actual-001/receipt.json",
+      "sha256": "b5dd9f69a5a61331141ad69f06466225349526b26916de9d57c7bbbbd71ec10f",
+      "size_bytes": 17310
+    },
+    "skin_shell": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-shell-1022-native/actual-001/skin-shell.npz",
+      "sha256": "1d29d3a07147ab7c7bcf45e017ee6515e0a4e7015dd236dbc7d07407c894c9cb",
+      "size_bytes": 12595199
+    },
+    "skin_volume": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/canonical834-current-base/skin-canonical-parent-union.npz",
+      "sha256": "a8e794d72a7b23c8917cf57b50cbef478b447bc529db8d27f256f16f858987a7",
+      "size_bytes": 34892464
+    },
+    "volume_prefix_818b_report": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/volume-prefix-818b-report.json",
+      "sha256": "9a68221b0fdc5c13d829495376c3000ab07b884b37edf5d5e65a45ddf632fe97",
+      "size_bytes": 16579
+    }
+  },
+  "limitations": [
+    "Canonical parent CSR remains in the per-role input NPZs and joins through the existing 217 element map; its rows refer to the explicit 834 base-volume domain.",
+    "This handoff does not assert original source330 cell ancestry, mass transfer, or native/physical admission."
+  ],
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "outputs": {
+    "fat.ele": {
+      "sha256": "4ab23c082639fbd20259f24dd3c5e899e321efe7a7d107e3498b4ebb097fced7",
+      "size_bytes": 27678180
+    },
+    "fat.node": {
+      "sha256": "9c9ee0659a86260d348a5016f12b83106c9984687808358b5cceec4d75c4669c",
+      "size_bytes": 10218378
+    },
+    "skin-fat-combined-I-interface.csv.gz": {
+      "sha256": "ab0a7781c89ea624ae8a6d1209f384e7866e32ef720ca23b39b220095db1c541",
+      "size_bytes": 10759732
+    },
+    "skin-fat-combined-element-map.csv.gz": {
+      "sha256": "a67a84b916d62bdc4cee566828d113bb56e654d139a74213be718c534e8a6d1d",
+      "size_bytes": 10831524
+    },
+    "skin-fat-combined-facet-ancestry.csv.gz": {
+      "sha256": "f03d236414e7ceb7c95d4f2117d8608915e90ecc2e8feae97409c4e7e1af0e7e",
+      "size_bytes": 25406564
+    },
+    "skin-fat-combined-node-map.csv.gz": {
+      "sha256": "b27d52c13c2b01012ca818fb474bc2da1b3707709e045eb84dd230d7b613adaf",
+      "size_bytes": 4329229
+    },
+    "skin-fat-combined-registered-surface-node-map.npz": {
+      "sha256": "4b98c0d437f9369b1ed07b2ef69138b3f0ccb5946631e4e0518e3bddfde986fa",
+      "size_bytes": 2377009
+    },
+    "skin-fat-combined.ele": {
+      "sha256": "ca1ec9c3ac3afc8964dbddf92bc6db5d1c854e0dc873ed8c4f3dfe4b0c6addeb",
+      "size_bytes": 55099001
+    },
+    "skin-fat-combined.node": {
+      "sha256": "f58cb0299e7a9c806ec141a051ca6b304fd05938d8168e2169655a4be708571e",
+      "size_bytes": 13943862
+    },
+    "skin.ele": {
+      "sha256": "d71ab5378cabf7268cdd6820cc4945f1c6d6076df049dbe76d296632716ef1de",
+      "size_bytes": 25673033
+    },
+    "skin.node": {
+      "sha256": "22e268ebb0e7ab4e50dffbc0e517cb06f44aecdf868fb51fbc515f8e22e43260",
+      "size_bytes": 8927560
+    }
+  },
+  "owner": {
+    "active_I_mapping_policy": "all face-referenced source-I rows map exactly; -1 is permitted only for rows absent from every current I face",
+    "capacity_profile": {
+      "max_cells_combined": 2000000,
+      "max_cells_per_child": 2000000,
+      "max_nodes_combined": 500000,
+      "max_nodes_per_child": 500000,
+      "name": "full-reference-500k-nodes-2m-cells"
+    },
+    "derived_from": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/paired-head-reference-fit-684/run-063-registered-native-wall-frame-002/native-domain-217-source-003/build_native_domain_217.py",
+      "sha256": "d7f411c18f91905c6e1d91ab75592ec5782a8852892ac8a1fdb566ee2206df09"
+    },
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-role-p1-support-938-1025-active-source-map/current_fine_217_owner_938_v3_active_source_rows.py",
+    "sha256": "e644a2852ab94fa1b4ce81d7abff41dd06d3aa0a7f955030a7c4f8d8253411fb"
+  },
+  "physical_admission": false,
+  "role_meshes": {
+    "Fat": {
+      "active_cell_count": 770438,
+      "active_node_count": 228373,
+      "ancestry_claim": "canonical-parent rows refer only to the explicitly pinned 834 base-volume domain; source330 ancestry is not inferred",
+      "canonical_base_state": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+      "canonical_base_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+      "canonical_parent_union": {
+        "offsets_sha256": "19bcff66cc04e2ae2318a82146f269e7d2869204ad184db92e2d20edb53a84bc",
+        "rows_sha256": "dc601cd0cc0f69b5e6e663426e5c984a65df6120e875432efecadd379af4cf86"
+      },
+      "cell_order_preserved": true,
+      "coordinates_roundtrip_exact_f32": true,
+      "material_ids_roundtrip_exact": true,
+      "removed_unreferenced_point_rows": 25514,
+      "source_point_count": 253887,
+      "tetrahedra_roundtrip_exact": true
+    },
+    "Skin": {
+      "active_cell_count": 724856,
+      "active_node_count": 201592,
+      "ancestry_claim": "canonical-parent rows refer only to the explicitly pinned 834 base-volume domain; source330 ancestry is not inferred",
+      "canonical_base_state": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+      "canonical_base_state_sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078",
+      "canonical_parent_union": {
+        "offsets_sha256": "2cea89704521129fef7a115c13c7e6fdddd570cc2c49d4fad23b116a186e0a13",
+        "rows_sha256": "8e046c8f0943967ee63479b36864104a68d03056cde5a348b2b1acb048caf60d"
+      },
+      "cell_order_preserved": true,
+      "coordinates_roundtrip_exact_f32": true,
+      "material_ids_roundtrip_exact": true,
+      "removed_unreferenced_point_rows": 8722,
+      "source_point_count": 210314,
+      "tetrahedra_roundtrip_exact": true
+    }
+  },
+  "runtime": 0,
+  "schema": "numi.h706.current-fine-217-combined-volume-handoff.v1",
+  "status": "PREPARED_EXISTING_217_COMBINED_CHILD_VOLUME_HANDOFF_NO_PHYSICAL_ADMISSION",
+  "tetgen_invoked": false
+}

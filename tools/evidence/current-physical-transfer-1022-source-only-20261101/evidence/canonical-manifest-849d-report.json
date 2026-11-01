@@ -1,0 +1,44 @@
+{
+  "base_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+    "sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078"
+  },
+  "chain_state_count": 1,
+  "chain_state_path_order": [
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json"
+  ],
+  "current_state": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/volume-prefix-818c/verified-state.json",
+    "sha256": "4a687ab33ddb55942cdca200683d903e64d772022a06cec2936cd78a336eb078"
+  },
+  "limitations": [
+    "Manifest discovery authenticates hash-pinned state links and volume pins; it does not run geometry or physical admission.",
+    "Identity classification proves cell-row ancestry only from identical ordered tetrahedra and material rows; point ancestry is outside this manifest.",
+    "Mapped cell ancestry is accepted only through 834's retained-row, direct/reverse map, replacement tetrahedron, and complete replacement-parent CSR checks.",
+    "The canonical base is the explicitly pinned base_state; base=current is an operational-reference identity rebase and does not claim historical or ultimate source330 ancestry.",
+    "Single-role pending proposals such as 848 are not valid paired current states and are rejected."
+  ],
+  "manifest_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-base849d/manifest.json",
+  "manifest_sha256": "b44e9f622d7795b8f4a74e22dd5c3c04ee285429a01ecb2945907849d3e8c95f",
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "roles": {
+    "Fat": {
+      "cell_domain": 770438,
+      "identity_cell_steps": 0,
+      "mapped_steps": 0,
+      "point_row_domain_changed_identity_steps": 0,
+      "steps": 0
+    },
+    "Skin": {
+      "cell_domain": 724856,
+      "identity_cell_steps": 0,
+      "mapped_steps": 0,
+      "point_row_domain_changed_identity_steps": 0,
+      "steps": 0
+    }
+  },
+  "schema": "numi.h706.auto-current-volume-parent-union-manifest.v1",
+  "status": "PASS_SOURCE_ONLY_AUTODISCOVERED_CELL_ANCESTRY_MANIFEST"
+}
