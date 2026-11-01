@@ -1,0 +1,69 @@
+{
+  "chunk": {
+    "approx_mib": 36.665937423706055,
+    "file_count": 1,
+    "id": "quality-volume-chunk-030",
+    "ordinal": 30,
+    "original_bytes": 38447022,
+    "roster_chunk_id": "failed-unadmitted-volume-followup-20261101"
+  },
+  "created_utc": "2026-11-01T02:54:12.705975Z",
+  "current_direct_path_proof": {
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-failed-proposals-current-path-proof-030.json",
+    "sha256": "4a9450415af66c0300d8418498aef13bcbe79b13c246544de7170be7eb1e9505",
+    "status": "PASS_NO_EXTERNAL_PATH_OR_HASH_REFERENCES; originating state/report preserved"
+  },
+  "files": [
+    {
+      "current_direct_input_overlap": false,
+      "expected_sha256_from_source_receipt": "a1314a25aabb40adeb7eae8ff02402ab0dbe051ccc783e4b999905eb6b26670f",
+      "live_sha256_validation": "PENDING_FRESH_HASH_DURING_BUILD",
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-03/proposal/candidate-fat-current.npz",
+      "role": "Fat",
+      "size_bytes_from_stat": 38447022,
+      "source_receipt_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-03/proposal/candidate-state-proposal.json",
+      "source_receipt_role_match": [
+        "Fat_current"
+      ],
+      "source_receipt_sha256_field": "sha256",
+      "source_relative_path": "all-quality-904-fat-only-root/round-03/proposal/candidate-fat-current.npz"
+    }
+  ],
+  "preparation_status": "READY_FOR_REVIEW_LIVE_PAYLOAD_HASH_PENDING",
+  "purpose": "Archive only receipt-pinned failed/unadmitted all-quality-904-fat-only-root volume proposal NPZs. No external current-root references; source, witness and failure receipts remain local. Historical recovery only, not current quality or physical admission.",
+  "release_target": {
+    "asset_label": "failed-unadmitted-volume-proposals-20261101-chunk-030.tar.zst",
+    "asset_name": "quality-volume-archive-chunk-030.tar.zst",
+    "independent_download_directory": "/Users/numi/Work/.quality-volume-archive-chunk-030-independent-download",
+    "local_archive_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-030-plan/quality-volume-archive-chunk-030.tar.zst",
+    "repository": "Numi2/numilab-human",
+    "retirement_enabled": false,
+    "tag": "human-quality-volume-failed-unadmitted-20261101-chunk-030"
+  },
+  "schema": "numi-human.quality-volume-archive-chunk-plan.v1",
+  "selection": {
+    "artifact_kind": "unqualified Fat or Skin volume proposal NPZ",
+    "include_current_state_inputs": false,
+    "include_primary_source_arrays": false,
+    "include_replay_npz": false,
+    "include_state_or_report_json": false,
+    "protection": "Preserve every source O/I/D array, witness, report, state, clone receipt, current/passing parent, alias and all nonselected NPZs; archive only the listed failed volume proposal NPZs.",
+    "selected_statuses": "Unqualified/unadmitted only; native_steps=0 and physical_admission=false."
+  },
+  "source_inventory": {
+    "candidate_count": 1,
+    "scope": "Exact failed/unadmitted role volumes from all-quality-904-fat-only-root; retain all other files and evidence.",
+    "selected_paths": [
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-904-fat-only-root/round-03/proposal/candidate-fat-current.npz"
+    ]
+  },
+  "source_root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706",
+  "source_workflow": {
+    "archive_layout": "content-addressed blobs/<sha256> with archive-index.json",
+    "builder_reuse_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-017-plan/build_volume_chunk_fast.py",
+    "repository": "Numi2/numilab-human",
+    "restore_verifier_path": "/Users/numi/Work/human-quality-trials-695-publish-20261031i/tools/evidence/connected-skin-fat-quality-trials-695-20261031i/restore_archive.py",
+    "verified_workflow_reference": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-volume-archive-chunk-019-plan/retirement-receipt.json",
+    "workflow_commit": "a7f784ecdd99f8b4ea70219304fff15b8d36cf85"
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "all_zip_crcs_passed": true,
+  "archive_index_canonical_sha256": "e97475c9d5381fa760e631f9a6214d7896d8456fd1d5543f571e593a50da1f5b",
+  "files": [
+    {
+      "npy_header_count": 166,
+      "npy_header_summary_sha256": "fccf6c6536eaea754d4e3fff4df9b565b24becb7ee2b4d53ed8cb16825f56ece",
+      "ram_restore_npy_header_count": 166,
+      "ram_restore_npy_header_summary_sha256": "fccf6c6536eaea754d4e3fff4df9b565b24becb7ee2b4d53ed8cb16825f56ece",
+      "ram_restore_required_array_readback": {
+        "boundary_faces": {
+          "array_bytes_sha256": "55c8214460f66b7c107fbf9ecf9e15c9c1cdec44ae71cd4e6221e5556c77cb02",
+          "dtype": "<i8",
+          "shape": [
+            444398,
+            3
+          ]
+        },
+        "material_indices": {
+          "array_bytes_sha256": "264fe2e7956e99e8997f688fc18db169966b259fec46ac0d085f25dc16cafbcd",
+          "dtype": "<i4",
+          "shape": [
+            770516
+          ]
+        },
+        "points_world_m": {
+          "array_bytes_sha256": "e83b537acbabb36b62ec0fb1b558f9bdc184a3c465947cfea274612bf8a57f8d",
+          "dtype": "<f4",
+          "shape": [
+            253887,
+            3
+          ]
+        },
+        "points_world_m_f32": {
+          "array_bytes_sha256": "e83b537acbabb36b62ec0fb1b558f9bdc184a3c465947cfea274612bf8a57f8d",
+          "dtype": "<f4",
+          "shape": [
+            253887,
+            3
+          ]
+        },
+        "tetrahedra": {
+          "array_bytes_sha256": "6f9a43eefc8dfd449f6d0ce87cf0d4c6371bec4056c8047d9b901b40f0e6a095",
+          "dtype": "<i8",
+          "shape": [
+            770516,
+            4
+          ]
+        }
+      },
+      "ram_restore_sha256": "f8c36a722647f63bb8c8370d89972dc8f35a1172bea056ab1fbf208b3faa499d",
+      "required_volume_arrays": [
+        "boundary_faces.npy",
+        "material_indices.npy",
+        "points_world_m.npy",
+        "points_world_m_f32.npy",
+        "tetrahedra.npy"
+      ],
+      "sha256": "f8c36a722647f63bb8c8370d89972dc8f35a1172bea056ab1fbf208b3faa499d",
+      "size_bytes": 47761900,
+      "source_paths": [
+        "all-quality-933-fixed-boundary-complete-cow-root/flips/fat-fixed-boundary-quality-queue.npz"
+      ],
+      "zip_crc": "PASS"
+    },
+    {
+      "npy_header_count": 127,
+      "npy_header_summary_sha256": "362b15ab353cc277359d2bf17205d3265f85671c876e04c594e353dd984e937f",
+      "required_volume_arrays": [
+        "boundary_faces.npy",
+        "material_indices.npy",
+        "points_world_m.npy",
+        "points_world_m_f32.npy",
+        "tetrahedra.npy"
+      ],
+      "sha256": "3087c41875d049d8277d6d9b5b3c9c3d2dc1f3a36df4fa14618279a4c7efc872",
+      "size_bytes": 82939801,
+      "source_paths": [
+        "all-quality-933-fixed-boundary-complete-cow-root/flips/skin-fixed-boundary-quality-queue.npz"
+      ],
+      "zip_crc": "PASS"
+    }
+  ],
+  "native_steps": 0,
+  "npy_array_headers_read": 293,
+  "npz_count": 2,
+  "physical_admission": false,
+  "remote_gh_asset_stdout_sha256": "cd76530ff6d3981780c6f6f6ab905a1fcf670763e898226fabdae051ff2c245e",
+  "schema": "numi-human.quality-volume-npz-readback.v1",
+  "status": "PASS_ALL_NPZ_ZIP_CRC_AND_NPY_HEADERS",
+  "uncompressed_blob_bytes": 130701701
+}

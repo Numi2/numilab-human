@@ -1,0 +1,75 @@
+{
+  "all_zip_crcs_passed": true,
+  "archive_index_canonical_sha256": "b3d3dbc92583702b86794af125251a20b7b154490b48042cfef495bf6fd40320",
+  "files": [
+    {
+      "npy_header_count": 166,
+      "npy_header_summary_sha256": "4bd8675e58f562618ccdf379fcdb5825b2d967c39c4a0302d0620b6e5fe7830e",
+      "ram_restore_npy_header_count": 166,
+      "ram_restore_npy_header_summary_sha256": "4bd8675e58f562618ccdf379fcdb5825b2d967c39c4a0302d0620b6e5fe7830e",
+      "ram_restore_required_array_readback": {
+        "boundary_faces": {
+          "array_bytes_sha256": "ca8c269d62ad494f301f3aeaf666dbadf1912356f81cb4b11896b13f28c0fd3c",
+          "dtype": "<i8",
+          "shape": [
+            444420,
+            3
+          ]
+        },
+        "material_indices": {
+          "array_bytes_sha256": "913b1321b3f62f1d3a16fa44703a39e9f301e463f4cadda07efd0eebe5ef9267",
+          "dtype": "<i4",
+          "shape": [
+            770533
+          ]
+        },
+        "points_world_m": {
+          "array_bytes_sha256": "f316dcf3d4c0ed7a4a7e31916f0a833629d7f9d642043729996ce9a97eb84d74",
+          "dtype": "<f4",
+          "shape": [
+            253887,
+            3
+          ]
+        },
+        "points_world_m_f32": {
+          "array_bytes_sha256": "f316dcf3d4c0ed7a4a7e31916f0a833629d7f9d642043729996ce9a97eb84d74",
+          "dtype": "<f4",
+          "shape": [
+            253887,
+            3
+          ]
+        },
+        "tetrahedra": {
+          "array_bytes_sha256": "ec3af36a77a8dfa685067828bec8ca4145d64cd4ae4247a11faeee28d404f5cb",
+          "dtype": "<i8",
+          "shape": [
+            770533,
+            4
+          ]
+        }
+      },
+      "ram_restore_sha256": "a1314a25aabb40adeb7eae8ff02402ab0dbe051ccc783e4b999905eb6b26670f",
+      "required_volume_arrays": [
+        "boundary_faces.npy",
+        "material_indices.npy",
+        "points_world_m.npy",
+        "points_world_m_f32.npy",
+        "tetrahedra.npy"
+      ],
+      "sha256": "a1314a25aabb40adeb7eae8ff02402ab0dbe051ccc783e4b999905eb6b26670f",
+      "size_bytes": 38447022,
+      "source_paths": [
+        "all-quality-904-fat-only-root/round-03/proposal/candidate-fat-current.npz"
+      ],
+      "zip_crc": "PASS"
+    }
+  ],
+  "native_steps": 0,
+  "npy_array_headers_read": 166,
+  "npz_count": 1,
+  "physical_admission": false,
+  "remote_gh_asset_stdout_sha256": "daf03b61988a18c06d75765fb0d9800cf43bfc755b68f044b87a17127d95a6cf",
+  "schema": "numi-human.quality-volume-npz-readback.v1",
+  "status": "PASS_ALL_NPZ_ZIP_CRC_AND_NPY_HEADERS",
+  "uncompressed_blob_bytes": 38447022
+}

@@ -1,0 +1,1725 @@
+{
+  "chunk": "027",
+  "github_archive_sha256": "1b35914b6789aa4aaf7d00ce2356b1e811a59f1b8360baa11469d9e085c0ad40",
+  "github_archive_size_bytes": 80034326,
+  "loaded_arrays": {
+    "boundary_faces": {
+      "dtype": "<i8",
+      "sha256": "5b039e14f261a82e05a7bf16223426a01593149d7ae0dedab59096e136ffcd7a",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    "canonical_parent_union_operation_order": {
+      "dtype": "<U30",
+      "sha256": "56701cb11f632c05fb4268e67ff6f77920913de4494e3d31c595ac0ff697e6ed",
+      "shape": []
+    },
+    "canonical_parent_union_physical_status": {
+      "dtype": "<U72",
+      "sha256": "067777b0d460d36695f8a1db7fd24e8aea9e4d4acff8d819b2ba5c5d78d7ad5e",
+      "shape": [
+        1
+      ]
+    },
+    "canonical_parent_union_schema": {
+      "dtype": "<U46",
+      "sha256": "91a349d5fd402f7b8ef5265209a05ea9f8ae479f5672e7599aa23b8948950084",
+      "shape": []
+    },
+    "current_geometry_parent_path": {
+      "dtype": "<U208",
+      "sha256": "81f5965831b5217dd4d88c710059d2e8eef29f7cc7391b6e4a9f8ba169b866d0",
+      "shape": [
+        1
+      ]
+    },
+    "current_geometry_parent_sha256": {
+      "dtype": "<U64",
+      "sha256": "32c1e6ef5ad3e59aef47cb85b15d70a99ed8d614cc27ffec35cdcf85c72820bd",
+      "shape": [
+        1
+      ]
+    },
+    "desired_boundary_degenerate_source_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "desired_boundary_faces": {
+      "dtype": "<i8",
+      "sha256": "db85132990c21e079b7bd28de59215c68e9e380636fb8f0c9b0e9c090c6b4bed",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    "desired_boundary_source_face_rows": {
+      "dtype": "<i8",
+      "sha256": "cfdeeac76e756814cb2fb9db424c6667f03b5b1ea2d9695a35584b76e5bf11a6",
+      "shape": [
+        388836
+      ]
+    },
+    "desired_boundary_source_group": {
+      "dtype": "|i1",
+      "sha256": "303dac63510836114444df26a490f8be9903b2c391789c2611e768536b476407",
+      "shape": [
+        388836
+      ]
+    },
+    "desired_boundary_source_rows": {
+      "dtype": "<i8",
+      "sha256": "cfdeeac76e756814cb2fb9db424c6667f03b5b1ea2d9695a35584b76e5bf11a6",
+      "shape": [
+        388836
+      ]
+    },
+    "endpoint_quotient_affected_input_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "dc3b956e5f6a7f876a09df2493f196c0104decd40c138600c51beba55baf9cc7",
+      "shape": [
+        6
+      ]
+    },
+    "endpoint_quotient_batch_drop_volume_rows": {
+      "dtype": "<i8",
+      "sha256": "bfc2572536b97e257c10a90af18d6f5c1d5cf6460bcde7aa9d381eff56ed4975",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_batch_input_node_to_output_rows": {
+      "dtype": "<i8",
+      "sha256": "62bf6443d4218b0a359fb1c868cb215d94e46a4a4b66b9e6171adba8c1e410a7",
+      "shape": [
+        210314
+      ]
+    },
+    "endpoint_quotient_batch_keep_volume_rows": {
+      "dtype": "<i8",
+      "sha256": "1779eb847797505b772adf67b86aa2358f65152446906130d92289d9a9f7cfe1",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_batch_operation_ids": {
+      "dtype": "<i8",
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_batch_operation_log_json": {
+      "dtype": "<U918",
+      "sha256": "852e13ee4b08941156513e42acbed07351df6edc075e3b7f5bd24cc7e1b19240",
+      "shape": []
+    },
+    "endpoint_quotient_batch_output_cell_to_input_rows": {
+      "dtype": "<i8",
+      "sha256": "68f640676fb8b6f0bae0e09c93ea4325a0bbc561a5cba03ca3c8ef03ddd8e3bf",
+      "shape": [
+        724878
+      ]
+    },
+    "endpoint_quotient_changed_input_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "60151a92428e9f9a271009779bfae6ba6041f987325a43e434d8d6f625f98102",
+      "shape": [
+        4
+      ]
+    },
+    "endpoint_quotient_changed_output_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "a097dc17dcfee1801ed067d3e41fd811a065b8173fdb613c944d680089564185",
+      "shape": [
+        4
+      ]
+    },
+    "endpoint_quotient_drop_volume_row": {
+      "dtype": "<i8",
+      "sha256": "bfc2572536b97e257c10a90af18d6f5c1d5cf6460bcde7aa9d381eff56ed4975",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_input_node_map": {
+      "dtype": "<i8",
+      "sha256": "62bf6443d4218b0a359fb1c868cb215d94e46a4a4b66b9e6171adba8c1e410a7",
+      "shape": [
+        210314
+      ]
+    },
+    "endpoint_quotient_keep_volume_row": {
+      "dtype": "<i8",
+      "sha256": "1779eb847797505b772adf67b86aa2358f65152446906130d92289d9a9f7cfe1",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_operation_id": {
+      "dtype": "<i8",
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_parent_path": {
+      "dtype": "<U227",
+      "sha256": "f4e28f234724abadbb4b7199fac0d67e13a7e055bba712a2ba9bc87773986a72",
+      "shape": [
+        1
+      ]
+    },
+    "endpoint_quotient_parent_sha256": {
+      "dtype": "<U64",
+      "sha256": "3bd78f4b83e6186154bb8217b2e3b71768183812f1d45c7a9be9f81f85283927",
+      "shape": [
+        1
+      ]
+    },
+    "input_cell_to_output_cell": {
+      "dtype": "<i8",
+      "sha256": "5a09f8b6c0e1745ba21a86ed68ee946f451aae3a3d1ddc320fa26212368804ae",
+      "shape": [
+        724881
+      ]
+    },
+    "input_cell_to_output_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "2f9cc4d054f9f194498e3cd952f609f84cf96e7425d30d981233bcaa3148f99d",
+      "shape": [
+        724880
+      ]
+    },
+    "input_node_to_output_node": {
+      "dtype": "<i8",
+      "sha256": "2fb219b11634e94d398ca1d4071648681c9bf9b39174e2c93cdb36a5f3666ace",
+      "shape": [
+        210314
+      ]
+    },
+    "input_node_to_output_node_rows": {
+      "dtype": "<i8",
+      "sha256": "62bf6443d4218b0a359fb1c868cb215d94e46a4a4b66b9e6171adba8c1e410a7",
+      "shape": [
+        210314
+      ]
+    },
+    "input_point_to_output_point_row": {
+      "dtype": "<i8",
+      "sha256": "62bf6443d4218b0a359fb1c868cb215d94e46a4a4b66b9e6171adba8c1e410a7",
+      "shape": [
+        210314
+      ]
+    },
+    "input_point_to_output_point_rows": {
+      "dtype": "<i8",
+      "sha256": "62bf6443d4218b0a359fb1c868cb215d94e46a4a4b66b9e6171adba8c1e410a7",
+      "shape": [
+        210314
+      ]
+    },
+    "mapped_current_boundary_faces": {
+      "dtype": "<i8",
+      "sha256": "70d4b7b0e3d7415ea7f1b86dd64c1f6d5a6c06719bb3a8b116197c68f9820573",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    "material_indices": {
+      "dtype": "<i4",
+      "sha256": "e6a26009921128b8f76979013423d17a4ea05b9ca44ed64349708d775f111a1a",
+      "shape": [
+        724881
+      ]
+    },
+    "metadata_finalizer_709_previous_canonical_parent_union_metadata_json": {
+      "dtype": "<U157",
+      "sha256": "d6d03fd6affc1b585fcc0d2365549bb311ca2601c3b3d6646f174f65c49562c1",
+      "shape": [
+        1
+      ]
+    },
+    "metadata_finalizer_709_previous_immediate_map_sha256_json": {
+      "dtype": "<U865",
+      "sha256": "ae235e28d8bf9ebfc001d369807a8435a9f52de542fa5a005b6a1f0bc805858b",
+      "shape": [
+        1
+      ]
+    },
+    "metadata_finalizer_709_previous_target_alias_sha256_json": {
+      "dtype": "<U205",
+      "sha256": "7496088be46cc844279e062091cab1eadc5610d8595175aa2d62da2f64867085",
+      "shape": [
+        1
+      ]
+    },
+    "metadata_finalizer_cell_map_status": {
+      "dtype": "<U37",
+      "sha256": "a719e48e570bff96afbeab372b4fba6a676b29294ccb481afdff03f0a774f0f3",
+      "shape": [
+        1
+      ]
+    },
+    "metadata_finalizer_parent_candidate_path": {
+      "dtype": "<U227",
+      "sha256": "96c86bbb4c5623ee4866f5cf9ba5eb5a04dcf6d94813518ce4017b4cc68ec387",
+      "shape": []
+    },
+    "metadata_finalizer_parent_candidate_sha256": {
+      "dtype": "<U64",
+      "sha256": "b2667576b7aa62d4e9026b897c9dcf309630930694159f2af3eb23174f3ec50e",
+      "shape": []
+    },
+    "metadata_finalizer_point_map_status": {
+      "dtype": "<U50",
+      "sha256": "3da0e38761d56fa3dbdb3f545ef5b6ecba83de974e3f0eecfc18437764cf259e",
+      "shape": []
+    },
+    "metadata_finalizer_point_parent_status": {
+      "dtype": "<U36",
+      "sha256": "f9d85dc03ede736282f6e3b16d02a0e2d4a306bac35e76b67fb167375993819f",
+      "shape": []
+    },
+    "metadata_finalizer_previous_desired_boundary_faces": {
+      "dtype": "<i8",
+      "sha256": "74c2d36dd17e320d25f494197b4af1ccaa6711dc6e07b056bc71077e5a5ba91a",
+      "shape": [
+        389192,
+        3
+      ]
+    },
+    "metadata_finalizer_region": {
+      "dtype": "<U4",
+      "sha256": "7d46d7e996b729fdb9d07e6ded344738027996901b5e12feacc4b1cc69a5e804",
+      "shape": []
+    },
+    "metadata_finalizer_schema": {
+      "dtype": "<U56",
+      "sha256": "47d55daab2691cd9e7ab7a344bd53120203c64d7b8428df4f62dc15729a5465b",
+      "shape": []
+    },
+    "metadata_finalizer_source_asset_sha256_json": {
+      "dtype": "<U2388",
+      "sha256": "0420f5c4d74377f06bd4412880944458624d1ca354e2e49bf585e529577bbb86",
+      "shape": []
+    },
+    "metadata_finalizer_status": {
+      "dtype": "<U59",
+      "sha256": "e2c52197f1302cba989ac656a7d4101d4946d3ef7b9bd6fd57b14de3b505c407",
+      "shape": []
+    },
+    "output_cell_to_input_cell": {
+      "dtype": "<i8",
+      "sha256": "5a09f8b6c0e1745ba21a86ed68ee946f451aae3a3d1ddc320fa26212368804ae",
+      "shape": [
+        724881
+      ]
+    },
+    "output_cell_to_input_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "68f640676fb8b6f0bae0e09c93ea4325a0bbc561a5cba03ca3c8ef03ddd8e3bf",
+      "shape": [
+        724878
+      ]
+    },
+    "output_node_to_input_node": {
+      "dtype": "<i8",
+      "sha256": "2fb219b11634e94d398ca1d4071648681c9bf9b39174e2c93cdb36a5f3666ace",
+      "shape": [
+        210314
+      ]
+    },
+    "output_node_to_input_node_rows": {
+      "dtype": "<i8",
+      "sha256": "2fb219b11634e94d398ca1d4071648681c9bf9b39174e2c93cdb36a5f3666ace",
+      "shape": [
+        210314
+      ]
+    },
+    "output_point_parent_input_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "output_point_parent_offsets": {
+      "dtype": "<i8",
+      "sha256": "c916dbbefa29da6d0d266332388a22725aa450efee3780ef71f0a501139b9963",
+      "shape": [
+        210315
+      ]
+    },
+    "output_point_to_input_point_row": {
+      "dtype": "<i8",
+      "sha256": "2fb219b11634e94d398ca1d4071648681c9bf9b39174e2c93cdb36a5f3666ace",
+      "shape": [
+        210314
+      ]
+    },
+    "output_point_to_input_point_rows": {
+      "dtype": "<i8",
+      "sha256": "2fb219b11634e94d398ca1d4071648681c9bf9b39174e2c93cdb36a5f3666ace",
+      "shape": [
+        210314
+      ]
+    },
+    "points_world_m": {
+      "dtype": "<f4",
+      "sha256": "5e1909e7898818f062185abbc9ee6b4a01d184023330d0ed73e8aa7ef988959c",
+      "shape": [
+        210314,
+        3
+      ]
+    },
+    "points_world_m_f32": {
+      "dtype": "<f4",
+      "sha256": "5e1909e7898818f062185abbc9ee6b4a01d184023330d0ed73e8aa7ef988959c",
+      "shape": [
+        210314,
+        3
+      ]
+    },
+    "proposed_current_desired_boundary_faces": {
+      "dtype": "<i8",
+      "sha256": "db85132990c21e079b7bd28de59215c68e9e380636fb8f0c9b0e9c090c6b4bed",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    "proposed_current_desired_boundary_source_face_rows": {
+      "dtype": "<i8",
+      "sha256": "cfdeeac76e756814cb2fb9db424c6667f03b5b1ea2d9695a35584b76e5bf11a6",
+      "shape": [
+        388836
+      ]
+    },
+    "proposed_current_desired_boundary_source_group": {
+      "dtype": "|i1",
+      "sha256": "303dac63510836114444df26a490f8be9903b2c391789c2611e768536b476407",
+      "shape": [
+        388836
+      ]
+    },
+    "proposed_current_desired_boundary_source_rows": {
+      "dtype": "<i8",
+      "sha256": "cfdeeac76e756814cb2fb9db424c6667f03b5b1ea2d9695a35584b76e5bf11a6",
+      "shape": [
+        388836
+      ]
+    },
+    "quality_complete_star_operation_vertex_rows": {
+      "dtype": "<i8",
+      "sha256": "15bd5be4105376a655c6eb149664f7a7b3da4443e7729a679368687a16c64854",
+      "shape": [
+        7
+      ]
+    },
+    "quality_fixed_boundary_input_candidate_path": {
+      "dtype": "<U195",
+      "sha256": "67f4529e8698f2d641ad0cefc65e9aba14ddc9dc5d47d7677b82b0ab71aa4de6",
+      "shape": [
+        1
+      ]
+    },
+    "quality_fixed_boundary_input_candidate_sha256": {
+      "dtype": "<U64",
+      "sha256": "689c0c459aa6a2ffaa0318014606b7cfcc58c11b58959579ffc1b89c99d424a6",
+      "shape": [
+        1
+      ]
+    },
+    "quality_fixed_boundary_operation_count": {
+      "dtype": "<i8",
+      "sha256": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3",
+      "shape": [
+        1
+      ]
+    },
+    "quality_fixed_boundary_operation_methods": {
+      "dtype": "<U28",
+      "sha256": "b72fe35213c28a53eaf542922a2c1f3f6993862b48917b1401e287af1c24dd6e",
+      "shape": [
+        8
+      ]
+    },
+    "quality_fixed_boundary_operation_parent_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "621d3f8d5807a33bd2646f5e7e49ec0bd70de94cdc2a7f73ad68b1e6dd63f15d",
+      "shape": [
+        241
+      ]
+    },
+    "quality_fixed_boundary_operation_parent_offsets": {
+      "dtype": "<i8",
+      "sha256": "002e643aa0bb30e45f06a3e68ab7f202da8ee7da71cfc533b1b36f2ff5fef27e",
+      "shape": [
+        9
+      ]
+    },
+    "quality_fixed_boundary_operation_seed_rows": {
+      "dtype": "<i8",
+      "sha256": "50bd675dd1474a0a529c8a709712a2587eff4cc217dbc6c1fdbe66c88bf6dd6d",
+      "shape": [
+        8
+      ]
+    },
+    "quality_milp_input_candidate_path": {
+      "dtype": "<U195",
+      "sha256": "67f4529e8698f2d641ad0cefc65e9aba14ddc9dc5d47d7677b82b0ab71aa4de6",
+      "shape": [
+        1
+      ]
+    },
+    "quality_milp_input_candidate_sha256": {
+      "dtype": "<U64",
+      "sha256": "689c0c459aa6a2ffaa0318014606b7cfcc58c11b58959579ffc1b89c99d424a6",
+      "shape": [
+        1
+      ]
+    },
+    "quality_milp_input_node_to_output_node": {
+      "dtype": "<i8",
+      "sha256": "04b020bc3409641da901d061f98dff8e7f7337f60a5c977f35694233dd305cd6",
+      "shape": [
+        210306
+      ]
+    },
+    "quality_milp_operation_count": {
+      "dtype": "<i8",
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "shape": [
+        1
+      ]
+    },
+    "quality_milp_operation_parent_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "quality_milp_operation_parent_offsets": {
+      "dtype": "<i8",
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "shape": [
+        1
+      ]
+    },
+    "quality_milp_operation_seed_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "quality_milp_output_node_to_input_node": {
+      "dtype": "<i8",
+      "sha256": "1dc994c4b80b26eb84786701773763319c0c1a5645cd3807075b78bca92b68a7",
+      "shape": [
+        210314
+      ]
+    },
+    "quality_milp_partial_bad_replacement": {
+      "dtype": "|b1",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "shape": [
+        1
+      ]
+    },
+    "quality_steiner_cavity_selection_methods": {
+      "dtype": "<U32",
+      "sha256": "6f564676d9a76e3a129a2633f9e5250198c02d649bfd2131f99bbd730533284f",
+      "shape": [
+        8
+      ]
+    },
+    "quality_steiner_kernel_helper_path": {
+      "dtype": "<U202",
+      "sha256": "ea70ae3b10d9c714ceef132eeec04e4c7a7df4c386c560cff38ffbcc485a7ef0",
+      "shape": [
+        1
+      ]
+    },
+    "quality_steiner_kernel_helper_sha256": {
+      "dtype": "<U64",
+      "sha256": "b73c711fbdab22ac82e5aca2fa262262de31f6bb68538dce872b6f6b6b1fe376",
+      "shape": [
+        1
+      ]
+    },
+    "quality_steiner_operation_count": {
+      "dtype": "<i8",
+      "sha256": "6cc16abd70eefb90dc0ba0d14fb088630873b2c6ad943f7442356735984c35a3",
+      "shape": [
+        1
+      ]
+    },
+    "quality_steiner_point_output_rows": {
+      "dtype": "<i8",
+      "sha256": "ef273b862181b4d1b8255ff13b53d06714f31920f088f8ea81fdea2ecec3683d",
+      "shape": [
+        8
+      ]
+    },
+    "replacement_parent_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "replacement_parent_offsets": {
+      "dtype": "<i8",
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "shape": [
+        1
+      ]
+    },
+    "replacement_tet_offsets": {
+      "dtype": "<i8",
+      "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb",
+      "shape": [
+        2
+      ]
+    },
+    "replacement_tetrahedra": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0,
+        4
+      ]
+    },
+    "retained_input_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "5a09f8b6c0e1745ba21a86ed68ee946f451aae3a3d1ddc320fa26212368804ae",
+      "shape": [
+        724881
+      ]
+    },
+    "skin_current_target_rebind_I_point_to_volume_rows": {
+      "dtype": "<i8",
+      "sha256": "09884e2e1daf8a5de4be1b2070f8274863e395fd3bc17d364b7db5b50e68f9c7",
+      "shape": [
+        125368
+      ]
+    },
+    "skin_current_target_rebind_O_point_to_volume_rows": {
+      "dtype": "<i8",
+      "sha256": "1a340bdd5a52cf25831aa0c513576d654f8c80ea88642b117783000323d0dbb7",
+      "shape": [
+        76669
+      ]
+    },
+    "skin_current_target_rebind_schema": {
+      "dtype": "<U56",
+      "sha256": "47d55daab2691cd9e7ab7a344bd53120203c64d7b8428df4f62dc15729a5465b",
+      "shape": []
+    },
+    "skin_current_target_rebind_source_asset_paths_json": {
+      "dtype": "<U1538",
+      "sha256": "10a66e3d697ec75428fefd6da0c2eebdf8c3ce82365e1ece2a9594abbcbee88b",
+      "shape": [
+        1
+      ]
+    },
+    "skin_current_target_rebind_source_asset_sha256_json": {
+      "dtype": "<U635",
+      "sha256": "1fc1c6ee7a1a048a2b585b86155c156f750df4d5e07895142ee772e4dbe23959",
+      "shape": [
+        1
+      ]
+    },
+    "skin_current_target_rebind_wall_face_points_world_m_f32": {
+      "dtype": "<f4",
+      "sha256": "9c80a49fb8fa1b72516e023d3e4d5f1c50d6a39f65bc1e0bf7f6786a91038f19",
+      "shape": [
+        90,
+        3,
+        3
+      ]
+    },
+    "skin_current_target_rebind_wall_faces_collar_point_rows": {
+      "dtype": "<i8",
+      "sha256": "b32bc47dcb81afca298a61bec7731c4faa9d0478cb96b746c6e91bdf57166634",
+      "shape": [
+        90,
+        3
+      ]
+    },
+    "skin_current_target_rebind_wall_faces_volume_rows": {
+      "dtype": "<i8",
+      "sha256": "34818fd33461ee456f2f537ee234b4bbd70222218219a6af5ea35e2fab6fee3b",
+      "shape": [
+        90,
+        3
+      ]
+    },
+    "source_I_vertex_quotient": {
+      "dtype": "<i8",
+      "sha256": "1dc994c4b80b26eb84786701773763319c0c1a5645cd3807075b78bca92b68a7",
+      "shape": [
+        210314
+      ]
+    },
+    "source_input_node_to_output_node": {
+      "dtype": "<i8",
+      "sha256": "04b020bc3409641da901d061f98dff8e7f7337f60a5c977f35694233dd305cd6",
+      "shape": [
+        210306
+      ]
+    },
+    "source_input_vertex_quotient": {
+      "dtype": "<i8",
+      "sha256": "1dc994c4b80b26eb84786701773763319c0c1a5645cd3807075b78bca92b68a7",
+      "shape": [
+        210314
+      ]
+    },
+    "source_interior_vertex_quotient": {
+      "dtype": "<i8",
+      "sha256": "ac525d333b92ee7f0bd3e9125eac8d88f37ced2901c0b2ae348264178a4d33a1",
+      "shape": [
+        210314
+      ]
+    },
+    "steiner_parent_point_csr_input_offsets": {
+      "dtype": "<i8",
+      "sha256": "a5bde5c5786dc2f736471abbcde0eb1a2fe26e17fd88d37120f838fdb77e9600",
+      "shape": [
+        210307
+      ]
+    },
+    "steiner_parent_point_csr_input_output_point_parent_input_cell_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "steiner_parent_point_csr_input_output_point_parent_offsets": {
+      "dtype": "<i8",
+      "sha256": "a5bde5c5786dc2f736471abbcde0eb1a2fe26e17fd88d37120f838fdb77e9600",
+      "shape": [
+        210307
+      ]
+    },
+    "steiner_parent_point_csr_input_path": {
+      "dtype": "<U195",
+      "sha256": "67f4529e8698f2d641ad0cefc65e9aba14ddc9dc5d47d7677b82b0ab71aa4de6",
+      "shape": [
+        1
+      ]
+    },
+    "steiner_parent_point_csr_input_rows": {
+      "dtype": "<i8",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "shape": [
+        0
+      ]
+    },
+    "steiner_parent_point_csr_input_sha256": {
+      "dtype": "<U64",
+      "sha256": "689c0c459aa6a2ffaa0318014606b7cfcc58c11b58959579ffc1b89c99d424a6",
+      "shape": [
+        1
+      ]
+    },
+    "steiner_point_csr_policy": {
+      "dtype": "<U66",
+      "sha256": "40c99af77b8981107e1bc6fa7e8a7ef406a3f17bbd751373456f163bc16d6bdc",
+      "shape": []
+    },
+    "target_metadata_native_steps": {
+      "dtype": "<i8",
+      "sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc",
+      "shape": []
+    },
+    "target_metadata_physical_admission": {
+      "dtype": "|b1",
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "shape": []
+    },
+    "tetrahedra": {
+      "dtype": "<i8",
+      "sha256": "fe1357be23a4a576e21b9a6ad38a2d9694e3bc1d9cdb265ed146263bdad182f1",
+      "shape": [
+        724881,
+        4
+      ]
+    },
+    "typed_D_candidate_path": {
+      "dtype": "<U198",
+      "sha256": "37fbfd0f9f50251311783f21a84e139c3db5935c2842405b1c7b6a881be83f81",
+      "shape": [
+        1
+      ]
+    },
+    "typed_D_candidate_sha256": {
+      "dtype": "<U64",
+      "sha256": "670f079149e71aaac35c55ed628af73b5d61610c3465666d69d2fda3f4065098",
+      "shape": [
+        1
+      ]
+    },
+    "typed_I_candidate_path": {
+      "dtype": "<U198",
+      "sha256": "001aa5209a8b2c69e6d2cd98dee15128daf98f86406385e2104ad920e410c059",
+      "shape": [
+        1
+      ]
+    },
+    "typed_I_candidate_sha256": {
+      "dtype": "<U64",
+      "sha256": "f997d1fc281bebd4e94b503dc67c7bdc49338f4e55a3e80ea0f2673fe0456bdf",
+      "shape": [
+        1
+      ]
+    },
+    "typed_O_candidate_path": {
+      "dtype": "<U198",
+      "sha256": "739650b2cdd7db8b0f5a5df6ac9196409e02cc2eddbe3b49ebb7570fe706252d",
+      "shape": [
+        1
+      ]
+    },
+    "typed_O_candidate_sha256": {
+      "dtype": "<U64",
+      "sha256": "1cc38bc9338f1470aac0bb16ff7b9110b7578cb204d0cb1217ee8127e52aa555",
+      "shape": [
+        1
+      ]
+    }
+  },
+  "native_steps": 0,
+  "npy_header_count": 116,
+  "npy_headers": [
+    {
+      "dtype": "<f4",
+      "fortran_order": false,
+      "name": "points_world_m.npy",
+      "shape": [
+        210314,
+        3
+      ]
+    },
+    {
+      "dtype": "<f4",
+      "fortran_order": false,
+      "name": "points_world_m_f32.npy",
+      "shape": [
+        210314,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "tetrahedra.npy",
+      "shape": [
+        724881,
+        4
+      ]
+    },
+    {
+      "dtype": "<i4",
+      "fortran_order": false,
+      "name": "material_indices.npy",
+      "shape": [
+        724881
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "boundary_faces.npy",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "desired_boundary_faces.npy",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "retained_input_cell_rows.npy",
+      "shape": [
+        724881
+      ]
+    },
+    {
+      "dtype": "<U198",
+      "fortran_order": false,
+      "name": "typed_I_candidate_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "typed_I_candidate_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U208",
+      "fortran_order": false,
+      "name": "current_geometry_parent_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "current_geometry_parent_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_cell_to_input_cell.npy",
+      "shape": [
+        724881
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "input_cell_to_output_cell.npy",
+      "shape": [
+        724881
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "replacement_parent_offsets.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "replacement_parent_cell_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "replacement_tet_offsets.npy",
+      "shape": [
+        2
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "replacement_tetrahedra.npy",
+      "shape": [
+        0,
+        4
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_point_to_input_point_row.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_point_parent_offsets.npy",
+      "shape": [
+        210315
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_point_parent_input_cell_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<U198",
+      "fortran_order": false,
+      "name": "typed_O_candidate_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "typed_O_candidate_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U198",
+      "fortran_order": false,
+      "name": "typed_D_candidate_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "typed_D_candidate_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "input_node_to_output_node.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_node_to_input_node.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<U46",
+      "fortran_order": false,
+      "name": "canonical_parent_union_schema.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U30",
+      "fortran_order": false,
+      "name": "canonical_parent_union_operation_order.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "source_interior_vertex_quotient.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "metadata_finalizer_previous_desired_boundary_faces.npy",
+      "shape": [
+        389192,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "desired_boundary_degenerate_source_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<U56",
+      "fortran_order": false,
+      "name": "metadata_finalizer_schema.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U4",
+      "fortran_order": false,
+      "name": "metadata_finalizer_region.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U59",
+      "fortran_order": false,
+      "name": "metadata_finalizer_status.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U227",
+      "fortran_order": false,
+      "name": "metadata_finalizer_parent_candidate_path.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "metadata_finalizer_parent_candidate_sha256.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U50",
+      "fortran_order": false,
+      "name": "metadata_finalizer_point_map_status.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U36",
+      "fortran_order": false,
+      "name": "metadata_finalizer_point_parent_status.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U2388",
+      "fortran_order": false,
+      "name": "metadata_finalizer_source_asset_sha256_json.npy",
+      "shape": []
+    },
+    {
+      "dtype": "|b1",
+      "fortran_order": false,
+      "name": "target_metadata_physical_admission.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "target_metadata_native_steps.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<U56",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_schema.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_O_point_to_volume_rows.npy",
+      "shape": [
+        76669
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_I_point_to_volume_rows.npy",
+      "shape": [
+        125368
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_wall_faces_volume_rows.npy",
+      "shape": [
+        90,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_wall_faces_collar_point_rows.npy",
+      "shape": [
+        90,
+        3
+      ]
+    },
+    {
+      "dtype": "<f4",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_wall_face_points_world_m_f32.npy",
+      "shape": [
+        90,
+        3,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_milp_operation_parent_offsets.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_milp_operation_parent_cell_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<U195",
+      "fortran_order": false,
+      "name": "quality_milp_input_candidate_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "quality_milp_input_candidate_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "|b1",
+      "fortran_order": false,
+      "name": "quality_milp_partial_bad_replacement.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_milp_operation_count.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_milp_operation_seed_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_milp_input_node_to_output_node.npy",
+      "shape": [
+        210306
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_milp_output_node_to_input_node.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_operation_parent_offsets.npy",
+      "shape": [
+        9
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_operation_parent_cell_rows.npy",
+      "shape": [
+        241
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_operation_count.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U28",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_operation_methods.npy",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_operation_seed_rows.npy",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "dtype": "<U195",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_input_candidate_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "quality_fixed_boundary_input_candidate_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_steiner_point_output_rows.npy",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_steiner_operation_count.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U32",
+      "fortran_order": false,
+      "name": "quality_steiner_cavity_selection_methods.npy",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "dtype": "<U202",
+      "fortran_order": false,
+      "name": "quality_steiner_kernel_helper_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "quality_steiner_kernel_helper_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "input_point_to_output_point_row.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "source_input_vertex_quotient.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "source_input_node_to_output_node.npy",
+      "shape": [
+        210306
+      ]
+    },
+    {
+      "dtype": "<U195",
+      "fortran_order": false,
+      "name": "steiner_parent_point_csr_input_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "steiner_parent_point_csr_input_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "steiner_parent_point_csr_input_offsets.npy",
+      "shape": [
+        210307
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "steiner_parent_point_csr_input_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "steiner_parent_point_csr_input_output_point_parent_offsets.npy",
+      "shape": [
+        210307
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "steiner_parent_point_csr_input_output_point_parent_input_cell_rows.npy",
+      "shape": [
+        0
+      ]
+    },
+    {
+      "dtype": "<U66",
+      "fortran_order": false,
+      "name": "steiner_point_csr_policy.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "quality_complete_star_operation_vertex_rows.npy",
+      "shape": [
+        7
+      ]
+    },
+    {
+      "dtype": "|i1",
+      "fortran_order": false,
+      "name": "desired_boundary_source_group.npy",
+      "shape": [
+        388836
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "desired_boundary_source_rows.npy",
+      "shape": [
+        388836
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "desired_boundary_source_face_rows.npy",
+      "shape": [
+        388836
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "mapped_current_boundary_faces.npy",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "proposed_current_desired_boundary_faces.npy",
+      "shape": [
+        388836,
+        3
+      ]
+    },
+    {
+      "dtype": "|i1",
+      "fortran_order": false,
+      "name": "proposed_current_desired_boundary_source_group.npy",
+      "shape": [
+        388836
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "proposed_current_desired_boundary_source_rows.npy",
+      "shape": [
+        388836
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "proposed_current_desired_boundary_source_face_rows.npy",
+      "shape": [
+        388836
+      ]
+    },
+    {
+      "dtype": "<U635",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_source_asset_sha256_json.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U1538",
+      "fortran_order": false,
+      "name": "skin_current_target_rebind_source_asset_paths_json.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U37",
+      "fortran_order": false,
+      "name": "metadata_finalizer_cell_map_status.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U865",
+      "fortran_order": false,
+      "name": "metadata_finalizer_709_previous_immediate_map_sha256_json.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U157",
+      "fortran_order": false,
+      "name": "metadata_finalizer_709_previous_canonical_parent_union_metadata_json.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U205",
+      "fortran_order": false,
+      "name": "metadata_finalizer_709_previous_target_alias_sha256_json.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "source_I_vertex_quotient.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_cell_to_input_cell_rows.npy",
+      "shape": [
+        724878
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "input_cell_to_output_cell_rows.npy",
+      "shape": [
+        724880
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "input_node_to_output_node_rows.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_node_to_input_node_rows.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "output_point_to_input_point_rows.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_changed_output_cell_rows.npy",
+      "shape": [
+        4
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_changed_input_cell_rows.npy",
+      "shape": [
+        4
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_affected_input_cell_rows.npy",
+      "shape": [
+        6
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_input_node_map.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<U227",
+      "fortran_order": false,
+      "name": "endpoint_quotient_parent_path.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U64",
+      "fortran_order": false,
+      "name": "endpoint_quotient_parent_sha256.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<U72",
+      "fortran_order": false,
+      "name": "canonical_parent_union_physical_status.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "input_point_to_output_point_rows.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_batch_operation_ids.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_batch_drop_volume_rows.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_batch_keep_volume_rows.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_batch_output_cell_to_input_rows.npy",
+      "shape": [
+        724878
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_batch_input_node_to_output_rows.npy",
+      "shape": [
+        210314
+      ]
+    },
+    {
+      "dtype": "<U918",
+      "fortran_order": false,
+      "name": "endpoint_quotient_batch_operation_log_json.npy",
+      "shape": []
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_operation_id.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_drop_volume_row.npy",
+      "shape": [
+        1
+      ]
+    },
+    {
+      "dtype": "<i8",
+      "fortran_order": false,
+      "name": "endpoint_quotient_keep_volume_row.npy",
+      "shape": [
+        1
+      ]
+    }
+  ],
+  "physical_admission": false,
+  "restored_member_bytes": 65528898,
+  "restored_member_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-926-fixed-boundary-cow-root/flips/skin-fixed-boundary-quality-queue.npz",
+  "restored_member_sha256": "9117f00f40ccaf667c901bbaaab3ee833c7efce27324ec047c4c6a0a5a78ac18",
+  "schema": "numi-human.volume-archive-all-blobs-exact-ram-restore-supplement.v1",
+  "selection_plan_sha256": "9d6ae7ce9d1a4be0aa70c2820c31ccca677780498a6ba7df589db41e859bd9f8",
+  "status": "PASS_INDEPENDENT_GH_ARCHIVE_STREAM_AND_EXACT_RESTORE_ALL_TWO_FILES",
+  "zip_crc": "PASS"
+}

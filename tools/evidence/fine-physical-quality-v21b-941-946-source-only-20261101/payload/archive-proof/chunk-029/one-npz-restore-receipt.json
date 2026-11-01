@@ -1,0 +1,60 @@
+{
+  "archive_sha256": "d3a33b42fee236e9624047627c9ce317f72f14adc964a00581bc994d8fa58488",
+  "created_utc": "2026-11-01T02:53:20.201824Z",
+  "expected_source_sha256": "6246fe35e9869981798b7de74c61fb1189ae138256caf8a24de0562458e4cc6e",
+  "filesystem_restore_performed": false,
+  "native_steps": 0,
+  "physical_admission": false,
+  "remote_download_method": "gh release download --output - captured in RAM; full blob SHA verified",
+  "restore_method": "fresh BytesIO copy, full SHA/size check, ZIP CRC, NPY headers, and required array loads",
+  "restored_npy_header_count": 166,
+  "restored_npy_header_summary_sha256": "06a0cb406c47f74e70b9c81cd63802fcc9aaf3fc7d80fc8151ccd7fb14eb2da2",
+  "restored_original_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-938-fixed-boundary-complete-cow-root/flips/fat-fixed-boundary-quality-queue.npz",
+  "restored_path": null,
+  "restored_required_array_readback": {
+    "boundary_faces": {
+      "array_bytes_sha256": "4cf79dce939e5be5a10486dc5c7a366df4a23db884179a07adddb0118c5a93dd",
+      "dtype": "<i8",
+      "shape": [
+        444398,
+        3
+      ]
+    },
+    "material_indices": {
+      "array_bytes_sha256": "264fe2e7956e99e8997f688fc18db169966b259fec46ac0d085f25dc16cafbcd",
+      "dtype": "<i4",
+      "shape": [
+        770516
+      ]
+    },
+    "points_world_m": {
+      "array_bytes_sha256": "3d4217d0e13758ef8cd48c1981b9ae606d843bceb148413f703518c566f73393",
+      "dtype": "<f4",
+      "shape": [
+        253887,
+        3
+      ]
+    },
+    "points_world_m_f32": {
+      "array_bytes_sha256": "3d4217d0e13758ef8cd48c1981b9ae606d843bceb148413f703518c566f73393",
+      "dtype": "<f4",
+      "shape": [
+        253887,
+        3
+      ]
+    },
+    "tetrahedra": {
+      "array_bytes_sha256": "86074bef1625d38784ccb159c52ace719c8a2077c84ac8a1de319443eb776a8e",
+      "dtype": "<i8",
+      "shape": [
+        770516,
+        4
+      ]
+    }
+  },
+  "restored_sha256": "6246fe35e9869981798b7de74c61fb1189ae138256caf8a24de0562458e4cc6e",
+  "restored_size_bytes": 72289456,
+  "restored_zip_crc": "PASS",
+  "schema": "numi-human.volume-archive-one-npz-restore-receipt.v1",
+  "status": "PASS_EXACT_IN_MEMORY_NPZ_RESTORE_AND_READBACK"
+}
