@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental_fixed_boundary_polygon_search_658_cow_root.py", line 96, in <module>
+    if __name__=="__main__":main()
+                            ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/incremental_fixed_boundary_polygon_search_658_cow_root.py", line 86, in main
+    dest=out/(role.lower()+"-fixed-boundary-quality-queue.npz");clone_receipt=COW.write_npz_clone(Path(e["path"]),dest,payload);(out/(role.lower()+"-npz-clone-receipt.json")).write_text(json.dumps(clone_receipt,indent=2,default=str)+"\n")
+                                                                              ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/npz-cow-append-925-root/npz_cow_append_925.py", line 125, in write_npz_clone
+    zf.writestr(name,bio.getvalue(),compress_type=ctype,
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        compresslevel=6 if ctype==zipfile.ZIP_DEFLATED else None)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 2003, in writestr
+    dest.write(data)
+    ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/zipfile/__init__.py", line 1298, in write
+    self._fileobj.write(data)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^
+OSError: [Errno 28] No space left on device

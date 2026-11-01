@@ -1,0 +1,3427 @@
+{
+  "schema": "h706.target-remainder-block-local-slp.v3-joint-count-stall",
+  "status": "PASS_F32_BLOCK_LOCAL_TARGET_QUALITY_PROPOSAL",
+  "physical_admission": false,
+  "native_steps": 0,
+  "bad_before": 35,
+  "bad_after": 32,
+  "bad_score_before": 41.70736864389431,
+  "bad_score_after": 35.0976619630904,
+  "quality_log_deficit_by_role_before": {
+    "Skin": 21.339085520725405,
+    "Fat": 20.368283123168915
+  },
+  "quality_log_deficit_by_role_after": {
+    "Skin": 17.38493342902441,
+    "Fat": 17.712728534065988
+  },
+  "fat_log_deficit_score_before": 20.368283123168915,
+  "fat_log_deficit_score_after": 17.712728534065988,
+  "skin_log_deficit_score_before": 21.339085520725405,
+  "skin_log_deficit_score_after": 17.38493342902441,
+  "strict_fat_log_deficit_score_progress": true,
+  "strict_skin_log_deficit_score_progress": true,
+  "strict_quality_count_progress": true,
+  "strict_bad_score_progress": false,
+  "accepted_components": 6,
+  "accepted_log_deficit_components": 0,
+  "local_patch_count": 21,
+  "local_patch_attempts": [
+    {
+      "patch": 0,
+      "bad_component": 10,
+      "seed_bad_cells": 5,
+      "bad_cluster_cells": 5,
+      "free_rows": 66,
+      "affected_cells_initial": 1656,
+      "native_bad_count_before_patch": 35,
+      "fat_priority_rank": 0,
+      "seed_bad_fat_cells": 3,
+      "seed_bad_skin_cells": 2,
+      "fat_seed_log_deficit": 5.9494784440878306,
+      "skin_seed_log_deficit": 1.3588429422915558,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 18,
+      "local_bad_after": 18,
+      "global_bad_before": 35,
+      "global_bad_after": 35,
+      "global_score_after": 41.705460249139534,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.19358849991112947,
+      "moved_rows": 15,
+      "maximum_cumulative_path_L1_m": 1.4901161193847656e-08,
+      "max_step_L1_m": 1.4901161193847656e-08,
+      "local_native_bad_after": 18,
+      "native_bad_count_after_block_lp": 35,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+        "accepted": true,
+        "native_bad_count_before": 35,
+        "native_bad_count_after": 35,
+        "remaining_same_patch_deadline_s": 1.2991762920282781
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 135150,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 35,
+            "score_after": 41.70528735653416,
+            "step_l1_m": 4.3213367462158203e-07,
+            "cumulative_path_l1_m": 4.3213367462158203e-07,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 13,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 8,
+            "bad_after": 8,
+            "objective_before": -11.88798199872954,
+            "objective_after": -11.888045486833732,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.958210883831009e-10,
+              "maximum": 8.569593200764675e-06
+            }
+          },
+          {
+            "node": 136606,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136610,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 345950,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136603,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 35,
+            "score_after": 39.725455200923825,
+            "step_l1_m": 0.0002499818801879883,
+            "cumulative_path_l1_m": 0.00024999678134918213,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 3,
+            "bad_after": 3,
+            "objective_before": -4.113022723667235,
+            "objective_after": -4.972252875515922,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 3.2279333741452816e-17,
+              "maximum": 1.5979122703530223e-08
+            }
+          },
+          {
+            "node": 210307,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136807,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 35,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1494776,
+            "free_rows": [
+              134151,
+              136610,
+              345950,
+              136606
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 35,
+              "block_lp_bad_count_after": 35,
+              "node_bad_count_after": 35,
+              "native_bad_count_before_joint": 35,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          },
+          {
+            "seed_cell": 1494002,
+            "free_rows": [
+              345950,
+              134151,
+              136606,
+              136603
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 35,
+              "block_lp_bad_count_after": 35,
+              "node_bad_count_after": 35,
+              "native_bad_count_before_joint": 35,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 2
+          }
+        ]
+      }
+    },
+    {
+      "patch": 1,
+      "bad_component": 18,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 24,
+      "affected_cells_initial": 1473,
+      "native_bad_count_before_patch": 35,
+      "fat_priority_rank": 1,
+      "seed_bad_fat_cells": 2,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 4.872911948595926,
+      "skin_seed_log_deficit": 0.0,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 2,
+      "local_bad_after": 2,
+      "global_bad_before": 35,
+      "global_bad_candidate": 35,
+      "global_score_before": 39.725455200923825,
+      "global_score_candidate": 39.725455200923825,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 35,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 35,
+        "native_bad_count_after": 35,
+        "remaining_same_patch_deadline_s": 1.4416673339437693
+      },
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 131960,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 131968,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 132261,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 35,
+            "score_after": 39.6990626557435,
+            "step_l1_m": 0.0002499932888895273,
+            "cumulative_path_l1_m": 0.0002499932888895273,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 8,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -2.177067258293686,
+            "objective_after": -2.1793951908530587,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 3.401523989891231e-10,
+              "maximum": 4.587675387228608e-05
+            }
+          },
+          {
+            "node": 131966,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 35,
+            "score_after": 39.504661978474175,
+            "step_l1_m": 3.4648459404706955e-05,
+            "cumulative_path_l1_m": 3.4648459404706955e-05,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.0862966212459495,
+            "objective_after": -1.1046123799277057,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.005267953351266e-15,
+              "maximum": 2.3517323113740337e-08
+            }
+          },
+          {
+            "node": 131972,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 35,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1493887,
+            "free_rows": [
+              131960,
+              131966,
+              131968,
+              132261
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 35,
+              "block_lp_bad_count_after": 35,
+              "node_bad_count_after": 35,
+              "native_bad_count_before_joint": 35,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          },
+          {
+            "seed_cell": 1493888,
+            "free_rows": [
+              131960,
+              131968,
+              131972,
+              132261
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 35,
+              "block_lp_bad_count_after": 35,
+              "node_bad_count_after": 35,
+              "native_bad_count_before_joint": 35,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 5
+          }
+        ]
+      }
+    },
+    {
+      "patch": 2,
+      "bad_component": 7,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 3,
+      "free_rows": 60,
+      "affected_cells_initial": 1703,
+      "native_bad_count_before_patch": 35,
+      "fat_priority_rank": 2,
+      "seed_bad_fat_cells": 2,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 3.0533686506325255,
+      "skin_seed_log_deficit": 2.1999258926528116,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 35,
+      "global_bad_candidate": 35,
+      "global_score_before": 39.504661978474175,
+      "global_score_candidate": 39.504661978474175,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 35,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 35,
+        "native_bad_count_after": 35,
+        "remaining_same_patch_deadline_s": 1.4300667920615524
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 111626,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109675,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109677,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 109674,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109705,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 109704,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109678,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109671,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 35,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1472278,
+            "free_rows": [
+              109678,
+              109675,
+              111626,
+              109677
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 35,
+              "block_lp_bad_count_after": 35,
+              "node_bad_count_after": 35,
+              "native_bad_count_before_joint": 35,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "seed_cell": 724121,
+            "free_rows": [
+              109674,
+              109675,
+              109705,
+              111626
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 35,
+              "block_lp_bad_count_after": 35,
+              "node_bad_count_after": 35,
+              "native_bad_count_before_joint": 35,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_F32_NONPOSITIVE_OR_NONFINITE"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 3,
+      "bad_component": 20,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 26,
+      "affected_cells_initial": 602,
+      "native_bad_count_before_patch": 35,
+      "fat_priority_rank": 3,
+      "seed_bad_fat_cells": 2,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 1.842336130911084,
+      "skin_seed_log_deficit": 0.0,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 12,
+      "local_bad_after": 12,
+      "global_bad_before": 35,
+      "global_bad_after": 35,
+      "global_score_after": 39.49178453855873,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.08851958299055696,
+      "moved_rows": 20,
+      "maximum_cumulative_path_L1_m": 0.00024999678134918213,
+      "max_step_L1_m": 5.960464477539063e-08,
+      "local_native_bad_after": 12,
+      "native_bad_count_after_block_lp": 35,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+        "accepted": true,
+        "native_bad_count_before": 35,
+        "native_bad_count_after": 35,
+        "remaining_same_patch_deadline_s": 1.405945209087804
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 35,
+            "global_bad_candidate": 35,
+            "score_before": 39.49178453855873,
+            "score_candidate": 39.49179647409974
+          },
+          {
+            "node": 136410,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136373,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136427,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136362,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136406,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136374,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 34,
+            "score_after": 38.93456017755778,
+            "step_l1_m": 6.737187504768372e-05,
+            "cumulative_path_l1_m": 6.740912795066833e-05,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 1,
+            "objective_before": -2.9914175693602183,
+            "objective_after": -3.2694634339495208,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 4.52924525157833e-15,
+              "maximum": 1.194048524090127e-07
+            }
+          },
+          {
+            "node": 313525,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 34,
+            "score_after": 38.843669623575515,
+            "step_l1_m": 0.00024993717670440674,
+            "cumulative_path_l1_m": 0.00024998560547828674,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 12,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -3.0592426655144767,
+            "objective_after": -3.1051822055056015,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 8.945914203076988e-12,
+              "maximum": 8.331934443457944e-08
+            }
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 34
+    },
+    {
+      "patch": 4,
+      "bad_component": 17,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 67,
+      "affected_cells_initial": 2141,
+      "native_bad_count_before_patch": 34,
+      "fat_priority_rank": 4,
+      "seed_bad_fat_cells": 1,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 1.9605947953847054,
+      "skin_seed_log_deficit": 0.0,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 34,
+      "global_bad_candidate": 34,
+      "global_score_before": 38.843669623575515,
+      "global_score_candidate": 38.843669623575515,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 34,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 34,
+        "native_bad_count_after": 34,
+        "remaining_same_patch_deadline_s": 1.4292291670572013
+      },
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 142492,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 7,
+            "optimizer_delta_m": [
+              2.4175970528006465e-09,
+              -2.715865900981829e-08,
+              -5.926145710141717e-09
+            ],
+            "objective_before": -1.141774663894,
+            "objective_after": -1.1421727659637697,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 142498,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 142597,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 143376,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 34,
+            "score_after": 38.843625274962285,
+            "step_l1_m": 2.384185791015625e-07,
+            "cumulative_path_l1_m": 2.384185791015625e-07,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.141774663894,
+            "objective_after": -1.1417772006796945,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.2757446996458681e-11,
+              "maximum": 1.842426313438174e-06
+            }
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 34,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1493678,
+            "free_rows": [
+              142597,
+              142498,
+              142492,
+              143376
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_NODE_CANDIDATE"
+              ],
+              "native_bad_count_before_patch": 34,
+              "block_lp_bad_count_after": 34,
+              "node_bad_count_after": 34,
+              "native_bad_count_before_joint": 34,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 8
+          }
+        ]
+      }
+    },
+    {
+      "patch": 5,
+      "bad_component": 16,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 92,
+      "affected_cells_initial": 1816,
+      "native_bad_count_before_patch": 34,
+      "fat_priority_rank": 5,
+      "seed_bad_fat_cells": 1,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 1.2254941955946101,
+      "skin_seed_log_deficit": 0.0,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 21,
+      "local_bad_after": 21,
+      "global_bad_before": 34,
+      "global_bad_candidate": 34,
+      "global_score_before": 38.843625274962285,
+      "global_score_candidate": 38.843625274962285,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 34,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 34,
+        "native_bad_count_after": 34,
+        "remaining_same_patch_deadline_s": 1.434115624986589
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 135150,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 34,
+            "global_bad_candidate": 34,
+            "score_before": 38.843625274962285,
+            "score_candidate": 38.84363451722116
+          },
+          {
+            "node": 136410,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136427,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 33,
+            "score_after": 38.755702418903184,
+            "step_l1_m": 6.988644599914551e-06,
+            "cumulative_path_l1_m": 7.040798664093018e-06,
+            "optimizer_success": false,
+            "optimizer_message": "Iteration limit reached",
+            "iterations": 30,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 3,
+            "bad_after": 2,
+            "objective_before": -5.2932996058300725,
+            "objective_after": -5.383832881254624,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 7.992705530997887e-15,
+              "maximum": 4.9517775410325416e-08
+            }
+          },
+          {
+            "node": 136373,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 33,
+            "score_after": 38.73542924852028,
+            "step_l1_m": 6.058812141418457e-05,
+            "cumulative_path_l1_m": 6.0636550188064575e-05,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -2.4758637656029254,
+            "objective_after": -2.4769859279872803,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 4.387643047520376e-14,
+              "maximum": 1.760755545520788e-07
+            }
+          },
+          {
+            "node": 136362,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 38.73542924852028,
+            "score_candidate": 39.05015412124167
+          },
+          {
+            "node": 136406,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136473,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 33
+    },
+    {
+      "patch": 6,
+      "bad_component": 14,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 38,
+      "affected_cells_initial": 462,
+      "native_bad_count_before_patch": 33,
+      "fat_priority_rank": 6,
+      "seed_bad_fat_cells": 1,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 0.6808832958626636,
+      "skin_seed_log_deficit": 0.0,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 33,
+      "global_bad_candidate": 33,
+      "global_score_before": 38.73542924852028,
+      "global_score_candidate": 38.73542924852028,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 33,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 33,
+        "native_bad_count_after": 33,
+        "remaining_same_patch_deadline_s": 1.4501079581677914
+      },
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 254466,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 254467,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 262454,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 343790,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 33,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1398752,
+            "free_rows": [
+              343790,
+              254467,
+              254466,
+              262454
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "SEPARATION_WITNESS_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 33,
+              "block_lp_bad_count_after": 33,
+              "node_bad_count_after": 33,
+              "native_bad_count_before_joint": 33,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          }
+        ]
+      }
+    },
+    {
+      "patch": 7,
+      "bad_component": 15,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 104,
+      "affected_cells_initial": 539,
+      "native_bad_count_before_patch": 33,
+      "fat_priority_rank": 7,
+      "seed_bad_fat_cells": 1,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 0.4498359750651089,
+      "skin_seed_log_deficit": 0.0,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 33,
+      "global_bad_candidate": 33,
+      "global_score_before": 38.73542924852028,
+      "global_score_candidate": 38.73542924852028,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 33,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 33,
+        "native_bad_count_after": 33,
+        "remaining_same_patch_deadline_s": 1.444982707966119
+      },
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 247095,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 247096,
+            "status": "SEPARATION_WITNESS_REGRESSION"
+          },
+          {
+            "node": 261565,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.6387327471157276,
+            "objective_after": -1.6387327471157276,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 344382,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 38.73542924852028,
+            "score_candidate": 38.73543592652203
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 33,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1419645,
+            "free_rows": [
+              247095,
+              261565,
+              344382,
+              247096
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "SEPARATION_WITNESS_REGRESSION",
+                "NO_F32_NODE_MOVE",
+                "NO_GLOBAL_LEX_PROGRESS"
+              ],
+              "native_bad_count_before_patch": 33,
+              "block_lp_bad_count_after": 33,
+              "node_bad_count_after": 33,
+              "native_bad_count_before_joint": 33,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 2
+          }
+        ]
+      }
+    },
+    {
+      "patch": 8,
+      "bad_component": 1,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 41,
+      "affected_cells_initial": 1739,
+      "native_bad_count_before_patch": 33,
+      "fat_priority_rank": 8,
+      "seed_bad_fat_cells": 1,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.22631343465520393,
+      "skin_seed_log_deficit": 1.6552221491180124,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 20,
+      "local_bad_after": 20,
+      "global_bad_before": 33,
+      "global_bad_candidate": 33,
+      "global_score_before": 38.73542924852028,
+      "global_score_candidate": 38.73542924852028,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 33,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 33,
+        "native_bad_count_after": 33,
+        "remaining_same_patch_deadline_s": 1.4347959158476442
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 135150,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 38.73542924852028,
+            "score_candidate": 38.73543850835014
+          },
+          {
+            "node": 136410,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136373,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              1.0777012748641165e-09,
+              4.765537913769925e-09,
+              5.511478973273427e-10
+            ],
+            "objective_before": -2.4769600780459546,
+            "objective_after": -2.4769644691548196,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136406,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136362,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 38.73542924852028,
+            "score_candidate": 39.05015412124167
+          },
+          {
+            "node": 136473,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136427,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 38.73542924852028,
+            "score_candidate": 38.735520437454106
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 33,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 704868,
+            "free_rows": [
+              209408,
+              136373,
+              135150,
+              136374
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_GLOBAL_LEX_PROGRESS",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_GLOBAL_LEX_PROGRESS",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_GLOBAL_LEX_PROGRESS"
+              ],
+              "native_bad_count_before_patch": 33,
+              "block_lp_bad_count_after": 33,
+              "node_bad_count_after": 33,
+              "native_bad_count_before_joint": 33,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          }
+        ]
+      }
+    },
+    {
+      "patch": 9,
+      "bad_component": 19,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 35,
+      "affected_cells_initial": 892,
+      "native_bad_count_before_patch": 33,
+      "fat_priority_rank": 9,
+      "seed_bad_fat_cells": 1,
+      "seed_bad_skin_cells": 0,
+      "fat_seed_log_deficit": 0.10706625237925628,
+      "skin_seed_log_deficit": 0.0,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 10,
+      "local_bad_after": 10,
+      "global_bad_before": 33,
+      "global_bad_candidate": 33,
+      "global_score_before": 38.73542924852028,
+      "global_score_candidate": 38.73542924852028,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 33,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 33,
+        "native_bad_count_after": 33,
+        "remaining_same_patch_deadline_s": 1.4481962909922004
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136610,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136606,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 345950,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 38.73542924852028,
+            "score_candidate": 38.88346850157964
+          },
+          {
+            "node": 136603,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": false,
+            "optimizer_message": "Iteration limit reached",
+            "iterations": 30,
+            "optimizer_delta_m": [
+              1.5595911214976829e-09,
+              -8.206070838809567e-10,
+              7.096923629959667e-10
+            ],
+            "objective_before": -4.972190676578504,
+            "objective_after": -4.972241723832853,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136807,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136747,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136630,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 33,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 1494003,
+            "free_rows": [
+              345950,
+              135453,
+              136584,
+              135457
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 33,
+              "block_lp_bad_count_after": 33,
+              "node_bad_count_after": 33,
+              "native_bad_count_before_joint": 33,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          }
+        ]
+      }
+    },
+    {
+      "patch": 10,
+      "bad_component": 13,
+      "seed_bad_cells": 3,
+      "bad_cluster_cells": 3,
+      "free_rows": 36,
+      "affected_cells_initial": 1652,
+      "native_bad_count_before_patch": 33,
+      "fat_priority_rank": 10,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 3,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 1.7141237232664175,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 20,
+      "local_bad_after": 20,
+      "global_bad_before": 33,
+      "global_bad_after": 33,
+      "global_score_after": 36.902436030844925,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.44618374994024634,
+      "moved_rows": 22,
+      "maximum_cumulative_path_L1_m": 0.00024999678134918213,
+      "max_step_L1_m": 1.2740492820739746e-05,
+      "local_native_bad_after": 20,
+      "native_bad_count_after_block_lp": 33,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+        "accepted": true,
+        "native_bad_count_before": 33,
+        "native_bad_count_after": 33,
+        "remaining_same_patch_deadline_s": 1.046490125125274
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 36.902436030844925,
+            "score_candidate": 36.92066675185728
+          },
+          {
+            "node": 135150,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 33,
+            "global_bad_candidate": 33,
+            "score_before": 36.902436030844925,
+            "score_candidate": 36.9024461038149
+          },
+          {
+            "node": 136410,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 210311,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 33,
+            "score_after": 36.86427422611778,
+            "step_l1_m": 9.215623140335083e-05,
+            "cumulative_path_l1_m": 0.0001048557460308075,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 5,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 3,
+            "bad_after": 3,
+            "objective_before": -4.903936996553624,
+            "objective_after": -4.926050927264155,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 7.872138253746696e-11,
+              "maximum": 4.9180795067149695e-08
+            }
+          },
+          {
+            "node": 136373,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 33,
+            "score_after": 36.84205758161194,
+            "step_l1_m": 2.1867454051971436e-06,
+            "cumulative_path_l1_m": 7.555261254310608e-05,
+            "optimizer_success": false,
+            "optimizer_message": "Positive directional derivative for linesearch",
+            "iterations": 13,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -2.564370166741435,
+            "objective_after": -2.571134523255269,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 6.857680796612277e-14,
+              "maximum": 1.8381092793735512e-07
+            }
+          },
+          {
+            "node": 136362,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 136406,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136473,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 33,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 1,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724872,
+            "free_rows": [
+              210311,
+              136406,
+              135150,
+              136410
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_GLOBAL_LEX_PROGRESS",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_NODE_CANDIDATE",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 33,
+              "block_lp_bad_count_after": 33,
+              "node_bad_count_after": 33,
+              "native_bad_count_before_joint": 33,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          },
+          {
+            "seed_cell": 724494,
+            "free_rows": [
+              135150,
+              136427,
+              136429,
+              210311
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_GLOBAL_LEX_PROGRESS",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "F32_NODE_CANDIDATE",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 33,
+              "block_lp_bad_count_after": 33,
+              "node_bad_count_after": 33,
+              "native_bad_count_before_joint": 33,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "ACCEPT_COUNT_REDUCTION",
+            "physical_admission": false,
+            "native_steps": 0,
+            "fallback_scope": "failed local patch only; 2-4 free rows, 1-4 seed bad cells",
+            "affected_cells": [
+              18198,
+              88401,
+              91013,
+              95036,
+              185651,
+              288285,
+              288365,
+              290350,
+              290856,
+              290859,
+              299286,
+              323435,
+              429760,
+              441867,
+              448259,
+              451722,
+              455845,
+              484234,
+              669760,
+              669761,
+              669765,
+              673075,
+              673078,
+              690453,
+              690455,
+              690475,
+              690476,
+              690477,
+              690478,
+              704866,
+              704867,
+              704868,
+              704871,
+              704872,
+              722610,
+              722625,
+              722776,
+              722777,
+              724452,
+              724455,
+              724458,
+              724475,
+              724480,
+              724481,
+              724482,
+              724483,
+              724484,
+              724485,
+              724486,
+              724487,
+              724491,
+              724492,
+              724493,
+              724494,
+              724495,
+              724804,
+              724808,
+              724809,
+              724837,
+              724838,
+              724840,
+              724871,
+              724872,
+              724873,
+              724874,
+              724875,
+              724877,
+              724878,
+              724879,
+              724880,
+              766525,
+              1033054,
+              1050027,
+              1051481,
+              1223748,
+              1442112,
+              1446288,
+              1449549,
+              1459789,
+              1459803,
+              1459825,
+              1459852,
+              1459853,
+              1459883,
+              1459937,
+              1459993,
+              1460017,
+              1460037,
+              1460070,
+              1460105,
+              1460178,
+              1460187,
+              1460217,
+              1460229,
+              1460402,
+              1460416,
+              1460536,
+              1460580,
+              1460588,
+              1460595,
+              1460603,
+              1460607,
+              1460610,
+              1460615,
+              1460622,
+              1460628,
+              1460637,
+              1460645,
+              1460646,
+              1460757,
+              1460902,
+              1460909,
+              1460921,
+              1460923,
+              1460924,
+              1460926,
+              1460929,
+              1460931,
+              1460952,
+              1460959,
+              1460964,
+              1460977,
+              1460979,
+              1460982,
+              1460989,
+              1461034,
+              1461120,
+              1461338,
+              1461341,
+              1461395,
+              1461443,
+              1461583,
+              1461587,
+              1461647,
+              1461656,
+              1461747,
+              1461766,
+              1461779,
+              1461780,
+              1461781,
+              1461789,
+              1461790,
+              1461815,
+              1461824,
+              1461830,
+              1461832,
+              1461844,
+              1461891,
+              1461907,
+              1461949,
+              1461951,
+              1461985,
+              1462000,
+              1462041,
+              1462042,
+              1462043,
+              1462050,
+              1462094,
+              1462105,
+              1462107,
+              1485497,
+              1485825,
+              1485826,
+              1485893,
+              1485894,
+              1487027,
+              1487029,
+              1487030,
+              1487046,
+              1487060,
+              1487070,
+              1487071,
+              1487076,
+              1487077,
+              1487078,
+              1487079,
+              1488556,
+              1488557,
+              1489333,
+              1489334,
+              1489981,
+              1489982,
+              1489983,
+              1489984,
+              1489985,
+              1489986,
+              1489991,
+              1489992,
+              1489993,
+              1489994,
+              1490136,
+              1490138,
+              1491059,
+              1491060,
+              1491061,
+              1491123,
+              1491146,
+              1491147,
+              1491718,
+              1491719,
+              1492783,
+              1492784,
+              1492785,
+              1492786,
+              1493809,
+              1493917,
+              1493918,
+              1494094,
+              1494148,
+              1494149,
+              1494150,
+              1494570,
+              1494571,
+              1494572,
+              1494573,
+              1494756,
+              1494757,
+              1494758,
+              1494759,
+              1495129,
+              1495226,
+              1495240,
+              1495356,
+              1495357,
+              1495358,
+              1495359,
+              1495360,
+              1495361,
+              1495362,
+              1495363,
+              1495364,
+              1495365,
+              1495366,
+              1495367,
+              1495368,
+              1495369,
+              1495370,
+              1495371,
+              1495372,
+              1495373,
+              1495374,
+              1495375,
+              1495376,
+              1495377,
+              1495378,
+              1495379,
+              1495380,
+              1495381,
+              1495382,
+              1495383,
+              1495386,
+              1495389,
+              1495394,
+              1495395
+            ],
+            "seed_bad_cells": [
+              724494
+            ],
+            "seed_free_corner_counts": [
+              4
+            ],
+            "moved_rows": [
+              135150,
+              136427,
+              136429,
+              210311
+            ],
+            "full_point_star_verified": true,
+            "maximum_remaining_l1_m": 0.0002495678663253784,
+            "maximum_step_l1_m": 0.00014514103531837463,
+            "bad_before": 7,
+            "bad_after": 6,
+            "score_before": 5.489745571743391,
+            "score_after": 4.925413811647886,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 12,
+            "solver_elapsed_s": 0.03634645789861679,
+            "analytic_jacobians": true,
+            "normalized_variable_parameterization": "delta_i=remaining_l1_cap_i*y_i",
+            "quality_objective": "sum log deficits for current bad cells; max-edge q and min-volume",
+            "all_current_and_baseline_good_incident_cells_preserved": true,
+            "all_local_exact_f32_determinants_positive": true,
+            "all_local_f32_native_passes_recomputed": true,
+            "all_attached_separation_witnesses_rechecked": true,
+            "shared_point_cell_incidence_reused": true,
+            "requires_external_full_805_and_global_boundary_flux_volume_audits": true,
+            "mass_reconciliation": "PENDING",
+            "global_bad_after": 32,
+            "global_score_after": 36.27772566722629,
+            "max_cumulative_path_l1_m": 0.00024999678134918213
+          }
+        ]
+      }
+    },
+    {
+      "patch": 11,
+      "bad_component": 3,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 33,
+      "affected_cells_initial": 1626,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 11,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 2,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 1.8094067636283095,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 19,
+      "local_bad_after": 19,
+      "global_bad_before": 32,
+      "global_bad_after": 32,
+      "global_score_after": 35.56807311191943,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.44441766710951924,
+      "moved_rows": 18,
+      "maximum_cumulative_path_L1_m": 0.00024999678134918213,
+      "max_step_L1_m": 8.381903171539307e-06,
+      "local_native_bad_after": 19,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+        "accepted": true,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.0482934589963406
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 32,
+            "global_bad_candidate": 32,
+            "score_before": 35.56807311191943,
+            "score_candidate": 35.585533377767995
+          },
+          {
+            "node": 135150,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -9.054244560259455,
+            "objective_after": -9.054244560259455,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136410,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136373,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136362,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136406,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136473,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 207607,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 32,
+            "score_after": 35.39001011845753,
+            "step_l1_m": 0.00024161860346794128,
+            "cumulative_path_l1_m": 0.00024999678134918213,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 9,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 2,
+            "bad_after": 2,
+            "objective_before": -3.1137057324191524,
+            "objective_after": -3.2419200502438863,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.4576674135702904e-12,
+              "maximum": 1.9817394067957896e-07
+            }
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 722777,
+            "free_rows": [
+              136472,
+              135150,
+              207607,
+              136473
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 2
+          },
+          {
+            "seed_cell": 722625,
+            "free_rows": [
+              207607,
+              136473,
+              135150,
+              136476
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          }
+        ]
+      }
+    },
+    {
+      "patch": 12,
+      "bad_component": 11,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 67,
+      "affected_cells_initial": 1702,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 12,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 2,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 1.925411119484837,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 16,
+      "local_bad_after": 16,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.39001011845753,
+      "global_score_candidate": 35.39001011845753,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.4402452500071377
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 32,
+            "global_bad_candidate": 32,
+            "score_before": 35.39001011845753,
+            "score_candidate": 35.407470384306095
+          },
+          {
+            "node": 135150,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -9.182463067490401,
+            "objective_after": -9.182463067490401,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136610,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136606,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 210307,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 32,
+            "score_after": 35.31275730565248,
+            "step_l1_m": 0.00020265206694602966,
+            "cumulative_path_l1_m": 0.00020265206694602966,
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 6,
+            "f32_cap_rounding_steps": 0,
+            "bad_before": 3,
+            "bad_after": 3,
+            "objective_before": -4.68805375568677,
+            "objective_after": -4.7181661349333925,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.5472658522516056e-13,
+              "maximum": 1.6814424206063618e-08
+            }
+          },
+          {
+            "node": 136603,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": false,
+            "optimizer_message": "Iteration limit reached",
+            "iterations": 30,
+            "optimizer_delta_m": [
+              1.5595572661689994e-09,
+              -8.208608531895798e-10,
+              7.098734480776226e-10
+            ],
+            "objective_before": -4.973599177164361,
+            "objective_after": -4.973650223272119,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136807,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136747,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724407,
+            "free_rows": [
+              210307,
+              136843,
+              134151,
+              136807
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 5
+          },
+          {
+            "seed_cell": 724406,
+            "free_rows": [
+              210307,
+              136747,
+              136807,
+              134151
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NODE_CANDIDATE",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          }
+        ]
+      }
+    },
+    {
+      "patch": 13,
+      "bad_component": 12,
+      "seed_bad_cells": 2,
+      "bad_cluster_cells": 2,
+      "free_rows": 17,
+      "affected_cells_initial": 680,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 13,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 2,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 2.6763717930042588,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 18,
+      "local_bad_after": 18,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.31275730565248,
+      "global_score_candidate": 35.31275730565248,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.449718042043969
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 32,
+            "global_bad_candidate": 32,
+            "score_before": 35.31275730565248,
+            "score_candidate": 35.312891049348146
+          },
+          {
+            "node": 135150,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -9.182463067490401,
+            "objective_after": -9.182463067490401,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136373,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136362,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 208742,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 210309,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136406,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136473,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 2,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724489,
+            "free_rows": [
+              210309,
+              136373,
+              208742,
+              136362
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 2
+          },
+          {
+            "seed_cell": 724488,
+            "free_rows": [
+              210309,
+              136362,
+              208742,
+              136360
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          }
+        ]
+      }
+    },
+    {
+      "patch": 14,
+      "bad_component": 0,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 22,
+      "affected_cells_initial": 208,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 14,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 0.5595113672350627,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.31275730565248,
+      "global_score_candidate": 35.31275730565248,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.4541102908551693
+      },
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59894,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59898,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59909,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 60043,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 560107,
+            "free_rows": [
+              59898,
+              59894,
+              59909,
+              60043
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          }
+        ]
+      }
+    },
+    {
+      "patch": 15,
+      "bad_component": 2,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 14,
+      "affected_cells_initial": 86,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 15,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 0.6929536319837643,
+      "status": "ACCEPT_TIED_SCORE_REDUCTION",
+      "retry": 0,
+      "local_bad_before": 1,
+      "local_bad_after": 1,
+      "global_bad_before": 32,
+      "global_bad_after": 32,
+      "global_score_after": 35.30791674555799,
+      "solver_status": 0,
+      "solver_method": null,
+      "solver_elapsed_s": 0.07826287508942187,
+      "moved_rows": 9,
+      "maximum_cumulative_path_L1_m": 0.00024999678134918213,
+      "max_step_L1_m": 3.91155481338501e-07,
+      "local_native_bad_after": 1,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+        "accepted": true,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.417073082877323
+      },
+      "single_node_fallback": {
+        "attempt_count": 4,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 59983,
+            "status": "F32_NODE_CANDIDATE",
+            "global_bad_after": 32,
+            "score_after": 35.09766196309038,
+            "step_l1_m": 0.00024960562586784363,
+            "cumulative_path_l1_m": 0.00024999305605888367,
+            "optimizer_success": false,
+            "optimizer_message": "Positive directional derivative for linesearch",
+            "iterations": 16,
+            "f32_cap_rounding_steps": 1,
+            "bad_before": 1,
+            "bad_after": 1,
+            "objective_before": -1.5035234005425635,
+            "objective_after": -1.621432194980427,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale",
+            "determinant_row_scale_m3": {
+              "minimum": 1.84965116928827e-13,
+              "maximum": 7.740118572557736e-11
+            }
+          },
+          {
+            "node": 59984,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 59988,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 209137,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 710264,
+            "free_rows": [
+              59984,
+              59983,
+              209137,
+              59988
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "PASS_F32_COUPLED_QUALITY_PROPOSAL",
+              "lp_accepted_score_only": true,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_NODE_CANDIDATE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          }
+        ]
+      }
+    },
+    {
+      "patch": 16,
+      "bad_component": 4,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 61,
+      "affected_cells_initial": 1583,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 16,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 0.499035651304879,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 16,
+      "local_bad_after": 16,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.09766196309038,
+      "global_score_candidate": 35.09766196309038,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.4416924170218408
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 32,
+            "global_bad_candidate": 32,
+            "score_before": 35.09766196309038,
+            "score_candidate": 35.097795706786044
+          },
+          {
+            "node": 135150,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -9.182463067490401,
+            "objective_after": -9.182463067490401,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136610,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136606,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136603,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": false,
+            "optimizer_message": "Iteration limit reached",
+            "iterations": 30,
+            "optimizer_delta_m": [
+              1.5595572661689994e-09,
+              -8.208608531895798e-10,
+              7.098734480776226e-10
+            ],
+            "objective_before": -4.973599177164361,
+            "objective_after": -4.973650223272119,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136807,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136747,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136630,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724030,
+            "free_rows": [
+              136610,
+              134151,
+              136740,
+              136747
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          }
+        ]
+      }
+    },
+    {
+      "patch": 17,
+      "bad_component": 5,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 60,
+      "affected_cells_initial": 1725,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 17,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 0.8527441825947546,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.09766196309038,
+      "global_score_candidate": 35.09766196309038,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.4308101669885218
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 111626,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109675,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109677,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 109674,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109705,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 109704,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109678,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109671,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724118,
+            "free_rows": [
+              109702,
+              109671,
+              109704,
+              111626
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_F32_NONPOSITIVE_OR_NONFINITE"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 18,
+      "bad_component": 6,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 58,
+      "affected_cells_initial": 1703,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 18,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 0.5556733226715576,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 5,
+      "local_bad_after": 5,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.09766196309038,
+      "global_score_candidate": 35.09766196309038,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.4312102920375764
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 111626,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109675,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109677,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 109674,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109705,
+            "status": "F32_NONPOSITIVE_OR_NONFINITE"
+          },
+          {
+            "node": 109704,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109678,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 109671,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724120,
+            "free_rows": [
+              109673,
+              109674,
+              109704,
+              111626
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_NONPOSITIVE_OR_NONFINITE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_F32_NONPOSITIVE_OR_NONFINITE"
+          }
+        ]
+      }
+    },
+    {
+      "patch": 19,
+      "bad_component": 8,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 69,
+      "affected_cells_initial": 2291,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 19,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 1.9495250777514566,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 7,
+      "local_bad_after": 7,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.09766196309038,
+      "global_score_candidate": 35.09766196309038,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.424009250011295
+      },
+      "single_node_fallback": {
+        "attempt_count": 5,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 135150,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -9.182463067490401,
+            "objective_after": -9.182463067490401,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 135101,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 135102,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 2,
+            "optimizer_delta_m": [
+              7.992564214631681e-10,
+              3.159285118362054e-09,
+              -5.812707585609034e-09
+            ],
+            "objective_before": -1.1433416567560808,
+            "objective_after": -1.1433482043781444,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 135103,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 135278,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -1.1433416567560808,
+            "objective_after": -1.1433416567560808,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724305,
+            "free_rows": [
+              135101,
+              135103,
+              135278,
+              135102
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_F32_NODE_MOVE"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 3
+          }
+        ]
+      }
+    },
+    {
+      "patch": 20,
+      "bad_component": 9,
+      "seed_bad_cells": 1,
+      "bad_cluster_cells": 1,
+      "free_rows": 65,
+      "affected_cells_initial": 1684,
+      "native_bad_count_before_patch": 32,
+      "fat_priority_rank": 20,
+      "seed_bad_fat_cells": 0,
+      "seed_bad_skin_cells": 1,
+      "fat_seed_log_deficit": 0.0,
+      "skin_seed_log_deficit": 2.8903379037377257,
+      "status": "REJECT_NO_GLOBAL_LEX_PROGRESS",
+      "retry": 0,
+      "local_bad_before": 16,
+      "local_bad_after": 16,
+      "global_bad_before": 32,
+      "global_bad_candidate": 32,
+      "global_score_before": 35.09766196309038,
+      "global_score_candidate": 35.09766196309038,
+      "solver_status": 0,
+      "native_bad_count_after_block_lp": 32,
+      "block_lp_retry": {
+        "attempted": true,
+        "last_status": "NO_LEXICOGRAPHIC_PROGRESS",
+        "accepted": false,
+        "native_bad_count_before": 32,
+        "native_bad_count_after": 32,
+        "remaining_same_patch_deadline_s": 1.4408586248755455
+      },
+      "single_node_fallback": {
+        "attempt_count": 8,
+        "accepted_count": 0,
+        "nodes": [
+          {
+            "node": 134151,
+            "status": "NO_GLOBAL_LEX_PROGRESS",
+            "global_bad_before": 32,
+            "global_bad_candidate": 32,
+            "score_before": 35.09766196309038,
+            "score_candidate": 35.097795706786044
+          },
+          {
+            "node": 135150,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": true,
+            "optimizer_message": "Optimization terminated successfully",
+            "iterations": 1,
+            "optimizer_delta_m": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "objective_before": -9.182463067490401,
+            "objective_after": -9.182463067490401,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136610,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136606,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136603,
+            "status": "NO_F32_NODE_MOVE",
+            "optimizer_success": false,
+            "optimizer_message": "Iteration limit reached",
+            "iterations": 30,
+            "optimizer_delta_m": [
+              1.5595572661689994e-09,
+              -8.208608531895798e-10,
+              7.098734480776226e-10
+            ],
+            "objective_before": -4.973599177164361,
+            "objective_after": -4.973650223272119,
+            "variable_parameterization": "normalized_delta_over_cap",
+            "constraint_row_scaling": "L1_over_cap_and_det_over_per_cell_native_scale"
+          },
+          {
+            "node": 136807,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136747,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          },
+          {
+            "node": 136630,
+            "status": "F32_GOOD_CELL_REGRESSION"
+          }
+        ]
+      },
+      "native_bad_count_after_one_node_fallback": 32,
+      "joint_multi_node_slsqp_fallback": {
+        "attempt_count": 1,
+        "accepted_count": 0,
+        "shared_patch_deadline_s": 0.95,
+        "reserved_slice_s": 0.95,
+        "reports": [
+          {
+            "seed_cell": 724331,
+            "free_rows": [
+              136610,
+              134151,
+              136630,
+              136728
+            ],
+            "prior_failures": {
+              "lp_attempted": true,
+              "lp_status": "NO_NATIVE_BAD_COUNT_REDUCTION",
+              "lp_raw_status": "NO_LEXICOGRAPHIC_PROGRESS",
+              "lp_accepted_score_only": false,
+              "node_fallback_attempted": true,
+              "node_fallback_accepted": 0,
+              "node_fallback_accepted_statuses": [],
+              "node_statuses": [
+                "NO_GLOBAL_LEX_PROGRESS",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "NO_F32_NODE_MOVE",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION",
+                "F32_GOOD_CELL_REGRESSION"
+              ],
+              "native_bad_count_before_patch": 32,
+              "block_lp_bad_count_after": 32,
+              "node_bad_count_after": 32,
+              "native_bad_count_before_joint": 32,
+              "block_lp_count_reduction": false,
+              "node_fallback_count_reduction": false,
+              "native_bad_count_reduction_since_patch_start": false
+            },
+            "schema": "h706.joint-small-patch-slsqp.v4-count-stall",
+            "status": "REJECT_CURRENT_OR_BASELINE_GOOD_REGRESSION",
+            "regressions": 1
+          }
+        ]
+      }
+    }
+  ],
+  "visited_patch_count": 21,
+  "unvisited_patch_count": 0,
+  "per_patch_combined_solver_and_fallback_budget_s": 1.5,
+  "per_patch_deadline_policy": "one shared deadline per bad-face component covers block-LP retries and single-node fallbacks; later components receive a fresh slice until the global deadline",
+  "accepted_local_patches": 6,
+  "accepted_single_node_fallbacks": 14,
+  "accepted_joint_small_patch_fallbacks": 1,
+  "joint_small_patch_fallback": {
+    "enabled": true,
+    "helper": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/coupled-anchor-collapse-780-root/ordinary-allrole-v26b3r2-count-stall-250um/joint_small_patch_slsqp_893_v26b3r2_count_stall.py",
+      "sha256": "5e5f6aaa0da1d3e12122623379e2f1a424d563ff364eac7a5a1748d91adb491b"
+    },
+    "attempts_per_patch": 2,
+    "reserve_seconds": 0.95,
+    "reserve_patch_budget_fraction": 0.65,
+    "maxiter": 25,
+    "eligibility": "after LP and node attempts when the current bad-face patch has no native bad-count reduction; prior score-only LP/node gains are retained and 2-4 movable corners of 1-4 currently bad seed cells are refit from the current coordinates",
+    "deadline": "reserved slice remains inside the same per-patch deadline; full star and exact Float32 local gates before ledger acceptance"
+  },
+  "skipped_local_patches": 12,
+  "local_bad_face_components": 21,
+  "affected_cell_sets_are_point_incident_only": true,
+  "current_passed_cells_and_immutable_baseline_good_cells_never_regress": true,
+  "cumulative_per_point_path_L1_cap_m": 0.00025,
+  "maximum_cumulative_path_L1_m": 0.00024999678134918213,
+  "final_full_domain_native_replay": true,
+  "full_domain_cells": 1495397,
+  "changed_point_rows": [
+    26960,
+    59978,
+    59980,
+    59983,
+    59984,
+    59988,
+    59990,
+    59993,
+    131966,
+    132261,
+    133871,
+    134151,
+    135150,
+    135451,
+    135453,
+    135457,
+    136352,
+    136355,
+    136360,
+    136362,
+    136373,
+    136374,
+    136406,
+    136407,
+    136410,
+    136416,
+    136423,
+    136426,
+    136427,
+    136429,
+    136436,
+    136455,
+    136472,
+    136473,
+    136476,
+    136479,
+    136482,
+    136586,
+    136590,
+    136603,
+    136605,
+    136606,
+    136617,
+    136642,
+    136728,
+    136740,
+    143376,
+    207607,
+    209137,
+    210302,
+    210307,
+    210311,
+    312930,
+    313525,
+    345950,
+    345953
+  ],
+  "max_free_node_l1_displacement_bound_m": 0.00024999678134918213,
+  "total_trust_cap_m": 0.00025,
+  "objective_mode": "role_equal",
+  "trust_policy": "bounded local patches; per-point cumulative L1 measured from immutable baseline across all accepted patches",
+  "elapsed_s": 4.32032079086639
+}

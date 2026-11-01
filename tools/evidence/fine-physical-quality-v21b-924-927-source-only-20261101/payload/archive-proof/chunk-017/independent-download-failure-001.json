@@ -1,0 +1,18 @@
+{
+  "schema": "numi-human.volume-archive-independent-download-failure.v1",
+  "recorded_utc": "2026-11-01T01:52:22Z",
+  "status": "FAILED_PARTIAL_DOWNLOAD_NO_SPACE",
+  "release_tag": "human-quality-volume-failed-unadmitted-20261101-chunk-017",
+  "expected_asset_sha256": "9153c9b502d0284c21526d33c94a0a6a986c40a852de9e5a88027f404bf33b3d",
+  "failed_command": "gh release download human-quality-volume-failed-unadmitted-20261101-chunk-017 --repo Numi2/numilab-human --pattern quality-volume-archive-chunk-017.tar.zst --dir /Users/numi/Work/.quality-volume-archive-chunk-017-independent-download",
+  "observed_error": "write .../quality-volume-archive-chunk-017.tar.zst: no space left on device",
+  "partial_download_path": "/Users/numi/Work/.quality-volume-archive-chunk-017-independent-download/quality-volume-archive-chunk-017.tar.zst",
+  "partial_download_bytes": 19760192,
+  "partial_download_sha256": "c2f1504a8b1bf47141beb3648137f3fcb46b61e36281b3172852d915064799bf",
+  "partial_is_verified": false,
+  "partial_download_removed": true,
+  "local_complete_archive_retained": true,
+  "no_source_retirement": true,
+  "disk_free_after_partial_removal": "135MiB",
+  "disposition": "Failure receipt retained; only the unverified partial download was removed. No proposal source volume was retired."
+}
