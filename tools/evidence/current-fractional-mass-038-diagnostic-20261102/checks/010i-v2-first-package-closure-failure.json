@@ -1,0 +1,9 @@
+{
+  "cause": "The compact package initially omitted the adjacent pinned 009 Python contract dependency.",
+  "initial_error": "ModuleNotFoundError: No module named recorded_flow_contract_009_postpass",
+  "not_a_runtime_result": true,
+  "resolution": "Copied the exact pinned 009 contract and current launch-003 dependency into the package source closure; the final copied-package suite passed 8 tests.",
+  "schema": "numi.human.evidence-package-check.v1",
+  "status": "FAILED_INCOMPLETE_PACKAGE_IMPORT_CLOSURE_THEN_FIXED",
+  "test": "010i-v2 copied-package import smoke"
+}
