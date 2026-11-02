@@ -1,0 +1,92 @@
+{
+  "configured_maximum_wall_seconds": 1800,
+  "cut_reachable_child_rows": 1170400,
+  "cut_reachable_parent_rows": 45469,
+  "cut_residual_child_kg": "0.019380173772254032",
+  "cut_residual_child_rows": 60604,
+  "cut_witness": {
+    "compressed_bytes": 376396775,
+    "compressed_host_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/postpass-030d-canonical-038/out-007/output/capacity-witness/full-cut-witness.csv.gz",
+    "compressed_sha256": "ee7e96ac73313d1c8e099f196f5cadef34ee078e45c15c638c174b36e7713ff2",
+    "header": {
+      "path": "evidence/out-007-full-cut-witness.header.txt",
+      "sha256": "7edea684046ef3890d34b13bc9485b84a0985662e145a43e41737e49c0b3308f"
+    },
+    "header_manifest": {
+      "path": "evidence/out-007-full-cut-header-manifest.json",
+      "sha256": "62909a11f459bb928b0303f8c03f713802b68a985afe4661272c5850a331dd47",
+      "status": "FULL_WITNESS_PENDING"
+    },
+    "large_compressed_witness_copied": false,
+    "manifest": {
+      "path": "evidence/out-007-full-cut-manifest.json",
+      "sha256": "ef63a10439fdcfbdc9d9cca4b8a13d3316013369f92a3f1a9051653f4354b928"
+    },
+    "status": "INFEASIBLE_FULL_GRAPH_CUT",
+    "uncompressed_bytes": 1486254454
+  },
+  "elapsed_wall_seconds": 640.4035549170803,
+  "exit_code": 6,
+  "flow_status_note": "The exact admissible graph was exhausted and could not meet every child minimum-density demand; this does not establish impossibility under other valid support.",
+  "full_graph_exhausted": true,
+  "input_route_lineage": {
+    "fat_packet_sha256": "12068b0a15bcc24dd8adae0d452ad6bf49b443a8a4b78712093aaa26713126a8",
+    "fat_witness_csv_sha256": "86ddf947327c6ed692455bfac6f07a01404b6cf2ca76741be0ffc44d27cfefa1",
+    "skin_route_pair_count": 300860,
+    "skin_witness_csv_sha256": "025a223eba90d9069836ea4a5baa6fa97bb13ba685e156998eb542022be3eb17"
+  },
+  "logs": {
+    "stderr": {
+      "path": "evidence/out-007-cli.stderr.log",
+      "sha256": "f450f1bd36cb118dd2f01eeddd4322d6825f158d03e17c634a77f8ae0f9404c8"
+    },
+    "stdout": {
+      "path": "evidence/out-007-cli.stdout.log",
+      "sha256": "aacdb4b3233dc8d47c69629133e5375704ddaeef11a3eb5df9c108a0670c66cb"
+    }
+  },
+  "mass_admission": "NOT_PASSED",
+  "minimum_demand_shortfall_kg": "0.019380173772159",
+  "minimum_density_demand_kg": "12.998725017533202",
+  "native_steps": 0,
+  "no_augmenting_path": true,
+  "physical_admission": false,
+  "run_pins": {
+    "binary": {
+      "bytes": 889352,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-030d-contiguous-preference-lookup/bin/current-fractional-mass-mapping-cli-030d-o3",
+      "sha256": "6ab7d0cb65366c2aba8a447b1c6e86726f77d9eab8e56a025e14aa137999f5d3"
+    },
+    "execution": {
+      "path": "evidence/out-007-execution.json",
+      "sha256": "a51595cefaaca3d12200eadc20ae85fc787d50c27adf1b906ff320d7f8badc7c"
+    },
+    "maximum_transport_distance_m": "0.187444",
+    "preflight": {
+      "path": "evidence/out-007-preflight.json",
+      "sha256": "98f166637d92cc13b759df60528f04fe0cd8bc6670c201c901b0f028603df282",
+      "status": "PASS_LAUNCH_READY_NOT_RUN"
+    },
+    "run_config": {
+      "path": "evidence/out-007-run-config-038.json",
+      "sha256": "9f5d48170960bd4ca0777efe630172f6e7a308dc123bd4483992340ece02d5a3"
+    },
+    "run_manifest": {
+      "path": "evidence/out-007-run-manifest.json",
+      "sha256": "72df2017d2c70c6a9b7ac0ba49f86832f8d2c4adb97a4af0e3da3b504d3300c3"
+    },
+    "source": {
+      "bytes": 55536,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-030d-contiguous-preference-lookup/NumiHumanCurrentFractionalMassMappingCLI_030d.cpp",
+      "sha256": "f529630cbf415439575c287f21f5d99286ed3e7066190a98ef3e9a2bf1e75a86"
+    },
+    "source_closure_sha256": "56922cd918d6246df8d7dc423a03cc4cad4510db076ca6e5264e1aaf150a0436",
+    "source_control_manifest_sha256": "3ab84015892b4937f4920101d18a0429a616da0b6086f606faaa0792496d20d0"
+  },
+  "schema": "numi.human.current-fractional-route-expansion-038-actual-run-result.v1",
+  "scope": "diagnostic allocation result for the exact current 030d candidate and pinned support graph",
+  "sent_mass_kg": "12.979344843761043",
+  "stage": "minimum_flow",
+  "status": "INFEASIBLE_FULL_GRAPH_CUT",
+  "timed_out": false
+}

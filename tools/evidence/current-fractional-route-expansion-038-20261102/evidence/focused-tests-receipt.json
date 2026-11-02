@@ -1,0 +1,36 @@
+{
+  "actual_run_execution_sha256": "a51595cefaaca3d12200eadc20ae85fc787d50c27adf1b906ff320d7f8badc7c",
+  "actual_run_result_sha256": "876246d470ebd8d314d8d2b98f9412becea98cd079b1c63498d66a19146de9aa",
+  "actual_run_status": "INFEASIBLE_FULL_GRAPH_CUT",
+  "append_validation_receipt_sha256": "16087f0d6c53a2486623efa80c6a80cf2bad1a0bc40428407e27b1a35f779aa4",
+  "checks": {
+    "git_diff_check_note": "All package diff whitespace checks are clean except one verbatim frozen source copy, src/screen_cut_spare_routes_038_v6.py, whose pinned upstream bytes include one blank line at EOF; source was preserved byte-for-byte.",
+    "py_compile": "PASS",
+    "py_compile_file_count": 11,
+    "pytest_command": "python -m pytest -q -p no:cacheprovider tests",
+    "pytest_result": "7 passed in 0.13s"
+  },
+  "fixture_pins": {
+    "skin-adaptive-source-quadrature-032d.npz": "7f648262440539761f5cc6f14c9a2a7c5bf73c5cf75b310ec747872d83c0efb3",
+    "whole-cut-crossing-routes.npz": "6ba416a2f06261e2e002b0727b1e0497ce447ddca6db7f7466092111ef5a4009"
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "preflight_receipt_sha256": "98f166637d92cc13b759df60528f04fe0cd8bc6670c201c901b0f028603df282",
+  "python": "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+  "schema": "numi.human.current-fractional-route-expansion-038-focused-controls.v1",
+  "scope": "source, compact route fixture, CSR replay, and preflight receipt checks only; allocator not invoked by these controls",
+  "source_pins": {
+    "append_skin_witnesses_from_whole_cut_routes_038c.py": "e3694a708ac4ce1a91b2d3574ffb2dbb66ad69330d354daa45b1af9492768abd",
+    "bind_whole_cut_route_lineage_038.py": "37a86e256070bb5c4030b3708c70190b4faa91ae0a5792435e0f2ddc73989e8d",
+    "enumerate_whole_cut_routes_038_v1.py": "cee02a011d27e1fad13f7c66b91aefa19a9bd8233f7e7b6836146695234ca069",
+    "prepare_run_manifest_038c.py": "ea830f1c9cd4211642c80c32cd7fc532ad0fa64eb85fadd2d8b426cd43575887",
+    "screen_cut_spare_routes_038_v6.py": "ae205ea5516771bbc24930c49ba290c1390e7f05f76684599d10f27519f10e94",
+    "verify_and_finalize_skin_witness_append_038d.py": "4fdc7cc91ab733f604c292246558a8a110dab4b6de7d171950e33e5baf402978"
+  },
+  "status": "PASS",
+  "test_source": {
+    "path": "tests/test_route_lineage_and_csr.py",
+    "sha256": "3a812742d15e04635c8fcb27c8fc5d07f754b41b5f334c13de831c21f88a8a62"
+  }
+}

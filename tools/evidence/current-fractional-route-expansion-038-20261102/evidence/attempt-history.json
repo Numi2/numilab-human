@@ -1,0 +1,58 @@
+{
+  "actual_run_result_sha256": "876246d470ebd8d314d8d2b98f9412becea98cd079b1c63498d66a19146de9aa",
+  "attempts": [
+    {
+      "owner": "prepare_run_manifest_038.py",
+      "source_sha256": "9c5d160fe9005b8e3173a9dcde12838ec7277b7873811f3f91640c9f1e6642c5",
+      "status": "FAILED_PREFLIGHT_NO_MANIFEST",
+      "witness": "template RUN_CONFIG_SHA256 lookup required basename run-config.json while the canonical pinned input is run-config-038.json"
+    },
+    {
+      "owner": "append_skin_witnesses_from_whole_cut_routes_038.py",
+      "source_sha256": "f95ef8b58321034e778f21a3bd11aca8c629ab50cc58418e0d54617d91b19806",
+      "status": "FAILED_SOURCE_CROSSWALK_NO_OUTPUT",
+      "witness": "flattened packet carrier row was incorrectly indexed into the 14,316-row parent array; packet carrier domain is 48,573 rows"
+    },
+    {
+      "owner": "append_skin_witnesses_from_whole_cut_routes_038b.py",
+      "source_sha256": "e1be370a4a88a559498aab12bee122eeafd4c98dd99bc275f40cacac1879a575",
+      "status": "FAILED_REACHED_MASS_CROSSWALK_NO_OUTPUT",
+      "witness": "reached carrier rows were used directly against the parent-row array instead of through the packet parent_offsets expansion"
+    },
+    {
+      "owner": "append_skin_witnesses_from_whole_cut_routes_038c.py",
+      "source_sha256": "e3694a708ac4ce1a91b2d3574ffb2dbb66ad69330d354daa45b1af9492768abd",
+      "status": "CSV_WRITTEN_RECEIPT_ASSEMBLY_FAILED",
+      "witness": "KeyError p1_skin after atomic output replacement; output was retained and not rewritten"
+    },
+    {
+      "owner": "verify_and_finalize_skin_witness_append_038d.py",
+      "source_sha256": "4fdc7cc91ab733f604c292246558a8a110dab4b6de7d171950e33e5baf402978",
+      "status": "PASS_EXISTING_OUTPUT_RECOVERY",
+      "witness": "reran source/cut/packet/child/P1/R checks, then verified the existing v15 prefix and exact serialized appended suffix without rewriting the 933,678,749-byte CSV"
+    },
+    {
+      "owner": "enumerate_whole_cut_routes_038_v1.py",
+      "source_sha256": "cee02a011d27e1fad13f7c66b91aefa19a9bd8233f7e7b6836146695234ca069",
+      "status": "REPORT_SERIALIZATION_FAILED_PROPOSAL_RECOVERED",
+      "witness": "producer exit 1 at report serialization for nonexistent minimum_required_kg field; census report was recovered from pinned proposal NPZ and full-cut evidence without rerunning enumeration"
+    },
+    {
+      "elapsed_wall_seconds": 640.4035549170803,
+      "execution_sha256": "a51595cefaaca3d12200eadc20ae85fc787d50c27adf1b906ff320d7f8badc7c",
+      "exit_code": 6,
+      "native_steps": 0,
+      "owner": "out-007 full allocator diagnostic",
+      "physical_admission": false,
+      "run_manifest_sha256": "72df2017d2c70c6a9b7ac0ba49f86832f8d2c4adb97a4af0e3da3b504d3300c3",
+      "status": "INFEASIBLE_FULL_GRAPH_CUT",
+      "witness": "Complete minimum-flow residual closure found no augmenting path; sent mass is below minimum density demand by 0.019380173772159 kg. The full compressed cut witness is host-pinned and not copied."
+    }
+  ],
+  "current_route_append_receipt_sha256": "16087f0d6c53a2486623efa80c6a80cf2bad1a0bc40428407e27b1a35f779aa4",
+  "current_route_census_report_sha256": "d5d47d1410b0a5c0e3e91a29a3c1d51f9bb82e22647ffd82ce7c973d41726ffd",
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "numi.human.current-fractional-route-expansion-038-attempt-history.v1",
+  "scope": "Bounded tooling, receipt recovery, and one full allocator diagnostic; no entry establishes physical admission."
+}
