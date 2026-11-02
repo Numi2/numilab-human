@@ -1,0 +1,12 @@
+usage: run_current_433_refresh_1060.py [-h] {bind,execute,preflight} ...
+
+Bind the fresh mass-fit source receipt, then execute the pinned 433 refresh
+owners. The command writes source-only artifacts. It does not run the native
+solver or mass allocation. Every heavy owner is called once through
+run_geometry_serial.py.
+
+positional arguments:
+  {bind,execute,preflight}
+
+options:
+  -h, --help            show this help message and exit
