@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-031-adaptive-anchor-joint-lp-001/adaptive_anchor_joint_lp_031.py", line 361, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-031-adaptive-anchor-joint-lp-001/adaptive_anchor_joint_lp_031.py", line 248, in main
+    pin(OWNER030,EXPECTED_030_SOURCE);pin(MATRIX,EXPECTED_MATRIX);pin(EXEC,EXPECTED_EXEC);pin(MANIFEST,EXPECTED_RUN);pin(OWNER1046H,EXPECTED_1046H)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-031-adaptive-anchor-joint-lp-001/adaptive_anchor_joint_lp_031.py", line 47, in pin
+    raise RuntimeError(f"pinned input mismatch: {p}")
+RuntimeError: pinned input mismatch: /Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-030-joint-lp-001/h706_joint_hall_lp_030.py

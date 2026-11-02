@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-031-adaptive-anchor-joint-lp-001/adaptive_anchor_joint_lp_031e.py", line 386, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-031-adaptive-anchor-joint-lp-001/adaptive_anchor_joint_lp_031e.py", line 274, in main
+    ints,fl,wit,dist=parse_matrix(MATRIX,n);parents=ints["parent_input_row"];baseb=np.column_stack([fl[f"bary{i}"] for i in range(4)]);route=ints["route_mask"]
+                     ~~~~~~~~~~~~^^^^^^^^^^
+  File "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-source-carrier-joint-initialization-1054/cut-closure-1054/actual-031-adaptive-anchor-joint-lp-001/adaptive_anchor_joint_lp_031e.py", line 82, in parse_matrix
+    for k in ints: ints[k][i]=int(row[k])
+                              ~~~^^^^^^^^
+ValueError: invalid literal for int() with base 10: ''
