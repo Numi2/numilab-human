@@ -1,0 +1,106 @@
+{
+  "binary": {
+    "bytes": 207304,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/bin/CurrentCarrierPointProjectionCheck-031-o3",
+    "sha256": "174dce0576275e593e44e4a031df793d0926e1aab52de8b3fa07d8201371e0d5"
+  },
+  "compile": {
+    "command": [
+      "/usr/bin/clang++",
+      "-std=c++20",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-DNUMI_HUMAN_FULL_REFERENCE_SKIN_CAPACITY=1",
+      "-I/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-029-canonical-source-tet-sites",
+      "-I/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/source/apps",
+      "-I/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/../direct-source-parent-retet-control-654/source/matter/include",
+      "-I/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/../direct-source-parent-retet-control-654/source/include",
+      "-I/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/../publication-140/dependencies/include",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/CurrentCarrierPointProjectionCheck_031.cpp",
+      "-lz",
+      "-o",
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/bin/CurrentCarrierPointProjectionCheck-031-o3"
+    ],
+    "exit_code": 0,
+    "stderr": {
+      "bytes": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/controls/compile.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/controls/compile.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "controls": {
+    "arbitrary_projection_positive": {
+      "description": "four noncanonical interior source-tet barycentric sites per role; equal positive weights reproduce exact parent first moment; binder and validateCarrierInput accept 1046d CurrentCarrierPointProjection",
+      "status": "PASS"
+    },
+    "bad_moments": {
+      "description": "point binding accepted, validateCarrierInput rejected non-centroid-preserving weighted barycentric moment",
+      "status": "PASS_REJECTED_BY_NATIVE_OWNER"
+    },
+    "canonical_mode_restriction": {
+      "description": "existing frozen 029 canonical checker still rejects noncanonical barycentrics in canonical mode",
+      "status": "PASS_RETAINED"
+    },
+    "outside_tet": {
+      "description": "negative barycentric coordinate rejected",
+      "status": "PASS_REJECTED_BY_BINDER"
+    },
+    "radius": {
+      "description": "point-to-child distance exceeding unchanged maximumTransportDistanceM rejected",
+      "status": "PASS_REJECTED_BY_BINDER"
+    },
+    "wrong_tuple": {
+      "description": "mismatched exact donor tuple rejected",
+      "status": "PASS_REJECTED_BY_BINDER"
+    }
+  },
+  "execution": {
+    "command": [
+      "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/bin/CurrentCarrierPointProjectionCheck-031-o3"
+    ],
+    "exit_code": 0,
+    "stderr": {
+      "bytes": 0,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/controls/CurrentCarrierPointProjectionCheck-031.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 391,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/controls/CurrentCarrierPointProjectionCheck-031.stdout.txt",
+      "sha256": "4b63f34313be92ca33b3860fc3015c8395b32cc910cf8502b66dd13bd89656b2"
+    }
+  },
+  "frozen_dependencies": {
+    "029_support_header": {
+      "bytes": 124393,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-029-canonical-source-tet-sites/NumiHumanCurrentFractionalSupportNPZ_029.hpp",
+      "sha256": "84f23778ccde7cfddd85564a62056906b66dba09f9e57924a9eeae3a7bf14ca0"
+    },
+    "canonical_fixture_source": {
+      "bytes": 13493,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-029-canonical-source-tet-sites/CanonicalSourceTetQuadratureCheck_029.cpp",
+      "sha256": "ce3081974af1513337220cabe0b119ad30adedb9a75a27c46c41b7dcf5c481d4"
+    },
+    "source_carrier_owner_header": {
+      "bytes": 37049,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-029-canonical-source-tet-sites/ConservativeSpatialSourceCarrierQuadrature.hpp",
+      "sha256": "9d0afe443ec1d753eb5daaa82475b1dbd2afd12979812bc85af57ff3a22fa47a"
+    }
+  },
+  "full_allocator_run": "NOT_RUN",
+  "schema": "numi.h706.current-carrier-point-projection-control.031.v1",
+  "source": {
+    "bytes": 21704,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/optimization-trial-031-arbitrary-carrier-point/CurrentCarrierPointProjectionCheck_031.cpp",
+    "sha256": "35a6ada8eef5b9eb9c79aa2012da12b745c161c6026eecd4fbb304d724558ae7"
+  },
+  "source_closure": "029-canonical-source-tet-sites",
+  "status": "PASS_NATIVE_OWNER_PROJECTION_AND_CANONICAL_CONTROLS"
+}

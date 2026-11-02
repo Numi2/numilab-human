@@ -1,0 +1,95 @@
+{
+  "binary_payloads_included": false,
+  "control_output": "controls/tiny-controls-006-fixture-report.json",
+  "external_dependencies": {
+    "closed_shell_topology_218": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/remesh_complete_surface_cavities_218_root.py",
+      "sha256": "81e1128ca6f92693039d9ce53bea62e90b1d99f72bd9b9d997826b7ee2877b9a"
+    },
+    "exact_mesh_volume_198": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_flip_198_root.py",
+      "sha256": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0"
+    },
+    "exact_surface_intersection_349": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    },
+    "partial_solver_684": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/solve_partial_oriented_cavity_milp_684.py",
+      "sha256": "5bca7a54c4bb1642be5153d6553a2ab009bbdd37186b208cc2c57083050a301d"
+    },
+    "quality_readback_750": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/batch_interior_steiner_kernel_cone_quality_750_root.py",
+      "sha256": "509260bb075771481aa307541b186c37389fc2d5ecbccad0b16c5a2d6bc36cc8"
+    },
+    "source_756": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/quality-partial-cavity-684-root/batch_tetgen_plc_quality_756_root.py",
+      "sha256": "993035088016c8b920e9be0c88bde3afa4406f2354c6affc745028430f064def"
+    },
+    "tetgen_1_6_1": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/offline-tetgen-318/build/tetgen",
+      "sha256": "a8d2a4979fe577206588db0997147fb60ebadad533a0f3d07b5b39a21741196a"
+    }
+  },
+  "full_allocator_run": "NOT_RUN",
+  "full_mesh_reconstruction": "NOT_RUN_SOURCE_I_FACE_GATE_PENDING",
+  "geometry_payloads_included": false,
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "package": "reference-plc-reconstruction-779-20261102",
+  "physical_admission": false,
+  "published_files": [
+    {
+      "bytes": 87362,
+      "path": "producer/batch_tetgen_reference_plc_779_root.py",
+      "sha256": "a6712fd878f2b3b35e04cb03f610b29479e18dffd12b33afdc54fcf6ccb837fd",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/batch_tetgen_reference_plc_779_root.py"
+    },
+    {
+      "bytes": 10787,
+      "path": "controls/source-control-reference-plc-779.json",
+      "sha256": "79d8c479be2971ee08082e42cb11188e2dc017f9f537717bceca721e12051c0c",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/source-control-reference-plc-779.json"
+    },
+    {
+      "bytes": 22066,
+      "path": "controls/tiny-controls-006-fixture-report.json",
+      "sha256": "5b61b8bd6e9ea177eb1f79c9dbc0b7ed41734a3b8adc49ef20fe5d4401fc85e1",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/tiny-controls-006/fixture-report.json"
+    },
+    {
+      "bytes": 21617,
+      "path": "controls/tiny-controls-006-paired-role-report.json",
+      "sha256": "5330963ece51fad399977eafe2a3037319787cb731567c12358aae05ed465786",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/tiny-controls-006/paired-role-run/report.json"
+    },
+    {
+      "bytes": 720,
+      "path": "controls/tiny-controls-006-independent-readback.json",
+      "sha256": "3a31a886d49ef8a367ece552bc165f75794444a200adb145acbe1d6c84d2f7a7",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/tiny-controls-006/paired-role-run/skin-independent-readback.json"
+    },
+    {
+      "bytes": 18282,
+      "path": "controls/tiny-controls-006-operation-journal.json",
+      "sha256": "33cefad59f6f327eb2675ff4827cf2e6a1f29c23c2dd0f5cdb1114750090cbd3",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/tiny-controls-006/paired-role-run/skin-operations.json"
+    },
+    {
+      "bytes": 982,
+      "path": "controls/tiny-controls-006-state.json",
+      "sha256": "8ae2156ed4eff28c9488997e38aeb447e493aeebe5bed9d17f38a667871e94f4",
+      "upstream_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/reference-plc-reconstruction-779/tiny-controls-006/paired-role-run/state.json"
+    },
+    {
+      "bytes": 1193,
+      "path": "README.md",
+      "sha256": "08243965396a3c7721735363308957c2e86ec03f4ec2204d2a1fa2072c5f747b"
+    }
+  ],
+  "schema": "numi.human.source-control-publication.v1",
+  "scope": "source_and_focused_controls_only",
+  "source_control_manifest": "controls/source-control-reference-plc-779.json",
+  "status": "PASS_REFERENCE_PLC_TINY_CONTROLS_SOURCE_ONLY",
+  "upstream_control_manifest_sha256": "79d8c479be2971ee08082e42cb11188e2dc017f9f537717bceca721e12051c0c"
+}
