@@ -1,0 +1,50 @@
+{
+  "schema": "numi.human.current-motion-v17c-010f-010g-logger-v2-validation.v1",
+  "result": "PASS_SOURCE_AND_CONTROL_TESTS_NO_NATIVE_EXECUTION",
+  "tests": [
+    {
+      "suite": "v17c reference-J verifier",
+      "command": "python -m pytest -q -p no:cacheprovider test_current_motion_geometry_v17c_reference_j.py",
+      "passed": 8,
+      "result": "PASS"
+    },
+    {
+      "suite": "010f first-run prelaunch controls",
+      "command": "python -m pytest -q -p no:cacheprovider test_current_native_1025_first_run_010f.py",
+      "passed": 5,
+      "result": "PASS"
+    },
+    {
+      "suite": "010g horizon controls",
+      "command": "python -m pytest -q -p no:cacheprovider test_current_native_1025_horizon_010g.py",
+      "passed": 15,
+      "result": "PASS"
+    },
+    {
+      "suite": "logger v2 isolated source patch",
+      "command": "python -m unittest -v test_logger_v2_patch.py",
+      "passed": 1,
+      "result": "PASS"
+    },
+    {
+      "suite": "published source pin manifest",
+      "command": "python -m unittest -v tests/test_package_hash_pins.py",
+      "passed": 1,
+      "result": "PASS"
+    }
+  ],
+  "syntax": {
+    "python_py_compile": "PASS for v17c verifier/test and 010f test, 010g owner/test",
+    "bash_n": "PASS for 010f and 010g runners"
+  },
+  "source_tests_run_from": "Original pinned H source directories on numi using /Users/numi/numi-human-prep-venv-20261005/bin/python",
+  "logger_patch_test": {
+    "pinned_base_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+    "assertion": "patch applies to the base app and resulting full-file bytes equal only the three declared logger-v2 text transformations"
+  },
+  "native_steps": 0,
+  "gpu_executed": false,
+  "physical_admission": false,
+  "actual_first_run_or_horizon_launch": false,
+  "total_test_cases": 30
+}

@@ -1,0 +1,23 @@
+diff --git a/apps/numilab_human_myosim_visual_probe.mm b/apps/numilab_human_myosim_visual_probe.mm
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -12423,1 +12423,1 @@
+-                <<"resting_FEM_endpoint_capture=begin version=1 steps="<<stepCount
++                <<"resting_FEM_endpoint_capture=begin version=2 steps="<<stepCount
+@@ -12482,3 +12482,6 @@
+                         <<",mass_kg="<<p.w<<",initial_mass_kg="<<p0.w
+                         <<",inverse_mass="<<v.w
++                        <<",initial_rest_x="<<initialNode.restAndFixed.x
++                        <<",initial_rest_y="<<initialNode.restAndFixed.y
++                        <<",initial_rest_z="<<initialNode.restAndFixed.z
+                         <<",rest_x="<<rest.x<<",rest_y="<<rest.y<<",rest_z="<<rest.z
+@@ -12483,2 +12486,9 @@
+                         <<",rest_x="<<rest.x<<",rest_y="<<rest.y<<",rest_z="<<rest.z
++                        <<",initial_reference_mode="<<initialNode.referenceDisplacementAndMode.w
++                        <<",initial_reference_u_hi_x="<<initialNode.referenceDisplacementAndMode.x
++                        <<",initial_reference_u_hi_y="<<initialNode.referenceDisplacementAndMode.y
++                        <<",initial_reference_u_hi_z="<<initialNode.referenceDisplacementAndMode.z
++                        <<",initial_reference_u_lo_x="<<initialNode.referenceDisplacementLow.x
++                        <<",initial_reference_u_lo_y="<<initialNode.referenceDisplacementLow.y
++                        <<",initial_reference_u_lo_z="<<initialNode.referenceDisplacementLow.z
+                         <<",reference_mode="<<current.referenceDisplacementAndMode.w

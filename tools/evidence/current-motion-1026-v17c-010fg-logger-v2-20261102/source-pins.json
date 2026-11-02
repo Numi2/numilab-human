@@ -1,0 +1,141 @@
+{
+  "schema": "numi.human.current-motion-v17c-010f-010g-logger-v2-source-pins.v1",
+  "status": "SOURCE_AND_CONTROL_TESTS_PASS_NO_NATIVE_EXECUTION",
+  "native_steps": 0,
+  "gpu_executed": false,
+  "physical_admission": false,
+  "human_source": {
+    "root": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706",
+    "v17c": {
+      "verifier_path": "current-motion-1026-verifier/verify_current_motion_geometry_1026_v17c.py",
+      "verifier_sha256": "191072eb77df793ec47cde6c412257423d36456fa3e335a509e69b8500d01f00",
+      "test_path": "current-motion-1026-verifier/test_current_motion_geometry_v17c_reference_j.py",
+      "test_sha256": "bb796879b17b5ea8331491569950e3841fba93d3dd2cd77568918157d8d590cf"
+    },
+    "010f": {
+      "runner_path": "current-native-1025-launch/current-native-1025-direct-o-010f-first-run-v17c/run_current_native_1025_direct_o_first_run_010f_v17c.sh",
+      "runner_sha256": "c6cc7fd2518ff28eaa102cc9638ba84cf8bbcf2312036a3cc196a67b3ab50dc9",
+      "test_path": "current-native-1025-launch/current-native-1025-direct-o-010f-first-run-v17c/test_current_native_1025_first_run_010f.py",
+      "test_sha256": "81f4af504a9d7d91dde89c8c52a71b1df3df45ea0240150a881886c9bdd5d55f",
+      "pinned_inputs_path": "current-native-1025-launch/current-native-1025-direct-o-010f-first-run-v17c/PINNED-INPUTS.txt",
+      "pinned_inputs_sha256": "3fa7533ff4dd0979044ff5dc84742d3d26db73ffa798593997d102d7f693632c"
+    },
+    "010g": {
+      "owner_path": "current-native-1025-launch/current-native-1025-direct-o-010g-horizon-v17c/prepare_current_native_1025_horizon_010g.py",
+      "owner_sha256": "b87f3b576242a62a1180fffaf4a6623759ccf5a376443e0f3387ced4ac8077d2",
+      "runner_path": "current-native-1025-launch/current-native-1025-direct-o-010g-horizon-v17c/run_current_native_1025_horizon_010g.sh",
+      "runner_sha256": "66be907ae309ecf2fdd9570ca457e00534cc8f15796d1bf8a0dcc28effffb263",
+      "test_path": "current-native-1025-launch/current-native-1025-direct-o-010g-horizon-v17c/test_current_native_1025_horizon_010g.py",
+      "test_sha256": "a6308084a9907b6090d3310380c0186141b20c6dd94fb3fb2f191f662f27ea29",
+      "pinned_inputs_path": "current-native-1025-launch/current-native-1025-direct-o-010g-horizon-v17c/PINNED-INPUTS.txt",
+      "pinned_inputs_sha256": "65f6cea01e6822749aab90414289a477785bb3cfdeecb3c2ef6f08b828eb312e"
+    }
+  },
+  "logger_patch": {
+    "patch_path": "logger/endpoint-capture-v2.patch",
+    "patch_sha256": "4e9b0c1e22d5c4bd3500bbccd44251edb809d5a28a89e0cd9a3197928b939061",
+    "source_owner": "/Users/numi/Work/skin-fat-native-integration-209",
+    "source_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+    "base_app_path": "apps/numilab_human_myosim_visual_probe.mm",
+    "base_blob_oid": "83b5c68cca96c1d07b9d4ec6d299cc652e899990",
+    "current_dirty_source_sha256": "add44961ea154029cf41bb09d8e991b2d0369d7f21d33ad350b3104f7e9dfd99",
+    "current_dirty_source_blob_oid": "6f56ed798c65d808664b82e7b7d42ce45503b5ff",
+    "current_dirty_source_bytes": 2674438,
+    "full_current_worktree_diff": {
+      "insertions": 4482,
+      "deletions": 447,
+      "included": false
+    },
+    "build_manifest_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/build-refresh-current-native-1025-v17b-logger-013/build-source-device-manifest.json",
+    "build_manifest_sha256": "505629275e9f18c40d2b651b9ad4eba6669ce8a85d155a90b8684e9b1d002186",
+    "built_binary_sha256": "d59a6914e82c90ed5e045b693faf90275eda91e05546ec8f163f45605d317bde",
+    "build_exit_code": 0,
+    "claim_limit": "Build manifest covers the full R working-tree source, including unrelated uncommitted changes; it is provenance only, not an isolated patch build or runtime qualification."
+  },
+  "orientation_gate": {
+    "owner_path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/audit_1022_role_surface_orientation_1057.py",
+    "owner_sha256": "9c9a68a7d1122e326b7504737a8d3abeba9d3c1a1ddb011f6320940df09519f1",
+    "fresh_report_included": false
+  },
+  "published_artifacts": [
+    {
+      "path": "motion/verify_current_motion_geometry_1026_v17c.py",
+      "sha256": "191072eb77df793ec47cde6c412257423d36456fa3e335a509e69b8500d01f00"
+    },
+    {
+      "path": "motion/test_current_motion_geometry_v17c_reference_j.py",
+      "sha256": "bb796879b17b5ea8331491569950e3841fba93d3dd2cd77568918157d8d590cf"
+    },
+    {
+      "path": "first-run-010f/run_current_native_1025_direct_o_first_run_010f_v17c.sh",
+      "sha256": "c6cc7fd2518ff28eaa102cc9638ba84cf8bbcf2312036a3cc196a67b3ab50dc9"
+    },
+    {
+      "path": "first-run-010f/test_current_native_1025_first_run_010f.py",
+      "sha256": "81f4af504a9d7d91dde89c8c52a71b1df3df45ea0240150a881886c9bdd5d55f"
+    },
+    {
+      "path": "first-run-010f/PINNED-INPUTS.txt",
+      "sha256": "3fa7533ff4dd0979044ff5dc84742d3d26db73ffa798593997d102d7f693632c"
+    },
+    {
+      "path": "horizon-010g/prepare_current_native_1025_horizon_010g.py",
+      "sha256": "b87f3b576242a62a1180fffaf4a6623759ccf5a376443e0f3387ced4ac8077d2"
+    },
+    {
+      "path": "horizon-010g/run_current_native_1025_horizon_010g.sh",
+      "sha256": "66be907ae309ecf2fdd9570ca457e00534cc8f15796d1bf8a0dcc28effffb263"
+    },
+    {
+      "path": "horizon-010g/test_current_native_1025_horizon_010g.py",
+      "sha256": "a6308084a9907b6090d3310380c0186141b20c6dd94fb3fb2f191f662f27ea29"
+    },
+    {
+      "path": "horizon-010g/PINNED-INPUTS.txt",
+      "sha256": "65f6cea01e6822749aab90414289a477785bb3cfdeecb3c2ef6f08b828eb312e"
+    },
+    {
+      "path": "logger/endpoint-capture-v2.patch",
+      "sha256": "4e9b0c1e22d5c4bd3500bbccd44251edb809d5a28a89e0cd9a3197928b939061"
+    },
+    {
+      "path": "tests/test_logger_v2_patch.py",
+      "sha256": "5037f30965f4b913058261ad9f7525e02243bffc9575d0e3b37283ab77f0292e"
+    }
+  ],
+  "pinned_external_source_dependencies_not_copied": [
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/prepare_current_native_1025_direct_o_009.py",
+      "sha256": "1797b3298ef2b0be28f8d06567414232a6392da08935770f552c8f84ae7c2406"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/recorded_flow_contract_009_postpass.py",
+      "sha256": "3acac46166e32cbdcfad1813355fd592efb4be63b8e8b87a5467292e95ca8ddc"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/materialize_current_fractional_013_identity_009.py",
+      "sha256": "ae2ecf81a85d1c4effb4b0d7a80eb4b96c6bac9f1f2a41c24bd0be539802d104"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/build_current_fractional_mass_receipt_013_nested_controls_compat_009.py",
+      "sha256": "c31ba26110f4b9da3606eb0811bf8fc22f1e39be6e6731c80d0c94b9ee6031e7"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-007-recorded-flow-scope/materialize_current_native_1025_direct_o_009_recorded_flow_dir.py",
+      "sha256": "7ce6d04562a5d90c7e62a43e0d17fd56cd512bf7d2aa01b01aea44ce0c53cfba"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-recorded-flow-1050/solver-free-converter-001/convert_current_fractional_combined_flow.py",
+      "sha256": "c55ba546033fa12edd6aee96dcc5ef84ae92689fa88715d8171987a21184447c"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/audit_1022_role_surface_orientation_1057.py",
+      "sha256": "9c9a68a7d1122e326b7504737a8d3abeba9d3c1a1ddb011f6320940df09519f1"
+    },
+    {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/deep-boundary-checkpoint-349/payload/exact-owner/numilab_human/cardiac_cavity_intersections.py",
+      "sha256": "f0c1d81bffb185565b174f293b67da01926db1dfa6f6b80cb5629828ccf08b6d"
+    }
+  ],
+  "pinned_external_source_dependencies_not_copied_note": "These are direct source references found in the packaged controls. Run-specific manifests, checkpoints, binaries, and the Python environment remain supplied at invocation; no run was made here."
+}
