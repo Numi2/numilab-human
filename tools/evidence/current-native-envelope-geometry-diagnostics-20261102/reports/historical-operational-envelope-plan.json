@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/operational-reference-map-501/export_refined_coarse_registered_volume_433.py",
+    "--candidate-npz",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.npz",
+    "--candidate-node",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/candidate.node",
+    "--candidate-node-map",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/coarse-node-to-fine-surface.csv",
+    "--inserted-node-ancestry",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/reduced-physical-boundary-400/attempt-030-connected-constrained-edge-fit/run-006/inserted-node-ancestry.csv",
+    "--capture",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003",
+    "--out",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/registered-assets",
+    "--maximum-mass-transport-distance-m",
+    "0.019352999999999999",
+    "--candidate-operational-reference"
+  ],
+  "export_script_sha256": "ad63b10701c42b37b1aa6aa79e0dc0c9f7ac87cdea7622f65582f9d1a63af2b1",
+  "candidate_sha256": "888eb12450d0e69fb0ad3f5998159ab7a0a20d3e70b13c42ba416c61cbbede63",
+  "predeclared_transport_envelope_m": 0.019353,
+  "maximum_declared_source_centroid_distance_m": 0.01935191740066899,
+  "mass_transport_rule": "ceil(max child-to-declared-source-centroid distance/1um)*1um+1um, floor200um; derived before native evaluation",
+  "purpose": "existing CSV asset compiler and native integration regression only; known bank29 failure retained",
+  "physical_admission": false,
+  "runtime": 0,
+  "accepted_steps": 0,
+  "registration_contract": "existing54column separated source330 ancestry and exact candidate operational self registration; conforming530proof still required"
+}

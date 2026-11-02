@@ -1,0 +1,933 @@
+{
+  "boundary_topology": {
+    "I_interface_faces": 236389,
+    "active_I_rows_frozen_on_actual_exterior": 45,
+    "actual_exterior_nodes_fixed": 179747,
+    "all_I_faces_have_two_tet_cofaces": true,
+    "authored_head_sidewall_extra_facets": 180,
+    "authored_headwall_ancestry_csv": {
+      "bytes": 118106798,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/facet-ancestry.csv",
+      "sha256": "cbfebfc668cada5dc0a3e17f28f573904f805872cfdedd9dbf0980799bfbf5f4"
+    },
+    "exact_O_D_source_facets_are_on_exterior": true,
+    "extra_sidewall_label_counts": {
+      "15:23:23": 90,
+      "16:23:23": 90
+    },
+    "headwall_exact_matches_by_role": {
+      "donor_fat_ID_headwall": 90,
+      "donor_skin_OI_headwall": 90
+    },
+    "tet_exterior_faces": 360422,
+    "tet_face_incidence_only_one_or_two": true
+  },
+  "current030c_targets": {
+    "component_count": 9,
+    "components": [
+      {
+        "component_id": 0,
+        "effective_gradient_l1_m2": 0.10502784987378169,
+        "effective_gradient_nonzero_I_nodes": 35193,
+        "material_index": 15,
+        "minimum_density_kg_m3": 900.0,
+        "required_reduction_m3": 6.984149027232053e-05,
+        "target_cell_count": 222218,
+        "volume_m3": 0.00024009067397886262
+      },
+      {
+        "component_id": 1,
+        "effective_gradient_l1_m2": 0.03174873952579289,
+        "effective_gradient_nonzero_I_nodes": 3269,
+        "material_index": 15,
+        "minimum_density_kg_m3": 900.0,
+        "required_reduction_m3": 1.4234068794890425e-05,
+        "target_cell_count": 12072,
+        "volume_m3": 8.241876811792014e-05
+      },
+      {
+        "component_id": 2,
+        "effective_gradient_l1_m2": 0.06610004851438073,
+        "effective_gradient_nonzero_I_nodes": 28128,
+        "material_index": 15,
+        "minimum_density_kg_m3": 900.0,
+        "required_reduction_m3": 3.4644178116606034e-05,
+        "target_cell_count": 198934,
+        "volume_m3": 0.00012547763461132286
+      },
+      {
+        "component_id": 3,
+        "effective_gradient_l1_m2": 0.04907600077744581,
+        "effective_gradient_nonzero_I_nodes": 1004,
+        "material_index": 15,
+        "minimum_density_kg_m3": 900.0,
+        "required_reduction_m3": 9.545740310010767e-06,
+        "target_cell_count": 4849,
+        "volume_m3": 0.00012693495178682754
+      },
+      {
+        "component_id": 4,
+        "effective_gradient_l1_m2": 0.021575254049666426,
+        "effective_gradient_nonzero_I_nodes": 25463,
+        "material_index": 16,
+        "minimum_density_kg_m3": 850.0,
+        "required_reduction_m3": 1.3398538969202841e-05,
+        "target_cell_count": 93525,
+        "volume_m3": 0.0001455709530100235
+      },
+      {
+        "component_id": 5,
+        "effective_gradient_l1_m2": 0.0020029341150041764,
+        "effective_gradient_nonzero_I_nodes": 3579,
+        "material_index": 16,
+        "minimum_density_kg_m3": 850.0,
+        "required_reduction_m3": 4.309461762424583e-08,
+        "target_cell_count": 18034,
+        "volume_m3": 2.925867862640937e-06
+      },
+      {
+        "component_id": 6,
+        "effective_gradient_l1_m2": 0.0016087420941518224,
+        "effective_gradient_nonzero_I_nodes": 1765,
+        "material_index": 16,
+        "minimum_density_kg_m3": 850.0,
+        "required_reduction_m3": 6.910924659298136e-07,
+        "target_cell_count": 11366,
+        "volume_m3": 3.2647692594195367e-06
+      },
+      {
+        "component_id": 7,
+        "effective_gradient_l1_m2": 0.002779482842473973,
+        "effective_gradient_nonzero_I_nodes": 1622,
+        "material_index": 16,
+        "minimum_density_kg_m3": 850.0,
+        "required_reduction_m3": 2.9317084078233583e-07,
+        "target_cell_count": 10209,
+        "volume_m3": 8.403662640599302e-06
+      },
+      {
+        "component_id": 8,
+        "effective_gradient_l1_m2": 0.0684868959067754,
+        "effective_gradient_nonzero_I_nodes": 53,
+        "material_index": 16,
+        "minimum_density_kg_m3": 850.0,
+        "required_reduction_m3": 5.728226217443014e-05,
+        "target_cell_count": 90,
+        "volume_m3": 0.0005788035417240646
+      }
+    ],
+    "interpretation": "Per-component isolated optimistic bounds only. Existing-anchor capacity ignores competition across components and does not prove simultaneous mass feasibility. Reduction is current target reference volume minus capacity divided by the authenticated material density lower bound; it is a local construction target, not an accepted anatomy change.",
+    "schema": "numi.h706.authenticated-hall-cut-component-census.1054.v2",
+    "target_child_count": 571297,
+    "target_rows_sha256": "14252ebfe9c5c42adb5f1641dbd3446a5d9db739620251eafa58be91e2945da6",
+    "volume_bounds_report": {
+      "bytes": 14450,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/actual-030c-component-census-001/run-001/component-volume-bounds.json",
+      "sha256": "e349b2ff9d67e4a4602d5174b3f0076deba8e84e4b888fe42ba3857c654f41a7"
+    }
+  },
+  "fit": {
+    "accepted_alpha": null,
+    "accepted_assets": {},
+    "active_set_passes": 4,
+    "blocked_I_source_rows_after_active_set": 80435,
+    "component_first_order_matrix_m2": null,
+    "direction_construction": "surface-area preconditioned gradients; physically normalized bases; capped predicted mass-reduction LP with minimum-amplitude tie-break, actual harmonic/quarantine derivatives, smooth local I taper and full witness-star quarantine; minimum actual 5g capacity proxy progress",
+    "direction_objective": "nonnegative combination of smoothed effective gradients, constrained to first-order nonincrease of every 030c target component; effective gradient includes H^T times all true-interior volume gradient",
+    "harmonic_node_roster": {
+      "bytes": 2451207,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/run-014-current030c-area-metric-root008/harmonic-node-roster.npz",
+      "sha256": "52a47f6caa1cc39632bc461c80c0ae33369bfa937f75dc60ec6ed1739bc72b37"
+    },
+    "max_requested_before_250um_cap_m": null,
+    "move_cap_m": 0.00025,
+    "paired_role_volume_policy": {
+      "O_D_fixed": true,
+      "boundary_delta_checks": {},
+      "historical_global_volume_cap_1e-4_applied": false,
+      "paired_exact_cancellation": false,
+      "reason": "replaced for this I-redistribution candidate by exact per-role boundary-volume delta == exact changed-tet det6 delta, plus exact Skin+Fat total volume cancellation; original owner file remains unchanged",
+      "replay_owner_local_volume_cap_0.01_retained": true
+    },
+    "quarantined_joint_rows": 133267,
+    "requested_displacement_scale": null,
+    "serialized_candidate_motion": null,
+    "surface_self_cross_and_806_808": "PENDING_NOT_RUN",
+    "trial_log": [
+      {
+        "active_set_pass": 0,
+        "alpha": 1.0,
+        "face_summary": {
+          "count": 190911,
+          "max_area_ratio": 871.306389269989,
+          "min_area_ratio": 0.037394298681170425,
+          "min_cosine": -0.9999580889583195,
+          "pass": false
+        },
+        "failing_faces": [
+          512,
+          514,
+          634,
+          713,
+          781,
+          796,
+          937,
+          1008,
+          1055,
+          1299,
+          1349,
+          1396,
+          1397,
+          1441,
+          1450,
+          1511
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 0,
+        "alpha": 0.5,
+        "face_summary": {
+          "count": 190737,
+          "max_area_ratio": 435.0214742499485,
+          "min_area_ratio": 0.022654377668923573,
+          "min_cosine": -0.9997699253024389,
+          "pass": false
+        },
+        "failing_faces": [
+          512,
+          514,
+          713,
+          1055,
+          1299,
+          1349,
+          1396,
+          1397,
+          1441,
+          1450,
+          1714,
+          1852,
+          1977,
+          1978,
+          1979,
+          1980
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 0,
+        "alpha": 0.25,
+        "face_summary": {
+          "count": 190413,
+          "max_area_ratio": 216.39299446953993,
+          "min_area_ratio": 0.0642185739728518,
+          "min_cosine": -0.999908426848799,
+          "pass": false
+        },
+        "failing_faces": [
+          1299,
+          1349,
+          1396,
+          1397,
+          1441,
+          1450,
+          1852,
+          1977,
+          1978,
+          1979,
+          2211,
+          2371,
+          3039,
+          3755,
+          3756,
+          3776
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 0,
+        "alpha": 0.125,
+        "face_summary": {
+          "count": 190017,
+          "max_area_ratio": 107.86196845598496,
+          "min_area_ratio": 0.0425219020888959,
+          "min_cosine": -0.9999110067265198,
+          "pass": false
+        },
+        "failing_faces": [
+          1299,
+          1396,
+          1397,
+          1852,
+          2211,
+          3039,
+          3755,
+          3756,
+          4717,
+          4917,
+          5353,
+          5444,
+          5649,
+          5790,
+          5797,
+          6123
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 0,
+        "alpha": 0.0625,
+        "face_summary": {
+          "count": 189712,
+          "max_area_ratio": 53.922211140586384,
+          "min_area_ratio": 0.06804311783833268,
+          "min_cosine": -0.9999106151894273,
+          "pass": false
+        },
+        "failing_faces": [
+          1299,
+          1396,
+          1397,
+          1852,
+          3039,
+          5790,
+          5797,
+          6123,
+          8072,
+          8485,
+          8764,
+          8819,
+          9146,
+          9808,
+          9831,
+          10031
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 0,
+        "alpha": 0.03125,
+        "face_summary": {
+          "count": 189265,
+          "max_area_ratio": 26.19562774765514,
+          "min_area_ratio": 0.14045024473354922,
+          "min_cosine": -0.9999928866937452,
+          "pass": false
+        },
+        "failing_faces": [
+          1299,
+          1852,
+          3039,
+          5790,
+          6123,
+          8819,
+          9831,
+          11834,
+          89859,
+          90989,
+          93912,
+          97335,
+          97542,
+          98105,
+          98109,
+          98187
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 1,
+        "alpha": 1.0,
+        "face_summary": {
+          "count": 151842,
+          "max_area_ratio": 24.65170427615728,
+          "min_area_ratio": 0.11712925058554156,
+          "min_cosine": -0.9735365368111739,
+          "pass": false
+        },
+        "failing_faces": [
+          686,
+          731,
+          745,
+          1955,
+          2254,
+          3728,
+          5235,
+          5238,
+          5240,
+          5241,
+          5243,
+          5244,
+          5248,
+          5249,
+          5250,
+          5497
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 1,
+        "alpha": 0.5,
+        "face_summary": {
+          "count": 151579,
+          "max_area_ratio": 12.019627307695163,
+          "min_area_ratio": 0.2417336689222197,
+          "min_cosine": -0.6016825020109254,
+          "pass": false
+        },
+        "failing_faces": [
+          5249,
+          5696,
+          5980,
+          7144,
+          7553,
+          7554,
+          8268,
+          9852,
+          10459,
+          10993,
+          13268,
+          15385,
+          15491,
+          89358,
+          89612,
+          89659
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 1,
+        "alpha": 0.25,
+        "face_summary": {
+          "count": 151208,
+          "max_area_ratio": 6.0644464418725725,
+          "min_area_ratio": 0.4294654768948115,
+          "min_cosine": -0.002080885323434806,
+          "pass": false
+        },
+        "failing_faces": [
+          5249,
+          7553,
+          8268,
+          91004,
+          96536,
+          96691,
+          98274,
+          101753,
+          107462,
+          120010,
+          198211,
+          217151,
+          217198,
+          220683,
+          220976,
+          230650
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 1,
+        "alpha": 0.125,
+        "face_summary": {
+          "count": 150712,
+          "max_area_ratio": 3.104610513936455,
+          "min_area_ratio": 0.6136127714500768,
+          "min_cosine": 0.21514445104033908,
+          "pass": false
+        },
+        "failing_faces": [
+          198211,
+          220976
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 1,
+        "alpha": 0.0625,
+        "face_summary": {
+          "count": 150230,
+          "max_area_ratio": 1.6432589429780278,
+          "min_area_ratio": 0.787976043712722,
+          "min_cosine": 0.46451909796177576,
+          "pass": false
+        },
+        "failing_faces": [
+          220976
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 1,
+        "alpha": 0.03125,
+        "bad_q_count": 886,
+        "bad_q_rows": [
+          2951,
+          3682,
+          3717,
+          4924,
+          6518,
+          7660,
+          8439,
+          8499,
+          8622,
+          10500,
+          12920,
+          14145
+        ],
+        "changed_joint_nodes": 73762,
+        "expanded_source_I_freeze_rows": 15744,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 2,
+        "alpha": 1.0,
+        "face_summary": {
+          "count": 104171,
+          "max_area_ratio": 3.4067116245779685,
+          "min_area_ratio": 0.11374022148092107,
+          "min_cosine": 0.33023845387573847,
+          "pass": false
+        },
+        "failing_faces": [
+          3584,
+          16382,
+          88679,
+          90338,
+          90346,
+          93675,
+          95007,
+          96753,
+          96754,
+          98058,
+          98321,
+          120295,
+          188487,
+          191758,
+          209361,
+          212998
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 2,
+        "alpha": 0.5,
+        "bad_q_count": 2688,
+        "bad_q_rows": [
+          767,
+          1408,
+          1985,
+          2683,
+          2698,
+          2757,
+          3965,
+          4230,
+          4613,
+          4869,
+          6071,
+          12170
+        ],
+        "changed_joint_nodes": 47973,
+        "expanded_source_I_freeze_rows": 27798,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 2,
+        "alpha": 0.25,
+        "bad_q_count": 1806,
+        "bad_q_rows": [
+          767,
+          2683,
+          3965,
+          4230,
+          4613,
+          4869,
+          6071,
+          12170,
+          12188,
+          14333,
+          14752,
+          20635
+        ],
+        "changed_joint_nodes": 47556,
+        "expanded_source_I_freeze_rows": 28595,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 2,
+        "alpha": 0.125,
+        "bad_q_count": 1143,
+        "bad_q_rows": [
+          4230,
+          4613,
+          6071,
+          12188,
+          20635,
+          21384,
+          21561,
+          22833,
+          29617,
+          31363,
+          31471,
+          33032
+        ],
+        "changed_joint_nodes": 46922,
+        "expanded_source_I_freeze_rows": 29100,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 2,
+        "alpha": 0.0625,
+        "bad_q_count": 711,
+        "bad_q_rows": [
+          4230,
+          4613,
+          12188,
+          21384,
+          33032,
+          36754,
+          37221,
+          38499,
+          38538,
+          38592,
+          44643,
+          48741
+        ],
+        "changed_joint_nodes": 45892,
+        "expanded_source_I_freeze_rows": 29360,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 2,
+        "alpha": 0.03125,
+        "bad_q_count": 367,
+        "bad_q_rows": [
+          21384,
+          33230,
+          36754,
+          37221,
+          38499,
+          38538,
+          38592,
+          44643,
+          47576,
+          48741,
+          68747,
+          79135
+        ],
+        "changed_joint_nodes": 44822,
+        "expanded_source_I_freeze_rows": 29420,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 3,
+        "alpha": 1.0,
+        "face_summary": {
+          "count": 47103,
+          "max_area_ratio": 1.9947048906562923,
+          "min_area_ratio": 0.061690513694096005,
+          "min_cosine": -0.8779024986086741,
+          "pass": false
+        },
+        "failing_faces": [
+          11719,
+          111866,
+          204535
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 3,
+        "alpha": 0.5,
+        "face_summary": {
+          "count": 45969,
+          "max_area_ratio": 1.4779661435426565,
+          "min_area_ratio": 0.3652142402565738,
+          "min_cosine": 0.6467790364236774,
+          "pass": false
+        },
+        "failing_faces": [
+          111866
+        ],
+        "status": "I_FACE_SHAPE_REJECT"
+      },
+      {
+        "active_set_pass": 3,
+        "alpha": 0.25,
+        "bad_q_count": 342,
+        "bad_q_rows": [
+          4739,
+          5591,
+          5728,
+          20943,
+          21627,
+          21639,
+          24847,
+          32467,
+          35693,
+          37111,
+          38487,
+          46336
+        ],
+        "changed_joint_nodes": 17834,
+        "expanded_source_I_freeze_rows": 4019,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 3,
+        "alpha": 0.125,
+        "bad_q_count": 215,
+        "bad_q_rows": [
+          4739,
+          5591,
+          21639,
+          24847,
+          32467,
+          35693,
+          44588,
+          46336,
+          162080,
+          163535,
+          165042,
+          167894
+        ],
+        "changed_joint_nodes": 17637,
+        "expanded_source_I_freeze_rows": 4158,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 3,
+        "alpha": 0.0625,
+        "bad_q_count": 132,
+        "bad_q_rows": [
+          4739,
+          5591,
+          21639,
+          24847,
+          32467,
+          35693,
+          162080,
+          163535,
+          164474,
+          167894,
+          175419,
+          177381
+        ],
+        "changed_joint_nodes": 17297,
+        "expanded_source_I_freeze_rows": 4179,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      },
+      {
+        "active_set_pass": 3,
+        "alpha": 0.03125,
+        "bad_q_count": 65,
+        "bad_q_rows": [
+          5591,
+          162080,
+          163535,
+          164474,
+          182184,
+          233750,
+          239986,
+          245035,
+          248159,
+          248250,
+          273614,
+          276531
+        ],
+        "changed_joint_nodes": 16544,
+        "expanded_source_I_freeze_rows": 4179,
+        "new_exact_nonpositive_rows": [],
+        "old_exact_nonpositive_rows": [],
+        "status": "TET_QUALITY_REJECT"
+      }
+    ]
+  },
+  "geometry_source": "source-only current 1020/433 selected reference; candidate is separate and not selected",
+  "harmonic_operator": {
+    "A_iI_nnz": 98056,
+    "A_ii_nnz": 35446,
+    "Dirichlet_joint_nodes": 297902,
+    "P1_coupled_material_mesh": true,
+    "authenticated_root_free_joint_nodes": 13869,
+    "explicit_cell_incidence_role_joint_map": {
+      "bytes": 1190271,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/cell-incidence-role-joint-map-root-002/maps.npz",
+      "sha256": "7c6da695e2d2e77f0404d828028cf828281f83b5daf1352d28ef04aa0a132ee1"
+    },
+    "explicit_crosswalk_report": {
+      "bytes": 2929,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/cell-incidence-role-joint-map-root-002/report.json",
+      "sha256": "1fcb5f6df77acb65cc9ae21b470548496a0c793e25212c45260c626ab36e3e18"
+    },
+    "frozen_legacy_surface_alias_joint_nodes": 3,
+    "frozen_unreferenced_surface_alias_joint_nodes": 3,
+    "interior_exact_role_local_rows": {
+      "Fat": 6667,
+      "Skin": 7199
+    },
+    "interior_material_role_map": "authoritative cell-incidence crosswalk with per-cell 4-corner identity, all incident-cell vertex consistency, and exact F32 parity; no global point-key or legacy TetGen-ID inference",
+    "joint_nodes": 311768,
+    "movable_I_joint_nodes": 117382,
+    "operator_factorization_count": 1,
+    "push_pull_adjoint_relative_error": 3.0329382541777074e-15,
+    "role_local_cell_and_point_parity": {
+      "Fat": {
+        "active_local_rows": 228373,
+        "allocated_local_rows": 253887,
+        "inactive_local_rows": 25514,
+        "mapped_cells": 770438
+      },
+      "Skin": {
+        "active_local_rows": 201592,
+        "allocated_local_rows": 210314,
+        "inactive_local_rows": 8722,
+        "mapped_cells": 724856
+      }
+    },
+    "root_free_joint_nodes": 13869,
+    "schema_source": {
+      "bytes": 8875,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/mass-aware-inner-I-001/harmonic_i_extension_001.py",
+      "sha256": "ed25e2f1a1549dab353ca4144c50d156e764a46e2aae504029c0ae853d4d5d7a"
+    },
+    "tets": 1495294,
+    "true_interior_joint_nodes": 13866
+  },
+  "inputs": {
+    "030c_component_census": {
+      "bytes": 9436,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/actual-030c-component-census-001/run-001/component-census/component-census.json",
+      "sha256": "d8ac2770b3fa5bde237aebe20a97a1b28bbae9a5ce1f58bc3406341305f13c62"
+    },
+    "030c_target_rows": {
+      "bytes": 4006555,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/actual-030c-component-census-001/target-rows/target-side-child-rows.csv",
+      "sha256": "14252ebfe9c5c42adb5f1641dbd3446a5d9db739620251eafa58be91e2945da6"
+    },
+    "030c_volume_bounds": {
+      "bytes": 14450,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/actual-030c-component-census-001/run-001/component-volume-bounds.json",
+      "sha256": "e349b2ff9d67e4a4602d5174b3f0076deba8e84e4b888fe42ba3857c654f41a7"
+    },
+    "D": {
+      "bytes": 11035611,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-958-D014-root/proposal-003/candidate-D-typed-current.npz",
+      "sha256": "63cec05102fd2dc670d9220ec6472cd7d9ffa7085b4694719c605947086c7da9"
+    },
+    "Fat": {
+      "bytes": 38429612,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-point-update-1018-root/actual-001/fat-volume-point-updated.npz",
+      "sha256": "b83df0f4a4ff183bd147f0c0d6236a22e3ea6ce1ae9e9531ffc1c457c2ffac88"
+    },
+    "I": {
+      "bytes": 8222673,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-point-update-1018-root/actual-001/candidate-I-point-updated.npz",
+      "sha256": "5557cbb88b46ea83d7977d60e1d362a10c48c290b77afb39b273efa29d32e323"
+    },
+    "O": {
+      "bytes": 11199621,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz",
+      "sha256": "10169962e298586d63794bf94515ecc3a9b1ce91e66cc60566a6919d7c856ac3"
+    },
+    "Skin": {
+      "bytes": 32736648,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-point-update-1018-root/actual-001/skin-volume-point-updated.npz",
+      "sha256": "41291a7298517ab250a64e4bbda6bbee7591b7d2b594aacc1dce6d6fc78025ba"
+    },
+    "boundary_classification": {
+      "bytes": 4947,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/boundary-face-classification-002/report.json",
+      "sha256": "e753ec087610000dba23597e9f338cdbe94a0526809b290f02c8fb9f02824ce9"
+    },
+    "boundary_witnesses": {
+      "bytes": 1843739,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/boundary-face-classification-002/boundary-difference-witnesses.npz",
+      "sha256": "4d6fae8b49aac15634be8f6945e4d0bd8229d0b67f618a23d87207784bc0b2ea"
+    },
+    "cell_incidence_role_joint_map_npz": {
+      "bytes": 1190271,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/cell-incidence-role-joint-map-root-002/maps.npz",
+      "sha256": "7c6da695e2d2e77f0404d828028cf828281f83b5daf1352d28ef04aa0a132ee1"
+    },
+    "cell_incidence_role_joint_map_report": {
+      "bytes": 2929,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/cell-incidence-role-joint-map-root-002/report.json",
+      "sha256": "1fcb5f6df77acb65cc9ae21b470548496a0c793e25212c45260c626ab36e3e18"
+    },
+    "facet_ancestry": {
+      "bytes": 118106798,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/facet-ancestry.csv",
+      "sha256": "cbfebfc668cada5dc0a3e17f28f573904f805872cfdedd9dbf0980799bfbf5f4"
+    },
+    "harmonic_helper": {
+      "bytes": 8875,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/mass-aware-inner-I-001/harmonic_i_extension_001.py",
+      "sha256": "ed25e2f1a1549dab353ca4144c50d156e764a46e2aae504029c0ae853d4d5d7a"
+    },
+    "point_update_owner": {
+      "bytes": 65025,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-banks-point-update-001/emit_and_replay_point_updates_001.py",
+      "sha256": "c75a3b5532700df673113ce6ae7b069042244569f4abf03c714ad0953c5098b7"
+    },
+    "protection_source": {
+      "bytes": 22543,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/derive_current1020_cut_gradients_007.py",
+      "sha256": "b6135f00fa83b366ee31f25e821a752a08edcfd926624a831d308cc7fd5ea2d3"
+    },
+    "root_inventory_report": {
+      "bytes": 5448,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/run-005-root-inventory/report.json",
+      "sha256": "b9277ea48a59e2e09ee99e66c45a54a29b2fc5336679764add230cc0868adda2"
+    },
+    "root_sensitivities": {
+      "bytes": 3258027,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/run-005-root-inventory/sensitivities.npz",
+      "sha256": "a3d1d5c8d4933f9bdd24dda0a015471742398a6e333e7409c80a147f9dad127f"
+    },
+    "state": {
+      "bytes": 1644202,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1020-zero-skin-fat-source-qualified-root/verified-state.json",
+      "sha256": "11044a88b2d45ab9a9625f9a2cac46b8a952032b9ac0a07274710c316f5a88a9"
+    },
+    "typed433": {
+      "bytes": 288630607,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1037/candidate-current-typed-volume.npz",
+      "sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372"
+    }
+  },
+  "limitations": "Current 030c isolated component volume reductions are necessary local construction bounds only, not proof of simultaneous flow feasibility or an accepted anatomy change. This candidate has no fresh 806/808, source-surface self/cross audit, mass mapping, native or physical admission.",
+  "mass_mapping": "NOT_RUN",
+  "native_steps": 0,
+  "physical_admission": false,
+  "protected_scope": {
+    "D_fixed_source_rows": 103509,
+    "I_active_source_rows": 118197,
+    "I_actual_exterior_source_rows": 45,
+    "I_movable_source_rows": 117382,
+    "I_protected_source_rows": 835,
+    "I_surface_rims": 45,
+    "O_D_alias_I_rows": 0,
+    "O_fixed_source_rows": 76193,
+    "back_rows": 790,
+    "route_rows": 45
+  },
+  "schema": "numi.h706.current1020-coupled-harmonic-030c-I-redistribution-candidate.v1",
+  "status": "NO_ACCEPTED_BOUNDED_COUPLED_STEP"
+}

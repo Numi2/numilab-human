@@ -1,0 +1,225 @@
+{
+  "exact_comparison": {
+    "I_face_coface_counts": {
+      "2": 236389
+    },
+    "OID_faces_missing_from_tet_boundary": 236389,
+    "common_OID_tet_boundary_faces": 360242,
+    "extra_boundary_face_source_node_membership_counts": {
+      "all3": 180,
+      "none": 0,
+      "some": 0
+    },
+    "tet_boundary_extra_vs_OID": 180,
+    "tet_boundary_nodes_not_on_any_OID_source_surface": 0
+  },
+  "extra_boundary_labels": {
+    "columns": [
+      "material_index",
+      "geometric_donor_body",
+      "anatomical_region_id"
+    ],
+    "first_extra_faces": [
+      [
+        24698,
+        24714,
+        122448
+      ],
+      [
+        24698,
+        24730,
+        122545
+      ],
+      [
+        24698,
+        122345,
+        122448
+      ],
+      [
+        24698,
+        122345,
+        122545
+      ],
+      [
+        24714,
+        24753,
+        122589
+      ],
+      [
+        24714,
+        122448,
+        122589
+      ],
+      [
+        24730,
+        24761,
+        122613
+      ],
+      [
+        24730,
+        122545,
+        122613
+      ],
+      [
+        24753,
+        24760,
+        122615
+      ],
+      [
+        24753,
+        122589,
+        122615
+      ],
+      [
+        24760,
+        24810,
+        122931
+      ],
+      [
+        24760,
+        122615,
+        122931
+      ]
+    ],
+    "first_extra_owner_tets": [
+      176456,
+      15009,
+      34857,
+      176465,
+      176321,
+      410589,
+      176294,
+      482359,
+      469449,
+      176328,
+      176297,
+      449090
+    ],
+    "rows": [
+      {
+        "face_count": 90,
+        "labels": [
+          15,
+          23,
+          23
+        ]
+      },
+      {
+        "face_count": 90,
+        "labels": [
+          16,
+          23,
+          23
+        ]
+      }
+    ]
+  },
+  "inputs": {
+    "D": {
+      "bytes": 11035611,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-958-D014-root/proposal-003/candidate-D-typed-current.npz",
+      "sha256": "63cec05102fd2dc670d9220ec6472cd7d9ffa7085b4694719c605947086c7da9"
+    },
+    "I": {
+      "bytes": 8222673,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-1009-point-update-1018-root/actual-001/candidate-I-point-updated.npz",
+      "sha256": "5557cbb88b46ea83d7977d60e1d362a10c48c290b77afb39b273efa29d32e323"
+    },
+    "O": {
+      "bytes": 11199621,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz",
+      "sha256": "10169962e298586d63794bf94515ecc3a9b1ce91e66cc60566a6919d7c856ac3"
+    },
+    "typed433": {
+      "bytes": 288630607,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1037/candidate-current-typed-volume.npz",
+      "sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372"
+    }
+  },
+  "interpretation": "Exact face identity only. The actual one-coface tet boundary is external and must remain fixed. Differences from O/I/D face tessellations are not interpreted as defects without source ancestry; I-face coface counts are reported separately.",
+  "missing_OID_faces_first12": [
+    [
+      76193,
+      76194,
+      76197
+    ],
+    [
+      76193,
+      76194,
+      77212
+    ],
+    [
+      76193,
+      76196,
+      76199
+    ],
+    [
+      76193,
+      76196,
+      76203
+    ],
+    [
+      76193,
+      76197,
+      76199
+    ],
+    [
+      76193,
+      76198,
+      76203
+    ],
+    [
+      76193,
+      76198,
+      77212
+    ],
+    [
+      76194,
+      76195,
+      76202
+    ],
+    [
+      76194,
+      76195,
+      77212
+    ],
+    [
+      76194,
+      76197,
+      76202
+    ],
+    [
+      76195,
+      76200,
+      76205
+    ],
+    [
+      76195,
+      76200,
+      77212
+    ]
+  ],
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "numi.h706.current1020-tet-vs-O-I-D-boundary-face-classification.v2",
+  "source_surface_faces": {
+    "D": 207901,
+    "I": 236389,
+    "O": 152341,
+    "OID_unique_canonical_faces": 596631
+  },
+  "status": "PASS_EXACT_BOUNDARY_MISMATCH_CLASSIFIED",
+  "tet_mesh": {
+    "face_incidence_max": 2,
+    "nodes": 311768,
+    "one_coface_boundary_faces": 360422,
+    "tets": 1495294,
+    "two_coface_faces": 2810377,
+    "unique_tet_faces": 3170799
+  },
+  "witnesses": {
+    "bytes": 1843739,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/joint-local-i-patch-preflight-002/boundary-face-classification-002/boundary-difference-witnesses.npz",
+    "sha256": "4d6fae8b49aac15634be8f6945e4d0bd8229d0b67f618a23d87207784bc0b2ea"
+  }
+}

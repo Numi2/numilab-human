@@ -1,0 +1,20 @@
+# Current geometry and envelope diagnostics
+
+**Status: source diagnostic only. Accepted source geometry 1020 remains unchanged; no new repair candidate was selected.** This package preserves compact source and diagnostic records for the current 1020 geometry path and the 033h source-only initialization proposal. It does not establish physical admission or a native run: physical_admission=false, native_steps=0 throughout.
+
+## Geometry evidence
+
+- The cell-incidence role crosswalk passed for the pinned current typed volume. It maps 201,592 active Skin nodes and 228,373 active Fat nodes through exact material-local cell rows and exact F32 corner coordinates. It keeps unreferenced allocation rows inactive (-1) and does not infer IDs by global nearest-coordinate matching. The map array is omitted; the report and evidence index pin its source path and SHA-256.
+- Random-direction volume derivative controls passed with maximum relative error 2.8648178377415917e-7. These are derivative checks, not a fitted or admitted geometry.
+- The head/sidewall boundary-face classification is exact face-identity evidence only. It reports 236,389 two-coface I faces; 360,242 matching outer/deep (O/D) source and tet-boundary face identities; and 180 extra one-coface tet-boundary faces, split into 90 each with labels [15,23,23] and [16,23,23]. The classifier explicitly does not treat tessellation differences as defects without source ancestry. Its small witness array is omitted and pinned in the index.
+- The 006 harmonic fit ended NO_ACCEPTED_BOUNDED_COUPLED_STEP. The 007 result is a source candidate only (PASS_COUPLED_030C_SOURCE_CANDIDATE_PENDING_SURFACE_AND_MASS_QUALIFICATION); it was not surface/mass qualified or selected. The 008 area-metric fit ended NO_ACCEPTED_BOUNDED_COUPLED_STEP. Candidate NPZs and harmonic work arrays are omitted and hash-referenced.
+
+## Source-only initialization and controls
+
+- The 033h preparation report passed source-only preparation and its 35-cut LP is INCONCLUSIVE_SOURCE_ONLY_35_CUT_LP. Its nine new disjoint target cuts reduce the measured capacity-proxy deficit from 176.390 g to 18.930 g. This is a cut-capacity proxy, not a full flow result; there was no allocator run, geometry selection, or physical admission. Proposal and route NPZs are omitted and pinned by evidence-index.json.
+- The 030d controls report exact semantic-support parity, repeated-fixture parity, exact gzip roundtrip, and source-only compilation. They do not establish a successful full allocation or a runtime performance claim. Binaries and dependency arrays are omitted; the compact control sources, reports and source manifest are included.
+- The historical 19.353 mm transport envelope originated in the pinned operational-reference plan from the earlier candidate. It remains the legacy software limit until regenerated and verified; it is not a material constant. The 035 source-only sensitivity diagnostic derived 0.187444 m from a maximum child-centroid to declared source-centroid distance of 0.1874423157 m using the old rounding rule. Its 300-second run timed out during minimum-flow computation (exit -15) after four BFS rounds; it did not produce a complete flow or change any contract. This value is a diagnostic envelope proposal, not an accepted transport radius. The plan, execution record, and short stdout/stderr are included. The nine large 030c coefficient CSVs referenced by the proposal reports have been retired only after archive hash verification and independent full restore. Restore them from [the evidence archive release](https://github.com/Numi2/macmini-evidence-archive/releases/tag/numi-20261102-030c-component-coefficients-005-sourceonly-001); the compact archive manifest, build receipt, restore proof, and retirement receipt are in archive/.
+
+## Evidence handling
+
+evidence-index.json records byte-identical copies, original paths, SHA-256 values, and references to omitted large arrays. No NPZ, full mesh, or large CSV is copied. The reports retain their original statuses and failures; no diagnostic or candidate result is promoted to an accepted geometry.

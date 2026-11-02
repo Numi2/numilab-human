@@ -1,0 +1,72 @@
+{
+  "base_execution": {
+    "bytes": 12600,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/actual-030c-032d-diagnostic/run-001/execution.json",
+    "sha256": "900bbea8520b9e13bca4c51d8853f080890702c7bc01d237935540e5bff294d4"
+  },
+  "current_derived_envelope_m": 0.187444,
+  "current_typed_volume": {
+    "bytes": 288630607,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1037/candidate-current-typed-volume.npz",
+    "sha256": "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372"
+  },
+  "distance_quantiles_m": [
+    2.26600562419676e-08,
+    0.009315298053849183,
+    0.021757380806765765,
+    0.03744702469611311,
+    0.07238670887699505,
+    0.1874423157229725
+  ],
+  "historical_rule": {
+    "bytes": 2486,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/conforming-fit-006-native-assets-545/run-002-operational-reference/plan.json",
+    "sha256": "6ad9204795423c1e21fb222beaa6a4ddf6d0825fbd28ab22d18e87e2c38c44c7"
+  },
+  "maximum_witness": {
+    "child_centroid": [
+      0.07995261624455452,
+      -1.6633005738258362,
+      0.1111848596483469
+    ],
+    "child_row": 1452622,
+    "distance_m": 0.1874423157229725,
+    "parent_row": 23412,
+    "source_parent_centroid": [
+      0.08850562945008278,
+      -1.4772352874279022,
+      0.13218907080590725
+    ]
+  },
+  "native_steps": 0,
+  "old_envelope_m": 0.019353,
+  "physical_admission": false,
+  "purpose": "Source-only sensitivity using the old candidate-independent geometric rule on the current mesh; NOT an accepted/native radius change.",
+  "rule": "ceil(max child-to-declared-source-centroid distance/1um)*1um+1um, floor200um; derived before native evaluation",
+  "schema": "numi.human.current-envelope-diagnostic.v1",
+  "source": {
+    "bytes": 4252,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-fractional-semantic-native-1047/run_current_envelope_diagnostic_035_root.py",
+    "sha256": "65fb2222860999a18fec56d5dca51ba03e017f4fc6ef7889a27bd57dfef5c193"
+  },
+  "source_nodes": {
+    "bytes": 1694447,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+    "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+  },
+  "source_tets": {
+    "bytes": 2207254,
+    "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+    "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+  },
+  "unchanged": [
+    "source330 mass ledger",
+    "source parent geometry",
+    "density bounds",
+    "semantic group and one-hop checks",
+    "P1 support",
+    "carrier weights and first moments",
+    "current1020 geometry",
+    "runtime physics"
+  ]
+}
