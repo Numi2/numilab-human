@@ -1,0 +1,32 @@
+{
+  "schema": "numi.human.shared-reference-motion-diagnostic-publication-test.v1",
+  "result": "PASS_CPU_FIXTURE_REPLAY_NO_NATIVE",
+  "command": "python3 -m unittest -v tests/test_fixture_replay.py",
+  "test_count": 3,
+  "compiled_source": {
+    "path": "source/shared_reference_motion.cpp",
+    "sha256": "91994ec07b75f180b0e115d24506635476e39a4b2f2abff6338542afa5210b52"
+  },
+  "fixture": {
+    "path": "fixture/selected-rest-f32.bin",
+    "sha256": "37210c7bec578506faf2f67f66096ae732e2ff9a8756ef60aee906a62b29123e",
+    "row_table": "fixture/selected-tet-rows.csv",
+    "row_table_sha256": "520e88f84996310e29de628bb5f52ebbc9b0fdb5a7ed209db14fc3dba4a68e1e",
+    "selected_tets": 4329
+  },
+  "verifier": {
+    "path": "verify_fixture.py",
+    "sha256": "87120f4c43bdba9f25f130fcc89dc4467c2fed8b07b7c79a97563ecf34db8864"
+  },
+  "test": {
+    "path": "tests/test_fixture_replay.py",
+    "sha256": "ccd8525ae3761dd15968d79b66eeaf1f956565dfaee289c9860909a718d0c213"
+  },
+  "report_sha256": "d1b0bd35a2ba2c2cfb2585ab97480e9233b4ad458494f1db1205905c2936e22f",
+  "header_closure_sha256": "3bfa7ea495cac62fd39ad0c4d44da0c62062f50bfceb447c5983cf82e3f40074",
+  "owner_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+  "gpu_executed": false,
+  "native_steps": 0,
+  "physical_admission": false,
+  "qualification_scope": "CPU compile and compact fixture replay only"
+}

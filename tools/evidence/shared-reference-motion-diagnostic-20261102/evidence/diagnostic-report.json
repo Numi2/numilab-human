@@ -1,0 +1,97 @@
+{
+  "status": "COMPLETED_SHARED_ARITHMETIC_DIAGNOSTIC_NO_NATIVE_EXECUTION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "gpu_executed": false,
+  "selected_rows": 4329,
+  "selection": "union of all original1020 failures in the three materialized-F32 rigid-frame probes, not unbiased fullmesh",
+  "inputs": {
+    "mesh_node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.node",
+      "sha256": "8f47890b86b3a71ce247caf69eff6e72cf4a7080af28a287b8f4cd40efa27424",
+      "bytes": 21425652
+    },
+    "mesh_ele": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.ele",
+      "sha256": "ca1ec9c3ac3afc8964dbddf92bc6db5d1c854e0dc873ed8c4f3dfe4b0c6addeb",
+      "bytes": 55099001
+    },
+    "cpp": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/shared-reference-motion-diagnostic-root-001/shared_reference_motion.cpp",
+      "sha256": "91994ec07b75f180b0e115d24506635476e39a4b2f2abff6338542afa5210b52",
+      "bytes": 2321
+    },
+    "fixture": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/shared-reference-motion-diagnostic-root-001/selected-rest-f32.bin",
+      "sha256": "37210c7bec578506faf2f67f66096ae732e2ff9a8756ef60aee906a62b29123e",
+      "bytes": 207800
+    },
+    "rows": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/shared-reference-motion-diagnostic-root-001/selected-tet-rows.csv",
+      "sha256": "520e88f84996310e29de628bb5f52ebbc9b0fdb5a7ed209db14fc3dba4a68e1e",
+      "bytes": 31745
+    },
+    "shared_header": {
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/matter/include/numi/matter/fem_compensated_deformation.h",
+      "sha256": "bafca18e85ebf1c644e77f3114abf4dc5050b3362b2379ca6aef46fa0df1e96f",
+      "bytes": 2359
+    },
+    "compensated_header": {
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/include/metalrobo/compensated_geometry_gpu.h",
+      "sha256": "b047b4f1e6351d12ac9bc9853bb8975410d7beacc3954f565a944d8a0234b649",
+      "bytes": 6955
+    },
+    "translation_header": {
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/include/metalrobo/compensated_translation_gpu.h",
+      "sha256": "a04166e5c8ef76db05271c8c9b084f0b2edc9bb4a7e6bfe1986527a4f8c09097",
+      "bytes": 7828
+    }
+  },
+  "compile_argv": [
+    "/usr/bin/clang++",
+    "-std=c++20",
+    "-O2",
+    "-fno-fast-math",
+    "-ffp-contract=off",
+    "-I/Users/numi/Work/skin-fat-native-integration-209/include",
+    "-I/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/shared-reference-motion-diagnostic-root-001/shared_reference_motion.cpp",
+    "-o",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/shared-reference-motion-diagnostic-root-001/shared-reference-motion"
+  ],
+  "arithmetic": {
+    "schema": "h706.shared-reference-deformation-diagnostic.v1",
+    "physical_admission": false,
+    "native_steps": 0,
+    "gpu_executed": false,
+    "selected_tets": 4329,
+    "cases": [
+      {
+        "case": 0,
+        "minimum_J": 1,
+        "maximum_J": 1,
+        "nonpositive_or_nonfinite_J": 0,
+        "maximum_entry_error_from_R": 0
+      },
+      {
+        "case": 1,
+        "minimum_J": 0.9999403437617088,
+        "maximum_J": 1.0000495818370008,
+        "nonpositive_or_nonfinite_J": 0,
+        "maximum_entry_error_from_R": 5.279473906338872e-05
+      },
+      {
+        "case": 2,
+        "minimum_J": 0.9999503401369085,
+        "maximum_J": 1.0000599702680029,
+        "nonpositive_or_nonfinite_J": 0,
+        "maximum_entry_error_from_R": 5.222864503084956e-05
+      }
+    ]
+  },
+  "limitations": [
+    "CPU instantiation of the actual shared Metal/C++ arithmetic helper, not GPU execution",
+    "synthetic exact rigid displacement split into F32 high/low; no forces/contact or controller advanced",
+    "source cells and inverseRest casting mirror compiler; actual GPU state still requires native verification"
+  ]
+}

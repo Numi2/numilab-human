@@ -1,0 +1,63 @@
+{
+  "schema": "numi.human.shared-reference-motion-diagnostic-pins.v1",
+  "status": "COMPLETED_SHARED_ARITHMETIC_DIAGNOSTIC_NO_NATIVE_EXECUTION",
+  "physical_admission": false,
+  "native_steps": 0,
+  "gpu_executed": false,
+  "source_directory": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/shared-reference-motion-diagnostic-root-001",
+  "source_artifacts": {
+    "diagnostic-report.json": "d1b0bd35a2ba2c2cfb2585ab97480e9233b4ad458494f1db1205905c2936e22f",
+    "run_diagnostic.py": "8a5d0ecdeb5aae36f702da120a2c2ce5c420cb23a8f3c6200ed5b8ba2c5366d8",
+    "shared_reference_motion.cpp": "91994ec07b75f180b0e115d24506635476e39a4b2f2abff6338542afa5210b52",
+    "selected-rest-f32.bin": "37210c7bec578506faf2f67f66096ae732e2ff9a8756ef60aee906a62b29123e",
+    "selected-tet-rows.csv": "520e88f84996310e29de628bb5f52ebbc9b0fdb5a7ed209db14fc3dba4a68e1e",
+    "run.stdout": "f7fc43869bdbfef12d8ee365305cccc451c6800355a1bed1915b306eca0fd6af",
+    "run.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "build.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "regeneration_inputs_not_copied": {
+    "mesh.node": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.node",
+      "sha256": "8f47890b86b3a71ce247caf69eff6e72cf4a7080af28a287b8f4cd40efa27424",
+      "bytes": 21425652
+    },
+    "mesh.ele": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1044/volume-export/volume/mesh.ele",
+      "sha256": "ca1ec9c3ac3afc8964dbddf92bc6db5d1c854e0dc873ed8c4f3dfe4b0c6addeb",
+      "bytes": 55099001
+    },
+    "translate_z_plus_1mm/tet-regressions.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/mass-aware-inner-I-review-002/1020_original/translate_z_plus_1mm/tet-regressions.csv",
+      "sha256": "9842622691d56255469fac882d16aeca688beb022d1777d78e155b2afd5785b4",
+      "bytes": 1693
+    },
+    "rotate_z_minus_1deg/tet-regressions.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/mass-aware-inner-I-review-002/1020_original/rotate_z_minus_1deg/tet-regressions.csv",
+      "sha256": "129a4440002c0a53ea2e747e50a44737a8dcc7b8d6d12694d99905fcdb866f92",
+      "bytes": 313822
+    },
+    "rotate_z_plus_1deg/tet-regressions.csv": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/mass-aware-inner-I-review-002/1020_original/rotate_z_plus_1deg/tet-regressions.csv",
+      "sha256": "70a9f8dbb9f6ea7734230897b842b8f73619b36839a6bc7482b32817cd1479a1",
+      "bytes": 323030
+    }
+  },
+  "independent_source_review": {
+    "reviewed": true,
+    "findings": [
+      "Row-major inverse-rest/cofactor and edge construction match the compiler's matrix layout.",
+      "Post-F32 inverse coefficients had zero mismatches across the retained 4329 cells.",
+      "Runtime Metal uses MTLMathModeSafe and MTLMathFloatingPointFunctionsPrecise; generated Metal commands include -fno-fast-math."
+    ],
+    "limit": "CPU/header and compile-policy review only; this does not establish GPU/native parity."
+  },
+  "expected_arithmetic": {
+    "selected_tets": 4329,
+    "cases": [
+      {"case": 0, "minimum_J": 1.0, "maximum_J": 1.0, "nonpositive_or_nonfinite_J": 0},
+      {"case": 1, "minimum_J": 0.9999403437617088, "maximum_J": 1.0000495818370008, "nonpositive_or_nonfinite_J": 0},
+      {"case": 2, "minimum_J": 0.9999503401369085, "maximum_J": 1.0000599702680029, "nonpositive_or_nonfinite_J": 0}
+    ]
+  }
+}

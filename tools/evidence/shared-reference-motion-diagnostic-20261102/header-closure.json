@@ -1,0 +1,52 @@
+{
+  "schema": "numi.human.shared-reference-motion-header-closure.v1",
+  "owner": {
+    "repository_url": "https://github.com/Numi2/numi-lab.git",
+    "revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+    "root_path": "/Users/numi/Work/skin-fat-native-integration-209",
+    "header_files_clean_at_capture": true
+  },
+  "include_chain": [
+    "matter/include/numi/matter/fem_compensated_deformation.h",
+    "include/metalrobo/compensated_geometry_gpu.h",
+    "include/metalrobo/compensated_translation_gpu.h",
+    "include/metalrobo/gpu_types.h"
+  ],
+  "headers": [
+    {
+      "path": "matter/include/numi/matter/fem_compensated_deformation.h",
+      "sha256": "bafca18e85ebf1c644e77f3114abf4dc5050b3362b2379ca6aef46fa0df1e96f",
+      "bytes": 2359,
+      "includes": ["metalrobo/compensated_geometry_gpu.h"]
+    },
+    {
+      "path": "include/metalrobo/compensated_geometry_gpu.h",
+      "sha256": "b047b4f1e6351d12ac9bc9853bb8975410d7beacc3954f565a944d8a0234b649",
+      "bytes": 6955,
+      "includes": ["metalrobo/compensated_translation_gpu.h"]
+    },
+    {
+      "path": "include/metalrobo/compensated_translation_gpu.h",
+      "sha256": "a04166e5c8ef76db05271c8c9b084f0b2edc9bb4a7e6bfe1986527a4f8c09097",
+      "bytes": 7828,
+      "includes": ["metalrobo/gpu_types.h", "<cmath>", "<cstring>"]
+    },
+    {
+      "path": "include/metalrobo/gpu_types.h",
+      "sha256": "55777caa42851b167780255c76e02c40e2285ee43cc6dda77063d8639f6728d8",
+      "bytes": 3809,
+      "includes": ["<metal_stdlib>", "<stdint.h>"]
+    }
+  ],
+  "repository_notice": {
+    "path": "THIRD_PARTY_NOTICES.md",
+    "sha256": "0a9645dea2d1033e8d1b12e07698cdfb518c225139683b499297ffc621023d6a",
+    "bytes": 13994
+  },
+  "license_status": "No repository-root LICENSE file was present at the pinned revision. Headers are referenced, not redistributed. This package adds no license grant.",
+  "compile": {
+    "compiler": "/usr/bin/clang++",
+    "arguments": ["-std=c++20", "-O2", "-fno-fast-math", "-ffp-contract=off"],
+    "include_roots": ["include", "matter/include"]
+  }
+}
