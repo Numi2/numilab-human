@@ -1,0 +1,88 @@
+{
+  "capture_profiles": {
+    "quartiles-six": [
+      0,
+      1,
+      "quarter",
+      "half",
+      "three-quarter",
+      "horizon"
+    ],
+    "sampled-three": [
+      0,
+      "horizon//2",
+      "horizon"
+    ]
+  },
+  "checks": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "-m",
+        "pytest",
+        "-q",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/test_current_native_1025_horizon_010h.py"
+      ],
+      "exit_code": 0,
+      "name": "pytest",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "183ef1418ee4356c0496dd0a4a373ef553ce0a237ea15584a0736fbc837f778c"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "-m",
+        "py_compile",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/prepare_current_native_1025_horizon_010h.py",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/test_current_native_1025_horizon_010h.py"
+      ],
+      "exit_code": 0,
+      "name": "py_compile",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/bin/bash",
+        "-n",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/run_current_native_1025_horizon_010h.sh"
+      ],
+      "exit_code": 0,
+      "name": "bash_n",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "gpu_executed": false,
+  "native_runtime_executed": false,
+  "physical_admission": false,
+  "schema": "numi.human.current-native-direct-o-010h-source-control.v1",
+  "source_refs": {
+    "PINNED-INPUTS.txt": {
+      "bytes": 970,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/PINNED-INPUTS.txt",
+      "sha256": "429e40ccc91e4a544782397e437e985171751b21520d34c2283fd74445d800f9"
+    },
+    "README.md": {
+      "bytes": 1526,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/README.md",
+      "sha256": "03817f40eafef696839e50850e44646ae153e94dab93d3d9cea20ed0180cb0e5"
+    },
+    "prepare_current_native_1025_horizon_010h.py": {
+      "bytes": 53116,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/prepare_current_native_1025_horizon_010h.py",
+      "sha256": "78d9692905fd01a88e1566e0de287fff1589ac466b27b9e1a54d937e86951410"
+    },
+    "run_current_native_1025_horizon_010h.sh": {
+      "bytes": 4352,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/run_current_native_1025_horizon_010h.sh",
+      "sha256": "ceb2470f3fa6867f057a4277b156e07b7634fa8feda591c649744e901eead06b"
+    },
+    "test_current_native_1025_horizon_010h.py": {
+      "bytes": 10190,
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1025-launch/current-native-1025-direct-o-010h-sparse-capture-v17c/test_current_native_1025_horizon_010h.py",
+      "sha256": "c43d99b98456e0b4ae07df9e6391df5ce822eb764a1a7c6f2b9b387ca1c863ee"
+    }
+  },
+  "status": "PASS_FOCUSED_NONLAUNCH_CONTROLS"
+}

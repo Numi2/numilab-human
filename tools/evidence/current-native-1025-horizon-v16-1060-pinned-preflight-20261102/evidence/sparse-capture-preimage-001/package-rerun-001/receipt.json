@@ -1,0 +1,142 @@
+{
+  "adaptive_packet": {
+    "all_26_constraints_met_after_restore_and_blend": false,
+    "allocator_run": false,
+    "status": "PASS_SOURCE_ONLY_PACKET_READBACK"
+  },
+  "allocator_result": {
+    "deficit_kg": 0.1763908649522172,
+    "elapsed_s": 239.91032666596584,
+    "exit_code": 6,
+    "minimum_kg": 12.998725017533202,
+    "sent_kg": 12.822334152581076,
+    "status": "INFEASIBLE_FULL_GRAPH_CUT"
+  },
+  "checks": [
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider horizon-010h/test_current_native_1025_horizon_010h.py",
+      "exit_code": 0,
+      "log": "pytest-010h.stdout.txt",
+      "name": "010h pytest",
+      "passed": 24
+    },
+    {
+      "command": "python3 -m pytest -q -p no:cacheprovider adaptive-joint-032d/034-packet-readback/test_bridge_indices_032.py",
+      "exit_code": 0,
+      "log": "pytest-032-index.stdout.txt",
+      "name": "032 index controls",
+      "passed": 3
+    },
+    {
+      "command": "bash -n horizon-010h/run_current_native_1025_horizon_010h.sh",
+      "exit_code": 0,
+      "log": "bash-n-010h.stdout.txt",
+      "name": "010h shell syntax"
+    },
+    {
+      "command": "python3 -m py_compile on the copied 010g/010h, source002, 030c, 031h, 032d and 034 Python owners and tests",
+      "exit_code": 0,
+      "log": "py-compile.stdout.txt",
+      "name": "Python syntax compilation"
+    }
+  ],
+  "git_diff_check": {
+    "exceptions": [
+      {
+        "line": 402,
+        "path": "adaptive-joint-032d/031h/adaptive_anchor_joint_lp_031h.py"
+      },
+      {
+        "line": 507,
+        "path": "adaptive-joint-032d/034-packet-readback/bridge_adaptive_031h.py"
+      },
+      {
+        "line": 694,
+        "path": "adaptive-joint-032d/034-packet-readback/bridge_adaptive_032d_current11_034.py"
+      },
+      {
+        "line": 2966,
+        "path": "allocator-diagnostic-030c/closed-include/ConservativeSpatialFractionalSemanticSupport.hpp"
+      },
+      {
+        "line": 891,
+        "path": "allocator-diagnostic-030c/closed-include/NumiHumanCurrentFractionalMassMappingCLI_030c.cpp"
+      },
+      {
+        "line": 1651,
+        "path": "allocator-diagnostic-030c/closed-include/NumiHumanPhysicalSkinChildMassMapping.hpp"
+      },
+      {
+        "line": 131,
+        "path": "allocator-diagnostic-030c/closed-include/launch_run_030c.py"
+      },
+      {
+        "line": 269,
+        "path": "allocator-diagnostic-030c/closed-include/prepare_run_030c.py"
+      }
+    ],
+    "other_whitespace_findings": 0,
+    "source_byte_identity_preserved": true,
+    "status": "PASS_WITH_ONLY_VERBATIM_UPSTREAM_EOF_BLANK_LINES"
+  },
+  "gpu_executed": false,
+  "limitations": [
+    "No native/GPU execution",
+    "No physical admission",
+    "No feasible full allocator flow",
+    "The source002 preimage is rejected by determinant and parent-replay failures",
+    "The adaptive packet is source-only and its 26-cut gate remains unmet"
+  ],
+  "log_pins": {
+    "010h_bash_n": {
+      "bytes": 0,
+      "path": "bash-n-010h.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "010h_bash_n_stderr": {
+      "bytes": 0,
+      "path": "bash-n-010h.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "010h_pytest": {
+      "bytes": 99,
+      "path": "pytest-010h.stdout.txt",
+      "sha256": "97877355b64da0bfe5a3ead24680b52c10e8337bc853fce4f8a285f93d602bc1"
+    },
+    "010h_pytest_stderr": {
+      "bytes": 0,
+      "path": "pytest-010h.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "032_index_pytest": {
+      "bytes": 98,
+      "path": "pytest-032-index.stdout.txt",
+      "sha256": "c2cba0e5b1275bde99432021fd22a26635493fa35d0886fcd5cd38708b0f7cca"
+    },
+    "032_index_pytest_stderr": {
+      "bytes": 0,
+      "path": "pytest-032-index.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python_compile": {
+      "bytes": 0,
+      "path": "py-compile.stdout.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "python_compile_stderr": {
+      "bytes": 0,
+      "path": "py-compile.stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "native_steps": 0,
+  "physical_admission": false,
+  "schema": "numi.human.current-native-sparse-capture-preimage-allocator-addendum-checks.v1",
+  "source002_preimage": {
+    "invalid_mapping": true,
+    "negative_tets": 293319,
+    "status": "COMPLETED_READ_ONLY_GEOMETRY_DIAGNOSTIC",
+    "zero_tets": 2619
+  },
+  "status": "PASS_FOCUSED_SOURCE_AND_PACKAGE_CONTROLS"
+}
