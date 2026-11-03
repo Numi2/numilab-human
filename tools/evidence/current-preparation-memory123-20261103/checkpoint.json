@@ -1,7 +1,7 @@
 {
   "status": "PARTIAL_NATIVE_MEMORY_AND_SOLVER_CHECKPOINT_NOT_MOTION_QUALIFIED",
-  "engine_revision": "2d20e13188b432e1f6ed175b9dc562ae18012c00",
-  "engine_evidence": "https://github.com/Numi2/numi-lab/tree/2d20e13188b432e1f6ed175b9dc562ae18012c00/tools/evidence/human-preparation-memory123-20261103",
+  "engine_revision": "ada294a63ef8c8db8a09070dcb3a5a7efd97cb26",
+  "engine_evidence": "https://github.com/Numi2/numi-lab/tree/ada294a63ef8c8db8a09070dcb3a5a7efd97cb26/tools/evidence/human-compensated-collision124-20261103",
   "execution_checkout_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
   "execution_has_retained_dirty_sources": true,
   "physical_equations_changed": false,
@@ -10,9 +10,11 @@
   "target_qualified": false,
   "measured_failed_attempt_pair_speedup": 1.633006295027673,
   "remaining_blockers": [
-    "Six zero-time contact bounds remain after integrated angular-energy fix; captured10916gap67.878nm versus91.692nm combined numerical CCD threshold, authored clearance1nm. Qualify conservative precision refinement; no gate bypass.",
-    "Regional preconditioner still constructs dense coefficients before sparse export;170region and384MiB guards retained",
-    "Supported equilibrium, accepted full skin/fat motion, sustained coupled physiology and native presentation at0.1x remain unqualified"
+    "Shared globalization stalls at microscopic fractions; capture the minimum-producing features and verify actual current coupled derivative/rounded trial consistency. Do not merely increase budgets or bypass local/full acceptance.",
+    "High/low mode removes the earlier vascular plateau but does not establish global convergence; final residual remains about0.7097 versus1e-5.",
+    "Tiled contact partition can reject a different contact; retain diagnostic failures and qualify geometry/energy parity before default promotion.",
+    "Only failed initialization measured; supported equilibrium, accepted motion, accepted-state integration and sustained 0.1x remain unqualified.",
+    "Regional preconditioner dense construction before sparse export; retain region/memory admission guards"
   ],
   "source_recovery": {
     "status": "PASS_INDEPENDENT_DOWNLOAD_ALL_MEMBERS_AND_RESTORE",
@@ -28,25 +30,41 @@
   },
   "background_decoder_root_cause": "macOS WallpaperAerialsExtension",
   "background_decoder_resolution": "Static desktop selected; old aerial client terminated; retained surfaces released without reboot; kernel_task237MiB, no decoder process",
-  "kernel_check_count": 78032,
+  "kernel_check_count": 80780,
   "latest_solver_measurement": {
-    "actual_krylov_columns": 2,
-    "actual_newton_steps": 1,
+    "actual_krylov_columns": 26,
+    "actual_newton_steps": 13,
     "accepted_steps": 0,
-    "scope": "015/016 guarded adaptive true-linear certificate; final contact rejection"
+    "scope": "matched serial-contact high/low vascular/cavity failed initialization",
+    "final_nonlinear_norm": 0.709711611,
+    "nonlinear_threshold": 1e-05,
+    "final_vascular_row": 16,
+    "shared_alpha_before_vascular_backtracking": 1.45519152e-11
   },
   "cleanup_parent_recovery": "Four transitive parent sources omitted from original protection roster restored at exact paths/hashes from verified025archive; all8input pins protected and checked",
   "historical_batches_verified": 24,
   "post_dedup_disk_free_bytes": 39378882560,
   "starting_disk_free_bytes": 12105162752,
   "tested_code_revision": "8b4df906e6540ce0ea3117fcfa0671d7f4762ab8",
-  "final_available_disk_bytes": 42809090048,
+  "final_available_disk_bytes": 31431421952,
   "final_net_available_change_bytes": 30703927296,
   "native_jobs_active": false,
   "latest_full_scene_trials": [
-    "native021",
-    "native022"
+    "parallel-backtracking-control",
+    "compact-vascular-witness",
+    "compact-serial-vascular-witness",
+    "compact-serial-vascular-words"
   ],
   "required_parent_input_hashes_pass": true,
-  "additional_duplicate_static_outputs_hardlinked": 100
+  "additional_duplicate_static_outputs_hardlinked": 100,
+  "prior_checkpoint_engine_revision": "2d20e13188b432e1f6ed175b9dc562ae18012c00",
+  "checked_zero_bounds": 5,
+  "all_checked_initial_zero_bounds_resolved": true,
+  "globalization_stage_comparison": {
+    "serial_contact_serial_FEM": 24.690697458,
+    "tiled_contact_serial_FEM": 13.503386541,
+    "tiled_contact_tiled_FEM": 0.594016041
+  },
+  "compact_backtracking_scratch_ratio": 0.125,
+  "performance_scope": "provisional sequential failed-initialization stage measurements; not accepted-time throughput"
 }

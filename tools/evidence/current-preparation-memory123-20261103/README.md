@@ -1,71 +1,15 @@
-# Native preparation and memory checkpoint 123
+# Current physical skin/fat native checkpoint
 
-**The full current skin/fat scene has not accepted a physical step. Motion,
-supported rest, integrated physiology and0.1x remain unqualified.**
+The full scene still has zero accepted physical steps. Supported rest, motion and at least0.1x integrated throughput remain unqualified.
 
-The tested engine implementation and exact execution evidence are in
-[Numi Lab checkpoint123](https://github.com/Numi2/numi-lab/tree/2d20e13188b432e1f6ed175b9dc562ae18012c00/tools/evidence/human-preparation-memory123-20261103).
-This is the detailed entry point for commands, device, source/binary hashes,
-configuration, failed trials and recovery receipts. All builds and runs use
-SSH Numi (Apple M6,16GiB); the execution checkout deliberately retains unrelated
-dirty work and its complete patch is pinned per trial.
+The current entry point is [collision, reduction and convergence checkpoint124](https://github.com/Numi2/numi-lab/tree/ada294a63ef8c8db8a09070dcb3a5a7efd97cb26/tools/evidence/human-compensated-collision124-20261103). It retains exact source/binary/asset pins, launch plans, controls, failed trials, resource monitors and regression results. Builds and native trials ran on SSH Numi, Apple M6 with16GiB. Commits are attributed to numi2. The execution checkout and all unrelated dirty work are preserved.
 
-Preparation releases large import/authoring copies and bounds upload staging
-to32MiB. Exact current-pose contact-row reuse and certified closed-bank AABB
-exclusion preserve force ownership and use no alternate per-step CPU physics.
-Their GPU fixtures compare flags, forces, wrenches and audits. Single matched
-rejected-attempt pairs improved51.835->31.742s and32.101->27.024s in different
-configurations; these are not sustained real-time factors.
+Five actual zero-bound collision witnesses were captured together, correcting the earlier count of six. Outward-rounded compensated reference-plane certificates give all five positive conservative swept prefixes while retaining authored1nm clearance, CCD fallback, material laws, contact forces and final physical gates. A later vascular rejection now blocks the original serial-contact trajectory.
 
-The guarded inexact-Newton option certifies the complete current linear
-residual against its adaptive relative target while retaining the final
-physical nonlinear residual, contact, vessel, tissue and rollback checks.
-Trials015/016 needed two actual Krylov columns rather than raising iteration
-budgets, but the first shared contact fraction became zero. No accepted-time
-performance follows from that reduction.
+Contact bounds run over128GPU threadgroups. Existing tiled FEM backtracking was measured with constitutive validity retained; its eight SIMD records are now reduced to one deterministic tile record, cutting that scratch/record traffic eightfold. Across sequential failed-initialization runs, three active globalization stages total24.6907s with both serial paths,13.5034s with tiled contact, and0.5940s with tiled contact and FEM, about41.6x for this stage. This is not a sustained/end-to-end speedup. Contact partitioning can change conservative rejection behavior; its differing contact806132 failure is retained and not declared qualified.
 
-Two concrete numerical defects were then isolated: reference-local CCD used a
-world-coordinate roundoff floor, and projecting nearly parallel compensated
-edges made contact energy discontinuous under vanishing trial displacement.
-Both are fixed in the owning Metal code. Authored clearance and physical gates
-remain. The full production GPU checker passes78,032checks, including captured
-contact continuity and angular values/analytic gradients against Float64.
-Full-scene019/020passed the earlier false contacts but rejected a later
-contact-energy backtrack.021confirms the repaired contact accepts its first
-trial at alpha0.001953125. Six other lanes still produce zero-time CCD bounds;
-022captures the earliest one. No physical time is accepted.
+The complete kernel contract passes80,780checks. Exact-size compact scratch canaries and FEM constitutive backtracking controls pass. Vascular/cavity regressions pass conservation, rollback, independent geometry/JVP and pressure-work checks. These tests do not establish full-Human motion.
 
-Historical outputs were retired only after independent GitHub downloads,
-archive/member hash checks and restore tests. A cleanup omission of four
-transitive parent sources was caught in014 and repaired from the verified
-archive at exact original paths/hashes. The corrected protection roster and
-runner now pin all eight parent inputs, including canonical/aliased paths.
-All current source geometry, mass proofs and execution inputs are preserved.
-32completed-run byte-identical large output duplicates were subsequently
-hard-linked after SHA checks; sources and assets were excluded. The retained
-post-dedup free-space snapshot was39,378,882,560bytes, net27,273,719,808above
-start. OS paging changes current availability; the final receipt is separate.
+Matched vascular evidence shows a residual rounding plateau. Existing high/low state and cavity arithmetic gets past the earlier rejection, reaching13active Newton solves/26Krylov columns instead of3/6. It still fails row16: shared alpha shrinks to1.455e-11, and mechanical residual remains0.709712 against1e-5. More iterations would repeat stalled work. Next work must resolve the shared globalization bound and current coupled derivative/trial consistency, then the supported equilibrium and sparse/coarse preparation. Do not bypass physical gates or describe this as finished motion.
 
-The recurrent large idle decoder allocation belonged to animated aerial
-wallpaper. Selecting a static desktop and terminating its old client released
-it without reboot. A later7MiB idle decoder belongs to mediaanalysisd and
-is distinct from that leak. No security or login service was disabled.
-
-The regional preconditioner remains blocked by dense construction before
-sparse export (170region and384MiB guards). Those guards were retained.
-The supported equilibrium checkpoint, sparse construction/runtime projection,
-accepted motion and end-to-end throughput qualification remain necessary.
-
-Final checkpoint:100additional duplicate completed-run static output files were
-hard-linked after per-file SHA checks, preserving every path and byte. Available
-disk is42.8GB, about30.7GB above the starting snapshot (including OS paging
-changes). The exact final disk/process/input-hash receipt is retained in Lab.
-No native benchmark is left running.
-
-The next physical blocker is explicit: contact10916has67.878nm initial gap,
-1nm authored clearance, and91.692nm combined numerical CCD threshold from
-stacked outer/inner roundoff floors. A more accurate conservative CCD refinement
-requires qualification; collision checks were not disabled or silently loosened.
-The other five zero bounds need classification. The failed physical segments
-still take about26s; this provides no achieved real-time factor. Final supported
-rest, sparse reduction, accepted motion and0.1x remain unfinished.
+The previous verified historical cleanup and parent-source recovery remain in Git history at377f113d22101935cbd0c5391e8686816986084b and its linked Lab evidence. All eight required transitive mass/source inputs were freshly rehashed at this checkpoint. No current source or physical mass proof was retired. The former animated-wallpaper decoder leak remains resolved; no unrelated service was disabled. Current disk and idle process state are recorded in final-host-receipt.json.
