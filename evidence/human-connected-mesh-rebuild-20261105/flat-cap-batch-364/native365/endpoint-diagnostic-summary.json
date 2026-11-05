@@ -1,0 +1,50 @@
+{
+  "solver_control_comparison": {
+    "matched": false,
+    "differences": [
+      "environment:NM_FEM_BACKTRACKING_TRACE_NEWTON",
+      "environment:NM_FEM_BACKTRACKING_TRACE_OBJECT",
+      "environment:NM_FEM_BACKTRACKING_TRACE_ROOT",
+      "environment:NM_FEM_NEWTON_TRACE_ROOT",
+      "environment:NM_FEM_THIN_CELL_REGIONAL_COMPOSITE",
+      "environment:NM_FEM_THIN_CELL_SCHWARZ",
+      "environment:NM_FGMRES_GRAPH_FULL_PSD_CONTACT_BLOCKS",
+      "environment:NM_VASCULAR_TRACE_ROOT",
+      "environment:NUMI_HUMAN_RESTING_FGMRES_BUDGET",
+      "environment:NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ",
+      "environment:NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256",
+      "environment:NUMI_MATTER_VASCULAR_ROW16_DIRECTION_TRACE"
+    ],
+    "qualification": "Endpoint diagnostic only: successful335 has different numerical controls; no isolated mesh speedup or equivalence admission."
+  },
+  "force_metrics": 388,
+  "force_metrics_over_1percent": 85,
+  "strain_metrics": 282,
+  "strain_metrics_over_5percent": 241,
+  "maximum_force_metric": 1.3244546994432775,
+  "maximum_strain_metric": 8.358008694732893,
+  "total_fem_mass_kg": {
+    "reference": 14.415518495516805,
+    "candidate": 14.415518492953332
+  },
+  "matched_field": {
+    "count": 1467745,
+    "candidate_changed_cells": 7517,
+    "removed_or_changed_reference_cells": 11734,
+    "restricted_field_max_absolute_green_strain_difference": 0.0,
+    "actual_field_max_absolute_green_strain_difference": 5.709911479214456,
+    "actual_field_volume_weighted_rms_green_strain_difference": 1.617027094315976e-05,
+    "maximum_witness": {
+      "candidate_tet": 985292,
+      "reference_tet": 951925,
+      "region": 23,
+      "absolute_green_strain_difference": 5.709911479214456
+    }
+  },
+  "physical_fidelity_qualification": false,
+  "source_owners": {
+    "/Users/numi/Work/human-checkpoint-owner-20261105/evidence/human-connected-mesh-rebuild-20261105/flat-cap-batch-364/native365/compare_endpoint_365.py": "d9ef17ea511c19cbb2815439aabd3149eb70ae801da6ab3a643b948941885849",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_remeshed_native_310.py": "0181dd99e2dc5c9c47c0e9c725d6762edee5dd41ca2bd4329f328e42a85d2902",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_matched_deformation_339.py": "1469a76a268a9e57607b3d6697d33a627cbe41ad789d5fdd9dffc47140f26c4b"
+  }
+}
