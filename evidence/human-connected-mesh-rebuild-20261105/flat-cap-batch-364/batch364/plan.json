@@ -1,0 +1,261 @@
+{
+  "stages": [
+    {
+      "name": "connected-witness-rebuild",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/simplify_human_skin_fat_boundary.py",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal",
+        "--seconds",
+        "180",
+        "--max-operations",
+        "128",
+        "--passes",
+        "7",
+        "--maximum-edge-m",
+        "0.000002",
+        "--resume-proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/reference-screened-interior-341/candidate-volume.npz",
+        "--resume-sha256",
+        "0909eac848a3560ba6e35ecdd8282880ecacbb4c9f707889a900c75d99034db0",
+        "--resume-cell-mass-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/reference-screened-interior-341/local-child-mass-proposal.csv",
+        "--resume-cell-mass-sha256",
+        "e8944dcce0635ae64e453d9b2ed0002b80d1d06fdaee71822f3cb81739cf7573",
+        "--replay-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/witness-replay.json",
+        "--bone-barriers",
+        "--attachment-requests-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv",
+        "--attachment-requests-sha256",
+        "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5"
+      ],
+      "source_sha256": "9795910faad8412b49067e905837d72b08efd9a18a8cba781e9dc40208dc75e4"
+    }
+  ],
+  "prediction": "One connected batch can retain safe simplifications of47 bounded-error low-quality caps together with the already passing nine local construction repairs. No automatic physical promotion; exact context, geometry, mass, full native and fidelity gates remain.",
+  "resource": {
+    "max_rss_gib": 8,
+    "min_disk_gib": 12,
+    "max_seconds": 300
+  },
+  "physical_admission": false,
+  "contact_witness": {
+    "native_object": 15,
+    "global_node_offset": 1666,
+    "native_nodes": [
+      61202,
+      61204,
+      61325,
+      61213
+    ],
+    "rich_nodes": [
+      59536,
+      59538,
+      59659,
+      59547
+    ],
+    "reference_positions_world_m": [
+      [
+        0.041102249175310135,
+        -0.06798774749040604,
+        0.07800491899251938
+      ],
+      [
+        0.04109688848257065,
+        -0.06798733025789261,
+        0.07797976583242416
+      ],
+      [
+        0.04175674915313721,
+        -0.06850097328424454,
+        0.07967925071716309
+      ],
+      [
+        0.0413549542427063,
+        -0.06793320178985596,
+        0.07941558212041855
+      ]
+    ],
+    "exact_tetrahedron_rows": [],
+    "opposite_triangle_node_edge_neighbors_of_vertex": [
+      false,
+      true,
+      false
+    ],
+    "roles": {
+      "O": [
+        [
+          59895
+        ],
+        [
+          59897
+        ],
+        [
+          60043
+        ],
+        [
+          59907
+        ]
+      ],
+      "I": [
+        [],
+        [],
+        [],
+        []
+      ],
+      "D": [
+        [],
+        [],
+        [],
+        []
+      ]
+    },
+    "incident_tet_counts": [
+      1,
+      16,
+      36,
+      32
+    ],
+    "star_tet_rows": [
+      4878,
+      31122,
+      53115,
+      77262,
+      116350,
+      245459,
+      264629,
+      297338,
+      298223,
+      298415,
+      302020,
+      349711,
+      363181,
+      366533,
+      372556,
+      388896,
+      393093,
+      393578,
+      394261,
+      419827,
+      424440,
+      430120,
+      452970,
+      456657,
+      465113,
+      502965,
+      515232,
+      515233,
+      515234,
+      515235,
+      530265,
+      530266,
+      530267,
+      530268,
+      552889,
+      552890,
+      552891,
+      552892,
+      552893,
+      579647,
+      579649,
+      579651,
+      579655,
+      579659,
+      590063,
+      590065,
+      590066,
+      590067,
+      590068,
+      591784,
+      591787,
+      591788,
+      591789,
+      637172,
+      642774,
+      642775,
+      642776,
+      642777,
+      642778,
+      648805,
+      659034,
+      659038,
+      668949,
+      668950,
+      670081,
+      670082,
+      670357,
+      670358,
+      670440,
+      670441,
+      678938,
+      678939,
+      694344
+    ],
+    "materials": [
+      15
+    ],
+    "anatomical_regions": [
+      23
+    ],
+    "volume_asset": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/rich433/candidate-current-typed-volume.npz",
+      "sha256": "e5aa88f025ac1f79db936ea5ad126159036e6ce478b3cc86c98f64e4c8d91c57"
+    },
+    "role_surface": {
+      "role": "O",
+      "source_nodes": [
+        59895,
+        59897,
+        60043,
+        59907
+      ],
+      "triangle_source_face_rows": [
+        150711
+      ],
+      "vertex_star_faces": [
+        101279,
+        101312,
+        150713
+      ],
+      "triangle_vertices_edge_neighbors": [
+        false,
+        true,
+        false
+      ],
+      "vertex_star_triangle_nodes": [
+        [
+          60024,
+          59896,
+          59895
+        ],
+        [
+          60043,
+          60024,
+          59895
+        ],
+        [
+          60043,
+          59895,
+          59896
+        ]
+      ]
+    },
+    "triangle_ancestry": {
+      "face_source_layer": [
+        0
+      ],
+      "face_source_body": [
+        -1
+      ],
+      "face_source_bone": [
+        -1
+      ],
+      "face_source_face_id": [
+        59777
+      ]
+    }
+  },
+  "maximum_patch_hausdorff_m": 0.0005
+}

@@ -1,0 +1,38 @@
+{
+  "stages": [
+    {
+      "name": "role-bridge",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/bridge_joint_role_volumes_64.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal"
+      ],
+      "source_sha256": "030e7477883f4ffee0987820ac95bf1ccfee536c0a1a2b40244da3972bdedfaa"
+    },
+    {
+      "name": "independent-geometry",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/verify-connected-output.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal"
+      ],
+      "source_sha256": "cf3388e99ab43d1101a4935baeb1c2380f7303770d41be09bbf8f3e38407f228"
+    },
+    {
+      "name": "full-context",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_inner_layer_surface_diff_806_extended_250um_construction.py",
+        "--config",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/context-config.json",
+        "--out",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/full-context"
+      ],
+      "source_sha256": "1c20de7dffa2cbf55abf195310af988aed9c5a87f035a8e79e099a3f00c74377"
+    }
+  ],
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal",
+  "native_plan_output": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365",
+  "prediction": "Batch coarsening retains the root6 fat repair and captured root15 skin repair, plus safe bounded-error low-quality skin-cap quotients. All geometry, mass, physical and fidelity gates unchanged.",
+  "physical_admission": false
+}

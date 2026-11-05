@@ -22,3 +22,5 @@ The canonical mass compiler preserved the source/donor allocation and unchanged 
 - Native/CPU execution was on SSH Numi. No visual verification was performed. Human-specific artifacts are owned by numilab-human.
 
 SHA256SUMS lists every retained file except itself. Large source payloads remain in their existing pinned storage/recovery archives; paths and source identities are recorded by the plans.
+
+Large JSON and stderr are retained as lossless .gz files; their decompressed identities remain recorded by the executed plans and logs.
