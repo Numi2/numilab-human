@@ -1,0 +1,186 @@
+{
+  "stages": [
+    {
+      "name": "independent-geometry",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/verify-connected-output.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "cf3388e99ab43d1101a4935baeb1c2380f7303770d41be09bbf8f3e38407f228"
+    },
+    {
+      "name": "full-context",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_inner_layer_surface_diff_806_extended_250um_construction.py",
+        "--config",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/context-config.json",
+        "--out",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/full-context"
+      ],
+      "source_sha256": "1c20de7dffa2cbf55abf195310af988aed9c5a87f035a8e79e099a3f00c74377"
+    },
+    {
+      "name": "compiler",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/compile_joint64.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "d99d999800f9e42e1e55fb94011cab7cc624ffedfc78d64eae9f1ecef2c9c3dd"
+    },
+    {
+      "name": "typed-adapters",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_interior_typed_adapters_326.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "e263086e3f961cb9424114cc22173585a051d209f08b002b12b1ac7b52f8a92e"
+    },
+    {
+      "name": "p1",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/compile_joint64_p1.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "7dff3613e8bbba8339be908029d6cbe00e1eeba6557278c4d55d8de6b4e764cd"
+    },
+    {
+      "name": "p1-export-rich",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/compile_joint64_export.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "d9f82ecaf7a969fd1ffade1f8a7b4de3b4b4e047f8659a44d103ab1d15221b75"
+    },
+    {
+      "name": "assets",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/export_joint64_assets.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "7dae60166ab70adc9f5f61fd9dc42d9bdf943305e933d514e0b88fad2091800c"
+    },
+    {
+      "name": "bindings",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_bindings.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "source_sha256": "7a23c975eef6f4b0a3aea41149c7fed481aa99de07fcc79ad90810250231d8ed"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/rebind_joint64_mass_support.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "name": "mass-support",
+      "source_sha256": "0ce39d20b75e7952e34a7894e479402728cb83f8c39e002dc090815c2d819245"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_prescribed_local_mass_315.py",
+        "--candidate-root",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-targets",
+        "--halo-rings",
+        "0",
+        "--all-proposed-cell-masses"
+      ],
+      "name": "mass-targets",
+      "source_sha256": "a627705f76c3a63579ec1a5c78d9b3b9abed2fcc82ea10826013d0043f157ed5"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/allocate_joint64_mass.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "name": "mass-allocation",
+      "source_sha256": "5886313e2b1f12483c11e99549beb9a2c44080bc84de617240c6ef66db94abef"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/qualify_joint64_source.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "name": "source-qualification",
+      "source_sha256": "dfb5858649270a27577d97edd59140bb56b1d36d35b4dc5ddbe6c20e68264573"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_mass_admission.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "name": "mass-admission-prepare",
+      "source_sha256": "f7cdcc749a169a773f2814bddde9a25640163c29bd1ecbb3ba91ffe395706481"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/build_current_fractional_mass_receipt_1061.py",
+        "--run-manifest",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/run-manifest.json",
+        "--execution",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/execution.json",
+        "--stdout-log",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-allocation/stdout.log",
+        "--identity-config",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/identity.json",
+        "--control-manifest",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-allocation/source-control.json",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/mass-receipt.json",
+        "--source-projection-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/source-projection.json",
+        "--failure-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal/compiler/mass-admission/failure.json"
+      ],
+      "name": "mass-receipt-341",
+      "source_sha256": "4bc0e23896632b72591c5cc88560bf9656bd7dd86e493917ff218e3d80f01f16"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/check_mass_targets_326.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "name": "mass-target-parity-341",
+      "source_sha256": "33bb94873652c36e95d4ffc02c476bd6ee183f41965271b55d5b931e8541fe46"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/convert_joint64_mass.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal"
+      ],
+      "name": "mass-converter-341",
+      "source_sha256": "cb695b8c7b19e69a2cbb1c8f4458ca0e2da512c9995051ce32bf48d183e86531"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_native.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-native-357"
+      ],
+      "name": "native-plan-344",
+      "source_sha256": "c23bbdfe5696f3f044b2664d5b6b82592a9622c1a588637f62778dfad8e63c07"
+    }
+  ],
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal",
+  "native_plan_output": "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-native-357",
+  "prediction": "Existing compiler admits one targeted deep-fat contraction with conservative source mass. Native trial must exceed matched347 six accepted roots without weakened physical gates; performance and fidelity remain to be measured.",
+  "physical_admission": false
+}

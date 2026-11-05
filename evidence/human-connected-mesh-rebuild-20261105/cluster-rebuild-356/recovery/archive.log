@@ -1,0 +1,10 @@
+HTTP 422: Validation Failed (https://uploads.github.com/repos/Numi2/numilab-human/releases/435787063/assets?label=&name=human-compiler341-cold-outputs.tar.zst)
+size must be less than 2147483648
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-integrated-gaps-20261104/compiler-intermediate-recovery-358/archive_verified.py", line 27, in <module>
+    subprocess.run([gh,'release','upload',tag,str(asset),str(manifest),'--repo',repo],check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.16/Frameworks/Python.framework/Versions/3.13/lib/python3.13/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/opt/homebrew/bin/gh', 'release', 'upload', 'numi-human-20261105-intermediate-recovery', '/Users/numi/Work/human-integrated-gaps-20261104/compiler-intermediate-recovery-358/human-compiler341-cold-outputs/human-compiler341-cold-outputs.tar.zst', '/Users/numi/Work/human-integrated-gaps-20261104/compiler-intermediate-recovery-358/human-compiler341-cold-outputs/human-compiler341-cold-outputs.json', '--repo', 'Numi2/numilab-human']' returned non-zero exit status 1.
