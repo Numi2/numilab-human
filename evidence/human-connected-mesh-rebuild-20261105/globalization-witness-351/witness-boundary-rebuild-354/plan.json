@@ -1,0 +1,44 @@
+{
+  "stages": [
+    {
+      "name": "connected-witness-rebuild",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/simplify_human_skin_fat_boundary.py",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-boundary-rebuild-354/proposal",
+        "--seconds",
+        "180",
+        "--max-operations",
+        "2",
+        "--passes",
+        "2",
+        "--maximum-edge-m",
+        "0.000002",
+        "--resume-proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/reference-screened-interior-341/candidate-volume.npz",
+        "--resume-sha256",
+        "0909eac848a3560ba6e35ecdd8282880ecacbb4c9f707889a900c75d99034db0",
+        "--resume-cell-mass-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/reference-screened-interior-341/local-child-mass-proposal.csv",
+        "--resume-cell-mass-sha256",
+        "e8944dcce0635ae64e453d9b2ed0002b80d1d06fdaee71822f3cb81739cf7573",
+        "--replay-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/witness-boundary-rebuild-354/witness-replay.json",
+        "--bone-barriers",
+        "--attachment-requests-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv",
+        "--attachment-requests-sha256",
+        "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5"
+      ],
+      "source_sha256": "9795910faad8412b49067e905837d72b08efd9a18a8cba781e9dc40208dc75e4"
+    }
+  ],
+  "prediction": "at least one bounded deep-fat contraction retires the exact blocking sliver; all native construction, mass-density and exact crossing gates retained; no native outcome claimed",
+  "resource": {
+    "max_rss_gib": 8,
+    "min_disk_gib": 12,
+    "max_seconds": 300
+  },
+  "physical_admission": false
+}
