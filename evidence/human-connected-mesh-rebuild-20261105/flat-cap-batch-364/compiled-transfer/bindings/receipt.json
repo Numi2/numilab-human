@@ -1,0 +1,350 @@
+{
+  "status": "PASS_CURRENT_DOMINANT_FRAME_REGISTRATION_ONLY",
+  "physical_admission": false,
+  "native_steps": 0,
+  "changed_boundary_nodes": 14,
+  "changed_combined_csv_rows": 15,
+  "world_geometry_changed": false,
+  "source_ids_changed": false,
+  "full86_weights_changed": false,
+  "physical_cell_semantics_changed": false,
+  "mass_allocation_changed": false,
+  "historical_registration_changed": false,
+  "inputs": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/rich433/candidate-current-typed-volume.npz": "d346e56adb8752cc8b266149b915855814123127c0648d8ab8cba7ae28909b82",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/registered/donor-frames.csv": "b1704fb7b846254583f4b6a08c394ed3cad1603554244078706ca4b3811ac674",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/roles/O-source.json": "cf8758438d6f4c547b5a596e9658c6d2dd2722c8846b67e550174c07fb5f0c7f",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/registered/registered-O.csv": "2784431eef3c3f210a8fb62b9cda17907d5d1423c1dc7a014c083e8e6d74da8e",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/roles/I-source.json": "4ed92791c08358f45b198af26818e96bc61f3eb6cd260af942595a76dd0224d1",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/registered/registered-I.csv": "f28dee0523513b4c8824d325dbc4e56157fb110a5e298b257b361c84c932be23",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/roles/D-source.json": "a700662788d66e3e7d32dbe77d0b0edf85ea558abfde422e943bc5bc9254d2e4",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/registered/registered-D.csv": "ae921cd8ca5e33d71019cad4db6b1cd75eb7113e647cf1d5b8a34fa77aa7a59d",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/combined-node-map.csv": "cd2df2fd5dfa9ee3c05ab25ccfa5ea5986b856176fd8c1d1ac51d6d239a8e870"
+  },
+  "outputs": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/registered-O.csv": {
+      "sha256": "ba5946e4728c2bcf2b63172dd5e382f44957c080e0e590165fad43d636d16a0c",
+      "changed_rows": 9
+    },
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/O-source.json": {
+      "sha256": "1cd66a6a371a4a14e2b3c29ab2b474628710197ba606e09cbbca3ad74500f6b4",
+      "changed_rows": 9
+    },
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/registered-I.csv": {
+      "sha256": "2b4bff02d3cfbd58918470cc8434e08ed7c839a56b3551341c39d09f15db52f3",
+      "changed_rows": 1
+    },
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/I-source.json": {
+      "sha256": "7f06c9f63cf61d02396d5a70ecedd332a63490f09cf824e48f5500830d706be6",
+      "changed_rows": 1
+    },
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/registered-D.csv": {
+      "sha256": "b51f13a1a666a37c27d047991c0499ab8249dac6ae32f1cc6744b23cfca64a97",
+      "changed_rows": 4
+    },
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/D-source.json": {
+      "sha256": "1bcf8824e21e807bd98a2002976eb606f41b04530541ad514da4001ece87cae3",
+      "changed_rows": 4
+    },
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/bindings/combined-node-map.csv": {
+      "sha256": "98d09113037acb226c24c69419a3f8276a917301c16e55e9941b77809969ba44",
+      "changed_rows": 15
+    }
+  },
+  "witnesses": [
+    {
+      "layer": "O",
+      "compact_row": 6824,
+      "source_vertex_row": 6842,
+      "volume_node_row": 6824,
+      "old_frame_owner": 60,
+      "dominant_frame_owner": 59,
+      "dominant_binding": 26,
+      "dominant_weight": 0.38954904981881566,
+      "old_owner_weight": 0.38453849375470256,
+      "position_m": [
+        -0.30932337045669556,
+        -0.9861933588981628,
+        0.1461566984653473
+      ],
+      "new_donor_local_m": [
+        0.012354260249074283,
+        -0.044630819337818366,
+        0.003911979310499191
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 8344,
+      "source_vertex_row": 8370,
+      "volume_node_row": 8344,
+      "old_frame_owner": 69,
+      "dominant_frame_owner": 62,
+      "dominant_binding": 29,
+      "dominant_weight": 0.2694944405697247,
+      "old_owner_weight": 0.04011727128848711,
+      "position_m": [
+        -0.30804887413978577,
+        -0.9623187184333801,
+        0.10637468844652176
+      ],
+      "new_donor_local_m": [
+        -0.009847690220779054,
+        -0.04759384018653672,
+        0.006415021660517466
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 9349,
+      "source_vertex_row": 9384,
+      "volume_node_row": 9349,
+      "old_frame_owner": 69,
+      "dominant_frame_owner": 62,
+      "dominant_binding": 29,
+      "dominant_weight": 0.2575388540942129,
+      "old_owner_weight": 0.052710480245666456,
+      "position_m": [
+        -0.3067658543586731,
+        -0.9616056084632874,
+        0.10732286423444748
+      ],
+      "new_donor_local_m": [
+        -0.008907749514624379,
+        -0.04675118724802619,
+        0.005206654761053839
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 38500,
+      "source_vertex_row": 38735,
+      "volume_node_row": 38500,
+      "old_frame_owner": 100,
+      "dominant_frame_owner": 93,
+      "dominant_binding": 45,
+      "dominant_weight": 0.21378831044784996,
+      "old_owner_weight": 0.12324235244139464,
+      "position_m": [
+        0.23268890380859375,
+        -0.8558967113494873,
+        0.14126086235046387
+      ],
+      "new_donor_local_m": [
+        0.006587698289851651,
+        0.00012693816046452356,
+        -0.055631285551267846
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 40508,
+      "source_vertex_row": 40749,
+      "volume_node_row": 40508,
+      "old_frame_owner": 124,
+      "dominant_frame_owner": 120,
+      "dominant_binding": 67,
+      "dominant_weight": 0.19088227164297983,
+      "old_owner_weight": 0.1771976654118668,
+      "position_m": [
+        0.23861399292945862,
+        -0.9661742448806763,
+        0.09359441697597504
+      ],
+      "new_donor_local_m": [
+        -0.006908410466845582,
+        0.01564841316988534,
+        0.010651761956606665
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 40515,
+      "source_vertex_row": 40756,
+      "volume_node_row": 40515,
+      "old_frame_owner": 124,
+      "dominant_frame_owner": 120,
+      "dominant_binding": 67,
+      "dominant_weight": 0.19067134570662783,
+      "old_owner_weight": 0.17745423300088226,
+      "position_m": [
+        0.23864828050136566,
+        -0.9660919308662415,
+        0.09357151389122009
+      ],
+      "new_donor_local_m": [
+        -0.00693190041471409,
+        0.015726788774745638,
+        0.010609556827158906
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 40794,
+      "source_vertex_row": 41037,
+      "volume_node_row": 40794,
+      "old_frame_owner": 124,
+      "dominant_frame_owner": 120,
+      "dominant_binding": 67,
+      "dominant_weight": 0.2034970433843082,
+      "old_owner_weight": 0.1705386634453264,
+      "position_m": [
+        0.23923596739768982,
+        -0.967608630657196,
+        0.09348851442337036
+      ],
+      "new_donor_local_m": [
+        -0.0070096024331878564,
+        0.014158678742196592,
+        0.010176386591420125
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 40858,
+      "source_vertex_row": 41101,
+      "volume_node_row": 40858,
+      "old_frame_owner": 124,
+      "dominant_frame_owner": 120,
+      "dominant_binding": 67,
+      "dominant_weight": 0.200441663649337,
+      "old_owner_weight": 0.17317076602627263,
+      "position_m": [
+        0.23939894139766693,
+        -0.9668518304824829,
+        0.09334095567464828
+      ],
+      "new_donor_local_m": [
+        -0.007161868086771249,
+        0.014894749293603406,
+        0.009939540773756582
+      ]
+    },
+    {
+      "layer": "O",
+      "compact_row": 50694,
+      "source_vertex_row": 51025,
+      "volume_node_row": 50694,
+      "old_frame_owner": 119,
+      "dominant_frame_owner": 115,
+      "dominant_binding": 63,
+      "dominant_weight": 0.28584866929032215,
+      "old_owner_weight": 0.19345034626189958,
+      "position_m": [
+        0.26215192675590515,
+        -0.9767088294029236,
+        0.11100421100854874
+      ],
+      "new_donor_local_m": [
+        -0.009321455133750349,
+        0.008179937978619828,
+        -0.001106320828692786
+      ]
+    },
+    {
+      "layer": "I",
+      "compact_row": 72259,
+      "source_vertex_row": 77506,
+      "volume_node_row": 148414,
+      "old_frame_owner": 126,
+      "dominant_frame_owner": 120,
+      "dominant_binding": 67,
+      "dominant_weight": 0.3633866201946463,
+      "old_owner_weight": 0.012891633747334798,
+      "position_m": [
+        0.23957405984401703,
+        -0.9928223490715027,
+        0.08808310329914093
+      ],
+      "new_donor_local_m": [
+        -0.012284096484206973,
+        -0.010988635965347264,
+        0.012380172244332811
+      ]
+    },
+    {
+      "layer": "D",
+      "compact_row": 97786,
+      "source_vertex_row": 114340,
+      "volume_node_row": 298979,
+      "old_frame_owner": 109,
+      "dominant_frame_owner": 107,
+      "dominant_binding": 57,
+      "dominant_weight": 0.321482890192895,
+      "old_owner_weight": 0.2960461168577534,
+      "position_m": [
+        0.25255781412124634,
+        -0.9416033625602722,
+        0.1427101343870163
+      ],
+      "new_donor_local_m": [
+        0.009924971505864444,
+        -0.027902123115632546,
+        -0.005571591171915013
+      ]
+    },
+    {
+      "layer": "D",
+      "compact_row": 97870,
+      "source_vertex_row": 114431,
+      "volume_node_row": 299063,
+      "old_frame_owner": 109,
+      "dominant_frame_owner": 107,
+      "dominant_binding": 57,
+      "dominant_weight": 0.3212261275357533,
+      "old_owner_weight": 0.29718833720316,
+      "position_m": [
+        0.25278106331825256,
+        -0.9420394897460938,
+        0.14279310405254364
+      ],
+      "new_donor_local_m": [
+        0.010009215924622557,
+        -0.02835793294159907,
+        -0.005750676025081052
+      ]
+    },
+    {
+      "layer": "D",
+      "compact_row": 97871,
+      "source_vertex_row": 114433,
+      "volume_node_row": 299064,
+      "old_frame_owner": 109,
+      "dominant_frame_owner": 107,
+      "dominant_binding": 57,
+      "dominant_weight": 0.3212243084610134,
+      "old_owner_weight": 0.29719642943978386,
+      "position_m": [
+        0.25278347730636597,
+        -0.9420442581176758,
+        0.14279362559318542
+      ],
+      "new_donor_local_m": [
+        0.010009751533858174,
+        -0.02836291567039048,
+        -0.005752605338062111
+      ]
+    },
+    {
+      "layer": "D",
+      "compact_row": 97873,
+      "source_vertex_row": 114435,
+      "volume_node_row": 299066,
+      "old_frame_owner": 109,
+      "dominant_frame_owner": 107,
+      "dominant_binding": 57,
+      "dominant_weight": 0.32122366058430557,
+      "old_owner_weight": 0.2971993115487528,
+      "position_m": [
+        0.2527843713760376,
+        -0.942046046257019,
+        0.14279380440711975
+      ],
+      "new_donor_local_m": [
+        0.010009935674579085,
+        -0.028364783159513525,
+        -0.005753317625961283
+      ]
+    }
+  ]
+}

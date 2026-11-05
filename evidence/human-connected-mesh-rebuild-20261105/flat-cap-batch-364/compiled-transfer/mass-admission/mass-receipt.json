@@ -1,0 +1,266 @@
+{
+  "allocation": "NOT_NATIVE_EXECUTED",
+  "candidate": {
+    "child_mesh_sha256": "e237bb5301f8e9e56096c267d833311e5178870a13d68022115ebeacb6f6f1bd",
+    "child_node_count": 311023,
+    "child_tetrahedron_count": 1448843,
+    "coordinate_frame_sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "current_state": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-prefix/verified-state.json",
+      "sha256": "730e864b76b1657fbc3b12c291b2d62682eb1b700462004e62cda4ffba5486b1"
+    },
+    "fat_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/canonical/fat-canonical-parent-union.npz",
+      "sha256": "e28a7d73cce35e13fad2891ffc463422de6e3171e57c3e4022b48bdb8a90b0ea"
+    },
+    "mass_transport_envelope": {
+      "exact_decimal": "0.187444",
+      "input_sha256": {
+        "candidate": "d346e56adb8752cc8b266149b915855814123127c0648d8ab8cba7ae28909b82",
+        "child_element": "e81b3e4f3688238b400db5ddee3770cadd45930de64d3ba65b76cc54a0b544d1",
+        "child_labels": "589b835aca75495f81f213974cbe907ac3e7a6139e217a9e3b4b7615c4a5778a",
+        "child_node": "730db61872dace5505bede1c237b7ca04fa65a2dddaa51bf352637f268c8e861",
+        "coordinate_frame": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "geometry_fat": "e28a7d73cce35e13fad2891ffc463422de6e3171e57c3e4022b48bdb8a90b0ea",
+        "geometry_skin": "411d999a400390f471fcba2a0f33346d245d911926bf800800ea71f619479c33",
+        "source330_labels": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+        "source330_mass": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+        "source330_nodes": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+        "source330_source": "8e2424901318f25caca1540aeca412ca779fc014f68f49fe0cb6c17fb5aa0c1f",
+        "source330_tets": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+        "state": "730e864b76b1657fbc3b12c291b2d62682eb1b700462004e62cda4ffba5486b1"
+      },
+      "maximum_declared_source_centroid_distance_m": 0.1874423157229725,
+      "predeclared_transport_envelope_m": "0.187444",
+      "receipt": {
+        "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/geometry-envelope.json",
+        "sha256": "d46dc2c11cd87de4e4014a646a670e7930627fe6eda4bf2c6a76b2d4dcf20691"
+      },
+      "rule_id": "ceil_max_declared_source_centroid_um_plus_1_floor_200",
+      "schema": "numi.human.mass-transport-envelope.v1"
+    },
+    "region_label_sha256": "589b835aca75495f81f213974cbe907ac3e7a6139e217a9e3b4b7615c4a5778a",
+    "skin_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/canonical/skin-canonical-parent-union.npz",
+      "sha256": "411d999a400390f471fcba2a0f33346d245d911926bf800800ea71f619479c33"
+    }
+  },
+  "claims": {
+    "all_material_density_bounds": true,
+    "mass_conservation_pass": true,
+    "mass_mapping_pass": true,
+    "regional_capacity_pass": true,
+    "transport_distance_bounds": true
+  },
+  "closure_tolerances": {
+    "carrier_barycentric_sum_absolute": 2e-12,
+    "carrier_first_moment_m": 1e-11,
+    "mass_absolute_kg": 1e-13,
+    "mass_relative": 1e-10,
+    "measure_absolute_m3": 1e-15
+  },
+  "density": {
+    "bounds_by_material": {
+      "15": {
+        "lower_kgm3": 900,
+        "upper_kgm3": 1100
+      },
+      "16": {
+        "lower_kgm3": 850,
+        "upper_kgm3": 950
+      }
+    },
+    "by_material": {
+      "15": {
+        "max_kgm3": 1100.0000000000002,
+        "min_kgm3": 899.9999999999997,
+        "within_bounds": true
+      },
+      "16": {
+        "max_kgm3": 950.0000000000002,
+        "min_kgm3": 849.9999999999998,
+        "within_bounds": true
+      }
+    },
+    "violation_count": 0
+  },
+  "input_sha256": {
+    "candidate_fat_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/canonical/fat-canonical-parent-union.npz",
+      "sha256": "e28a7d73cce35e13fad2891ffc463422de6e3171e57c3e4022b48bdb8a90b0ea"
+    },
+    "candidate_skin_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/canonical/skin-canonical-parent-union.npz",
+      "sha256": "411d999a400390f471fcba2a0f33346d245d911926bf800800ea71f619479c33"
+    },
+    "carrier_fat_packet": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-support/fat-source-carriers.npz",
+      "sha256": "82417fa5d947d0d912b36116109de869a2ac95ca9167e30991f0f81ddf773129"
+    },
+    "carrier_skin_packet": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-support/skin-source-carriers.npz",
+      "sha256": "67d1b6e34edd4486dc7e0e70649ec538924c6162d44498fb447b8161343d1cd1"
+    },
+    "carrier_witness_fat": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-support/fat-carrier-witnesses.csv.gz",
+      "sha256": "820d9375c18db76e95d3e634731875febfbc66525ffa3762674b51015eb3cc5b"
+    },
+    "carrier_witness_skin": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-support/skin-carrier-witnesses.csv.gz",
+      "sha256": "48aafa1b2bdb0148e5e374aca58fb2555a9ac65d0eb26a67e64c58b392c1d406"
+    },
+    "child_fat_elements": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/mesh.ele",
+      "sha256": "e81b3e4f3688238b400db5ddee3770cadd45930de64d3ba65b76cc54a0b544d1"
+    },
+    "child_fat_labels": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/child.labels.csv",
+      "sha256": "589b835aca75495f81f213974cbe907ac3e7a6139e217a9e3b4b7615c4a5778a"
+    },
+    "child_fat_node": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/mesh.node",
+      "sha256": "730db61872dace5505bede1c237b7ca04fa65a2dddaa51bf352637f268c8e861"
+    },
+    "child_skin_elements": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/mesh.ele",
+      "sha256": "e81b3e4f3688238b400db5ddee3770cadd45930de64d3ba65b76cc54a0b544d1"
+    },
+    "child_skin_labels": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/child.labels.csv",
+      "sha256": "589b835aca75495f81f213974cbe907ac3e7a6139e217a9e3b4b7615c4a5778a"
+    },
+    "child_skin_node": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-export/volume/mesh.node",
+      "sha256": "730db61872dace5505bede1c237b7ca04fa65a2dddaa51bf352637f268c8e861"
+    },
+    "current_state": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/volume-prefix/verified-state.json",
+      "sha256": "730e864b76b1657fbc3b12c291b2d62682eb1b700462004e62cda4ffba5486b1"
+    },
+    "p1_fat_support": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/p1-Fat/fat-current-p1-143-support.npz",
+      "sha256": "9791c5ce107a8cc229cb5782287561390fe1f081c615ac45622e9cc91daf3ef2"
+    },
+    "p1_skin_support": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/p1-Skin/skin-current-p1-143-support.npz",
+      "sha256": "7ce99e30c6384ef3a3558ba194e951b68edab4e74e230a207a90c4db9766f954"
+    },
+    "projection_evidence": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-support/exact-projection-support.csv",
+      "sha256": "0f4b6748831401118151de9403e042a418d6294013df7b20b9cbd8fe10db9953"
+    },
+    "projection_report": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/projection-report.json",
+      "sha256": "61fdfd30f2b522cfaaca15873f2a641989853ede33b9ab079ae8f52e35e400b7"
+    },
+    "source330_labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "source330_mass": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "source330_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "source330_tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    },
+    "source_centroid_slots": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-support/source-centroid-slots.csv",
+      "sha256": "1dec0fcda0ac9d3c333b012b073b5175ed2117c3ae685de9babdb2729238687f"
+    }
+  },
+  "native_steps": 0,
+  "output_sha256": {
+    "carrier_trace": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/allocator-output/carrier-trace.csv",
+      "sha256": "33794ab988c9dd2b14637ed664003dd00b0c80b5d8ccc1d887ec48306491a38e"
+    },
+    "flow": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/allocator-output/flow.csv",
+      "sha256": "5e080a8efcdbdb3dfad4ec64bcaae9ac4f44dd31839530c8735e23092dd38f83"
+    },
+    "semantic_groups": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/allocator-output/semantic-groups.csv",
+      "sha256": "91913fbb047f694af376a29415d8b5d68a15317038e6383211c1a5f96ef013d9"
+    },
+    "source_donors": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/allocator-output/source-donors.csv",
+      "sha256": "bf65cc0af82adac887e377a5528078858877843ac1a2082e36211d7b7adc1b79"
+    }
+  },
+  "physical_admission": false,
+  "replay": {
+    "flow_array_equality": true,
+    "max_child_fraction_sum_error": 4.440892098500626e-16,
+    "max_parent_mass_closure_abs_kg": 7.17958678619901e-16,
+    "max_parent_measure_closure_abs_m3": 7.979050363135509e-19,
+    "max_source_donor_closure_abs_kg": 6.794564910705958e-14,
+    "max_transport_distance_used_m": 0.1874439969916807,
+    "result_sha256": "1273dbf4a1140ae45ceebac39a15c833dab93f419a8c39c690f80831a8a865a1",
+    "status": "PASS_DETERMINISTIC_REPLAY"
+  },
+  "schema": "numi.human.current-fractional-semantic-mass-mapping.v1",
+  "semantic_group_rows": {
+    "count": 1522288,
+    "csv": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/allocator-output/semantic-groups.csv",
+      "sha256": "91913fbb047f694af376a29415d8b5d68a15317038e6383211c1a5f96ef013d9"
+    },
+    "exact_tuple_membership_checked": true,
+    "max_group_mass_closure_abs_kg": 3.68594044175552e-14,
+    "max_shared_child_capacity_violation_kg": 1.734723475976807e-18
+  },
+  "solver": {
+    "augmentation_count": 1791029,
+    "elapsed_s": 239.781486542,
+    "mapping_path_sha256": "323f877eb62f011dbf546eb3014fa0314dd2b80f2b9d06913d6b22a2bfada8e5",
+    "method": "deterministic_dinic_feasibility",
+    "optimality_certified": false,
+    "postsolve_rescaling": false,
+    "scale_factor": 1.0,
+    "status": "PASS_FEASIBLE_NOT_OPTIMAL",
+    "transport_edge_count": 1606857,
+    "transport_receipt_sha256": "1273dbf4a1140ae45ceebac39a15c833dab93f419a8c39c690f80831a8a865a1"
+  },
+  "source330": {
+    "labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "mass_packet": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "parent_count": 28632,
+    "parent_source_contributions": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.source.csv",
+      "sha256": "8e2424901318f25caca1540aeca412ca779fc014f68f49fe0cb6c17fb5aa0c1f"
+    },
+    "source_donor_contribution_count": 9644,
+    "source_mass_kg": 13.939678963460478,
+    "tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "source_donor_rows": {
+    "count": 148,
+    "csv": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/allocator-output/source-donors.csv",
+      "sha256": "bf65cc0af82adac887e377a5528078858877843ac1a2082e36211d7b7adc1b79"
+    },
+    "max_closure_abs_kg": 6.794564910705958e-14,
+    "source_donor_closure_group_count": 148
+  },
+  "status": "PASS_SOURCE_ONLY_REPLAY",
+  "transport_distance_limit_m": 0.187444
+}

@@ -1,0 +1,70 @@
+{
+  "generated_script_identity_rebind": {
+    "new_sha256": "206046383a042925a4e82203b973c45b650fd75d4cfc2a3fe73e32f84cf7a479",
+    "old_sha256": "bfa80ce6ae1c412da3629a432de8af880ea775e2bb87d2301eb0829968519114",
+    "only_delta": "Current receiver-map path and SHA; exact normalized code parity checked",
+    "receiver_map_sha256": "3a8dab87b59e7049bab0f393fafbb25f9d04d0bd502d4cc068f522b23e9c6d20"
+  },
+  "native_plan_output": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365",
+  "physical_admission": false,
+  "prediction": "Batch coarsening retains the root6 fat repair and captured root15 skin repair, plus safe bounded-error low-quality skin-cap quotients. All geometry, mass, physical and fidelity gates unchanged.",
+  "resume_from": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/compiler-flat-cap-batch-364/compiler-execution-resumed-middle-367.json",
+    "sha256": "a7f154fe76bdc0d8bb8df6de71806cf9ccef0ee0342403fb7a97fcd9239f112d"
+  },
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/witness-cluster-rebuild-356/proposal",
+  "stages": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/build_current_fractional_mass_receipt_1061.py",
+        "--run-manifest",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/run-manifest.json",
+        "--execution",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/execution.json",
+        "--stdout-log",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/stdout.log",
+        "--identity-config",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/identity.json",
+        "--control-manifest",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-allocation/source-control.json",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/mass-receipt.json",
+        "--source-projection-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/source-projection.json",
+        "--failure-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/failure.json"
+      ],
+      "name": "mass-receipt-341",
+      "source_sha256": "206046383a042925a4e82203b973c45b650fd75d4cfc2a3fe73e32f84cf7a479"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/check_mass_targets_326.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal"
+      ],
+      "name": "mass-target-parity-341",
+      "source_sha256": "33bb94873652c36e95d4ffc02c476bd6ee183f41965271b55d5b931e8541fe46"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/convert_joint64_mass.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal"
+      ],
+      "name": "mass-converter-341",
+      "source_sha256": "cb695b8c7b19e69a2cbb1c8f4458ca0e2da512c9995051ce32bf48d183e86531"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_native.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365"
+      ],
+      "name": "native-plan-344",
+      "source_sha256": "c23bbdfe5696f3f044b2664d5b6b82592a9622c1a588637f62778dfad8e63c07"
+    }
+  ]
+}
