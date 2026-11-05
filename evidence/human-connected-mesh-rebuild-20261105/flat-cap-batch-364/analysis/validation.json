@@ -1,0 +1,22 @@
+{
+  "status": "PASS_PUBLISHED_ANALYZER_KNOWN_EVIDENCE_AND_CONTROL_CHECKS",
+  "owner": {
+    "path": "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compare_human_native_mesh_trials.py",
+    "bytes": 5134,
+    "sha256": "417f40fe0df9322848ff8fbb0cdf4261fe9d74d77513050ed6ed4a9b138bfa64"
+  },
+  "matched_known_candidate_accepted_roots": 15,
+  "matched_known_control_accepted_roots": 6,
+  "numeric_summaries_exactly_equal": true,
+  "tests": {
+    "command": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_native_mesh_trial_controls.py"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "9310d484212a1fe2c33b4b8accdf50a2639f09ba039354f8448f8aa8d173e1ff"
+  }
+}
