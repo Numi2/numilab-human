@@ -1,0 +1,17 @@
+{
+  "changes": "Evidence only; no new native geometry promoted.",
+  "validation": [
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 /Users/numi/numi-human-prep-venv-20261005/bin/python3 -m pytest -p no:cacheprovider tests/test_human_cavity_response.py -q",
+      "exit_code": 0,
+      "result": "10 passed in 0.04s"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_human_cavity_response.py -v",
+      "exit_code": 5,
+      "result": "No tests collected; corrected to the existing pytest runner. Not counted as validation."
+    }
+  ],
+  "native_candidate_completed": true,
+  "native_candidate_fidelity_passed": false
+}

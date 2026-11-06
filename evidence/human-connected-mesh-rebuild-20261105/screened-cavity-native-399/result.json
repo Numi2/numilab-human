@@ -1,0 +1,306 @@
+{
+  "control_accepted": 32,
+  "candidate_accepted": 32,
+  "accepted_time_s": 0.0005,
+  "control_body_s": 209.195502959,
+  "candidate_body_s": 235.095943459,
+  "body_throughput_ratio": 0.8898303385463691,
+  "control_active": {
+    "used_columns_sum": 1232,
+    "cycles_with_work": 77,
+    "budget_exhausted_solves": 0
+  },
+  "candidate_active": {
+    "used_columns_sum": 1632,
+    "cycles_with_work": 102,
+    "budget_exhausted_solves": 0
+  },
+  "matched_deformation_summary": {
+    "reference_actual_vs_candidate_actual": {
+      "metrics": 282,
+      "over_5percent": 228,
+      "maximum_relative_change": 11.481537575224943
+    },
+    "discretization_at_reference_displacement": {
+      "metrics": 282,
+      "over_5percent": 0,
+      "maximum_relative_change": 0.014039635356536646
+    },
+    "candidate_actual_vs_restricted_reference_displacement": {
+      "metrics": 282,
+      "over_5percent": 228,
+      "maximum_relative_change": 11.481537575224943
+    }
+  },
+  "mass_kg": {
+    "reference": 14.415518492953332,
+    "candidate": 14.415518492858974
+  },
+  "maximum_matched_displacement_difference_m": 1.7071699303454255e-06,
+  "physical_admission": false,
+  "limitations": [
+    "32 roots cover only 0.5 ms initialization, not motion qualification.",
+    "Captured force channels do not establish full force-owner coverage.",
+    "No material-energy admission or mesh promotion from these diagnostics."
+  ],
+  "force_gate_failures_count": 148,
+  "force_gate_failures_largest_witnesses": [
+    {
+      "region": "region:145",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "relative_change": 1.789678867809265,
+      "reference": {
+        "resultant_N": [
+          0.00021020418775999995,
+          -3.440063760851998e-05,
+          0.0006393636090895004
+        ],
+        "nodal_l1_N": 0.009538013335368363
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0006622008577535001,
+          7.262920159923007e-05,
+          0.0014164038215339699
+        ],
+        "nodal_l1_N": 0.026607994242560086
+      }
+    },
+    {
+      "region": "region:156",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "relative_change": 0.9273379302434808,
+      "reference": {
+        "resultant_N": [
+          0.0003075819821906207,
+          -0.0003865454747455043,
+          0.0010699586682595633
+        ],
+        "nodal_l1_N": 0.006802701792100114
+      },
+      "candidate": {
+        "resultant_N": [
+          0.000498703992033829,
+          -0.0006148113862413594,
+          0.0022310462893240478
+        ],
+        "nodal_l1_N": 0.013111105192049851
+      }
+    },
+    {
+      "region": "region:136",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "relative_change": 0.7488490570064851,
+      "reference": {
+        "resultant_N": [
+          -6.507284621417128e-05,
+          -8.00718312473102e-05,
+          -0.00022925317263833688
+        ],
+        "nodal_l1_N": 0.018963651300423247
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00015793071029527808,
+          -1.7390852931073905e-05,
+          -0.0007993003992852789
+        ],
+        "nodal_l1_N": 0.033164563694145
+      }
+    },
+    {
+      "region": "region:26",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "relative_change": 0.7270810975311679,
+      "reference": {
+        "resultant_N": [
+          -0.00014273427260029996,
+          -0.00014057265102910006,
+          -0.000830578523834
+        ],
+        "nodal_l1_N": 0.005327215442501847
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0004114475716885,
+          6.468143484584996e-05,
+          -0.0006010330080660801
+        ],
+        "nodal_l1_N": 0.009200533093221077
+      }
+    },
+    {
+      "region": "region:131",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "relative_change": 0.6313616202673679,
+      "reference": {
+        "resultant_N": [
+          2.67481153005002e-06,
+          2.5192704343001023e-05,
+          0.0001248147309674001
+        ],
+        "nodal_l1_N": 0.005100067626568247
+      },
+      "candidate": {
+        "resultant_N": [
+          -2.9214383188599966e-05,
+          4.780934908327001e-05,
+          0.0005906998159530993
+        ],
+        "nodal_l1_N": 0.008320054586751524
+      }
+    }
+  ],
+  "strain_gate_failures_count": 228,
+  "strain_gate_failures_largest_witnesses": [
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_squared",
+      "relative_change": 11.481537575224943,
+      "reference": {
+        "volume_m3": 0.0005376962461326515,
+        "volume_weighted_strain_norm": 2.1009920193883547e-10,
+        "volume_weighted_strain_squared": 1.7581820585319218e-16,
+        "maximum_green_strain_norm": 1.0902075208321667e-05,
+        "minimum_J": 0.9999891326336751,
+        "cells": 256
+      },
+      "candidate": {
+        "volume_m3": 0.0005376962461326515,
+        "volume_weighted_strain_norm": 7.095629076627465e-10,
+        "volume_weighted_strain_squared": 2.1944815427652523e-15,
+        "maximum_green_strain_norm": 3.6056102979533214e-05,
+        "minimum_J": 0.9999648736368468,
+        "cells": 256
+      }
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_squared",
+      "relative_change": 4.312267191020883,
+      "reference": {
+        "volume_m3": 3.001478584139777e-05,
+        "volume_weighted_strain_norm": 1.3298696381072055e-10,
+        "volume_weighted_strain_squared": 9.265960089607206e-16,
+        "maximum_green_strain_norm": 0.0008487774109606252,
+        "minimum_J": 0.9992299252800471,
+        "cells": 123
+      },
+      "candidate": {
+        "volume_m3": 3.001478584139777e-05,
+        "volume_weighted_strain_norm": 2.8176275734230546e-10,
+        "volume_weighted_strain_squared": 4.922325577732928e-15,
+        "maximum_green_strain_norm": 0.0019237998671833686,
+        "minimum_J": 0.9993835986284714,
+        "cells": 123
+      }
+    },
+    {
+      "region": "region:1",
+      "metric": "volume_weighted_strain_squared",
+      "relative_change": 3.444811922567724,
+      "reference": {
+        "volume_m3": 6.066322099938825e-05,
+        "volume_weighted_strain_norm": 1.5256620231576166e-10,
+        "volume_weighted_strain_squared": 6.007087127308648e-16,
+        "maximum_green_strain_norm": 0.00015182817122369693,
+        "minimum_J": 0.9999783359216626,
+        "cells": 697
+      },
+      "candidate": {
+        "volume_m3": 6.066322099938825e-05,
+        "volume_weighted_strain_norm": 3.017414320402048e-10,
+        "volume_weighted_strain_squared": 2.670037248336458e-15,
+        "maximum_green_strain_norm": 0.0003002176944081378,
+        "minimum_J": 0.9999565377743481,
+        "cells": 697
+      }
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_norm",
+      "relative_change": 2.37727559702638,
+      "reference": {
+        "volume_m3": 0.0005376962461326515,
+        "volume_weighted_strain_norm": 2.1009920193883547e-10,
+        "volume_weighted_strain_squared": 1.7581820585319218e-16,
+        "maximum_green_strain_norm": 1.0902075208321667e-05,
+        "minimum_J": 0.9999891326336751,
+        "cells": 256
+      },
+      "candidate": {
+        "volume_m3": 0.0005376962461326515,
+        "volume_weighted_strain_norm": 7.095629076627465e-10,
+        "volume_weighted_strain_squared": 2.1944815427652523e-15,
+        "maximum_green_strain_norm": 3.6056102979533214e-05,
+        "minimum_J": 0.9999648736368468,
+        "cells": 256
+      }
+    },
+    {
+      "region": "region:145",
+      "metric": "maximum_green_strain_norm",
+      "relative_change": 2.3072696977921434,
+      "reference": {
+        "volume_m3": 0.0005376962461326515,
+        "volume_weighted_strain_norm": 2.1009920193883547e-10,
+        "volume_weighted_strain_squared": 1.7581820585319218e-16,
+        "maximum_green_strain_norm": 1.0902075208321667e-05,
+        "minimum_J": 0.9999891326336751,
+        "cells": 256
+      },
+      "candidate": {
+        "volume_m3": 0.0005376962461326515,
+        "volume_weighted_strain_norm": 7.095629076627465e-10,
+        "volume_weighted_strain_squared": 2.1944815427652523e-15,
+        "maximum_green_strain_norm": 3.6056102979533214e-05,
+        "minimum_J": 0.9999648736368468,
+        "cells": 256
+      }
+    }
+  ],
+  "status": "RETAINED_FAILED_NATIVE_FIDELITY_AND_PERFORMANCE_COMPARISON",
+  "scope": "Short complete-scene initialization transient; not sustained motion or resting qualification.",
+  "candidate_mesh_promoted": false,
+  "candidate_cavities": 244,
+  "candidate_removed_tetrahedra": 68,
+  "control_tetrahedra": 1475262,
+  "candidate_tetrahedra": 1475194,
+  "unchanged_nodes": 318229,
+  "body_wall_time_increase_fraction": 0.12380973842002807,
+  "identical_cell_diagnostic": {
+    "count": 1474354,
+    "candidate_changed_cells": 840,
+    "removed_or_changed_reference_cells": 908,
+    "restricted_field_max_absolute_green_strain_difference": 0.0,
+    "actual_field_max_absolute_green_strain_difference": 0.8172768350187287,
+    "actual_field_volume_weighted_rms_green_strain_difference": 7.554747587931433e-06,
+    "maximum_witness": {
+      "candidate_tet": 951378,
+      "reference_tet": 951811,
+      "region": 23,
+      "absolute_green_strain_difference": 0.8172768350187287
+    }
+  },
+  "source_revision": {
+    "human": "2229197fc",
+    "shared_runtime": "1c13906d8"
+  },
+  "comparison_source_pins": {
+    "/Users/numi/Work/human-checkpoint-owner-20261105/evidence/human-connected-mesh-rebuild-20261105/native-cavity-comparison-399-400/compare.py": "13e3703fa7a9c599ef765ba37dffc2c39158e749882208198ced9ff2254ed15c",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_remeshed_native_310.py": "0181dd99e2dc5c9c47c0e9c725d6762edee5dd41ca2bd4329f328e42a85d2902",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_matched_deformation_339.py": "1469a76a268a9e57607b3d6697d33a627cbe41ad789d5fdd9dffc47140f26c4b",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compare_human_native_mesh_trials.py": "ab5254521e8d8f396f7f049d8ce8bd74088224cbfe7da475228ceb07a1bf35f0"
+  },
+  "notes": [
+    "Fixed-field strain screening passed but did not predict the matched native trajectory.",
+    "Small reference signals inflate some relative failures; report absolute witnesses and retain declared gates.",
+    "No clinical, full-cycle physiology, visual motion or 0.1x claim.",
+    "A completed initialization horizon does not promote a failed mesh."
+  ]
+}
