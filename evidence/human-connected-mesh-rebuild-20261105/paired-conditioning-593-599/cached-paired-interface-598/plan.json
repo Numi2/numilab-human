@@ -1,0 +1,24 @@
+{
+  "stages": [
+    {
+      "name": "paired-candidate",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/rebuild_human_interface_caps.py",
+        "--config",
+        "/Users/numi/Work/human-integrated-gaps-20261104/paired-interface-conditioning-593/input-config.json",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/cached-paired-interface-598/proposal",
+        "--maximum-caps",
+        "12000",
+        "--seconds",
+        "180",
+        "--maximum-pair-distance-m",
+        ".02"
+      ],
+      "source_sha256": "186d625aededdb8b95355ed2a42231bb1443192a80711a8e0013e9d6fb6acfbd"
+    }
+  ],
+  "prediction": "Cache unchanged old cell and candidate volumes across halo mass attempts. Require exact selected patches, labels, connectivity, mass and all NPZ lanes against593; preparation timing only, not native throughput.",
+  "physical_admission": false
+}

@@ -1,0 +1,26 @@
+{
+  "command": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+    "-m",
+    "pytest",
+    "-q",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tests/test_human_interface_caps.py",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tests/test_human_interface_ancestry.py",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tests/test_human_conditioned_cavities.py"
+  ],
+  "exit_code": 0,
+  "pytest_passed": 31,
+  "pytest_reported_s": 0.14,
+  "source_sha256": {
+    "tools/rebuild_human_interface_caps.py": "186d625aededdb8b95355ed2a42231bb1443192a80711a8e0013e9d6fb6acfbd",
+    "tools/build_human_conditioned_cavities.py": "97a0280e2d3988e84afc752748a55b8505d1ff772de4d7ccfba0591345f5dcc1",
+    "tests/test_human_interface_caps.py": "4fe57c681fd43d8fa60263c56e09e97905361b0d22d37806a390296edb8b9b79",
+    "tests/test_human_conditioned_cavities.py": "dd45c3d9202c5be01cd1c3054d87e8a7bae2a3449c9395ff335df08742f5b425"
+  },
+  "native_controls": {
+    "path": "native-witness-cavity-594/native-cavity-controls.log",
+    "negative_cases": 29,
+    "result": "PASS"
+  },
+  "qualification": "preparation and native-cavity component checks only; complete native trial failed independent fidelity"
+}

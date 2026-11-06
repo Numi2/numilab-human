@@ -80,3 +80,11 @@ def test_native_replacement_capacity_and_empty_cavities_fail_early():
  for n in (1,65):
   with pytest.raises(ValueError,match="replacement cell capacity"):
    m.cavity_payload("a"*64,4,[dict(old_rows=[0,1],new_cells=[[0,1,2,3]]*n)])
+
+
+def test_star_anchor_search_budget_is_explicit_and_bounded():
+ p,t,labels,inc=star_fixture();surface=np.ones(len(p),bool)
+ assert m.star_anchors(p,t,labels,0,inc,surface,count=8)==[0]
+ assert m.star_anchors(p,t,labels,0,inc,surface,count=32)==[0]
+ for count in [0,33]:
+  with pytest.raises(ValueError,match='anchor count'):m.star_anchors(p,t,labels,0,inc,surface,count=count)

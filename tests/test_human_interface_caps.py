@@ -105,3 +105,52 @@ def test_context_pins_emitted_interface_and_includes_it_in_audit(tmp_path):
   assert result['candidate_surfaces'][role]['sha256']==hashlib.sha256(role.encode()).hexdigest()
   assert result['candidate_surfaces'][role]['path']==str(new/f'candidate-{role}-typed-current.npz')
  assert config['candidate_surfaces']['I']['sha256']=='stale'
+
+
+def paired_fixture():
+ p,t=fixture();p2=p+np.array([4.,0,0],np.float32)
+ points=np.vstack([p,p2]);cells=np.vstack([t,t+len(p)])
+ labels=np.array([[16,23,23],[15,23,23],[15,23,23],
+                  [15,23,23],[16,23,23],[16,23,23]])
+ import simplify_human_skin_fat_boundary as mesh
+ volume=mesh.measure(points,cells)[0]/6
+ mass=volume*np.where(labels[:,0]==16,950.,1000.)
+ parts=[]
+ for base in [0,3]:
+  flip=m.interface_flip(points,cells[base],cells[base+1:base+3])
+  parts.append(dict(core_rows=[base,base+1,base+2],rest=[],
+                    opposite=[base+1,base+2],new=flip['cells']))
+ return points,cells,labels,mass,parts
+
+
+def test_opposite_caps_balance_a_density_saturated_tissue_without_lost_mass():
+ p,t,labels,mass,parts=paired_fixture()
+ # Removing the first fat cap alone cannot retain its mass below950kg/m3.
+ with pytest.raises(ValueError):m.cap_group_mass(p,t,labels,mass,parts[:1])
+ rows,cells,newlabels,newmass=m.cap_group_mass(p,t,labels,mass,parts)
+ import simplify_human_skin_fat_boundary as mesh
+ volume=mesh.measure(p,cells)[0]/6
+ for mat,lo,hi in [(15,900.,1100.),(16,850.,950.)]:
+  assert newmass[newlabels[:,0]==mat].sum()==pytest.approx(mass[labels[:,0]==mat].sum(),rel=3e-15)
+  density=newmass[newlabels[:,0]==mat]/volume[newlabels[:,0]==mat]
+  assert np.all(density>=lo-1e-10) and np.all(density<=hi+1e-10)
+ assert len(cells)==4 and len(rows)==6
+ assert m.unchanged_cavity_boundary(t,cells)
+
+
+def test_cap_group_rejects_overlap_ownership_and_capacity():
+ p,t,labels,mass,parts=paired_fixture()
+ with pytest.raises(ValueError,match='overlapping'):m.cap_group_mass(p,t,labels,mass,[parts[0],parts[0]])
+ with pytest.raises(ValueError,match='capacity'):m.cap_group_mass(p,t,labels,mass,[])
+ with pytest.raises(ValueError,match='capacity'):m.cap_group_mass(p,t,labels,mass,parts+[parts[0]])
+ labels[3:,1]=24
+ with pytest.raises(ValueError,match='ownership'):m.cap_group_mass(p,t,labels,mass,parts)
+
+
+def test_cached_cap_volumes_preserve_the_exact_mass_solution():
+ p,t,labels,mass,parts=paired_fixture()
+ import simplify_human_skin_fat_boundary as mesh
+ for part in parts:part['new_volume']=mesh.measure(p,part['new'])[0]/6
+ cached=m.cap_group_mass(p,t,labels,mass,parts,cell_volume=mesh.measure(p,t)[0]/6)
+ direct=m.cap_group_mass(p,t,labels,mass,parts)
+ for a,b in zip(cached,direct):assert np.array_equal(a,b)

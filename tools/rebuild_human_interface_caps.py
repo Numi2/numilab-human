@@ -163,6 +163,36 @@ def bounded_patch_mass(old_mass,old_material,new_material,new_volume,preferred):
  return out
 
 
+
+def cap_group_mass(points,cells,labels,mass,parts,halo=(),cell_volume=None):
+ """Conserve both tissue masses over bounded, disjoint interface cavities.
+
+ Pairing changes no coordinates or cavity boundary. Existing source transport
+ still has to prove the final allocation; this is only a prescribed-mass
+ proposal with unchanged material density boxes.
+ """
+ import simplify_human_skin_fat_boundary as mesh
+ if not parts or len(parts)>2:raise ValueError('interface group capacity')
+ core=np.concatenate([np.asarray(v['core_rows'],np.int64) for v in parts])
+ if len(np.unique(core))!=len(core):raise ValueError('overlapping interface cores')
+ rest=list(dict.fromkeys(int(i) for v in parts for i in v['rest']))
+ rest=list(dict.fromkeys(rest+list(map(int,halo))))
+ rest=[i for i in rest if i not in set(map(int,core))]
+ rows=np.r_[core,rest].astype(np.int64)
+ if not np.all(labels[rows,1:]==labels[rows[0],1:]):raise ValueError('interface group changes anatomical ownership')
+ pieces=[np.asarray(v['new'],np.int64) for v in parts]
+ combined=np.vstack([*pieces,cells[rest]])
+ nl=np.vstack([*[np.tile(labels[v['opposite'][0]],(len(v['new']),1)) for v in parts],labels[rest]])
+ volume=(mesh.measure(points,combined)[0]/6 if cell_volume is None else
+  np.r_[np.concatenate([v['new_volume'] for v in parts]),cell_volume[rest]])
+ preferred=[];start=0
+ for v in parts:
+  count=len(v['new']);vol=volume[start:start+count]
+  preferred.extend(float(mass[v['opposite']].sum())*vol/vol.sum());start+=count
+ preferred=np.r_[preferred,mass[rest]]
+ nm=bounded_patch_mass(mass[rows],labels[rows,0],nl[:,0],volume,preferred)
+ return rows,combined,nl,nm
+
 def run(a):
  from pathlib import Path
  import json,time,hashlib,collections,shutil
@@ -221,12 +251,14 @@ def run(a):
   if reverse[node]>=0:raise ValueError('ambiguous active typed interface vertex')
   reverse[node]=row
  is_inner=np.zeros(len(p),bool);is_inner[im_raw[valid]]=True
- q=np.empty(len(t))
- for lo in range(0,len(t),8192):q[lo:lo+8192]=mesh.measure(p,t[lo:lo+8192])[1]
+ q=np.empty(len(t));cell_volume=np.empty(len(t))
+ for lo in range(0,len(t),8192):
+  det,quality=mesh.measure(p,t[lo:lo+8192]);q[lo:lo+8192]=quality;cell_volume[lo:lo+8192]=det/6
  caps=np.flatnonzero(np.all(is_inner[t],axis=1)&(q<.001))
  eligible_caps=len(caps)
  condition=spectral_condition(p,t[caps]);caps=caps[np.lexsort((caps,-condition))][:a.maximum_caps]
- seeds=[int(mapped[i]) for i in cfg.get('seed_registered_cells',[])]
+ seeds=[int(mapped[i]) for i in cfg.get('seed_registered_cells',[])]+list(map(int,cfg.get('seed_raw_cells',[])))
+ if any(i<0 or i>=len(t) for i in seeds):raise ValueError('requested cap outside current source domain')
  caps=np.r_[seeds,[int(i) for i in caps if i not in set(seeds)]].astype(np.int64)
  incident=mesh.incidence(t,len(p))
  def together(nodes):
@@ -234,6 +266,7 @@ def run(a):
   for n in nodes[1:]:rows=np.intersect1d(rows,incident(int(n)),assume_unique=True)
   return rows
  used=set();retired=set();operations=[];rejected=collections.Counter();changed_faces={};new_cells=[];new_labels=[];new_mass=[];new_parents=[]
+ pending=collections.defaultdict(list);paired_groups=0
  offsets=raw['replacement_parent_offsets'];parents=raw['replacement_parent_cell_rows'];rejection_witnesses=[];tested_caps=0;mass_failure_witnesses=[]
  def reject(reason,row):
   rejected[reason]+=1
@@ -267,41 +300,49 @@ def run(a):
   if np.any(nd/6<=1e-18) or np.any(nq<np.float32(1e-5)) or nq.min()<=q[[caprow,*opposite]].min():reject('native_quality',caprow);continue
   before=float(spectral_condition(p,t[[caprow,*opposite]]).max());after=float(spectral_condition(p,new).max())
   if after>=.75*before:reject('insufficient_conditioning_gain',caprow);continue
-  core_rows=np.array([caprow,*opposite]);rest=list(other);halo=[]
-  def mass_proposal():
-   combined=np.vstack([new,t[rest]]);nl=np.vstack([np.tile(labels[opposite[0]],(2,1)),labels[rest]])
-   volume=mesh.measure(p,combined)[0]/6
-   preferred=np.r_[float(mass[opposite].sum())*volume[:2]/volume[:2].sum(),mass[rest]]
-   rr=np.r_[core_rows,rest].astype(np.int64)
-   return rr,combined,nl,bounded_patch_mass(mass[rr],labels[rr,0],nl[:,0],volume,preferred)
-  try:rows,combined,nl,nm=mass_proposal()
-  except ValueError:
-   # A skin cap can be exactly at the density bound. A bounded one-ring halo
-   # supplies only existing mass from the same original and registered region.
-   candidates=np.unique(np.concatenate([incident(int(n)) for n in cap]))
-   candidates=[int(i) for i in candidates if i not in set(rows) and np.array_equal(labels[i,1:],labels[caprow,1:]) and np.array_equal(primary[i,1:],primary[caprow,1:]) and not any(int(n) in used for n in t[i])]
-   candidates.sort(key=lambda i:float(np.linalg.norm(p[t[i]].mean(0)-p[cap].mean(0))))
-   success=False
-   for i in candidates[:16]:
-    rest.append(i);halo.append(i)
-    try:rows,combined,nl,nm=mass_proposal();success=True;break
-    except ValueError:pass
-   if not success:
-    if int(caprow) in seeds:
-     combined0=np.vstack([new,t[rest]]);newmat0=np.r_[np.repeat(labels[opposite[0],0],2),labels[rest,0]];vv=mesh.measure(p,combined0)[0]/6;rr=np.r_[core_rows,rest].astype(np.int64)
-     mass_failure_witnesses.append(dict(source_cap_row=int(caprow),old_rows=rr.tolist(),material_totals={str(int(m)):dict(mass_kg=float(mass[rr][labels[rr,0]==m].sum()),new_volume_m3=float(vv[newmat0==m].sum())) for m in np.unique(newmat0)}))
-    reject('material_mass_or_density',caprow);continue
   old_boundary=mesh.oriented_tet_boundary(t[opposite]);factors=[]
   for i in ir:
    f=list(map(int,face[i]));factors.append(sign(f)*old_boundary[tuple(sorted(f))])
   if factors[0]!=factors[1] or abs(factors[0])!=1:reject('typed_orientation',caprow);continue
   if factors[0]<0:nf[:,[1,2]]=nf[:,[2,1]]
   if np.any(reverse[nf]<0):raise ValueError('new interface references an unregistered point')
-  for i,f in zip(ir,nf):inner['faces'][i]=reverse[f];changed_faces[i]=ir
+  part=dict(caprow=int(caprow),core_rows=[int(caprow),*opposite],rest=other,
+   new=new,new_volume=nd/6,opposite=opposite,ir=ir,nf=nf,center=p[cap].mean(0),
+   nodes=set(map(int,t[np.r_[caprow,opposite,other]].ravel())),
+   gap=flip['interface_hausdorff_bound_m'],before=before,after=after)
+  key=tuple(map(int,np.r_[labels[caprow,1:],primary[caprow,1:]]))
+  opposite_key=key+(31-int(labels[caprow,0]),)
+  eligible=[v for v in pending[opposite_key] if not (v['nodes']&used or v['nodes']&part['nodes']) and np.linalg.norm(v['center']-part['center'])<=a.maximum_pair_distance_m]
+  eligible.sort(key=lambda v:(0 if v['caprow'] in seeds else 1,float(np.linalg.norm(v['center']-part['center'])),v['caprow']))
+  attempts=[[v,part] for v in eligible[:16]]+[[part]]
+  success=False;halo=[]
+  for group in attempts:
+   # All paired old/new regions must agree in both exact ancestry and P1 domain.
+   group_rows=np.unique(np.concatenate([np.r_[v['core_rows'],v['rest']] for v in group]))
+   if not np.all(primary[group_rows,1:]==primary[caprow,1:]):raise ValueError('paired primary anatomical domain mismatch')
+   halo=[]
+   try:rows,combined,nl,nm=cap_group_mass(p,t,labels,mass,group,cell_volume=cell_volume);success=True
+   except ValueError:
+    candidates=np.unique(np.concatenate([incident(int(n)) for v in group for n in t[v['caprow']]]))
+    excluded=set(map(int,group_rows))
+    candidates=[int(i) for i in candidates if i not in excluded and np.array_equal(labels[i,1:],labels[caprow,1:]) and np.array_equal(primary[i,1:],primary[caprow,1:]) and not any(int(n) in used for n in t[i])]
+    candidates.sort(key=lambda i:(min(float(np.linalg.norm(p[t[i]].mean(0)-v['center'])) for v in group),i))
+    for i in candidates[:16*len(group)]:
+     halo.append(i)
+     try:rows,combined,nl,nm=cap_group_mass(p,t,labels,mass,group,halo,cell_volume=cell_volume);success=True;break
+     except ValueError:pass
+   if success:break
+  if not success:
+   pending[key+(int(labels[caprow,0]),)].append(part)
+   if int(caprow) in seeds:mass_failure_witnesses.append(dict(source_cap_row=int(caprow),reason='deferred_for_opposite_tissue_cap',maximum_pair_distance_m=a.maximum_pair_distance_m))
+   reject('material_mass_or_density_deferred',caprow);continue
+  if len(group)==2:paired_groups+=1
+  for v in group:
+   for i,f in zip(v['ir'],v['nf']):inner['faces'][i]=reverse[f];changed_faces[i]=v['ir']
   retired.update(map(int,rows));used.update(map(int,t[rows].ravel()))
   pools={int(mat):np.unique(np.concatenate([parents[offsets[i]:offsets[i+1]] for i in rows if labels[i,0]==mat])) for mat in np.unique(labels[rows,0])}
   new_cells.extend(combined);new_labels.extend(nl);new_mass.extend(nm);new_parents.extend([pools[int(mat)] for mat in nl[:,0]])
-  operations.append(dict(source_cap_row=int(caprow),source_cell_rows=rows.tolist(),new_cells=combined.tolist(),new_materials=nl[:,0].tolist(),inner_face_rows=ir,interface_gap_bound_m=flip['interface_hausdorff_bound_m'],condition_before=before,condition_after=after,exact_cavity_and_volume=True,material_mass_conserved=True,mass_halo_source_rows=halo))
+  operations.append(dict(source_cap_row=int(caprow),paired_source_cap_rows=[v['caprow'] for v in group],source_cell_rows=rows.tolist(),new_cells=combined.tolist(),new_materials=nl[:,0].tolist(),inner_face_rows=[i for v in group for i in v['ir']],interface_gap_bound_m=max(v['gap'] for v in group),condition_before=max(v['before'] for v in group),condition_after=max(v['after'] for v in group),exact_cavity_and_volume=True,material_mass_conserved=True,mass_halo_source_rows=halo))
   if len(operations)%32==0:print('passing_interface_caps',len(operations),flush=True)
  if not operations:
   (a.output/'failure-witnesses.json').write_text(json.dumps(dict(status='NO_ADMISSIBLE_CONNECTED_INTERFACE_REPAIR',rejections=dict(rejected),witnesses=rejection_witnesses,primary_label_domains=primary_label_diagnostic),indent=2)+'\n')
@@ -322,7 +363,7 @@ def run(a):
  # independent existing compiler checker; interface operations have no quotient.
  report['operations']=report['source_report_history']['operations']
  report.update(status='CONNECTED_INTERFACE_CAP_PROPOSAL_NOT_PHYSICAL_ADMISSION',physical_admission=False,native_steps=0,interior_only=False,
-  interface_operations=operations,interface_inputs=pins,primary_label_domains=primary_label_diagnostic,eligible_interface_caps=eligible_caps,tested_interface_caps=tested_caps,mass_failure_witnesses=mass_failure_witnesses,rejections=dict(rejected),rejection_witnesses=rejection_witnesses,current_input_cells=len(t),output_cells=len(raw['volume_tetrahedra']),low_quality_cells_before=int(np.count_nonzero(q<.001)),low_quality_cells_after=int(np.count_nonzero(q[alive]<.001)+np.count_nonzero(mesh.measure(p,new_cells)[1]<.001)),all_point_coordinates_unchanged=True,
+  interface_operations=operations,paired_interface_groups=paired_groups,maximum_pair_distance_m=a.maximum_pair_distance_m,interface_inputs=pins,primary_label_domains=primary_label_diagnostic,eligible_interface_caps=eligible_caps,tested_interface_caps=tested_caps,mass_failure_witnesses=mass_failure_witnesses,rejections=dict(rejected),rejection_witnesses=rejection_witnesses,current_input_cells=len(t),output_cells=len(raw['volume_tetrahedra']),low_quality_cells_before=int(np.count_nonzero(q<.001)),low_quality_cells_after=int(np.count_nonzero(q[alive]<.001)+np.count_nonzero(mesh.measure(p,new_cells)[1]<.001)),all_point_coordinates_unchanged=True,
   unchanged_outer_and_deep_asset_hashes={r:pins[r]['sha256'] for r in ['O','D']},elapsed_s=time.monotonic()-start,
   local_mass_construction={'scope':'Per-patch material mass and unchanged density ranges only; source-flow and native admission must be repeated','actual_reference_mass':pins['mass_csv']},
   fidelity_qualification='PENDING_REFERENCE_STRAIN_FORCE_ENERGY_AND_NATIVE_COMPARISON')
@@ -336,7 +377,9 @@ if __name__=='__main__':
  from pathlib import Path
  import argparse
  ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('--config',type=Path,required=True);ap.add_argument('--output',type=Path,required=True)
+ ap.add_argument('--maximum-pair-distance-m',type=float,default=.02)
  ap.add_argument('--maximum-caps',type=int,default=4096);ap.add_argument('--seconds',type=float,default=180);ap.add_argument('--maximum-gap-m',type=float,default=.000020)
  a=ap.parse_args()
+ if not 0<=a.maximum_pair_distance_m<=.02:raise ValueError('invalid paired interface locality bound')
  if a.maximum_caps<1 or a.seconds<=0 or not 0<a.maximum_gap_m<=.000020:raise ValueError('invalid bounded construction settings')
  run(a)

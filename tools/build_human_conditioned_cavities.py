@@ -89,10 +89,11 @@ def grow_star_cavity(points,cells,labels,seed,anchor,incident,maximum_cells=NATI
 
 
 def star_anchors(points,cells,labels,seed,incident,surface_nodes,count=8):
+ if not 1<=count<=32:raise ValueError("invalid bounded star anchor count")
  near=np.unique(np.concatenate([incident(int(n)) for n in cells[seed]]))
  near=near[np.all(labels[near]==labels[seed],axis=1)]
  nodes=np.setdiff1d(np.unique(cells[near]),cells[seed]);center=points[cells[seed]].mean(0)
- return sorted(map(int,nodes),key=lambda n:(int(surface_nodes[n]),float(np.linalg.norm(points[n]-center))))[:count]
+ return sorted(map(int,nodes),key=lambda n:(int(surface_nodes[n]),float(np.linalg.norm(points[n]-center)),n))[:count]
 
 
 def run(a):
@@ -132,7 +133,7 @@ def run(a):
  for seed in seeds:
   if time.monotonic()-start>a.seconds or len(patches)>=a.maximum_cavities:break
   if set(map(int,t[seed]))&used:reject['dependent_seed']+=1;continue
-  anchors=star_anchors(p,t,labels,seed,inc,surface_nodes) if getattr(a,'star_cavities',False) else []
+  anchors=star_anchors(p,t,labels,seed,inc,surface_nodes,count=a.star_anchor_count) if getattr(a,'star_cavities',False) else []
   candidates=[('star',v,None) for v in anchors]+[('edge',d,e) for d,e in itertools.combinations(map(int,t[seed]),2)]
   for method,d,e in candidates:
    if time.monotonic()-start>a.seconds:break
@@ -182,7 +183,7 @@ def run(a):
  report=dict(status="PASS_FIXED_BOUNDARY_CONDITIONING_PROPOSAL" if patches else "NO_ADMISSIBLE_CONDITIONING_PROGRESS",
   input=dict(volume=dict(path=str(a.volume),sha256=a.volume_sha256),reference=dict(path=str(a.reference),sha256=a.reference_sha256),mass_csv=dict(path=str(a.mass_csv),sha256=a.mass_sha256),mass_parity=dict(path=str(a.mass_parity),sha256=a.mass_parity_sha256),mass_receipt=dict(path=str(a.mass_receipt),sha256=a.mass_receipt_sha256)),
   owners={str(path):sha(path) for path in [Path(__file__),a.polygon_owner,a.polygon_owner.parent/"fixed_boundary_volume_flip_198_root.py",Path(mesh.__file__)]},
-  input_cells=len(t),eligible_seed_cells=len(seeds),tested_edges=sum(len(k)==2 for k in seen),tested_star_anchors=sum(len(k)==3 for k in seen),star_cavities_enabled=bool(getattr(a,"star_cavities",False)),passing_cavities=len(patches),rejections=dict(reject),patches=patches,
+  input_cells=len(t),eligible_seed_cells=len(seeds),tested_edges=sum(len(k)==2 for k in seen),tested_star_anchors=sum(len(k)==3 for k in seen),star_cavities_enabled=bool(getattr(a,"star_cavities",False)),star_anchor_count=a.star_anchor_count,passing_cavities=len(patches),rejections=dict(reject),patches=patches,
   reference_deformation=gate.report(),source_coordinate_and_typed_boundaries_unchanged=True,
   source_mass_transport_and_native_admission="MUST_REPEAT_EXISTING_NATIVE_OWNER",physical_admission=False,native_steps=0,elapsed_s=time.monotonic()-start)
  if patches:
@@ -195,8 +196,10 @@ def main():
  ap=argparse.ArgumentParser(description=__doc__)
  for name in ["volume","reference","mass-csv","mass-parity","mass-receipt","polygon-owner","output"]:ap.add_argument("--"+name,type=Path,required=True)
  for name in ["volume","reference","mass","mass-parity","mass-receipt","polygon","predicate","mesh-owner"]:ap.add_argument("--"+name+"-sha256",required=True)
+ ap.add_argument("--star-anchor-count",type=int,default=32)
  ap.add_argument("--seed-cell",action="append",type=int,default=[]);ap.add_argument("--star-cavities",action="store_true");ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--maximum-seeds",type=int,default=4096);ap.add_argument("--maximum-cavities",type=int,default=256);ap.add_argument("--condition-threshold",type=float,default=10000)
  a=ap.parse_args()
+ if not 1<=a.star_anchor_count<=32:raise ValueError("invalid bounded star anchor count")
  if a.seconds<=0 or a.maximum_seeds<1 or a.maximum_cavities<1 or a.condition_threshold<=1:raise ValueError("invalid bounded construction settings")
  run(a)
 if __name__=="__main__":main()

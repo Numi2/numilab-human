@@ -1,0 +1,32 @@
+{
+  "status": "PASS_EXACT_CACHED_DIRECT_PROPOSAL_PARITY",
+  "checks": [
+    {
+      "file": "candidate-volume.npz",
+      "all_lanes_bitwise_equal": true,
+      "lanes": 8
+    },
+    {
+      "file": "candidate-I-typed-current.npz",
+      "all_lanes_bitwise_equal": true,
+      "lanes": 26
+    },
+    {
+      "file": "candidate-O-typed-current.npz",
+      "all_lanes_bitwise_equal": true,
+      "lanes": 26
+    },
+    {
+      "file": "candidate-D-typed-current.npz",
+      "all_lanes_bitwise_equal": true,
+      "lanes": 27
+    }
+  ],
+  "mass_file_bitwise_equal": true,
+  "operations_identical": true,
+  "direct_s": 99.60337637498742,
+  "cached_s": 81.59717545803869,
+  "wall_reduction_fraction": 0.1807790214777345,
+  "single_pair": true,
+  "native_speedup_claim": false
+}
