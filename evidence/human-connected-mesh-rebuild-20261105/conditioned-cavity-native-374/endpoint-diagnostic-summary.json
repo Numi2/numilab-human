@@ -1,0 +1,37 @@
+{
+  "solver_control_comparison": {
+    "matched": true,
+    "differences": [],
+    "qualification": "Matched runtime and numerical controls. Existing captured-force and regional-strain engineering screen; no material-energy or sustained-motion qualification."
+  },
+  "force_metrics": 388,
+  "force_metrics_over_1percent": 63,
+  "strain_metrics": 282,
+  "strain_metrics_over_5percent": 220,
+  "maximum_force_metric": 0.6847286868357516,
+  "maximum_strain_metric": 4.418593654879839,
+  "total_fem_mass_kg": {
+    "reference": 14.415518492953332,
+    "candidate": 14.415518492858974
+  },
+  "matched_field": {
+    "count": 1474350,
+    "candidate_changed_cells": 844,
+    "removed_or_changed_reference_cells": 912,
+    "restricted_field_max_absolute_green_strain_difference": 0.0,
+    "actual_field_max_absolute_green_strain_difference": 0.7299890053457352,
+    "actual_field_volume_weighted_rms_green_strain_difference": 5.734235184064725e-06,
+    "maximum_witness": {
+      "candidate_tet": 951374,
+      "reference_tet": 951811,
+      "region": 23,
+      "absolute_green_strain_difference": 0.7299890053457352
+    }
+  },
+  "physical_fidelity_qualification": false,
+  "source_owners": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/conditioned-cavity-analysis-375/compare_endpoint_374.py": "ebb7df2b228952d4a226f955548fc909e50c76020d0afea41fc9a1b2830501e6",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_remeshed_native_310.py": "0181dd99e2dc5c9c47c0e9c725d6762edee5dd41ca2bd4329f328e42a85d2902",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_matched_deformation_339.py": "1469a76a268a9e57607b3d6697d33a627cbe41ad789d5fdd9dffc47140f26c4b"
+  }
+}
