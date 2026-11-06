@@ -98,3 +98,21 @@ def test_native_geometry_checker_hash_is_mandatory_before_execution(tmp_path,mon
  monkeypatch.setattr(m.subprocess,"run",lambda *a,**k:pytest.fail("unverified checker executed"))
  with pytest.raises(ValueError,match="SHA mismatch"):
   m.native_geometry_check(checker,"f"*64,tmp_path/"source",tmp_path/"proposal","a"*64,"b"*64,1)
+
+
+def test_native_transport_exclusions_require_matching_complete_trial_evidence(tmp_path):
+ import json
+ plan=tmp_path/"install-motion.plan.json";stderr=tmp_path/"install-motion.stderr.log";execution=tmp_path/"install-motion.execution.json"
+ payload="a"*64
+ plan.write_text(json.dumps(dict(stages=[dict(environment={"NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256":payload})])))
+ witness=dict(complete=True,maximum_transport_distance_m=.187444,cavity_indices=[1,3])
+ def write_trial():
+  stderr.write_text("skin_fat_cavity_transport_failures="+json.dumps(witness)+"\n")
+  execution.write_text(json.dumps(dict(plan_sha256=m.sha(plan),stderr_sha256=m.sha(stderr),exit_code=1,resource_stop_reason=None)))
+ write_trial();proof,indices=m.native_transport_rejections(tmp_path,payload,4)
+ assert indices=={1,3} and proof["certificate"]["maximum_transport_distance_m"]==.187444
+ with pytest.raises(ValueError,match="identity"):m.native_transport_rejections(tmp_path,"b"*64,4)
+ stderr.write_text(stderr.read_text()+"tampered")
+ with pytest.raises(ValueError,match="identity"):m.native_transport_rejections(tmp_path,payload,4)
+ witness["complete"]=False;write_trial()
+ with pytest.raises(ValueError,match="incomplete"):m.native_transport_rejections(tmp_path,payload,4)

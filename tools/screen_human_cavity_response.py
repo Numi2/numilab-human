@@ -121,17 +121,37 @@ def native_geometry_check(checker,checker_sha,volume,proposal,source_sha,proposa
   raise ValueError("native geometry certificate identity, domain or exit-code mismatch")
  return dict(certificate=record,checker=pin(checker),argv=argv,elapsed_s=time.monotonic()-start),set(rejected)
 
+def native_transport_rejections(trial,payload_sha,count):
+ """Replay complete initialization witnesses bound to this exact native trial."""
+ plan_path=trial/"install-motion.plan.json";execution_path=trial/"install-motion.execution.json";stderr=trial/"install-motion.stderr.log"
+ execution=json.loads(execution_path.read_text());plan=json.loads(plan_path.read_text())
+ if (execution["plan_sha256"]!=sha(plan_path) or execution["stderr_sha256"]!=sha(stderr) or
+     execution["exit_code"]==0 or execution.get("resource_stop_reason") is not None or
+     plan["stages"][0]["environment"].get("NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256")!=payload_sha):
+  raise ValueError("native transport witness trial/payload identity mismatch")
+ lines=[line.split("=",1)[1] for line in stderr.read_text().splitlines() if line.startswith("skin_fat_cavity_transport_failures=")]
+ if len(lines)!=1:raise ValueError("native transport witness is missing or ambiguous")
+ r=json.loads(lines[0]);indices=r.get("cavity_indices",[])
+ if (r.get("complete") is not True or not indices or len(set(indices))!=len(indices) or
+     any(type(i) is not int or not 0<=i<count for i in indices) or
+     not np.isfinite(r.get("maximum_transport_distance_m",np.nan)) or r["maximum_transport_distance_m"]<=0):
+  raise ValueError("native transport witness is incomplete or outside the cavity domain")
+ return dict(certificate=r,plan=pin(plan_path),execution=pin(execution_path),stderr=pin(stderr)),set(indices)
+
 def run(a):
  start=time.monotonic();a.output.mkdir(parents=True,exist_ok=False)
  if sha(a.proposal_report)!=a.proposal_report_sha256:raise ValueError("proposal report mismatch")
  r=json.loads(a.proposal_report.read_text())
- native_input=None;native_rejected=set()
+ native_input=None;native_rejected=set();transport_input=None;transport_rejected=set()
  if getattr(a,"emit_proposal",False):
   if not getattr(a,"native_geometry_check",None) or not getattr(a,"native_geometry_check_sha256",None):
    raise ValueError("emitting a native proposal requires the pinned existing native geometry checker")
   native_input,native_rejected=native_geometry_check(a.native_geometry_check,a.native_geometry_check_sha256,
    Path(r["input"]["volume"]["path"]),Path(r["output"]["path"]),r["input"]["volume"]["sha256"],r["output"]["sha256"],len(r["patches"]))
   (a.output/"native-input-geometry.json").write_text(json.dumps(native_input,indent=2)+"\n")
+  if getattr(a,"native_failed_trial",None):
+   transport_input,transport_rejected=native_transport_rejections(a.native_failed_trial,r["output"]["sha256"],len(r["patches"]))
+   (a.output/"native-transport-exclusions.json").write_text(json.dumps(transport_input,indent=2)+"\n")
  for v in r["input"].values():
   if sha(v["path"])!=v["sha256"]:raise ValueError("source input mismatch")
  cap=module(a.capture_owner,"retained_native_capture",a.capture_owner_sha256)
@@ -205,6 +225,8 @@ def run(a):
   budget=RegionalResponseBudget(force_reference,{k:v["energy_J"] for k,v in base.items()})
   kept=[];excluded=[];indices=[];response_rejections=[]
   for index,patch in enumerate(r["patches"]):
+   if index in transport_rejected:
+    excluded.append(index);response_rejections.append(dict(index=index,failures=[dict(metric="native_transport_radius",reason="complete source-flow witness from exact failed native input; frozen radius unchanged")]));continue
    if index in native_rejected:
     excluded.append(index);response_rejections.append(dict(index=index,failures=[dict(metric="native_geometry",reason=next(row["reason"] for row in native_input["certificate"]["failures"] if row["cavity"]==index))]));continue
    measured=patches[index]
@@ -224,6 +246,7 @@ def run(a):
   (a.output/"native-output-geometry.json").write_text(json.dumps(native_output,indent=2)+"\n")
   if rejected:raise ValueError("screened proposal failed the existing native geometry certificate")
   r["native_geometry"]=dict(input=native_input,output=native_output)
+  if transport_input is not None:r["native_transport_exclusions"]=transport_input
   history={k:r.pop(k) for k in ["eligible_seed_cells","tested_edges","rejections","elapsed_s","replay","reference_rebinding_diagnostic"] if k in r}
   r["source_report_history"]=history
   r["owners"][str(Path(__file__))]=sha(Path(__file__))
@@ -240,6 +263,7 @@ if __name__=="__main__":
  ap=argparse.ArgumentParser(description=__doc__)
  for name in ["proposal-report","capture-owner","skin-material","fat-material"]:
   ap.add_argument("--"+name,type=Path,required=True);ap.add_argument("--"+name+"-sha256",required=True)
+ ap.add_argument("--native-failed-trial",type=Path,help="Exclude complete frozen-radius failure witnesses bound to this exact input payload; all remaining admission repeats")
  ap.add_argument("--native-geometry-check",type=Path);ap.add_argument("--native-geometry-check-sha256")
  ap.add_argument("--emit-proposal",action="store_true",help="Replay only cavities passing 1% fixed-field force bounds,5% energy bounds and the existing5% strain gate after force calibration; physical admission remains mandatory")
  ap.add_argument("--output",type=Path,required=True);run(ap.parse_args())
