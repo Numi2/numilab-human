@@ -1,0 +1,11 @@
+# Canonical tangent comparison: rejected optimization
+
+SSH Numi, Apple M6. Runtime shader revision f8efdb0dc802284137372ef10bb9c48f62850850; executable, library, shader and input hashes are pinned in the native plan. Existing material GPU regression passed (70.91 seconds), including canonical and bytecode direct/cache actions, rotated material frames, random directions and ineligible fallbacks. Its first 60-second timeout is inconclusive and retained separately.
+
+The complete-scene comparison used identical candidate568 geometry, input assets, physical equations, timestep, thresholds and solve budgets. Only the five documented tangent-selection settings changed; runtime admission rules were preserved. The existing mesh comparator correctly rejected those deliberate control differences. The retained comparison source imports its authoritative summarizer and verifies exactly the five predeclared differences before comparing endpoints; it does not relabel the runs as identical solver controls.
+
+Both runs accepted four 15.625-microsecond roots, with 1,120 active Krylov columns, 70 cycles and 12 exhausted solve budgets. Native-float control572 took 65.798879958 body seconds; canonical579 took 71.155245208 seconds: 8.14% more time in this single pair, with unchanged work. Launcher time was 261.915838 seconds. Candidate body real-time factor was 0.0000008783611x. This is an initialization transient, not sustained coupled/viewer throughput.
+
+The existing endpoint rules found 21 force, seven strain and four strict-relative physiological outliers. Thus canonical mode provides neither convergence improvement nor admitted equivalence. It is not promoted. The default native tangent path remains unchanged. The prior 60-second coupon timeout and the comparator control-difference rejection remain evidence, not hidden failures.
+
+Source geometry and conservative mass construction are already passing, but candidate568 still lacks native fidelity and motion admission. Neither this test nor four accepted roots completes the Human deliverable or the 0.1x requirement. Do not repeat this tangent mode or the unchanged small connectivity batch as an optimization. The unresolved work is substantial model/solver work reduction with preserved physical acceptance, followed by native motion qualification.

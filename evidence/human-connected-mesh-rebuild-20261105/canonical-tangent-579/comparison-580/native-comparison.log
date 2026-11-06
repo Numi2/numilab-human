@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compare_human_native_mesh_trials.py", line 73, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compare_human_native_mesh_trials.py", line 64, in main
+    if differences:raise ValueError('Unmatched native controls: '+', '.join(differences))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Unmatched native controls: environment:NM_FEM_ALL_NATIVE_FLOAT_SPECIALIZATION, environment:NM_FEM_CANONICAL_NEOHOOKEAN_TANGENT, environment:NM_FEM_NATIVE_TANGENT_BUNDLE, environment:NM_FEM_STATELESS_TANGENT_BUNDLE, environment:NM_FEM_TANGENT_OWNER_TASKS

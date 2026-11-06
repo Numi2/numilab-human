@@ -1,0 +1,219 @@
+{
+  "force_failures": [
+    [
+      "region:1",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.02967818925497468
+    ],
+    [
+      "region:4",
+      "free_internal_force",
+      "relative_resultant_difference_over_reference_nodal_l1",
+      0.041181888903520925
+    ],
+    [
+      "region:4",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.045468212230539984
+    ],
+    [
+      "region:59",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.011037228315686676
+    ],
+    [
+      "region:60",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.015478731947915237
+    ],
+    [
+      "region:65",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.010873805965154285
+    ],
+    [
+      "region:66",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.02947154840531462
+    ],
+    [
+      "region:69",
+      "free_internal_force",
+      "relative_resultant_difference_over_reference_nodal_l1",
+      0.01220101040901741
+    ],
+    [
+      "region:95",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.010468100214072644
+    ],
+    [
+      "region:97",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.036249196812160905
+    ],
+    [
+      "region:99",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.03669464005211742
+    ],
+    [
+      "region:110",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.01711429034546646
+    ],
+    [
+      "region:115",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.018882010754794336
+    ],
+    [
+      "region:117",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.06855528034597623
+    ],
+    [
+      "region:124",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.016999235495378306
+    ],
+    [
+      "region:126",
+      "free_internal_force",
+      "relative_resultant_difference_over_reference_nodal_l1",
+      0.01161159985070494
+    ],
+    [
+      "region:131",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.015502569809773324
+    ],
+    [
+      "region:142",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.013194668418399167
+    ],
+    [
+      "region:145",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.021470368485617144
+    ],
+    [
+      "region:156",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.027764537435922963
+    ],
+    [
+      "object:numi_human_regional_myofascia_6",
+      "free_internal_force",
+      "relative_nodal_l1_change",
+      0.011934534929074743
+    ]
+  ],
+  "strain_failures": [
+    [
+      "region:56",
+      "maximum_green_strain_norm",
+      0.10456220543294213
+    ],
+    [
+      "region:119",
+      "maximum_green_strain_norm",
+      0.09661721137583926
+    ],
+    [
+      "region:122",
+      "maximum_green_strain_norm",
+      0.11184850705564038
+    ],
+    [
+      "region:131",
+      "volume_weighted_strain_squared",
+      0.05606064895167181
+    ],
+    [
+      "region:131",
+      "maximum_green_strain_norm",
+      0.05645524065578822
+    ],
+    [
+      "region:152",
+      "maximum_green_strain_norm",
+      0.10587162241129511
+    ],
+    [
+      "region:57",
+      "maximum_green_strain_norm",
+      0.16506371395401026
+    ]
+  ],
+  "strict_relative_physiology_outliers": [
+    [
+      "blood_continuity_residual_accum_ml",
+      {
+        "max_abs_change": 5.55111512313e-10,
+        "max_abs_reference": 4.4408920985e-10,
+        "relative_max_abs_change": 1.250000000001126
+      }
+    ],
+    [
+      "blood_physical_delta_accum_ml",
+      {
+        "max_abs_change": 5.55111512313e-10,
+        "max_abs_reference": 4.4408920985e-10,
+        "relative_max_abs_change": 1.250000000001126
+      }
+    ],
+    [
+      "post_projection_equality_residual_generalized_s",
+      {
+        "max_abs_change": 6.802780561099997e-12,
+        "max_abs_reference": 5.19576603963e-11,
+        "relative_max_abs_change": 0.13092930877204076
+      }
+    ],
+    [
+      "equality_velocity_projection_max_generalized_s",
+      {
+        "max_abs_change": 8.731149137030001e-11,
+        "max_abs_reference": 9.09494701773e-11,
+        "relative_max_abs_change": 0.9600000000010117
+      }
+    ]
+  ],
+  "body_throughput_ratio": 0.9247228333717024,
+  "body_wall_reduction_fraction": -0.08140511287455054,
+  "candidate_active_work": {
+    "used_columns_sum": 1120,
+    "cycles_with_work": 70,
+    "budget_exhausted_solves": 12
+  },
+  "control_active_work": {
+    "used_columns_sum": 1120,
+    "cycles_with_work": 70,
+    "budget_exhausted_solves": 12
+  },
+  "candidate_body_wall_s": "71.155245207999997",
+  "control_body_wall_s": "65.798879958000001",
+  "candidate_accepted_roots": 4,
+  "candidate_body_rtf": 8.783611077061275e-07,
+  "full_human_qualified": false,
+  "single_short_pair_only": true
+}
