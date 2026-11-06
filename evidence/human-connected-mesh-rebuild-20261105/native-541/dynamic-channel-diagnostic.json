@@ -1,0 +1,1645 @@
+{
+  "scope": "Existing endpoint observations only. Retained mechanical residual buffer is not independently reassembled here; no residual-based physical admission. Retained-node mass differences are not a conservative full-field comparison.",
+  "runtime_dt_s": 1.562500074e-05,
+  "input_pins": [
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/targeted-fat-native-499/install-motion.stdout.log.gz",
+      "sha256": "d730f9b52ffc7a71dfe742950fd9a304acd226c80dda1fd9f63543347dde913a"
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/joint-response-native-546/install-motion.stdout.log.gz",
+      "sha256": "ff92f2ea68c065d7ac549d3ce8bfced7b1975a5cda446ee87be25ee855a5fd7f"
+    }
+  ],
+  "parser_owner": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/compare_remeshed_native_310.py",
+    "sha256": "0181dd99e2dc5c9c47c0e9c725d6762edee5dd41ca2bd4329f328e42a85d2902"
+  },
+  "mapping": {
+    "method": "exact Float32 rest coordinate + named object + anatomical region; duplicates require exact unchanged local topology, tags and mass",
+    "unique_coordinate_nodes": 317536,
+    "duplicate_nodes": 72,
+    "verified_unchanged_objects": [
+      {
+        "object": "numi_human_regional_myofascia_6",
+        "nodes": 270,
+        "tetrahedra": 576,
+        "node_key_sha256": "40304566f59b926a82e732920bacef31e862817fd98df82e5702d3cf7cd0af30",
+        "local_topology_sha256": "b063b6d26933a1486509ae6d8c610b77e223b4aca5d2b2663a75a98d6257137c"
+      },
+      {
+        "object": "numi_human_regional_myofascia_7",
+        "nodes": 270,
+        "tetrahedra": 576,
+        "node_key_sha256": "3c7b7a8a4838736024802bab2463e55e5951ec8fcd38d2f6c74992c32fe1e6a2",
+        "local_topology_sha256": "b063b6d26933a1486509ae6d8c610b77e223b4aca5d2b2663a75a98d6257137c"
+      }
+    ],
+    "mapping_sha256": "55b900c5c0a1a9b383c013a866c6bc6129cd496caa3f98be63abd4b1a6377b92",
+    "canonical_ancestry_admission": false
+  },
+  "maximum_displacement_witness": {
+    "candidate_node": 262559,
+    "reference_node": 262779,
+    "object": "BodyParts3D whole-body skin-fat bonded shell",
+    "region": 23,
+    "tag": 0.0,
+    "rest_m": [
+      -0.024536950513720512,
+      -0.07213088870048523,
+      0.04577421396970749
+    ],
+    "displacement_difference_m": 3.677008856883506e-06,
+    "velocity_difference_m_s": 0.006564663345166295,
+    "reference_mass_kg": 2.34980535e-10,
+    "candidate_mass_kg": 2.34980535e-10,
+    "reference_retained_residual_Ns": [
+      1.866852484e-14,
+      2.998648422e-14,
+      -1.262776098e-13
+    ],
+    "candidate_retained_residual_Ns": [
+      -6.717476527e-15,
+      -3.523629956e-15,
+      -1.012921131e-14
+    ]
+  },
+  "maximum_velocity_witness": {
+    "candidate_node": 255400,
+    "reference_node": 255620,
+    "object": "BodyParts3D whole-body skin-fat bonded shell",
+    "region": 23,
+    "tag": 0.0,
+    "rest_m": [
+      -0.026985812932252884,
+      -0.06246383860707283,
+      0.04977831616997719
+    ],
+    "displacement_difference_m": 8.23586137374208e-07,
+    "velocity_difference_m_s": 0.014342444787665987,
+    "reference_mass_kg": 1.029774668e-10,
+    "candidate_mass_kg": 1.029774668e-10,
+    "reference_retained_residual_Ns": [
+      -2.163944293e-15,
+      9.184115667e-16,
+      4.868391321e-15
+    ],
+    "candidate_retained_residual_Ns": [
+      3.141528523e-15,
+      -2.91973951e-16,
+      -5.963178864e-15
+    ]
+  },
+  "maximum_relative_retained_mass_change_witness": {
+    "candidate_node": 169387,
+    "reference_node": 169387,
+    "object": "BodyParts3D whole-body skin-fat bonded shell",
+    "region": 116,
+    "tag": 0.0,
+    "rest_m": [
+      0.2672591507434845,
+      -1.010087251663208,
+      0.12568730115890503
+    ],
+    "displacement_difference_m": 3.064441533443416e-08,
+    "velocity_difference_m_s": 0.0004601601400811121,
+    "reference_mass_kg": 7.817053211e-13,
+    "candidate_mass_kg": 1.81232071e-10,
+    "reference_retained_residual_Ns": [
+      -1.710814324e-12,
+      -5.402628215e-13,
+      -1.202544141e-12
+    ],
+    "candidate_retained_residual_Ns": [
+      -2.436169322e-12,
+      -8.719866192e-13,
+      -1.642434019e-12
+    ]
+  },
+  "retained_mass_difference_l1_kg": 0.0029903488317844415,
+  "removed_nodes": 618,
+  "removed_reference_mass_kg": 0.002734803048903021,
+  "regions": {
+    "1": {
+      "reference": {
+        "free_nodes": 138,
+        "free_mass_kg": 0.045691954391714,
+        "retained_residual_impulse_l2_Ns": 4.0054192365141614e-08,
+        "retained_residual_impulse_l1_Ns": 1.7134642604747933e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01096617074768083,
+        "free_internal_force_l1_N": 0.003391294357016358,
+        "free_FEM_kinetic_energy_J": 2.3668064094515124e-06
+      },
+      "candidate": {
+        "free_nodes": 138,
+        "free_mass_kg": 0.045691954391714,
+        "retained_residual_impulse_l2_Ns": 1.8426994532501708e-07,
+        "retained_residual_impulse_l1_Ns": 6.629655970531898e-07,
+        "retained_residual_equivalent_force_l1_N": 0.042429796201929,
+        "free_internal_force_l1_N": 0.00550491595146742,
+        "free_FEM_kinetic_energy_J": 2.366393374482172e-06
+      }
+    },
+    "4": {
+      "reference": {
+        "free_nodes": 8,
+        "free_mass_kg": 0.051829967245371006,
+        "retained_residual_impulse_l2_Ns": 1.2675248431169789e-07,
+        "retained_residual_impulse_l1_Ns": 2.1694494120822374e-07,
+        "retained_residual_equivalent_force_l1_N": 0.013884475579757555,
+        "free_internal_force_l1_N": 0.006052254611622292,
+        "free_FEM_kinetic_energy_J": 2.8162549703767996e-06
+      },
+      "candidate": {
+        "free_nodes": 8,
+        "free_mass_kg": 0.051829967245371006,
+        "retained_residual_impulse_l2_Ns": 9.962248730446297e-07,
+        "retained_residual_impulse_l1_Ns": 1.5171155109653279e-06,
+        "retained_residual_equivalent_force_l1_N": 0.0970953881033434,
+        "free_internal_force_l1_N": 0.017751359783731113,
+        "free_FEM_kinetic_energy_J": 2.954348137522029e-06
+      }
+    },
+    "20": {
+      "reference": {
+        "free_nodes": 3588,
+        "free_mass_kg": 3.6164973411861396,
+        "retained_residual_impulse_l2_Ns": 5.490479707264312e-07,
+        "retained_residual_impulse_l1_Ns": 9.377000851594943e-06,
+        "retained_residual_equivalent_force_l1_N": 0.600128026080013,
+        "free_internal_force_l1_N": 0.16611559616789479,
+        "free_FEM_kinetic_energy_J": 0.0001817423437820863
+      },
+      "candidate": {
+        "free_nodes": 3564,
+        "free_mass_kg": 3.6164974475139333,
+        "retained_residual_impulse_l2_Ns": 8.175429827647979e-07,
+        "retained_residual_impulse_l1_Ns": 1.388411786926152e-05,
+        "retained_residual_equivalent_force_l1_N": 0.8885835015494227,
+        "free_internal_force_l1_N": 0.1856885478594793,
+        "free_FEM_kinetic_energy_J": 0.00017966355325757058
+      }
+    },
+    "23": {
+      "reference": {
+        "free_nodes": 129084,
+        "free_mass_kg": 0.8804078975016119,
+        "retained_residual_impulse_l2_Ns": 1.2140334095465604e-06,
+        "retained_residual_impulse_l1_Ns": 1.8607307744990437e-05,
+        "retained_residual_equivalent_force_l1_N": 1.1908676392798965,
+        "free_internal_force_l1_N": 1.9697736100545093,
+        "free_FEM_kinetic_energy_J": 4.0795471947912376e-05
+      },
+      "candidate": {
+        "free_nodes": 128991,
+        "free_mass_kg": 0.8804076402719359,
+        "retained_residual_impulse_l2_Ns": 1.298126675538688e-06,
+        "retained_residual_impulse_l1_Ns": 2.3225579122146406e-05,
+        "retained_residual_equivalent_force_l1_N": 1.486436993419714,
+        "free_internal_force_l1_N": 2.218359932947111,
+        "free_FEM_kinetic_energy_J": 4.0480055929573654e-05
+      }
+    },
+    "26": {
+      "reference": {
+        "free_nodes": 55,
+        "free_mass_kg": 0.209598930920951,
+        "retained_residual_impulse_l2_Ns": 1.1058678997591923e-07,
+        "retained_residual_impulse_l1_Ns": 5.211152538211997e-07,
+        "retained_residual_equivalent_force_l1_N": 0.033351374665035675,
+        "free_internal_force_l1_N": 0.009958277048897214,
+        "free_FEM_kinetic_energy_J": 1.0458981317291604e-05
+      },
+      "candidate": {
+        "free_nodes": 55,
+        "free_mass_kg": 0.209599187616951,
+        "retained_residual_impulse_l2_Ns": 1.723393540681295e-07,
+        "retained_residual_impulse_l1_Ns": 7.155659924213861e-07,
+        "retained_residual_equivalent_force_l1_N": 0.045796221346059665,
+        "free_internal_force_l1_N": 0.010751774057407975,
+        "free_FEM_kinetic_energy_J": 1.0345600112907127e-05
+      }
+    },
+    "29": {
+      "reference": {
+        "free_nodes": 35,
+        "free_mass_kg": 0.015401660090690234,
+        "retained_residual_impulse_l2_Ns": 3.1307778518597093e-08,
+        "retained_residual_impulse_l1_Ns": 5.983213058054088e-08,
+        "retained_residual_equivalent_force_l1_N": 0.003829256175801044,
+        "free_internal_force_l1_N": 0.0015475216356460586,
+        "free_FEM_kinetic_energy_J": 7.222339503859631e-07
+      },
+      "candidate": {
+        "free_nodes": 35,
+        "free_mass_kg": 0.015401662651890233,
+        "retained_residual_impulse_l2_Ns": 4.412307105577183e-08,
+        "retained_residual_impulse_l1_Ns": 8.123098420550872e-08,
+        "retained_residual_equivalent_force_l1_N": 0.005198782742938207,
+        "free_internal_force_l1_N": 0.0012539021388624746,
+        "free_FEM_kinetic_energy_J": 7.191825650275986e-07
+      }
+    },
+    "34": {
+      "reference": {
+        "free_nodes": 655,
+        "free_mass_kg": 0.027815544193729065,
+        "retained_residual_impulse_l2_Ns": 5.0070622516783626e-08,
+        "retained_residual_impulse_l1_Ns": 1.8271793370382885e-07,
+        "retained_residual_equivalent_force_l1_N": 0.011693947203219706,
+        "free_internal_force_l1_N": 0.007770241096988883,
+        "free_FEM_kinetic_energy_J": 1.3234026861607187e-06
+      },
+      "candidate": {
+        "free_nodes": 648,
+        "free_mass_kg": 0.027813802736036855,
+        "retained_residual_impulse_l2_Ns": 4.8222641817791506e-08,
+        "retained_residual_impulse_l1_Ns": 2.1371413131331667e-07,
+        "retained_residual_equivalent_force_l1_N": 0.013677703756276216,
+        "free_internal_force_l1_N": 0.008417814258150396,
+        "free_FEM_kinetic_energy_J": 1.3168833033019814e-06
+      }
+    },
+    "41": {
+      "reference": {
+        "free_nodes": 2948,
+        "free_mass_kg": 0.1635247713964424,
+        "retained_residual_impulse_l2_Ns": 2.2366159963881365e-07,
+        "retained_residual_impulse_l1_Ns": 1.5014082214433648e-06,
+        "retained_residual_equivalent_force_l1_N": 0.09609012162154718,
+        "free_internal_force_l1_N": 0.09297595258109129,
+        "free_FEM_kinetic_energy_J": 8.214310405805456e-06
+      },
+      "candidate": {
+        "free_nodes": 2943,
+        "free_mass_kg": 0.1635263741139938,
+        "retained_residual_impulse_l2_Ns": 2.8289424133724277e-07,
+        "retained_residual_impulse_l1_Ns": 1.8478846017850946e-06,
+        "retained_residual_equivalent_force_l1_N": 0.11826460891323416,
+        "free_internal_force_l1_N": 0.10413898441945521,
+        "free_FEM_kinetic_energy_J": 8.099287849121229e-06
+      }
+    },
+    "42": {
+      "reference": {
+        "free_nodes": 718,
+        "free_mass_kg": 0.14160218965012125,
+        "retained_residual_impulse_l2_Ns": 7.946913390750313e-08,
+        "retained_residual_impulse_l1_Ns": 6.52369776544442e-07,
+        "retained_residual_equivalent_force_l1_N": 0.04175166372148549,
+        "free_internal_force_l1_N": 0.06498004333871,
+        "free_FEM_kinetic_energy_J": 7.086933396629143e-06
+      },
+      "candidate": {
+        "free_nodes": 701,
+        "free_mass_kg": 0.14160446321179151,
+        "retained_residual_impulse_l2_Ns": 1.5955342480713283e-07,
+        "retained_residual_impulse_l1_Ns": 1.2264720101662543e-06,
+        "retained_residual_equivalent_force_l1_N": 0.07849420493315472,
+        "free_internal_force_l1_N": 0.07586959898928598,
+        "free_FEM_kinetic_energy_J": 7.0194600541250615e-06
+      }
+    },
+    "43": {
+      "reference": {
+        "free_nodes": 3661,
+        "free_mass_kg": 0.16562724268066037,
+        "retained_residual_impulse_l2_Ns": 8.122385803612244e-08,
+        "retained_residual_impulse_l1_Ns": 8.263456084518347e-07,
+        "retained_residual_equivalent_force_l1_N": 0.052886116436230944,
+        "free_internal_force_l1_N": 0.09318082285724025,
+        "free_FEM_kinetic_energy_J": 8.211919170958856e-06
+      },
+      "candidate": {
+        "free_nodes": 3648,
+        "free_mass_kg": 0.1656236315480821,
+        "retained_residual_impulse_l2_Ns": 1.0442658001243438e-07,
+        "retained_residual_impulse_l1_Ns": 1.2217994816415872e-06,
+        "retained_residual_equivalent_force_l1_N": 0.07819516312173866,
+        "free_internal_force_l1_N": 0.10105059891334897,
+        "free_FEM_kinetic_energy_J": 8.12040814534512e-06
+      }
+    },
+    "45": {
+      "reference": {
+        "free_nodes": 50,
+        "free_mass_kg": 0.0002491019719580469,
+        "retained_residual_impulse_l2_Ns": 2.114764179717122e-09,
+        "retained_residual_impulse_l1_Ns": 6.126384018069971e-09,
+        "retained_residual_equivalent_force_l1_N": 0.000392088558587164,
+        "free_internal_force_l1_N": 0.0008931388319833217,
+        "free_FEM_kinetic_energy_J": 1.14053845850098e-08
+      },
+      "candidate": {
+        "free_nodes": 50,
+        "free_mass_kg": 0.0002491019719580469,
+        "retained_residual_impulse_l2_Ns": 5.375978376390269e-09,
+        "retained_residual_impulse_l1_Ns": 1.490034375839029e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0009536219553734428,
+        "free_internal_force_l1_N": 0.001336612672483655,
+        "free_FEM_kinetic_energy_J": 1.0986453552779735e-08
+      }
+    },
+    "46": {
+      "reference": {
+        "free_nodes": 4683,
+        "free_mass_kg": 0.019221609760402523,
+        "retained_residual_impulse_l2_Ns": 9.854841753546847e-08,
+        "retained_residual_impulse_l1_Ns": 6.396229005657037e-07,
+        "retained_residual_equivalent_force_l1_N": 0.04093586369748253,
+        "free_internal_force_l1_N": 0.06135688301872536,
+        "free_FEM_kinetic_energy_J": 8.570860650092191e-07
+      },
+      "candidate": {
+        "free_nodes": 4673,
+        "free_mass_kg": 0.019222980112461666,
+        "retained_residual_impulse_l2_Ns": 2.039973720061659e-07,
+        "retained_residual_impulse_l1_Ns": 1.0036356409916167e-06,
+        "retained_residual_equivalent_force_l1_N": 0.06423267798140384,
+        "free_internal_force_l1_N": 0.08678321950887731,
+        "free_FEM_kinetic_energy_J": 8.523819052953123e-07
+      }
+    },
+    "48": {
+      "reference": {
+        "free_nodes": 96,
+        "free_mass_kg": 0.001147555415945696,
+        "retained_residual_impulse_l2_Ns": 8.514162032092002e-09,
+        "retained_residual_impulse_l1_Ns": 3.3264724643372946e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0021289422763491623,
+        "free_internal_force_l1_N": 0.0035770030229720735,
+        "free_FEM_kinetic_energy_J": 5.087582968211566e-08
+      },
+      "candidate": {
+        "free_nodes": 96,
+        "free_mass_kg": 0.001147555415945696,
+        "retained_residual_impulse_l2_Ns": 1.243207567563654e-08,
+        "retained_residual_impulse_l1_Ns": 4.9516319473841795e-08,
+        "retained_residual_equivalent_force_l1_N": 0.003169044296239937,
+        "free_internal_force_l1_N": 0.004368424108903659,
+        "free_FEM_kinetic_energy_J": 5.098351908211192e-08
+      }
+    },
+    "49": {
+      "reference": {
+        "free_nodes": 702,
+        "free_mass_kg": 0.0014561025080541928,
+        "retained_residual_impulse_l2_Ns": 6.2599550943343e-09,
+        "retained_residual_impulse_l1_Ns": 5.066161485082139e-08,
+        "retained_residual_equivalent_force_l1_N": 0.003242343196895195,
+        "free_internal_force_l1_N": 0.004437951621931797,
+        "free_FEM_kinetic_energy_J": 6.862792064324844e-08
+      },
+      "candidate": {
+        "free_nodes": 701,
+        "free_mass_kg": 0.001456101881415785,
+        "retained_residual_impulse_l2_Ns": 6.965062019170714e-09,
+        "retained_residual_impulse_l1_Ns": 6.332754412862636e-08,
+        "retained_residual_equivalent_force_l1_N": 0.004052962632283776,
+        "free_internal_force_l1_N": 0.005041238857699202,
+        "free_FEM_kinetic_energy_J": 6.793750213034407e-08
+      }
+    },
+    "50": {
+      "reference": {
+        "free_nodes": 2,
+        "free_mass_kg": 0.0003851267974,
+        "retained_residual_impulse_l2_Ns": 7.834432166091395e-10,
+        "retained_residual_impulse_l1_Ns": 1.0879019669013926e-09,
+        "retained_residual_equivalent_force_l1_N": 6.96257225842149e-05,
+        "free_internal_force_l1_N": 0.0004627076273942616,
+        "free_FEM_kinetic_energy_J": 1.876392660634053e-08
+      },
+      "candidate": {
+        "free_nodes": 2,
+        "free_mass_kg": 0.00038509081060000003,
+        "retained_residual_impulse_l2_Ns": 1.847141842388677e-09,
+        "retained_residual_impulse_l1_Ns": 2.5768471094225452e-09,
+        "retained_residual_equivalent_force_l1_N": 0.0001649182071925166,
+        "free_internal_force_l1_N": 0.00030962184634337813,
+        "free_FEM_kinetic_energy_J": 1.8916687585624603e-08
+      }
+    },
+    "52": {
+      "reference": {
+        "free_nodes": 3205,
+        "free_mass_kg": 0.014988337777378744,
+        "retained_residual_impulse_l2_Ns": 1.8405160594041524e-08,
+        "retained_residual_impulse_l1_Ns": 2.2327190958266102e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014289401536544248,
+        "free_internal_force_l1_N": 0.021851048701794516,
+        "free_FEM_kinetic_energy_J": 7.327446616416907e-07
+      },
+      "candidate": {
+        "free_nodes": 3199,
+        "free_mass_kg": 0.014987876654394243,
+        "retained_residual_impulse_l2_Ns": 2.7412717116913534e-08,
+        "retained_residual_impulse_l1_Ns": 3.087696248516257e-07,
+        "retained_residual_equivalent_force_l1_N": 0.019761255054611005,
+        "free_internal_force_l1_N": 0.024788687357259295,
+        "free_FEM_kinetic_energy_J": 7.245508393895929e-07
+      }
+    },
+    "53": {
+      "reference": {
+        "free_nodes": 1019,
+        "free_mass_kg": 0.00784545569420432,
+        "retained_residual_impulse_l2_Ns": 2.1326701875595815e-08,
+        "retained_residual_impulse_l1_Ns": 1.8817017088850406e-07,
+        "retained_residual_equivalent_force_l1_N": 0.012042890366512972,
+        "free_internal_force_l1_N": 0.015926034570493363,
+        "free_FEM_kinetic_energy_J": 3.778882770148206e-07
+      },
+      "candidate": {
+        "free_nodes": 1005,
+        "free_mass_kg": 0.007839290157986751,
+        "retained_residual_impulse_l2_Ns": 2.610374748325241e-08,
+        "retained_residual_impulse_l1_Ns": 2.3087878992648968e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014776241855492525,
+        "free_internal_force_l1_N": 0.01918404399990403,
+        "free_FEM_kinetic_energy_J": 3.736788092467798e-07
+      }
+    },
+    "54": {
+      "reference": {
+        "free_nodes": 3325,
+        "free_mass_kg": 0.010772392047396051,
+        "retained_residual_impulse_l2_Ns": 1.684921279614867e-08,
+        "retained_residual_impulse_l1_Ns": 2.2336184166145133e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014295157189314239,
+        "free_internal_force_l1_N": 0.021559257910470267,
+        "free_FEM_kinetic_energy_J": 5.258344849871007e-07
+      },
+      "candidate": {
+        "free_nodes": 3321,
+        "free_mass_kg": 0.010779061549305172,
+        "retained_residual_impulse_l2_Ns": 2.0473465731764144e-08,
+        "retained_residual_impulse_l1_Ns": 2.893210492282191e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01851654627366239,
+        "free_internal_force_l1_N": 0.023796415229652798,
+        "free_FEM_kinetic_energy_J": 5.206044420159297e-07
+      }
+    },
+    "56": {
+      "reference": {
+        "free_nodes": 284,
+        "free_mass_kg": 0.003958518701367228,
+        "retained_residual_impulse_l2_Ns": 3.264575981665547e-09,
+        "retained_residual_impulse_l1_Ns": 2.041271256999148e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0013064135426077092,
+        "free_internal_force_l1_N": 0.004737910407876976,
+        "free_FEM_kinetic_energy_J": 1.916224467258979e-07
+      },
+      "candidate": {
+        "free_nodes": 273,
+        "free_mass_kg": 0.003958504709711433,
+        "retained_residual_impulse_l2_Ns": 8.947807637097472e-09,
+        "retained_residual_impulse_l1_Ns": 4.983883533685964e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0031896853104955206,
+        "free_internal_force_l1_N": 0.0054020330179854045,
+        "free_FEM_kinetic_energy_J": 1.9133450803949034e-07
+      }
+    },
+    "57": {
+      "reference": {
+        "free_nodes": 1166,
+        "free_mass_kg": 0.010878579796831381,
+        "retained_residual_impulse_l2_Ns": 9.190500622766986e-09,
+        "retained_residual_impulse_l1_Ns": 8.920109245664785e-08,
+        "retained_residual_equivalent_force_l1_N": 0.005708869646853396,
+        "free_internal_force_l1_N": 0.0074135956771802895,
+        "free_FEM_kinetic_energy_J": 5.379982388526803e-07
+      },
+      "candidate": {
+        "free_nodes": 1164,
+        "free_mass_kg": 0.010878554043342871,
+        "retained_residual_impulse_l2_Ns": 1.517038669928413e-08,
+        "retained_residual_impulse_l1_Ns": 1.1569088191640835e-07,
+        "retained_residual_equivalent_force_l1_N": 0.00740421609198646,
+        "free_internal_force_l1_N": 0.008483188461808231,
+        "free_FEM_kinetic_energy_J": 5.331604555580601e-07
+      }
+    },
+    "59": {
+      "reference": {
+        "free_nodes": 9620,
+        "free_mass_kg": 0.012892989266349273,
+        "retained_residual_impulse_l2_Ns": 2.816702353076914e-08,
+        "retained_residual_impulse_l1_Ns": 5.908884945478288e-07,
+        "retained_residual_equivalent_force_l1_N": 0.037816861860054465,
+        "free_internal_force_l1_N": 0.047342203593553234,
+        "free_FEM_kinetic_energy_J": 6.09540913350039e-07
+      },
+      "candidate": {
+        "free_nodes": 9609,
+        "free_mass_kg": 0.012892993583770117,
+        "retained_residual_impulse_l2_Ns": 3.094608736059576e-08,
+        "retained_residual_impulse_l1_Ns": 6.87336702020056e-07,
+        "retained_residual_equivalent_force_l1_N": 0.04398954684593864,
+        "free_internal_force_l1_N": 0.05474030416690296,
+        "free_FEM_kinetic_energy_J": 6.060583072991695e-07
+      }
+    },
+    "60": {
+      "reference": {
+        "free_nodes": 553,
+        "free_mass_kg": 0.0037001913430222766,
+        "retained_residual_impulse_l2_Ns": 1.3382111094223805e-08,
+        "retained_residual_impulse_l1_Ns": 9.108026285041329e-08,
+        "retained_residual_equivalent_force_l1_N": 0.005829136546358543,
+        "free_internal_force_l1_N": 0.007215666417180504,
+        "free_FEM_kinetic_energy_J": 1.7135910412428853e-07
+      },
+      "candidate": {
+        "free_nodes": 553,
+        "free_mass_kg": 0.0037001913430222766,
+        "retained_residual_impulse_l2_Ns": 1.4532819527024883e-08,
+        "retained_residual_impulse_l1_Ns": 1.0141349599223314e-07,
+        "retained_residual_equivalent_force_l1_N": 0.0064904634361145725,
+        "free_internal_force_l1_N": 0.009519357632233931,
+        "free_FEM_kinetic_energy_J": 1.6967313222815893e-07
+      }
+    },
+    "61": {
+      "reference": {
+        "free_nodes": 5460,
+        "free_mass_kg": 0.006395067719067117,
+        "retained_residual_impulse_l2_Ns": 4.5299796861552776e-08,
+        "retained_residual_impulse_l1_Ns": 3.100508361154993e-07,
+        "retained_residual_equivalent_force_l1_N": 0.019843252571615514,
+        "free_internal_force_l1_N": 0.024010559546210338,
+        "free_FEM_kinetic_energy_J": 3.067096206750932e-07
+      },
+      "candidate": {
+        "free_nodes": 5449,
+        "free_mass_kg": 0.00639506771934974,
+        "retained_residual_impulse_l2_Ns": 5.509239780863304e-08,
+        "retained_residual_impulse_l1_Ns": 3.6607272149726956e-07,
+        "retained_residual_equivalent_force_l1_N": 0.02342865306624424,
+        "free_internal_force_l1_N": 0.027485438821085426,
+        "free_FEM_kinetic_energy_J": 3.0370402549344e-07
+      }
+    },
+    "62": {
+      "reference": {
+        "free_nodes": 4426,
+        "free_mass_kg": 0.00473046667802143,
+        "retained_residual_impulse_l2_Ns": 1.504688888937782e-08,
+        "retained_residual_impulse_l1_Ns": 2.2619452616716123e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014476448989093694,
+        "free_internal_force_l1_N": 0.019526248263730304,
+        "free_FEM_kinetic_energy_J": 2.2497692747229714e-07
+      },
+      "candidate": {
+        "free_nodes": 4405,
+        "free_mass_kg": 0.004730282947141192,
+        "retained_residual_impulse_l2_Ns": 1.672155280836888e-08,
+        "retained_residual_impulse_l1_Ns": 2.5930680244029355e-07,
+        "retained_residual_equivalent_force_l1_N": 0.016595634570209534,
+        "free_internal_force_l1_N": 0.021028292519523418,
+        "free_FEM_kinetic_energy_J": 2.229777025337063e-07
+      }
+    },
+    "64": {
+      "reference": {
+        "free_nodes": 6458,
+        "free_mass_kg": 0.005694483410809253,
+        "retained_residual_impulse_l2_Ns": 2.5806872203810923e-08,
+        "retained_residual_impulse_l1_Ns": 4.396605124611294e-07,
+        "retained_residual_equivalent_force_l1_N": 0.028138271464883746,
+        "free_internal_force_l1_N": 0.03479694215902988,
+        "free_FEM_kinetic_energy_J": 2.5309720215272636e-07
+      },
+      "candidate": {
+        "free_nodes": 6443,
+        "free_mass_kg": 0.0056945227313425694,
+        "retained_residual_impulse_l2_Ns": 2.573730765444295e-08,
+        "retained_residual_impulse_l1_Ns": 4.862618126330098e-07,
+        "retained_residual_equivalent_force_l1_N": 0.031120754534633692,
+        "free_internal_force_l1_N": 0.03952884119782207,
+        "free_FEM_kinetic_energy_J": 2.5208296684044973e-07
+      }
+    },
+    "65": {
+      "reference": {
+        "free_nodes": 6838,
+        "free_mass_kg": 0.006735199798347743,
+        "retained_residual_impulse_l2_Ns": 1.9159645346043767e-08,
+        "retained_residual_impulse_l1_Ns": 3.527331238880015e-07,
+        "retained_residual_equivalent_force_l1_N": 0.022574918859683938,
+        "free_internal_force_l1_N": 0.029934415267665236,
+        "free_FEM_kinetic_energy_J": 3.2075118114620245e-07
+      },
+      "candidate": {
+        "free_nodes": 6825,
+        "free_mass_kg": 0.006734416491490165,
+        "retained_residual_impulse_l2_Ns": 1.998031043412608e-08,
+        "retained_residual_impulse_l1_Ns": 4.127690742332739e-07,
+        "retained_residual_equivalent_force_l1_N": 0.026417219499810015,
+        "free_internal_force_l1_N": 0.03331487360481009,
+        "free_FEM_kinetic_energy_J": 3.174608780448879e-07
+      }
+    },
+    "66": {
+      "reference": {
+        "free_nodes": 7022,
+        "free_mass_kg": 0.0053867880799624325,
+        "retained_residual_impulse_l2_Ns": 1.2590794423101445e-08,
+        "retained_residual_impulse_l1_Ns": 2.408302032342031e-07,
+        "retained_residual_equivalent_force_l1_N": 0.015413132277023052,
+        "free_internal_force_l1_N": 0.02090122439537156,
+        "free_FEM_kinetic_energy_J": 2.5631994376054306e-07
+      },
+      "candidate": {
+        "free_nodes": 7017,
+        "free_mass_kg": 0.005387574820754063,
+        "retained_residual_impulse_l2_Ns": 1.903165486270109e-08,
+        "retained_residual_impulse_l1_Ns": 2.917160598001648e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01866982694300754,
+        "free_internal_force_l1_N": 0.023703978952251497,
+        "free_FEM_kinetic_energy_J": 2.535370751888521e-07
+      }
+    },
+    "67": {
+      "reference": {
+        "free_nodes": 861,
+        "free_mass_kg": 0.003801785374191559,
+        "retained_residual_impulse_l2_Ns": 7.326818556836426e-09,
+        "retained_residual_impulse_l1_Ns": 6.98088209018976e-08,
+        "retained_residual_equivalent_force_l1_N": 0.004467764326128127,
+        "free_internal_force_l1_N": 0.007290181655032734,
+        "free_FEM_kinetic_energy_J": 1.8289219300748066e-07
+      },
+      "candidate": {
+        "free_nodes": 861,
+        "free_mass_kg": 0.0038020127028999583,
+        "retained_residual_impulse_l2_Ns": 9.882163069296221e-09,
+        "retained_residual_impulse_l1_Ns": 9.308471470101365e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0059574214587213925,
+        "free_internal_force_l1_N": 0.008134594412352345,
+        "free_FEM_kinetic_energy_J": 1.811983095494848e-07
+      }
+    },
+    "69": {
+      "reference": {
+        "free_nodes": 689,
+        "free_mass_kg": 0.005452351650932178,
+        "retained_residual_impulse_l2_Ns": 2.2578654002693875e-08,
+        "retained_residual_impulse_l1_Ns": 1.6796856038041171e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010749987355226948,
+        "free_internal_force_l1_N": 0.01804370416125394,
+        "free_FEM_kinetic_energy_J": 2.483509890936042e-07
+      },
+      "candidate": {
+        "free_nodes": 678,
+        "free_mass_kg": 0.005448059575053423,
+        "retained_residual_impulse_l2_Ns": 4.2338789515677154e-08,
+        "retained_residual_impulse_l1_Ns": 2.416146095311596e-07,
+        "retained_residual_equivalent_force_l1_N": 0.015463334277650701,
+        "free_internal_force_l1_N": 0.022288022729449988,
+        "free_FEM_kinetic_energy_J": 2.45558322804273e-07
+      }
+    },
+    "70": {
+      "reference": {
+        "free_nodes": 1621,
+        "free_mass_kg": 0.0038001348811753303,
+        "retained_residual_impulse_l2_Ns": 2.30992019397504e-08,
+        "retained_residual_impulse_l1_Ns": 1.9407283933034017e-07,
+        "retained_residual_equivalent_force_l1_N": 0.012420661128899259,
+        "free_internal_force_l1_N": 0.020275619257185365,
+        "free_FEM_kinetic_energy_J": 1.6565436681619456e-07
+      },
+      "candidate": {
+        "free_nodes": 1614,
+        "free_mass_kg": 0.0037998848576868373,
+        "retained_residual_impulse_l2_Ns": 3.521532314843132e-08,
+        "retained_residual_impulse_l1_Ns": 2.838045974905942e-07,
+        "retained_residual_equivalent_force_l1_N": 0.018163493379174982,
+        "free_internal_force_l1_N": 0.024609239235493997,
+        "free_FEM_kinetic_energy_J": 1.6603328137201163e-07
+      }
+    },
+    "71": {
+      "reference": {
+        "free_nodes": 2796,
+        "free_mass_kg": 0.00599384386589771,
+        "retained_residual_impulse_l2_Ns": 4.808089185878417e-08,
+        "retained_residual_impulse_l1_Ns": 4.699626289156406e-07,
+        "retained_residual_equivalent_force_l1_N": 0.03007760682612554,
+        "free_internal_force_l1_N": 0.04195467178174192,
+        "free_FEM_kinetic_energy_J": 2.642501071189439e-07
+      },
+      "candidate": {
+        "free_nodes": 2787,
+        "free_mass_kg": 0.00599462520890774,
+        "retained_residual_impulse_l2_Ns": 6.304740826818161e-08,
+        "retained_residual_impulse_l1_Ns": 5.864106083300539e-07,
+        "retained_residual_equivalent_force_l1_N": 0.03753027715568952,
+        "free_internal_force_l1_N": 0.049901272510942396,
+        "free_FEM_kinetic_energy_J": 2.629354332608797e-07
+      }
+    },
+    "72": {
+      "reference": {
+        "free_nodes": 2603,
+        "free_mass_kg": 0.020998336989071633,
+        "retained_residual_impulse_l2_Ns": 1.6270762951103386e-08,
+        "retained_residual_impulse_l1_Ns": 1.6524968270967053e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010575979192540538,
+        "free_internal_force_l1_N": 0.015638601678209043,
+        "free_FEM_kinetic_energy_J": 1.0321398425474325e-06
+      },
+      "candidate": {
+        "free_nodes": 2599,
+        "free_mass_kg": 0.02099832435680822,
+        "retained_residual_impulse_l2_Ns": 1.8151334520211673e-08,
+        "retained_residual_impulse_l1_Ns": 2.0949252258047297e-07,
+        "retained_residual_equivalent_force_l1_N": 0.013407520810170083,
+        "free_internal_force_l1_N": 0.017393273063259922,
+        "free_FEM_kinetic_energy_J": 1.0206665297353974e-06
+      }
+    },
+    "74": {
+      "reference": {
+        "free_nodes": 1882,
+        "free_mass_kg": 0.008789541023315224,
+        "retained_residual_impulse_l2_Ns": 1.327462157562021e-08,
+        "retained_residual_impulse_l1_Ns": 1.3417367019385041e-07,
+        "retained_residual_equivalent_force_l1_N": 0.008587114485720684,
+        "free_internal_force_l1_N": 0.012394571377352585,
+        "free_FEM_kinetic_energy_J": 4.394880754482806e-07
+      },
+      "candidate": {
+        "free_nodes": 1879,
+        "free_mass_kg": 0.008793406352857424,
+        "retained_residual_impulse_l2_Ns": 1.7494097556437604e-08,
+        "retained_residual_impulse_l1_Ns": 1.8884804602611408e-07,
+        "retained_residual_equivalent_force_l1_N": 0.012086274373265347,
+        "free_internal_force_l1_N": 0.013535908162915493,
+        "free_FEM_kinetic_energy_J": 4.353613575622612e-07
+      }
+    },
+    "75": {
+      "reference": {
+        "free_nodes": 2309,
+        "free_mass_kg": 0.005783079740724598,
+        "retained_residual_impulse_l2_Ns": 1.5054744450259014e-08,
+        "retained_residual_impulse_l1_Ns": 1.2850818008360982e-07,
+        "retained_residual_equivalent_force_l1_N": 0.008224523135837613,
+        "free_internal_force_l1_N": 0.013449235698906202,
+        "free_FEM_kinetic_energy_J": 2.754618436928484e-07
+      },
+      "candidate": {
+        "free_nodes": 2302,
+        "free_mass_kg": 0.00578291943316349,
+        "retained_residual_impulse_l2_Ns": 1.9606459675976087e-08,
+        "retained_residual_impulse_l1_Ns": 1.7471972819199043e-07,
+        "retained_residual_equivalent_force_l1_N": 0.011182062074704928,
+        "free_internal_force_l1_N": 0.014895427572442128,
+        "free_FEM_kinetic_energy_J": 2.7329112939078844e-07
+      }
+    },
+    "76": {
+      "reference": {
+        "free_nodes": 1706,
+        "free_mass_kg": 0.0018895546561940502,
+        "retained_residual_impulse_l2_Ns": 2.99886540843003e-09,
+        "retained_residual_impulse_l1_Ns": 4.217642251463895e-08,
+        "retained_residual_equivalent_force_l1_N": 0.002699290913098475,
+        "free_internal_force_l1_N": 0.0037926733866103434,
+        "free_FEM_kinetic_energy_J": 9.189328905526178e-08
+      },
+      "candidate": {
+        "free_nodes": 1703,
+        "free_mass_kg": 0.0018895329969990913,
+        "retained_residual_impulse_l2_Ns": 3.4040898157340505e-09,
+        "retained_residual_impulse_l1_Ns": 4.7349557905185006e-08,
+        "retained_residual_equivalent_force_l1_N": 0.003030371562413443,
+        "free_internal_force_l1_N": 0.0038891824248162795,
+        "free_FEM_kinetic_energy_J": 9.098750292954518e-08
+      }
+    },
+    "79": {
+      "reference": {
+        "free_nodes": 210,
+        "free_mass_kg": 0.01842323723706958,
+        "retained_residual_impulse_l2_Ns": 3.7707963674534185e-08,
+        "retained_residual_impulse_l1_Ns": 1.5372623242650566e-07,
+        "retained_residual_equivalent_force_l1_N": 0.009838478409346024,
+        "free_internal_force_l1_N": 0.009527073858527314,
+        "free_FEM_kinetic_energy_J": 8.863785895060154e-07
+      },
+      "candidate": {
+        "free_nodes": 203,
+        "free_mass_kg": 0.018422101129288753,
+        "retained_residual_impulse_l2_Ns": 2.598144774064893e-08,
+        "retained_residual_impulse_l1_Ns": 1.274260078541959e-07,
+        "retained_residual_equivalent_force_l1_N": 0.008155264116435228,
+        "free_internal_force_l1_N": 0.009302609288771111,
+        "free_FEM_kinetic_energy_J": 8.770076844528191e-07
+      }
+    },
+    "84": {
+      "reference": {
+        "free_nodes": 2936,
+        "free_mass_kg": 0.061312492483925965,
+        "retained_residual_impulse_l2_Ns": 9.852460558928024e-08,
+        "retained_residual_impulse_l1_Ns": 8.477328858006238e-07,
+        "retained_residual_equivalent_force_l1_N": 0.054254902121727754,
+        "free_internal_force_l1_N": 0.06822046413483092,
+        "free_FEM_kinetic_energy_J": 2.9892381908783053e-06
+      },
+      "candidate": {
+        "free_nodes": 2931,
+        "free_mass_kg": 0.06131368119718601,
+        "retained_residual_impulse_l2_Ns": 1.643122742872516e-07,
+        "retained_residual_impulse_l1_Ns": 1.2154840749050251e-06,
+        "retained_residual_equivalent_force_l1_N": 0.07779097710974094,
+        "free_internal_force_l1_N": 0.08242879264589593,
+        "free_FEM_kinetic_energy_J": 2.965928994897719e-06
+      }
+    },
+    "91": {
+      "reference": {
+        "free_nodes": 1824,
+        "free_mass_kg": 0.2756083713434931,
+        "retained_residual_impulse_l2_Ns": 8.947770534109224e-08,
+        "retained_residual_impulse_l1_Ns": 6.446595451782612e-07,
+        "retained_residual_equivalent_force_l1_N": 0.04125820893741994,
+        "free_internal_force_l1_N": 0.032249733723547926,
+        "free_FEM_kinetic_energy_J": 1.3764941674837258e-05
+      },
+      "candidate": {
+        "free_nodes": 1818,
+        "free_mass_kg": 0.2756082773903096,
+        "retained_residual_impulse_l2_Ns": 9.282930839017688e-08,
+        "retained_residual_impulse_l1_Ns": 7.41451096877681e-07,
+        "retained_residual_equivalent_force_l1_N": 0.047452867952803755,
+        "free_internal_force_l1_N": 0.03423044986782192,
+        "free_FEM_kinetic_energy_J": 1.3600655011845051e-05
+      }
+    },
+    "92": {
+      "reference": {
+        "free_nodes": 128,
+        "free_mass_kg": 0.202229465479895,
+        "retained_residual_impulse_l2_Ns": 6.719689142759572e-08,
+        "retained_residual_impulse_l1_Ns": 4.3465539699051967e-07,
+        "retained_residual_equivalent_force_l1_N": 0.027817944089935424,
+        "free_internal_force_l1_N": 0.009355032795242173,
+        "free_FEM_kinetic_energy_J": 1.0070603183133703e-05
+      },
+      "candidate": {
+        "free_nodes": 128,
+        "free_mass_kg": 0.202229465479895,
+        "retained_residual_impulse_l2_Ns": 4.955397121619424e-08,
+        "retained_residual_impulse_l1_Ns": 2.7699854138615275e-07,
+        "retained_residual_equivalent_force_l1_N": 0.017727905809120155,
+        "free_internal_force_l1_N": 0.008366717713769543,
+        "free_FEM_kinetic_energy_J": 9.94425627895489e-06
+      }
+    },
+    "93": {
+      "reference": {
+        "free_nodes": 4557,
+        "free_mass_kg": 0.15101629775640096,
+        "retained_residual_impulse_l2_Ns": 1.0945589047976065e-07,
+        "retained_residual_impulse_l1_Ns": 1.0359708643757577e-06,
+        "retained_residual_equivalent_force_l1_N": 0.0663021321799795,
+        "free_internal_force_l1_N": 0.07604892311393781,
+        "free_FEM_kinetic_energy_J": 7.458085167575229e-06
+      },
+      "candidate": {
+        "free_nodes": 4546,
+        "free_mass_kg": 0.15101636497897372,
+        "retained_residual_impulse_l2_Ns": 1.0957526608889476e-07,
+        "retained_residual_impulse_l1_Ns": 1.1523369446747e-06,
+        "retained_residual_equivalent_force_l1_N": 0.07374956096640159,
+        "free_internal_force_l1_N": 0.08182817626218025,
+        "free_FEM_kinetic_energy_J": 7.377146195082782e-06
+      }
+    },
+    "95": {
+      "reference": {
+        "free_nodes": 340,
+        "free_mass_kg": 0.0032699368309080145,
+        "retained_residual_impulse_l2_Ns": 8.531157613052274e-09,
+        "retained_residual_impulse_l1_Ns": 4.463576269012728e-08,
+        "retained_residual_equivalent_force_l1_N": 0.00285668867687537,
+        "free_internal_force_l1_N": 0.004929525516523344,
+        "free_FEM_kinetic_energy_J": 1.640673674580325e-07
+      },
+      "candidate": {
+        "free_nodes": 339,
+        "free_mass_kg": 0.0032699322637993644,
+        "retained_residual_impulse_l2_Ns": 1.7739181299094298e-08,
+        "retained_residual_impulse_l1_Ns": 7.905309328447795e-08,
+        "retained_residual_equivalent_force_l1_N": 0.005059397730593512,
+        "free_internal_force_l1_N": 0.005716493381235437,
+        "free_FEM_kinetic_energy_J": 1.618656677234689e-07
+      }
+    },
+    "97": {
+      "reference": {
+        "free_nodes": 265,
+        "free_mass_kg": 0.001332957973005984,
+        "retained_residual_impulse_l2_Ns": 8.985222822855825e-09,
+        "retained_residual_impulse_l1_Ns": 4.533921112003037e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0029017093742569875,
+        "free_internal_force_l1_N": 0.0035497849108482808,
+        "free_FEM_kinetic_energy_J": 6.814955156554125e-08
+      },
+      "candidate": {
+        "free_nodes": 264,
+        "free_mass_kg": 0.001332957972976191,
+        "retained_residual_impulse_l2_Ns": 1.1242196300274997e-08,
+        "retained_residual_impulse_l1_Ns": 5.665511463751758e-08,
+        "retained_residual_equivalent_force_l1_N": 0.003625927165077214,
+        "free_internal_force_l1_N": 0.0036567654295683195,
+        "free_FEM_kinetic_energy_J": 6.739318140090975e-08
+      }
+    },
+    "98": {
+      "reference": {
+        "free_nodes": 295,
+        "free_mass_kg": 0.002187428410846535,
+        "retained_residual_impulse_l2_Ns": 8.692275458019551e-10,
+        "retained_residual_impulse_l1_Ns": 7.755871389649451e-09,
+        "retained_residual_equivalent_force_l1_N": 0.0004963757454292095,
+        "free_internal_force_l1_N": 0.0012141227434419302,
+        "free_FEM_kinetic_energy_J": 1.1535708286886646e-07
+      },
+      "candidate": {
+        "free_nodes": 295,
+        "free_mass_kg": 0.002187428410846535,
+        "retained_residual_impulse_l2_Ns": 3.964405348252765e-09,
+        "retained_residual_impulse_l1_Ns": 2.8674067070897648e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0018351402056252092,
+        "free_internal_force_l1_N": 0.0011397674927989443,
+        "free_FEM_kinetic_energy_J": 1.1399114048494923e-07
+      }
+    },
+    "99": {
+      "reference": {
+        "free_nodes": 1415,
+        "free_mass_kg": 0.0021203926812189194,
+        "retained_residual_impulse_l2_Ns": 1.0075920837575157e-08,
+        "retained_residual_impulse_l1_Ns": 8.745239249131826e-08,
+        "retained_residual_equivalent_force_l1_N": 0.005596952854372681,
+        "free_internal_force_l1_N": 0.008287384570283204,
+        "free_FEM_kinetic_energy_J": 1.0022736457063905e-07
+      },
+      "candidate": {
+        "free_nodes": 1410,
+        "free_mass_kg": 0.0021189427275061295,
+        "retained_residual_impulse_l2_Ns": 1.5074607636773348e-08,
+        "retained_residual_impulse_l1_Ns": 1.1622499541735295e-07,
+        "retained_residual_equivalent_force_l1_N": 0.007438399354427995,
+        "free_internal_force_l1_N": 0.00951265758402547,
+        "free_FEM_kinetic_energy_J": 9.914266826666158e-08
+      }
+    },
+    "100": {
+      "reference": {
+        "free_nodes": 2142,
+        "free_mass_kg": 0.002124032876346201,
+        "retained_residual_impulse_l2_Ns": 1.1253666930450235e-08,
+        "retained_residual_impulse_l1_Ns": 1.1819490433963646e-07,
+        "retained_residual_equivalent_force_l1_N": 0.007564473519483267,
+        "free_internal_force_l1_N": 0.010872295398348629,
+        "free_FEM_kinetic_energy_J": 9.625300881538969e-08
+      },
+      "candidate": {
+        "free_nodes": 2139,
+        "free_mass_kg": 0.002124041221601377,
+        "retained_residual_impulse_l2_Ns": 1.5718717435570436e-08,
+        "retained_residual_impulse_l1_Ns": 1.596752336256246e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010219214468057977,
+        "free_internal_force_l1_N": 0.01305001072449842,
+        "free_FEM_kinetic_energy_J": 9.589616482369114e-08
+      }
+    },
+    "102": {
+      "reference": {
+        "free_nodes": 4478,
+        "free_mass_kg": 0.01742120435757878,
+        "retained_residual_impulse_l2_Ns": 1.877467699196481e-08,
+        "retained_residual_impulse_l1_Ns": 3.5507027302932433e-07,
+        "retained_residual_equivalent_force_l1_N": 0.022724496397644605,
+        "free_internal_force_l1_N": 0.03235766724931383,
+        "free_FEM_kinetic_energy_J": 8.5442264216242e-07
+      },
+      "candidate": {
+        "free_nodes": 4463,
+        "free_mass_kg": 0.0174226639840731,
+        "retained_residual_impulse_l2_Ns": 2.585345850824078e-08,
+        "retained_residual_impulse_l1_Ns": 4.397459649000844e-07,
+        "retained_residual_equivalent_force_l1_N": 0.028143740420717853,
+        "free_internal_force_l1_N": 0.03630572221580261,
+        "free_FEM_kinetic_energy_J": 8.445776820568195e-07
+      }
+    },
+    "103": {
+      "reference": {
+        "free_nodes": 1359,
+        "free_mass_kg": 0.012364101074631512,
+        "retained_residual_impulse_l2_Ns": 1.5486327227185634e-08,
+        "retained_residual_impulse_l1_Ns": 1.5388579760677656e-07,
+        "retained_residual_equivalent_force_l1_N": 0.009848690580399713,
+        "free_internal_force_l1_N": 0.013761340509751573,
+        "free_FEM_kinetic_energy_J": 5.944190842618824e-07
+      },
+      "candidate": {
+        "free_nodes": 1355,
+        "free_mass_kg": 0.012364132001704373,
+        "retained_residual_impulse_l2_Ns": 1.958617091009682e-08,
+        "retained_residual_impulse_l1_Ns": 1.8421793502020805e-07,
+        "retained_residual_equivalent_force_l1_N": 0.011789947282921412,
+        "free_internal_force_l1_N": 0.015577512905808248,
+        "free_FEM_kinetic_energy_J": 5.901903622750241e-07
+      }
+    },
+    "104": {
+      "reference": {
+        "free_nodes": 5224,
+        "free_mass_kg": 0.006233844595820882,
+        "retained_residual_impulse_l2_Ns": 4.7883720093221777e-08,
+        "retained_residual_impulse_l1_Ns": 4.007452263490661e-07,
+        "retained_residual_equivalent_force_l1_N": 0.025647693271665477,
+        "free_internal_force_l1_N": 0.03343936991224358,
+        "free_FEM_kinetic_energy_J": 2.727755989259352e-07
+      },
+      "candidate": {
+        "free_nodes": 5215,
+        "free_mass_kg": 0.006234122061188324,
+        "retained_residual_impulse_l2_Ns": 6.211881124593173e-08,
+        "retained_residual_impulse_l1_Ns": 4.815659329192673e-07,
+        "retained_residual_equivalent_force_l1_N": 0.030820218247187572,
+        "free_internal_force_l1_N": 0.038010484381829995,
+        "free_FEM_kinetic_energy_J": 2.710719232914239e-07
+      }
+    },
+    "106": {
+      "reference": {
+        "free_nodes": 13,
+        "free_mass_kg": 0.0009581919100550001,
+        "retained_residual_impulse_l2_Ns": 8.760816594249925e-10,
+        "retained_residual_impulse_l1_Ns": 2.139319245358108e-09,
+        "retained_residual_equivalent_force_l1_N": 0.000136916425218557,
+        "free_internal_force_l1_N": 0.0003092882632274576,
+        "free_FEM_kinetic_energy_J": 4.8129572242219935e-08
+      },
+      "candidate": {
+        "free_nodes": 13,
+        "free_mass_kg": 0.0009581919100550001,
+        "retained_residual_impulse_l2_Ns": 2.5167355722548245e-09,
+        "retained_residual_impulse_l1_Ns": 5.124458488145669e-09,
+        "retained_residual_equivalent_force_l1_N": 0.00032796532770888487,
+        "free_internal_force_l1_N": 0.0003179939012009368,
+        "free_FEM_kinetic_energy_J": 4.750180453493621e-08
+      }
+    },
+    "107": {
+      "reference": {
+        "free_nodes": 5062,
+        "free_mass_kg": 0.005369603536655039,
+        "retained_residual_impulse_l2_Ns": 1.5036473244880092e-08,
+        "retained_residual_impulse_l1_Ns": 2.6040489543451096e-07,
+        "retained_residual_equivalent_force_l1_N": 0.016665912518511083,
+        "free_internal_force_l1_N": 0.022798012363707935,
+        "free_FEM_kinetic_energy_J": 2.445593617761518e-07
+      },
+      "candidate": {
+        "free_nodes": 5048,
+        "free_mass_kg": 0.005371008911315807,
+        "retained_residual_impulse_l2_Ns": 2.0787621993361157e-08,
+        "retained_residual_impulse_l1_Ns": 3.2938575748056327e-07,
+        "retained_residual_equivalent_force_l1_N": 0.02108068748037469,
+        "free_internal_force_l1_N": 0.027176481816196085,
+        "free_FEM_kinetic_energy_J": 2.4235189700316906e-07
+      }
+    },
+    "109": {
+      "reference": {
+        "free_nodes": 3805,
+        "free_mass_kg": 0.014197518379219454,
+        "retained_residual_impulse_l2_Ns": 2.993271459928341e-08,
+        "retained_residual_impulse_l1_Ns": 3.233047822260239e-07,
+        "retained_residual_equivalent_force_l1_N": 0.020691505082515847,
+        "free_internal_force_l1_N": 0.028055021126655727,
+        "free_FEM_kinetic_energy_J": 6.926860586411686e-07
+      },
+      "candidate": {
+        "free_nodes": 3794,
+        "free_mass_kg": 0.014197477861162395,
+        "retained_residual_impulse_l2_Ns": 3.2184362285687466e-08,
+        "retained_residual_impulse_l1_Ns": 3.7637915798948504e-07,
+        "retained_residual_equivalent_force_l1_N": 0.024088264970506812,
+        "free_internal_force_l1_N": 0.030125097508260458,
+        "free_FEM_kinetic_energy_J": 6.840545230144407e-07
+      }
+    },
+    "110": {
+      "reference": {
+        "free_nodes": 176,
+        "free_mass_kg": 0.00240642719055336,
+        "retained_residual_impulse_l2_Ns": 1.767956444898377e-08,
+        "retained_residual_impulse_l1_Ns": 4.702976759585818e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0030099049835858233,
+        "free_internal_force_l1_N": 0.0038249503597160036,
+        "free_FEM_kinetic_energy_J": 1.28266089604443e-07
+      },
+      "candidate": {
+        "free_nodes": 176,
+        "free_mass_kg": 0.00240642719055336,
+        "retained_residual_impulse_l2_Ns": 6.905270361348597e-09,
+        "retained_residual_impulse_l1_Ns": 2.8094105895568627e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0017980226921620374,
+        "free_internal_force_l1_N": 0.002159765864867747,
+        "free_FEM_kinetic_energy_J": 1.2615583024668903e-07
+      }
+    },
+    "111": {
+      "reference": {
+        "free_nodes": 5008,
+        "free_mass_kg": 0.007573217838275372,
+        "retained_residual_impulse_l2_Ns": 1.0384532707771431e-08,
+        "retained_residual_impulse_l1_Ns": 1.8684030484101977e-07,
+        "retained_residual_equivalent_force_l1_N": 0.011957778943504855,
+        "free_internal_force_l1_N": 0.016310284891810134,
+        "free_FEM_kinetic_energy_J": 3.7034511407843487e-07
+      },
+      "candidate": {
+        "free_nodes": 5004,
+        "free_mass_kg": 0.007573255429939113,
+        "retained_residual_impulse_l2_Ns": 1.1374055546617341e-08,
+        "retained_residual_impulse_l1_Ns": 2.276143037519411e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014567314750216203,
+        "free_internal_force_l1_N": 0.018217253285507818,
+        "free_FEM_kinetic_energy_J": 3.6540729578538506e-07
+      }
+    },
+    "112": {
+      "reference": {
+        "free_nodes": 2146,
+        "free_mass_kg": 0.0016958725503982454,
+        "retained_residual_impulse_l2_Ns": 5.784476858922821e-09,
+        "retained_residual_impulse_l1_Ns": 5.6733268732768363e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0036309290269363765,
+        "free_internal_force_l1_N": 0.005136224879820386,
+        "free_FEM_kinetic_energy_J": 8.200249357430177e-08
+      },
+      "candidate": {
+        "free_nodes": 2145,
+        "free_mass_kg": 0.0016959120808402637,
+        "retained_residual_impulse_l2_Ns": 6.764911665206144e-09,
+        "retained_residual_impulse_l1_Ns": 7.004647300028917e-08,
+        "retained_residual_equivalent_force_l1_N": 0.0044829740597048555,
+        "free_internal_force_l1_N": 0.00551936047481276,
+        "free_FEM_kinetic_energy_J": 8.08306916490429e-08
+      }
+    },
+    "114": {
+      "reference": {
+        "free_nodes": 3357,
+        "free_mass_kg": 0.00814367799432879,
+        "retained_residual_impulse_l2_Ns": 1.4845257765510604e-08,
+        "retained_residual_impulse_l1_Ns": 1.9644081139998686e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01257221133417923,
+        "free_internal_force_l1_N": 0.016730140161911072,
+        "free_FEM_kinetic_energy_J": 4.0090971968544383e-07
+      },
+      "candidate": {
+        "free_nodes": 3339,
+        "free_mass_kg": 0.008143316502466434,
+        "retained_residual_impulse_l2_Ns": 2.6130239785460637e-08,
+        "retained_residual_impulse_l1_Ns": 2.5288338731138295e-07,
+        "retained_residual_equivalent_force_l1_N": 0.016184536021428882,
+        "free_internal_force_l1_N": 0.019359885832131784,
+        "free_FEM_kinetic_energy_J": 3.969363098428043e-07
+      }
+    },
+    "115": {
+      "reference": {
+        "free_nodes": 4385,
+        "free_mass_kg": 0.0069042653745704325,
+        "retained_residual_impulse_l2_Ns": 1.7185846845937227e-08,
+        "retained_residual_impulse_l1_Ns": 2.765571758667508e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01769965841721623,
+        "free_internal_force_l1_N": 0.02353977304240749,
+        "free_FEM_kinetic_energy_J": 3.240362291413164e-07
+      },
+      "candidate": {
+        "free_nodes": 4375,
+        "free_mass_kg": 0.006903989691441433,
+        "retained_residual_impulse_l2_Ns": 2.2481485458308366e-08,
+        "retained_residual_impulse_l1_Ns": 3.3962616394558193e-07,
+        "retained_residual_equivalent_force_l1_N": 0.021736073463096802,
+        "free_internal_force_l1_N": 0.028154182296553667,
+        "free_FEM_kinetic_energy_J": 3.199916906471795e-07
+      }
+    },
+    "116": {
+      "reference": {
+        "free_nodes": 3327,
+        "free_mass_kg": 0.004516348026468949,
+        "retained_residual_impulse_l2_Ns": 2.277427319158909e-08,
+        "retained_residual_impulse_l1_Ns": 2.6402067251309736e-07,
+        "retained_residual_equivalent_force_l1_N": 0.016897322240581047,
+        "free_internal_force_l1_N": 0.025072602939868786,
+        "free_FEM_kinetic_energy_J": 2.04606737590161e-07
+      },
+      "candidate": {
+        "free_nodes": 3322,
+        "free_mass_kg": 0.0045166539118637805,
+        "retained_residual_impulse_l2_Ns": 3.069602579180146e-08,
+        "retained_residual_impulse_l1_Ns": 3.545857353048365e-07,
+        "retained_residual_equivalent_force_l1_N": 0.022693485984746038,
+        "free_internal_force_l1_N": 0.03032654155453872,
+        "free_FEM_kinetic_energy_J": 2.039875832605992e-07
+      }
+    },
+    "117": {
+      "reference": {
+        "free_nodes": 123,
+        "free_mass_kg": 0.00027797135024486703,
+        "retained_residual_impulse_l2_Ns": 1.0165665601699636e-09,
+        "retained_residual_impulse_l1_Ns": 5.383862290788711e-09,
+        "retained_residual_equivalent_force_l1_N": 0.0003445671702917763,
+        "free_internal_force_l1_N": 0.000428905983295818,
+        "free_FEM_kinetic_energy_J": 1.4031289581595041e-08
+      },
+      "candidate": {
+        "free_nodes": 123,
+        "free_mass_kg": 0.000278181033349297,
+        "retained_residual_impulse_l2_Ns": 1.2474187436073578e-09,
+        "retained_residual_impulse_l1_Ns": 6.326690554664889e-09,
+        "retained_residual_equivalent_force_l1_N": 0.00040490817632210166,
+        "free_internal_force_l1_N": 0.00044639571109018303,
+        "free_FEM_kinetic_energy_J": 1.3886081178562502e-08
+      }
+    },
+    "119": {
+      "reference": {
+        "free_nodes": 1301,
+        "free_mass_kg": 0.00210887395439762,
+        "retained_residual_impulse_l2_Ns": 1.4354978778601587e-08,
+        "retained_residual_impulse_l1_Ns": 1.2369874182722398e-07,
+        "retained_residual_equivalent_force_l1_N": 0.007916719102006519,
+        "free_internal_force_l1_N": 0.009170077624051167,
+        "free_FEM_kinetic_energy_J": 1.0101166203142066e-07
+      },
+      "candidate": {
+        "free_nodes": 1301,
+        "free_mass_kg": 0.0021090269623438023,
+        "retained_residual_impulse_l2_Ns": 2.1502807160001515e-08,
+        "retained_residual_impulse_l1_Ns": 1.6613318975337423e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010632523640659631,
+        "free_internal_force_l1_N": 0.01201366324947305,
+        "free_FEM_kinetic_energy_J": 9.992144622177811e-08
+      }
+    },
+    "120": {
+      "reference": {
+        "free_nodes": 2630,
+        "free_mass_kg": 0.004692682849745392,
+        "retained_residual_impulse_l2_Ns": 1.4622607990971173e-08,
+        "retained_residual_impulse_l1_Ns": 1.9188351151645613e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01228054415544662,
+        "free_internal_force_l1_N": 0.016663362491585967,
+        "free_FEM_kinetic_energy_J": 2.211051942103921e-07
+      },
+      "candidate": {
+        "free_nodes": 2621,
+        "free_mass_kg": 0.00469143498065968,
+        "retained_residual_impulse_l2_Ns": 1.6415411207218048e-08,
+        "retained_residual_impulse_l1_Ns": 2.2801519247452123e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014592971627246222,
+        "free_internal_force_l1_N": 0.018499247651918974,
+        "free_FEM_kinetic_energy_J": 2.1972409351897725e-07
+      }
+    },
+    "121": {
+      "reference": {
+        "free_nodes": 3727,
+        "free_mass_kg": 0.006264920332378176,
+        "retained_residual_impulse_l2_Ns": 1.1991823849960155e-08,
+        "retained_residual_impulse_l1_Ns": 1.659417116864665e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010620269044957914,
+        "free_internal_force_l1_N": 0.015754498559532037,
+        "free_FEM_kinetic_energy_J": 3.021968315269121e-07
+      },
+      "candidate": {
+        "free_nodes": 3712,
+        "free_mass_kg": 0.006266168201169911,
+        "retained_residual_impulse_l2_Ns": 1.381566834206765e-08,
+        "retained_residual_impulse_l1_Ns": 2.1837546702857783e-07,
+        "retained_residual_equivalent_force_l1_N": 0.013976029227924236,
+        "free_internal_force_l1_N": 0.017735660165581826,
+        "free_FEM_kinetic_energy_J": 2.9908669986870656e-07
+      }
+    },
+    "122": {
+      "reference": {
+        "free_nodes": 656,
+        "free_mass_kg": 0.02452199092756969,
+        "retained_residual_impulse_l2_Ns": 1.1314374023369599e-08,
+        "retained_residual_impulse_l1_Ns": 1.0118345920449454e-07,
+        "retained_residual_equivalent_force_l1_N": 0.006475741082396552,
+        "free_internal_force_l1_N": 0.007566675369100956,
+        "free_FEM_kinetic_energy_J": 1.2255942336095206e-06
+      },
+      "candidate": {
+        "free_nodes": 652,
+        "free_mass_kg": 0.02452019072021814,
+        "retained_residual_impulse_l2_Ns": 1.5854358762511406e-08,
+        "retained_residual_impulse_l1_Ns": 1.5657968389709368e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010021099294814732,
+        "free_internal_force_l1_N": 0.008146606269902507,
+        "free_FEM_kinetic_energy_J": 1.213014091514615e-06
+      }
+    },
+    "124": {
+      "reference": {
+        "free_nodes": 4823,
+        "free_mass_kg": 0.004079274310753176,
+        "retained_residual_impulse_l2_Ns": 9.499687264531652e-09,
+        "retained_residual_impulse_l1_Ns": 1.6876039087048496e-07,
+        "retained_residual_equivalent_force_l1_N": 0.010800664504191565,
+        "free_internal_force_l1_N": 0.014580893946258134,
+        "free_FEM_kinetic_energy_J": 1.9075892502677965e-07
+      },
+      "candidate": {
+        "free_nodes": 4809,
+        "free_mass_kg": 0.00407726291108339,
+        "retained_residual_impulse_l2_Ns": 1.1608606681726719e-08,
+        "retained_residual_impulse_l1_Ns": 1.989710414868144e-07,
+        "retained_residual_equivalent_force_l1_N": 0.012734146052066964,
+        "free_internal_force_l1_N": 0.016167769705506346,
+        "free_FEM_kinetic_energy_J": 1.8974427310553045e-07
+      }
+    },
+    "125": {
+      "reference": {
+        "free_nodes": 2712,
+        "free_mass_kg": 0.0010122325986193193,
+        "retained_residual_impulse_l2_Ns": 8.884061571529138e-09,
+        "retained_residual_impulse_l1_Ns": 1.1566344314406965e-07,
+        "retained_residual_equivalent_force_l1_N": 0.007402460010639951,
+        "free_internal_force_l1_N": 0.008806609017249962,
+        "free_FEM_kinetic_energy_J": 4.411719356943662e-08
+      },
+      "candidate": {
+        "free_nodes": 2709,
+        "free_mass_kg": 0.0010128073929105289,
+        "retained_residual_impulse_l2_Ns": 1.1802477587093915e-08,
+        "retained_residual_impulse_l1_Ns": 1.4831357782871344e-07,
+        "retained_residual_equivalent_force_l1_N": 0.009492068531493293,
+        "free_internal_force_l1_N": 0.01125992726084345,
+        "free_FEM_kinetic_energy_J": 4.438700308379846e-08
+      }
+    },
+    "126": {
+      "reference": {
+        "free_nodes": 3575,
+        "free_mass_kg": 0.0015156965579523147,
+        "retained_residual_impulse_l2_Ns": 9.44808609951997e-09,
+        "retained_residual_impulse_l1_Ns": 1.4214239883052538e-07,
+        "retained_residual_equivalent_force_l1_N": 0.009097113094314347,
+        "free_internal_force_l1_N": 0.011420227740116123,
+        "free_FEM_kinetic_energy_J": 6.817835326090665e-08
+      },
+      "candidate": {
+        "free_nodes": 3574,
+        "free_mass_kg": 0.0015171119994551428,
+        "retained_residual_impulse_l2_Ns": 1.1597363951941546e-08,
+        "retained_residual_impulse_l1_Ns": 1.8523792883920494e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01185522688424557,
+        "free_internal_force_l1_N": 0.01425360415049914,
+        "free_FEM_kinetic_energy_J": 6.84658332186666e-08
+      }
+    },
+    "128": {
+      "reference": {
+        "free_nodes": 3254,
+        "free_mass_kg": 2.976757052705154,
+        "retained_residual_impulse_l2_Ns": 1.91313483646215e-06,
+        "retained_residual_impulse_l1_Ns": 1.9176476772086828e-05,
+        "retained_residual_equivalent_force_l1_N": 1.2272944552888916,
+        "free_internal_force_l1_N": 0.24804801013720057,
+        "free_FEM_kinetic_energy_J": 0.0001433600342619498
+      },
+      "candidate": {
+        "free_nodes": 3248,
+        "free_mass_kg": 2.9767570847143086,
+        "retained_residual_impulse_l2_Ns": 2.1731239980183578e-06,
+        "retained_residual_impulse_l1_Ns": 2.1569481655766056e-05,
+        "retained_residual_equivalent_force_l1_N": 1.3804467605910689,
+        "free_internal_force_l1_N": 0.2917586634171126,
+        "free_FEM_kinetic_energy_J": 0.00014480439676748
+      }
+    },
+    "131": {
+      "reference": {
+        "free_nodes": 59,
+        "free_mass_kg": 0.6725053515223999,
+        "retained_residual_impulse_l2_Ns": 4.114681161000346e-07,
+        "retained_residual_impulse_l1_Ns": 2.2741764522006603e-06,
+        "retained_residual_equivalent_force_l1_N": 0.1455472860477228,
+        "free_internal_force_l1_N": 0.005748936444331056,
+        "free_FEM_kinetic_energy_J": 3.372198345857109e-05
+      },
+      "candidate": {
+        "free_nodes": 59,
+        "free_mass_kg": 0.6725053515223999,
+        "retained_residual_impulse_l2_Ns": 3.9862053424724985e-07,
+        "retained_residual_impulse_l1_Ns": 2.1266078144143955e-06,
+        "retained_residual_equivalent_force_l1_N": 0.13610289367668826,
+        "free_internal_force_l1_N": 0.006474820452639661,
+        "free_FEM_kinetic_energy_J": 3.3071594112169674e-05
+      }
+    },
+    "136": {
+      "reference": {
+        "free_nodes": 645,
+        "free_mass_kg": 1.0900117628749122,
+        "retained_residual_impulse_l2_Ns": 3.605890545749191e-07,
+        "retained_residual_impulse_l1_Ns": 3.344343962434434e-06,
+        "retained_residual_equivalent_force_l1_N": 0.2140380034589639,
+        "free_internal_force_l1_N": 0.020928335891864037,
+        "free_FEM_kinetic_energy_J": 5.462573439372391e-05
+      },
+      "candidate": {
+        "free_nodes": 641,
+        "free_mass_kg": 1.0899345911111125,
+        "retained_residual_impulse_l2_Ns": 5.457227905714369e-07,
+        "retained_residual_impulse_l1_Ns": 4.158698177464732e-06,
+        "retained_residual_equivalent_force_l1_N": 0.26615667075256294,
+        "free_internal_force_l1_N": 0.025626330847582406,
+        "free_FEM_kinetic_energy_J": 5.386473630039358e-05
+      }
+    },
+    "138": {
+      "reference": {
+        "free_nodes": 3782,
+        "free_mass_kg": 0.3204736233000115,
+        "retained_residual_impulse_l2_Ns": 1.4964618712026717e-07,
+        "retained_residual_impulse_l1_Ns": 1.3491518453977436e-06,
+        "retained_residual_equivalent_force_l1_N": 0.08634571401612258,
+        "free_internal_force_l1_N": 0.08088131483919278,
+        "free_FEM_kinetic_energy_J": 1.6022596084492713e-05
+      },
+      "candidate": {
+        "free_nodes": 3745,
+        "free_mass_kg": 0.32054498280757826,
+        "retained_residual_impulse_l2_Ns": 2.258838813894148e-07,
+        "retained_residual_impulse_l1_Ns": 1.8988388793595247e-06,
+        "retained_residual_equivalent_force_l1_N": 0.12152568252355325,
+        "free_internal_force_l1_N": 0.09162206641909952,
+        "free_FEM_kinetic_energy_J": 1.580946530950553e-05
+      }
+    },
+    "139": {
+      "reference": {
+        "free_nodes": 8285,
+        "free_mass_kg": 0.06824572827222183,
+        "retained_residual_impulse_l2_Ns": 5.089359731719621e-08,
+        "retained_residual_impulse_l1_Ns": 7.619556058846372e-07,
+        "retained_residual_equivalent_force_l1_N": 0.04876515646709897,
+        "free_internal_force_l1_N": 0.08174853577970786,
+        "free_FEM_kinetic_energy_J": 3.3440850360972235e-06
+      },
+      "candidate": {
+        "free_nodes": 8241,
+        "free_mass_kg": 0.06825154664351787,
+        "retained_residual_impulse_l2_Ns": 5.9292599619684336e-08,
+        "retained_residual_impulse_l1_Ns": 9.502556729169915e-07,
+        "retained_residual_equivalent_force_l1_N": 0.06081636018642463,
+        "free_internal_force_l1_N": 0.08901588196688294,
+        "free_FEM_kinetic_energy_J": 3.3006833622202976e-06
+      }
+    },
+    "142": {
+      "reference": {
+        "free_nodes": 247,
+        "free_mass_kg": 0.10935137923138799,
+        "retained_residual_impulse_l2_Ns": 9.870513628755558e-08,
+        "retained_residual_impulse_l1_Ns": 2.9101410287953335e-07,
+        "retained_residual_equivalent_force_l1_N": 0.01862490170221479,
+        "free_internal_force_l1_N": 0.002483757215485088,
+        "free_FEM_kinetic_energy_J": 5.400840211070043e-06
+      },
+      "candidate": {
+        "free_nodes": 246,
+        "free_mass_kg": 0.10935137429755748,
+        "retained_residual_impulse_l2_Ns": 4.547240917953787e-08,
+        "retained_residual_impulse_l1_Ns": 2.2249101504472798e-07,
+        "retained_residual_equivalent_force_l1_N": 0.014239424288483455,
+        "free_internal_force_l1_N": 0.003213673365169751,
+        "free_FEM_kinetic_energy_J": 5.359610667635347e-06
+      }
+    },
+    "145": {
+      "reference": {
+        "free_nodes": 66,
+        "free_mass_kg": 0.6281595009893,
+        "retained_residual_impulse_l2_Ns": 9.493160397460824e-07,
+        "retained_residual_impulse_l1_Ns": 4.106725381806126e-06,
+        "retained_residual_equivalent_force_l1_N": 0.2628304119879437,
+        "free_internal_force_l1_N": 0.024397965429001318,
+        "free_FEM_kinetic_energy_J": 3.118200960699142e-05
+      },
+      "candidate": {
+        "free_nodes": 66,
+        "free_mass_kg": 0.6281595009893,
+        "retained_residual_impulse_l2_Ns": 1.7238641467180458e-06,
+        "retained_residual_impulse_l1_Ns": 7.132196794779176e-06,
+        "retained_residual_equivalent_force_l1_N": 0.4564605732478945,
+        "free_internal_force_l1_N": 0.037231807554145215,
+        "free_FEM_kinetic_energy_J": 3.2094473931121976e-05
+      }
+    },
+    "150": {
+      "reference": {
+        "free_nodes": 1668,
+        "free_mass_kg": 1.1824666618012765,
+        "retained_residual_impulse_l2_Ns": 4.7220989208760216e-07,
+        "retained_residual_impulse_l1_Ns": 4.96920584713017e-06,
+        "retained_residual_equivalent_force_l1_N": 0.3180291591544699,
+        "free_internal_force_l1_N": 0.1195893501962178,
+        "free_FEM_kinetic_energy_J": 5.911135051830919e-05
+      },
+      "candidate": {
+        "free_nodes": 1661,
+        "free_mass_kg": 1.1824666621479714,
+        "retained_residual_impulse_l2_Ns": 5.649145580031067e-07,
+        "retained_residual_impulse_l1_Ns": 5.836609864050179e-06,
+        "retained_residual_equivalent_force_l1_N": 0.3735430136082143,
+        "free_internal_force_l1_N": 0.14139293011801457,
+        "free_FEM_kinetic_energy_J": 5.8217268088254824e-05
+      }
+    },
+    "152": {
+      "reference": {
+        "free_nodes": 1349,
+        "free_mass_kg": 0.2678757251190033,
+        "retained_residual_impulse_l2_Ns": 1.1401711270035615e-07,
+        "retained_residual_impulse_l1_Ns": 9.546095545078298e-07,
+        "retained_residual_equivalent_force_l1_N": 0.061095008595041495,
+        "free_internal_force_l1_N": 0.07745095786132558,
+        "free_FEM_kinetic_energy_J": 1.3350596541209142e-05
+      },
+      "candidate": {
+        "free_nodes": 1347,
+        "free_mass_kg": 0.26787569802250333,
+        "retained_residual_impulse_l2_Ns": 1.6448690124336204e-07,
+        "retained_residual_impulse_l1_Ns": 1.4323295910673877e-06,
+        "retained_residual_equivalent_force_l1_N": 0.09166908948686474,
+        "free_internal_force_l1_N": 0.08503222118996079,
+        "free_FEM_kinetic_energy_J": 1.3177665819216806e-05
+      }
+    },
+    "153": {
+      "reference": {
+        "free_nodes": 9188,
+        "free_mass_kg": 0.05839156827827074,
+        "retained_residual_impulse_l2_Ns": 4.473373528526821e-08,
+        "retained_residual_impulse_l1_Ns": 5.58285419550056e-07,
+        "retained_residual_equivalent_force_l1_N": 0.03573026515901822,
+        "free_internal_force_l1_N": 0.08894718317871686,
+        "free_FEM_kinetic_energy_J": 3.0032128277730492e-06
+      },
+      "candidate": {
+        "free_nodes": 9176,
+        "free_mass_kg": 0.05839159434812065,
+        "retained_residual_impulse_l2_Ns": 7.896956362536005e-08,
+        "retained_residual_impulse_l1_Ns": 9.112057767833253e-07,
+        "retained_residual_equivalent_force_l1_N": 0.05831716695223179,
+        "free_internal_force_l1_N": 0.0930936755944552,
+        "free_FEM_kinetic_energy_J": 2.9627947834036913e-06
+      }
+    },
+    "156": {
+      "reference": {
+        "free_nodes": 212,
+        "free_mass_kg": 0.2226139668291613,
+        "retained_residual_impulse_l2_Ns": 8.280513534575549e-07,
+        "retained_residual_impulse_l1_Ns": 2.513521461732212e-06,
+        "retained_residual_equivalent_force_l1_N": 0.16086536593227785,
+        "free_internal_force_l1_N": 0.01245712064221783,
+        "free_FEM_kinetic_energy_J": 1.05889680338833e-05
+      },
+      "candidate": {
+        "free_nodes": 210,
+        "free_mass_kg": 0.222613967502706,
+        "retained_residual_impulse_l2_Ns": 1.3988374046007475e-06,
+        "retained_residual_impulse_l1_Ns": 4.036132700469102e-06,
+        "retained_residual_equivalent_force_l1_N": 0.25831248059634343,
+        "free_internal_force_l1_N": 0.014306685495250994,
+        "free_FEM_kinetic_energy_J": 1.0718313494947732e-05
+      }
+    }
+  },
+  "physical_admission": false
+}
