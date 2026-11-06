@@ -1,0 +1,73 @@
+diff --git a/matter/src/metal/contact.metalinc b/matter/src/metal/contact.metalinc
+index 149835f5b..f822bb309 100644
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -14005,11 +14005,11 @@ inline bool nmReferenceContactSubdividedSweepSeparated(
+                     midpoint[2],midpoint[3],barycentric,point,axis,distance))return false;
+         } else if(kind==NM_DEFORMABLE_CONTACT_EDGE_EDGE) {
+             float u,v;float3 a,b;
+-            closestPointsOnSegments(midpoint[0].high.xyz+midpoint[0].low.xyz,
+-                midpoint[1].high.xyz+midpoint[1].low.xyz,
+-                midpoint[2].high.xyz+midpoint[2].low.xyz,
+-                midpoint[3].high.xyz+midpoint[3].low.xyz,u,v,a,b);
+-            axis=mrCompensatedVector(float4(a-b,0.0f));
++            float separation;
++            if(!contactCompensatedSegmentWitness(midpoint[0],midpoint[1],
++                    midpoint[2],midpoint[3],u,v,a,b,axis,separation))return false;
++            // This axis only proposes a plane; ORIGINAL endpoint expansions
++            // still own the outward-interval proof and unchanged thickness.
+         } else if(kind==NM_DEFORMABLE_CONTACT_POINT_POINT)
+             axis=mrCompensatedVectorAdd(midpoint[0],mrCompensatedVectorNegate(midpoint[1]));
+         else return false;
+@@ -14045,6 +14045,17 @@ inline bool nmReferenceUnresolvedSweepSeparated(
+         if(nmReferenceContactSweepFraction(kind,start,finish,direction,thickness)==1.0f)
+             return true;
+         if(kind==NM_DEFORMABLE_CONTACT_EDGE_EDGE) {
++            // Preserve the paired segment witness before subtraction, as in
++            // barrier evaluation. Separately rounded closest points can lose
++            // the direction of a grazing activation-band gap.
++            thread const MRCompensatedPositionGPU* feature=endpoint==0u?start:finish;
++            float u,v,distance;float3 first,second;
++            MRCompensatedPositionGPU segmentAxis;
++            if(contactCompensatedSegmentWitness(feature[0],feature[1],
++                    feature[2],feature[3],u,v,first,second,segmentAxis,distance)&&
++               nmReferenceContactCompensatedPlaneFraction(kind,start,finish,
++                    segmentAxis,segmentAxis.high.xyz+segmentAxis.low.xyz,thickness)==1.0f)
++                return true;
+             // Endpoint/edge Voronoi regions need a point/segment axis rather
+             // than the two edge cross product. Axis selection may be rounded;
+             // the unchanged outward-interval proof uses ORIGINAL expansions.
+diff --git a/matter/tools/fgmres_true_residual_native_check.mm b/matter/tools/fgmres_true_residual_native_check.mm
+index 0fb260283..569b8179f 100644
+--- a/matter/tools/fgmres_true_residual_native_check.mm
++++ b/matter/tools/fgmres_true_residual_native_check.mm
+@@ -18324,6 +18324,29 @@ void checkUnresolvedReferenceSweepProof(
+         parameters.push_back({float(double(float(1e-5))*scale),0,0,0});
+         expected.push_back(mode<2u?1u:0u);
+       }
++    // Native470's rounded edge-edge failure capture. These do not claim its
++    // uncaptured compensated low words; use them as forward/reverse and
++    // crossing/nonfinite controls for the SAME full-thickness proof.
++    constexpr float edgeCapture[8][3]={
++      {-0.000516544562f,-0.00130090548f,0.000371464645f},
++      {3.01928194e-05f,8.33248341e-05f,2.19168214e-05f},
++      {0.00028652398f,0.000645407825f,-0.000561383145f},
++      {7.41795748e-06f,-7.06190178e-07f,4.87884899e-05f},
++      {-0.000516543689f,-0.0013009056f,0.000371352653f},
++      {3.0199426e-05f,8.33213635e-05f,2.18302011e-05f},
++      {0.000286524009f,0.000645406777f,-0.000561386289f},
++      {7.4245545e-06f,-7.0981298e-07f,4.86987119e-05f}};
++    for(unsigned mode=0;mode<4;++mode) {
++      std::array<P,8> p{};
++      for(unsigned e=0;e<2;++e)for(unsigned i=0;i<4;++i) {
++        const auto& a=edgeCapture[4u*(mode==1u?1u-e:e)+i];
++        p[4u*e+i]=point(a[0],a[1],a[2]);
++      }
++      if(mode==2u){p[6]=p[4];p[7]=p[5];}
++      if(mode==3u)p[4].low.x=std::numeric_limits<float>::quiet_NaN();
++      positions.insert(positions.end(),p.begin(),p.end());
++      parameters.push_back({1e-5f,1,0,0});expected.push_back(mode<2u?1u:0u);
++    }
+     const unsigned count=unsigned(expected.size());
+     auto output=makeBuffer(device,std::vector<unsigned>(count+4u,0xdeadbeefu));
+     dispatch(device,queue,pipeline(device,library,

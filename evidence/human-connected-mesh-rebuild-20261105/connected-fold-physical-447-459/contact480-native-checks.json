@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "argv": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/numi-matter-fgmres-true-residual-native-check",
+        "--unresolved-reference-sweep-only"
+      ],
+      "exit_code": 0,
+      "elapsed_s": 0.25049901008605957,
+      "stdout": "reference_endpoint_potential=true collision_clearance_unchanged=true activation_band_retained=true crossing_rejected=true invalid_rejected=true double_distance=true compensated_translation=true cases=42 canaries=4 PASS\nunresolved_reference_sweep=true full_activation_thickness=true compensated_translation=true VT_EE_PP=true crossing_rejected=true within_activation_retained=true nonfinite_rejected=true bounded_subdivision=true cases=58 canaries=4 PASS\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/numi-matter-fgmres-true-residual-native-check",
+        "--reference-rest-margin-only"
+      ],
+      "exit_code": 0,
+      "elapsed_s": 0.032814979553222656,
+      "stdout": "captured_initial_nonclosing=true opening=true stationary=true closure_rejected=true initial_intersection_rejected=true nonfinite_rejected=true fixtures=2 cases=10 canaries=4 PASS\npositive_ordinary_fraction=0.000858454 owned_margin_fraction=1 reference_source_margin=true immutable=true captured_closing_picometres=true swept_intersection_rejected=true nonfinite_rejected=true cases=9 canaries=4 PASS\nfinal_contact_reference_clearance cases=19 world_translation_invariant=true hard_clearance=unchanged nonreference_rejected=true invalid_rejected=true canaries=4 PASS\nPASS reference rest margin 625 checks\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/numi-matter-fgmres-true-residual-native-check",
+        "--reference-plane-only"
+      ],
+      "exit_code": 0,
+      "elapsed_s": 0.01928400993347168,
+      "stdout": "captured_plane_case=0 fraction=0.0221158\ncaptured_plane_case=1 fraction=1\ncaptured_plane_case=2 fraction=0.306457\ncaptured_plane_case=3 fraction=0.00876136\ncaptured_plane_case=4 fraction=1\nreference_plane_certificate=true exact_Float32_inputs=true Float64_clearance=true captured_zero_hit_refined=true invalid_rejected=true cases=172 certified=79 result=PASS\nPASS reference contact plane 396 checks\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/numi-matter-fgmres-true-residual-native-check",
+        "--fem-aligned-barrier-only"
+      ],
+      "exit_code": 0,
+      "elapsed_s": 0.01645183563232422,
+      "stdout": "fem_clearance_aligned_barrier=true Float64_energy_force_curvature=true nanometre_underflow_avoided=true positive_gap_no_flat_curvature=true paired_response_and_certificate=true independent_inertial_impact_scaling=true invalid_domain_rejected=true cases=119 PASS\n",
+      "stderr": ""
+    }
+  ],
+  "shader_sha256": "515a14b73e3c2295b9de4363f0418ddd84c3232d1b336fcb6d73fe8b154ea58d"
+}
