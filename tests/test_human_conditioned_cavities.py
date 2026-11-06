@@ -65,3 +65,18 @@ def test_star_growth_stops_at_material_region_or_capacity_boundary():
  p,t,labels,inc=star_fixture()
  with pytest.raises(ValueError,match='capacity'):m.grow_star_cavity(p,t,labels,0,0,inc,maximum_cells=1)
  with pytest.raises(ValueError,match='domain'):m.grow_star_cavity(p,t,labels,0,7,inc)
+
+
+def test_native_parent_capacity_is_checked_before_emitting_a_payload():
+ patch=dict(old_rows=list(range(32)),new_cells=[[0,1,2,3],[0,1,2,4]])
+ out=m.cavity_payload("a"*64,40,[patch])
+ assert np.diff(out["replacement_parent_offsets"]).tolist()==[32,32]
+ patch["old_rows"].append(32)
+ with pytest.raises(ValueError,match="ancestry capacity"):m.cavity_payload("a"*64,40,[patch])
+
+
+def test_native_replacement_capacity_and_empty_cavities_fail_early():
+ with pytest.raises(ValueError,match="count capacity"):m.cavity_payload("a"*64,4,[])
+ for n in (1,65):
+  with pytest.raises(ValueError,match="replacement cell capacity"):
+   m.cavity_payload("a"*64,4,[dict(old_rows=[0,1],new_cells=[[0,1,2,3]]*n)])

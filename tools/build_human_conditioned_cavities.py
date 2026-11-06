@@ -18,7 +18,17 @@ def spectral_condition(points,cells):
  s=np.linalg.svd(x-x.mean(axis=1,keepdims=True),compute_uv=False)
  return np.divide(s[:,0],s[:,-1],out=np.full(len(x),np.inf),where=s[:,-1]>0)
 
+# Admission limits of NumiHumanSkinFatFixedCavityReconditioning.hpp. These
+# bound the existing native ancestry representation, not an accuracy tolerance.
+NATIVE_MAX_CAVITY_PARENTS=32
+NATIVE_MAX_REPLACEMENT_CELLS=64
+NATIVE_MAX_CAVITIES=50000
+
 def cavity_payload(source_sha,cell_count,patches):
+ if not 1<=len(patches)<=NATIVE_MAX_CAVITIES:raise ValueError("native cavity count capacity")
+ for patch in patches:
+  if not 2<=len(patch["old_rows"])<=NATIVE_MAX_CAVITY_PARENTS:raise ValueError("native complete cavity ancestry capacity")
+  if not 2<=len(patch["new_cells"])<=NATIVE_MAX_REPLACEMENT_CELLS:raise ValueError("native replacement cell capacity")
  retired=np.concatenate([np.asarray(p["old_rows"],np.uint32) for p in patches])
  if len(np.unique(retired))!=len(retired) or retired.max()>=cell_count:raise ValueError("overlapping cavity rows")
  keep=np.ones(cell_count,bool);keep[retired]=False
@@ -44,7 +54,7 @@ def validate_mass_proof(parity, receipt, volume_sha, mass_sha, receipt_sha, cell
      receipt["candidate"]["child_tetrahedron_count"]!=cell_count):
   raise ValueError("source mass receipt is not bound to this volume")
 
-def grow_star_cavity(points,cells,labels,seed,anchor,incident,maximum_cells=256):
+def grow_star_cavity(points,cells,labels,seed,anchor,incident,maximum_cells=NATIVE_MAX_CAVITY_PARENTS):
  """Grow a visibility cavity to an existing vertex without moving its boundary.
 
  Returned geometry is only a proposal: the caller still certifies the exact
@@ -142,6 +152,7 @@ def run(a):
     proposal=polygon.best_triangulation(p,ring,d,e)
     if proposal is None:reject["no_positive_triangulation"]+=1;continue
     new,_,tris=proposal
+   if not 2<=len(rows)<=NATIVE_MAX_CAVITY_PARENTS or not 2<=len(new)<=NATIVE_MAX_REPLACEMENT_CELLS:reject["native_cavity_capacity"]+=1;continue
    old=t[rows];nodes=set(map(int,old.ravel()))
    if nodes&used:reject["dependent_cavity"]+=1;continue
    od,oq=polygon.m.measurements(p,old);nd,nq=polygon.m.measurements(p,new)
