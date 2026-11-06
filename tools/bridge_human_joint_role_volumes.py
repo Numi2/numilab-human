@@ -3,6 +3,7 @@ Uses the retained 217 node table. No guessed coordinates, parent rows or mass.
 """
 from pathlib import Path
 import numpy as np,csv,gzip,json,sys,hashlib,importlib.util
+from human_stable_cell_order import replacement_in_reference_order
 H=Path("/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706")
 d=Path(sys.argv[1]);out=d/"role-volumes-v2";out.mkdir(exist_ok=False)
 def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
@@ -79,14 +80,30 @@ for role,material in [("Skin",15),("Fat",16)]:
  retained=direct[ri];inverse=np.full(len(base["t"]),-1,np.int64);inverse[retained]=np.arange(len(retained))
  replacement_offsets=np.r_[0,np.cumsum(np.diff(offsets)[changed])]
  replacement_rows=np.concatenate([cp[offsets[i]:offsets[i+1]] for i in changed])
+ stable=None
+ if relocations:
+  source=relocation_report['relocation_input'];reference_report_path=Path(source['volume']).parent/'role-volumes-v2/report.json'
+  reference_report=json.loads(reference_report_path.read_text());reference_pin=reference_report['roles'][role]
+  reference_path=Path(reference_pin['path'])
+  if sha(reference_path)!=reference_pin['sha256']:raise ValueError('stable reference role hash mismatch')
+  if sha(source['volume'])!=source['volume_sha256']:raise ValueError('stable reference source hash mismatch')
+  with np.load(source['volume']) as z:source_points=z['points_reference_world_m_f64'].astype(np.float32)
+  with np.load(reference_path) as z:reference_tets=z['tetrahedra'];reference_points=z['points_world_m_f32']
+  if reference_points.shape!=role_points.shape or not np.array_equal(reference_points[used],source_points[forward[used]]):raise ValueError('stable reference point identity mismatch')
+  ordered,replacement_offsets,replacement_rows,order=replacement_in_reference_order(tt,offsets,cp,reference_tets)
+  # Every output is explicitly a replacement with complete ancestry. Do not call
+  # a relocated volume cell retained merely to preserve its numerical row order.
+  retained=np.empty(0,np.int64);inverse=np.full(len(base['t']),-1,np.int64)
+  changed=order
+  stable=dict(reference=reference_pin,reference_report_sha256=sha(reference_report_path),all_cells_explicit_replacements=True,permuted_from_raw_material_rows=int(np.count_nonzero(order!=np.arange(len(order)))),complete_parent_unions_preserved=True,point_identity='unchanged role input row domain; documented derived interior points remain derived')
  np.savez_compressed(target,points_world_m=role_points,points_world_m_f32=role_points,tetrahedra=ordered,material_indices=np.full(len(tt),material,np.int32),boundary_faces=boundary,
   current_geometry_parent_path=np.array(str(base["path"])),current_geometry_parent_sha256=np.array(sha(base["path"])),
   replacement_parent_offsets=replacement_offsets,replacement_parent_cell_rows=replacement_rows,
-  retained_input_cell_rows=retained,replacement_tetrahedra=tt[changed],
+  retained_input_cell_rows=retained,replacement_tetrahedra=ordered if stable else tt[changed],
   output_cell_to_input_cell=direct[order],input_cell_to_output_cell=inverse,
   output_point_to_input_point_row=point_map,
   output_point_parent_offsets=point_offsets,output_point_parent_input_cell_rows=point_parents)
- report["roles"][role]={"path":str(target),"sha256":sha(target),"cells":len(tt),"active_nodes":len(np.unique(tt)),"nonpositive_cells":int((det<=0).sum()),"native_quality_failures":int((~top.m.passes(det,q)).sum()),"minimum_volume_m3":float(det.min()/6),"minimum_quality":float(q.min()),"relocated_interior_points":len(point_pools),"joint_current_coordinate_difference_max_m":float(current_mismatch.max()),"joint_source_coordinate_difference_rms_m":float(np.sqrt(np.mean(mismatch**2))),"joint_source_coordinate_difference_max_m":float(mismatch.max()),"original_ordered_cell_domains_proven":True,"immediate_parent_references":len(cp)}
+ report["roles"][role]={"path":str(target),"sha256":sha(target),"cells":len(tt),"active_nodes":len(np.unique(tt)),"nonpositive_cells":int((det<=0).sum()),"native_quality_failures":int((~top.m.passes(det,q)).sum()),"minimum_volume_m3":float(det.min()/6),"minimum_quality":float(q.min()),"relocated_interior_points":len(point_pools),"joint_current_coordinate_difference_max_m":float(current_mismatch.max()),"joint_source_coordinate_difference_rms_m":float(np.sqrt(np.mean(mismatch**2))),"joint_source_coordinate_difference_max_m":float(mismatch.max()),"original_ordered_cell_domains_proven":True,"immediate_parent_references":len(cp),"stable_cell_order":stable}
  save()
 report["status"]="SOURCE_ROLE_VOLUME_BRIDGE_CHECKED_NOT_PHYSICAL_ADMISSION";save()
 print(json.dumps(report,indent=2))
