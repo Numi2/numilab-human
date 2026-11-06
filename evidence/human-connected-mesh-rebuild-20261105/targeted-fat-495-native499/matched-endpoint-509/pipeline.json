@@ -1,0 +1,55 @@
+[
+  {
+    "stage": 0,
+    "command": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/prepare.py"
+    ],
+    "exit_code": 0,
+    "available_bytes": 17221517312
+  },
+  {
+    "stage": 1,
+    "command": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/control/run_native_plan.py",
+      "install-motion"
+    ],
+    "exit_code": 0,
+    "available_bytes": 16689201152
+  },
+  {
+    "stage": 2,
+    "command": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/run_native_plan.py",
+      "install-motion"
+    ],
+    "exit_code": 0,
+    "available_bytes": 16178626560
+  },
+  {
+    "stage": 3,
+    "command": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/compare_endpoint_channels.py",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/control/install-motion.stdout.log.gz",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/endpoint-channels.json"
+    ],
+    "exit_code": 0,
+    "available_bytes": 16178163712
+  },
+  {
+    "stage": 4,
+    "command": [
+      "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+      "/Users/numi/Work/human-integrated-gaps-20261104/compare_matched_deformation_339.py",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/control/install-motion.stdout.log.gz",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz",
+      "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/matched-deformation.json"
+    ],
+    "exit_code": 0,
+    "available_bytes": 16177946624
+  }
+]
