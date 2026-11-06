@@ -1,0 +1,3 @@
+A boundary-fixed cavity removes the measured worst fat cap without moving points or changing the skin/fat interface. The 11-to-10-cell replacement retains all vertices and material/region identities and passes the existing exact oriented boundary/volume owner. Centered spectral condition improves from15838.43 to43.04; minimum native shape quality from1.5666e-5 to0.01025.
+
+The native trial421 is running at the same32 roots of15.625us as395. Physics, numerical controls, binary and runtime libraries are unchanged. A bounded same-interface MILP trial415 found no admissible repair in its selected32-cell neighborhoods; the visibility-grown cavity follows different neighborhoods. No native promotion, fidelity or performance claim is made here.

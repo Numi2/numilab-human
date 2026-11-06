@@ -1,0 +1,161 @@
+{
+  "status": "EXACT_CAVITY_PROPOSAL_NATIVE_PENDING",
+  "trials": [
+    {
+      "anchor": 304955,
+      "old_cells": 11,
+      "iterations": 7,
+      "reason": null,
+      "success": true
+    }
+  ],
+  "best": {
+    "old_rows": [
+      898295,
+      948306,
+      948308,
+      948445,
+      948496,
+      948508,
+      949322,
+      949442,
+      1063939,
+      1125294,
+      1408145
+    ],
+    "new_cells": [
+      [
+        304955,
+        175071,
+        175144,
+        180817
+      ],
+      [
+        304955,
+        175071,
+        180817,
+        180863
+      ],
+      [
+        304955,
+        175071,
+        175143,
+        175144
+      ],
+      [
+        304955,
+        175143,
+        175217,
+        175218
+      ],
+      [
+        304955,
+        175143,
+        175218,
+        175144
+      ],
+      [
+        304955,
+        175217,
+        180816,
+        180817
+      ],
+      [
+        304955,
+        180816,
+        180863,
+        180817
+      ],
+      [
+        304955,
+        180816,
+        180862,
+        180863
+      ],
+      [
+        304955,
+        175144,
+        175218,
+        180817
+      ],
+      [
+        304955,
+        175217,
+        180817,
+        175218
+      ]
+    ],
+    "anchor": 304955,
+    "old_min_q": 1.5666111335981133e-05,
+    "new_min_q": 0.01025063737916293,
+    "condition_before": 15838.425751938556,
+    "condition_after": 43.03742516249523,
+    "exact_certificate": "PASS"
+  },
+  "elapsed_s": 0.5420831250376068,
+  "physical_admission": false,
+  "source_identity": {
+    "source": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/rich433/candidate-current-typed-volume.npz",
+    "sha256": "d346e56adb8752cc8b266149b915855814123127c0648d8ab8cba7ae28909b82",
+    "seed": 948496,
+    "anchors": [
+      304955,
+      175287,
+      175071,
+      175356,
+      174996,
+      175286,
+      175072,
+      175070,
+      175288,
+      175216,
+      175145,
+      175142,
+      175219,
+      175069,
+      175289,
+      180771,
+      180817,
+      180818,
+      180816,
+      180863,
+      180862
+    ],
+    "maximum_cells": 256,
+    "seconds": 60,
+    "method": "Grow same-material/region cavity across non-visible or poor cone facets; exact oriented boundary and volume mandatory; no point or interface changes",
+    "native_steps": 0,
+    "physical_admission": false
+  },
+  "evidence": [
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/measured-cap-star-cavity-420/report.json",
+      "sha256": "b521dc61fd0e98a00585eb13877d798f2cf3199226f778bf688e53a1cec211a0",
+      "bytes": 1508
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/measured-cap-star-cavity-420/plan.json",
+      "sha256": "3be02be650fe069648f46113da3969ab2a5536ca2cf461b678f41d9bef02b586",
+      "bytes": 780
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/measured-cap-star-cavity-420/fixed-boundary-volume-proposal.npz",
+      "sha256": "86497279a0321df3782403a1edde3817c235f613a4d819479093888db97c81ae",
+      "bytes": 2005359
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/measured-cap-star-cavity-420/solve.py",
+      "sha256": "a245094ab15832088ac0ac6540857e097b05fb457fe7b938146351352b67a572",
+      "bytes": 3986
+    }
+  ],
+  "native_trial": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/star-cavity-native-421/install-motion.plan.json",
+    "sha256": "c0aaa32f82366aaefcae22bb39e6e7018e69f47af066b80e8175c11a29d937f2",
+    "bytes": 53524
+  },
+  "unit_controls": {
+    "passed": 48,
+    "scope": "Geometry and rejection controls only, no native fidelity admission"
+  }
+}

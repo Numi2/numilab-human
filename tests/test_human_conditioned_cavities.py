@@ -1,6 +1,7 @@
 """Numerical geometry and native cavity-format regressions."""
 from pathlib import Path
-import importlib.util,itertools
+import importlib.util,itertools,sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"tools"))
 import numpy as np
 import pytest
 spec=importlib.util.spec_from_file_location("cavities",Path(__file__).resolve().parents[1]/"tools/build_human_conditioned_cavities.py")
@@ -40,3 +41,27 @@ def test_mass_proof_is_bound_to_mesh_and_prescribed_target():
  with pytest.raises(ValueError):m.validate_mass_proof(bad,receipt,"volume","mass","receipt",4)
  bad=deepcopy(parity);bad["maximum_relative_mass_difference"]=1e-9
  with pytest.raises(ValueError):m.validate_mass_proof(bad,receipt,"volume","mass","receipt",4)
+
+
+def star_fixture():
+ import rebuild_human_interface_caps as cap
+ import simplify_human_skin_fat_boundary as mesh
+ p=np.array([[0.,0,-1],[-1,0,0],[0,1,2**-16],[1,0,0],[0,-1,2**-16]],np.float32)
+ t=cap.positive_cells(p,[[1,2,3,4],[0,1,2,3],[0,1,3,4]])
+ return p,t,np.tile([16,23,23],(3,1)),mesh.incidence(t,len(p))
+
+def test_star_cavity_removes_flat_cell_with_exact_boundary_and_no_new_coordinates():
+ import simplify_human_skin_fat_boundary as mesh
+ p,t,labels,inc=star_fixture();rows,new=m.grow_star_cavity(p,t,labels,0,0,inc)
+ assert rows.tolist()==[0,1,2] and len(new)==2
+ assert mesh.unchanged_cavity_boundary(t[rows],new)
+ assert np.array_equal(np.unique(t[rows]),np.unique(new))
+ assert mesh.measure(p,new)[0].min()>0
+ assert m.spectral_condition(p,new).max()<m.spectral_condition(p,t).max()/1000
+
+def test_star_growth_stops_at_material_region_or_capacity_boundary():
+ p,t,labels,inc=star_fixture();labels[1,0]=15
+ with pytest.raises(ValueError,match='material or region'):m.grow_star_cavity(p,t,labels,0,0,inc)
+ p,t,labels,inc=star_fixture()
+ with pytest.raises(ValueError,match='capacity'):m.grow_star_cavity(p,t,labels,0,0,inc,maximum_cells=1)
+ with pytest.raises(ValueError,match='domain'):m.grow_star_cavity(p,t,labels,0,7,inc)
