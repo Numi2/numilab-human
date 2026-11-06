@@ -1,0 +1,35 @@
+{
+  "stages": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/allocate_joint64_mass.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal"
+      ],
+      "name": "mass-allocation",
+      "source_sha256": "5886313e2b1f12483c11e99549beb9a2c44080bc84de617240c6ef66db94abef"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/qualify_joint64_source.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal"
+      ],
+      "name": "source-qualification",
+      "source_sha256": "dfb5858649270a27577d97edd59140bb56b1d36d35b4dc5ddbe6c20e68264573"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_mass_admission.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal"
+      ],
+      "name": "mass-admission-prepare",
+      "source_sha256": "f7cdcc749a169a773f2814bddde9a25640163c29bd1ecbb3ba91ffe395706481"
+    }
+  ],
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal",
+  "native_plan_output": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365",
+  "prediction": "Source495 fixed-boundary batch568, screened at4/16/58/64. Existing physical transfer, mass, source-quality and unchanged-boundary gates retained.",
+  "physical_admission": false
+}

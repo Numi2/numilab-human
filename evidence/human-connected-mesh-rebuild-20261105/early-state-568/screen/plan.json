@@ -1,0 +1,103 @@
+{
+  "stages": [
+    {
+      "name": "changed-cavity-rebuild",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/run_prepared.py",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal",
+        "--seconds",
+        "180",
+        "--max-operations",
+        "5000",
+        "--passes",
+        "8",
+        "--maximum-edge-m",
+        "0.001",
+        "--interior-only",
+        "--changed-star-only",
+        "--resume-proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-volume.npz",
+        "--resume-sha256",
+        "9e75ecbe86636616c18185cb8cc4f063810c1e2b5fe7b9c48122c26b49375740",
+        "--resume-cell-mass-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/local-child-mass-proposal.csv",
+        "--resume-cell-mass-sha256",
+        "0439c45ab8a948579539c50208ad3f55b1fe41bedad2e8838f89feb07f356331",
+        "--attachment-requests-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv",
+        "--attachment-requests-sha256",
+        "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5",
+        "--reference-endpoint-capture",
+        "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz",
+        "--reference-endpoint-sha256",
+        "3ba3089d5a969ff90d57010bbf044846742d62e77d35e4214e313965b5f39ba7",
+        "--replay-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/strain-screened-interior-520/proposal/report.json"
+      ],
+      "source_sha256": "407f9c9e169282c85eaf63b1af584d91a12623f0a678e646d500544884bb5660"
+    }
+  ],
+  "input_pins": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/compiler-source.py": "70562ce6b14b075e97f2055152cc1c67532fd4e48e4cc1d9091a6272c6846b33",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-volume.npz": "9e75ecbe86636616c18185cb8cc4f063810c1e2b5fe7b9c48122c26b49375740",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/local-child-mass-proposal.csv": "0439c45ab8a948579539c50208ad3f55b1fe41bedad2e8838f89feb07f356331",
+    "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz": "3ba3089d5a969ff90d57010bbf044846742d62e77d35e4214e313965b5f39ba7",
+    "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv": "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-O-typed-current.npz": "8de8675b39b7f3a910fdbe7e10679c5797e4038eb1c10052a4653c1a171ad888",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-I-typed-current.npz": "5fceeebfc7b639cf7c5dfd08c587e4b4d6f09b56df12d03bb72c3862bc43370b",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-D-typed-current.npz": "e1df8ffa61da936277aa8adccaa308b49ae22ea073ceb08ddaa9af106bd15aaa",
+    "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/compare_endpoint_channels.py": "43db7867cc50a99b182ee55fda57b4a1ecde5ad760498f3b6f727a5ea1f40df9",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tools/screen_human_cavity_response.py": "57b821f73ba4dc0e333cff02e88c68eb7fa6f19f4cdfad5f34cec4f9441b7ff3",
+    "/Users/numi/Work/human-integrated-gaps-20261104/strain-screened-interior-520/proposal/report.json": "2bebf2eaa542a2acd89dcfb35c5de665aaa49b8f22f3a9ad9e126ef5a579b81e",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f",
+    "/Users/numi/Work/human-integrated-gaps-20261104/targeted-fat-native-499/install-motion.stdout.log.gz": "d730f9b52ffc7a71dfe742950fd9a304acd226c80dda1fd9f63543347dde913a",
+    "/Users/numi/Work/human-integrated-gaps-20261104/inertial-guess-native-pair-513/control/install-motion.stdout.log.gz": "f3817373f68334554d0526cd175813e2cc4b83d9cbfd38bb31f4af7aac3b5a68",
+    "/Users/numi/Work/human-integrated-gaps-20261104/domain-mesh-fidelity-pair-565/control/install-motion.stdout.log.gz": "c5343635d3679ec3eca43bea4e12b10921f86699501ab9be2c6359861ceb6a16"
+  },
+  "typed_surfaces": {
+    "O": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-O-typed-current.npz",
+    "I": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-I-typed-current.npz",
+    "D": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-D-typed-current.npz"
+  },
+  "prediction": "Rescreen the same batch520 operations on source495 against matched4,16,58,64 fields, including new corrected-solver early root4. Reject region20 strain witness and retain safe connected operations. No native fidelity or throughput claim.",
+  "resource": {
+    "max_rss_gib": 8,
+    "min_disk_gib": 12,
+    "max_seconds": 300
+  },
+  "physical_admission": false,
+  "capture_owner": "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/compare_endpoint_channels.py",
+  "response_owner": "/Users/numi/Work/human-checkpoint-owner-20261105/tools/screen_human_cavity_response.py",
+  "resume_volume": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-volume.npz",
+  "materials": {
+    "15": {
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter",
+      "sha256": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad"
+    },
+    "16": {
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter",
+      "sha256": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+    }
+  },
+  "matched_reference_fields": [
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/domain-mesh-fidelity-pair-565/control/install-motion.stdout.log.gz",
+      "sha256": "c5343635d3679ec3eca43bea4e12b10921f86699501ab9be2c6359861ceb6a16"
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/targeted-fat-native-499/install-motion.stdout.log.gz",
+      "sha256": "d730f9b52ffc7a71dfe742950fd9a304acd226c80dda1fd9f63543347dde913a"
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz",
+      "sha256": "3ba3089d5a969ff90d57010bbf044846742d62e77d35e4214e313965b5f39ba7"
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/inertial-guess-native-pair-513/control/install-motion.stdout.log.gz",
+      "sha256": "f3817373f68334554d0526cd175813e2cc4b83d9cbfd38bb31f4af7aac3b5a68"
+    }
+  ]
+}

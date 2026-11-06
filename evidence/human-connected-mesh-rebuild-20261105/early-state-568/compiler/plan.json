@@ -1,0 +1,38 @@
+{
+  "stages": [
+    {
+      "name": "role-bridge",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/bridge_joint_role_volumes_64.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal"
+      ],
+      "source_sha256": "030e7477883f4ffee0987820ac95bf1ccfee536c0a1a2b40244da3972bdedfaa"
+    },
+    {
+      "name": "independent-geometry",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal/verify-connected-output.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal"
+      ],
+      "source_sha256": "f9ba7f8459cc0fc7ea2834eb5b4215704d6d4ae7fe6bb2349fd099d1800bf562"
+    },
+    {
+      "name": "full-context",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/combined-surface-diff-audit-270/audit_combined_bounded_inner_layer_surface_diff_806_extended_250um_construction.py",
+        "--config",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal/context-config.json",
+        "--out",
+        "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal/full-context"
+      ],
+      "source_sha256": "1c20de7dffa2cbf55abf195310af988aed9c5a87f035a8e79e099a3f00c74377"
+    }
+  ],
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal",
+  "native_plan_output": "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365",
+  "prediction": "Source495 fixed-boundary batch568, screened at4/16/58/64. Existing physical transfer, mass, source-quality and unchanged-boundary gates retained.",
+  "physical_admission": false
+}
