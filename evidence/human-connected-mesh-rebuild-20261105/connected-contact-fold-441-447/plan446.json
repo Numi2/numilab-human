@@ -1,0 +1,76 @@
+{
+  "stages": [
+    {
+      "name": "connected-witness-rebuild",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/simplify_human_skin_fat_boundary.py",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal",
+        "--seconds",
+        "180",
+        "--max-operations",
+        "128",
+        "--passes",
+        "9",
+        "--maximum-edge-m",
+        "0.000002",
+        "--resume-proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/reference-screened-interior-341/candidate-volume.npz",
+        "--resume-sha256",
+        "0909eac848a3560ba6e35ecdd8282880ecacbb4c9f707889a900c75d99034db0",
+        "--resume-cell-mass-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/reference-screened-interior-341/local-child-mass-proposal.csv",
+        "--resume-cell-mass-sha256",
+        "e8944dcce0635ae64e453d9b2ed0002b80d1d06fdaee71822f3cb81739cf7573",
+        "--replay-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/witness-replay.json",
+        "--bone-barriers",
+        "--attachment-requests-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv",
+        "--attachment-requests-sha256",
+        "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5",
+        "--boundary-contact-edge",
+        "22677",
+        "22679",
+        "--boundary-contact-edge",
+        "22676",
+        "22677"
+      ],
+      "source_sha256": "a88c52e4b96f1a1fd6d54b9bb4791ab2368991bca272bbc8b4e0844162278133"
+    }
+  ],
+  "prediction": "Replay42 retained operations, then connected22676->22677->22679 removing the measured outer-skin fold with unchanged coordinate, native quality, orientation, collision, density, mass, source and attachment gates.",
+  "resource": {
+    "max_rss_gib": 8,
+    "min_disk_gib": 12,
+    "max_seconds": 300
+  },
+  "physical_admission": false,
+  "contact_witness": {
+    "trial": 441,
+    "object": 15,
+    "global_nodes": [
+      24336,
+      24402,
+      24338,
+      24334
+    ],
+    "original_volume_nodes": [
+      22677,
+      22743,
+      22679,
+      22675
+    ],
+    "source_outer_skin_nodes": [
+      22783,
+      22850,
+      22785,
+      22781
+    ],
+    "source_outer_face": 151120,
+    "source_face_id": 31216,
+    "reference_gap_m": 2.1642035484e-09
+  },
+  "maximum_patch_hausdorff_m": 0.0005
+}

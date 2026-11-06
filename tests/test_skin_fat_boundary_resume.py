@@ -48,4 +48,20 @@ class ResumeTest(unittest.TestCase):
     np.savetxt(self.mass,[row],delimiter=",",header="child_row,mass_kg",comments="")
     with self.assertRaises(ValueError):self.load()
 
+class BoundaryContactQualityTest(unittest.TestCase):
+ def test_measured_fold_can_improve_worst_cell_despite_log_sum(self):
+  old=np.array([1.179095772658468e-5,.001,.001])
+  new=np.array([1.2986674107320688e-5,2e-5])
+  self.assertTrue(owner.boundary_contact_quality_progress(old,new,1))
+ def test_native_floor_and_no_degradation_remain_required(self):
+  for new,removed in [([9e-6],1),([1.01e-5],1),([2e-5],0),([float('nan')],1),([],1)]:
+   with self.subTest(new=new,removed=removed):
+    self.assertFalse(owner.boundary_contact_quality_progress([1.02e-5],new,removed))
+ def test_neutral_first_contraction_requires_cell_removal(self):
+  self.assertTrue(owner.boundary_contact_quality_progress([1.2e-5,.001],[1.2e-5],1))
+  self.assertFalse(owner.boundary_contact_quality_progress([1.2e-5],[1.2e-5],0))
+ def test_invalid_original_quality_cannot_be_promoted(self):
+  for old in [[],[float('inf')],[9e-6]]:
+   self.assertFalse(owner.boundary_contact_quality_progress(old,[2e-5],1))
+
 if __name__=="__main__":unittest.main()

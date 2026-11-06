@@ -1,0 +1,41 @@
+{
+  "diagnostic441": {
+    "accepted_steps": 30,
+    "attempted_failure_step": 31,
+    "accepted_time_s": 0.00046875,
+    "launch_wall_s": 391.06782794,
+    "final_nonlinear_residual": 0.00025058203,
+    "root30_active_linear_solves": 16,
+    "root30_linear_budget_exhaustions": 0,
+    "limiter": "Deformable outer-skin self contact, reference-local effective gap about1nm, per-feature barrier globalization",
+    "source_point": 22677,
+    "source_triangle": [
+      22743,
+      22679,
+      22675
+    ],
+    "scope": "Diagnostic, not supported rest or sustained motion; no solver/material/clearance relaxation"
+  },
+  "isolated_worst_cell442": {
+    "accepted_steps": 32,
+    "accepted_time_s": 0.0005,
+    "body_wall_s": 209.21288875,
+    "reference395_body_wall_s": 209.195502959,
+    "throughput_ratio": 0.9999168990442995,
+    "active_columns": 1200,
+    "reference_columns": 1232,
+    "force_strain_fidelity": "FAIL; not promoted",
+    "matched_reference_displacement_strain_max_relative_error": 3.31999e-06,
+    "actual_run_strain_max_relative_error": 0.4562484
+  },
+  "files": [
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/measured-cap-native-analysis-443/summary.json",
+      "sha256": "f609ff783b9c6b5369b1b3f3b96f79702d31f1e22b7b094c619d3a9019274ed6"
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/measured-cap-native-analysis-443/matched-deformation.json",
+      "sha256": "b596d3de53b048121092af51a2902ea76c99d552737a8462cca52163dc198511"
+    }
+  ]
+}

@@ -58,6 +58,21 @@ def measure(p,t):
  det=np.einsum("ij,ij->i",np.cross(e[:,0],e[:,1]),e[:,2])
  mx=np.stack([np.sum((x[:,i]-x[:,j])**2,axis=1) for i,j in itertools.combinations(range(4),2)]).max(0)**.5
  return det,det/mx**3
+def boundary_contact_quality_progress(old_quality,new_quality,removed_cells):
+ """Construction admission for an explicitly selected contact-fold edge.
+
+ A sum of log-quality penalties is a conditioning heuristic, not a physical
+ certificate. Permit the measured boundary repair when it removes cells and
+ does not worsen the minimum cell quality. This permits connected fold
+ repairs whose first contraction preserves the worst cell. Every native
+ cell, surface, crossing, mass and provenance check still applies below.
+ """
+ old=np.asarray(old_quality,float);new=np.asarray(new_quality,float)
+ return bool(old.size and new.size and removed_cells>0 and
+  np.isfinite(old).all() and np.isfinite(new).all() and
+  np.all(old>=np.float32(1e-5)) and np.all(new>=np.float32(1e-5)) and
+  new.min()>=old.min())
+
 def link(cells,vs):
  vs=set(vs);out=set()
  for cell in cells:
@@ -333,7 +348,8 @@ class ReferenceDeformationGate:
 
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--max-operations",type=int,default=2048);ap.add_argument("--maximum-edge-m",type=float,default=.0001);ap.add_argument("--replay-report",type=Path);ap.add_argument("--exclude-operation-rows",type=Path);ap.add_argument("--reference-flow-csv",type=Path);ap.add_argument("--reference-flow-sha256");ap.add_argument("--passes",type=int,default=1);ap.add_argument("--bone-barriers",action="store_true");ap.add_argument("--interior-only",action="store_true");ap.add_argument("--attachment-requests-csv",type=Path);ap.add_argument("--attachment-requests-sha256");ap.add_argument("--reference-endpoint-capture",type=Path);ap.add_argument("--reference-endpoint-sha256");ap.add_argument("--resume-proposal",type=Path);ap.add_argument("--resume-sha256");ap.add_argument("--resume-cell-mass-csv",type=Path);ap.add_argument("--resume-cell-mass-sha256");a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--max-operations",type=int,default=2048);ap.add_argument("--maximum-edge-m",type=float,default=.0001);ap.add_argument("--replay-report",type=Path);ap.add_argument("--exclude-operation-rows",type=Path);ap.add_argument("--reference-flow-csv",type=Path);ap.add_argument("--reference-flow-sha256");ap.add_argument("--boundary-contact-edge",nargs=2,type=int,action="append",default=[],metavar=("DROP","KEEP"));ap.add_argument("--passes",type=int,default=1);ap.add_argument("--bone-barriers",action="store_true");ap.add_argument("--interior-only",action="store_true");ap.add_argument("--attachment-requests-csv",type=Path);ap.add_argument("--attachment-requests-sha256");ap.add_argument("--reference-endpoint-capture",type=Path);ap.add_argument("--reference-endpoint-sha256");ap.add_argument("--resume-proposal",type=Path);ap.add_argument("--resume-sha256");ap.add_argument("--resume-cell-mass-csv",type=Path);ap.add_argument("--resume-cell-mass-sha256");a=ap.parse_args()
+ if a.boundary_contact_edge and (a.interior_only or not a.replay_report):raise ValueError("boundary contact repairs require an explicit surface replay")
  if bool(a.reference_endpoint_capture)!=bool(a.reference_endpoint_sha256):raise ValueError("reference endpoint path/SHA must be paired")
  if a.reference_endpoint_capture and not a.interior_only:raise ValueError("reference deformation screening requires fixed interior-only coordinates")
  if bool(a.attachment_requests_csv)!=bool(a.attachment_requests_sha256):raise ValueError("attachment path/SHA must be paired")
@@ -386,6 +402,8 @@ def main():
  if a.reference_endpoint_capture:
   reference_u,reference_receipt=load_reference_deformation(a.reference_endpoint_capture,a.reference_endpoint_sha256,p,t,labs)
   deformation_gate=ReferenceDeformationGate(p,t,reference_u,labs[:,1],reference_receipt)
+ contact_repair_edges=set(map(tuple,a.boundary_contact_edge))
+ if any(d==k or min(d,k)<0 or max(d,k)>=len(p) for d,k in contact_repair_edges):raise ValueError("invalid boundary contact edge")
  getcells=incidence(t,len(p));alive=np.ones(len(t),bool);used=set();reject=collections.Counter();ops=[]
  raw={r:dict(np.load(path,allow_pickle=False)) for r,path in S.items()}
  faces={r:maps[r][raw[r]["faces"]] for r in S};assert all(np.all(f>=0) for f in faces.values())
@@ -505,7 +523,8 @@ def main():
     oldq=q[rows];cost=lambda z:float(np.maximum(np.log(.001/z),0).sum())
     good_coarsening=oldq.min()>=.001 and nq.min()>=.001 and int((~live).sum())>0
     conditioning_gain=nq.min()>=oldq.min() and cost(nq)<cost(oldq)-1e-6
-    if not (good_coarsening or conditioning_gain):reject["no_conditioning_gain"]+=1;continue
+    boundary_contact_repair=(drop,keep) in contact_repair_edges and boundary_contact_quality_progress(oldq,nq,int((~live).sum()))
+    if not (good_coarsening or conditioning_gain or boundary_contact_repair):reject["no_conditioning_gain"]+=1;continue
     deformation_proposal=None
     if deformation_gate:
      deformation_proposal=deformation_gate.propose(rows,n,live)
@@ -534,6 +553,7 @@ def main():
      if not valid:break
      changes.update({int(offsets[ri]+i):ff for i,ff in zip(fr[fl],nf[fl])});deleted.update(map(int,offsets[ri]+fr[~fl]));affected[r]=(fr,nf,fl)
     if not valid:reject["surface_link_or_orientation"]+=1;continue
+    if boundary_contact_repair and not deleted:reject["contact_edge_did_not_remove_boundary_faces"]+=1;continue
     if not crossing(changes,deleted):reject["exact_surface_or_bone_crossing" if a.bone_barriers else "exact_surface_crossing"]+=1;continue
     # Retained source cell ancestry is a union, not a nearest-cell guess.
     parents=np.unique(np.concatenate([original_parents[i] for i in rows]))
@@ -545,7 +565,7 @@ def main():
     for i,f in changes.items():allfaces[i]=f
     for i in deleted:allfaces[i]=[0,0,0]
     used.update(nodes);changed_volume+=abs(delta)
-    ops.append(dict(pass_index=pass_index,drop=drop,keep=keep,source_cell_rows=rows.tolist(),removed_cells=int((~live).sum()),roles=list(affected),source_face_rows={r:fr.tolist() for r,(fr,_,_) in affected.items()},signed_volume_change_m3=delta,minimum_quality_before=float(oldq.min()),minimum_quality_after=float(nq.min())))
+    ops.append(dict(pass_index=pass_index,drop=drop,keep=keep,boundary_contact_repair=boundary_contact_repair,source_cell_rows=rows.tolist(),removed_cells=int((~live).sum()),roles=list(affected),source_face_rows={r:fr.tolist() for r,(fr,_,_) in affected.items()},signed_volume_change_m3=delta,minimum_quality_before=float(oldq.min()),minimum_quality_after=float(nq.min())))
     with (a.output/"operations.jsonl").open("a") as ledger:ledger.write(json.dumps(ops[-1])+"\n")
     if len(ops)%10==0:print(json.dumps(dict(operations=len(ops),elapsed_s=time.monotonic()-start)),flush=True)
     break
@@ -587,7 +607,7 @@ def main():
    if r in op["roles"]:quotient[reverse[op["drop"]]]=reverse[op["keep"]]
   payload["source_input_vertex_quotient"]=quotient_closure(quotient)
   np.savez_compressed(a.output/f"candidate-{r}-typed-current.npz",**payload)
- report=dict(interior_only=a.interior_only,actual_and_typed_boundary_nodes_fixed=(len(fixed_nodes) if a.interior_only else None),typed_surface_faces_unchanged=bool(a.interior_only),status="JOINT_BOUNDARY_VOLUME_PROPOSAL_NOT_PHYSICAL_ADMISSION",physical_admission=False,native_steps=0,mass_mapping="PENDING",input_pins={str(x):sha(x) for x in [V,C,*S.values(),*resume_pins,a.output/"executed-runner.py",*([a.replay_report] if a.replay_report else []),*([a.exclude_operation_rows] if a.exclude_operation_rows else [])]},operations=ops,passes=passes,bone_barrier=bone_receipt,protected_attachment_requests=(dict(path=str(a.attachment_requests_csv),sha256=a.attachment_requests_sha256) if a.attachment_requests_csv else None),rejections=dict(reject),input_cells=len(t),output_cells=len(rows),input_nodes=len(p),active_output_nodes=len(np.unique(t[rows])),low_quality_cells_before=initial_low_quality_cells,low_quality_cells_after=int((q[rows]<.001).sum()),native_quality_failures=int(((det[rows]/6<=1e-18)|(q[rows]<np.float32(1e-5))).sum()),all_point_coordinates_unchanged=True,absolute_geometric_volume_change_m3=changed_volume,elapsed_s=time.monotonic()-start,remaining=["complete anatomical context including bones and containment","independent topology, F32, typed ancestry and volume checks","canonical parent and conservative source mass compiler","complete native scene comparison"])
+ report=dict(boundary_contact_edges=[list(e) for e in sorted(contact_repair_edges)],interior_only=a.interior_only,actual_and_typed_boundary_nodes_fixed=(len(fixed_nodes) if a.interior_only else None),typed_surface_faces_unchanged=bool(a.interior_only),status="JOINT_BOUNDARY_VOLUME_PROPOSAL_NOT_PHYSICAL_ADMISSION",physical_admission=False,native_steps=0,mass_mapping="PENDING",input_pins={str(x):sha(x) for x in [V,C,*S.values(),*resume_pins,a.output/"executed-runner.py",*([a.replay_report] if a.replay_report else []),*([a.exclude_operation_rows] if a.exclude_operation_rows else [])]},operations=ops,passes=passes,bone_barrier=bone_receipt,protected_attachment_requests=(dict(path=str(a.attachment_requests_csv),sha256=a.attachment_requests_sha256) if a.attachment_requests_csv else None),rejections=dict(reject),input_cells=len(t),output_cells=len(rows),input_nodes=len(p),active_output_nodes=len(np.unique(t[rows])),low_quality_cells_before=initial_low_quality_cells,low_quality_cells_after=int((q[rows]<.001).sum()),native_quality_failures=int(((det[rows]/6<=1e-18)|(q[rows]<np.float32(1e-5))).sum()),all_point_coordinates_unchanged=True,absolute_geometric_volume_change_m3=changed_volume,elapsed_s=time.monotonic()-start,remaining=["complete anatomical context including bones and containment","independent topology, F32, typed ancestry and volume checks","canonical parent and conservative source mass compiler","complete native scene comparison"])
  if cell_mass is not None:
   touched=np.unique(np.concatenate([np.asarray(o["source_cell_rows"],np.int64) for o in ops])) if ops else np.empty(0,np.int64)
   unchanged=np.ones(len(t),bool);unchanged[touched]=False
