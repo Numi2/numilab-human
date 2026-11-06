@@ -53,6 +53,19 @@ def load_resume_volume(path,expected_sha,mass_path,mass_sha,points,source_sha,so
   raise ValueError("invalid resumed mass rows")
  return t,labels,[parents[off[i]:off[i+1]] for i in range(len(t))],mass_rows[:,1].copy()
 
+def uniform_typed_labels_by_material(labels):
+ """Retain each material's donor/region owner across a shared layer edge.
+
+ Skin and fat may have different donor owners on their bonded interface.
+ Parent unions and mass repartition already separate material indices; require
+ one donor/region within EACH partition so no child's typed ancestry is mixed.
+ """
+ labels=np.asarray(labels)
+ if labels.ndim!=2 or labels.shape[1]!=3 or not len(labels):return False
+ return all(np.all(part[:,1:]==part[0,1:])
+  for material in np.unique(labels[:,0])
+  for part in [labels[labels[:,0]==material]])
+
 def measure(p,t):
  x=p[t].astype(float);e=x[:,1:]-x[:,:1]
  det=np.einsum("ij,ij->i",np.cross(e[:,0],e[:,1]),e[:,2])
@@ -509,7 +522,7 @@ def main():
    if nodes&used or (not a.interior_only and (u in protected or v in protected)):reject["protected_or_dependent"]+=1;continue
    if not len(rows):reject["inactive_replay_edge"]+=1;continue
    if len(rows)>256:reject["unbounded_star"]+=1;continue
-   if not np.all(labs[rows,1:]==labs[rows[0],1:]):reject["donor_or_region_interface"]+=1;continue
+   if not uniform_typed_labels_by_material(labs[rows]):reject["donor_or_region_interface"]+=1;continue
    if link(t[rows],[u])&link(t[rows],[v])!=link(t[rows],[u,v]):reject["volume_link"]+=1;continue
    directions=([(u,v)] if replay_directions else [(u,v),(v,u)])
    if a.interior_only:

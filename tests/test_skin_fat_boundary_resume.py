@@ -48,6 +48,23 @@ class ResumeTest(unittest.TestCase):
     np.savetxt(self.mass,[row],delimiter=",",header="child_row,mass_kg",comments="")
     with self.assertRaises(ValueError):self.load()
 
+class MaterialPartitionLabelTest(unittest.TestCase):
+ def test_captured_bonded_skin_fat_donors_remain_distinct(self):
+  labels=np.array([[15,95,93],[15,95,93],[16,93,93],[16,93,93]])
+  self.assertTrue(owner.uniform_typed_labels_by_material(labels))
+  # Production ancestry union is partitioned by material, matching mass routing.
+  for material,donor in [(15,95),(16,93)]:
+   parents=np.flatnonzero(labels[:,0]==material)
+   np.testing.assert_array_equal(labels[parents,1:],[[donor,93],[donor,93]])
+ def test_one_material_cannot_mix_donor_or_region(self):
+  for labels in [[[15,95,93],[15,93,93]],[[16,93,93],[16,93,95]],
+                 [[15,95,93],[16,93,93],[16,99,93]]]:
+   with self.subTest(labels=labels):
+    self.assertFalse(owner.uniform_typed_labels_by_material(labels))
+ def test_invalid_partition_shape_is_rejected(self):
+  for labels in [[],[[15,95]],[15,95,93]]:
+   self.assertFalse(owner.uniform_typed_labels_by_material(labels))
+
 class BoundaryContactQualityTest(unittest.TestCase):
  def test_measured_fold_can_improve_worst_cell_despite_log_sum(self):
   old=np.array([1.179095772658468e-5,.001,.001])
