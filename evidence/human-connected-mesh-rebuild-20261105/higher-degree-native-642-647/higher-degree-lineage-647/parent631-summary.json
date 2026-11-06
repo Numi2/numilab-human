@@ -1,0 +1,1405 @@
+{
+  "reference": "/Users/numi/Work/human-integrated-gaps-20261104/stable-interior-native-631/install-motion.stdout.log.gz",
+  "candidate": "/Users/numi/Work/human-integrated-gaps-20261104/higher-degree-native-645/install-motion.stdout.log.gz",
+  "force_failures": 95,
+  "strain_failures": 62,
+  "physiology_relative_outliers": [
+    {
+      "channel": "blood_continuity_residual_accum_ml",
+      "max_abs_change": 1.221245327088e-09,
+      "max_abs_reference": 3.33066907388e-10,
+      "relative_max_abs_change": 3.6666666666626635
+    },
+    {
+      "channel": "blood_physical_delta_accum_ml",
+      "max_abs_change": 1.221245327088e-09,
+      "max_abs_reference": 3.33066907388e-10,
+      "relative_max_abs_change": 3.6666666666626635
+    },
+    {
+      "channel": "post_projection_equality_residual_generalized_s",
+      "max_abs_change": 1.83255684933e-11,
+      "max_abs_reference": 6.63257226918e-11,
+      "relative_max_abs_change": 0.27629655207007087
+    },
+    {
+      "channel": "equality_velocity_projection_max_generalized_s",
+      "max_abs_change": 6.730260793130001e-11,
+      "max_abs_reference": 1.16415321827e-10,
+      "relative_max_abs_change": 0.5781250000005638
+    }
+  ],
+  "force_witnesses": [
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.6085108949932696,
+      "resultant_difference_N": 0.0009955187177246104,
+      "nodal_l1_absolute_change_N": 0.015981361177917708,
+      "relative_change": 0.02626306498274689
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.5713439427557792,
+      "resultant_difference_N": 0.0007726859693662284,
+      "nodal_l1_absolute_change_N": 0.009643816496321178,
+      "relative_change": 0.0168791786779184
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.08542434310537768,
+      "resultant_difference_N": 0.00012578905072521172,
+      "nodal_l1_absolute_change_N": 0.001478024663219099,
+      "relative_change": 0.017302148421508363
+    },
+    {
+      "region": "region:4",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 3.7744814717487914e-06,
+      "resultant_difference_N": 5.528564871398485e-06,
+      "nodal_l1_absolute_change_N": 6.55481525212818e-07,
+      "relative_change": 1.464721687675153
+    },
+    {
+      "region": "region:4",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.7744814717487914e-06,
+      "resultant_difference_N": 5.528564871398485e-06,
+      "nodal_l1_absolute_change_N": 6.55481525212818e-07,
+      "relative_change": 0.17366134398034827
+    },
+    {
+      "region": "region:41",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00040155422076859474,
+      "resultant_difference_N": 3.474096993863243e-06,
+      "nodal_l1_absolute_change_N": 6.337632047586066e-06,
+      "relative_change": 0.015782755403381202
+    },
+    {
+      "region": "region:20",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 0.00025562202911738797,
+      "resultant_difference_N": 3.4523243756704172e-06,
+      "nodal_l1_absolute_change_N": 5.0166161573933954e-05,
+      "relative_change": 0.013505582392842302
+    },
+    {
+      "region": "region:20",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00025562202911738797,
+      "resultant_difference_N": 3.4523243756704172e-06,
+      "nodal_l1_absolute_change_N": 5.0166161573933954e-05,
+      "relative_change": 0.19625132367170284
+    },
+    {
+      "region": "region:69",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 3.355883423982818e-05,
+      "resultant_difference_N": 1.9094161895608972e-06,
+      "nodal_l1_absolute_change_N": 8.838816564023632e-07,
+      "relative_change": 0.05689757206448997
+    },
+    {
+      "region": "region:69",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.355883423982818e-05,
+      "resultant_difference_N": 1.9094161895608972e-06,
+      "nodal_l1_absolute_change_N": 8.838816564023632e-07,
+      "relative_change": 0.02633827057536337
+    },
+    {
+      "region": "region:150",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 0.00017480561687777018,
+      "resultant_difference_N": 1.8493920467694898e-06,
+      "nodal_l1_absolute_change_N": 1.745464919923129e-05,
+      "relative_change": 0.010579706074677482
+    },
+    {
+      "region": "region:150",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00017480561687777018,
+      "resultant_difference_N": 1.8493920467694898e-06,
+      "nodal_l1_absolute_change_N": 1.745464919923129e-05,
+      "relative_change": 0.09985176398213882
+    },
+    {
+      "region": "region:115",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0001812687062539626,
+      "resultant_difference_N": 1.3857900826393493e-06,
+      "nodal_l1_absolute_change_N": 5.773299808546384e-06,
+      "relative_change": 0.03184940152029235
+    },
+    {
+      "region": "region:43",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00027057452865890093,
+      "resultant_difference_N": 1.3367378248688212e-06,
+      "nodal_l1_absolute_change_N": 2.9943320292627864e-06,
+      "relative_change": 0.011066570249994164
+    },
+    {
+      "region": "region:109",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00016123255484472713,
+      "resultant_difference_N": 1.2449510521950872e-06,
+      "nodal_l1_absolute_change_N": 2.8805183722489607e-06,
+      "relative_change": 0.017865612655105573
+    },
+    {
+      "region": "region:70",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 7.49885226319501e-05,
+      "resultant_difference_N": 1.2402792308961048e-06,
+      "nodal_l1_absolute_change_N": 1.2406471775796153e-06,
+      "relative_change": 0.01653958749105511
+    },
+    {
+      "region": "region:70",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 7.49885226319501e-05,
+      "resultant_difference_N": 1.2402792308961048e-06,
+      "nodal_l1_absolute_change_N": 1.2406471775796153e-06,
+      "relative_change": 0.016544494197716295
+    },
+    {
+      "region": "region:79",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 8.434430160847026e-05,
+      "resultant_difference_N": 1.1393576461812404e-06,
+      "nodal_l1_absolute_change_N": 4.620592143098911e-06,
+      "relative_change": 0.013508412832323704
+    },
+    {
+      "region": "region:79",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 8.434430160847026e-05,
+      "resultant_difference_N": 1.1393576461812404e-06,
+      "nodal_l1_absolute_change_N": 4.620592143098911e-06,
+      "relative_change": 0.054782505219474
+    },
+    {
+      "region": "region:107",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00018606516612301586,
+      "resultant_difference_N": 1.0651713086095966e-06,
+      "nodal_l1_absolute_change_N": 2.6233907759555313e-06,
+      "relative_change": 0.014099311712226094
+    },
+    {
+      "region": "region:93",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00042799725437283367,
+      "resultant_difference_N": 1.054406289405136e-06,
+      "nodal_l1_absolute_change_N": 1.3899292474813028e-05,
+      "relative_change": 0.032475190746679844
+    },
+    {
+      "region": "region:111",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 9.927581126776742e-05,
+      "resultant_difference_N": 9.820407496184247e-07,
+      "nodal_l1_absolute_change_N": 1.0331954171468758e-05,
+      "relative_change": 0.10407322830736018
+    },
+    {
+      "region": "region:114",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 7.38652110522297e-05,
+      "resultant_difference_N": 8.393464214542962e-07,
+      "nodal_l1_absolute_change_N": 1.5165919027343628e-06,
+      "relative_change": 0.011363216993461222
+    },
+    {
+      "region": "region:114",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 7.38652110522297e-05,
+      "resultant_difference_N": 8.393464214542962e-07,
+      "nodal_l1_absolute_change_N": 1.5165919027343628e-06,
+      "relative_change": 0.0205318834283434
+    },
+    {
+      "region": "region:71",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0002664480090825009,
+      "resultant_difference_N": 7.855677851911273e-07,
+      "nodal_l1_absolute_change_N": 9.305219618528095e-06,
+      "relative_change": 0.03492320941173518
+    },
+    {
+      "region": "region:156",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 9.77780249591551e-06,
+      "resultant_difference_N": 7.65242323129153e-07,
+      "nodal_l1_absolute_change_N": 1.417781451719369e-06,
+      "relative_change": 0.07826322156218826
+    },
+    {
+      "region": "region:156",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 9.77780249591551e-06,
+      "resultant_difference_N": 7.65242323129153e-07,
+      "nodal_l1_absolute_change_N": 1.417781451719369e-06,
+      "relative_change": 0.1450000091852561
+    },
+    {
+      "region": "region:84",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0004953313666405518,
+      "resultant_difference_N": 7.529824958979167e-07,
+      "nodal_l1_absolute_change_N": 3.6422186674723894e-05,
+      "relative_change": 0.07353095145527996
+    },
+    {
+      "region": "region:42",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 7.241580523303425e-05,
+      "resultant_difference_N": 7.267796570963033e-07,
+      "nodal_l1_absolute_change_N": 3.6134504966261896e-06,
+      "relative_change": 0.010036202107502975
+    },
+    {
+      "region": "region:42",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 7.241580523303425e-05,
+      "resultant_difference_N": 7.267796570963033e-07,
+      "nodal_l1_absolute_change_N": 3.6134504966261896e-06,
+      "relative_change": 0.049898644156453086
+    },
+    {
+      "region": "region:95",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 8.942611277139314e-06,
+      "resultant_difference_N": 7.213004894160446e-07,
+      "nodal_l1_absolute_change_N": 1.912278224328853e-06,
+      "relative_change": 0.08065882179850092
+    },
+    {
+      "region": "region:95",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 8.942611277139314e-06,
+      "resultant_difference_N": 7.213004894160446e-07,
+      "nodal_l1_absolute_change_N": 1.912278224328853e-06,
+      "relative_change": 0.21383890734659988
+    },
+    {
+      "region": "region:102",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00018075893307147427,
+      "resultant_difference_N": 7.129834240955681e-07,
+      "nodal_l1_absolute_change_N": 5.143786097418511e-06,
+      "relative_change": 0.028456607980666692
+    },
+    {
+      "region": "region:60",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 5.447368920031293e-05,
+      "resultant_difference_N": 7.109720150974959e-07,
+      "nodal_l1_absolute_change_N": 1.1736164677462189e-06,
+      "relative_change": 0.013051658985002464
+    },
+    {
+      "region": "region:60",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 5.447368920031293e-05,
+      "resultant_difference_N": 7.109720150974959e-07,
+      "nodal_l1_absolute_change_N": 1.1736164677462189e-06,
+      "relative_change": 0.021544648159050644
+    },
+    {
+      "region": "region:29",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 3.204851465398287e-06,
+      "resultant_difference_N": 6.991142661242438e-07,
+      "nodal_l1_absolute_change_N": 5.960026783529379e-07,
+      "relative_change": 0.2181424860628792
+    },
+    {
+      "region": "region:29",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.204851465398287e-06,
+      "resultant_difference_N": 6.991142661242438e-07,
+      "nodal_l1_absolute_change_N": 5.960026783529379e-07,
+      "relative_change": 0.18596889272023373
+    },
+    {
+      "region": "region:91",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.000228365449318143,
+      "resultant_difference_N": 6.444061402620138e-07,
+      "nodal_l1_absolute_change_N": 8.405078275149151e-06,
+      "relative_change": 0.03680538496626858
+    },
+    {
+      "region": "region:52",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00012539100562582704,
+      "resultant_difference_N": 6.392460681270152e-07,
+      "nodal_l1_absolute_change_N": 3.561229409075248e-06,
+      "relative_change": 0.028400995679882596
+    },
+    {
+      "region": "region:61",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00014961619757680194,
+      "resultant_difference_N": 5.269092067189429e-07,
+      "nodal_l1_absolute_change_N": 7.785109686533952e-06,
+      "relative_change": 0.052033869411349326
+    },
+    {
+      "region": "region:1",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 3.4778255669928545e-06,
+      "resultant_difference_N": 4.5413879045570803e-07,
+      "nodal_l1_absolute_change_N": 1.4900140812651601e-06,
+      "relative_change": 0.13058124443210212
+    },
+    {
+      "region": "region:1",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.4778255669928545e-06,
+      "resultant_difference_N": 4.5413879045570803e-07,
+      "nodal_l1_absolute_change_N": 1.4900140812651601e-06,
+      "relative_change": 0.42843266649325357
+    },
+    {
+      "region": "region:46",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.000169907025212028,
+      "resultant_difference_N": 4.4487613379594516e-07,
+      "nodal_l1_absolute_change_N": 4.0298460623065975e-06,
+      "relative_change": 0.023717948432548496
+    },
+    {
+      "region": "region:152",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0002131843547768662,
+      "resultant_difference_N": 4.31388170768055e-07,
+      "nodal_l1_absolute_change_N": 3.2198871049191427e-06,
+      "relative_change": 0.015103768324318659
+    },
+    {
+      "region": "region:65",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0002547016546861462,
+      "resultant_difference_N": 4.065285287250879e-07,
+      "nodal_l1_absolute_change_N": 7.036040123396716e-06,
+      "relative_change": 0.027624634524133003
+    },
+    {
+      "region": "region:120",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00010091489679772586,
+      "resultant_difference_N": 3.7468188074429003e-07,
+      "nodal_l1_absolute_change_N": 1.0488006822901522e-05,
+      "relative_change": 0.10392922309501755
+    },
+    {
+      "region": "region:125",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 5.971712786527122e-05,
+      "resultant_difference_N": 3.5482225050630257e-07,
+      "nodal_l1_absolute_change_N": 2.177226525465184e-06,
+      "relative_change": 0.036458995991522906
+    },
+    {
+      "region": "region:53",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00011800581690299254,
+      "resultant_difference_N": 3.5227857954965467e-07,
+      "nodal_l1_absolute_change_N": 4.1546948144613655e-06,
+      "relative_change": 0.03520754250510176
+    },
+    {
+      "region": "region:59",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00029236908388385267,
+      "resultant_difference_N": 3.3212448667179407e-07,
+      "nodal_l1_absolute_change_N": 1.5152660256809777e-05,
+      "relative_change": 0.05182716330851645
+    },
+    {
+      "region": "region:136",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 1.8794815092232838e-05,
+      "resultant_difference_N": 3.143391195059186e-07,
+      "nodal_l1_absolute_change_N": 1.5121760506797866e-05,
+      "relative_change": 0.016724778507441803
+    },
+    {
+      "region": "region:136",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 1.8794815092232838e-05,
+      "resultant_difference_N": 3.143391195059186e-07,
+      "nodal_l1_absolute_change_N": 1.5121760506797866e-05,
+      "relative_change": 0.804570858111134
+    },
+    {
+      "region": "region:76",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 1.3301862742187138e-05,
+      "resultant_difference_N": 2.827030458701809e-07,
+      "nodal_l1_absolute_change_N": 4.873957563084471e-07,
+      "relative_change": 0.021252891519740483
+    },
+    {
+      "region": "region:76",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 1.3301862742187138e-05,
+      "resultant_difference_N": 2.827030458701809e-07,
+      "nodal_l1_absolute_change_N": 4.873957563084471e-07,
+      "relative_change": 0.03664116565890138
+    },
+    {
+      "region": "region:26",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 8.765318623548876e-06,
+      "resultant_difference_N": 2.7935617345754e-07,
+      "nodal_l1_absolute_change_N": 1.1678720325207758e-06,
+      "relative_change": 0.03187062392769416
+    },
+    {
+      "region": "region:26",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 8.765318623548876e-06,
+      "resultant_difference_N": 2.7935617345754e-07,
+      "nodal_l1_absolute_change_N": 1.1678720325207758e-06,
+      "relative_change": 0.1332378299840892
+    },
+    {
+      "region": "region:104",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00017310699688848633,
+      "resultant_difference_N": 2.6658227984208337e-07,
+      "nodal_l1_absolute_change_N": 7.046620607484267e-06,
+      "relative_change": 0.040706734760257116
+    },
+    {
+      "region": "region:145",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 7.820092028320409e-06,
+      "resultant_difference_N": 2.4912914786721794e-07,
+      "nodal_l1_absolute_change_N": 9.035674684969054e-07,
+      "relative_change": 0.0318575723872556
+    },
+    {
+      "region": "region:145",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 7.820092028320409e-06,
+      "resultant_difference_N": 2.4912914786721794e-07,
+      "nodal_l1_absolute_change_N": 9.035674684969054e-07,
+      "relative_change": 0.11554435232023384
+    },
+    {
+      "region": "region:139",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0002442825221205678,
+      "resultant_difference_N": 2.442383814344414e-07,
+      "nodal_l1_absolute_change_N": 6.459014962577618e-06,
+      "relative_change": 0.026440757637952148
+    },
+    {
+      "region": "region:112",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 4.631106497103442e-05,
+      "resultant_difference_N": 1.99505773399931e-07,
+      "nodal_l1_absolute_change_N": 1.62226510453337e-06,
+      "relative_change": 0.03502975164894236
+    },
+    {
+      "region": "region:131",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 3.331358118954271e-06,
+      "resultant_difference_N": 1.7792340130436302e-07,
+      "nodal_l1_absolute_change_N": 2.6557338299209332e-06,
+      "relative_change": 0.05340866846228289
+    },
+    {
+      "region": "region:131",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.331358118954271e-06,
+      "resultant_difference_N": 1.7792340130436302e-07,
+      "nodal_l1_absolute_change_N": 2.6557338299209332e-06,
+      "relative_change": 0.7971925368247652
+    },
+    {
+      "region": "region:54",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00013437081537905624,
+      "resultant_difference_N": 1.591142566785867e-07,
+      "nodal_l1_absolute_change_N": 4.276933550319403e-06,
+      "relative_change": 0.03182933390896152
+    },
+    {
+      "region": "region:56",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 5.895301647437909e-06,
+      "resultant_difference_N": 1.4949328650167986e-07,
+      "nodal_l1_absolute_change_N": 9.910626458573935e-07,
+      "relative_change": 0.02535803856052887
+    },
+    {
+      "region": "region:56",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 5.895301647437909e-06,
+      "resultant_difference_N": 1.4949328650167986e-07,
+      "nodal_l1_absolute_change_N": 9.910626458573935e-07,
+      "relative_change": 0.16811059130250072
+    },
+    {
+      "region": "region:75",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 4.130392934752256e-05,
+      "resultant_difference_N": 1.4199442969514434e-07,
+      "nodal_l1_absolute_change_N": 4.5554730371184e-07,
+      "relative_change": 0.011029151727404941
+    },
+    {
+      "region": "region:103",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 7.965930016643838e-05,
+      "resultant_difference_N": 1.3046169855532132e-07,
+      "nodal_l1_absolute_change_N": 1.9148084910043244e-06,
+      "relative_change": 0.024037475687127125
+    },
+    {
+      "region": "region:138",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.00017541121611681473,
+      "resultant_difference_N": 1.29325883052884e-07,
+      "nodal_l1_absolute_change_N": 2.8890415523930425e-06,
+      "relative_change": 0.016470107307557182
+    },
+    {
+      "region": "region:99",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.8055649994522386e-05,
+      "resultant_difference_N": 1.292524726864892e-07,
+      "nodal_l1_absolute_change_N": 6.6652539819245875e-06,
+      "relative_change": 0.17514492546793875
+    },
+    {
+      "region": "region:62",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 8.757514253280083e-05,
+      "resultant_difference_N": 1.27285457093286e-07,
+      "nodal_l1_absolute_change_N": 3.1074552759371445e-06,
+      "relative_change": 0.03548330252243966
+    },
+    {
+      "region": "region:100",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 6.010128422106388e-05,
+      "resultant_difference_N": 1.2048859857818965e-07,
+      "nodal_l1_absolute_change_N": 1.9537487247786958e-06,
+      "relative_change": 0.032507603624449
+    },
+    {
+      "region": "region:116",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0002559354886769587,
+      "resultant_difference_N": 1.1750202111233706e-07,
+      "nodal_l1_absolute_change_N": 9.659699800454208e-06,
+      "relative_change": 0.037742713409497745
+    },
+    {
+      "region": "region:72",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 8.165262588961897e-05,
+      "resultant_difference_N": 1.1185488781926562e-07,
+      "nodal_l1_absolute_change_N": 1.1857041750087998e-06,
+      "relative_change": 0.014521323253114705
+    },
+    {
+      "region": "region:122",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 1.6971500743047647e-05,
+      "resultant_difference_N": 1.0634127803491396e-07,
+      "nodal_l1_absolute_change_N": 1.0840347524894893e-06,
+      "relative_change": 0.06387382995187169
+    },
+    {
+      "region": "region:45",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 1.3780992338684854e-06,
+      "resultant_difference_N": 1.0048489043491153e-07,
+      "nodal_l1_absolute_change_N": 1.865520777939449e-07,
+      "relative_change": 0.0729155694781418
+    },
+    {
+      "region": "region:45",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 1.3780992338684854e-06,
+      "resultant_difference_N": 1.0048489043491153e-07,
+      "nodal_l1_absolute_change_N": 1.865520777939449e-07,
+      "relative_change": 0.1353691179917947
+    },
+    {
+      "region": "region:97",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 6.946615589166469e-06,
+      "resultant_difference_N": 9.839649573899551e-08,
+      "nodal_l1_absolute_change_N": 5.087785161878301e-08,
+      "relative_change": 0.014164666876406528
+    },
+    {
+      "region": "region:110",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 6.688392617305126e-06,
+      "resultant_difference_N": 9.131192217757416e-08,
+      "nodal_l1_absolute_change_N": 6.92629449801514e-06,
+      "relative_change": 0.013652296957167173
+    },
+    {
+      "region": "region:110",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 6.688392617305126e-06,
+      "resultant_difference_N": 9.131192217757416e-08,
+      "nodal_l1_absolute_change_N": 6.92629449801514e-06,
+      "relative_change": 1.0355693653650777
+    },
+    {
+      "region": "region:92",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 1.32377467204614e-05,
+      "resultant_difference_N": 7.85171950365712e-08,
+      "nodal_l1_absolute_change_N": 9.759152168340082e-06,
+      "relative_change": 0.737221550949868
+    },
+    {
+      "region": "region:49",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 5.727270546733546e-05,
+      "resultant_difference_N": 6.995144428906324e-08,
+      "nodal_l1_absolute_change_N": 1.1609093985177365e-05,
+      "relative_change": 0.2026985435810854
+    },
+    {
+      "region": "region:34",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 3.330490920902402e-05,
+      "resultant_difference_N": 6.942602016944911e-08,
+      "nodal_l1_absolute_change_N": 2.387672302629877e-06,
+      "relative_change": 0.0716913019532548
+    },
+    {
+      "region": "region:121",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 9.433195404142271e-05,
+      "resultant_difference_N": 6.695188089732375e-08,
+      "nodal_l1_absolute_change_N": 2.9598670213610206e-06,
+      "relative_change": 0.03137714098513526
+    },
+    {
+      "region": "region:48",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 8.101217432713223e-06,
+      "resultant_difference_N": 6.177451171478083e-08,
+      "nodal_l1_absolute_change_N": 2.746610527667061e-07,
+      "relative_change": 0.0339036762126156
+    },
+    {
+      "region": "region:153",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 0.0003187203219121757,
+      "resultant_difference_N": 5.346638857102453e-08,
+      "nodal_l1_absolute_change_N": 1.788687089465576e-05,
+      "relative_change": 0.05612089868428451
+    },
+    {
+      "region": "region:50",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 1.9838261727189874e-08,
+      "resultant_difference_N": 3.614048451579218e-08,
+      "nodal_l1_absolute_change_N": 3.521841795273486e-08,
+      "relative_change": 1.821756614202687
+    },
+    {
+      "region": "region:50",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 1.9838261727189874e-08,
+      "resultant_difference_N": 3.614048451579218e-08,
+      "nodal_l1_absolute_change_N": 3.521841795273486e-08,
+      "relative_change": 1.7752774127616882
+    },
+    {
+      "region": "region:106",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 2.5477281875505857e-07,
+      "resultant_difference_N": 3.463234343064941e-08,
+      "nodal_l1_absolute_change_N": 1.4455473581159974e-08,
+      "relative_change": 0.13593421621615503
+    },
+    {
+      "region": "region:106",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 2.5477281875505857e-07,
+      "resultant_difference_N": 3.463234343064941e-08,
+      "nodal_l1_absolute_change_N": 1.4455473581159974e-08,
+      "relative_change": 0.05673868056960043
+    },
+    {
+      "region": "region:67",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 4.5839729821758785e-05,
+      "resultant_difference_N": 3.1852417014554286e-08,
+      "nodal_l1_absolute_change_N": 3.0507985571384376e-06,
+      "relative_change": 0.06655358940816253
+    },
+    {
+      "region": "region:74",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 5.660440045941071e-05,
+      "resultant_difference_N": 3.078309911473809e-08,
+      "nodal_l1_absolute_change_N": 1.516016488734359e-06,
+      "relative_change": 0.026782661355479742
+    },
+    {
+      "region": "region:142",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 2.2596719413073877e-06,
+      "resultant_difference_N": 1.7677643970269375e-08,
+      "nodal_l1_absolute_change_N": 1.0160126482634033e-06,
+      "relative_change": 0.4496283861787321
+    },
+    {
+      "region": "region:117",
+      "channel": "free_internal_force",
+      "metric": "relative_resultant_difference_over_reference_nodal_l1",
+      "reference_nodal_l1_N": 9.633096202005987e-07,
+      "resultant_difference_N": 1.0306038182870516e-08,
+      "nodal_l1_absolute_change_N": 1.4982512195205677e-07,
+      "relative_change": 0.010698572885345417
+    },
+    {
+      "region": "region:117",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 9.633096202005987e-07,
+      "resultant_difference_N": 1.0306038182870516e-08,
+      "nodal_l1_absolute_change_N": 1.4982512195205677e-07,
+      "relative_change": 0.155531636776198
+    },
+    {
+      "region": "region:98",
+      "channel": "free_internal_force",
+      "metric": "relative_nodal_l1_change",
+      "reference_nodal_l1_N": 9.479279488829661e-07,
+      "resultant_difference_N": 8.19277185051118e-09,
+      "nodal_l1_absolute_change_N": 2.731883481732059e-07,
+      "relative_change": 0.28819526683977387
+    }
+  ],
+  "strain_witnesses": [
+    {
+      "region": "region:114",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.02878174104440015,
+      "candidate": 0.0061911975638099205,
+      "absolute_change": 0.02259054348059023,
+      "relative_change": 0.7848914853948873
+    },
+    {
+      "region": "region:23",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.02274541747263727,
+      "candidate": 0.025404221081496245,
+      "absolute_change": 0.002658803608858975,
+      "relative_change": 0.11689403424041413
+    },
+    {
+      "region": "region:112",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0002817294795519381,
+      "candidate": 0.0019684047888388683,
+      "absolute_change": 0.0016866753092869302,
+      "relative_change": 5.98686126836785
+    },
+    {
+      "region": "region:125",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.004290162433066195,
+      "candidate": 0.004605576038329088,
+      "absolute_change": 0.00031541360526289326,
+      "relative_change": 0.07352020120074242
+    },
+    {
+      "region": "region:65",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00415783799938649,
+      "candidate": 0.0044293048978527386,
+      "absolute_change": 0.00027146689846624817,
+      "relative_change": 0.06529039816036711
+    },
+    {
+      "region": "region:20",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0008850471578412505,
+      "candidate": 0.0010397722394960523,
+      "absolute_change": 0.00015472508165480182,
+      "relative_change": 0.17482128526597066
+    },
+    {
+      "region": "region:124",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001122438396721208,
+      "candidate": 0.000999876404078858,
+      "absolute_change": 0.00012256199264235003,
+      "relative_change": 0.10919262295407027
+    },
+    {
+      "region": "region:93",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001939371598037506,
+      "candidate": 0.0020590352110993267,
+      "absolute_change": 0.0001196636130618206,
+      "relative_change": 0.06170226128036056
+    },
+    {
+      "region": "region:42",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00019832532970882167,
+      "candidate": 0.0002601762985660223,
+      "absolute_change": 6.185096885720064e-05,
+      "relative_change": 0.31186620966675976
+    },
+    {
+      "region": "region:75",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.000563964477393826,
+      "candidate": 0.0006221804547183266,
+      "absolute_change": 5.821597732450065e-05,
+      "relative_change": 0.1032263194900615
+    },
+    {
+      "region": "region:76",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0001230955216479271,
+      "candidate": 6.693527640505212e-05,
+      "absolute_change": 5.6160245242874976e-05,
+      "relative_change": 0.45623304967586287
+    },
+    {
+      "region": "region:56",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0001247490611594346,
+      "candidate": 6.978027655192886e-05,
+      "absolute_change": 5.4968784607505736e-05,
+      "relative_change": 0.44063485605918346
+    },
+    {
+      "region": "region:57",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.610656299179383e-05,
+      "candidate": 3.626373304849779e-05,
+      "absolute_change": 3.9842829943296036e-05,
+      "relative_change": 0.5235137204605085
+    },
+    {
+      "region": "region:116",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0005937189393824747,
+      "candidate": 0.0006291346729486707,
+      "absolute_change": 3.541573356619597e-05,
+      "relative_change": 0.05965067175224656
+    },
+    {
+      "region": "region:48",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00013165221333673557,
+      "candidate": 0.00015050239904396308,
+      "absolute_change": 1.8850185707227507e-05,
+      "relative_change": 0.14318168475461282
+    },
+    {
+      "region": "region:29",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.3364992986237514e-05,
+      "candidate": 6.191440839832317e-05,
+      "absolute_change": 1.8549415412085652e-05,
+      "relative_change": 0.42775091461383535
+    },
+    {
+      "region": "region:111",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00019588679119526348,
+      "candidate": 0.00020583488036399303,
+      "absolute_change": 9.94808916872955e-06,
+      "relative_change": 0.05078489012979499
+    },
+    {
+      "region": "region:136",
+      "metric": "maximum_green_strain_norm",
+      "reference": 6.456847514381557e-06,
+      "candidate": 1.5300104282039722e-05,
+      "absolute_change": 8.843256767658164e-06,
+      "relative_change": 1.3695935590799189
+    },
+    {
+      "region": "region:79",
+      "metric": "maximum_green_strain_norm",
+      "reference": 9.297187304098174e-05,
+      "candidate": 8.462932444305012e-05,
+      "absolute_change": 8.342548597931618e-06,
+      "relative_change": 0.08973196220597003
+    },
+    {
+      "region": "region:122",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.424566526563288e-05,
+      "candidate": 5.2424441711547864e-05,
+      "absolute_change": 8.178776445914984e-06,
+      "relative_change": 0.18484921396961612
+    },
+    {
+      "region": "region:126",
+      "metric": "maximum_green_strain_norm",
+      "reference": 3.5722925671994264e-05,
+      "candidate": 3.16021389665503e-05,
+      "absolute_change": 4.120786705443961e-06,
+      "relative_change": 0.1153541214199748
+    },
+    {
+      "region": "region:4",
+      "metric": "maximum_green_strain_norm",
+      "reference": 2.733286981733183e-06,
+      "candidate": 3.6363510946073005e-06,
+      "absolute_change": 9.030641128741174e-07,
+      "relative_change": 0.3303949123928006
+    },
+    {
+      "region": "region:98",
+      "metric": "maximum_green_strain_norm",
+      "reference": 8.6454610492012e-06,
+      "candidate": 9.302202024669041e-06,
+      "absolute_change": 6.567409754678409e-07,
+      "relative_change": 0.0759636729296838
+    },
+    {
+      "region": "region:92",
+      "metric": "maximum_green_strain_norm",
+      "reference": 2.1232677713903493e-07,
+      "candidate": 5.972602233436295e-07,
+      "absolute_change": 3.8493344620459456e-07,
+      "relative_change": 1.8129293506514916
+    },
+    {
+      "region": "region:156",
+      "metric": "maximum_green_strain_norm",
+      "reference": 5.084506885862962e-07,
+      "candidate": 6.606866435187215e-07,
+      "absolute_change": 1.5223595493242528e-07,
+      "relative_change": 0.2994114441180213
+    },
+    {
+      "region": "region:1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.562868496113793e-08,
+      "candidate": 1.273909372714678e-07,
+      "absolute_change": 5.176225231032987e-08,
+      "relative_change": 0.6844261848123907
+    },
+    {
+      "region": "region:131",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.380557815554712e-08,
+      "candidate": 2.1531435179111174e-08,
+      "absolute_change": 7.725857023564054e-09,
+      "relative_change": 0.5596185061224533
+    },
+    {
+      "region": "region:145",
+      "metric": "maximum_green_strain_norm",
+      "reference": 3.280462832767733e-09,
+      "candidate": 8.891077865863949e-09,
+      "absolute_change": 5.610615033096215e-09,
+      "relative_change": 1.7103120258072024
+    },
+    {
+      "region": "region:26",
+      "metric": "maximum_green_strain_norm",
+      "reference": 6.219480117518694e-08,
+      "candidate": 6.534251397664495e-08,
+      "absolute_change": 3.1477128014580057e-09,
+      "relative_change": 0.05061054528644121
+    },
+    {
+      "region": "region:20",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3234767155237963e-12,
+      "candidate": 1.4629961970796146e-12,
+      "absolute_change": 1.3951948155581822e-13,
+      "relative_change": 0.1054189166453149
+    },
+    {
+      "region": "region:136",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 8.782958948432842e-14,
+      "candidate": 1.584136100980127e-13,
+      "absolute_change": 7.058402061368428e-14,
+      "relative_change": 0.8036473929583686
+    },
+    {
+      "region": "region:150",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.7968579885120187e-13,
+      "candidate": 3.380084805565317e-13,
+      "absolute_change": 5.832268170532984e-14,
+      "relative_change": 0.2085292923161916
+    },
+    {
+      "region": "region:92",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.7828415535236632e-14,
+      "candidate": 4.7629858811589946e-14,
+      "absolute_change": 1.9801443276353314e-14,
+      "relative_change": 0.7115548224900019
+    },
+    {
+      "region": "region:131",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.826517278574732e-14,
+      "candidate": 3.648832361015627e-14,
+      "absolute_change": 1.822315082440895e-14,
+      "relative_change": 0.997699339511797
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.239625763464469e-15,
+      "candidate": 2.55098359466074e-14,
+      "absolute_change": 1.627021018314293e-14,
+      "relative_change": 1.7609165781885834
+    },
+    {
+      "region": "region:1",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.125080915466699e-15,
+      "candidate": 2.0387840508615156e-14,
+      "absolute_change": 1.1262759593148457e-14,
+      "relative_change": 1.23426407913364
+    },
+    {
+      "region": "region:41",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.427960829958624e-14,
+      "candidate": 8.512771992171736e-14,
+      "absolute_change": 1.0848111622131119e-14,
+      "relative_change": 0.14604427608689402
+    },
+    {
+      "region": "region:26",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3628360862548235e-14,
+      "candidate": 2.1378584754908918e-14,
+      "absolute_change": 7.750223892360683e-15,
+      "relative_change": 0.5686834954347946
+    },
+    {
+      "region": "region:125",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 8.450592031439702e-14,
+      "candidate": 9.069522204955402e-14,
+      "absolute_change": 6.189301735156999e-15,
+      "relative_change": 0.07324104290125749
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.604222024513764e-14,
+      "candidate": 2.948276382954822e-14,
+      "absolute_change": 3.4405435844105835e-15,
+      "relative_change": 0.13211406523808084
+    },
+    {
+      "region": "region:142",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.8339279410936705e-14,
+      "candidate": 2.1605107279255536e-14,
+      "absolute_change": 3.26582786831883e-15,
+      "relative_change": 0.178078309138539
+    },
+    {
+      "region": "region:57",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.200026710240406e-15,
+      "candidate": 1.0280032646116381e-14,
+      "absolute_change": 1.0800059358759747e-15,
+      "relative_change": 0.11739160873020477
+    },
+    {
+      "region": "region:29",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3931057207383679e-14,
+      "candidate": 1.5003733737139804e-14,
+      "absolute_change": 1.072676529756125e-15,
+      "relative_change": 0.07699893222659293
+    },
+    {
+      "region": "region:98",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.413964689474397e-15,
+      "candidate": 7.40423315677759e-15,
+      "absolute_change": 9.902684673031935e-16,
+      "relative_change": 0.15439256610318863
+    },
+    {
+      "region": "region:97",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.698254693848125e-15,
+      "candidate": 8.452058460650857e-15,
+      "absolute_change": 7.538037668027324e-16,
+      "relative_change": 0.09791878767081018
+    },
+    {
+      "region": "region:114",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.945882906074104e-19,
+      "candidate": 4.71884134344478e-19,
+      "absolute_change": 7.729584373706755e-20,
+      "relative_change": 0.19588985678739226
+    },
+    {
+      "region": "region:46",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.1363291158678092e-19,
+      "candidate": 2.246005097873081e-19,
+      "absolute_change": 1.0967598200527203e-20,
+      "relative_change": 0.0513385232596617
+    },
+    {
+      "region": "region:112",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.171311368985911e-21,
+      "candidate": 1.466518048847618e-20,
+      "absolute_change": 5.49386911949027e-21,
+      "relative_change": 0.5990276524760206
+    },
+    {
+      "region": "region:76",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.6116159527587255e-20,
+      "candidate": 1.1888352979478216e-20,
+      "absolute_change": 4.2278065481090394e-21,
+      "relative_change": 0.26233337668766443
+    },
+    {
+      "region": "region:56",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.1607989785897323e-20,
+      "candidate": 1.3344462562525695e-20,
+      "absolute_change": 1.7364727766283714e-21,
+      "relative_change": 0.14959289322756225
+    },
+    {
+      "region": "region:41",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.63479773848997e-21,
+      "candidate": 9.367213477882645e-21,
+      "absolute_change": 7.32415739392676e-22,
+      "relative_change": 0.08482141233348205
+    },
+    {
+      "region": "region:136",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.862352427058184e-22,
+      "candidate": 1.2715547216526904e-21,
+      "absolute_change": 3.85319478946872e-22,
+      "relative_change": 0.4347823922804399
+    },
+    {
+      "region": "region:92",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.3827855084913166e-22,
+      "candidate": 6.206993934081574e-22,
+      "absolute_change": 3.8242084255902577e-22,
+      "relative_change": 1.604931879920485
+    },
+    {
+      "region": "region:57",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.55880308562055e-21,
+      "candidate": 5.863944230224353e-21,
+      "absolute_change": 3.051411446038028e-22,
+      "relative_change": 0.054893317842673456
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.446544632070893e-23,
+      "candidate": 3.138430252917752e-22,
+      "absolute_change": 2.2937757897106627e-22,
+      "relative_change": 2.7156380385434407
+    },
+    {
+      "region": "region:156",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.917993957470813e-22,
+      "candidate": 2.3351256360639463e-22,
+      "absolute_change": 4.171316785931334e-23,
+      "relative_change": 0.2174833121701746
+    },
+    {
+      "region": "region:97",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.12833205212135e-22,
+      "candidate": 6.505504772772614e-22,
+      "absolute_change": 3.771727206512641e-23,
+      "relative_change": 0.061545738292804165
+    },
+    {
+      "region": "region:29",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.4315243683624003e-22,
+      "candidate": 2.7690525634684904e-22,
+      "absolute_change": 3.3752819510609005e-23,
+      "relative_change": 0.13881341248223264
+    },
+    {
+      "region": "region:1",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.673933034035407e-24,
+      "candidate": 2.125151014108874e-23,
+      "absolute_change": 1.2577577107053332e-23,
+      "relative_change": 1.4500431416406516
+    },
+    {
+      "region": "region:131",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.8177567718816225e-24,
+      "candidate": 1.2028612329294446e-23,
+      "absolute_change": 9.210855557412823e-24,
+      "relative_change": 3.268861120068238
+    },
+    {
+      "region": "region:26",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3878080268622483e-23,
+      "candidate": 1.990157134335079e-23,
+      "absolute_change": 6.023491074728308e-24,
+      "relative_change": 0.43402912781438974
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.039274031791036e-24,
+      "candidate": 1.0490690688937794e-23,
+      "absolute_change": 3.451416657146758e-24,
+      "relative_change": 0.49030860875132004
+    }
+  ],
+  "body_wall_s": {
+    "reference": 66.2215575,
+    "candidate": 65.287036708
+  },
+  "body_wall_reduction_fraction": 0.014112032807443442,
+  "active_work": {
+    "reference": {
+      "cycles_with_work": 71,
+      "used_columns_sum": 1136,
+      "budget_exhausted_solves": 11
+    },
+    "candidate": {
+      "cycles_with_work": 70,
+      "used_columns_sum": 1120,
+      "budget_exhausted_solves": 11
+    }
+  },
+  "physical_admission": false
+}

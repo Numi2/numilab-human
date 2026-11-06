@@ -1,0 +1,54 @@
+{
+  "status": "NATIVE_STEPS_ACCEPTED_MODEL_FIDELITY_NOT_ADMITTED",
+  "native_steps": 4,
+  "simulated_s": 6.25000029685907e-05,
+  "body_wall_s": 65.287036708,
+  "launcher_wall_s": 241.8637592792511,
+  "body_real_time_factor": 9.57311070008056e-07,
+  "retained_cavities": 246,
+  "excluded_transport_cavities": [
+    3,
+    11,
+    17,
+    41,
+    89,
+    181,
+    183,
+    185,
+    187,
+    246
+  ],
+  "source_import_pass": true,
+  "resource_stop_reason": null,
+  "force_strain_comparison_counts": {
+    "parent631": [
+      95,
+      62
+    ],
+    "unqualified572": [
+      112,
+      193
+    ],
+    "reference495": [
+      102,
+      139
+    ]
+  },
+  "body_wall_reduction_fraction": {
+    "parent631": 0.014112032807443442,
+    "unqualified572": 0.007778905208215003,
+    "reference495": 0.0023570435663801126
+  },
+  "runtime_changed": false,
+  "dt_or_acceptance_changed": false,
+  "all_force_gate_failures_in": "free_internal_force",
+  "full_human_qualified": false,
+  "physical_admission": false,
+  "remaining": [
+    "reference495 force and strain fidelity",
+    "conservative qualification of a better-conditioned reference mesh",
+    "supported resting motion",
+    "sustained breathing circulation gas response",
+    "0.1x end-to-end throughput"
+  ]
+}
