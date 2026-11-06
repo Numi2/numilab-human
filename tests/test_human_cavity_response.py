@@ -70,3 +70,11 @@ def test_force_budget_groups_actual_node_owners_without_vector_cancellation():
 
 def test_negative_reference_energy_is_not_normalized_into_a_valid_budget():
  with pytest.raises(ValueError):m.RegionalResponseBudget({1:1.},{1:-1.})
+
+
+def test_force_budget_reference_excludes_prescribed_reaction_rows():
+ force=np.array([[3.,4,0],[1000.,0,0],[0,0,2.]])
+ reference=m.regional_force_change(np.arange(3),force,np.array([7,7,9]),np.array([True,False,False]))
+ assert reference=={7:5.}
+ budget=m.RegionalResponseBudget(reference,{7:1.})
+ assert budget.propose({7:.051},7,0)[0] is None

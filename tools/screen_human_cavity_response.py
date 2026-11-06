@@ -177,7 +177,7 @@ def run(a):
   ref=r["input"]["reference"]
   field,receipt=mesh.load_reference_deformation(Path(ref["path"]),ref["sha256"],p,t,labels)
   gate=mesh.ReferenceDeformationGate(p,t,field,labels[:,1],receipt)
-  force_reference={int(k):float(np.linalg.norm(native_force[z["region"][ni]==k],axis=1).sum()) for k in np.unique(z["region"][ni])}
+  force_reference=regional_force_change(np.arange(len(p)),native_force,z["region"][ni],free)
   budget=RegionalResponseBudget(force_reference,{k:v["energy_J"] for k,v in base.items()})
   kept=[];excluded=[];indices=[];response_rejections=[]
   for index,patch in enumerate(r["patches"]):
