@@ -78,3 +78,23 @@ def test_force_budget_reference_excludes_prescribed_reaction_rows():
  assert reference=={7:5.}
  budget=m.RegionalResponseBudget(reference,{7:1.})
  assert budget.propose({7:.051},7,0)[0] is None
+
+
+def test_native_geometry_certificate_keeps_exact_failure_witnesses_and_rejects_bad_domains(tmp_path,monkeypatch):
+ import json
+ from types import SimpleNamespace
+ checker=tmp_path/"checker";checker.write_bytes(b"pinned executable")
+ proposal=tmp_path/"proposal.npz";proposal.write_bytes(b"pinned proposal")
+ cert=dict(source_sha256="a"*64,proposal_sha256=m.sha(proposal),cavities=3,failures=[dict(cavity=1,reason="cavity boundary is not a closed sphere")],failure_count=1,native_steps=0,mass_qualified=False)
+ monkeypatch.setattr(m.subprocess,"run",lambda *a,**k:SimpleNamespace(returncode=1,stdout="skin_fat_cavity_geometry="+json.dumps(cert),stderr=""))
+ record,rejected=m.native_geometry_check(checker,m.sha(checker),tmp_path/"source.npz",proposal,"a"*64,m.sha(proposal),3)
+ assert rejected=={1} and record["certificate"]["failures"][0]["reason"]=="cavity boundary is not a closed sphere"
+ cert["failures"][0]["cavity"]=3
+ with pytest.raises(ValueError,match="domain"):m.native_geometry_check(checker,m.sha(checker),tmp_path/"source.npz",proposal,"a"*64,m.sha(proposal),3)
+
+
+def test_native_geometry_checker_hash_is_mandatory_before_execution(tmp_path,monkeypatch):
+ checker=tmp_path/"checker";checker.write_bytes(b"changed executable")
+ monkeypatch.setattr(m.subprocess,"run",lambda *a,**k:pytest.fail("unverified checker executed"))
+ with pytest.raises(ValueError,match="SHA mismatch"):
+  m.native_geometry_check(checker,"f"*64,tmp_path/"source",tmp_path/"proposal","a"*64,"b"*64,1)

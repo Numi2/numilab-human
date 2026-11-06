@@ -6,7 +6,7 @@ it never advances simulation, supplies forces, changes material data, or admits 
 physical step. The native owner remains the acceptance authority.
 """
 from pathlib import Path
-import argparse,hashlib,importlib.util,json,re,time
+import argparse,hashlib,importlib.util,json,re,time,subprocess
 import numpy as np
 
 def sha(p):
@@ -104,10 +104,34 @@ def regional_force_change(nodes,delta,node_regions,free):
   if np.any(mask):out[int(region)]=float(np.linalg.norm(delta[mask],axis=1).sum())
  return out
 
+def native_geometry_check(checker,checker_sha,volume,proposal,source_sha,proposal_sha,count):
+ """Call the existing native certificate; this never advances physical state."""
+ if sha(checker)!=checker_sha or sha(proposal)!=proposal_sha:raise ValueError("native geometry checker or payload SHA mismatch")
+ argv=[str(checker),"--geometry-proposal",str(volume),str(proposal)]
+ start=time.monotonic();result=subprocess.run(argv,capture_output=True,text=True)
+ lines=[line.split("=",1)[1] for line in result.stdout.splitlines() if line.startswith("skin_fat_cavity_geometry=")]
+ if len(lines)!=1:raise ValueError("native geometry certificate did not return a complete batch: "+result.stderr[-1000:])
+ record=json.loads(lines[0]);failures=record.get("failures",[])
+ rejected=[row["cavity"] for row in failures]
+ if (record.get("source_sha256")!=source_sha or record.get("proposal_sha256")!=proposal_sha or
+     record.get("cavities")!=count or record.get("failure_count")!=len(rejected) or
+     len(set(rejected))!=len(rejected) or any(type(i) is not int or not 0<=i<count for i in rejected) or
+     record.get("native_steps")!=0 or record.get("mass_qualified") is not False or
+     result.returncode!=(1 if rejected else 0)):
+  raise ValueError("native geometry certificate identity, domain or exit-code mismatch")
+ return dict(certificate=record,checker=pin(checker),argv=argv,elapsed_s=time.monotonic()-start),set(rejected)
+
 def run(a):
  start=time.monotonic();a.output.mkdir(parents=True,exist_ok=False)
  if sha(a.proposal_report)!=a.proposal_report_sha256:raise ValueError("proposal report mismatch")
  r=json.loads(a.proposal_report.read_text())
+ native_input=None;native_rejected=set()
+ if getattr(a,"emit_proposal",False):
+  if not getattr(a,"native_geometry_check",None) or not getattr(a,"native_geometry_check_sha256",None):
+   raise ValueError("emitting a native proposal requires the pinned existing native geometry checker")
+  native_input,native_rejected=native_geometry_check(a.native_geometry_check,a.native_geometry_check_sha256,
+   Path(r["input"]["volume"]["path"]),Path(r["output"]["path"]),r["input"]["volume"]["sha256"],r["output"]["sha256"],len(r["patches"]))
+  (a.output/"native-input-geometry.json").write_text(json.dumps(native_input,indent=2)+"\n")
  for v in r["input"].values():
   if sha(v["path"])!=v["sha256"]:raise ValueError("source input mismatch")
  cap=module(a.capture_owner,"retained_native_capture",a.capture_owner_sha256)
@@ -181,6 +205,8 @@ def run(a):
   budget=RegionalResponseBudget(force_reference,{k:v["energy_J"] for k,v in base.items()})
   kept=[];excluded=[];indices=[];response_rejections=[]
   for index,patch in enumerate(r["patches"]):
+   if index in native_rejected:
+    excluded.append(index);response_rejections.append(dict(index=index,failures=[dict(metric="native_geometry",reason=next(row["reason"] for row in native_input["certificate"]["failures"] if row["cavity"]==index))]));continue
    measured=patches[index]
    response_proposal,failures=budget.propose(measured["regional_free_force_change_l1_bound_N"],measured["donor"],measured["new_energy_J"]-measured["old_energy_J"])
    if response_proposal is None:
@@ -193,6 +219,11 @@ def run(a):
   if not kept:raise ValueError("no cavities pass the unchanged reference gate")
   payload=a.output/"fixed-boundary-volume-proposal.npz"
   np.savez_compressed(payload,**builder.cavity_payload(r["input"]["volume"]["sha256"],len(t),kept))
+  native_output,rejected=native_geometry_check(a.native_geometry_check,a.native_geometry_check_sha256,
+   Path(r["input"]["volume"]["path"]),payload,r["input"]["volume"]["sha256"],sha(payload),len(kept))
+  (a.output/"native-output-geometry.json").write_text(json.dumps(native_output,indent=2)+"\n")
+  if rejected:raise ValueError("screened proposal failed the existing native geometry certificate")
+  r["native_geometry"]=dict(input=native_input,output=native_output)
   history={k:r.pop(k) for k in ["eligible_seed_cells","tested_edges","rejections","elapsed_s","replay","reference_rebinding_diagnostic"] if k in r}
   r["source_report_history"]=history
   r["owners"][str(Path(__file__))]=sha(Path(__file__))
@@ -209,5 +240,6 @@ if __name__=="__main__":
  ap=argparse.ArgumentParser(description=__doc__)
  for name in ["proposal-report","capture-owner","skin-material","fat-material"]:
   ap.add_argument("--"+name,type=Path,required=True);ap.add_argument("--"+name+"-sha256",required=True)
+ ap.add_argument("--native-geometry-check",type=Path);ap.add_argument("--native-geometry-check-sha256")
  ap.add_argument("--emit-proposal",action="store_true",help="Replay only cavities passing 1% fixed-field force bounds,5% energy bounds and the existing5% strain gate after force calibration; physical admission remains mandatory")
  ap.add_argument("--output",type=Path,required=True);run(ap.parse_args())
