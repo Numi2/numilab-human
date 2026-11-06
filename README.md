@@ -1,5 +1,9 @@
 # NumiLab Human v1
 
+> **Session closed — 6 November 2026. The full Human goal is unfinished.**
+> See the [concise handoff and recovery index](Docs/session-close-20261106/README.md).
+> Simulation and queued trials are stopped. Historical component results below do not establish full-scene qualification.
+
 An Apple-native, muscle-driven Human foundation for Numi Lab. The active
 full-body mechanical source is **MyoSim `myofullbody`** (416 authored
 muscle-tendon actuators); the Core owns the articulated state, muscle route
