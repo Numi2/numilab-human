@@ -1,0 +1,12 @@
+[
+  {
+    "command": "/usr/bin/clang++ -DNUMI_MATTER_METALLIB=\\\"/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib\\\" -I/Users/numi/Work/skin-fat-native-integration-209/matter/../include -I/Users/numi/Work/skin-fat-native-integration-209/matter/include -F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks -x objective-c++ -O3 -DNDEBUG -std=c++23 -arch arm64 -fPIE -fobjc-arc -Wall -Wextra -Wpedantic -Werror -MD -MT matter/CMakeFiles/numi-matter-fgmres-true-residual-native-check.dir/tools/fgmres_true_residual_native_check.mm.o -MF matter/CMakeFiles/numi-matter-fgmres-true-residual-native-check.dir/tools/fgmres_true_residual_native_check.mm.o.d -o matter/CMakeFiles/numi-matter-fgmres-true-residual-native-check.dir/tools/fgmres_true_residual_native_check.mm.o -c /Users/numi/Work/skin-fat-native-integration-209/matter/tools/fgmres_true_residual_native_check.mm",
+    "exit_code": 0,
+    "wall_s": 8.92854905128479
+  },
+  {
+    "command": ": && /usr/bin/c++ -O3 -DNDEBUG -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names matter/CMakeFiles/numi-matter-fgmres-true-residual-native-check.dir/tools/fgmres_true_residual_native_check.mm.o -o matter/numi-matter-fgmres-true-residual-native-check  matter/libnumi_matter_compiler.a  -framework Foundation  -framework Metal && :",
+    "exit_code": 0,
+    "wall_s": 0.10199594497680664
+  }
+]

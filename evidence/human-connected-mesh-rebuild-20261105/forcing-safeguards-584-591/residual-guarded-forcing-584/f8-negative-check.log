@@ -1,0 +1,7 @@
+inexact_coupled_linear_true_certificate=true default_strict=true nonlinear_unchanged=true vascular_domain_target=true nonfinite_layout_rejection=true result=PASS
+scaled_fresh_rhs_preflight cases=18 scales=1e-8,1,1e8 forcing=0.25,1e-4,1e-12 raw_domains=mechanical,vascular nonfinite_and_bad_status_rejected=true PASS
+schur_original_rhs_norm=true condensed_arnoldi_norm=true full_residual_target=true result=PASS
+schur_domain_latch_uses_full_rhs=true condensed_arnoldi_norm_preserved=true result=PASS
+domain_nonlinear_latch=true separate_mechanical_vascular=true legacy_full_norm=true pressure_and_support_gates=true nonfinite_rejected=true result=PASS
+distributed_begin=true inactive_transport_mask=true distributed_correction=true mixed_pressure_field=true legacy_controls=true result=PASS
+FAIL native FGMRES true-residual kernel contract: physical-progress EW cap depends on Arnoldi row scale

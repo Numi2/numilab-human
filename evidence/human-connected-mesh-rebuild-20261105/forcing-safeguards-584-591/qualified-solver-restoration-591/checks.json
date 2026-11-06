@@ -1,0 +1,20 @@
+[
+  {
+    "command": [
+      "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/numi-matter-fgmres-true-residual-native-check",
+      "--inexact-coupled-certificate-only"
+    ],
+    "wall_s": 0.35669398307800293,
+    "exit_code": 0,
+    "output": "inexact_coupled_linear_true_certificate=true default_strict=true nonlinear_unchanged=true vascular_domain_target=true nonfinite_layout_rejection=true result=PASS\nscaled_fresh_rhs_preflight cases=18 scales=1e-8,1,1e8 forcing=0.25,1e-4,1e-12 raw_domains=mechanical,vascular nonfinite_and_bad_status_rejected=true PASS\nschur_original_rhs_norm=true condensed_arnoldi_norm=true full_residual_target=true result=PASS\nschur_domain_latch_uses_full_rhs=true condensed_arnoldi_norm_preserved=true result=PASS\ndomain_nonlinear_latch=true separate_mechanical_vascular=true legacy_full_norm=true pressure_and_support_gates=true nonfinite_rejected=true result=PASS\ndistributed_begin=true inactive_transport_mask=true distributed_correction=true mixed_pressure_field=true legacy_controls=true result=PASS\ninexact_newton_forcing=true full_rhs=true accepted_history=true restart_preserved=true reject_status_reset=true NaN_fallback=true support_gate=true no_op_preserved=true result=PASS\nPASS inexact coupled certificate 1954 checks\n"
+  },
+  {
+    "command": [
+      "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/numi-matter-fgmres-true-residual-native-check",
+      "--tiled-mixed-certificate-only"
+    ],
+    "wall_s": 0.06590819358825684,
+    "exit_code": 0,
+    "output": "final_contact_active_prefix=true sparse_order=true poisoned_padding_ignored=true empty=true invalid_index_rejected=true hard_clearance_preserved=true deterministic_witness=true canaries=2 cases=16 initially_close_nonclosing=true default_clearance_preserved=true source_margin_pipeline=true captured_full_Human_case=true source_overlap_rejected=true below_source_margin_rejected=true PASS\nmixed_certificate_tiled domains=FEM_pressure_transport contacts=519 environments=2 objects=3 faults=clearance_residual_inversion_nonfinite PASS\nPASS tiled mixed certificate 2129 checks\n"
+  }
+]

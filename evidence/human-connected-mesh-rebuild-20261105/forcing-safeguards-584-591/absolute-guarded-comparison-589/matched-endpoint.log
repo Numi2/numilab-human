@@ -1,0 +1,114 @@
+parsed early-state-native-572 317611 1471447
+parsed absolute-guarded-native-588 317611 1471447
+{
+  "reference": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/early-state-native-572/install-motion.stdout.log.gz",
+    "sha256": "c38f4d846db812b6c986fab4d46f2ff71a15b13e3c2f5dce770542524c35de6e",
+    "header": {
+      "version": "2",
+      "steps": "4",
+      "dt_s": "1.5625e-05",
+      "endpoint_time_s": "6.25e-05",
+      "runtime_dt_s": "1.562500074e-05",
+      "timestep_multiplier": "1",
+      "timestep_divisor": "1",
+      "completed_microsteps": "1",
+      "runtime_coordinate_projection": "disabled",
+      "coordinate_unit": "m",
+      "mass_unit": "kg",
+      "force_unit": "N",
+      "time_unit": "s",
+      "strain_unit": "1",
+      "mechanical_residual_unit": "N_s",
+      "bulk_reaction_available": "1",
+      "contact_force_available": "1",
+      "mechanical_residual_available": "1",
+      "free_internal_force_available": "1",
+      "free_internal_force_scope": "accepted_snapshot_bulk_element_force_scattered_to_tag0_free_nodes_field_activation_included_borrowed_prescribed_tension_excluded",
+      "tag2_attachment_force_available": "0",
+      "tag2_attachment_force_scope": "final_accepted_solve_linearization_reaction_on_Human_N",
+      "force_channels_scope": "FEM_bulk_reaction_plus_contact_supplement;tag2_attachment_and_free_element_channels_reported_separately",
+      "source_region_label_source": "registered_skin_fat_donor_body_id",
+      "source_region_labeled_nodes": "310405",
+      "source_region_total_nodes": "317611",
+      "source_region_labeled_tetrahedra": "1445028",
+      "source_region_total_tetrahedra": "1471447",
+      "objects": "22",
+      "nodes": "317611",
+      "tetrahedra": "1471447",
+      "reactions": "4"
+    },
+    "body": {
+      "simulated_s": "6.2500002968590707e-05",
+      "wall_s": "65.798879958000001",
+      "real_time_factor": "9.4986423793968837e-07",
+      "physiology_body_clock": "matched",
+      "root_assistance": "false",
+      "presentation_qualification": "pending"
+    },
+    "active_work": {
+      "cycles_with_work": 70,
+      "used_columns_sum": 1120,
+      "budget_exhausted_solves": 12
+    }
+  },
+  "candidate": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/absolute-guarded-native-588/install-motion.stdout.log.gz",
+    "sha256": "24cb5a8020d4e5537ef45ba8f8cfa0c422a93dfde329e7b898a6b366c514fe96",
+    "header": {
+      "version": "2",
+      "steps": "4",
+      "dt_s": "1.5625e-05",
+      "endpoint_time_s": "6.25e-05",
+      "runtime_dt_s": "1.562500074e-05",
+      "timestep_multiplier": "1",
+      "timestep_divisor": "1",
+      "completed_microsteps": "1",
+      "runtime_coordinate_projection": "disabled",
+      "coordinate_unit": "m",
+      "mass_unit": "kg",
+      "force_unit": "N",
+      "time_unit": "s",
+      "strain_unit": "1",
+      "mechanical_residual_unit": "N_s",
+      "bulk_reaction_available": "1",
+      "contact_force_available": "1",
+      "mechanical_residual_available": "1",
+      "free_internal_force_available": "1",
+      "free_internal_force_scope": "accepted_snapshot_bulk_element_force_scattered_to_tag0_free_nodes_field_activation_included_borrowed_prescribed_tension_excluded",
+      "tag2_attachment_force_available": "0",
+      "tag2_attachment_force_scope": "final_accepted_solve_linearization_reaction_on_Human_N",
+      "force_channels_scope": "FEM_bulk_reaction_plus_contact_supplement;tag2_attachment_and_free_element_channels_reported_separately",
+      "source_region_label_source": "registered_skin_fat_donor_body_id",
+      "source_region_labeled_nodes": "310405",
+      "source_region_total_nodes": "317611",
+      "source_region_labeled_tetrahedra": "1445028",
+      "source_region_total_tetrahedra": "1471447",
+      "objects": "22",
+      "nodes": "317611",
+      "tetrahedra": "1471447",
+      "reactions": "4"
+    },
+    "body": {
+      "simulated_s": "6.2500002968590707e-05",
+      "wall_s": "50.505125374999999",
+      "real_time_factor": "1.237498224279791e-06",
+      "physiology_body_clock": "matched",
+      "root_assistance": "false",
+      "presentation_qualification": "pending"
+    },
+    "active_work": {
+      "cycles_with_work": 54,
+      "used_columns_sum": 716,
+      "budget_exhausted_solves": 9
+    }
+  },
+  "body_wall_reduction_fraction": 0.23243183763556674,
+  "body_throughput_ratio": 1.3028158918415516,
+  "total_fem_mass_kg": {
+    "reference": 14.415518495388671,
+    "candidate": 14.415518495388671
+  },
+  "physical_fidelity_qualification": false,
+  "scope": "Existing captured force channels and regional strain aggregates; changed topology. Not pointwise canonical-parent strain, material energy, full force-owner coverage, rest qualification, or sustained integrated throughput."
+}
