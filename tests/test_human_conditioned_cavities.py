@@ -88,3 +88,65 @@ def test_star_anchor_search_budget_is_explicit_and_bounded():
  assert m.star_anchors(p,t,labels,0,inc,surface,count=32)==[0]
  for count in [0,33]:
   with pytest.raises(ValueError,match='anchor count'):m.star_anchors(p,t,labels,0,inc,surface,count=count)
+
+
+def expanded_fixture():
+ import rebuild_human_interface_caps as cap
+ import simplify_human_skin_fat_boundary as mesh
+ angle=np.arange(5)*2*np.pi/5
+ p=np.vstack([np.column_stack([np.cos(angle),np.sin(angle),np.zeros(5)]),[0,0,-1],[0,0,1]])
+ old=cap.positive_cells(p,[[5,6,i,(i+1)%5] for i in range(5)])
+ faces=[[0,1,2],[0,2,3],[0,3,4]]
+ new=cap.positive_cells(p,[[apex,*face] for apex in [5,6] for face in faces])
+ u=p@np.array([[.01,.02,0],[0,-.01,0],[0,0,.03]]).T
+ return p,old,new,u,mesh
+
+
+def test_expanded_cavity_preserves_affine_strain_integrals_and_capacity():
+ p,old,new,u,mesh=expanded_fixture()
+ assert mesh.unchanged_cavity_boundary(old,new)
+ gate=mesh.ReferenceDeformationGate(p,old,u,np.full(len(old),7),{})
+ baseline=gate.base[7].copy();m.reserve_reference_expansion(gate,2)
+ arrays=[id(gate.norm),id(gate.vol),id(gate.regions)]
+ proposal=m.propose_expanded_reference(gate,np.arange(len(old)),new)
+ assert proposal is not None
+ rows,live,values=proposal;gate.commit(rows,live,values)
+ np.testing.assert_allclose(gate.current[7],baseline,rtol=1e-13)
+ np.testing.assert_allclose(gate.vol[rows].sum(),mesh.measure(p,old)[0].sum()/6,rtol=1e-14)
+ assert gate.expansion_used==1 and gate.regions[-1]==-1
+ assert arrays==[id(gate.norm),id(gate.vol),id(gate.regions)]
+ payload=m.cavity_payload('a'*64,len(old),[dict(old_rows=list(range(5)),new_cells=new.tolist())])
+ assert len(payload['replacement_tetrahedra'])==6
+ assert np.diff(payload['replacement_parent_offsets']).tolist()==[5]*6
+
+
+def test_expanded_cavity_failure_restores_exact_reference_state():
+ p,old,new,u,mesh=expanded_fixture();gate=mesh.ReferenceDeformationGate(p,old,u,np.full(5,7),{})
+ m.reserve_reference_expansion(gate,2)
+ before=[x.copy() for x in [gate.norm,gate.vol,gate.regions,gate.rows[7]]]
+ bad=new.copy();bad[0]=[0,1,2,2]
+ assert m.propose_expanded_reference(gate,np.arange(5),bad) is None
+ for a,b in zip(before,[gate.norm,gate.vol,gate.regions,gate.rows[7]]):np.testing.assert_array_equal(a,b)
+ assert gate.expansion_used==0 and gate.rejected_count==1
+ assert m.propose_expanded_reference(gate,np.arange(5),new) is not None
+
+
+def test_expanded_cavity_rejects_actual_nonaffine_strain_change():
+ p,old,new,u,mesh=expanded_fixture();u[0,2]+=.2
+ gate=mesh.ReferenceDeformationGate(p,old,u,np.full(5,7),{});m.reserve_reference_expansion(gate,2)
+ assert m.propose_expanded_reference(gate,np.arange(5),new) is None
+ assert gate.expansion_used==0 and gate.rejected_count==1
+ np.testing.assert_array_equal(gate.current[7],gate.base[7])
+
+
+def test_expansion_capacity_and_region_checks_are_mandatory():
+ p,old,new,u,mesh=expanded_fixture();gate=mesh.ReferenceDeformationGate(p,old,u,np.full(5,7),{})
+ with pytest.raises(ValueError,match='capacity'):m.propose_expanded_reference(gate,np.arange(5),new)
+ m.reserve_reference_expansion(gate,1)
+ with pytest.raises(ValueError,match='repeated'):m.reserve_reference_expansion(gate,1)
+ proposal=m.propose_expanded_reference(gate,np.arange(5),new);gate.commit(*proposal)
+ with pytest.raises(ValueError,match='capacity'):m.propose_expanded_reference(gate,np.arange(5),new)
+ gate=mesh.ReferenceDeformationGate(p,old,u,np.array([7,8,7,7,7]),{});m.reserve_reference_expansion(gate,1)
+ with pytest.raises(ValueError,match='regions'):m.propose_expanded_reference(gate,np.arange(5),new)
+ assert gate.expansion_used==0
+ with pytest.raises(ValueError,match='domain'):m.propose_expanded_reference(gate,[0,0],new)

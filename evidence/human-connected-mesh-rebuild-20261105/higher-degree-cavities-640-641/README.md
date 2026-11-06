@@ -1,0 +1,11 @@
+# Bounded higher-degree cavity reconstruction
+
+The existing edge method only admitted3/4-cell stars because it prohibited added cells and its reference strain bookkeeping had one slot per original cell. The polygon owner already supports higher degree. The Human preparation tool now optionally admits degree3–8 with explicit per-cavity and total added-cell budgets. Defaults remain degree4/no growth. Existing32-parent/64-replacement native capacities, material/donor/region separation, exact Float32 boundaries/volumes, density bounds, minimum quality, spectral and5% reference-strain gates are unchanged.
+
+Added strain slots are reserved once, with zero initial reference volume. Accepted cells participate in both integral and maximum-strain metrics. Rejected/invalid proposals restore the exact working state; no physical equation or native runtime changes.113 Human controls pass, including affine5→6 integral parity, actual nonaffine rejection, singular-cell rollback, capacity, complete ancestry and material-region checks.
+
+Two bounded source trials each produce256 disjoint cavities. The568 control repairs1022 cells into1020, including41 higher-degree cavities. Three of eight measured unchanged-cell sensitivity seeds are directly repaired. Median local worst-shape condition improvement is36.19x; this is a local construction metric, not a solver/runtime speedup.
+
+The current624 variant has its own631 captured endpoint and conservative source proofs. Independent whole rebuilt-mesh strain replay, exact common-lattice cavity volumes, oriented boundaries, no duplicate cells and complete parent ancestry pass. The existing native C++ geometry admission reports zero failures across256 cavities; native controls include29 negative cases. Full native642 is pending at this publication. The existing conservative mass/moment/transport owner and fresh native force/strain gates must pass before promotion. Candidate624 was previously unqualified; neither source-only result promotes it.
+
+All work and checks execute on SSH Numi. The native experiment retains runtimef8efdb0dc802284137372ef10bb9c48f62850850 and the same15.625us/4-root initialization scope and numerical controls. No breath/heartbeat cycle, sustained motion, supported-rest, presentation or0.1x claim is established.

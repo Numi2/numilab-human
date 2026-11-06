@@ -96,6 +96,41 @@ def star_anchors(points,cells,labels,seed,incident,surface_nodes,count=8):
  return sorted(map(int,nodes),key=lambda n:(int(surface_nodes[n]),float(np.linalg.norm(points[n]-center)),n))[:count]
 
 
+def reserve_reference_expansion(gate, capacity):
+ """One bounded allocation for added mechanical cells; no reference volume."""
+ if not isinstance(capacity,int) or not 1<=capacity<=4096 or hasattr(gate,'expansion_used'):
+  raise ValueError('invalid or repeated reference expansion reservation')
+ gate.expansion_start=len(gate.norm);gate.expansion_used=0;gate.expansion_capacity=capacity
+ gate.norm=np.r_[gate.norm,np.zeros(capacity)];gate.vol=np.r_[gate.vol,np.zeros(capacity)]
+ gate.regions=np.r_[gate.regions,np.full(capacity,-1,dtype=gate.regions.dtype)]
+
+
+def propose_expanded_reference(gate, rows, new):
+ """Apply the unchanged strain gate to actual added cells; reject atomically."""
+ rows=np.asarray(rows,np.int64);new=np.asarray(new,np.int64);growth=len(new)-len(rows)
+ if growth<=0 or not len(rows) or new.ndim!=2 or new.shape[1]!=4 or len(np.unique(rows))!=len(rows):
+  raise ValueError('invalid expanded reference domain')
+ if not hasattr(gate,'expansion_used') or gate.expansion_used+growth>gate.expansion_capacity:
+  raise ValueError('reference expansion capacity')
+ if np.any(rows<0) or np.any(rows>=gate.expansion_start):raise ValueError('expanded source rows outside original domain')
+ regions=np.unique(gate.regions[rows])
+ if len(regions)!=1:raise ValueError('expanded cavity crosses construction regions')
+ region=int(regions[0]);original_rows=gate.rows[region]
+ start=gate.expansion_start+gate.expansion_used;extra=np.arange(start,start+growth,dtype=np.int64)
+ assert not gate.norm[extra].any() and not gate.vol[extra].any() and np.all(gate.regions[extra]==-1)
+ gate.regions[extra]=region;gate.rows[region]=np.r_[original_rows,extra]
+ extended=np.r_[rows,extra];proposal=None
+ try:
+  live=np.ones(len(extended),bool);proposal=gate.propose(extended,new,live)
+  if proposal is not None:
+   gate.expansion_used+=growth
+   return extended,live,proposal
+ finally:
+  if proposal is None:
+   gate.norm[extra]=0;gate.vol[extra]=0;gate.regions[extra]=-1;gate.rows[region]=original_rows
+ return None
+
+
 def run(a):
  start=time.monotonic();a.output.mkdir(parents=True,exist_ok=False)
  for path,digest in [(a.volume,a.volume_sha256),(a.reference,a.reference_sha256),(a.mass_csv,a.mass_sha256),(a.mass_parity,a.mass_parity_sha256),(a.mass_receipt,a.mass_receipt_sha256)]:
@@ -119,6 +154,7 @@ def run(a):
  validate_mass_proof(parity,source_receipt,a.volume_sha256,a.mass_sha256,a.mass_receipt_sha256,len(t))
  u,receipt=mesh.load_reference_deformation(a.reference,a.reference_sha256,p,t,labels)
  gate=mesh.ReferenceDeformationGate(p,t,u,labels[:,1],receipt)
+ if getattr(a,"maximum_total_cell_growth",0):reserve_reference_expansion(gate,a.maximum_total_cell_growth)
  cond=np.empty(len(t))
  for lo in range(0,len(t),8192):cond[lo:lo+8192]=spectral_condition(p,t[lo:lo+8192])
  if not np.all(np.isfinite(cond)):raise ValueError("nonfinite input shape condition")
@@ -129,7 +165,7 @@ def run(a):
  seeds=np.r_[requested,[int(i) for i in seeds if int(i) not in set(requested)]].astype(np.int64)
  inc=mesh.incidence(t,len(p))
  def edge_rows(d,e):return np.intersect1d(inc(int(d)),inc(int(e)),assume_unique=True)
- reject=collections.Counter();seen=set();used=set();patches=[]
+ reject=collections.Counter();seen=set();used=set();patches=[];cell_growth=0
  for seed in seeds:
   if time.monotonic()-start>a.seconds or len(patches)>=a.maximum_cavities:break
   if set(map(int,t[seed]))&used:reject['dependent_seed']+=1;continue
@@ -146,7 +182,7 @@ def run(a):
     except ValueError as exc:reject[str(exc)]+=1;continue
    else:
     rows=edge_rows(d,e)
-    if len(rows) not in (3,4):reject["bounded_degree"]+=1;continue
+    if not 3<=len(rows)<=getattr(a,"maximum_edge_degree",4):reject["bounded_degree"]+=1;continue
     if not np.all(labels[rows]==labels[rows[0]]):reject["material_donor_region_boundary"]+=1;continue
     ring=polygon.ring_order(t[rows],d,e)
     if ring is None:reject["open_edge_link"]+=1;continue
@@ -157,7 +193,8 @@ def run(a):
    old=t[rows];nodes=set(map(int,old.ravel()))
    if nodes&used:reject["dependent_cavity"]+=1;continue
    od,oq=polygon.m.measurements(p,old);nd,nq=polygon.m.measurements(p,new)
-   if len(new)>len(old) or np.any(nd/6<=1e-18) or np.any(nq<1e-5) or float(nq.min())<1.02*float(oq.min()):reject["unchanged_native_quality_gate"]+=1;continue
+   if len(new)-len(old)>getattr(a,"maximum_cell_growth",0) or cell_growth+max(0,len(new)-len(old))>getattr(a,"maximum_total_cell_growth",0):reject["cell_growth_budget"]+=1;continue
+   if np.any(nd/6<=1e-18) or np.any(nq<1e-5) or float(nq.min())<1.02*float(oq.min()):reject["unchanged_native_quality_gate"]+=1;continue
    oldc=cond[rows];newc=spectral_condition(p,new)
    if newc.max()>oldc.max() or np.log(np.maximum(newc/1000,1)).sum()>=np.log(np.maximum(oldc/1000,1)).sum()-.02:reject["spectral_no_progress"]+=1;continue
    if method=='edge':
@@ -169,10 +206,15 @@ def run(a):
    if not ok:reject["exact_"+why]+=1;continue
    density=float(mass[rows].sum()/(od.sum()/6));bounds={15:(900.,1100.),16:(850.,950.)}.get(int(labels[rows[0],0]))
    if bounds is None or density<bounds[0]-64*np.finfo(float).eps*bounds[1] or density>bounds[1]+64*np.finfo(float).eps*bounds[1]:reject["density"]+=1;continue
-   padded=old.copy();padded[:len(new)]=new;live=np.arange(len(old))<len(new)
-   deformation=gate.propose(rows,padded,live)
-   if deformation is None:reject["reference_deformation"]+=1;continue
-   gate.commit(rows,live,deformation);used.update(nodes)
+   if len(new)>len(old):
+    expanded=propose_expanded_reference(gate,rows,new)
+    if expanded is None:reject["reference_deformation"]+=1;continue
+    reference_rows,live,deformation=expanded
+   else:
+    reference_rows=rows;padded=old.copy();padded[:len(new)]=new;live=np.arange(len(old))<len(new)
+    deformation=gate.propose(rows,padded,live)
+    if deformation is None:reject["reference_deformation"]+=1;continue
+   gate.commit(reference_rows,live,deformation);used.update(nodes);cell_growth+=max(0,len(new)-len(old))
    patches.append(dict(old_rows=rows.tolist(),new_cells=new.tolist(),removed_edge=[d,e] if method=="edge" else None,ring=ring,method=method,star_anchor=int(d) if method=="star" else None,
     material=int(labels[rows[0],0]),donor=int(labels[rows[0],1]),region=int(labels[rows[0],2]),
     minimum_native_quality_before=float(oq.min()),minimum_native_quality_after=float(nq.min()),
@@ -183,7 +225,7 @@ def run(a):
  report=dict(status="PASS_FIXED_BOUNDARY_CONDITIONING_PROPOSAL" if patches else "NO_ADMISSIBLE_CONDITIONING_PROGRESS",
   input=dict(volume=dict(path=str(a.volume),sha256=a.volume_sha256),reference=dict(path=str(a.reference),sha256=a.reference_sha256),mass_csv=dict(path=str(a.mass_csv),sha256=a.mass_sha256),mass_parity=dict(path=str(a.mass_parity),sha256=a.mass_parity_sha256),mass_receipt=dict(path=str(a.mass_receipt),sha256=a.mass_receipt_sha256)),
   owners={str(path):sha(path) for path in [Path(__file__),a.polygon_owner,a.polygon_owner.parent/"fixed_boundary_volume_flip_198_root.py",Path(mesh.__file__)]},
-  input_cells=len(t),eligible_seed_cells=len(seeds),tested_edges=sum(len(k)==2 for k in seen),tested_star_anchors=sum(len(k)==3 for k in seen),star_cavities_enabled=bool(getattr(a,"star_cavities",False)),star_anchor_count=a.star_anchor_count,passing_cavities=len(patches),rejections=dict(reject),patches=patches,
+  input_cells=len(t),eligible_seed_cells=len(seeds),tested_edges=sum(len(k)==2 for k in seen),tested_star_anchors=sum(len(k)==3 for k in seen),star_cavities_enabled=bool(getattr(a,"star_cavities",False)),star_anchor_count=a.star_anchor_count,passing_cavities=len(patches),added_cells_budget_used=cell_growth,maximum_edge_degree=getattr(a,"maximum_edge_degree",4),maximum_cell_growth=getattr(a,"maximum_cell_growth",0),maximum_total_cell_growth=getattr(a,"maximum_total_cell_growth",0),rejections=dict(reject),patches=patches,
   reference_deformation=gate.report(),source_coordinate_and_typed_boundaries_unchanged=True,
   source_mass_transport_and_native_admission="MUST_REPEAT_EXISTING_NATIVE_OWNER",physical_admission=False,native_steps=0,elapsed_s=time.monotonic()-start)
  if patches:
@@ -196,9 +238,13 @@ def main():
  ap=argparse.ArgumentParser(description=__doc__)
  for name in ["volume","reference","mass-csv","mass-parity","mass-receipt","polygon-owner","output"]:ap.add_argument("--"+name,type=Path,required=True)
  for name in ["volume","reference","mass","mass-parity","mass-receipt","polygon","predicate","mesh-owner"]:ap.add_argument("--"+name+"-sha256",required=True)
+ ap.add_argument("--maximum-edge-degree",type=int,default=4)
+ ap.add_argument("--maximum-cell-growth",type=int,default=0)
+ ap.add_argument("--maximum-total-cell-growth",type=int,default=0)
  ap.add_argument("--star-anchor-count",type=int,default=32)
  ap.add_argument("--seed-cell",action="append",type=int,default=[]);ap.add_argument("--star-cavities",action="store_true");ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--maximum-seeds",type=int,default=4096);ap.add_argument("--maximum-cavities",type=int,default=256);ap.add_argument("--condition-threshold",type=float,default=10000)
  a=ap.parse_args()
+ if not 3<=a.maximum_edge_degree<=8 or not 0<=a.maximum_cell_growth<=8 or not 0<=a.maximum_total_cell_growth<=4096:raise ValueError("invalid bounded edge-growth construction settings")
  if not 1<=a.star_anchor_count<=32:raise ValueError("invalid bounded star anchor count")
  if a.seconds<=0 or a.maximum_seeds<1 or a.maximum_cavities<1 or a.condition_threshold<=1:raise ValueError("invalid bounded construction settings")
  run(a)
