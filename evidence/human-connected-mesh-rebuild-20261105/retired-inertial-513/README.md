@@ -1,0 +1,1 @@
+Matched16-root experiment:37 versus38 active solves and0.754percent body-time reduction in one pair, but232/282 strain metrics and167 available force metrics fail. Retired; source and native binaries restored exactly. The patch is evidence, not production code.71859 GPU contract checks passed, which does not establish full-scene fidelity.

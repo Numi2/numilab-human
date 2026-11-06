@@ -1,0 +1,271 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -4487,6 +4487,7 @@
+     bool femAcceptedZ0RecycleEnabled = false;
+     bool femAcceptedSubspacePredictorRequested = false;
+     bool femAcceptedSubspacePredictorEnabled = false;
++    bool femAcceptedInertialPredictorEnabled = false;
+     std::uint32_t femRegionalGraphPatchCount = 0u;
+     bool femRegionalGraphSolve32ThreadgroupEnabled = false;
+     const char* femRegionalGraphSolve32PipelineName =
+@@ -5296,16 +5297,19 @@
+         if (acceptedSubspacePredictor != nullptr) {
+             if (std::strcmp(acceptedSubspacePredictor, "0") == 0) {
+                 candidate->femAcceptedSubspacePredictorRequested = false;
+-            } else if (std::strcmp(acceptedSubspacePredictor, "1") == 0 &&
++            } else if ((std::strcmp(acceptedSubspacePredictor, "1") == 0 ||
++                        std::strcmp(acceptedSubspacePredictor, "inertial") == 0) &&
+                        (world.mixedSolver.executionBudgets.z == 0u ||
+                         world.mixedSolver.executionBudgets.z == 6u) &&
+                        world.dispatch.environmentCount == 1u &&
+                        world.dispatch.mpmActiveNodeCapacity == 0u &&
+                        world.dispatch.cohesiveFaceCount == 0u) {
+                 candidate->femAcceptedSubspacePredictorRequested = true;
++                candidate->femAcceptedInertialPredictorEnabled =
++                    std::strcmp(acceptedSubspacePredictor, "inertial") == 0;
+             } else {
+                 diagnostics.message =
+-                    "accepted FGMRES subspace predictor requires exact value 0 or 1 and selector-0 or selector-6 single-environment MPM/cohesive-free layout";
++                    "accepted FGMRES subspace predictor requires 0, 1, or inertial and selector-0 or selector-6 single-environment MPM/cohesive-free layout";
+                 return diagnostics;
+             }
+         }
+@@ -5314,7 +5318,8 @@
+         if (subspaceHumanScope != nullptr) {
+             if (std::strcmp(subspaceHumanScope, "1") != 0 ||
+                 acceptedSubspacePredictor == nullptr ||
+-                std::strcmp(acceptedSubspacePredictor, "1") != 0) {
++                (std::strcmp(acceptedSubspacePredictor, "1") != 0 &&
++                  std::strcmp(acceptedSubspacePredictor, "inertial") != 0)) {
+                 diagnostics.message =
+                     "Human subspace scope requires exact value 1 and explicit subspace predictor";
+                 return diagnostics;
+@@ -8800,6 +8805,7 @@
+             "nm_fgmres_prepare_inexact_newton_forcing",
+             "nm_fgmres_commit_inexact_newton_history",
+             "nm_fgmres_accepted_subspace_reset",
++            "nm_fgmres_accepted_inertial_guess",
+             "nm_fgmres_accepted_subspace_project_partial",
+             "nm_fgmres_accepted_subspace_project_finish",
+             "nm_fgmres_accepted_subspace_qr_partial",
+@@ -13593,6 +13599,12 @@
+                 return diagnostics;
+             }
+             candidate->femAcceptedSubspacePredictorEnabled = true;
++            if (candidate->femAcceptedInertialPredictorEnabled) {
++                candidate->executionFingerprint = mixFingerprint(
++                    candidate->executionFingerprint, 0x494e455247553031ull); // INERGU01
++                std::fprintf(stderr,
++                    "matter_accepted_inertial_guess=1 newton=first admission=current_operator_raw_and_scaled physical_candidate_unchanged=1\n");
++            }
+             // Keep the original nonlinear RHS norm separate from the predictor
+             // Arnoldi norm. The same layout bit is used by exact Schur solves.
+             candidate->fgmresLayout.reserved |= (1u << 22u);
+@@ -37127,7 +37139,9 @@
+             };
+ 
+             const bool useAcceptedSubspacePredictor =
+-                captureAcceptedSubspaceHistory && nonlinearIteration > 0u;
++                captureAcceptedSubspaceHistory &&
++                (state.femAcceptedInertialPredictorEnabled
++                    ? nonlinearIteration == 0u : nonlinearIteration > 0u);
+ 
+             const auto prepareSchurOperatorStates = [&]() -> bool {
+                 if (state.femTrueResidualOperatorStates == nil ||
+@@ -41180,6 +41194,37 @@
+                 const std::uint32_t tiles = (activeItems + 255u) / 256u;
+                 const std::uint32_t projectionGroups =
+                     static_cast<std::uint32_t>(environments) * tiles;
++                if (state.femAcceptedInertialPredictorEnabled) {
++                    // A linear correction guess only: preserve the feasible
++                    // physical candidate. Common current-operator admission
++                    // below rejects worsening raw OR scaled residual norms.
++                    dispatchThreads("nm_fgmres_clear_true_operator",
++                        state.fgmresLayout.unknownCount, [&] {
++                        setDispatch();
++                        [encoder setBytes:&state.fgmresLayout
++                                   length:sizeof(state.fgmresLayout) atIndex:30u];
++                        [encoder setBuffer:state.femAcceptedSubspaceInitialGuess
++                                      offset:0u atIndex:1u];
++                    });
++                    [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++                    dispatchThreads("nm_fgmres_accepted_inertial_guess",
++                        femNodeTotal, [&] {
++                        setDispatch();
++                        [encoder setBytes:&micro length:sizeof(micro) atIndex:1u];
++                        [encoder setBuffer:state.objects offset:0u atIndex:2u];
++                        [encoder setBuffer:state.femNodeRanges offset:0u atIndex:3u];
++                        [encoder setBuffer:state.schedulers offset:0u atIndex:4u];
++                        [encoder setBuffer:state.adaptive offset:0u atIndex:5u];
++                        [encoder setBuffer:state.femAccepted offset:0u atIndex:6u];
++                        [encoder setBuffer:state.femCandidate offset:0u atIndex:7u];
++                        [encoder setBuffer:state.femAcceptedSubspaceInitialGuess
++                                      offset:0u atIndex:8u];
++                        [encoder setBuffer:state.femAcceptedSubspaceCoefficients
++                                      offset:0u atIndex:9u];
++                        [encoder setBuffer:state.statuses offset:0u atIndex:10u];
++                    });
++                    [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++                } else {
+                 dispatchGroups256(
+                     "nm_fgmres_accepted_subspace_project_partial",
+                     projectionGroups, [&] {
+@@ -41257,6 +41302,7 @@
+                                length:sizeof(state.fgmresLayout) atIndex:30u];
+                 });
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++                }
+                 dispatchThreads("nm_fgmres_clear_true_operator",
+                     state.fgmresLayout.unknownCount, [&] {
+                     setDispatch();
+@@ -51249,7 +51295,8 @@
+                 [encoder setBuffer:state.mixedMaterials offset:0u atIndex:10u];
+                 [encoder setBuffer:state.femFieldsCandidate offset:0u atIndex:11u];
+             }, WorkDomain::newtonAssemblyFemNodes);
+-            if (captureAcceptedSubspaceHistory) {
++            if (captureAcceptedSubspaceHistory &&
++                !state.femAcceptedInertialPredictorEnabled) {
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+                 dispatchThreads(
+                     "nm_fgmres_accepted_subspace_commit_vectors",
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -16692,6 +16692,46 @@
+     counts[environment] = 0u;
+ }
+ 
++// First-Newton linear guess only. Globalization owns candidate kinematics,
++// contact and material feasibility. Common admission recomputes b-A*x0 using
++// the current operator, with both physical and scaled residual checks.
++kernel void nm_fgmres_accepted_inertial_guess(
++    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
++    constant NMMicrostepGPU& microstep [[buffer(1)]],
++    device const NMContinuumObjectGPU* objects [[buffer(2)]],
++    device const NMIncidenceRangeGPU* nodeRanges [[buffer(3)]],
++    device const NMSchedulerStateGPU* schedulers [[buffer(4)]],
++    device const NMAdaptiveStateGPU* adaptive [[buffer(5)]],
++    device const NMFEMNodeStateGPU* accepted [[buffer(6)]],
++    device const NMFEMNodeStateGPU* candidate [[buffer(7)]],
++    device float4* initialGuess [[buffer(8)]],
++    device float4* coefficients [[buffer(9)]],
++    device const NMMatterStatusGPU* statuses [[buffer(10)]],
++    uint global [[thread_position_in_grid]]) {
++    const uint total = dispatch.environmentCount * dispatch.femNodeCount;
++    if (global >= total || dispatch.femNodeCount == 0u) return;
++    const uint environment = global / dispatch.femNodeCount;
++    const bool healthy = environmentHealthy(statuses, environment);
++    if (global % dispatch.femNodeCount == 0u)
++        coefficients[environment] = float4(1.0f, 0.0f, healthy ? 1.0f : 0.0f, 1.0f);
++    float3 guess(0.0f);
++    const uint objectIndex = nodeRanges[global].objectIndex;
++    if (healthy && objectIndex < dispatch.objectCount &&
++        candidate[global].restAndFixed.w <= 0.5f) {
++        const NMContinuumObjectGPU object = objects[objectIndex];
++        const uint objectGlobal = environment * dispatch.objectCount + objectIndex;
++        const NMSchedulerStateGPU scheduler = schedulers[objectGlobal];
++        if (object.representation == NM_REPRESENTATION_FEM &&
++            objectDue(object, scheduler, adaptive[objectGlobal], microstep)) {
++            guess = accepted[global].velocityAndInverseMass.xyz +
++                objectTimestep(dispatch, scheduler) * dispatch.gravityAndTimestep.xyz -
++                candidate[global].velocityAndInverseMass.xyz;
++        }
++    }
++    // Pressure and all other domains retain their common cleared zero.
++    initialGuess[global] = float4(guess, 0.0f);
++}
++
+ kernel void nm_fgmres_accepted_subspace_project_partial(
+     constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
+     constant NMFGMRESLayoutGPU& layout [[buffer(30)]],
+--- a/matter/tools/fgmres_true_residual_native_check.mm
++++ b/matter/tools/fgmres_true_residual_native_check.mm
+@@ -11582,6 +11582,81 @@
+                  "condensed_rhs=passed recovery=passed result=PASS\n";
+ }
+ 
++void checkAcceptedInertialGuess(id<MTLDevice> device,
++    id<MTLCommandQueue> queue, id<MTLLibrary> library) {
++    const auto seed = pipeline(device, library,
++        "numi_matter_metal::nm_fgmres_accepted_inertial_guess");
++    NMMatterDispatchGPU d{};
++    d.environmentCount = 2u; d.femNodeCount = 9u; d.objectCount = 2u;
++    d.maximumRateExponent = 1u;
++    d.gravityAndTimestep = {0.0f, -9.81f, 0.0f, 0.002f};
++    NMMicrostepGPU m{};
++    std::vector<NMContinuumObjectGPU> objects(2u);
++    objects[0].representation = NM_REPRESENTATION_FEM;
++    objects[1].representation = NM_REPRESENTATION_MPM;
++    objects[0].solver.y = 1u;
++    objects[0].flags = NM_OBJECT_ACTIVE;
++    std::vector<NMSchedulerStateGPU> schedulers(4u);
++    std::vector<NMAdaptiveStateGPU> adaptive(4u);
++    for (auto& v : schedulers) {v.activeExponent = 1u;v.numerical.w=1.0f;}
++    for (auto& v : adaptive) v.activeRepresentation=NM_REPRESENTATION_FEM;
++    std::vector<NMFEMNodeStateGPU> accepted(18u), candidate(18u);
++    std::vector<NMIncidenceRangeGPU> ranges(18u);
++    for (unsigned i = 0u; i < 18u; ++i) {
++        accepted[i].velocityAndInverseMass = {0.25f, -0.5f, 0.75f, 1.0f};
++        candidate[i].velocityAndInverseMass = {0.05f, -0.1f, 0.15f, 1.0f};
++        ranges[i].objectIndex = 0u;
++        candidate[i].restAndFixed.w = float(i % 9u <= 3u ? i % 9u : 0u);
++        if (i % 9u == 4u) ranges[i].objectIndex = NM_INVALID_INDEX;
++        if (i % 9u == 5u) ranges[i].objectIndex = 1u;
++    }
++    std::vector<NMMatterStatusGPU> statuses(2u);
++    statuses[1].code = 1u;
++    const nm_float4 sentinel{81.0f, -83.0f, 89.0f, -97.0f};
++    auto db=makeBuffer(device,std::vector{d}), mb=makeBuffer(device,std::vector{m});
++    auto ob=makeBuffer(device,objects), rb=makeBuffer(device,ranges);
++    auto sb=makeBuffer(device,schedulers), ab=makeBuffer(device,adaptive);
++    auto acceptedBuffer=makeBuffer(device,accepted), cb=makeBuffer(device,candidate);
++    auto gb=makeBuffer(device,std::vector<nm_float4>(40u,sentinel));
++    auto coeff=makeBuffer(device,std::vector<nm_float4>(2u));
++    auto status=makeBuffer(device,statuses);
++    dispatch(device,queue,seed,{{0u,db},{1u,mb},{2u,ob},{3u,rb},{4u,sb},
++        {5u,ab},{6u,acceptedBuffer},{7u,cb},{8u,gb},{9u,coeff},{10u,status}},1u,32u);
++    const auto got=readBuffer<nm_float4>(gb,40u);
++    for (unsigned i=0u;i<18u;++i) {
++        const bool free=i<9u && (i%9u==0u || i%9u>=6u);
++        if (!(close(got[i].x,free?0.2f:0.0f) && close(got[i].y,free?-0.40981f:0.0f) && close(got[i].z,free?0.6f:0.0f)))
++            std::cerr << "inertial row="<<i<<" free="<<free<<" value="<<got[i].x<<","<<got[i].y<<","<<got[i].z<<","<<got[i].w<<"\n";
++        require(close(got[i].x,free?0.2f:0.0f) &&
++            close(got[i].y,free?-0.40981f:0.0f) &&
++            close(got[i].z,free?0.6f:0.0f) && got[i].w==0.0f,
++            "inertial seed changed constraints, due rows, gravity, or velocity correction");
++    }
++    for (unsigned i=18u;i<40u;++i)
++        require(std::memcmp(&got[i],&sentinel,sizeof(sentinel))==0,
++            "inertial seed touched non-FEM domain or capacity tail");
++    require(readBuffer<nm_float4>(coeff,2u)[0].z==1.0f &&
++        readBuffer<nm_float4>(coeff,2u)[1].z==0.0f,
++        "inertial seed did not mask unhealthy environment");
++    require(std::memcmp(acceptedBuffer.contents,accepted.data(),accepted.size()*sizeof(accepted[0]))==0 &&
++        std::memcmp(cb.contents,candidate.data(),candidate.size()*sizeof(candidate[0]))==0,
++        "linear seed modified physical accepted or candidate state");
++    // Off-schedule FEM rows must remain zero as well.
++    statuses[1].code=0u;
++    for(auto& v:schedulers)v.activeExponent=0u;
++    m.microtick=1u;
++    std::memcpy(status.contents,statuses.data(),statuses.size()*sizeof(statuses[0]));
++    std::memcpy(sb.contents,schedulers.data(),schedulers.size()*sizeof(schedulers[0]));
++    std::memcpy(mb.contents,&m,sizeof(m));
++    dispatch(device,queue,seed,{{0u,db},{1u,mb},{2u,ob},{3u,rb},{4u,sb},
++        {5u,ab},{6u,acceptedBuffer},{7u,cb},{8u,gb},{9u,coeff},{10u,status}},1u,32u);
++    for(const auto& v:readBuffer<nm_float4>(gb,18u))
++        require(v.x==0.0f && v.y==0.0f && v.z==0.0f && v.w==0.0f,
++            "inertial seed touched inactive schedule");
++    std::cout << "accepted_inertial_guess=passed constraints=all_tags inactive=passed "
++                 "physical_state_unchanged=true capacity_tail=passed\n";
++}
++
+ void checkAcceptedSubspacePredictor(
+     id<MTLDevice> device,
+     id<MTLCommandQueue> queue,
+@@ -19466,6 +19541,7 @@
+                     [[error localizedDescription] UTF8String]
+                 : "cannot load Matter metallib");
+             if(argc==2&&std::string(argv[1])=="--accepted-subspace-only") {
++                checkAcceptedInertialGuess(device,queue,library);
+                 checkAcceptedSubspacePredictor(device,queue,library);
+                 checkAcceptedSubspaceAdmission(device,queue,library);
+                 std::cout<<"PASS accepted subspace "<<checks<<" checks\n";

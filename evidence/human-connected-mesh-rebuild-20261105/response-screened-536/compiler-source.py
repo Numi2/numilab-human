@@ -1,0 +1,681 @@
+#!/usr/bin/env python3
+"""Initialization-only joint O/I/D skin/fat boundary and volume simplification.
+Uses retained Float32 geometry and production exact intersection predicates.
+Outputs existing typed surface and volume proposal NPZs, never physical admission.
+"""
+from pathlib import Path
+import argparse,ctypes,hashlib,itertools,json,time,collections,shutil,csv
+import numpy as np
+from scipy.spatial import cKDTree
+H=Path("/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706")
+V=H/"current-native-1024-root/current-433-1037/candidate-current-typed-volume.npz"
+C=H/"regional-compensation-1061-root/memory-performance-123/rejection-recovery-125/connected-conditioning-134/fixed-boundary-volume-proposal.npz"
+S={"O":H/"all-quality-937-b5-backtracking-root/proposal/candidate-O-typed-current.npz","I":H/"all-quality-1009-point-update-1018-root/actual-001/candidate-I-point-updated.npz","D":H/"all-quality-958-D014-root/proposal-003/candidate-D-typed-current.npz"}
+W=Path("/Users/numi/Work/human-integrated-gaps-20261104")
+def sha(p):
+ h=hashlib.sha256()
+ with Path(p).open("rb") as f:
+  for b in iter(lambda:f.read(1<<20),b""):h.update(b)
+ return h.hexdigest()
+
+def load_resume_volume(path,expected_sha,mass_path,mass_sha,points,source_sha,source_labels):
+ """Resume an existing proposal with its original cell ancestry, never infer it.
+ Uses the established candidate NPZ and child-mass CSV formats.
+ """
+ if not expected_sha or sha(path)!=expected_sha:raise ValueError("resume volume SHA mismatch")
+ if not mass_sha or sha(mass_path)!=mass_sha:raise ValueError("resume mass SHA mismatch")
+ with np.load(path,allow_pickle=False) as z:
+  if str(z["source_volume_sha256"].item())!=source_sha:raise ValueError("resume source identity mismatch")
+  if not np.array_equal(z["points_reference_world_m_f64"],points.astype(np.float64)):
+   raise ValueError("resume changes reference coordinates")
+  t=z["volume_tetrahedra"].copy()
+  labels=np.column_stack([z[k] for k in ["material_index","geometric_donor_body","anatomical_region_id"]])
+  off=z["replacement_parent_offsets"].copy();parents=z["replacement_parent_cell_rows"].copy()
+ if (t.ndim!=2 or t.shape[1]!=4 or not np.issubdtype(t.dtype,np.integer) or
+     np.any(t<0) or np.any(t>=len(points)) or
+     labels.shape!=(len(t),3) or off.shape!=(len(t)+1,) or
+     not np.issubdtype(off.dtype,np.integer) or not np.issubdtype(parents.dtype,np.integer) or
+     off[0]!=0 or off[-1]!=len(parents) or np.any(np.diff(off)<=0) or
+     np.any(parents<0) or np.any(parents>=len(source_labels))):
+  raise ValueError("invalid resumed cell/ancestry domain")
+ # Every immediate cell must preserve all typed labels across its entire ancestry.
+ for start in range(0,len(t),65536):
+  end=min(start+65536,len(t));lo=int(off[start]);hi=int(off[end])
+  repeated=np.repeat(labels[start:end],np.diff(off[start:end+1]),axis=0)
+  if not np.array_equal(source_labels[parents[lo:hi]],repeated):
+   raise ValueError("resume ancestry changes material/donor/region")
+ with Path(mass_path).open() as stream:
+  if stream.readline().strip()!="child_row,mass_kg":raise ValueError("resume mass columns differ")
+ mass_rows=np.loadtxt(mass_path,delimiter=",",skiprows=1,ndmin=2)
+ if (mass_rows.shape!=(len(t),2) or
+     not np.array_equal(mass_rows[:,0],np.arange(len(t))) or
+     not np.all(np.isfinite(mass_rows)) or np.any(mass_rows[:,1]<=0)):
+  raise ValueError("invalid resumed mass rows")
+ return t,labels,[parents[off[i]:off[i+1]] for i in range(len(t))],mass_rows[:,1].copy()
+
+def uniform_typed_labels_by_material(labels):
+ """Retain each material's donor/region owner across a shared layer edge.
+
+ Skin and fat may have different donor owners on their bonded interface.
+ Parent unions and mass repartition already separate material indices; require
+ one donor/region within EACH partition so no child's typed ancestry is mixed.
+ """
+ labels=np.asarray(labels)
+ if labels.ndim!=2 or labels.shape[1]!=3 or not len(labels):return False
+ return all(np.all(part[:,1:]==part[0,1:])
+  for material in np.unique(labels[:,0])
+  for part in [labels[labels[:,0]==material]])
+
+def contraction_changed_rows(tetrahedra,star_rows,drop):
+ """Only dropped-vertex cells change connectivity, ancestry, or mass.
+
+ Keep-only neighbors remain in the link test and independence neighborhood.
+ They must not acquire a different donor, mass, or source parent in this repair.
+ """
+ rows=np.asarray(star_rows)
+ return rows[np.any(np.asarray(tetrahedra)[rows]==drop,axis=1)]
+
+def measure(p,t):
+ x=p[t].astype(float);e=x[:,1:]-x[:,:1]
+ det=np.einsum("ij,ij->i",np.cross(e[:,0],e[:,1]),e[:,2])
+ mx=np.stack([np.sum((x[:,i]-x[:,j])**2,axis=1) for i,j in itertools.combinations(range(4),2)]).max(0)**.5
+ return det,det/mx**3
+def boundary_contact_quality_progress(old_quality,new_quality,removed_cells):
+ """Construction admission for an explicitly selected contact-fold edge.
+
+ A sum of log-quality penalties is a conditioning heuristic, not a physical
+ certificate. Permit the measured boundary repair when it removes cells and
+ does not worsen the minimum cell quality. This permits connected fold
+ repairs whose first contraction preserves the worst cell. Every native
+ cell, surface, crossing, mass and provenance check still applies below.
+ """
+ old=np.asarray(old_quality,float);new=np.asarray(new_quality,float)
+ return bool(old.size and new.size and removed_cells>0 and
+  np.isfinite(old).all() and np.isfinite(new).all() and
+  np.all(old>=np.float32(1e-5)) and np.all(new>=np.float32(1e-5)) and
+  new.min()>=old.min())
+
+def link(cells,vs):
+ vs=set(vs);out=set()
+ for cell in cells:
+  if not vs.issubset(cell):continue
+  rest=sorted(set(map(int,cell))-vs)
+  for k in range(len(rest)+1):out.update(itertools.combinations(rest,k))
+ return out
+def incidence(rows,n):
+ order=np.argsort(rows.ravel(),kind="stable");off=np.r_[0,np.cumsum(np.bincount(rows.ravel(),minlength=n))]
+ return lambda v:np.unique(order[off[v]:off[v+1]]//rows.shape[1])
+def compose_local_cell_mass(old_mass,old_material,new_material,new_volume,density_bounds):
+ """Conserve each cavity material mass without touching other cells.
+ This is construction eligibility, not source-flow or native admission.
+ Roundoff matches densityBoundRoundoff in the existing C++ mass owner.
+ """
+ old_mass=np.asarray(old_mass,dtype=np.float64)
+ old_material=np.asarray(old_material)
+ new_material=np.asarray(new_material)
+ new_volume=np.asarray(new_volume,dtype=np.float64)
+ if (old_mass.ndim!=1 or old_material.shape!=old_mass.shape or
+     new_volume.ndim!=1 or new_material.shape!=new_volume.shape or
+     not len(old_mass) or not len(new_volume) or
+     not np.all(np.isfinite(old_mass)&(old_mass>0)) or
+     not np.all(np.isfinite(new_volume)&(new_volume>0))):
+  raise ValueError("invalid local mass or volume domain")
+ if set(map(int,old_material))!=set(map(int,new_material)):
+  raise ValueError("cavity loses a material")
+ result=np.empty(len(new_volume),dtype=np.float64)
+ for material in np.unique(old_material):
+  rows=np.flatnonzero(new_material==material)
+  lower,upper=map(float,density_bounds[int(material)])
+  if not (np.isfinite(lower) and np.isfinite(upper) and 0<lower<=upper):
+   raise ValueError("invalid material density bounds")
+  total=float(np.sum(old_mass[old_material==material],dtype=np.float64))
+  volumes=new_volume[rows];volume=float(np.sum(volumes,dtype=np.float64))
+  density=total/volume
+  tolerance=64*np.finfo(np.float64).eps*max(1.,abs(lower),abs(upper),abs(density))
+  if not np.isfinite(density) or density<lower-tolerance or density>upper+tolerance:
+   raise ValueError("local material mass cannot fit unchanged density bounds")
+  portions=(volumes/volume)*total
+  # Put the final rounding residual on the largest cell. Assigning it to an
+  # arbitrarily tiny last cell can move its density outside the original bound.
+  pivot=int(np.argmax(volumes))
+  portions[pivot]=total-float(np.sum(np.delete(portions,pivot),dtype=np.float64))
+  actual=portions/volumes
+  tol=64*np.finfo(np.float64).eps*np.maximum.reduce([np.ones(len(rows)),np.full(len(rows),abs(lower)),np.full(len(rows),abs(upper)),np.abs(actual)])
+  if not np.all(np.isfinite(portions)&(portions>0)&(actual>=lower-tol)&(actual<=upper+tol)):
+   raise ValueError("rounded local cell mass violates unchanged density bounds")
+  result[rows]=portions
+ return result
+
+def load_reference_cell_mass(path,expected_sha,count):
+ if not expected_sha or sha(path)!=expected_sha:
+  raise ValueError("reference flow SHA mismatch")
+ # This is the existing flow CSV: child_row,source_parent_row,mass_kg,...
+ with Path(path).open() as stream:
+  if stream.readline().strip().split(",")[:3]!=["child_row","source_parent_row","mass_kg"]:
+   raise ValueError("reference flow column identities differ")
+ flow=np.loadtxt(path,delimiter=",",skiprows=1,usecols=(0,2),ndmin=2)
+ rows=flow[:,0].astype(np.int64)
+ if (not np.all(np.isfinite(flow)) or not np.array_equal(rows.astype(float),flow[:,0]) or
+     np.any(rows<0) or np.any(rows>=count) or np.any(flow[:,1]<=0)):
+  raise ValueError("invalid reference flow")
+ mass=np.bincount(rows,weights=flow[:,1],minlength=count)
+ if len(mass)!=count or not np.all(np.isfinite(mass)&(mass>0)):
+  raise ValueError("reference flow does not cover every original cell")
+ return mass
+
+def build_triangle_bins(points,faces):
+ """Conservative centroid/radius index with size-local query radii.
+ Bins partition triangle rows; exact predicates remain the acceptance authority.
+ """
+ valid=~np.any(np.diff(np.sort(faces,axis=1),axis=1)==0,axis=1)
+ rows=np.flatnonzero(valid)
+ if not len(rows):return []
+ xyz=points[faces[rows]];centers=xyz.mean(axis=1)
+ radii=np.linalg.norm(xyz-centers[:,None,:],axis=2).max(axis=1)
+ exponent=np.frexp(radii)[1]
+ return [(cKDTree(centers[exponent==e]),float(radii[exponent==e].max()),
+          rows[exponent==e]) for e in np.unique(exponent)]
+
+def query_triangle_bins(bins,triangle,padding=0.):
+ if not np.isfinite(padding) or padding<0:raise ValueError("invalid motion padding")
+ center=triangle.mean(axis=0);radius=float(np.linalg.norm(triangle-center,axis=1).max())
+ chunks=[]
+ for tree,maximum,rows in bins:
+  bound=radius+maximum+padding
+  bound=np.nextafter(bound+32*np.finfo(float).eps*max(1.,bound),np.inf)
+  ids=tree.query_ball_point(center,bound)
+  if ids:chunks.append(rows[np.asarray(ids,np.intp)])
+ return np.concatenate(chunks) if chunks else np.empty(0,np.int64)
+
+def quotient_closure(quotient):
+ """Resolve repeated contractions to final live vertices, rejecting cycles."""
+ q=np.asarray(quotient,dtype=np.int64).copy()
+ if q.ndim!=1 or np.any(q<0) or np.any(q>=len(q)):raise ValueError("invalid quotient domain")
+ for _ in range(max(1,len(q).bit_length()+1)):
+  nxt=q[q]
+  if np.array_equal(nxt,q):
+   if not np.all(np.asarray(quotient)[q]==q):raise ValueError("cyclic vertex quotient")
+   return q
+  q=nxt
+ raise ValueError("cyclic vertex quotient")
+
+def compose_face_ancestry(operations,role):
+ parents={}
+ for op in operations:
+  if role not in op["source_face_rows"]:continue
+  rows=op["source_face_rows"][role]
+  union=sorted(set().union(*(parents.get(int(f),{int(f)}) for f in rows)))
+  for f in rows:parents[int(f)]=union
+ return parents
+
+def load_bone_barriers():
+ """Read the existing370 pinned bone banks without Python triangle records."""
+ root=H.parent
+ native=root/"geometry-worker/matched-nesting-390/run-044-native-f32-replay-185/all185-source-order-native-f32-replay.npz"
+ manifest=root/"geometry-worker/fixed-physical-O-local-nested-001/pilot-004-union/exact-set-union-remaining-013/all185-bank-operand-manifest.json"
+ native_sha="e9f0fffefa68f274e8d1c0a565d3d6cab1cfba31d13e085b8fdc79ca362185e5"
+ manifest_sha="0e56a99c9f85be5995480fc2b150cedf000d3df40862732a5e32fa1d3040398c"
+ if sha(native)!=native_sha or sha(manifest)!=manifest_sha:raise ValueError("bone barrier pins changed")
+ with np.load(native,allow_pickle=False) as z:
+  if len(z["bank_body"])!=185:raise ValueError("incomplete native bone inventory")
+  points=[z["points_world_f32"].astype(np.float64)];faces=[z["faces"].astype(np.int64)]
+ offset=len(points[0]);operands=json.loads(manifest.read_text())["operands"]
+ if len(operands)!=185 or len({(int(b["body"]),int(b["bone"])) for b in operands})!=185:
+  raise ValueError("incomplete pinned Float64 bone inventory")
+ for bank in operands:
+  path=Path(bank["operand_path"])
+  if sha(path)!=bank["operand_sha256"]:raise ValueError("Float64 bone pin changed")
+  with np.load(path,allow_pickle=False) as z:
+   pp=z["points_world_m_f64"];ff=z["faces_f64"].astype(np.int64)
+   if not np.all(np.isfinite(pp)) or ff.min()<0 or ff.max()>=len(pp):raise ValueError("invalid bone geometry")
+   points.append(pp);faces.append(ff+offset);offset+=len(pp)
+ points=np.ascontiguousarray(np.concatenate(points),np.float64);faces=np.concatenate(faces)
+ if len(faces)!=938272:raise ValueError("bone triangle census differs")
+ return points,faces,{"native_path":str(native),"native_sha256":native_sha,
+  "manifest_path":str(manifest),"manifest_sha256":manifest_sha,
+  "coordinate_domains":370,"triangles":len(faces),"exact_intersection_predicate_unchanged":True}
+
+def attachment_nodes(path,expected_sha,mapping):
+ if sha(path)!=expected_sha:raise ValueError("attachment request SHA mismatch")
+ result=set();identities=set()
+ with Path(path).open() as stream:
+  reader=csv.DictReader(stream)
+  if set(reader.fieldnames or [])!={"stable_attachment_id","donor_body","stable_source_vertex","source_domain"}:
+   raise ValueError("attachment request columns differ")
+  for row in reader:
+   identity=int(row["stable_attachment_id"]);vertex=int(row["stable_source_vertex"])
+   if identity in identities or row["source_domain"]!="D37_coarse_parent" or not 0<=vertex<len(mapping) or mapping[vertex]<0:
+    raise ValueError("invalid attachment identity or source domain")
+   identities.add(identity);result.add(int(mapping[vertex]))
+ if not identities:raise ValueError("empty attachment requests")
+ return result
+
+
+TET_FACES=np.array(((1,2,3),(0,3,2),(0,1,3),(0,2,1)))
+
+def volume_boundary_nodes(cells,materials):
+ """Pin all actual exterior and material-interface vertices, not just render rows."""
+ cells=np.asarray(cells)
+ materials=np.asarray(materials)
+ if cells.ndim!=2 or cells.shape[1]!=4 or len(materials)!=len(cells):
+  raise ValueError("invalid volume boundary domain")
+ chunks=[]
+ for material in np.unique(materials):
+  faces=np.sort(cells[materials==material][:,TET_FACES].reshape(-1,3),axis=1).astype(np.uint32)
+  keys=np.ascontiguousarray(faces).view(np.dtype((np.void,12))).ravel()
+  keys.sort()
+  start=np.r_[0,np.flatnonzero(keys[1:]!=keys[:-1])+1]
+  counts=np.diff(np.r_[start,len(keys)])
+  if np.any(counts>2):raise ValueError("nonmanifold volume boundary")
+  chunks.append(keys[start[counts==1]].view(np.uint32).reshape(-1))
+ return np.unique(np.concatenate(chunks)).astype(np.int64) if chunks else np.empty(0,np.int64)
+
+def interior_contraction_directions(u,v,fixed_nodes,protected_nodes):
+ """Keep pinned vertices at their exact coordinates; never retire a pinned row."""
+ if u==v:return []
+ return [(drop,keep) for drop,keep in [(int(u),int(v)),(int(v),int(u))]
+         if drop not in fixed_nodes and drop not in protected_nodes]
+
+def oriented_tet_boundary(cells):
+ result=collections.Counter()
+ for cell in np.asarray(cells):
+  if len(set(map(int,cell)))!=4:raise ValueError("repeated tetrahedron vertex")
+  for pattern in TET_FACES:
+   face=tuple(map(int,cell[pattern]));sign=1 if sum(face[i]>face[j] for i in range(3) for j in range(i+1,3))%2==0 else -1
+   result[tuple(sorted(face))]+=sign
+ return {k:v for k,v in result.items() if v}
+
+def unchanged_cavity_boundary(old,new):
+ """Exact integer incidence certificate; coordinates and existing positive-cell gates stay separate."""
+ return oriented_tet_boundary(old)==oriented_tet_boundary(new)
+
+
+def match_reference_deformation(p,t,labels,nodes,globals_,cells,regions,displacements,require_same_donor=True):
+ """Match exact compiler compaction, never coordinate-nearest correspondence.
+
+ Unused master rows get zero displacement; no source cell references those rows.
+ Every active row, ordered tetrahedron and typed donor must match the capture.
+ """
+ p=np.asarray(p,np.float32);t=np.asarray(t);nodes=np.asarray(nodes,np.float32)
+ active=np.unique(t)
+ if len(nodes)==len(p):
+  rows=np.arange(len(p),dtype=np.int64);method="exact_full_source_order"
+ elif len(nodes)==len(active):
+  rows=active;method="exact_sorted_active_source_order"
+ else:raise ValueError("reference source node count mismatch")
+ if not len(rows) or nodes.shape!=p[rows].shape or not np.array_equal(nodes,p[rows]):raise ValueError("reference source node order/coordinates mismatch")
+ globals_=np.asarray(globals_,np.int64)
+ if globals_.shape!=(len(rows),) or not np.array_equal(globals_,np.arange(globals_[0],globals_[0]+len(rows))):raise ValueError("reference source nodes must be contiguous")
+ inverse=np.full(len(p),-1,np.int64);inverse[rows]=np.arange(len(rows))
+ native_cells=np.asarray(cells,np.int64)-globals_[0];source_cells=inverse[t]
+ if native_cells.shape!=source_cells.shape:raise ValueError("reference source cell count mismatch")
+ source_order=np.lexsort(source_cells.T[::-1]);native_order=np.lexsort(native_cells.T[::-1])
+ if (not np.array_equal(source_cells[source_order],native_cells[native_order]) or
+     np.any(np.all(source_cells[source_order][1:]==source_cells[source_order][:-1],axis=1))):raise ValueError("reference source connectivity mismatch or duplicate cells")
+ native_regions=np.asarray(regions)
+ if native_regions.shape!=(len(t),):raise ValueError("reference cell labels have wrong size")
+ donor_disagreements=np.flatnonzero(native_regions[native_order]!=labels[source_order,1])
+ if require_same_donor and len(donor_disagreements):raise ValueError("reference source donor mismatch")
+ native_u=np.asarray(displacements,float)
+ if native_u.shape!=(len(rows),3) or not np.all(np.isfinite(native_u)):raise ValueError("nonfinite or invalid reference displacement")
+ u=np.zeros((len(p),3),float);u[rows]=native_u
+ return u,dict(method=method,source_rows=len(p),active_rows=len(active),captured_rows=len(rows),unused_rows=len(p)-len(active),source_row_sha256=hashlib.sha256(np.asarray(rows,dtype="<i8").tobytes()).hexdigest(),cell_order_sha256=hashlib.sha256(np.asarray(source_order,dtype="<i8").tobytes()).hexdigest(),native_cell_order_sha256=hashlib.sha256(np.asarray(native_order,dtype="<i8").tobytes()).hexdigest(),source_vs_capture_label_disagreements=len(donor_disagreements),same_donor_required=require_same_donor,label_disagreement_witnesses=[dict(source_cell=int(source_order[k]),capture_cell=int(native_order[k]),construction_donor=int(labels[source_order[k],1]),capture_reference_anchor=int(native_regions[native_order[k]])) for k in donor_disagreements[:32]])
+
+def load_reference_deformation(path, expected_sha, p, t, labels):
+ """Read a pinned endpoint with exact topology and full or active-row order."""
+ import gzip
+ if sha(path)!=expected_sha:raise ValueError("reference endpoint SHA mismatch")
+ nodes=[];u=[];globals_=[];cells=[];regions=[];header=None;closed=False;body=False
+ owner="BodyParts3D whole-body skin-fat bonded shell"
+ with gzip.open(path,"rt") as f:
+  for line in f:
+   if "resting_FEM_endpoint_capture=begin " in line:
+    header=dict(x.split("=",1) for x in line.split("resting_FEM_endpoint_capture=begin ",1)[1].split() if "=" in x)
+   elif line.startswith("resting_FEM_node,object="+owner+","):
+    d=dict(x.split("=",1) for x in line.strip().split(",")[1:])
+    globals_.append(int(d["global"]));r=np.array([d["rest_"+a] for a in "xyz"],np.float32);nodes.append(r)
+    mode=int(float(d["reference_mode"]))
+    if mode not in (0,1):raise ValueError("invalid reference coordinate mode")
+    u.append([float(np.float32(d["reference_u_hi_"+a]))+float(np.float32(d["reference_u_lo_"+a])) if mode else float(np.float32(d["accepted_"+a]))-float(r[j]) for j,a in enumerate("xyz")])
+   elif line.startswith("resting_FEM_tet,object="+owner+","):
+    d=dict(x.split("=",1) for x in line.strip().split(",")[1:])
+    cells.append([int(d["n"+str(j)]) for j in range(4)]);regions.append(int(d["anatomical_region_id"]))
+    if not np.isfinite(float(d["J"])) or float(d["J"])<=0:raise ValueError("invalid reference endpoint cell")
+   elif "resting_FEM_endpoint_capture=end" in line:closed=True
+   elif "resting_integrated_body=completed " in line:body=True
+ if not header or not closed or not body or header.get("coordinate_unit")!="m" or header.get("strain_unit")!="1":raise ValueError("incomplete or wrong-unit reference endpoint")
+ # The native capture reports the P1 selected semantic/reference anchor.
+ # rich433 explicitly declares it is not exact geometric cell ancestry.
+ # Match the pinned kinematics by exact nodes and ordered connectivity; group
+ # the strain screen by the independently authenticated construction donor.
+ u,mapping=match_reference_deformation(p,t,labels,nodes,globals_,cells,regions,u,require_same_donor=False)
+ return u,dict(path=str(path),sha256=expected_sha,header=header,exact_source_nodes=len(nodes),exact_source_cells=len(t),node_mapping=mapping,native_capture_region_semantics="P1 selected semantic/reference anchor (legacy capture key anatomical_region_id); not geometric cell ancestry",screen_region_semantics="authenticated construction geometric_donor_body",source_ancestry_admission="separate exact resume/source CSR checks; capture labels never replace them")
+
+class ReferenceDeformationGate:
+ """Initialization-only strain screen. No material-energy or motion admission."""
+ def __init__(self,p,t,u,regions,receipt):
+  self.p=p;self.u=u;self.regions=regions;self.receipt=receipt;self.rejected=[];self.rejected_count=0;self.checked=0
+  self.norm=np.zeros(len(t));self.vol=np.zeros(len(t))
+  for start in range(0,len(t),8192):
+   stop=min(start+8192,len(t));self.norm[start:stop],self.vol[start:stop]=self.evaluate(t[start:stop])
+  self.rows={int(r):np.flatnonzero(regions==r) for r in np.unique(regions)}
+  self.base={r:self.stats(rows) for r,rows in self.rows.items()};self.current={r:v.copy() for r,v in self.base.items()}
+ def evaluate(self,t):
+  r=self.p[t].astype(float);u=self.u[t];dm=np.swapaxes(r[:,1:]-r[:,:1],1,2);du=np.swapaxes(u[:,1:]-u[:,:1],1,2)
+  f=np.eye(3)+du@np.linalg.inv(dm);j=np.linalg.det(f)
+  if not np.all(np.isfinite(j)) or np.any(j<=0):raise ValueError("reference deformation inverts a proposed cell")
+  e=(np.swapaxes(f,1,2)@f-np.eye(3))*.5
+  return np.linalg.norm(e,axis=(1,2)),np.abs(np.linalg.det(dm))/6
+ def stats(self,rows):
+  n=self.norm[rows];v=self.vol[rows]
+  return np.array([(v*n).sum(),(v*n*n).sum(),n.max()])
+ def propose(self,rows,new,live):
+  self.checked+=1
+  try:n,v=self.evaluate(new[live])
+  except (ValueError,np.linalg.LinAlgError):
+   self.rejected_count+=1
+   if len(self.rejected)<32:self.rejected.append(dict(source_cell_rows=rows.tolist(),reason="reference_deformation_invalid"))
+   return None
+  oldn=self.norm[rows].copy();oldv=self.vol[rows].copy();self.norm[rows]=0;self.vol[rows]=0
+  self.norm[rows[live]]=n;self.vol[rows[live]]=v
+  proposed={int(r):self.stats(self.rows[int(r)]) for r in np.unique(self.regions[rows])}
+  self.norm[rows]=oldn;self.vol[rows]=oldv
+  failures=[]
+  for r,values in proposed.items():
+   base=self.base[r];bad=np.abs(values-base)>.05*np.abs(base)
+   if np.any(bad):failures.append(dict(region=r,baseline=base.tolist(),proposed=values.tolist(),failed_metric_indices=np.flatnonzero(bad).tolist()))
+  if failures:
+   self.rejected_count+=1
+   if len(self.rejected)<32:self.rejected.append(dict(source_cell_rows=rows.tolist(),failures=failures))
+   return None
+  return n,v,proposed
+ def commit(self,rows,live,proposal):
+  n,v,proposed=proposal;self.norm[rows]=0;self.vol[rows]=0;self.norm[rows[live]]=n;self.vol[rows[live]]=v;self.current.update(proposed)
+ def report(self):
+  return dict(scope="Pinned endpoint kinematic strain screen only; native force, material energy, motion and conservative mass qualification remain required",
+              threshold_relative=.05,metrics=["volume_weighted_strain_norm","volume_weighted_strain_squared","maximum_green_strain_norm"],
+              source=self.receipt,checked_operations=self.checked,rejected_operations=self.rejected_count,
+              failure_witnesses=self.rejected,
+              baseline={str(r):v.tolist() for r,v in self.base.items()},
+              accepted={str(r):v.tolist() for r,v in self.current.items()},physical_admission=False)
+
+
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--max-operations",type=int,default=2048);ap.add_argument("--maximum-edge-m",type=float,default=.0001);ap.add_argument("--replay-report",type=Path);ap.add_argument("--exclude-operation-rows",type=Path);ap.add_argument("--reference-flow-csv",type=Path);ap.add_argument("--reference-flow-sha256");ap.add_argument("--boundary-contact-edge",nargs=2,type=int,action="append",default=[],metavar=("DROP","KEEP"));ap.add_argument("--passes",type=int,default=1);ap.add_argument("--bone-barriers",action="store_true");ap.add_argument("--interior-only",action="store_true");ap.add_argument("--changed-star-only",action="store_true");ap.add_argument("--attachment-requests-csv",type=Path);ap.add_argument("--attachment-requests-sha256");ap.add_argument("--reference-endpoint-capture",type=Path);ap.add_argument("--reference-endpoint-sha256");ap.add_argument("--resume-proposal",type=Path);ap.add_argument("--resume-sha256");ap.add_argument("--resume-cell-mass-csv",type=Path);ap.add_argument("--resume-cell-mass-sha256");a=ap.parse_args()
+ if a.changed_star_only and not a.interior_only:raise ValueError("changed-star mass routing requires exact fixed-boundary interior repair")
+ if a.boundary_contact_edge and (a.interior_only or not a.replay_report):raise ValueError("boundary contact repairs require an explicit surface replay")
+ if bool(a.reference_endpoint_capture)!=bool(a.reference_endpoint_sha256):raise ValueError("reference endpoint path/SHA must be paired")
+ if a.reference_endpoint_capture and not a.interior_only:raise ValueError("reference deformation screening requires fixed interior-only coordinates")
+ if bool(a.attachment_requests_csv)!=bool(a.attachment_requests_sha256):raise ValueError("attachment path/SHA must be paired")
+ if a.passes<1 or a.seconds<=0 or a.max_operations<0 or not np.isfinite(a.maximum_edge_m) or a.maximum_edge_m<=0:raise ValueError("invalid construction budget")
+ a.output.mkdir(parents=True,exist_ok=False);shutil.copy2(__file__,a.output/"executed-runner.py");start=time.monotonic()
+ with np.load(V) as z:
+  p=z["points_reference_world_m_f64"].astype(np.float32);ot=z["volume_tetrahedra"];om=z["material_index"]
+  rawlabs=np.column_stack([z[k] for k in ["material_index","geometric_donor_body","anatomical_region_id"]])
+  maps={r:z["current_typed_role_source_row_to_joint_node_"+r] for r in S}
+ with np.load(C) as z:
+  assert str(z["source_volume_sha256"].item())==sha(V)
+  kept=z["retained_input_cell_rows"];new=z["replacement_tetrahedra"];po=z["replacement_parent_offsets"];pr=z["replacement_parent_cell_rows"]
+  t=np.concatenate([ot[kept],new]);labs=np.concatenate([rawlabs[kept],rawlabs[pr[po[:-1]]]])
+  original_parents=[np.array([i],np.int64) for i in kept]+[pr[po[i]:po[i+1]] for i in range(len(new))]
+  cell_mass=None
+  density_bounds={15:(900.,1100.),16:(850.,950.)}
+  if bool(a.reference_flow_csv)!=bool(a.reference_flow_sha256):
+   raise ValueError("reference flow path and SHA must be provided together")
+  if a.reference_flow_csv:
+   original_mass=load_reference_cell_mass(a.reference_flow_csv,a.reference_flow_sha256,len(ot))
+   new_mass=np.empty(len(new),dtype=np.float64)
+   patch_offsets=z["replacement_tet_offsets"]
+   new_volume=measure(p,new)[0]/6
+   # Match the existing fixed-cavity owner: only repartition a patch's own mass.
+   for first,last in zip(patch_offsets[:-1],patch_offsets[1:]):
+    parents=pr[po[first]:po[first+1]]
+    # Reconstruct the already retained fixed-cavity baseline's own masses.
+    # Its exact geometry/density/source-flow certification remains the native
+    # fixed-cavity owner's authority. New quotient operations are screened below.
+    assert np.all(om[parents]==om[parents[0]])
+    total=float(original_mass[parents].sum())
+    portions=new_volume[first:last]/new_volume[first:last].sum()*total
+    portions[-1]=total-float(portions[:-1].sum())
+    assert np.all(np.isfinite(portions)&(portions>0))
+    new_mass[first:last]=portions
+   cell_mass=np.r_[original_mass[kept],new_mass]
+   input_cell_mass=cell_mass.copy()
+  assert all(np.all(rawlabs[pr[po[i]:po[i+1]]]==labs[len(kept)+i]) for i in range(len(new)))
+ resume_pins=[]
+ if any([a.resume_proposal,a.resume_sha256,a.resume_cell_mass_csv,a.resume_cell_mass_sha256]):
+  if not all([a.resume_proposal,a.resume_sha256,a.resume_cell_mass_csv,a.resume_cell_mass_sha256]):
+   raise ValueError("resume volume and mass paths require both SHA pins")
+  t,labs,original_parents,cell_mass=load_resume_volume(a.resume_proposal,a.resume_sha256,
+   a.resume_cell_mass_csv,a.resume_cell_mass_sha256,p,sha(V),rawlabs)
+  input_cell_mass=cell_mass.copy()
+  resume_pins=[a.resume_proposal,a.resume_cell_mass_csv]
+ det,q=measure(p,t);assert np.all((det/6>1e-18)&(q>=np.float32(1e-5)))
+ initial_low_quality_cells=int((q<.001).sum())
+ deformation_gate=None
+ if a.reference_endpoint_capture:
+  reference_u,reference_receipt=load_reference_deformation(a.reference_endpoint_capture,a.reference_endpoint_sha256,p,t,labs)
+  deformation_gate=ReferenceDeformationGate(p,t,reference_u,labs[:,1],reference_receipt)
+ contact_repair_edges=set(map(tuple,a.boundary_contact_edge))
+ if any(d==k or min(d,k)<0 or max(d,k)>=len(p) for d,k in contact_repair_edges):raise ValueError("invalid boundary contact edge")
+ getcells=incidence(t,len(p));alive=np.ones(len(t),bool);used=set();reject=collections.Counter();ops=[]
+ raw={r:dict(np.load(path,allow_pickle=False)) for r,path in S.items()}
+ faces={r:maps[r][raw[r]["faces"]] for r in S};assert all(np.all(f>=0) for f in faces.values())
+ getfaces={r:incidence(f,len(p)) for r,f in faces.items()};fa={r:np.ones(len(f),bool) for r,f in faces.items()}
+ sourcep=p.copy()
+ for r in S:
+  active=maps[r]>=0;sourcep[maps[r][active]]=raw[r]["points_world_m_f32"][active]
+ positions=[np.ascontiguousarray(x,dtype=np.float64) for x in [p,sourcep]]
+ bone_bins=[];bone_faces=None;bone_receipt=None
+ if a.bone_barriers:
+  bp,bf,bone_receipt=load_bone_barriers()
+  bone_bins=build_triangle_bins(bp,bf)
+  bone_faces=bf+len(p)
+  positions=[np.ascontiguousarray(np.concatenate([pp,bp]),np.float64) for pp in positions]
+ spatial=[]
+ motion_padding=[]
+ allfaces=np.concatenate(list(faces.values()));offsets=np.r_[0,np.cumsum([len(faces[r]) for r in S])]
+ lib=ctypes.CDLL(str(W/"connected-fold-repair-62/exact-pair.dylib"))
+ U=ctypes.POINTER(ctypes.c_uint32);D=ctypes.POINTER(ctypes.c_double)
+ lib.beyond.argtypes=[D,U,U];lib.beyond.restype=ctypes.c_uint
+ protected=set()
+ if a.attachment_requests_csv:protected.update(attachment_nodes(a.attachment_requests_csv,a.attachment_requests_sha256,maps["D"]))
+ for r,f in faces.items():
+  edges=np.sort(np.vstack([f[:,[0,1]],f[:,[1,2]],f[:,[2,0]]]),axis=1);un,ct=np.unique(edges,axis=0,return_counts=True)
+  protected.update(map(int,un[ct!=2].ravel()))
+ back=json.loads((H/"fixed-boundary-quality-topology-196/collapse-batch-004-from-003-001/back412-scope-audit-001/report.json").read_text())
+ for box in back["back412_world_aabbs"].values():
+  lo=np.array(box["min_world_m"]);hi=np.array(box["max_world_m"])
+  for pp in positions:
+   for f in faces.values():
+    x=pp[f];touch=np.all(x.max(1)>=lo,axis=1)&np.all(x.min(1)<=hi,axis=1);protected.update(map(int,f[touch].ravel()))
+ routes=json.loads((H/"verified-volume-preparation-010-merged038005/rim/protected149-current-routes.json").read_text())
+ for route in routes["surface_routes"]:
+  r=route["role"];sp=raw[r]["points_world_m_f32"];rows=np.flatnonzero(np.all(sp==np.array(route["target_world_m_f32"],np.float32),axis=1));protected.update(map(int,maps[r][rows]))
+ fixed_nodes=set()
+ if a.interior_only:
+  fixed_nodes.update(map(int,volume_boundary_nodes(t,labs[:,0])))
+  fixed_nodes.update(map(int,np.concatenate(list(faces.values())).ravel()))
+  original_surfaces={r:f.copy() for r,f in faces.items()}
+ total_volume=det.sum()/6;changed_volume=0.
+ def crossing(changes,deleted):
+  excluded=set(deleted);excluded.update(changes)
+  for pp,bins,padding in zip(positions,spatial,motion_padding):
+   for row,f in changes.items():
+    xyz=pp[f]
+    cand=query_triangle_bins(bins,xyz,padding)
+    cf=allfaces[cand].copy()
+    for k,j in enumerate(cand):
+     if j in changes:cf[k]=changes[j]
+    xx=pp[cf]
+    mask=np.all(xx.max(1)>=xyz.min(0),axis=1)&np.all(xx.min(1)<=xyz.max(0),axis=1)
+    mask &= ~np.any(np.diff(np.sort(cf,axis=1),axis=1)==0,axis=1)
+    for j,g in zip(cand[mask],cf[mask]):
+     if j==row or j in deleted:continue
+     aa=np.asarray(f,np.uint32);bb=np.asarray(g,np.uint32)
+     if lib.beyond(pp.ctypes.data_as(D),aa.ctypes.data_as(U),bb.ctypes.data_as(U)):return False
+    if bone_faces is not None:
+     candidates=query_triangle_bins(bone_bins,xyz)
+     cf=bone_faces[candidates];xx=pp[cf]
+     near=np.all(xx.max(1)>=xyz.min(0),axis=1)&np.all(xx.min(1)<=xyz.max(0),axis=1)
+     for g in cf[near]:
+      aa=np.asarray(f,np.uint32);bb=np.asarray(g,np.uint32)
+      if lib.beyond(pp.ctypes.data_as(D),aa.ctypes.data_as(U),bb.ctypes.data_as(U)):return False
+  return True
+ replay_passes={}
+ if a.replay_report:
+  excluded=set(json.loads(a.exclude_operation_rows.read_text())["failed_operation_rows"]) if a.exclude_operation_rows else set()
+  for i,op in enumerate(json.loads(a.replay_report.read_text())["operations"]):
+   if i not in excluded:replay_passes.setdefault(int(op.get("pass_index",0)),[]).append(op)
+ passes=[]
+ for pass_index in range(a.passes):
+  if time.monotonic()-start>a.seconds or len(ops)>=a.max_operations:break
+  pass_start=time.monotonic();before_ops=len(ops)
+  used=set()
+  active_cells=np.flatnonzero(alive)
+  localcells=incidence(t[active_cells],len(p))
+  getcells=lambda v:active_cells[localcells(v)]
+  getfaces={}
+  for r in S:
+   active_faces=np.flatnonzero(fa[r]);localfaces=incidence(faces[r][active_faces],len(p))
+   getfaces[r]=(lambda v,rows=active_faces,lookup=localfaces:rows[lookup(v)])
+  spatial=[[] for pp in positions] if a.interior_only else [build_triangle_bins(pp,allfaces) for pp in positions]
+  if a.interior_only:
+   edges=np.unique(np.sort(t[active_cells][:,[[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]].reshape(-1,2),axis=1),axis=0)
+   interior=np.ones(len(p),bool);interior[np.fromiter(fixed_nodes,dtype=np.int64)]=False
+   edges=edges[interior[edges].any(axis=1)]
+  else:
+   edges=np.unique(np.sort(np.concatenate([f[:,e] for f in [faces[r][fa[r]] for r in S] for e in [[0,1],[1,2],[2,0]]]),axis=1),axis=0)
+  length=np.linalg.norm(p[edges[:,0]].astype(float)-p[edges[:,1]].astype(float),axis=1);edges=edges[length<=a.maximum_edge_m];length=length[length<=a.maximum_edge_m]
+  hits=np.bincount(t[alive&(q<.001)].ravel(),minlength=len(p))
+  known_fold=np.all(edges==[22677,22679],axis=1)
+  rank=np.lexsort((edges[:,1],edges[:,0],length,-(hits[edges[:,0]]+hits[edges[:,1]]),~known_fold));edges=edges[rank]
+  replay_directions={}
+  if pass_index in replay_passes:
+   selected=replay_passes[pass_index]
+   edges=np.asarray([[op["drop"],op["keep"]] for op in selected],np.int64).reshape(-1,2)
+   replay_directions={tuple(map(int,e)):True for e in edges}
+  motion_padding=[float(np.linalg.norm(pp[edges[:,0]]-pp[edges[:,1]],axis=1).max()) if len(edges) else 0. for pp in positions]
+  for u,v in edges:
+   if time.monotonic()-start>a.seconds or len(ops)>=a.max_operations:break
+   u=int(u);v=int(v)
+   rows=np.union1d(getcells(u),getcells(v));nodes=set(map(int,t[rows].ravel()))
+   if nodes&used or (not a.interior_only and (u in protected or v in protected)):reject["protected_or_dependent"]+=1;continue
+   if not len(rows):reject["inactive_replay_edge"]+=1;continue
+   if len(rows)>256:reject["unbounded_star"]+=1;continue
+   if not a.changed_star_only and not uniform_typed_labels_by_material(labs[rows]):reject["donor_or_region_interface"]+=1;continue
+   if link(t[rows],[u])&link(t[rows],[v])!=link(t[rows],[u,v]):reject["volume_link"]+=1;continue
+   directions=([(u,v)] if replay_directions else [(u,v),(v,u)])
+   if a.interior_only:
+    directions=[e for e in directions if e in interior_contraction_directions(u,v,fixed_nodes,protected)]
+   star_rows=rows
+   for drop,keep in directions:
+    rows=contraction_changed_rows(t,star_rows,drop) if a.changed_star_only else star_rows
+    if not uniform_typed_labels_by_material(labs[rows]):reject["changed_cavity_donor_or_region_interface"]+=1;continue
+    n=t[rows].copy();n[n==drop]=keep;live=~np.any(np.diff(np.sort(n,axis=1),axis=1)==0,axis=1)
+    nd,nq=measure(p,n[live])
+    if not len(nd) or np.any((nd/6<=1e-18)|(nq<np.float32(1e-5))):reject["native_cell_quality"]+=1;continue
+    if a.interior_only and not unchanged_cavity_boundary(t[rows],n[live]):
+     reject["changed_exact_cavity_boundary"]+=1;continue
+    oldq=q[rows];cost=lambda z:float(np.maximum(np.log(.001/z),0).sum())
+    good_coarsening=oldq.min()>=.001 and nq.min()>=.001 and int((~live).sum())>0
+    conditioning_gain=nq.min()>=oldq.min() and cost(nq)<cost(oldq)-1e-6
+    boundary_contact_repair=(drop,keep) in contact_repair_edges and boundary_contact_quality_progress(oldq,nq,int((~live).sum()))
+    if not (good_coarsening or conditioning_gain or boundary_contact_repair):reject["no_conditioning_gain"]+=1;continue
+    deformation_proposal=None
+    if deformation_gate:
+     deformation_proposal=deformation_gate.propose(rows,n,live)
+     if deformation_proposal is None:reject["reference_deformation_fidelity"]+=1;continue
+    proposed_mass=None
+    if cell_mass is not None:
+     try:
+      proposed_mass=compose_local_cell_mass(cell_mass[rows],labs[rows,0],
+       labs[rows[live],0],nd/6,density_bounds)
+     except ValueError:
+      reject["local_mass_density_infeasible"]+=1;continue
+    delta=float((nd.sum()-det[rows].sum())/6)
+    if abs(delta)>.01*det[rows].sum()/6 or changed_volume+abs(delta)>1e-4*total_volume:reject["geometric_volume_budget"]+=1;continue
+    changes={};deleted=set();affected={}
+    valid=True
+    for ri,r in enumerate(S):
+     fr=getfaces[r](drop)
+     if not len(fr):continue
+     star=np.union1d(getfaces[r](drop),getfaces[r](keep))
+     if link(faces[r][star],[u])&link(faces[r][star],[v])!=link(faces[r][star],[u,v]):valid=False;break
+     nf=faces[r][fr].copy();nf[nf==drop]=keep;fl=~np.any(np.diff(np.sort(nf,axis=1),axis=1)==0,axis=1)
+     for pp in positions:
+      x=pp[faces[r][fr[fl]]];y=pp[nf[fl]];na=np.cross(x[:,1]-x[:,0],x[:,2]-x[:,0]);nb=np.cross(y[:,1]-y[:,0],y[:,2]-y[:,0])
+      den=np.linalg.norm(na,axis=1)*np.linalg.norm(nb,axis=1)
+      if np.any(den<=0) or np.any(np.einsum("ij,ij->i",na,nb)<.9*den):valid=False;break
+     if not valid:break
+     changes.update({int(offsets[ri]+i):ff for i,ff in zip(fr[fl],nf[fl])});deleted.update(map(int,offsets[ri]+fr[~fl]));affected[r]=(fr,nf,fl)
+    if not valid:reject["surface_link_or_orientation"]+=1;continue
+    if boundary_contact_repair and not deleted:reject["contact_edge_did_not_remove_boundary_faces"]+=1;continue
+    if not crossing(changes,deleted):reject["exact_surface_or_bone_crossing" if a.bone_barriers else "exact_surface_crossing"]+=1;continue
+    # Retained source cell ancestry is a union, not a nearest-cell guess.
+    parents=np.unique(np.concatenate([original_parents[i] for i in rows]))
+    for i in rows[live]:original_parents[int(i)]=parents[om[parents]==labs[i,0]]
+    if deformation_gate:deformation_gate.commit(rows,live,deformation_proposal)
+    t[rows]=n;alive[rows[~live]]=False;q[rows[live]]=nq;det[rows[live]]=nd
+    if proposed_mass is not None:cell_mass[rows[live]]=proposed_mass
+    for r,(fr,nf,fl) in affected.items():faces[r][fr]=nf;fa[r][fr[~fl]]=False
+    for i,f in changes.items():allfaces[i]=f
+    for i in deleted:allfaces[i]=[0,0,0]
+    used.update(nodes);changed_volume+=abs(delta)
+    ops.append(dict(pass_index=pass_index,drop=drop,keep=keep,boundary_contact_repair=boundary_contact_repair,source_cell_rows=rows.tolist(),removed_cells=int((~live).sum()),roles=list(affected),source_face_rows={r:fr.tolist() for r,(fr,_,_) in affected.items()},signed_volume_change_m3=delta,minimum_quality_before=float(oldq.min()),minimum_quality_after=float(nq.min())))
+    with (a.output/"operations.jsonl").open("a") as ledger:ledger.write(json.dumps(ops[-1])+"\n")
+    if len(ops)%10==0:print(json.dumps(dict(operations=len(ops),elapsed_s=time.monotonic()-start)),flush=True)
+    break
+  passes.append(dict(pass_index=pass_index,operations=len(ops)-before_ops,
+   active_cells=int(alive.sum()),elapsed_s=time.monotonic()-pass_start))
+  print(json.dumps({"completed_pass":passes[-1]}),flush=True)
+  if len(ops)==before_ops:break
+ if a.interior_only:
+  for r in S:
+   assert np.array_equal(faces[r],original_surfaces[r]) and np.all(fa[r]),"interior rebuild changed a typed surface"
+ # Export joint volume with immediate parent unions in the established CSR representation.
+ rows=np.flatnonzero(alive);parents=[original_parents[i] for i in rows];off=np.r_[0,np.cumsum([len(x) for x in parents])]
+ np.savez_compressed(a.output/"candidate-volume.npz",points_reference_world_m_f64=p.astype(float),volume_tetrahedra=t[rows],material_index=labs[rows,0],geometric_donor_body=labs[rows,1],anatomical_region_id=labs[rows,2],replacement_parent_offsets=off,replacement_parent_cell_rows=np.concatenate(parents),source_volume_sha256=np.array(sha(V)))
+ if cell_mass is not None:
+  # Same established child-mass CSV columns; never a replacement for source-flow admission.
+  np.savetxt(a.output/"local-child-mass-proposal.csv",
+   np.column_stack((np.arange(len(rows)),cell_mass[rows])),delimiter=",",
+   header="child_row,mass_kg",comments="",fmt=["%d","%.17g"])
+ # Typed surface emission and face-union composition happen only after accepted operations.
+ for r in S:
+  if a.interior_only:
+   (a.output/f"candidate-{r}-typed-current.npz").symlink_to(S[r].resolve())
+   continue
+  old=raw[r];keepf=np.flatnonzero(fa[r]);reverse=np.full(len(p),-1,np.int64);active=maps[r]>=0;reverse[maps[r][active]]=np.flatnonzero(active)
+  nf=reverse[faces[r][keepf]];assert np.all(nf>=0)
+  payload={k:old[k][keepf] for k in ["face_source_layer","face_source_body","face_source_bone","face_source_face_id","face_source_original_id","face_source_identity0","face_source_identity1"] if k in old}
+  payload.update(points_world_m=old["points_world_m"],points_world_m_f32=old["points_world_m_f32"],faces=nf,source_input_face_rows=keepf,typed_parent_candidate_path=np.array(str(S[r])),typed_parent_candidate_sha256=np.array(sha(S[r])))
+  parent_for_face=compose_face_ancestry(ops,r)
+  for offset,lanes in [("quality_star_patch_union_offsets",["quality_star_patch_union_face_source_"+k for k in ["layer","body","bone","face_id","original_id","identity0","identity1"]]),("face_ancestry_offsets",["face_ancestry_source_face_rows","face_ancestry_source_original_ids","face_ancestry_parent_face_rows"])]:
+   oo=old[offset];chunks=[]
+   for f in keepf:
+    ff=parent_for_face.get(int(f),[int(f)]);ix=np.concatenate([np.arange(oo[i],oo[i+1]) for i in ff]);chunks.append(np.unique(np.column_stack([old[k][ix] for k in lanes]),axis=0))
+   merged=np.concatenate(chunks);payload[offset]=np.r_[0,np.cumsum([len(x) for x in chunks])]
+   for j,k in enumerate(lanes):payload[k]=merged[:,j]
+  for k in old:
+   if "schema" in k and k not in payload:payload[k]=old[k]
+  quotient=np.arange(len(maps[r]))
+  for op in ops:
+   if r in op["roles"]:quotient[reverse[op["drop"]]]=reverse[op["keep"]]
+  payload["source_input_vertex_quotient"]=quotient_closure(quotient)
+  np.savez_compressed(a.output/f"candidate-{r}-typed-current.npz",**payload)
+ report=dict(changed_star_only=a.changed_star_only,boundary_contact_edges=[list(e) for e in sorted(contact_repair_edges)],interior_only=a.interior_only,actual_and_typed_boundary_nodes_fixed=(len(fixed_nodes) if a.interior_only else None),typed_surface_faces_unchanged=bool(a.interior_only),status="JOINT_BOUNDARY_VOLUME_PROPOSAL_NOT_PHYSICAL_ADMISSION",physical_admission=False,native_steps=0,mass_mapping="PENDING",input_pins={str(x):sha(x) for x in [V,C,*S.values(),*resume_pins,a.output/"executed-runner.py",*([a.replay_report] if a.replay_report else []),*([a.exclude_operation_rows] if a.exclude_operation_rows else [])]},operations=ops,passes=passes,bone_barrier=bone_receipt,protected_attachment_requests=(dict(path=str(a.attachment_requests_csv),sha256=a.attachment_requests_sha256) if a.attachment_requests_csv else None),rejections=dict(reject),input_cells=len(t),output_cells=len(rows),input_nodes=len(p),active_output_nodes=len(np.unique(t[rows])),low_quality_cells_before=initial_low_quality_cells,low_quality_cells_after=int((q[rows]<.001).sum()),native_quality_failures=int(((det[rows]/6<=1e-18)|(q[rows]<np.float32(1e-5))).sum()),all_point_coordinates_unchanged=True,absolute_geometric_volume_change_m3=changed_volume,elapsed_s=time.monotonic()-start,remaining=["complete anatomical context including bones and containment","independent topology, F32, typed ancestry and volume checks","canonical parent and conservative source mass compiler","complete native scene comparison"])
+ if cell_mass is not None:
+  touched=np.unique(np.concatenate([np.asarray(o["source_cell_rows"],np.int64) for o in ops])) if ops else np.empty(0,np.int64)
+  unchanged=np.ones(len(t),bool);unchanged[touched]=False
+  assert np.array_equal(cell_mass[unchanged],input_cell_mass[unchanged])
+  report["local_mass_construction"]={"reference_flow_path":str(a.reference_flow_csv),
+   "reference_flow_sha256":a.reference_flow_sha256,"resumed_volume_path":str(a.resume_proposal) if a.resume_proposal else None,"resumed_mass_path":str(a.resume_cell_mass_csv) if a.resume_cell_mass_csv else None,"density_bounds_kg_m3":density_bounds,
+   "input_mass_kg":float(input_cell_mass.sum()),"output_mass_kg":float(cell_mass[rows].sum()),
+   "unchanged_cells":int(unchanged.sum()),"unchanged_cell_masses_exact":True,
+   "source_flow_and_donor_composition":"PENDING_EXISTING_CONSERVATIVE_COMPILER",
+   "proposal_path":str(a.output/"local-child-mass-proposal.csv")}
+ if deformation_gate:report["reference_deformation_screen"]=deformation_gate.report()
+ (a.output/"report.json").write_text(json.dumps(report,indent=2)+"\n")
+ print(json.dumps({k:v for k,v in report.items() if k!="operations"}),flush=True)
+if __name__=="__main__":main()
