@@ -1,0 +1,32 @@
+{
+  "purpose": "Exploratory conditioning repair of complete disjoint free interior vertex stars",
+  "source_revision": "fc48f183be91cbd9989c6f7bd8898928ee560a35",
+  "runner_sha256": "1386eba6e13933f522f9fffce9ce0072bcd3e03fcec88388aaf2743d74614085",
+  "command": [
+    "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tools/relocate_human_skin_fat_interiors.py",
+    "--volume",
+    "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal/candidate-volume.npz",
+    "--mass-csv",
+    "/Users/numi/Work/human-integrated-gaps-20261104/early-state-screen-568/proposal/local-child-mass-proposal.csv",
+    "--original",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/current-native-1024-root/current-433-1037/candidate-current-typed-volume.npz",
+    "--volume-sha256",
+    "537edab8d9b7e1d496893574d675272f8790d142a17c54b76bad18527fa5ee41",
+    "--mass-sha256",
+    "64946afe9c37e6d9cec36025078bbcb7ded5f6d4074d52d752d11637be18c23b",
+    "--original-sha256",
+    "5d31c141b66628801a711c2e745f744f745611882a269e173eddfcd0e99d3372",
+    "--output",
+    "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal",
+    "--maximum-nodes",
+    "11000",
+    "--seconds",
+    "90"
+  ],
+  "changes": "Only untyped non-boundary interior coordinates, emitted Float32; material, region, donor, complete cavity boundary and mass moments fixed",
+  "prediction": "Process all eligible disjoint free stars within the90s budget. Positive cells, exact fixed anatomical boundaries and per-star mass moments remain mandatory. No speedup or native fidelity assumed.",
+  "stopping": "All candidates,11000 passing moves or90seconds",
+  "gates": "Positive exact Float32 determinants, same exact cavity volume, 5% min-quality improvement, 2% max-condition improvement; same density bounds, source mass and first moment; existing compiler and native gates mandatory",
+  "native_fidelity": "Existing 1% force/output and 5% regional strain gates unchanged; no promotion by cell metrics alone"
+}

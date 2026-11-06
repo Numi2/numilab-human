@@ -1,0 +1,61 @@
+{
+  "stages": [
+    {
+      "name": "compiler",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compile_human_connected_rebuild.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "source_sha256": "b4afa7106559b699e63382c0e7a10c22c5908cb66e7772f230e6ef79fbb1f143"
+    },
+    {
+      "name": "typed-adapters",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_interior_typed_adapters_326.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "source_sha256": "e263086e3f961cb9424114cc22173585a051d209f08b002b12b1ac7b52f8a92e"
+    },
+    {
+      "name": "p1",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/compile_joint64_p1.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "source_sha256": "7dff3613e8bbba8339be908029d6cbe00e1eeba6557278c4d55d8de6b4e764cd"
+    },
+    {
+      "name": "p1-export-rich",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/compile_joint64_export.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "source_sha256": "d9f82ecaf7a969fd1ffade1f8a7b4de3b4b4e047f8659a44d103ab1d15221b75"
+    },
+    {
+      "name": "assets",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/export_joint64_assets.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "source_sha256": "7dae60166ab70adc9f5f61fd9dc42d9bdf943305e933d514e0b88fad2091800c"
+    },
+    {
+      "name": "bindings",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_bindings.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "source_sha256": "7a23c975eef6f4b0a3aea41149c7fed481aa99de07fcc79ad90810250231d8ed"
+    }
+  ],
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal",
+  "physical_admission": false,
+  "prediction": "Independent source checks passed; current coordinates must survive the existing compiler with truthful inferred-interior lineage. Zero native-quality failures, fixed anatomical boundaries and unchanged physical laws."
+}

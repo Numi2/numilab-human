@@ -1,0 +1,42 @@
+{
+  "status": "PASS_INDEPENDENT_LOCAL_TOPOLOGY_TYPED_CSR_AND_EXACT_CELL_CHECKS",
+  "physical_admission": false,
+  "native_steps": 0,
+  "all_coordinates_exact": false,
+  "all_coordinates_emitted_float32": true,
+  "interior_relocation": {
+    "status": "PASS_INDEPENDENT_INTERIOR_RELOCATION_REPLAY",
+    "nodes": 1940,
+    "cells": 47666,
+    "maximum_displacement_m": 0.0004956646656180711,
+    "maximum_star_first_moment_error_kg_m": 1.939479807224432e-18,
+    "all_typed_and_actual_boundaries_fixed": true,
+    "exact_star_volumes_preserved": true,
+    "source_mass_and_first_moments_preserved": true,
+    "physical_admission": false
+  },
+  "complete_oriented_boundary_matches_volume_quotient": true,
+  "parent_materials_separated": true,
+  "duplicate_cells": 0,
+  "changed_cells_exactly_positive": 65946,
+  "source_cell_ancestry_entries": 4409100,
+  "surfaces": {
+    "O": {
+      "faces": 152261,
+      "points": 76669
+    },
+    "I": {
+      "faces": 236387,
+      "points": 125368
+    },
+    "D": {
+      "faces": 207893,
+      "points": 120648
+    }
+  },
+  "remaining": [
+    "all185 context and contained solid checks",
+    "conservative mass and P1/native compiler",
+    "whole native scene physical and performance comparison"
+  ]
+}

@@ -36,6 +36,24 @@ def interface_mass_scope(cells,operations,node_count):
  return changed[cells].any(axis=1)
 
 
+def relocation_query_points(original,candidate,operations):
+ """Use declared relocated coordinates only for interior identity lookup.
+
+ The independent complete-star replay remains mandatory; this helper never
+ allows nearest-position matching or invents source mass.
+ """
+ old=np.asarray(original,dtype=np.float32);new=np.asarray(candidate,dtype=np.float32)
+ if old.shape!=new.shape or not np.isfinite(new).all():raise ValueError('relocation coordinate domain mismatch')
+ seen=set()
+ for op in operations:
+  node=int(op['node'])
+  if not 0<=node<len(old) or node in seen:raise ValueError('invalid relocation node identity')
+  if not np.array_equal(old[node],op['old_world_m']) or not np.array_equal(new[node],op['new_world_m']):raise ValueError('relocation replay mismatch')
+  seen.add(node)
+ if not np.array_equal(np.flatnonzero(np.any(old!=new,axis=1)),np.sort(list(seen))):raise ValueError('undeclared relocation coordinate')
+ return new.astype(float),np.array(sorted(seen),dtype=np.int64)
+
+
 def main():
  global CAND,RICH
  ap=argparse.ArgumentParser();ap.add_argument('--output',type=Path,required=True);ap.add_argument('--halo-rings',type=int,choices=[0,1,2],default=1);ap.add_argument('--candidate-root',type=Path);ap.add_argument('--all-proposed-cell-masses',action='store_true');a=ap.parse_args()
@@ -68,6 +86,14 @@ def main():
   cmat=np.r_[mat[kept],mat[pr[po[:-1]]]]
   clabel=np.vstack((original_labels[kept],original_labels[pr[po[:-1]]]))
  del t,mass,new,newmass
+ construction=json.loads((CAND/'report.json').read_text());relocations=construction.get('interior_relocations',[])
+ query=p;moved=np.empty(0,np.int64)
+ if relocations:
+  if not a.all_proposed_cell_masses:raise ValueError('interior relocation requires all proposed cell masses')
+  checks=json.loads((CAND/'interior-relocation-checks.json').read_text())
+  assert checks['status']=='PASS_INDEPENDENT_INTERIOR_RELOCATION_REPLAY' and checks['nodes']==len(relocations)
+  with np.load(CAND/'candidate-volume.npz') as z:query,moved=relocation_query_points(p,z['points_reference_world_m_f64'],relocations)
+  pins[str(CAND/'interior-relocation-checks.json')]=sha(CAND/'interior-relocation-checks.json')
  with np.load(RICH) as z:
   x=z['points_reference_world_m_f64'];nt=z['volume_tetrahedra'];nmat=z['material_index']
   nlabel=np.column_stack([z[k] for k in ['material_index','geometric_donor_body','anatomical_region_id']])
@@ -85,18 +111,19 @@ def main():
   interior=np.flatnonzero((node_map<0)&~surface_node)
   nk=np.ascontiguousarray(x,dtype=np.float32).view('V12').ravel()
   order=np.argsort(nk,kind='stable');ks=nk[order]
-  pk=np.ascontiguousarray(p[interior],dtype=np.float32).view('V12').ravel()
+  pk=np.ascontiguousarray(query[interior],dtype=np.float32).view('V12').ravel()
   left=np.searchsorted(ks,pk,side='left');right=np.searchsorted(ks,pk,side='right')
   unique=right-left==1
   node_map[interior[unique]]=order[left[unique]]
   interior_mapped=int(unique.sum());interior_ambiguous=int((~unique).sum())
-  valid=node_map>=0;assert np.array_equal(p[valid].astype(np.float32),x[node_map[valid]].astype(np.float32))
- construction=json.loads((CAND/'report.json').read_text());operations=construction['operations']
+  valid=node_map>=0;assert np.array_equal(query[valid].astype(np.float32),x[node_map[valid]].astype(np.float32))
+ operations=construction['operations']
  free=np.zeros(len(ct),bool)
  for op in operations:free[np.asarray(op['source_cell_rows'],np.int64)]=True
  if construction.get('interface_operations'):
   if not a.all_proposed_cell_masses:raise ValueError('connected interface reconstruction requires all proposed cell masses')
   free|=interface_mass_scope(ct,construction['interface_operations'],len(p))
+ if len(moved):free|=np.isin(ct,moved).any(axis=1)
  direct=int(free.sum())
  for _ in range(a.halo_rings):
   nodes=np.zeros(len(p),bool);nodes[ct[free].ravel()]=True;free|=nodes[ct].any(axis=1)
@@ -134,7 +161,7 @@ def main():
   # and exact Float32 tetrahedron geometry, never by assuming compiler row order.
   with np.load(CAND/'candidate-volume.npz') as z:
    vp=z['points_reference_world_m_f64'];vt=z['volume_tetrahedra'];vm=z['material_index']
-  assert np.array_equal(vp.astype(np.float32),p.astype(np.float32))
+  assert np.array_equal(vp.astype(np.float32),query.astype(np.float32))
   assert np.all(node_map[vt]>=0), 'unmapped proposed mechanical coordinate'
   mapped=node_map[vt];kk=keys(mapped);pos=np.searchsorted(sortedkeys,kk)
   assert np.all(pos<len(nk)) and np.array_equal(sortedkeys[pos],kk)
@@ -156,7 +183,7 @@ def main():
   'additional_cells_unprescribed_for_ambiguous_mapping':ambiguous_outside,
   'prescribed_material_labels_unchanged':True,'primary_donor_region_label_differences':len(mismatch),
   'primary_label_equivalence':'NOT_QUALIFIED' if len(mismatch) else 'PASS',
-  'baseline_mass_kg':float(cm.sum()),'all_prescribed_rest_tetrahedra_identical_f32':True,
+  'baseline_mass_kg':float(cm.sum()),'all_prescribed_rest_tetrahedra_identical_f32':not bool(relocations),'all_prescribed_proposal_to_native_tetrahedra_identical_f32':True,'documented_interior_relocations':len(relocations),
   'physical_density_transport_source_and_semantic_gates':'UNCHANGED_MUST_PASS_EXISTING_ALLOCATOR',
   'prescribed_relative_tolerance':1e-10,'output':{'path':str(csv),'sha256':sha(csv)},'wall_s':time.time()-start}
  (a.output/'receipt.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='input_pins'},indent=2))
