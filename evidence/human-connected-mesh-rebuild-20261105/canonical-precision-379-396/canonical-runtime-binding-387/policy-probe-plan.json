@@ -1,0 +1,37 @@
+{
+  "build_argv": [
+    "xcrun",
+    "clang++",
+    "-O3",
+    "-DNDEBUG",
+    "-std=c++23",
+    "-arch",
+    "arm64",
+    "-fPIE",
+    "-fobjc-arc",
+    "-Wall",
+    "-Wextra",
+    "-Wpedantic",
+    "-Werror",
+    "-DNUMI_MATTER_METALLIB=\"/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib\"",
+    "-DNUMI_HUMAN_FEM_REFERENCE_OWNER=\"/Users/numi/Work/skin-fat-native-integration-209/matter/tools/fem_reference_check.mm\"",
+    "-I/Users/numi/Work/skin-fat-native-integration-209/include",
+    "-I/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tools/human_skin_fat_precision.mm",
+    "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/libnumi_matter_runtime.a",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/libnumi_matter_compiler.a",
+    "-o",
+    "/Users/numi/Work/human-integrated-gaps-20261104/canonical-runtime-binding-387/human-skin-fat-precision"
+  ],
+  "run_argv": [
+    "/Users/numi/Work/human-integrated-gaps-20261104/canonical-runtime-binding-387/human-skin-fat-precision",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter"
+  ],
+  "source_sha256": "5c3d03ed93bba182e9c63ee2ec6f8f174cb68fb5946190ccd47e8516f37f6b85",
+  "new_control": "Mode2 clears optional tangent flag and retains only private precision eligibility; same1e-5 force/tangent and1e-4 finite-difference gates."
+}

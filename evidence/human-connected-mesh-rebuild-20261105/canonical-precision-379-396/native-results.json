@@ -1,0 +1,178 @@
+[
+  {
+    "status": "NATIVE_CONTROL_COMPLETED_PRECISION_FIX_NOT_ACTIVATED",
+    "accepted_roots": 32,
+    "dt_s": 1.5625e-05,
+    "simulated_time_s": 0.0005,
+    "body_wall_s": 205.381766125,
+    "source_owner": "Runtime::initialize clears compiler canonical tangent bit9 in native bundle mode before material upload.",
+    "observations": "Skin/fat census: compiler canonical candidates true, execution canonical flags false. Captured field and free forces exactly match365; fixed-field analytical calibration still fails1.813%.",
+    "native_precision_fix_qualified": false,
+    "mesh_promoted": false,
+    "next_change": "Private precision metadata flag derived from compiler proof before optional tangent flag clearing, keeping existing tangent admission."
+  },
+  {
+    "directory": "/Users/numi/Work/human-integrated-gaps-20261104/precision-live-native-390",
+    "plan": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-live-native-390/install-motion.plan.json",
+      "bytes": 106426,
+      "sha256": "a4b8051f0783dda10e4c84d8c53d3e1e22d8b9ce72d286e63f82752653c85f4a"
+    },
+    "execution": {
+      "exit_code": 1,
+      "elapsed_s": 350.960618019104,
+      "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-live-native-390/install-motion.plan.json",
+      "plan_sha256": "a4b8051f0783dda10e4c84d8c53d3e1e22d8b9ce72d286e63f82752653c85f4a",
+      "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-live-native-390/install-motion.stdout.log.gz",
+      "stdout_encoding": "gzip",
+      "stdout_compressor_exit_code": 0,
+      "stdout_sha256": "0dabf9b7e7d3886c1e9e06b0839a63386e05017b63cefb08fba763b1c3d40b52",
+      "stdout_uncompressed_sha256": "1291e42074e478f5ec4c57075852afc7adb87a7651ea264887a48c242dedb123",
+      "stderr_sha256": "eac1fdc097b6f462251edbc35b85a5d54410b10b32f840de6da01ad30f4671a8",
+      "physical_admission": false,
+      "resource_stop_reason": null,
+      "source_import_pass": true,
+      "accepted_steps_are_separately_recorded_in_native_report": true
+    },
+    "accepted_roots": 24,
+    "requested_roots": 32,
+    "dt_s": 1.5625e-05,
+    "accepted_time_s": 0.000375,
+    "launcher_accepted_time_factor": 1.068495952955005e-06,
+    "full_requested_horizon_pass": false,
+    "active_work_all_attempts": {
+      "used_columns_sum": 944,
+      "cycles_with_work": 59,
+      "budget_exhausted_solves": 0
+    },
+    "active_work_accepted_roots": {
+      "used_columns_sum": 912,
+      "cycles_with_work": 57,
+      "budget_exhausted_solves": 0
+    },
+    "body": null,
+    "coupled_trace": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-live-native-390/install-motion/resting-coupled.csv",
+      "bytes": 18827,
+      "sha256": "108c50caa35a38f8141d1b89ac5daed3d502411772db104ea33e8294686e8b03"
+    },
+    "failure": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-live-native-390/install-motion/diagnostics/common-field-failure.json",
+      "bytes": 4068,
+      "sha256": "5648863c592928ab89a09bef42801a8e8bbcb3a10760a92f94a31063121bf3ea"
+    },
+    "scope": "Short initialization transient, no supported-rest, sustained throughput or visual motion admission."
+  },
+  {
+    "directory": "/Users/numi/Work/human-integrated-gaps-20261104/precision-endpoint-native-391",
+    "plan": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-endpoint-native-391/install-motion.plan.json",
+      "bytes": 105628,
+      "sha256": "3fc699a99908f22d9da5ad1b4d91f601516b609f2b065f209b453aa49b1c34f5"
+    },
+    "execution": {
+      "exit_code": 0,
+      "elapsed_s": 287.0069091320038,
+      "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-endpoint-native-391/install-motion.plan.json",
+      "plan_sha256": "3fc699a99908f22d9da5ad1b4d91f601516b609f2b065f209b453aa49b1c34f5",
+      "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-endpoint-native-391/install-motion.stdout.log.gz",
+      "stdout_encoding": "gzip",
+      "stdout_compressor_exit_code": 0,
+      "stdout_sha256": "fa53efbf6a4be5c2883fe2fed755620eec512edb069144573d80f8c55cdb2721",
+      "stdout_uncompressed_sha256": "e445a7d0e67106b3980a0797badb26e8001933a624fb4931d55e48e16df6127a",
+      "stderr_sha256": "e09a3dab369c030c60a7ad899718c99d9e9f0571a34a6b20a702531ebd7861f7",
+      "physical_admission": false,
+      "resource_stop_reason": null,
+      "source_import_pass": true,
+      "accepted_steps_are_separately_recorded_in_native_report": true
+    },
+    "accepted_roots": 16,
+    "requested_roots": 16,
+    "dt_s": 1.5625e-05,
+    "accepted_time_s": 0.00025,
+    "launcher_accepted_time_factor": 8.710591698160719e-07,
+    "full_requested_horizon_pass": true,
+    "active_work_all_attempts": {
+      "used_columns_sum": 656,
+      "cycles_with_work": 41,
+      "budget_exhausted_solves": 0
+    },
+    "active_work_accepted_roots": {
+      "used_columns_sum": 656,
+      "cycles_with_work": 41,
+      "budget_exhausted_solves": 0
+    },
+    "body": {
+      "simulated_s": "0.00025000001187436283",
+      "wall_s": "108.411367125",
+      "real_time_factor": "2.3060313554215115e-06",
+      "physiology_body_clock": "matched",
+      "root_assistance": "false",
+      "presentation_qualification": "pending"
+    },
+    "coupled_trace": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/precision-endpoint-native-391/install-motion/resting-coupled.csv",
+      "bytes": 13078,
+      "sha256": "121847255212c51896d9e6fce468d25488567fa8cd7caeb65e8aa87b352cc441"
+    },
+    "failure": null,
+    "scope": "Short initialization transient, no supported-rest, sustained throughput or visual motion admission.",
+    "body_real_time_factor": 2.3060312458909048e-06
+  },
+  {
+    "directory": "/Users/numi/Work/human-integrated-gaps-20261104/reference-edge-native-395",
+    "plan": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/reference-edge-native-395/install-motion.plan.json",
+      "bytes": 106445,
+      "sha256": "0b32b26fb2ac0247fa5bbf50e06b6873a8d64a4507743b971f127d6cf962b6fc"
+    },
+    "execution": {
+      "exit_code": 0,
+      "elapsed_s": 422.3978753089905,
+      "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/reference-edge-native-395/install-motion.plan.json",
+      "plan_sha256": "0b32b26fb2ac0247fa5bbf50e06b6873a8d64a4507743b971f127d6cf962b6fc",
+      "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/reference-edge-native-395/install-motion.stdout.log.gz",
+      "stdout_encoding": "gzip",
+      "stdout_compressor_exit_code": 0,
+      "stdout_sha256": "5b5ee1c59845c4df93630ea73e9d29b4bf30ad4ac9e7203ede56545a92310739",
+      "stdout_uncompressed_sha256": "f77c547fce032aeb01eb5d2ce6359a20c65d83c4f48eec71bdcfaf86760a0103",
+      "stderr_sha256": "353272c43377ecd9d9552c17594624008174ab1a7b8562a1508a886463219234",
+      "physical_admission": false,
+      "resource_stop_reason": null,
+      "source_import_pass": true,
+      "accepted_steps_are_separately_recorded_in_native_report": true
+    },
+    "accepted_roots": 32,
+    "requested_roots": 32,
+    "dt_s": 1.5625e-05,
+    "accepted_time_s": 0.0005,
+    "launcher_accepted_time_factor": 1.1837180753673118e-06,
+    "full_requested_horizon_pass": true,
+    "active_work_all_attempts": {
+      "used_columns_sum": 1232,
+      "cycles_with_work": 77,
+      "budget_exhausted_solves": 0
+    },
+    "active_work_accepted_roots": {
+      "used_columns_sum": 1232,
+      "cycles_with_work": 77,
+      "budget_exhausted_solves": 0
+    },
+    "body": {
+      "simulated_s": "0.00050000002374872565",
+      "wall_s": "209.19550295900001",
+      "real_time_factor": "2.3901088535670869e-06",
+      "physiology_body_clock": "matched",
+      "root_assistance": "false",
+      "presentation_qualification": "pending"
+    },
+    "coupled_trace": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/reference-edge-native-395/install-motion/resting-coupled.csv",
+      "bytes": 24569,
+      "sha256": "841e33d814506c0888247f6ac4f2641751b0cf0647bf84d09126f1456f92eeb3"
+    },
+    "failure": null,
+    "scope": "Short initialization transient, no supported-rest, sustained throughput or visual motion admission.",
+    "body_real_time_factor": 2.3901087400430133e-06
+  }
+]
