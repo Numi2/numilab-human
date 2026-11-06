@@ -1,0 +1,27 @@
+{
+  "reason": "Exclude exact11 transport-radius failure witnesses from failed native372; preserve all other repairs, rebuild existing CSR and repeat reference strain screen. Do not search or expand the batch.",
+  "source_proposal": "e1e6f4e5a3e32a4c6259d1bb983acef34b05de5bb08b397baf710a38b6665d0f",
+  "failed_native_execution": "9ae7696e8289969ff4b14c349110ad2f7cdc5277bc51bf8b5f70cebb8268ddb6",
+  "native_admission_thresholds_unchanged": true,
+  "physical_admission": false,
+  "stages": [
+    {
+      "name": "witnessed-subset",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/filter_human_cavities_from_native_witness.py",
+        "--proposal-report",
+        "/Users/numi/Work/human-integrated-gaps-20261104/conditioned-cavities-371/proposal/report.json",
+        "--report-sha256",
+        "e1e6f4e5a3e32a4c6259d1bb983acef34b05de5bb08b397baf710a38b6665d0f",
+        "--native-dir",
+        "/Users/numi/Work/human-integrated-gaps-20261104/conditioned-cavity-native-372",
+        "--execution-sha256",
+        "9ae7696e8289969ff4b14c349110ad2f7cdc5277bc51bf8b5f70cebb8268ddb6",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/conditioned-cavities-subset-373/proposal"
+      ],
+      "source_sha256": "b94f98d307099b62521991d91c98dda3c3d8c058b0a468b8fbe39c865a17514a"
+    }
+  ]
+}
