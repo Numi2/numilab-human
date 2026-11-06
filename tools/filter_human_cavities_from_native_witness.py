@@ -46,11 +46,12 @@ def run(a):
  spec=importlib.util.spec_from_file_location("replay_deformation",owner);mesh=importlib.util.module_from_spec(spec);spec.loader.exec_module(mesh)
  ref=report["input"]["reference"];u,rr=mesh.load_reference_deformation(Path(ref["path"]),ref["sha256"],p,t,labels)
  gate=mesh.ReferenceDeformationGate(p,t,u,labels[:,1],rr)
+ growth=sum(max(0,len(patch["new_cells"])-len(patch["old_rows"])) for patch in patches)
+ if growth:m.reserve_reference_expansion(gate,growth)
  for patch in patches:
-  rows=np.array(patch["old_rows"]);new=np.array(patch["new_cells"]);padded=t[rows].copy();padded[:len(new)]=new;live=np.arange(len(rows))<len(new)
-  proposal=gate.propose(rows,padded,live)
+  proposal=m.propose_reference_patch(gate,t,np.array(patch["old_rows"]),np.array(patch["new_cells"]))
   if proposal is None:raise ValueError("subset violates reference-deformation gate")
-  gate.commit(rows,live,proposal)
+  gate.commit(*proposal)
  a.output.mkdir(parents=True,exist_ok=False);out=a.output/"fixed-boundary-volume-proposal.npz"
  np.savez_compressed(out,**m.cavity_payload(report["input"]["volume"]["sha256"],len(t),patches))
  report.update(patches=patches,passing_cavities=len(patches),output=pin(out),reference_deformation=gate.report(),

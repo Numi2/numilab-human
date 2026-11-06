@@ -131,6 +131,21 @@ def propose_expanded_reference(gate, rows, new):
  return None
 
 
+def propose_reference_patch(gate, cells, rows, new):
+ """Share the unchanged strain gate for shrinking and expanding cavities."""
+ rows=np.asarray(rows);new=np.asarray(new);cells=np.asarray(cells)
+ if (rows.ndim!=1 or rows.dtype.kind not in 'iu' or
+     not 2<=len(rows)<=NATIVE_MAX_CAVITY_PARENTS or len(np.unique(rows))!=len(rows) or
+     np.any(rows<0) or np.any(rows>=len(cells)) or new.ndim!=2 or new.shape[1]!=4 or
+     new.dtype.kind not in 'iu' or not 2<=len(new)<=NATIVE_MAX_REPLACEMENT_CELLS or
+     np.any(new<0) or np.any(new>=len(gate.p))):
+  raise ValueError('invalid bounded reference patch domain')
+ if len(new)>len(rows):return propose_expanded_reference(gate,rows,new)
+ padded=cells[rows].copy();padded[:len(new)]=new;live=np.arange(len(rows))<len(new)
+ proposal=gate.propose(rows,padded,live)
+ return None if proposal is None else (rows,live,proposal)
+
+
 def run(a):
  start=time.monotonic();a.output.mkdir(parents=True,exist_ok=False)
  for path,digest in [(a.volume,a.volume_sha256),(a.reference,a.reference_sha256),(a.mass_csv,a.mass_sha256),(a.mass_parity,a.mass_parity_sha256),(a.mass_receipt,a.mass_receipt_sha256)]:
@@ -206,14 +221,9 @@ def run(a):
    if not ok:reject["exact_"+why]+=1;continue
    density=float(mass[rows].sum()/(od.sum()/6));bounds={15:(900.,1100.),16:(850.,950.)}.get(int(labels[rows[0],0]))
    if bounds is None or density<bounds[0]-64*np.finfo(float).eps*bounds[1] or density>bounds[1]+64*np.finfo(float).eps*bounds[1]:reject["density"]+=1;continue
-   if len(new)>len(old):
-    expanded=propose_expanded_reference(gate,rows,new)
-    if expanded is None:reject["reference_deformation"]+=1;continue
-    reference_rows,live,deformation=expanded
-   else:
-    reference_rows=rows;padded=old.copy();padded[:len(new)]=new;live=np.arange(len(old))<len(new)
-    deformation=gate.propose(rows,padded,live)
-    if deformation is None:reject["reference_deformation"]+=1;continue
+   accepted_reference=propose_reference_patch(gate,t,rows,new)
+   if accepted_reference is None:reject["reference_deformation"]+=1;continue
+   reference_rows,live,deformation=accepted_reference
    gate.commit(reference_rows,live,deformation);used.update(nodes);cell_growth+=max(0,len(new)-len(old))
    patches.append(dict(old_rows=rows.tolist(),new_cells=new.tolist(),removed_edge=[d,e] if method=="edge" else None,ring=ring,method=method,star_anchor=int(d) if method=="star" else None,
     material=int(labels[rows[0],0]),donor=int(labels[rows[0],1]),region=int(labels[rows[0],2]),

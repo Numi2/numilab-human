@@ -150,3 +150,32 @@ def test_expansion_capacity_and_region_checks_are_mandatory():
  with pytest.raises(ValueError,match='regions'):m.propose_expanded_reference(gate,np.arange(5),new)
  assert gate.expansion_used==0
  with pytest.raises(ValueError,match='domain'):m.propose_expanded_reference(gate,[0,0],new)
+
+
+def test_shared_reference_replay_handles_growth_and_shrinkage_without_source_mutation():
+ p,old,new,u,mesh=expanded_fixture()
+ for source,target in [(old,new),(new,old),(old,old)]:
+  gate=mesh.ReferenceDeformationGate(p,source,u,np.full(len(source),7),{})
+  baseline=gate.base[7].copy();snapshot=source.copy();growth=max(0,len(target)-len(source))
+  if growth:m.reserve_reference_expansion(gate,growth)
+  proposal=m.propose_reference_patch(gate,source,np.arange(len(source)),target)
+  assert proposal is not None;gate.commit(*proposal)
+  np.testing.assert_allclose(gate.current[7],baseline,rtol=1e-13)
+  np.testing.assert_array_equal(source,snapshot)
+  assert np.count_nonzero(gate.vol)==len(target)
+  assert sum(gate.vol)==pytest.approx(sum(mesh.measure(p,source)[0])/6,rel=1e-13)
+
+
+def test_shared_reference_replay_rejects_nonaffine_growth_and_preserves_gate():
+ p,old,new,u,mesh=expanded_fixture();u[0,2]+=.2
+ gate=mesh.ReferenceDeformationGate(p,old,u,np.full(len(old),7),{});m.reserve_reference_expansion(gate,1)
+ before=[x.copy() for x in (gate.norm,gate.vol,gate.regions,gate.rows[7])]
+ assert m.propose_reference_patch(gate,old,np.arange(len(old)),new) is None
+ assert gate.expansion_used==0
+ for a,b in zip(before,(gate.norm,gate.vol,gate.regions,gate.rows[7])):np.testing.assert_array_equal(a,b)
+
+
+@pytest.mark.parametrize('bad_rows',[[0,0],[0,5],[-1,1],[0.,1.]])
+def test_shared_reference_replay_checks_original_source_domain(bad_rows):
+ p,old,new,u,mesh=expanded_fixture();gate=mesh.ReferenceDeformationGate(p,old,u,np.full(len(old),7),{})
+ with pytest.raises(ValueError,match='domain'):m.propose_reference_patch(gate,old,bad_rows,new)

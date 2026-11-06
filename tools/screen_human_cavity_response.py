@@ -221,6 +221,8 @@ def run(a):
   ref=r["input"]["reference"]
   field,receipt=mesh.load_reference_deformation(Path(ref["path"]),ref["sha256"],p,t,labels)
   gate=mesh.ReferenceDeformationGate(p,t,field,labels[:,1],receipt)
+  growth=sum(max(0,len(patch["new_cells"])-len(patch["old_rows"])) for patch in r["patches"])
+  if growth:builder.reserve_reference_expansion(gate,growth)
   force_reference=regional_force_change(np.arange(len(p)),native_force,z["region"][ni],free)
   budget=RegionalResponseBudget(force_reference,{k:v["energy_J"] for k,v in base.items()})
   kept=[];excluded=[];indices=[];response_rejections=[]
@@ -234,10 +236,9 @@ def run(a):
    if response_proposal is None:
     excluded.append(index);response_rejections.append(dict(index=index,failures=failures));continue
    rr=np.array(patch["old_rows"]);new=np.array(patch["new_cells"])
-   padded=t[rr].copy();padded[:len(new)]=new;live=np.arange(len(rr))<len(new)
-   accepted=gate.propose(rr,padded,live)
+   accepted=builder.propose_reference_patch(gate,t,rr,new)
    if accepted is None:excluded.append(index);continue
-   gate.commit(rr,live,accepted);budget.commit(response_proposal);kept.append(patch);indices.append(index)
+   gate.commit(*accepted);budget.commit(response_proposal);kept.append(patch);indices.append(index)
   if not kept:raise ValueError("no cavities pass the unchanged reference gate")
   payload=a.output/"fixed-boundary-volume-proposal.npz"
   np.savez_compressed(payload,**builder.cavity_payload(r["input"]["volume"]["sha256"],len(t),kept))

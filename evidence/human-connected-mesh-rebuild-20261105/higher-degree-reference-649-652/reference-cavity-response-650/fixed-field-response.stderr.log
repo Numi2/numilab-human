@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-checkpoint-owner-20261105/tools/screen_human_cavity_response.py", line 269, in <module>
+    ap.add_argument("--output",type=Path,required=True);run(ap.parse_args())
+                                                        ~~~^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/human-checkpoint-owner-20261105/tools/screen_human_cavity_response.py", line 237, in run
+    padded=t[rr].copy();padded[:len(new)]=new;live=np.arange(len(rr))<len(new)
+                        ~~~~~~^^^^^^^^^^^
+ValueError: could not broadcast input array from shape (6,4) into shape (5,4)
