@@ -1,0 +1,266 @@
+{
+  "allocation": "NOT_NATIVE_EXECUTED",
+  "candidate": {
+    "child_mesh_sha256": "8503ecb41d97389f75f88a8b30103d8baf3bf5137b75e40093dd13a172b99bfa",
+    "child_node_count": 311020,
+    "child_tetrahedron_count": 1448830,
+    "coordinate_frame_sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "current_state": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-prefix/verified-state.json",
+      "sha256": "42c235ad9b107d20fbc2a4400ecc6407f9c74ede933d1c892abffd35f6955dc8"
+    },
+    "fat_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/canonical/fat-canonical-parent-union.npz",
+      "sha256": "9bb7592429473232077d8d7f74d73dd8948e6c252b4e1af3594b1932024a1b31"
+    },
+    "mass_transport_envelope": {
+      "exact_decimal": "0.187444",
+      "input_sha256": {
+        "candidate": "dad634c5f2511664383485c4faa9c272bf310b14be216ce84a574dc2f5516416",
+        "child_element": "3a3b26d3731b02cc15af34e4c732b6b595e09a0e00723f70d95ebf1e0c8b0252",
+        "child_labels": "a8a62802009336689d3845febf98d10a88d65bccd09ca31a625fb23258de33e7",
+        "child_node": "8f0de2dcd222b753db428efcddbe0c96f2faa7c46de1f89621abefbaa13ba50b",
+        "coordinate_frame": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "geometry_fat": "9bb7592429473232077d8d7f74d73dd8948e6c252b4e1af3594b1932024a1b31",
+        "geometry_skin": "678b4ae631d73a0e15366754f35b0131a683e500daa439ce002ef2ff4505dfdc",
+        "source330_labels": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+        "source330_mass": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+        "source330_nodes": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+        "source330_source": "8e2424901318f25caca1540aeca412ca779fc014f68f49fe0cb6c17fb5aa0c1f",
+        "source330_tets": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+        "state": "42c235ad9b107d20fbc2a4400ecc6407f9c74ede933d1c892abffd35f6955dc8"
+      },
+      "maximum_declared_source_centroid_distance_m": 0.1874423157229725,
+      "predeclared_transport_envelope_m": "0.187444",
+      "receipt": {
+        "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-admission/geometry-envelope.json",
+        "sha256": "32a37201785d366d20cf192570a3ed0a8a21b1ca408b736e942535cf3d1f2a51"
+      },
+      "rule_id": "ceil_max_declared_source_centroid_um_plus_1_floor_200",
+      "schema": "numi.human.mass-transport-envelope.v1"
+    },
+    "region_label_sha256": "a8a62802009336689d3845febf98d10a88d65bccd09ca31a625fb23258de33e7",
+    "skin_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/canonical/skin-canonical-parent-union.npz",
+      "sha256": "678b4ae631d73a0e15366754f35b0131a683e500daa439ce002ef2ff4505dfdc"
+    }
+  },
+  "claims": {
+    "all_material_density_bounds": true,
+    "mass_conservation_pass": true,
+    "mass_mapping_pass": true,
+    "regional_capacity_pass": true,
+    "transport_distance_bounds": true
+  },
+  "closure_tolerances": {
+    "carrier_barycentric_sum_absolute": 2e-12,
+    "carrier_first_moment_m": 1e-11,
+    "mass_absolute_kg": 1e-13,
+    "mass_relative": 1e-10,
+    "measure_absolute_m3": 1e-15
+  },
+  "density": {
+    "bounds_by_material": {
+      "15": {
+        "lower_kgm3": 900,
+        "upper_kgm3": 1100
+      },
+      "16": {
+        "lower_kgm3": 850,
+        "upper_kgm3": 950
+      }
+    },
+    "by_material": {
+      "15": {
+        "max_kgm3": 1100.0000000000002,
+        "min_kgm3": 899.9999999999997,
+        "within_bounds": true
+      },
+      "16": {
+        "max_kgm3": 950.0000000000002,
+        "min_kgm3": 849.9999999999998,
+        "within_bounds": true
+      }
+    },
+    "violation_count": 0
+  },
+  "input_sha256": {
+    "candidate_fat_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/canonical/fat-canonical-parent-union.npz",
+      "sha256": "9bb7592429473232077d8d7f74d73dd8948e6c252b4e1af3594b1932024a1b31"
+    },
+    "candidate_skin_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/canonical/skin-canonical-parent-union.npz",
+      "sha256": "678b4ae631d73a0e15366754f35b0131a683e500daa439ce002ef2ff4505dfdc"
+    },
+    "carrier_fat_packet": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-support/fat-source-carriers.npz",
+      "sha256": "709ccb5be21bd0c2754eef5b6e174f21a504ce7ed646134cc42158862e70ea6e"
+    },
+    "carrier_skin_packet": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-support/skin-source-carriers.npz",
+      "sha256": "b38d0b926782431d26c825c8814ac943f2ed2ffa81a8317e5e3b01f7b87b2057"
+    },
+    "carrier_witness_fat": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-support/fat-carrier-witnesses.csv.gz",
+      "sha256": "7ae070d92af8fc986dc7c0c932c11de73ba1d96694d349b2a6560db456fbc492"
+    },
+    "carrier_witness_skin": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-support/skin-carrier-witnesses.csv.gz",
+      "sha256": "a96f2ee1693a716fc633e70841f35556b4b6a0ce675fcd0c5af69b3de7090a98"
+    },
+    "child_fat_elements": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-export/volume/mesh.ele",
+      "sha256": "3a3b26d3731b02cc15af34e4c732b6b595e09a0e00723f70d95ebf1e0c8b0252"
+    },
+    "child_fat_labels": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-export/volume/child.labels.csv",
+      "sha256": "a8a62802009336689d3845febf98d10a88d65bccd09ca31a625fb23258de33e7"
+    },
+    "child_fat_node": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-export/volume/mesh.node",
+      "sha256": "8f0de2dcd222b753db428efcddbe0c96f2faa7c46de1f89621abefbaa13ba50b"
+    },
+    "child_skin_elements": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-export/volume/mesh.ele",
+      "sha256": "3a3b26d3731b02cc15af34e4c732b6b595e09a0e00723f70d95ebf1e0c8b0252"
+    },
+    "child_skin_labels": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-export/volume/child.labels.csv",
+      "sha256": "a8a62802009336689d3845febf98d10a88d65bccd09ca31a625fb23258de33e7"
+    },
+    "child_skin_node": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-export/volume/mesh.node",
+      "sha256": "8f0de2dcd222b753db428efcddbe0c96f2faa7c46de1f89621abefbaa13ba50b"
+    },
+    "current_state": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/volume-prefix/verified-state.json",
+      "sha256": "42c235ad9b107d20fbc2a4400ecc6407f9c74ede933d1c892abffd35f6955dc8"
+    },
+    "p1_fat_support": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/p1-Fat/fat-current-p1-143-support.npz",
+      "sha256": "8c06c22842ac60da20e54d75bce3c67a1c67b1e7bc00dc34f21607f1b07f0cce"
+    },
+    "p1_skin_support": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/p1-Skin/skin-current-p1-143-support.npz",
+      "sha256": "cc3bc3a4a17dcf39316eaa110bae4dded68667883ff64ed458c73c82009f5459"
+    },
+    "projection_evidence": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-support/exact-projection-support.csv",
+      "sha256": "d8e21c6daea02c2e6d4e317896c73e50b9e8a344b1f9e4c0833ffc39750f74a7"
+    },
+    "projection_report": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-admission/projection-report.json",
+      "sha256": "cb95d6e853231f8491f5accb5a1b3321c088c529e8348c04e7e885c801960c04"
+    },
+    "source330_labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "source330_mass": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "source330_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "source330_tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    },
+    "source_centroid_slots": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-support/source-centroid-slots.csv",
+      "sha256": "deef2c6261f099187918ae26c1b60cdd7674b832805eb9488fff01d1fb43fede"
+    }
+  },
+  "native_steps": 0,
+  "output_sha256": {
+    "carrier_trace": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-allocation/allocator-output/carrier-trace.csv",
+      "sha256": "4346623f5d87e36a2f7feba7f6808cbe06fd2fc77dde9dc596e64bab64808286"
+    },
+    "flow": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-allocation/allocator-output/flow.csv",
+      "sha256": "c1c6b230fb45b0d00a6ececf5bd048d0a8c428a6cc6b431efb3eb0fe1065162c"
+    },
+    "semantic_groups": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-allocation/allocator-output/semantic-groups.csv",
+      "sha256": "fe4907d5408ffaa271a3d4e06c933b0f7b34fc9c2b93e884c0eb143af3ad3bf5"
+    },
+    "source_donors": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-allocation/allocator-output/source-donors.csv",
+      "sha256": "d49be4ea457681ee26b4556d0a63e4fd98f4512ad1ec254b55fd2efe9d91c5d5"
+    }
+  },
+  "physical_admission": false,
+  "replay": {
+    "flow_array_equality": true,
+    "max_child_fraction_sum_error": 4.440892098500626e-16,
+    "max_parent_mass_closure_abs_kg": 7.17958678619901e-16,
+    "max_parent_measure_closure_abs_m3": 7.979050363135509e-19,
+    "max_source_donor_closure_abs_kg": 6.794564910705958e-14,
+    "max_transport_distance_used_m": 0.1874439969916807,
+    "result_sha256": "1c6eaba76e55d8b89d67a3e9f17ac30b9a17dccd96f0e9dc6dc8ad729031a495",
+    "status": "PASS_DETERMINISTIC_REPLAY"
+  },
+  "schema": "numi.human.current-fractional-semantic-mass-mapping.v1",
+  "semantic_group_rows": {
+    "count": 1522275,
+    "csv": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-allocation/allocator-output/semantic-groups.csv",
+      "sha256": "fe4907d5408ffaa271a3d4e06c933b0f7b34fc9c2b93e884c0eb143af3ad3bf5"
+    },
+    "exact_tuple_membership_checked": true,
+    "max_group_mass_closure_abs_kg": 3.68594044175552e-14,
+    "max_shared_child_capacity_violation_kg": 1.734723475976807e-18
+  },
+  "solver": {
+    "augmentation_count": 1791016,
+    "elapsed_s": 240.6441035,
+    "mapping_path_sha256": "0cbe70caff4b66e458e227d2a028e52c6e54c501396d5aecea7ffd0a918a754d",
+    "method": "deterministic_dinic_feasibility",
+    "optimality_certified": false,
+    "postsolve_rescaling": false,
+    "scale_factor": 1.0,
+    "status": "PASS_FEASIBLE_NOT_OPTIMAL",
+    "transport_edge_count": 1606844,
+    "transport_receipt_sha256": "1c6eaba76e55d8b89d67a3e9f17ac30b9a17dccd96f0e9dc6dc8ad729031a495"
+  },
+  "source330": {
+    "labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "mass_packet": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "parent_count": 28632,
+    "parent_source_contributions": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.source.csv",
+      "sha256": "8e2424901318f25caca1540aeca412ca779fc014f68f49fe0cb6c17fb5aa0c1f"
+    },
+    "source_donor_contribution_count": 9644,
+    "source_mass_kg": 13.939678963460478,
+    "tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "source_donor_rows": {
+    "count": 148,
+    "csv": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/compiler/mass-allocation/allocator-output/source-donors.csv",
+      "sha256": "d49be4ea457681ee26b4556d0a63e4fd98f4512ad1ec254b55fd2efe9d91c5d5"
+    },
+    "max_closure_abs_kg": 6.794564910705958e-14,
+    "source_donor_closure_group_count": 148
+  },
+  "status": "PASS_SOURCE_ONLY_REPLAY",
+  "transport_distance_limit_m": 0.187444
+}
