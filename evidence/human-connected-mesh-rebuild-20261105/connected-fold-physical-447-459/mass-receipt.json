@@ -1,0 +1,266 @@
+{
+  "allocation": "NOT_NATIVE_EXECUTED",
+  "candidate": {
+    "child_mesh_sha256": "ceb296cf206f059594904bbb62fb0f95f4f78a6c06ec62672b2a06785ec90423",
+    "child_node_count": 311021,
+    "child_tetrahedron_count": 1448838,
+    "coordinate_frame_sha256": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+    "current_state": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-prefix/verified-state.json",
+      "sha256": "4eaea79c9a70c927a419eac760255d61a390bd186937df7141fb73039ab990ba"
+    },
+    "fat_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/canonical/fat-canonical-parent-union.npz",
+      "sha256": "8c3da69233a1ee93662ac8ee5293576caf85f600c8aa79e6ebbf4a942451245b"
+    },
+    "mass_transport_envelope": {
+      "exact_decimal": "0.187444",
+      "input_sha256": {
+        "candidate": "bc2cd2755cf061c23168a375d522349b8938dd5f8b6e7e5fddc98d51ba09d469",
+        "child_element": "fa320bbc4185b3f680f7c12bcf56d64723961aa17cfa274f64e2a8ed20384e5f",
+        "child_labels": "1136d2c83ad2605c09391103726db632de86c640b0b650e1aacc76d00ae37efd",
+        "child_node": "cd236b12f843195487f796422d1ed9bd8e1cd1fc737d201bedc891c4d6cd7990",
+        "coordinate_frame": "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+        "geometry_fat": "8c3da69233a1ee93662ac8ee5293576caf85f600c8aa79e6ebbf4a942451245b",
+        "geometry_skin": "2b9b31bc116b2e11f646aa01231a8b95cb871f1049f04843767387a0368826a1",
+        "source330_labels": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+        "source330_mass": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679",
+        "source330_nodes": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044",
+        "source330_source": "8e2424901318f25caca1540aeca412ca779fc014f68f49fe0cb6c17fb5aa0c1f",
+        "source330_tets": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992",
+        "state": "4eaea79c9a70c927a419eac760255d61a390bd186937df7141fb73039ab990ba"
+      },
+      "maximum_declared_source_centroid_distance_m": 0.1874423157229725,
+      "predeclared_transport_envelope_m": "0.187444",
+      "receipt": {
+        "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-admission/geometry-envelope.json",
+        "sha256": "4dcce1b2692f912be8a9cf5bb59a83bdd0d79d352d0a087c112e9b52e8106381"
+      },
+      "rule_id": "ceil_max_declared_source_centroid_um_plus_1_floor_200",
+      "schema": "numi.human.mass-transport-envelope.v1"
+    },
+    "region_label_sha256": "1136d2c83ad2605c09391103726db632de86c640b0b650e1aacc76d00ae37efd",
+    "skin_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/canonical/skin-canonical-parent-union.npz",
+      "sha256": "2b9b31bc116b2e11f646aa01231a8b95cb871f1049f04843767387a0368826a1"
+    }
+  },
+  "claims": {
+    "all_material_density_bounds": true,
+    "mass_conservation_pass": true,
+    "mass_mapping_pass": true,
+    "regional_capacity_pass": true,
+    "transport_distance_bounds": true
+  },
+  "closure_tolerances": {
+    "carrier_barycentric_sum_absolute": 2e-12,
+    "carrier_first_moment_m": 1e-11,
+    "mass_absolute_kg": 1e-13,
+    "mass_relative": 1e-10,
+    "measure_absolute_m3": 1e-15
+  },
+  "density": {
+    "bounds_by_material": {
+      "15": {
+        "lower_kgm3": 900,
+        "upper_kgm3": 1100
+      },
+      "16": {
+        "lower_kgm3": 850,
+        "upper_kgm3": 950
+      }
+    },
+    "by_material": {
+      "15": {
+        "max_kgm3": 1100.0000000000002,
+        "min_kgm3": 899.9999999999997,
+        "within_bounds": true
+      },
+      "16": {
+        "max_kgm3": 950.0000000000002,
+        "min_kgm3": 849.9999999999998,
+        "within_bounds": true
+      }
+    },
+    "violation_count": 0
+  },
+  "input_sha256": {
+    "candidate_fat_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/canonical/fat-canonical-parent-union.npz",
+      "sha256": "8c3da69233a1ee93662ac8ee5293576caf85f600c8aa79e6ebbf4a942451245b"
+    },
+    "candidate_skin_volume": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/canonical/skin-canonical-parent-union.npz",
+      "sha256": "2b9b31bc116b2e11f646aa01231a8b95cb871f1049f04843767387a0368826a1"
+    },
+    "carrier_fat_packet": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-support/fat-source-carriers.npz",
+      "sha256": "82417fa5d947d0d912b36116109de869a2ac95ca9167e30991f0f81ddf773129"
+    },
+    "carrier_skin_packet": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-support/skin-source-carriers.npz",
+      "sha256": "c5c796443e7576dd1408b234e6689ab80b6b4698dde977a5c31de92ff142ad45"
+    },
+    "carrier_witness_fat": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-support/fat-carrier-witnesses.csv.gz",
+      "sha256": "b16b9be4a6ad344c93ae6c671279decfcbad34be411c4d3f3ad6e2a3433eccf7"
+    },
+    "carrier_witness_skin": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-support/skin-carrier-witnesses.csv.gz",
+      "sha256": "58afa51e3c16f03146b7dd21e37e13d2f63c5e793ea8ce97c8046853ed02c04b"
+    },
+    "child_fat_elements": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-export/volume/mesh.ele",
+      "sha256": "fa320bbc4185b3f680f7c12bcf56d64723961aa17cfa274f64e2a8ed20384e5f"
+    },
+    "child_fat_labels": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-export/volume/child.labels.csv",
+      "sha256": "1136d2c83ad2605c09391103726db632de86c640b0b650e1aacc76d00ae37efd"
+    },
+    "child_fat_node": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-export/volume/mesh.node",
+      "sha256": "cd236b12f843195487f796422d1ed9bd8e1cd1fc737d201bedc891c4d6cd7990"
+    },
+    "child_skin_elements": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-export/volume/mesh.ele",
+      "sha256": "fa320bbc4185b3f680f7c12bcf56d64723961aa17cfa274f64e2a8ed20384e5f"
+    },
+    "child_skin_labels": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-export/volume/child.labels.csv",
+      "sha256": "1136d2c83ad2605c09391103726db632de86c640b0b650e1aacc76d00ae37efd"
+    },
+    "child_skin_node": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-export/volume/mesh.node",
+      "sha256": "cd236b12f843195487f796422d1ed9bd8e1cd1fc737d201bedc891c4d6cd7990"
+    },
+    "current_state": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/volume-prefix/verified-state.json",
+      "sha256": "4eaea79c9a70c927a419eac760255d61a390bd186937df7141fb73039ab990ba"
+    },
+    "p1_fat_support": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/p1-Fat/fat-current-p1-143-support.npz",
+      "sha256": "009c253a0a9d35d0155fa2116825e8e75c403af8b634becb4e43468eb1f28405"
+    },
+    "p1_skin_support": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/p1-Skin/skin-current-p1-143-support.npz",
+      "sha256": "2eab3a51d46297009b7400432759ba64f16f41faccfb86036b6f25340e7a84dd"
+    },
+    "projection_evidence": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-support/exact-projection-support.csv",
+      "sha256": "37713245028a66137f2fc72fc0f63d2808a4efc94fa8bb3c3061d70274275556"
+    },
+    "projection_report": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-admission/projection-report.json",
+      "sha256": "722e3bf2b226e021cbe05b42ebfc0a14c9b578f2e7c3fc73370b507cbcdde81b"
+    },
+    "source330_labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "source330_mass": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "source330_nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "source330_tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    },
+    "source_centroid_slots": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-support/source-centroid-slots.csv",
+      "sha256": "d73329feade35bcbf7c7b2493683b52d9ed8bf698107d6c1a929b069bbcd9dcb"
+    }
+  },
+  "native_steps": 0,
+  "output_sha256": {
+    "carrier_trace": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-allocation/allocator-output/carrier-trace.csv",
+      "sha256": "fc90aff53b494e9460e17c575520643e95f62e627b28128f79709bf15d60a4ca"
+    },
+    "flow": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-allocation/allocator-output/flow.csv",
+      "sha256": "c422419a598cd9ba21c7f6c3785070cbdd1d3c750d4fb94faa63061e3b4d0d01"
+    },
+    "semantic_groups": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-allocation/allocator-output/semantic-groups.csv",
+      "sha256": "e14a5c1bf9b457a0e5efe73d830c715f901c5ac95cf45208e57bbacc7134a47b"
+    },
+    "source_donors": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-allocation/allocator-output/source-donors.csv",
+      "sha256": "adc85b588cfaa7b470a35e5031376430cf3807fb71001c33778aaa3bceb20f1a"
+    }
+  },
+  "physical_admission": false,
+  "replay": {
+    "flow_array_equality": true,
+    "max_child_fraction_sum_error": 4.440892098500626e-16,
+    "max_parent_mass_closure_abs_kg": 7.17958678619901e-16,
+    "max_parent_measure_closure_abs_m3": 7.979050363135509e-19,
+    "max_source_donor_closure_abs_kg": 6.794564910705958e-14,
+    "max_transport_distance_used_m": 0.1874439969916807,
+    "result_sha256": "7e72dc983be3e2b6a2af8c9724b110bb13e8f44c32b5d92582f0d47d088ecc17",
+    "status": "PASS_DETERMINISTIC_REPLAY"
+  },
+  "schema": "numi.human.current-fractional-semantic-mass-mapping.v1",
+  "semantic_group_rows": {
+    "count": 1522283,
+    "csv": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-allocation/allocator-output/semantic-groups.csv",
+      "sha256": "e14a5c1bf9b457a0e5efe73d830c715f901c5ac95cf45208e57bbacc7134a47b"
+    },
+    "exact_tuple_membership_checked": true,
+    "max_group_mass_closure_abs_kg": 3.68594044175552e-14,
+    "max_shared_child_capacity_violation_kg": 1.734723475976807e-18
+  },
+  "solver": {
+    "augmentation_count": 1791024,
+    "elapsed_s": 241.854654334,
+    "mapping_path_sha256": "44364b254e77e94b9b128e0b13db07b7f8842df6901d14075168298bba878b3b",
+    "method": "deterministic_dinic_feasibility",
+    "optimality_certified": false,
+    "postsolve_rescaling": false,
+    "scale_factor": 1.0,
+    "status": "PASS_FEASIBLE_NOT_OPTIMAL",
+    "transport_edge_count": 1606852,
+    "transport_receipt_sha256": "7e72dc983be3e2b6a2af8c9724b110bb13e8f44c32b5d92582f0d47d088ecc17"
+  },
+  "source330": {
+    "labels": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.labels.csv",
+      "sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457"
+    },
+    "mass_packet": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv",
+      "sha256": "c7823c42d64a2154a34c87cc0d4d202f0d5256f79217e74f5f62bcf1d5b31679"
+    },
+    "nodes": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.nodes.csv",
+      "sha256": "7044051353d173b94143a4027ba7dcc468b221512b3f41d5819d27025b36d044"
+    },
+    "parent_count": 28632,
+    "parent_source_contributions": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.source.csv",
+      "sha256": "8e2424901318f25caca1540aeca412ca779fc014f68f49fe0cb6c17fb5aa0c1f"
+    },
+    "source_donor_contribution_count": 9644,
+    "source_mass_kg": 13.939678963460478,
+    "tets": {
+      "path": "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/native-physical-parent-mass-330/native-source-identity-control-003/compiled-parent-cell-mass.csv.tets.csv",
+      "sha256": "82e20067454748a9eca91bc6f06ab343677c051a139797ae051c64022bd87992"
+    }
+  },
+  "source_donor_rows": {
+    "count": 148,
+    "csv": {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-contact-fold-446/proposal/compiler/mass-allocation/allocator-output/source-donors.csv",
+      "sha256": "adc85b588cfaa7b470a35e5031376430cf3807fb71001c33778aaa3bceb20f1a"
+    },
+    "max_closure_abs_kg": 6.794564910705958e-14,
+    "source_donor_closure_group_count": 148
+  },
+  "status": "PASS_SOURCE_ONLY_REPLAY",
+  "transport_distance_limit_m": 0.187444
+}

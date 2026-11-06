@@ -1,0 +1,32 @@
+{
+  "status": "PASS_CONNECTED_FOLD_QUOTIENT_REPLAY_GEOMETRIC_BOUND",
+  "reference_surface_sha256": "7058ff33bb45004df1c10257d156d5884d5c8a7fa8122dde684fe2d7f544722b",
+  "candidate_surface_sha256": "8de8675b39b7f3a910fdbe7e10679c5797e4038eb1c10052a4653c1a171ad888",
+  "operations": [
+    {
+      "drop_source_row": 22782,
+      "keep_source_row": 22783,
+      "edge_length_m": 3.92330906990618e-06,
+      "removed_faces": 2,
+      "degenerate_images_are_existing_edges": true
+    },
+    {
+      "drop_source_row": 22783,
+      "keep_source_row": 22785,
+      "edge_length_m": 7.5126979140302195e-06,
+      "removed_faces": 2,
+      "degenerate_images_are_existing_edges": true
+    }
+  ],
+  "exact_final_outer_topology_replayed": true,
+  "all_surface_coordinates_fixed": true,
+  "unchanged_other_roles": {
+    "I": true,
+    "D": true
+  },
+  "maximum_additional_patch_hausdorff_bound_m": 1.1436006983936399e-05,
+  "old_contact_source_point22783_now_maps_to_target_vertex22785": true,
+  "physical_admission": false,
+  "native_steps": 0,
+  "proof": "Each edge contraction has an affine map on every original triangle whose displacement is bounded by edge length. Its degenerate images are existing final edges. The image equals the emitted surface, giving both directed distance bounds; compose the two bounds. Other patches retain the prior reference bound. This is reference geometry, not motion admission."
+}
