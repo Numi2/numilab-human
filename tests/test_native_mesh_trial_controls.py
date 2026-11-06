@@ -33,3 +33,10 @@ def test_runtime_mismatch_is_rejected():
 def test_controller_change_is_rejected():
  a=fixture();b=deepcopy(a);b['stages'][0]['environment']['BRAIN_ENABLED']='0'
  assert 'environment:BRAIN_ENABLED' in owner.control_differences(a,b)
+
+def test_fixed_cavity_geometry_is_allowed_but_solver_controls_are_not():
+ a=fixture();b=deepcopy(a)
+ b['stages'][0]['environment'].update(NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ='/new-geometry.npz',NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256='new-geometry')
+ assert owner.control_differences(a,b)==[]
+ b['stages'][0]['environment']['NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SOLVER_TOLERANCE']='0.1'
+ assert owner.control_differences(a,b)==['environment:NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SOLVER_TOLERANCE']

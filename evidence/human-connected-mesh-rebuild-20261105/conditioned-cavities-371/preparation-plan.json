@@ -1,0 +1,95 @@
+{
+  "question": "Can disjoint fixed-boundary interior edge cavity replacements improve shape conditioning while preserving current anatomy and reference strain, with all native conservative admission unchanged?",
+  "prediction": {
+    "boundary_displacement_m": 0,
+    "exact_oriented_boundary_and_volume": true,
+    "min_native_quality_after": 1e-05,
+    "minimum_native_quality_ratio": 1.02,
+    "regional_reference_strain_relative_limit": 0.05,
+    "spectral_maximum_nonworsening": true,
+    "timing_gain": "unmeasured hypothesis; not guaranteed"
+  },
+  "controls": {
+    "reference_trial": 365,
+    "native_runtime_unchanged": true,
+    "solver_controls_unchanged": true,
+    "physical_time_step_s": 1.5625e-05,
+    "planned_roots": 32,
+    "source_mass_and_density_and_transport_unchanged": true
+  },
+  "limits": {
+    "seconds": 180,
+    "maximum_seeds": 4096,
+    "maximum_cavities": 256,
+    "rss_gib": 8,
+    "disk_min_gib": 12,
+    "native_qualification_pending": true
+  },
+  "stages": [
+    {
+      "name": "conditioning-proposal",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/build_human_conditioned_cavities.py",
+        "--volume",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/rich433/candidate-current-typed-volume.npz",
+        "--reference",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365/install-motion.stdout.log.gz",
+        "--mass-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-targets/prescribed-child-mass.csv",
+        "--mass-parity",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/prescribed-parity.json",
+        "--mass-receipt",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/mass-receipt.json",
+        "--polygon-owner",
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_polygon_flip_202_root.py",
+        "--volume-sha256",
+        "d346e56adb8752cc8b266149b915855814123127c0648d8ab8cba7ae28909b82",
+        "--reference-sha256",
+        "fa62a0fb24b30e1d2d006e62beee4f794120d2f9d74b97ef2e6782def89017b2",
+        "--mass-sha256",
+        "886d02340019e4e86fbe6c03841dcd468f5634d03eb7395ebace4f3dbd88b264",
+        "--mass-parity-sha256",
+        "d0937dffec72860e1465c9b7cef0dc0bf76325738363f221b068733aee96c5cb",
+        "--mass-receipt-sha256",
+        "4ab62ccab9779278a374fac23e07f6557255283f6513e23cb78d6debb8e55af6",
+        "--polygon-sha256",
+        "a98fead7f9ac1bb408ad600df28375539200c289c6647e5c9b898c418236a196",
+        "--predicate-sha256",
+        "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+        "--mesh-owner-sha256",
+        "9795910faad8412b49067e905837d72b08efd9a18a8cba781e9dc40208dc75e4",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/conditioned-cavities-371/proposal",
+        "--seconds",
+        "180",
+        "--maximum-seeds",
+        "4096",
+        "--maximum-cavities",
+        "256",
+        "--condition-threshold",
+        "10000"
+      ],
+      "source_sha256": "c41595b69dd77771455f054531c9da32b6354e1c19a57563d15e4851e175c37a"
+    }
+  ],
+  "input_pins": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/rich433/candidate-current-typed-volume.npz": "d346e56adb8752cc8b266149b915855814123127c0648d8ab8cba7ae28909b82",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365/install-motion.stdout.log.gz": "fa62a0fb24b30e1d2d006e62beee4f794120d2f9d74b97ef2e6782def89017b2",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-targets/prescribed-child-mass.csv": "886d02340019e4e86fbe6c03841dcd468f5634d03eb7395ebace4f3dbd88b264",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/prescribed-parity.json": "d0937dffec72860e1465c9b7cef0dc0bf76325738363f221b068733aee96c5cb",
+    "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-batch-rebuild-364/proposal/compiler/mass-admission/mass-receipt.json": "4ab62ccab9779278a374fac23e07f6557255283f6513e23cb78d6debb8e55af6",
+    "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/fixed_boundary_volume_polygon_flip_202_root.py": "a98fead7f9ac1bb408ad600df28375539200c289c6647e5c9b898c418236a196"
+  },
+  "digests": {
+    "volume": "d346e56adb8752cc8b266149b915855814123127c0648d8ab8cba7ae28909b82",
+    "reference": "fa62a0fb24b30e1d2d006e62beee4f794120d2f9d74b97ef2e6782def89017b2",
+    "mass": "886d02340019e4e86fbe6c03841dcd468f5634d03eb7395ebace4f3dbd88b264",
+    "mass-parity": "d0937dffec72860e1465c9b7cef0dc0bf76325738363f221b068733aee96c5cb",
+    "mass-receipt": "4ab62ccab9779278a374fac23e07f6557255283f6513e23cb78d6debb8e55af6",
+    "polygon": "a98fead7f9ac1bb408ad600df28375539200c289c6647e5c9b898c418236a196",
+    "predicate": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+    "mesh-owner": "9795910faad8412b49067e905837d72b08efd9a18a8cba781e9dc40208dc75e4"
+  },
+  "physical_admission": false
+}

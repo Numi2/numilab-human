@@ -37,7 +37,7 @@ def control_differences(candidate_plan,control_plan):
  a=candidate_plan['stages'][0];b=control_plan['stages'][0]
  def canonical(stage):
   root=stage['argv'][4]
-  geometry=lambda k:k.startswith('NUMI_H706_FRACTIONAL_') or k.startswith('NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_')
+  geometry=lambda k:k.startswith('NUMI_H706_FRACTIONAL_') or k.startswith('NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_') or k in {'NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ','NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256'}
   def value(v):return '<OUTPUT>'+v[len(root):] if v.startswith(root) else v
   env={k:value(v) for k,v in stage['environment'].items() if not geometry(k)}
   argv=[value(v) for v in stage['argv']]
