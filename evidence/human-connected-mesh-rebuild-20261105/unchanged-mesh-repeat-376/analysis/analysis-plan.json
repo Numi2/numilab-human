@@ -1,0 +1,36 @@
+{
+  "stages": [
+    {
+      "name": "matched-telemetry",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compare_human_native_mesh_trials.py",
+        "--candidate-dir",
+        "/Users/numi/Work/human-integrated-gaps-20261104/unchanged-mesh-repeat-376",
+        "--control-dir",
+        "/Users/numi/Work/human-integrated-gaps-20261104/flat-cap-native-365",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/unchanged-mesh-repeat-376/compact-comparison.json"
+      ],
+      "source_sha256": "ab5254521e8d8f396f7f049d8ce8bd74088224cbfe7da475228ceb07a1bf35f0"
+    },
+    {
+      "name": "endpoint-force-strain",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/unchanged-repeat-analysis-377/compare_endpoint_376.py"
+      ],
+      "source_sha256": "3f2091239642495582357ba52b34071f8527d97a464006905e39a3fae6b762d8"
+    }
+  ],
+  "scope": "Same geometry numerical repeatability",
+  "gates": {
+    "force_relative": 0.01,
+    "regional_strain_relative": 0.05
+  },
+  "source_pins": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_remeshed_native_310.py": "0181dd99e2dc5c9c47c0e9c725d6762edee5dd41ca2bd4329f328e42a85d2902",
+    "/Users/numi/Work/human-integrated-gaps-20261104/compare_matched_deformation_339.py": "1469a76a268a9e57607b3d6697d33a627cbe41ad789d5fdd9dffc47140f26c4b",
+    "/Users/numi/Work/human-checkpoint-owner-20261105/tools/compare_human_native_mesh_trials.py": "ab5254521e8d8f396f7f049d8ce8bd74088224cbfe7da475228ceb07a1bf35f0"
+  }
+}

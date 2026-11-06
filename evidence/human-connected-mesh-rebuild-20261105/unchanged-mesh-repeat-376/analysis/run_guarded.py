@@ -1,0 +1,46 @@
+from pathlib import Path
+import json,subprocess,time,shutil,hashlib,sys
+W=Path('/Users/numi/Work/human-integrated-gaps-20261104');O=W/'unchanged-repeat-analysis-377'
+def sha(p):
+ with Path(p).open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
+def save(p,x):p.write_text(json.dumps(x,indent=2,sort_keys=True)+'\n')
+plan=json.loads((O/'analysis-plan.json').read_text())
+
+stages=[(s['name'],s['argv'][1:]) for s in plan['stages']]
+assert shutil.disk_usage(W).free>=12*2**30,'need12GiB before remaining receipt conversion'
+results=[]
+for name,args in stages:
+ stage=next(s for s in plan['stages'] if s['name']==name)
+ assert sha(args[0])==stage['source_sha256'],args[0]
+ assert shutil.disk_usage(W).free>=12*2**30
+ start=time.time();stop=None
+ with (O/(name+'.stdout.log')).open('w') as a,(O/(name+'.stderr.log')).open('w') as b,(O/(name+'.resources.jsonl')).open('w') as mon:
+  p=subprocess.Popen([sys.executable,*map(str,args)],stdout=a,stderr=b)
+  save(O/'compiler-active.json',{'pid':p.pid,'stage':name,'started_epoch':start})
+  while p.poll() is None:
+   # Include direct child compiler processes in the working-set guard.
+   rows=subprocess.run(['ps','-axo','pid=,ppid=,rss='],capture_output=True,text=True).stdout.splitlines()
+   values=[tuple(map(int,r.split())) for r in rows]
+   descendants={p.pid}
+   for _ in range(8):
+    added={pid for pid,parent,rss in values if parent in descendants};old=len(descendants);descendants|=added
+    if len(descendants)==old:break
+   rss=sum(rss for pid,parent,rss in values if pid in descendants)
+   free=shutil.disk_usage(W).free;elapsed=time.time()-start
+   mon.write(json.dumps({'elapsed_s':elapsed,'rss_kib':rss,'disk_free_bytes':free})+'\n');mon.flush()
+   if free<12*2**30 or rss>8*2**20 or elapsed>900:
+    stop='disk' if free<12*2**30 else 'rss' if rss>8*2**20 else 'time'
+    for pid in sorted(descendants,reverse=True):
+     try:__import__('os').kill(pid,15)
+     except ProcessLookupError:pass
+    try:p.wait(timeout=5)
+    except subprocess.TimeoutExpired:p.kill()
+    break
+   time.sleep(5)
+  code=p.wait()
+ result={'name':name,'exit_code':code,'guard_stop':stop,'wall_s':time.time()-start,'stdout_sha256':sha(O/(name+'.stdout.log')),'stderr_sha256':sha(O/(name+'.stderr.log'))}
+ results.append(result);save(O/'analysis-execution.json',{'stages':results,'physical_admission':False,'native_steps':0})
+ print(json.dumps(result),flush=True)
+ if code or stop:
+  print((O/(name+'.stderr.log')).read_text()[-3000:],flush=True);sys.exit(code or 1)
+print('SCREENED_COMPILER_PREPARATION_PASS_NATIVE_PENDING',flush=True)
