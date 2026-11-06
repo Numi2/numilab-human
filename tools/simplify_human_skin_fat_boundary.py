@@ -66,6 +66,15 @@ def uniform_typed_labels_by_material(labels):
   for material in np.unique(labels[:,0])
   for part in [labels[labels[:,0]==material]])
 
+def contraction_changed_rows(tetrahedra,star_rows,drop):
+ """Only dropped-vertex cells change connectivity, ancestry, or mass.
+
+ Keep-only neighbors remain in the link test and independence neighborhood.
+ They must not acquire a different donor, mass, or source parent in this repair.
+ """
+ rows=np.asarray(star_rows)
+ return rows[np.any(np.asarray(tetrahedra)[rows]==drop,axis=1)]
+
 def measure(p,t):
  x=p[t].astype(float);e=x[:,1:]-x[:,:1]
  det=np.einsum("ij,ij->i",np.cross(e[:,0],e[:,1]),e[:,2])
@@ -281,8 +290,39 @@ def unchanged_cavity_boundary(old,new):
  return oriented_tet_boundary(old)==oriented_tet_boundary(new)
 
 
+def match_reference_deformation(p,t,labels,nodes,globals_,cells,regions,displacements,require_same_donor=True):
+ """Match exact compiler compaction, never coordinate-nearest correspondence.
+
+ Unused master rows get zero displacement; no source cell references those rows.
+ Every active row, ordered tetrahedron and typed donor must match the capture.
+ """
+ p=np.asarray(p,np.float32);t=np.asarray(t);nodes=np.asarray(nodes,np.float32)
+ active=np.unique(t)
+ if len(nodes)==len(p):
+  rows=np.arange(len(p),dtype=np.int64);method="exact_full_source_order"
+ elif len(nodes)==len(active):
+  rows=active;method="exact_sorted_active_source_order"
+ else:raise ValueError("reference source node count mismatch")
+ if not len(rows) or nodes.shape!=p[rows].shape or not np.array_equal(nodes,p[rows]):raise ValueError("reference source node order/coordinates mismatch")
+ globals_=np.asarray(globals_,np.int64)
+ if globals_.shape!=(len(rows),) or not np.array_equal(globals_,np.arange(globals_[0],globals_[0]+len(rows))):raise ValueError("reference source nodes must be contiguous")
+ inverse=np.full(len(p),-1,np.int64);inverse[rows]=np.arange(len(rows))
+ native_cells=np.asarray(cells,np.int64)-globals_[0];source_cells=inverse[t]
+ if native_cells.shape!=source_cells.shape:raise ValueError("reference source cell count mismatch")
+ source_order=np.lexsort(source_cells.T[::-1]);native_order=np.lexsort(native_cells.T[::-1])
+ if (not np.array_equal(source_cells[source_order],native_cells[native_order]) or
+     np.any(np.all(source_cells[source_order][1:]==source_cells[source_order][:-1],axis=1))):raise ValueError("reference source connectivity mismatch or duplicate cells")
+ native_regions=np.asarray(regions)
+ if native_regions.shape!=(len(t),):raise ValueError("reference cell labels have wrong size")
+ donor_disagreements=np.flatnonzero(native_regions[native_order]!=labels[source_order,1])
+ if require_same_donor and len(donor_disagreements):raise ValueError("reference source donor mismatch")
+ native_u=np.asarray(displacements,float)
+ if native_u.shape!=(len(rows),3) or not np.all(np.isfinite(native_u)):raise ValueError("nonfinite or invalid reference displacement")
+ u=np.zeros((len(p),3),float);u[rows]=native_u
+ return u,dict(method=method,source_rows=len(p),active_rows=len(active),captured_rows=len(rows),unused_rows=len(p)-len(active),source_row_sha256=hashlib.sha256(np.asarray(rows,dtype="<i8").tobytes()).hexdigest(),cell_order_sha256=hashlib.sha256(np.asarray(source_order,dtype="<i8").tobytes()).hexdigest(),native_cell_order_sha256=hashlib.sha256(np.asarray(native_order,dtype="<i8").tobytes()).hexdigest(),source_vs_capture_label_disagreements=len(donor_disagreements),same_donor_required=require_same_donor,label_disagreement_witnesses=[dict(source_cell=int(source_order[k]),capture_cell=int(native_order[k]),construction_donor=int(labels[source_order[k],1]),capture_reference_anchor=int(native_regions[native_order[k]])) for k in donor_disagreements[:32]])
+
 def load_reference_deformation(path, expected_sha, p, t, labels):
- """Read a pinned native endpoint; admit only the exact source node/cell order."""
+ """Read a pinned endpoint with exact topology and full or active-row order."""
  import gzip
  if sha(path)!=expected_sha:raise ValueError("reference endpoint SHA mismatch")
  nodes=[];u=[];globals_=[];cells=[];regions=[];header=None;closed=False;body=False
@@ -304,12 +344,12 @@ def load_reference_deformation(path, expected_sha, p, t, labels):
    elif "resting_FEM_endpoint_capture=end" in line:closed=True
    elif "resting_integrated_body=completed " in line:body=True
  if not header or not closed or not body or header.get("coordinate_unit")!="m" or header.get("strain_unit")!="1":raise ValueError("incomplete or wrong-unit reference endpoint")
- if len(nodes)!=len(p) or not np.array_equal(np.asarray(nodes,np.float32),p):raise ValueError("reference source node order/coordinates mismatch")
- if globals_!=list(range(globals_[0],globals_[0]+len(p))):raise ValueError("reference source nodes must be contiguous")
- if not np.array_equal(np.asarray(cells,np.int64)-globals_[0],t) or not np.array_equal(regions,labels[:,1]):raise ValueError("reference source cell order/regions mismatch")
- u=np.asarray(u,float)
- if not np.all(np.isfinite(u)):raise ValueError("nonfinite reference displacement")
- return u,dict(path=str(path),sha256=expected_sha,header=header,exact_source_nodes=len(p),exact_source_cells=len(t),native_capture_region_semantics="geometric_donor_body (legacy capture key anatomical_region_id)")
+ # The native capture reports the P1 selected semantic/reference anchor.
+ # rich433 explicitly declares it is not exact geometric cell ancestry.
+ # Match the pinned kinematics by exact nodes and ordered connectivity; group
+ # the strain screen by the independently authenticated construction donor.
+ u,mapping=match_reference_deformation(p,t,labels,nodes,globals_,cells,regions,u,require_same_donor=False)
+ return u,dict(path=str(path),sha256=expected_sha,header=header,exact_source_nodes=len(nodes),exact_source_cells=len(t),node_mapping=mapping,native_capture_region_semantics="P1 selected semantic/reference anchor (legacy capture key anatomical_region_id); not geometric cell ancestry",screen_region_semantics="authenticated construction geometric_donor_body",source_ancestry_admission="separate exact resume/source CSR checks; capture labels never replace them")
 
 class ReferenceDeformationGate:
  """Initialization-only strain screen. No material-energy or motion admission."""
@@ -361,7 +401,8 @@ class ReferenceDeformationGate:
 
 
 def main():
- ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--max-operations",type=int,default=2048);ap.add_argument("--maximum-edge-m",type=float,default=.0001);ap.add_argument("--replay-report",type=Path);ap.add_argument("--exclude-operation-rows",type=Path);ap.add_argument("--reference-flow-csv",type=Path);ap.add_argument("--reference-flow-sha256");ap.add_argument("--boundary-contact-edge",nargs=2,type=int,action="append",default=[],metavar=("DROP","KEEP"));ap.add_argument("--passes",type=int,default=1);ap.add_argument("--bone-barriers",action="store_true");ap.add_argument("--interior-only",action="store_true");ap.add_argument("--attachment-requests-csv",type=Path);ap.add_argument("--attachment-requests-sha256");ap.add_argument("--reference-endpoint-capture",type=Path);ap.add_argument("--reference-endpoint-sha256");ap.add_argument("--resume-proposal",type=Path);ap.add_argument("--resume-sha256");ap.add_argument("--resume-cell-mass-csv",type=Path);ap.add_argument("--resume-cell-mass-sha256");a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument("--output",type=Path,required=True);ap.add_argument("--seconds",type=float,default=180);ap.add_argument("--max-operations",type=int,default=2048);ap.add_argument("--maximum-edge-m",type=float,default=.0001);ap.add_argument("--replay-report",type=Path);ap.add_argument("--exclude-operation-rows",type=Path);ap.add_argument("--reference-flow-csv",type=Path);ap.add_argument("--reference-flow-sha256");ap.add_argument("--boundary-contact-edge",nargs=2,type=int,action="append",default=[],metavar=("DROP","KEEP"));ap.add_argument("--passes",type=int,default=1);ap.add_argument("--bone-barriers",action="store_true");ap.add_argument("--interior-only",action="store_true");ap.add_argument("--changed-star-only",action="store_true");ap.add_argument("--attachment-requests-csv",type=Path);ap.add_argument("--attachment-requests-sha256");ap.add_argument("--reference-endpoint-capture",type=Path);ap.add_argument("--reference-endpoint-sha256");ap.add_argument("--resume-proposal",type=Path);ap.add_argument("--resume-sha256");ap.add_argument("--resume-cell-mass-csv",type=Path);ap.add_argument("--resume-cell-mass-sha256");a=ap.parse_args()
+ if a.changed_star_only and not a.interior_only:raise ValueError("changed-star mass routing requires exact fixed-boundary interior repair")
  if a.boundary_contact_edge and (a.interior_only or not a.replay_report):raise ValueError("boundary contact repairs require an explicit surface replay")
  if bool(a.reference_endpoint_capture)!=bool(a.reference_endpoint_sha256):raise ValueError("reference endpoint path/SHA must be paired")
  if a.reference_endpoint_capture and not a.interior_only:raise ValueError("reference deformation screening requires fixed interior-only coordinates")
@@ -522,12 +563,15 @@ def main():
    if nodes&used or (not a.interior_only and (u in protected or v in protected)):reject["protected_or_dependent"]+=1;continue
    if not len(rows):reject["inactive_replay_edge"]+=1;continue
    if len(rows)>256:reject["unbounded_star"]+=1;continue
-   if not uniform_typed_labels_by_material(labs[rows]):reject["donor_or_region_interface"]+=1;continue
+   if not a.changed_star_only and not uniform_typed_labels_by_material(labs[rows]):reject["donor_or_region_interface"]+=1;continue
    if link(t[rows],[u])&link(t[rows],[v])!=link(t[rows],[u,v]):reject["volume_link"]+=1;continue
    directions=([(u,v)] if replay_directions else [(u,v),(v,u)])
    if a.interior_only:
     directions=[e for e in directions if e in interior_contraction_directions(u,v,fixed_nodes,protected)]
+   star_rows=rows
    for drop,keep in directions:
+    rows=contraction_changed_rows(t,star_rows,drop) if a.changed_star_only else star_rows
+    if not uniform_typed_labels_by_material(labs[rows]):reject["changed_cavity_donor_or_region_interface"]+=1;continue
     n=t[rows].copy();n[n==drop]=keep;live=~np.any(np.diff(np.sort(n,axis=1),axis=1)==0,axis=1)
     nd,nq=measure(p,n[live])
     if not len(nd) or np.any((nd/6<=1e-18)|(nq<np.float32(1e-5))):reject["native_cell_quality"]+=1;continue
@@ -620,7 +664,7 @@ def main():
    if r in op["roles"]:quotient[reverse[op["drop"]]]=reverse[op["keep"]]
   payload["source_input_vertex_quotient"]=quotient_closure(quotient)
   np.savez_compressed(a.output/f"candidate-{r}-typed-current.npz",**payload)
- report=dict(boundary_contact_edges=[list(e) for e in sorted(contact_repair_edges)],interior_only=a.interior_only,actual_and_typed_boundary_nodes_fixed=(len(fixed_nodes) if a.interior_only else None),typed_surface_faces_unchanged=bool(a.interior_only),status="JOINT_BOUNDARY_VOLUME_PROPOSAL_NOT_PHYSICAL_ADMISSION",physical_admission=False,native_steps=0,mass_mapping="PENDING",input_pins={str(x):sha(x) for x in [V,C,*S.values(),*resume_pins,a.output/"executed-runner.py",*([a.replay_report] if a.replay_report else []),*([a.exclude_operation_rows] if a.exclude_operation_rows else [])]},operations=ops,passes=passes,bone_barrier=bone_receipt,protected_attachment_requests=(dict(path=str(a.attachment_requests_csv),sha256=a.attachment_requests_sha256) if a.attachment_requests_csv else None),rejections=dict(reject),input_cells=len(t),output_cells=len(rows),input_nodes=len(p),active_output_nodes=len(np.unique(t[rows])),low_quality_cells_before=initial_low_quality_cells,low_quality_cells_after=int((q[rows]<.001).sum()),native_quality_failures=int(((det[rows]/6<=1e-18)|(q[rows]<np.float32(1e-5))).sum()),all_point_coordinates_unchanged=True,absolute_geometric_volume_change_m3=changed_volume,elapsed_s=time.monotonic()-start,remaining=["complete anatomical context including bones and containment","independent topology, F32, typed ancestry and volume checks","canonical parent and conservative source mass compiler","complete native scene comparison"])
+ report=dict(changed_star_only=a.changed_star_only,boundary_contact_edges=[list(e) for e in sorted(contact_repair_edges)],interior_only=a.interior_only,actual_and_typed_boundary_nodes_fixed=(len(fixed_nodes) if a.interior_only else None),typed_surface_faces_unchanged=bool(a.interior_only),status="JOINT_BOUNDARY_VOLUME_PROPOSAL_NOT_PHYSICAL_ADMISSION",physical_admission=False,native_steps=0,mass_mapping="PENDING",input_pins={str(x):sha(x) for x in [V,C,*S.values(),*resume_pins,a.output/"executed-runner.py",*([a.replay_report] if a.replay_report else []),*([a.exclude_operation_rows] if a.exclude_operation_rows else [])]},operations=ops,passes=passes,bone_barrier=bone_receipt,protected_attachment_requests=(dict(path=str(a.attachment_requests_csv),sha256=a.attachment_requests_sha256) if a.attachment_requests_csv else None),rejections=dict(reject),input_cells=len(t),output_cells=len(rows),input_nodes=len(p),active_output_nodes=len(np.unique(t[rows])),low_quality_cells_before=initial_low_quality_cells,low_quality_cells_after=int((q[rows]<.001).sum()),native_quality_failures=int(((det[rows]/6<=1e-18)|(q[rows]<np.float32(1e-5))).sum()),all_point_coordinates_unchanged=True,absolute_geometric_volume_change_m3=changed_volume,elapsed_s=time.monotonic()-start,remaining=["complete anatomical context including bones and containment","independent topology, F32, typed ancestry and volume checks","canonical parent and conservative source mass compiler","complete native scene comparison"])
  if cell_mass is not None:
   touched=np.unique(np.concatenate([np.asarray(o["source_cell_rows"],np.int64) for o in ops])) if ops else np.empty(0,np.int64)
   unchanged=np.ones(len(t),bool);unchanged[touched]=False

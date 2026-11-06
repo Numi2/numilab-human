@@ -1,0 +1,62 @@
+{
+  "stages": [
+    {
+      "name": "changed-cavity-rebuild",
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/strain-screened-interior-520/run_prepared.py",
+        "--output",
+        "/Users/numi/Work/human-integrated-gaps-20261104/strain-screened-interior-520/proposal",
+        "--seconds",
+        "180",
+        "--max-operations",
+        "5000",
+        "--passes",
+        "8",
+        "--maximum-edge-m",
+        "0.001",
+        "--interior-only",
+        "--changed-star-only",
+        "--resume-proposal",
+        "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-volume.npz",
+        "--resume-sha256",
+        "9e75ecbe86636616c18185cb8cc4f063810c1e2b5fe7b9c48122c26b49375740",
+        "--resume-cell-mass-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/local-child-mass-proposal.csv",
+        "--resume-cell-mass-sha256",
+        "0439c45ab8a948579539c50208ad3f55b1fe41bedad2e8838f89feb07f356331",
+        "--attachment-requests-csv",
+        "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv",
+        "--attachment-requests-sha256",
+        "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5",
+        "--reference-endpoint-capture",
+        "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz",
+        "--reference-endpoint-sha256",
+        "3ba3089d5a969ff90d57010bbf044846742d62e77d35e4214e313965b5f39ba7"
+      ],
+      "source_sha256": "fe01201ae704e397f6f9c690e2c692385c40a612af4c7e42b638adfe9fa7c5b0"
+    }
+  ],
+  "input_pins": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/strain-screened-interior-520/compiler-source.py": "70562ce6b14b075e97f2055152cc1c67532fd4e48e4cc1d9091a6272c6846b33",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-volume.npz": "9e75ecbe86636616c18185cb8cc4f063810c1e2b5fe7b9c48122c26b49375740",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/local-child-mass-proposal.csv": "0439c45ab8a948579539c50208ad3f55b1fe41bedad2e8838f89feb07f356331",
+    "/Users/numi/Work/human-integrated-gaps-20261104/matched-endpoint-pair-509/candidate/install-motion.stdout.log.gz": "3ba3089d5a969ff90d57010bbf044846742d62e77d35e4214e313965b5f39ba7",
+    "/Users/numi/Work/human-integrated-gaps-20261104/joint-boundary-rebuild-64c/compiler/bindings/deep-attachment-requests.csv": "8eeac310187b8b51170d94a9b207dc82a39d822a7a106cf65e329c231aba40f5",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-O-typed-current.npz": "8de8675b39b7f3a910fdbe7e10679c5797e4038eb1c10052a4653c1a171ad888",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-I-typed-current.npz": "5fceeebfc7b639cf7c5dfd08c587e4b4d6f09b56df12d03bb72c3862bc43370b",
+    "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-D-typed-current.npz": "e1df8ffa61da936277aa8adccaa308b49ae22ea073ceb08ddaa9af106bd15aaa"
+  },
+  "typed_surfaces": {
+    "O": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-O-typed-current.npz",
+    "I": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-I-typed-current.npz",
+    "D": "/Users/numi/Work/human-integrated-gaps-20261104/captured-fat-sliver-495/proposal/candidate-D-typed-current.npz"
+  },
+  "prediction": "Fixed-boundary changed-star batch from495. Exact active-row and ordered-connectivity permutation maps pinned509 kinematics. Strain grouped by authenticated construction ancestry; distinct P1 semantic-reference capture labels retained as witnesses, not substituted. Original physical/mass/density gates.",
+  "resource": {
+    "max_rss_gib": 8,
+    "min_disk_gib": 12,
+    "max_seconds": 300
+  },
+  "physical_admission": false
+}
