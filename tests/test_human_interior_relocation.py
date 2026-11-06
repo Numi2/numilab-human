@@ -99,3 +99,30 @@ def test_mass_lookup_accepts_only_declared_coordinate_changes():
  assert np.array_equal(moved,[4]) and np.array_equal(query,dst['points_reference_world_m_f64'])
  with pytest.raises(ValueError):relocation_query_points(src['points_reference_world_m_f64'],dst['points_reference_world_m_f64'],[])
  with pytest.raises(ValueError):relocation_query_points(src['points_reference_world_m_f64'],dst['points_reference_world_m_f64'],ops*2)
+
+
+def test_admission_authenticates_source_and_candidate(tmp_path):
+ import json,hashlib
+ src,dst,ops,mass,nm,typed=relocation_fixture()
+ original=dict(src,**{'current_typed_role_source_row_to_joint_node_'+k:np.arange(4) for k in 'OID'})
+ np.savez(tmp_path/'original.npz',**original)
+ digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+ src['source_volume_sha256']=np.asarray(digest(tmp_path/'original.npz'))
+ np.savez(tmp_path/'source.npz',**src);np.savez(tmp_path/'candidate-volume.npz',**dst)
+ for name,values in [('source.csv',mass),('local-child-mass-proposal.csv',nm)]:
+  np.savetxt(tmp_path/name,np.column_stack([np.arange(len(values)),values]),delimiter=',',header='child_row,mass_kg',comments='',fmt=['%d','%.17g'])
+ report=dict(status='INTERIOR_RELOCATION_PROPOSAL_NOT_PHYSICAL_ADMISSION',physical_admission=False,native_steps=0,native_quality_failures=0,interior_only=True,all_point_coordinates_unchanged=False,typed_surface_coordinates_unchanged=True,interior_relocations=ops,relocation_input={})
+ for key,name in [('volume','source.npz'),('mass','source.csv'),('original','original.npz')]:report['relocation_input'].update({key:str(tmp_path/name),key+'_sha256':digest(tmp_path/name)})
+ (tmp_path/'report.json').write_text(json.dumps(report))
+ result=r.replay_candidate_admission(tmp_path)
+ assert result['nodes']==1 and len(result['input_sha256'])==7
+ (tmp_path/'source.csv').write_text('stale')
+ with pytest.raises(ValueError,match='hash mismatch'):r.replay_candidate_admission(tmp_path)
+
+
+@pytest.mark.parametrize('key,value',[('physical_admission',True),('native_steps',1),('native_quality_failures',1),('interior_only',False),('all_point_coordinates_unchanged',True),('typed_surface_coordinates_unchanged',False),('native_steps',False)])
+def test_admission_rejects_unqualified_flags(tmp_path,key,value):
+ import json
+ report=dict(status='INTERIOR_RELOCATION_PROPOSAL_NOT_PHYSICAL_ADMISSION',physical_admission=False,native_steps=0,native_quality_failures=0,interior_only=True,all_point_coordinates_unchanged=False,typed_surface_coordinates_unchanged=True)
+ report[key]=value;(tmp_path/'report.json').write_text(json.dumps(report))
+ with pytest.raises(ValueError,match='explicit source-only'):r.replay_candidate_admission(tmp_path)

@@ -117,6 +117,33 @@ def verify_relocations(source,candidate,operations,source_mass,candidate_mass,ty
  return dict(status='PASS_INDEPENDENT_INTERIOR_RELOCATION_REPLAY',nodes=len(changed),cells=int(occupied.sum()),maximum_displacement_m=max_move,maximum_star_first_moment_error_kg_m=worst_moment,all_typed_and_actual_boundaries_fixed=True,exact_star_volumes_preserved=True,source_mass_and_first_moments_preserved=True,physical_admission=False)
 
 
+def replay_candidate_admission(directory):
+ """Authenticate and replay interior geometry; never admit a flag-only proposal."""
+ directory=Path(directory);report_path=directory/'report.json'
+ report=json.loads(report_path.read_text())
+ required=dict(status='INTERIOR_RELOCATION_PROPOSAL_NOT_PHYSICAL_ADMISSION',physical_admission=False,native_steps=0,native_quality_failures=0,interior_only=True,all_point_coordinates_unchanged=False,typed_surface_coordinates_unchanged=True)
+ if any(type(report.get(k)) is not type(v) or report[k]!=v for k,v in required.items()):
+  raise ValueError('interior admission requires explicit source-only relocation status')
+ pins={}
+ def pinned(path,expected=None):
+  path=Path(path)
+  with path.open('rb') as f:digest=hashlib.file_digest(f,'sha256').hexdigest()
+  if expected is not None and digest!=expected:raise ValueError('interior admission input hash mismatch: '+str(path))
+  pins[str(path)]=digest;return path
+ src=report['relocation_input']
+ volume=pinned(src['volume'],src['volume_sha256']);mass=pinned(src['mass'],src['mass_sha256']);original=pinned(src['original'],src['original_sha256'])
+ candidate_path=pinned(directory/'candidate-volume.npz');candidate_mass=pinned(directory/'local-child-mass-proposal.csv');pinned(report_path);pinned(__file__)
+ with np.load(volume,allow_pickle=False) as z:source={k:z[k] for k in z.files}
+ with np.load(candidate_path,allow_pickle=False) as z:candidate={k:z[k] for k in z.files}
+ if str(source['source_volume_sha256'].item())!=src['original_sha256']:raise ValueError('interior admission original ancestry pin mismatch')
+ with np.load(original,allow_pickle=False) as z:
+  typed=np.unique(np.concatenate([z['current_typed_role_source_row_to_joint_node_'+role] for role in 'OID']));typed=typed[typed>=0]
+  if not np.array_equal(source['points_reference_world_m_f64'],z['points_reference_world_m_f64'].astype(np.float32).astype(float)):raise ValueError('interior admission source point domain mismatch')
+ result=verify_relocations(source,candidate,report['interior_relocations'],read_mass(mass,len(source['volume_tetrahedra'])),read_mass(candidate_mass,len(candidate['volume_tetrahedra'])),typed)
+ result['input_sha256']=pins
+ return result
+
+
 def run(a):
  start=time.monotonic();a.output.mkdir(parents=True,exist_ok=False)
  def sha(p):

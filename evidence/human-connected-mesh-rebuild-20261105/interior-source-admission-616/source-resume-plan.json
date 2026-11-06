@@ -1,0 +1,26 @@
+{
+  "stages": [
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-checkpoint-owner-20261105/tools/qualify_human_connected_source.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "name": "source-qualification",
+      "source_sha256": "327198556161ffe08dc33b4c764bcfaa37430a52c2cb1df87afa5fb6509c5668"
+    },
+    {
+      "argv": [
+        "/Users/numi/numi-human-prep-venv-20261005/bin/python3",
+        "/Users/numi/Work/human-integrated-gaps-20261104/prepare_joint64_mass_admission.py",
+        "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal"
+      ],
+      "name": "mass-admission-prepare",
+      "source_sha256": "f7cdcc749a169a773f2814bddde9a25640163c29bd1ecbb3ba91ffe395706481"
+    }
+  ],
+  "source_root": "/Users/numi/Work/human-integrated-gaps-20261104/interior-relocation-602/proposal",
+  "physical_admission": false,
+  "prediction": "Preserve exact unchanged source quadrature and solve existing source-carrier conservation/density constraints against the documented relocated cells; no density bound or source transport distance changes.",
+  "reused_completed_stages": "/Users/numi/Work/human-integrated-gaps-20261104/interior-mass-606/compiler-execution.json"
+}
