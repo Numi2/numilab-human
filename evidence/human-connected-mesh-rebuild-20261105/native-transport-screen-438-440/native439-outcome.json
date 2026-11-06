@@ -1,0 +1,87 @@
+{
+  "directory": "/Users/numi/Work/human-integrated-gaps-20261104/transport-certified-star-native-439",
+  "plan": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/transport-certified-star-native-439/install-motion.plan.json",
+    "bytes": 55095,
+    "sha256": "0ba01a33446fc29e6891a480cc7b25fbdf370bf796c2240627737495a6821530"
+  },
+  "execution": {
+    "exit_code": 1,
+    "elapsed_s": 391.095764875412,
+    "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/transport-certified-star-native-439/install-motion.plan.json",
+    "plan_sha256": "0ba01a33446fc29e6891a480cc7b25fbdf370bf796c2240627737495a6821530",
+    "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/transport-certified-star-native-439/install-motion.stdout.log.gz",
+    "stdout_encoding": "gzip",
+    "stdout_compressor_exit_code": 0,
+    "stdout_sha256": "7244dcb397efba421bef75f37a6488a625aa0aa77965be7984c9db3e1aeb1633",
+    "stdout_uncompressed_sha256": "10871a2205c6e37e902f14cc3f292a41037d801e652094fb1f62046fd1899cf0",
+    "stderr_sha256": "6b42b573763917a2c66d1391e985d55e5df2ee0c8b676b86576efdc513140eae",
+    "physical_admission": false,
+    "resource_stop_reason": null,
+    "source_import_pass": true,
+    "accepted_steps_are_separately_recorded_in_native_report": true
+  },
+  "accepted_roots": 30,
+  "requested_roots": 32,
+  "dt_s": 1.5625e-05,
+  "accepted_time_s": 0.00046875,
+  "launcher_accepted_time_factor": 1.1985555510920084e-06,
+  "full_requested_horizon_pass": false,
+  "active_work_all_attempts": {
+    "used_columns_sum": 1424,
+    "cycles_with_work": 89,
+    "budget_exhausted_solves": 0
+  },
+  "active_work_accepted_roots": {
+    "used_columns_sum": 1168,
+    "cycles_with_work": 73,
+    "budget_exhausted_solves": 0
+  },
+  "failure": {
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/transport-certified-star-native-439/install-motion/diagnostics/common-field-failure.json",
+    "bytes": 4127,
+    "sha256": "9c4ec110a275343bc3a6583fcce13a8433e64dd92957006712f71f036acf8f1d"
+  },
+  "source_mass_import_pass": true,
+  "physical_admission": false,
+  "performance_improvement_demonstrated": false,
+  "failure_diagnostics": [
+    0.0002505820302758366,
+    0.012662439607083797,
+    0,
+    0
+  ],
+  "final_active_work": {
+    "root": 30,
+    "environment": 0,
+    "used_columns_sum": 256,
+    "cycles_with_work": 16,
+    "encoded_cycles": 64,
+    "budget_exhausted_solves": 0,
+    "active_newton_begins": 16,
+    "active_restart_begins": 0,
+    "has_outer_sample": true,
+    "last_newton_iteration": 15,
+    "last_newton_latched": false,
+    "last_newton_norm": 0.000269751908,
+    "last_newton_threshold": 9.99999975e-06,
+    "minimum_newton_norm": 0.000269751908,
+    "last_fgmres_residual_norm": 3.9305487e-06,
+    "last_fgmres_initial_norm": 0.000269751908,
+    "last_fgmres_cycle_accepted": 1,
+    "last_fgmres_columns": 0,
+    "last_newton_current_norm": 0.000269751908,
+    "last_newton_correction_ratio": 0.184823573,
+    "last_newton_converged": 0,
+    "final_nonpressure_nontransport_relative_residual": 0.00025058203,
+    "final_aggregate_transport_relative_residual": 0,
+    "aggregate_nonempty_cycle_ranges": 0,
+    "aggregate_selected_command_span_total": 0,
+    "status_code": 10,
+    "status_object": 10,
+    "status_failing_index": 4294967295,
+    "status_residual": 0,
+    "status_correction": 0
+  },
+  "scope": "Source/mass import only qualified. Nonlinear failure at attempted root30 uses shared environment norm; object10 is reporter, not local defect diagnosis. No supported rest, sustained motion or fidelity admission."
+}
