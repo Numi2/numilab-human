@@ -38,3 +38,35 @@ def test_unobservable_or_invalid_force_calibration_rejects(signal,error):
 
 def test_force_calibration_uses_measured_signal():
  assert m.calibrated_force_error(dict(native_free_force_l1_N=2.,analytical_minus_native_free_force_l1_N=.01))==.005
+
+
+def test_response_budget_rejects_cumulative_force_and_preserves_state():
+ b=m.RegionalResponseBudget({7:10.},{7:2.})
+ p,f=b.propose({7:.06},7,.04);assert not f;b.commit(p)
+ p,f=b.propose({7:.05},7,.01);assert p is None and f[0]["metric"]=="free_force_l1_bound_N"
+ assert b.force_used[7]==.06 and b.energy_used[7]==.04
+
+def test_response_budget_uses_absolute_energy_without_cancellation():
+ b=m.RegionalResponseBudget({7:10.},{7:2.})
+ p,f=b.propose({7:0.},7,.06);assert not f;b.commit(p)
+ p,f=b.propose({7:0.},7,-.05);assert p is None and f[0]["metric"]=="energy_absolute_change_bound_J"
+
+def test_response_budget_unexcited_region_only_allows_zero_change():
+ b=m.RegionalResponseBudget({7:0.},{7:0.})
+ p,f=b.propose({7:0.},7,0.);assert p is not None and not f
+ assert b.propose({7:1e-30},7,0.)[0] is None
+ assert b.propose({7:0.},7,1e-30)[0] is None
+
+@pytest.mark.parametrize("change",[float("nan"),float("inf"),-1.])
+def test_response_budget_rejects_invalid_force_change(change):
+ b=m.RegionalResponseBudget({7:1.},{7:1.})
+ with pytest.raises(ValueError):b.propose({7:change},7,0.)
+
+def test_force_budget_groups_actual_node_owners_without_vector_cancellation():
+ nodes=np.array([2,0,1]);delta=np.array([[3.,0,0],[-3.,0,0],[8.,0,0]])
+ regions=np.array([9,7,9]);free=np.array([True,False,True])
+ assert m.regional_force_change(nodes,delta,regions,free)=={9:6.}
+
+
+def test_negative_reference_energy_is_not_normalized_into_a_valid_budget():
+ with pytest.raises(ValueError):m.RegionalResponseBudget({1:1.},{1:-1.})

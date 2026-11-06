@@ -61,6 +61,49 @@ def calibrated_force_error(calibration):
   raise ValueError("force calibration requires a positive finite native signal")
  return error/native
 
+class RegionalResponseBudget:
+ """Conservative fixed-field bounds; never a native fidelity certificate.
+
+ Triangle inequalities bound both resultant and nodal-L1 force changes. Sum
+ absolute patch energy changes so cancellations cannot conceal local changes.
+ Force ownership is the captured node region, independent of cell donor labels.
+ """
+ def __init__(self,force_reference,energy_reference):
+  self.force={int(k):float(v) for k,v in force_reference.items()}
+  self.energy={int(k):float(v) for k,v in energy_reference.items()}
+  if any(not np.isfinite(v) or v<0 for v in self.force.values()) or any(not np.isfinite(v) or v<0 for v in self.energy.values()):
+   raise ValueError("invalid regional response reference")
+  self.force_used={k:0. for k in self.force};self.energy_used={k:0. for k in self.energy}
+ def propose(self,force_changes,energy_region,energy_change):
+  changes={int(k):float(v) for k,v in force_changes.items()};region=int(energy_region);energy=abs(float(energy_change))
+  if region not in self.energy or not np.isfinite(energy) or any(k not in self.force or not np.isfinite(v) or v<0 for k,v in changes.items()):
+   raise ValueError("invalid regional response change")
+  failures=[]
+  for k,v in changes.items():
+   bound=self.force_used[k]+v;limit=.01*self.force[k]
+   if bound>limit:failures.append(dict(metric="free_force_l1_bound_N",region=k,bound=bound,limit=limit))
+  bound=self.energy_used[region]+energy;limit=.05*self.energy[region]
+  if bound>limit:failures.append(dict(metric="energy_absolute_change_bound_J",region=region,bound=bound,limit=limit))
+  return (changes,region,energy) if not failures else None,failures
+ def commit(self,proposal):
+  changes,region,energy=proposal
+  for k,v in changes.items():self.force_used[k]+=v
+  self.energy_used[region]+=energy
+ def report(self):
+  return dict(scope="Conservative fixed-field preparation only; no native trajectory, reaction, contact, mass or energy admission",force_relative_limit=.01,energy_relative_limit=.05,
+   force_owner="captured node anatomical region, tag0 free nodes only",energy_owner="source cell geometric donor",
+   force_reference_l1_N=self.force,force_change_l1_bound_N=self.force_used,
+   energy_reference_J=self.energy,energy_absolute_change_bound_J=self.energy_used,physical_admission=False)
+
+def regional_force_change(nodes,delta,node_regions,free):
+ nodes=np.asarray(nodes);delta=np.asarray(delta,float)
+ if delta.shape!=(len(nodes),3) or not np.isfinite(delta).all():raise ValueError("invalid finite nodal force delta")
+ out={}
+ for region in np.unique(node_regions[nodes]):
+  mask=(node_regions[nodes]==region)&free[nodes]
+  if np.any(mask):out[int(region)]=float(np.linalg.norm(delta[mask],axis=1).sum())
+ return out
+
 def run(a):
  start=time.monotonic();a.output.mkdir(parents=True,exist_ok=False)
  if sha(a.proposal_report)!=a.proposal_report_sha256:raise ValueError("proposal report mismatch")
@@ -103,7 +146,9 @@ def run(a):
   om=scatter(oldlocal,np.repeat((cm[rr]*.25)[:,None,None],4,axis=1),len(nodes)).ravel()
   nmm=scatter(newlocal,np.repeat((nm*.25)[:,None,None],4,axis=1),len(nodes)).ravel()
   mass_delta=nmm-om;fd=nf-of;free_local=tags[nodes]==0
+  if not np.all(mats[rr]==mats[rr[0]]) or not np.all(regions[rr]==regions[rr[0]]):raise ValueError("cavity crosses material or donor ownership")
   rows=dict(index=index,material=int(mats[rr[0]]),donor=int(regions[rr[0]]),old_rows=rr.tolist(),
+   regional_free_force_change_l1_bound_N=regional_force_change(nodes,fd,z["region"][ni],free),
    old_energy_J=float(olde.sum()),new_energy_J=float(newe.sum()),
    relative_patch_energy_change=float(abs(newe.sum()-olde.sum())/max(abs(olde.sum()),1e-300)),
    maximum_nodal_mass_relative_change=float(np.max(np.abs(mass_delta)/native_mass[nodes])),
@@ -132,13 +177,19 @@ def run(a):
   ref=r["input"]["reference"]
   field,receipt=mesh.load_reference_deformation(Path(ref["path"]),ref["sha256"],p,t,labels)
   gate=mesh.ReferenceDeformationGate(p,t,field,labels[:,1],receipt)
-  kept=[];excluded=[];indices=[]
+  force_reference={int(k):float(np.linalg.norm(native_force[z["region"][ni]==k],axis=1).sum()) for k in np.unique(z["region"][ni])}
+  budget=RegionalResponseBudget(force_reference,{k:v["energy_J"] for k,v in base.items()})
+  kept=[];excluded=[];indices=[];response_rejections=[]
   for index,patch in enumerate(r["patches"]):
+   measured=patches[index]
+   response_proposal,failures=budget.propose(measured["regional_free_force_change_l1_bound_N"],measured["donor"],measured["new_energy_J"]-measured["old_energy_J"])
+   if response_proposal is None:
+    excluded.append(index);response_rejections.append(dict(index=index,failures=failures));continue
    rr=np.array(patch["old_rows"]);new=np.array(patch["new_cells"])
    padded=t[rr].copy();padded[:len(new)]=new;live=np.arange(len(rr))<len(new)
    accepted=gate.propose(rr,padded,live)
    if accepted is None:excluded.append(index);continue
-   gate.commit(rr,live,accepted);kept.append(patch);indices.append(index)
+   gate.commit(rr,live,accepted);budget.commit(response_proposal);kept.append(patch);indices.append(index)
   if not kept:raise ValueError("no cavities pass the unchanged reference gate")
   payload=a.output/"fixed-boundary-volume-proposal.npz"
   np.savez_compressed(payload,**builder.cavity_payload(r["input"]["volume"]["sha256"],len(t),kept))
@@ -148,7 +199,8 @@ def run(a):
   r.update(patches=kept,passing_cavities=len(kept),output=pin(payload),reference_deformation=gate.report(),elapsed_s=time.monotonic()-start,
    reference_screen=dict(source_report=pin(a.proposal_report),response_report=pin(a.output/"report.json"),
     excluded_cavity_indices=excluded,retained_input_cavity_indices=indices,calibration_relative_force_l1_error=error,
-    owner=pin(Path(__file__)),unchanged_kinematic_strain_relative_gate=.05),
+    owner=pin(Path(__file__)),unchanged_kinematic_strain_relative_gate=.05,
+    response_budget=budget.report(),response_rejections=response_rejections),
    status="PASS_FIXED_BOUNDARY_REFERENCE_SCREENED_SUBSET_PROPOSAL",physical_admission=False,native_steps=0)
   (a.output/"proposal-report.json").write_text(json.dumps(r,indent=2,allow_nan=False)+"\n")
   print(json.dumps(dict(status=r["status"],passing_cavities=len(kept),excluded=excluded,output=r["output"])),flush=True)
@@ -157,5 +209,5 @@ if __name__=="__main__":
  ap=argparse.ArgumentParser(description=__doc__)
  for name in ["proposal-report","capture-owner","skin-material","fat-material"]:
   ap.add_argument("--"+name,type=Path,required=True);ap.add_argument("--"+name+"-sha256",required=True)
- ap.add_argument("--emit-proposal",action="store_true",help="Replay only cavities passing the existing5% reference gate after native force calibration; physical admission remains mandatory")
+ ap.add_argument("--emit-proposal",action="store_true",help="Replay only cavities passing 1% fixed-field force bounds,5% energy bounds and the existing5% strain gate after force calibration; physical admission remains mandatory")
  ap.add_argument("--output",type=Path,required=True);run(ap.parse_args())

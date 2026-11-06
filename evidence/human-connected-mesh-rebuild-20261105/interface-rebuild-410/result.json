@@ -1,0 +1,154 @@
+{
+  "status": "CONSTRUCTION_AND_CONTEXT_PASS_PHYSICAL_MASS_AND_NATIVE_PENDING",
+  "physical_admission": false,
+  "native_steps": 0,
+  "interface_operations": 749,
+  "cells_before": 1448843,
+  "cells_after": 1448094,
+  "all_coordinates_unchanged": true,
+  "outer_and_deep_assets_unchanged": {
+    "O": "7058ff33bb45004df1c10257d156d5884d5c8a7fa8122dde684fe2d7f544722b",
+    "D": "e1df8ffa61da936277aa8adccaa308b49ae22ea073ceb08ddaa9af106bd15aaa"
+  },
+  "measured_worst_cell": [
+    {
+      "source_cap_row": 913064,
+      "old_rows": [
+        913064,
+        365755,
+        216007,
+        913013,
+        1377384,
+        456429,
+        1374503,
+        913868,
+        913913,
+        216124,
+        912664,
+        216106,
+        215302,
+        216132,
+        317303,
+        214910,
+        1069004,
+        216083,
+        216076,
+        215416,
+        458579
+      ],
+      "material_totals": {
+        "15": {
+          "mass_kg": 1.9131742746748628e-07,
+          "new_volume_m3": 1.739258472488999e-10
+        },
+        "16": {
+          "mass_kg": 2.76528752925777e-08,
+          "new_volume_m3": 2.910737659411198e-11
+        }
+      }
+    }
+  ],
+  "prior_native_counterexample": {
+    "candidate": 404,
+    "reference": 395,
+    "accepted_roots": 32,
+    "force_gate_failures": 142,
+    "strain_gate_failures": 229,
+    "body_throughput_ratio": 1.0073329524768864,
+    "promotion": false
+  },
+  "retained_evidence": [
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/report.json",
+      "sha256": "b7a720b37442fa9d9a6a4c946f0453e1ba2185dafdd0a621545288cb8e480a9d",
+      "bytes": 869979
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/candidate-volume.npz",
+      "sha256": "7b6d057409e1b79591780e984732fced042f458fdf6a190a86b0e48a68ec96c4",
+      "bytes": 21547013
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/candidate-I-typed-current.npz",
+      "sha256": "d0b8859abd714c87a4ae0b1e185549645dd84f08c7db30b86dd33117cbc1fb71",
+      "bytes": 7122227
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/local-child-mass-proposal.csv",
+      "sha256": "a24231a0bc8d51219085004fcca8e70f4fc129b4e8440fbbfc6b1b86175e37cd",
+      "bytes": 43615653
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/executed-runner.py",
+      "sha256": "3ceea29b65139c91fffbf5f9f17b88c95188c63ab78064fe190d1c3874d183d3",
+      "bytes": 24085
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/independent-checks.json",
+      "sha256": "7e0ff469bc34d3937088b4331bd55b99ef7dfb32c7ecaa80974ce1fad774db00",
+      "bytes": 769
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/context-config.json",
+      "sha256": "3f4ef86c6eb2183af0b2fb5bc2ed4ba5f73346316d7ad6d631aad2c0ab9b9101",
+      "bytes": 1829
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/context-pin-correction.json",
+      "sha256": "6d405e58c49e9b794ecc5c40487b8e098dcbe713b07570ad6a3ee673e2ed08a0",
+      "bytes": 2233
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/connected-interface-rebuild-410/proposal/full-context/report.json",
+      "sha256": "21e929690b7bdfd3cadce61eb35c6ea97c87a681c1cf028ca50b34f74f899408",
+      "bytes": 146852
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/interface-compiler-411/analysis-execution.json",
+      "sha256": "eb5abf1cb06b160be41aca2ce7e94bab8074aa4f644ae50e96438290c1b75fe0",
+      "bytes": 1002
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/interface-context-412/analysis-execution.json",
+      "sha256": "739aafc26293c5db59dce2e3dafb32371f072a9b8494437cecf80e55df6bfb94",
+      "bytes": 380
+    },
+    {
+      "path": "/Users/numi/Work/human-integrated-gaps-20261104/response-bounded-analysis-405/summary.json",
+      "sha256": "892e6211337505c29fc365d3762c8778e7e48db077139f9b8e1847c225c97755",
+      "bytes": 59763
+    }
+  ],
+  "tests": {
+    "command": "/Users/numi/numi-human-prep-venv-20261005/bin/python3 -m pytest -q tests/test_human_local_mass.py tests/test_human_cavity_response.py tests/test_human_interface_caps.py tests/test_human_conditioned_cavities.py",
+    "passed": 41,
+    "source": {
+      "tools/rebuild_human_interface_caps.py": {
+        "path": "/Users/numi/Work/human-checkpoint-owner-20261105/tools/rebuild_human_interface_caps.py",
+        "sha256": "290aec4cf4b698223371ca469884e78fc9d719bcdb14ae331551747e908d6734",
+        "bytes": 24804
+      },
+      "tools/prepare_human_local_mass.py": {
+        "path": "/Users/numi/Work/human-checkpoint-owner-20261105/tools/prepare_human_local_mass.py",
+        "sha256": "41f67d9b42473179f7f7f9a7c4a836128270834bc196517cf04cbc0405ce4753",
+        "bytes": 10966
+      },
+      "tools/screen_human_cavity_response.py": {
+        "path": "/Users/numi/Work/human-checkpoint-owner-20261105/tools/screen_human_cavity_response.py",
+        "sha256": "8700c5fe59453ffceb69bcb240117a0ef2c11a847667558cb1479d46adef40be",
+        "bytes": 14671
+      },
+      "tools/verify_human_connected_rebuild.py": {
+        "path": "/Users/numi/Work/human-checkpoint-owner-20261105/tools/verify_human_connected_rebuild.py",
+        "sha256": "2b9ae3347f80a87464888ec2979775200ed4d6e9fbba4cf1128f86cb2887dc77",
+        "bytes": 4402
+      }
+    }
+  },
+  "remaining": [
+    "Complete conservative source mass and registration admission",
+    "Native accepted-step force/strain/energy comparison",
+    "Repair measured cap rejected by unchanged density limits",
+    "Sustained supported physiology and end-to-end performance unqualified"
+  ]
+}
