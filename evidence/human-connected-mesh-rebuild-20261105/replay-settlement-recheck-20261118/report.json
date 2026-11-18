@@ -1,0 +1,393 @@
+{
+  "device": "Apple M6, SSH Numi",
+  "scope": "Native reference replay and qualification probes. Whole-body supported rest, fidelity of candidate 645, throughput target and long integrated physiology remain unqualified.",
+  "source": {
+    "numi_lab_native_checkout_base": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+    "numi_lab_runtime_publication": "f8efdb0dc802284137372ef10bb9c48f62850850",
+    "human_source_at_retained_checkpoint": "35649fc13a11e9ad0d8c67e1617c7a0d87ffbcc1",
+    "native_binary_sha256": "3900d587e78526d70157f864ba438a48acf48b652fd873e6542319ebf3e2bc8a",
+    "restored_articulated_metallib_sha256": "b52b5c1c5736da382682e4412aa9b458603066c0c5728a8869d02627aef97672",
+    "restored_authored_input_count": 17,
+    "native_source_was_dirty": true
+  },
+  "baseline": {
+    "geometry": "495",
+    "reference": "domain-mesh-fidelity-pair-565/control",
+    "accepted_roots": 4,
+    "simulated_s": 6.25000029685907e-05,
+    "timestep_s": 1.5625e-05,
+    "profiled_body_wall_s": 73.141344125,
+    "profiled_total_wall_s": 342.01045513153076,
+    "profiled_body_real_time_factor": 8.545099042995021e-07,
+    "retained_matched_control_body_wall_s": 65.441284667,
+    "same_force_metric_count": 776,
+    "same_strain_metric_count": 282,
+    "same_trace_channel_count": 77,
+    "max_relative_difference": 0.0,
+    "fem_mass_kg": 14.41551849295331,
+    "run_receipt_files_sha256": {
+      "install-motion.plan.json": "40af4b0dd87d7ac19001372361472c13ba8f0f7ead07aa0831d66198b735fa0d",
+      "install-motion.stdout.log.gz": "ed1c313f86d48eabd55fc39e24c4b5856e7f37b3cb0ef6c113debe32acdfba68",
+      "install-motion.stderr.log": "ac84e68d016f31bab6941b4c8d965e8b8aadf43026e67f54ec73242c2925736c",
+      "install-motion.execution.json": "b19b957014c81df31856484577ff6b11dbb7000948b0a3f68a36202854a57124",
+      "matched-endpoint-channels.json": "b56de284bee720b0cd1c462071406b3012afdc67079fd89b5fd19a5d142fe9b8",
+      "install-motion/resting-coupled.csv": "5fd0b936c2c3f610e26e9f3a030ef6613ef6961a3d67a1e2903515efbb5283e2"
+    }
+  },
+  "profile": {
+    "sampled_root_zero_based": 1,
+    "whole_stage_time_ns": 25581187209,
+    "gpu_timings": {
+      "matter_pre": {
+        "spans": 1,
+        "ns": 7797459
+      },
+      "brain_advance": {
+        "spans": 1,
+        "ns": 8666
+      },
+      "respiratory_mechanics": {
+        "spans": 1,
+        "ns": 1639792
+      },
+      "matter_after_frame_begin": {
+        "spans": 1,
+        "ns": 779458
+      },
+      "matter_newton_assembly": {
+        "spans": 16,
+        "ns": 2874288751
+      },
+      "matter_newton_linear": {
+        "spans": 16,
+        "ns": 21296675792
+      },
+      "matter_newton_globalization": {
+        "spans": 16,
+        "ns": 1082737915
+      },
+      "matter_final_certificate": {
+        "spans": 1,
+        "ns": 283983958
+      },
+      "respiratory_gas_exchange": {
+        "spans": 1,
+        "ns": 1820125
+      },
+      "matter_after_candidate_ready": {
+        "spans": 1,
+        "ns": 13191625
+      },
+      "matter_after_microstep": {
+        "spans": 1,
+        "ns": 2317417
+      },
+      "matter_post": {
+        "spans": 1,
+        "ns": 15241542
+      },
+      "brain_resolve": {
+        "spans": 1,
+        "ns": 1209
+      },
+      "respiratory_resolve": {
+        "spans": 1,
+        "ns": 703500
+      }
+    },
+    "target_wall_budget_per_root_s_at_real_time_factor_0p1": 0.00015625,
+    "active_work_by_root": [
+      {
+        "root": 0,
+        "used_columns_sum": 320,
+        "cycles_with_work": 20,
+        "active_newton_begins": 5,
+        "budget_exhausted_solves": 3
+      },
+      {
+        "root": 1,
+        "used_columns_sum": 544,
+        "cycles_with_work": 34,
+        "active_newton_begins": 10,
+        "budget_exhausted_solves": 4
+      },
+      {
+        "root": 2,
+        "used_columns_sum": 128,
+        "cycles_with_work": 8,
+        "active_newton_begins": 2,
+        "budget_exhausted_solves": 2
+      },
+      {
+        "root": 3,
+        "used_columns_sum": 128,
+        "cycles_with_work": 8,
+        "active_newton_begins": 2,
+        "budget_exhausted_solves": 2
+      }
+    ]
+  },
+  "rejected_645": {
+    "relative_force_gate": 0.01,
+    "relative_strain_gate": 0.05,
+    "versus_reference_495_force_failures": 102,
+    "versus_reference_495_strain_failures": 139,
+    "versus_paired_timing_control_572_force_failures": 112,
+    "versus_paired_timing_control_572_strain_failures": 193,
+    "throughput_gain_fraction_vs_572": 0.0078398909769675,
+    "promoted": false
+  },
+  "physiology_owner": {
+    "scope": "Reduced component, outside whole-body FEM and anatomical cardiac motion qualification",
+    "transaction_result": "coupled_rejection=bitwise_unchanged circulation_clock=unchanged controller_history=unchanged accepted_replay=bitwise",
+    "short_baseline_trace_sha256": "558180bd74dd84e242561f43273b5e8428f8da95c33fef535b8bd7d975f272b4",
+    "short_baseline_run_receipt": "accepted_steps=12000 simulated_s=12.00000057 wall_s=63.714205542 gpu_s=61.2051092542 real_time_factor=0.188341053112 Brain_control=1 no_anatomy_or_resting_claim=true",
+    "short_baseline_endpoint": {
+      "time_s": 12.00000057,
+      "breaths": 2.0,
+      "tidal_ml": 533.4361922,
+      "aortic_ejected_ml": 988.977495581,
+      "pulmonary_ejected_ml": 980.605254881,
+      "complete_filling_ejection_cycles": 14.0,
+      "last_lv_stroke_ml": 70.1278404449,
+      "PaO2_mmhg": 102.067741394,
+      "PaCO2_mmhg": 39.0712890625,
+      "SaO2": 0.973674356937,
+      "blood_error_ml": 0.0111758708954,
+      "oxygen_balance_error_stpd_ml": 0.000232830643654,
+      "co2_balance_error_stpd_ml": 0.000465661287308
+    },
+    "short_intervention": {
+      "scope": "12-second reduced physiology owner comparison, no anatomical or supported-body qualification",
+      "intervention": "0.6 respiratory drive from 4 through 8 seconds",
+      "identical_pre_intervention_samples": 249,
+      "trace_sha256": {
+        "control": "558180bd74dd84e242561f43273b5e8428f8da95c33fef535b8bd7d975f272b4",
+        "intervention": "e470215080ebe39b30b574be858a2a89593204b4dee371a74cbc827b73ceb2cf"
+      },
+      "total_inspired_ml_4_to_8_s": {
+        "control": 533.4360908420001,
+        "intervention": 389.8612457400001
+      },
+      "relative_change_in_inspired_volume": -0.2691509771589974,
+      "arterial_gas_mean_delta_mmhg": {
+        "7_to_8_s": {
+          "PaCO2_mmhg": 0.07542292276507868,
+          "PaO2_mmhg": -0.09448835579365034
+        },
+        "11_to_12_s": {
+          "PaCO2_mmhg": 0.522956363736508,
+          "PaO2_mmhg": -0.8607306101428577
+        }
+      },
+      "circulation": {
+        "control": {
+          "aortic_ejected_ml": 988.977495581,
+          "pulmonary_ejected_ml": 980.605254881,
+          "complete_filling_ejection_cycles": 14,
+          "max_abs_blood_volume_error_ml": 0.0111758708954
+        },
+        "intervention": {
+          "aortic_ejected_ml": 988.977495581,
+          "pulmonary_ejected_ml": 980.605254881,
+          "complete_filling_ejection_cycles": 14,
+          "max_abs_blood_volume_error_ml": 0.0111758708954
+        }
+      },
+      "recovery_qualified": false
+    },
+    "short_intervention_run_receipt": "accepted_steps=12000 simulated_s=12.00000057 wall_s=63.73960975 gpu_s=61.2741689584 real_time_factor=0.188265987461 Brain_control=1 no_anatomy_or_resting_claim=true",
+    "input_and_binary_sha256": {
+      "numi-human-resting": "ac59de7fc30c3e6c8bfd22c38fc0ce611bb262ba880885d7cf106d33d4e01ac5",
+      "circulation": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+      "respiration": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a"
+    },
+    "argv_suffixes": {
+      "transaction": [
+        "--vascular-dense45",
+        "--dt",
+        "0.001",
+        "--verify-transaction"
+      ],
+      "baseline": [
+        "--vascular-dense45",
+        "--dt",
+        "0.001",
+        "--steps",
+        "12000"
+      ],
+      "intervention": [
+        "--vascular-dense45",
+        "--dt",
+        "0.001",
+        "--steps",
+        "12000",
+        "--drive-intervention",
+        "4",
+        "8",
+        "0.6"
+      ]
+    }
+  },
+  "settlement_probe": {
+    "binary_sha256": "80145fb3a46cc2d2cb914b6c08396a8c0d8abf6cfedd33ed47c863b38035b01a",
+    "disk_stopped_prior_attempt_reason": "disk_below_12GiB",
+    "disk_stopped_prior_attempt_elapsed_s": 175.81049132347107,
+    "qualified": false,
+    "elapsed_s": 290.80945014953613,
+    "accepts_before_settlement_gate": 8,
+    "simulated_s": 0.000125,
+    "settlement_failure_reasons": [
+      "acceleration",
+      "insufficient_normal_reaction",
+      "speed"
+    ],
+    "observations": [
+      {
+        "accepted_step": 1,
+        "support_force_n": 1.72987260072e-05,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.99770879526e-06,
+        "max_generalized_acceleration": 10130.5527344,
+        "max_generalized_speed": 0.00907157920301,
+        "max_fem_speed": 1.25849839245,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 2,
+        "support_force_n": 0.000127752514345,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.99377279531e-06,
+        "max_generalized_acceleration": 9314.27246094,
+        "max_generalized_speed": 0.0181191135198,
+        "max_fem_speed": 2.31248904944,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 3,
+        "support_force_n": 0.000369772209297,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.98940394181e-06,
+        "max_generalized_acceleration": 9732.77734375,
+        "max_generalized_speed": 0.0271714720875,
+        "max_fem_speed": 3.11496185185,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 4,
+        "support_force_n": 0.000640280632069,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.98605496593e-06,
+        "max_generalized_acceleration": 9738.3046875,
+        "max_generalized_speed": 0.0362182408571,
+        "max_fem_speed": 3.64149966524,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 5,
+        "support_force_n": 0.000821432422526,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.9842045759e-06,
+        "max_generalized_acceleration": 9458.76660156,
+        "max_generalized_speed": 0.0452545769513,
+        "max_fem_speed": 3.89575072757,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 6,
+        "support_force_n": 0.000897315885595,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.98349101674e-06,
+        "max_generalized_acceleration": 9862.77148438,
+        "max_generalized_speed": 0.0542958416045,
+        "max_fem_speed": 3.90695658789,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 7,
+        "support_force_n": 0.000931731392484,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.98317719876e-06,
+        "max_generalized_acceleration": 9865.1328125,
+        "max_generalized_speed": 0.0633286088705,
+        "max_fem_speed": 3.71963911778,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      },
+      {
+        "accepted_step": 8,
+        "support_force_n": 0.000993545882011,
+        "reference_support_force_n": 952.864493986,
+        "minimum_support_gap_m": 9.98262728663e-06,
+        "max_generalized_acceleration": 9711.83984375,
+        "max_generalized_speed": 0.0723542645574,
+        "max_fem_speed": 3.38542831199,
+        "failure_mask": 7,
+        "settled_consecutive_steps": 0
+      }
+    ],
+    "stdout_gzip_sha256": "9a2e182f0a6aebb391ab04a0e442355a79b886226c8e304d3db8ebad82ec5ee8",
+    "stderr_sha256": "c642185dc169eebb11034be92b486ffa85f9b2bd6b3d3f914e2cfcd4f216c658",
+    "plan_sha256": "aebc9131a640ab21ad5a6e33bb2c2bbd2bd5ff9a4f0ec4c6229cc10afee481b8",
+    "diagnostic_disk_guard_gib": 10,
+    "qualification_disk_floor_gib": 12,
+    "release_initialization_maximum_generalized_acceleration_residual": 575.5861459,
+    "first_matched_control_root_joint_witnesses": [
+      {
+        "v_index": 108,
+        "native_joint_index": 136,
+        "source_joint": "ankle_angle_r",
+        "first_control_root_velocity_increment_over_dt_rad_s2": -580.5810412238803,
+        "last_projection_velocity_delta_rad_s": 0.0
+      },
+      {
+        "v_index": 122,
+        "native_joint_index": 150,
+        "source_joint": "ankle_angle_l",
+        "first_control_root_velocity_increment_over_dt_rad_s2": -572.3309840157369,
+        "last_projection_velocity_delta_rad_s": 0.0
+      },
+      {
+        "v_index": 37,
+        "native_joint_index": 40,
+        "source_joint": "shoulder_rot_r",
+        "first_control_root_velocity_increment_over_dt_rad_s2": -162.27760125222756,
+        "last_projection_velocity_delta_rad_s": 0.0
+      },
+      {
+        "v_index": 75,
+        "native_joint_index": 90,
+        "source_joint": "shoulder_rot_l",
+        "first_control_root_velocity_increment_over_dt_rad_s2": -160.61227781132615,
+        "last_projection_velocity_delta_rad_s": 0.0
+      },
+      {
+        "v_index": 114,
+        "native_joint_index": 142,
+        "source_joint": "hip_flexion_l",
+        "first_control_root_velocity_increment_over_dt_rad_s2": -106.88417668327402,
+        "last_projection_velocity_delta_rad_s": 0.0
+      }
+    ],
+    "matched_rigid_payload_sha256": "c10924a45efc1cfb3916bd22baabeeca491da5e412bbaad37b1328fe364db53d",
+    "joint_source_manifest_sha256": "c794687f4b60dab86b510658365fba74b29bcf749b1665f0ec232d4b6e451054",
+    "probe_fem_bed_release_minimum_initial_gap_m": 1.0000000216336957e-05,
+    "resting_application_build": "linked and exercised on SSH Numi",
+    "portable_patch_resting_syntax_pass": true,
+    "legacy_nonresting_preexisting_errors": 19,
+    "observer_patch_sha256": "e9d737e98a0167a724fb47e9264c776c82b19df24783f106ec6366808194e8e4"
+  },
+  "storage": {
+    "method": "Replaced three new, byte-identical diagnostic viewpacks in place with verified copy-on-write clones of the baseline.",
+    "files_with_preserved_bytes": 3,
+    "verified_viewpack_file_sha256": "2b66438bdf3df8c3313e04cc064b0210e2bba8c6b1c59af3f05691246b6136b2",
+    "reclaimed_bytes_by_live_free_space": 963907584,
+    "free_bytes_at_checkpoint": 13564391424
+  }
+}
