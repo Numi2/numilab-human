@@ -1,0 +1,14 @@
+{
+  "question": "Does staging accepted pleural pressure as an external load on the registered thoracic compartments produce an actual vascular response in the fast coupled native scene?",
+  "arms": ["constant thoracic pressure", "accepted previous-step pleural pressure added to immutable regional baseline"],
+  "common_setup": "Matched 12 s rest, active Brain control, same reference skin, regional compression and capsule. Drive multiplier .6 from 4 to 8 s in both arms.",
+  "criteria": {
+    "end_step": 6000,
+    "viewer_accepted_time_rtf_min": 0.1,
+    "maximum_sampled_blood_volume_error_ml": 0.1,
+    "late_support_weight_ratio": [0.98, 1.02],
+    "minimum_nonzero_pulmonary_ejection_divergence_ml": 1.0,
+    "minimum_nonzero_cardiac_pressure_divergence_mmhg": 0.05
+  },
+  "interpretation": "An external pressure load changes transmural pressure; the phase-dependent response is computed by the compiled filling/ejection network. No uniform sensitivity sign is assigned to each chamber at arbitrary phase. This test cannot establish feedback from vascular deformation to lung mechanics or active 3D vascular tissue."
+}

@@ -1,0 +1,119 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -38448,0 +38449,4 @@
++                if(const char* pressureBoundary=std::getenv("NM_VASCULAR_STEP_EXTERNAL_PRESSURE");
++                   pressureBoundary&&std::string_view(pressureBoundary)=="1") {
++                    appendTextSource("resting_vascular_step_boundary","accepted_pleural_pressure_delta_v1");
++                }
+--- a/matter/src/metal/human_respiration.metal
++++ b/matter/src/metal/human_respiration.metal
+@@ -2146,0 +2147,16 @@
++}
++
++// The borrowed trial is reconstructed from the immutable circuit and accepted
++// pleural state. This is an external pressure load, not a source of blood volume.
++kernel void nm_human_stage_thoracic_pressure(
++    device const NMVascularCompartmentGPU* reference [[buffer(0)]],
++    device NMVascularCompartmentGPU* trial [[buffer(1)]],
++    device const NMHumanRespirationState* accepted [[buffer(2)]],
++    constant float& pleuralReference [[buffer(3)]],
++    constant uint& thoracicMask [[buffer(4)]],
++    uint row [[thread_position_in_grid]]
++) {
++    auto compartment=reference[row];
++    if ((thoracicMask & (1u<<row))!=0u)
++        compartment.compliance.w += accepted[0].mechanics.z-pleuralReference;
++    trial[row]=compartment;
+--- a/matter/tools/human_resting_runtime.hpp
++++ b/matter/tools/human_resting_runtime.hpp
+@@ -88,0 +89,2 @@
++    id<MTLComputePipelineState> stageThoracicPressure=nil;
++    std::uint32_t thoracicPressureMask=0u;
+@@ -326,0 +329,19 @@
++        if (enabled("NM_VASCULAR_STEP_EXTERNAL_PRESSURE")) {
++            constexpr std::array<unsigned,11> thoracicIDs{{1,2,5,6,15,16,17,18,19,20,21}};
++            need(world.vascular.compartments.size()==21u && dispatch.environmentCount==1u &&
++                 expectedMicrotickCount==1u && world.vascular.cavities.empty(),
++                 "thoracic pressure is registered for the 21-compartment lumped resting network");
++            for (std::size_t i=0; i<world.vascular.compartments.size(); ++i) {
++                const auto& compartment=world.vascular.compartments[i];
++                need(compartment.identity.x==i+1u,"thoracic pressure compartment identity mismatch");
++                const bool thoracic=std::find(thoracicIDs.begin(),thoracicIDs.end(),
++                                             compartment.identity.x)!=thoracicIDs.end();
++                need((compartment.compliance.w < 0.0f)==thoracic,
++                     "thoracic pressure does not match the authored extramural compartment map");
++                if (thoracic) thoracicPressureMask |= 1u<<i;
++            }
++            stageThoracicPressure=pipeline(@"nm_human_stage_thoracic_pressure");
++            std::cout << "resting_vascular_external_pressure=accepted_pleural_delta"
++                      << " reference_pa=" << parameters.environment.x
++                      << " compartment_mask=" << thoracicPressureMask << "\n";
++        }
+@@ -579,0 +601,16 @@
++            if (stageThoracicPressure) {
++                if (!v.vascularExternalPressureSource || !v.vascularExternalPressureTrial ||
++                    v.compartmentCount!=21u || v.microtickCount!=1u) {
++                    [enc endEncoding];
++                    return false;
++                }
++                [enc setComputePipelineState:stageThoracicPressure];
++                [enc setBuffer:buffer(v.vascularExternalPressureSource) offset:0 atIndex:0];
++                [enc setBuffer:buffer(v.vascularExternalPressureTrial) offset:0 atIndex:1];
++                [enc setBuffer:accepted offset:0 atIndex:2];
++                const float pleuralReference=parameters.environment.x;
++                [enc setBytes:&pleuralReference length:sizeof(pleuralReference) atIndex:3];
++                [enc setBytes:&thoracicPressureMask length:sizeof(thoracicPressureMask) atIndex:4];
++                [enc dispatchThreads:MTLSizeMake(v.compartmentCount,1,1)
++                    threadsPerThreadgroup:MTLSizeMake(stageThoracicPressure.threadExecutionWidth,1,1)];
++            }
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -3256,0 +3257 @@
++    id<MTLBuffer> vascularExternalPressureSource = nil;
+@@ -11238,0 +11240,18 @@
++        if (const char* boundary = std::getenv("NM_VASCULAR_STEP_EXTERNAL_PRESSURE")) {
++            if (std::strcmp(boundary, "0") != 0 && std::strcmp(boundary, "1") != 0) {
++                diagnostics.message = "NM_VASCULAR_STEP_EXTERNAL_PRESSURE must be 0 or 1";
++                return diagnostics;
++            }
++            if (std::strcmp(boundary, "1") == 0) {
++                if (environments != 1u || world.vascular.compartments.empty() ||
++                    !world.vascular.cavities.empty() || world.dispatch.femNodeCount != 0u ||
++                    world.dispatch.particleCount != 0u || world.dispatch.maximumRateExponent != 0u) {
++                    diagnostics.message = "step external pressure needs a single lumped, single-rate vascular network";
++                    return diagnostics;
++                }
++                candidate->vascularExternalPressureSource = candidate->vascularCompartments;
++                candidate->vascularCompartments = uploads.one(
++                    std::span<const NMVascularCompartmentGPU>(world.vascular.compartments),
++                    valid, candidate->residentBytes);
++            }
++        }
+@@ -18676,0 +18696,4 @@
++            return diagnostics;
++        }
++        if (state.vascularExternalPressureSource && !hasAcceptedStepExtension) {
++            diagnostics.message = "vascular step pressure requires an accepted-step extension";
+@@ -21653,0 +21677,6 @@
++            if (state.vascularExternalPressureSource &&
++                phase == AcceptedStepExtensionPhase::frameBegin) {
++                view.vascularExternalPressureSource =
++                    (__bridge void*)state.vascularExternalPressureSource;
++                view.vascularExternalPressureTrial = (__bridge void*)state.vascularCompartments;
++            }
+@@ -33178 +33207,4 @@
+-                    sizeof(NMVascularCompartmentGPU), state.vascularCompartments, false);
++                    sizeof(NMVascularCompartmentGPU),
++                    state.vascularExternalPressureSource ?
++                        state.vascularExternalPressureSource : state.vascularCompartments,
++                    false);
+--- a/matter/include/numi/matter/matter.hpp
++++ b/matter/include/numi/matter/matter.hpp
+@@ -1252,0 +1253,7 @@
++    // Optional boundary staging for a single lumped vascular network.
++    // Immutable source and writable trial are offered together in frameBegin.
++    // The receiver must populate the entire trial array deterministically
++    // from accepted input, changing only compartment external pressure.
++    // The trial is scratch and is rebuilt on every attempted frame.
++    void* vascularExternalPressureSource = nullptr;
++    void* vascularExternalPressureTrial = nullptr;

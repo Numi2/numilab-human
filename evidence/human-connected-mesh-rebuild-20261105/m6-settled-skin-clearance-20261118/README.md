@@ -1,0 +1,9 @@
+# Exact rendered skin intersections at release and settled rest
+
+This independent audit uses the native M6 step-0 and step-2000 accepted packs and their source-bound rigid pose receipts. It reads MRVPACK2, composes captured instance poses once and rounds their vertices to the Float32 world lattice. It then uses the existing exact triangle predicates from Human commit 360d278c. All intersection witnesses and source IDs are retained in the compressed JSON files. The audit does not infer penetration depths, source seam exceptions, enclosed pairs, pairwise internal tissue intersections or full-cycle clearance.
+
+The captures use the regional bed skin/fat and passive hip mode. The release capture has 8,596 skin-to-structure triangle pairs and zero skin self-pairs. The 4-second settled capture has 14,211 skin-to-structure pairs and 610 raw self-pairs. At 4 seconds there are 10,533 muscle, 3,356 bone and 322 vessel triangle pairs. Several faces can represent one anatomical interface. These are witness counts. They require further anatomical classification before they can serve as defect counts.
+
+Passing sampled skin-to-bed clearance and valid face geometry can coexist with these intersections. The results establish a geometry problem in the fitted scene at the tested poses. They neither simulate nor measure blood outside the circulation. This audit has no authority to modify the physical skin, source arrangements, or active native solver.
+
+The launch receipt pins the source assets and binary. To reproduce the analysis, use the Human Python source at 360d278c and run audit.py with a frozen accepted pack and unused result path. The full packs remain on SSH Numi, with SHA-256 identities included in metrics.json. The capture launch derives from the regional 16-second fixture and requests exactly steps 0 and 2000.
