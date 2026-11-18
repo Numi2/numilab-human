@@ -1,0 +1,80 @@
+{
+  "human_parent_revision": "18c6cd2d26fd11fda5b3da03f49ee28312737eb5",
+  "numi_lab_runtime_base_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+  "numi_lab_runtime_dirty_source_pin": {
+    "bytes": 7554029,
+    "path": "/Users/numi/Work/human-integrated-gaps-20261104/shared-bundle-native-307/execution-source.patch",
+    "sha256": "c065211479f922c60fff20fe60310ee57db488ed65d8fab5fa8f309923ecaf16"
+  },
+  "macos": [
+    "ProductName:\t\tmacOS",
+    "ProductVersion:\t\t27.0",
+    "BuildVersion:\t\t26A425"
+  ],
+  "device": "Apple M6",
+  "source_files": {
+    "apps/NumiHumanLocalBedLayers.hpp": {
+      "base_file": null,
+      "base_sha256": null,
+      "tested_sha256": "fef26dc029277c07d09c5787b49ac19e80cfdc24d7e5c1b72a342049b81b4d8e"
+    },
+    "apps/NumiHumanRestingVisual.hpp": {
+      "base_file": "/Users/numi/Work/human-integrated-gaps-20261104/resume-accepted-knee-load-001/NumiHumanRestingVisual.hpp",
+      "base_sha256": "aec4c6081d2b6a67df485e093b0ad2b7c206c9a5a9e2205bc89ed10ad1f2231f",
+      "tested_sha256": "7ff3e320e9a51ad9645696072cc5912bc3150341f05d58884755924953b8d3e4"
+    },
+    "apps/numilab_human_myosim_visual_probe.mm": {
+      "base_file": "/Users/numi/Work/human-integrated-gaps-20261104/resume-accepted-knee-load-001/numilab_human_myosim_visual_probe.mm",
+      "base_sha256": "eb65196878582f53ef5999ecc73594f03bb78b5e87ed75e5543cd3a43df12126",
+      "tested_sha256": "c857252ace499c3fc0618fb97b896ac4eb0f731bb8ff85734b47a42e4c4f776e"
+    },
+    "src/metal/NumiHumanStand.metal": {
+      "base_file": "/Users/numi/Work/skin-fat-native-integration-209/src/metal/NumiHumanStand.metal",
+      "base_sha256": "f4d4454ee629575c041443aa1baa0a4cea132cebf30117481aa0b08e91b6cadf",
+      "tested_sha256": "276cc38e03bcd1dcd02518e7b146f4d34109d89ad8e018790226c1cbaa8326db"
+    },
+    "src/metal/NumiHumanStandSolve.metalinc": {
+      "base_file": "/Users/numi/Work/skin-fat-native-integration-209/src/metal/NumiHumanStandSolve.metalinc",
+      "base_sha256": "ca6b5bf7b52ea9d1569c21b9494a0b0180839246fde6863a6f85bec3f96a1587",
+      "tested_sha256": "d1188ae58a600448819ee42150971b367d4c2194f73c4522c8d6ce21dcdc4ed3"
+    },
+    "matter/src/human_respiration.metal": {
+      "base_file": "/Users/numi/Work/skin-fat-native-integration-209/matter/src/human_respiration.metal",
+      "base_sha256": "38b78a7fbd61f81797e9836712439e6caca9ab0ef96e9b9091678c2f93d4cbcd",
+      "tested_sha256": "9eef6d0b86ffea4f49ff0922c06c2d59455db97175adbe80f86c9c965fcc19f8"
+    }
+  },
+  "unchanged_app_headers": {
+    "NumiHumanAorticDiscretePreload.hpp": {
+      "file": "/Users/numi/Work/human-integrated-gaps-20261104/resume-accepted-knee-load-001/NumiHumanAorticDiscretePreload.hpp",
+      "sha256": "70964765628ed49c5620bc8dbc1d18402c5058448717c19e511527b50e5d771f"
+    }
+  },
+  "tested_binaries": {
+    "numi-human-native": "a9e20a7f8c1cf7b4315485a53ce19fdfc848ff1d3031aaf8f6bb3acb8e6ae035",
+    "metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+    "metalrobo/HumanRestingSkin.metallib": "ceb070d7b8ad357dc24606313780af9ab4651e4422c1035cdea7cc21698678e8"
+  },
+  "tested_untouched_runtime_dependencies": {
+    "/Users/numi/Work/skin-fat-native-integration-209/build-native/lib/libmetalrobo.dylib": {
+      "bytes": 10538256,
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/lib/libmetalrobo.dylib",
+      "sha256": "0dcaa938cc8c8fe892bb7351599efb97a8bd49cc92a12336121b3c35840500f2"
+    },
+    "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/HumanRespiration.metallib": {
+      "bytes": 560736,
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/HumanRespiration.metallib",
+      "sha256": "880f60be6eb17b6af781665c6016c6d050da069685fcf1e8e2cafda0fc2115c8"
+    },
+    "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib": {
+      "bytes": 22065331,
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib",
+      "sha256": "683c00b6cac9699002c60e64abe472b07d81a02c7149e28b32f446b255e9c66e"
+    },
+    "/Users/numi/Work/skin-fat-native-integration-209/build-native/shaders/MetalRobo.metallib": {
+      "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/shaders/MetalRobo.metallib",
+      "sha256": "b52b5c1c5736da382682e4412aa9b458603066c0c5728a8869d02627aef97672",
+      "bytes": 5376660
+    }
+  }
+}
