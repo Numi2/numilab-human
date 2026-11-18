@@ -1,0 +1,23 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -9204,7 +9204,10 @@
+             }
+             line << "]";
+             if (sourceStep == 0u) {
+-                line << " source_q=[";
++                line << " generalized_load=[";
++                for (std::size_t index = 0u; index < generalizedLoad.size(); ++index)
++                    line << (index == 0u ? "" : ",") << generalizedLoad[index];
++                line << "] source_q=[";
+                 for (std::size_t index = 0u; index < sourceQ.size(); ++index)
+                     line << (index == 0u ? "" : ",") << sourceQ[index];
+                 line << "]";
+@@ -12559,7 +12562,7 @@
+                         sameVectorBytes(frozenEndpointState.adaptive, a.adaptive) &&
+                         samePrefixBytes(frozenEndpointState.femMaterialState,
+                                         a.femMaterialState) &&
+-                        sameVectorBytes(frozenEndpointState.environmentParameters,
++                        samePrefixBytes(frozenEndpointState.environmentParameters,
+                                         a.environmentParameters) &&
+                         sameVectorBytes(frozenEndpointState.learnedWeights,
+                                         a.learnedWeights),

@@ -1,0 +1,11 @@
+# Accepted first-root FEM load at the reference posture
+
+Compiled on SSH Numi and executed on Apple M6 at 15.625 µs using the same G495 physical mesh and pressure-fitted aortic reference as the parent evidence. This capture uses the owner's accepted-load readback. The source pose precedes the accepted root. The physical update remained unchanged. This is a one-root release diagnostic. The independent eight-root settlement result in the parent directory still fails.
+
+- The Matter bed supplied 18.7027 N mean normal force through three samples during the first root. The complete body weighs 952.86 N. The three samples represent real contact with the sole physical bed plane.
+- The measured FEM contribution to the right and left knee flexion coordinates was +0.000390 and +0.001720 N·m. The source gravity targets in these rows are approximately −9.876 N·m each. Omitting these direct FEM knee-row torques from the recruitment input cannot by itself account for the roughly 62 rad/s² knee accelerations seen in the parent run. The captured source root force is `[2.807, 15.237, −17.434]` N and enters the coupled articulation. This test does not attribute cross-coordinate inertia, equality projection, or the full runtime muscle and ligament wrench.
+- The one accepted root used 272 Krylov columns and five active Newton iterations, matching the first root in the prior eight-root trial. Its command took 14.638 s. This diagnostic does not measure sustained throughput.
+
+`capture-load.patch` applies on top of the parent's tested native overlay. It emits only the accepted first-root vectors and updates the optional endpoint comparison for the frozen-load wrapper's logically trimmed parameter arena. The endpoint writer was disabled in this capture. The launch, hashes, and exact generalized load vectors are retained here.
+
+The source report shows about 811.45 N of rigid-body vertical gravity load and reports zero support in its recruitment system. The remaining full-system weight includes continuum mass. The knee rows appear balanced in the source report only after the separate compiled equality reactions are included (+7.755 and +1.319 N·m). Those values are source estimates. The current witness establishes the actual direct FEM contribution only; it does not give the native reaction on each equality row.
