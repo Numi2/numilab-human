@@ -1,0 +1,825 @@
+{
+  "device": "Apple M6, 16 GiB, Mac18,5, macOS 27.0 (26A425)",
+  "base_source_revision": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+  "build_source_scope": "Retained dirty native checkpoint with incremental application overlays and exact linked libraries for bed test.",
+  "cases": [
+    {
+      "case": "resume-fidelity-and-profile-02",
+      "native_binary": {
+        "bytes": 10556464,
+        "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/bin/numi-human-native",
+        "sha256": "3900d587e78526d70157f864ba438a48acf48b652fd873e6542319ebf3e2bc8a"
+      },
+      "step_seconds": 1.5625e-05,
+      "launch_plan_sha256": "40af4b0dd87d7ac19001372361472c13ba8f0f7ead07aa0831d66198b735fa0d",
+      "activation_cap": 0.0,
+      "execution": {
+        "exit_code": 0,
+        "elapsed_s": 342.01045513153076,
+        "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-fidelity-and-profile-02/install-motion.plan.json",
+        "plan_sha256": "40af4b0dd87d7ac19001372361472c13ba8f0f7ead07aa0831d66198b735fa0d",
+        "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-fidelity-and-profile-02/install-motion.stdout.log.gz",
+        "stdout_encoding": "gzip",
+        "stdout_compressor_exit_code": 0,
+        "stdout_sha256": "ed1c313f86d48eabd55fc39e24c4b5856e7f37b3cb0ef6c113debe32acdfba68",
+        "stdout_uncompressed_sha256": "1d30b2048c4eed8d85b02f459031e43382b746874b26867b91407182d848b313",
+        "stderr_sha256": "ac84e68d016f31bab6941b4c8d965e8b8aadf43026e67f54ec73242c2925736c",
+        "physical_admission": false,
+        "resource_stop_reason": null,
+        "source_import_pass": true,
+        "accepted_steps_are_separately_recorded_in_native_report": true
+      },
+      "last_terminal_failure": null,
+      "accepted_motion": [
+        {
+          "accepted_step": 1,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.340872299368055,
+            "108": -580.5810412238803,
+            "119": -4.494400484127432,
+            "122": -572.3309840157369
+          }
+        },
+        {
+          "accepted_step": 2,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.506882403482997,
+            "108": -579.0421676969727,
+            "119": -4.0994414756869775,
+            "122": -570.9572176809874
+          }
+        },
+        {
+          "accepted_step": 3,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.429292199168334,
+            "108": -579.3509228823078,
+            "119": -4.251995894041032,
+            "122": -571.1701808708722
+          }
+        },
+        {
+          "accepted_step": 4,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.51861328292581,
+            "108": -578.9931756992996,
+            "119": -4.20319077635915,
+            "122": -570.8453424863011
+          }
+        }
+      ],
+      "initialization_and_bed": [
+        "resting_fem_skin_bed_compiled=validated pair_rows=76153 initial_outer_min_gap_m=1.0000000216336957e-05 initial_outer_max_gap_m=0.29480481707196304 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+        "resting_initialization=dynamic_release recruitment_activation_cap=0 recruited_muscles=416 active_muscles=0 maximum_activation=0 normalized_residual_rms=95.4933424424 maximum_acceleration_residual=575.5861459 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+        "resting_bed_contact_owner=fem_outer_skin articulated_support_rows=0 initialization_only_support_rows=32",
+        "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=1.00043848761e-08 mean_normal_force_N=0.000640280632069 valid_contact_sample_count=1 impulse_on_plane_xyz_Ns=[0,0,-1.00043848761e-08] angular_impulse_on_plane_xyz_Nms=[8.4779321341e-09,1.76122963436e-10,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0"
+      ],
+      "physical_command_samples": [
+        {
+          "step": 1.0,
+          "command_ms": 16664.221792,
+          "gpu_ms": 16660.0267084,
+          "host_copy_ms": 0.357583,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 2.0,
+          "command_ms": 26740.129959,
+          "gpu_ms": 26737.0303751,
+          "host_copy_ms": 0.186083,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 3.0,
+          "command_ms": 8906.530833,
+          "gpu_ms": 8905.83954169,
+          "host_copy_ms": 0.075375,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 4.0,
+          "command_ms": 8877.510125,
+          "gpu_ms": 8855.57599994,
+          "host_copy_ms": 0.102958,
+          "full_state_readback": 1.0
+        }
+      ],
+      "solver_work": [
+        {
+          "root": 0,
+          "used_columns_sum": 320,
+          "cycles_with_work": 20,
+          "budget_exhausted_solves": 3,
+          "active_newton_begins": 5,
+          "final_nonpressure_nontransport_relative_residual": 4.64838331e-06,
+          "status_code": 0
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 544,
+          "cycles_with_work": 34,
+          "budget_exhausted_solves": 4,
+          "active_newton_begins": 10,
+          "final_nonpressure_nontransport_relative_residual": 3.98846805e-06,
+          "status_code": 0
+        },
+        {
+          "root": 2,
+          "used_columns_sum": 128,
+          "cycles_with_work": 8,
+          "budget_exhausted_solves": 2,
+          "active_newton_begins": 2,
+          "final_nonpressure_nontransport_relative_residual": 5.48017942e-06,
+          "status_code": 0
+        },
+        {
+          "root": 3,
+          "used_columns_sum": 128,
+          "cycles_with_work": 8,
+          "budget_exhausted_solves": 2,
+          "active_newton_begins": 2,
+          "final_nonpressure_nontransport_relative_residual": 5.68763062e-06,
+          "status_code": 0
+        }
+      ],
+      "body_elapsed_s_if_published": null
+    },
+    {
+      "case": "resume-ankle-recruitment-001",
+      "native_binary": {
+        "bytes": 10556464,
+        "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/bin/numi-human-native",
+        "sha256": "3900d587e78526d70157f864ba438a48acf48b652fd873e6542319ebf3e2bc8a"
+      },
+      "step_seconds": 1.5625e-05,
+      "launch_plan_sha256": "88eda20aa36a8417cc10169dbb70bdc2d279162ff234981bf82cedfe3c372d20",
+      "activation_cap": 0.1,
+      "execution": {
+        "exit_code": 0,
+        "elapsed_s": 280.7710499763489,
+        "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-ankle-recruitment-001/install-motion.plan.json",
+        "plan_sha256": "88eda20aa36a8417cc10169dbb70bdc2d279162ff234981bf82cedfe3c372d20",
+        "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-ankle-recruitment-001/install-motion.stdout.log.gz",
+        "stdout_encoding": "gzip",
+        "stdout_compressor_exit_code": 0,
+        "stdout_sha256": "a5d39f462c8d67678f1b52d53407d5cb2a8c514647e9b6db6838cf1b39408000",
+        "stdout_uncompressed_sha256": "b0f8134ff5a63867516a12855b0393ddfccba42987b5a7486f35082d36f00dbf",
+        "stderr_sha256": "f8e772c12b9a9aaa91b122d3b9bb9b32c0a413d24f10f17c5edbab6733264a2e",
+        "physical_admission": false,
+        "resource_stop_reason": null,
+        "source_import_pass": true,
+        "accepted_steps_are_separately_recorded_in_native_report": true
+      },
+      "last_terminal_failure": null,
+      "accepted_motion": [
+        {
+          "accepted_step": 1,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 198.57125520837147,
+            "108": -11.90952154632808,
+            "119": 151.8549099072788,
+            "122": -14.761289794876356
+          }
+        },
+        {
+          "accepted_step": 2,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 198.69153744265836,
+            "108": -10.683334852568821,
+            "119": 152.2285719695308,
+            "122": -13.711277684749257
+          }
+        },
+        {
+          "accepted_step": 3,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 198.63300560543846,
+            "108": -11.301718119197197,
+            "119": 152.0226526193115,
+            "122": -14.196983773679456
+          }
+        },
+        {
+          "accepted_step": 4,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 198.5914024074146,
+            "108": -10.965100919185653,
+            "119": 151.99550254060105,
+            "122": -13.94994493741317
+          }
+        }
+      ],
+      "initialization_and_bed": [
+        "resting_fem_skin_bed_compiled=validated pair_rows=76153 initial_outer_min_gap_m=1.0000000216336957e-05 initial_outer_max_gap_m=0.29480481707196304 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+        "resting_initialization=dynamic_release recruitment_activation_cap=0.1 recruited_muscles=416 active_muscles=146 maximum_activation=0.1 normalized_residual_rms=3.69891430971 maximum_acceleration_residual=199.328747703 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+        "resting_bed_contact_owner=fem_outer_skin articulated_support_rows=0 initialization_only_support_rows=32",
+        "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=9.85987469448e-09 mean_normal_force_N=0.000631031980447 valid_contact_sample_count=1 impulse_on_plane_xyz_Ns=[0,0,-9.85987469448e-09] angular_impulse_on_plane_xyz_Nms=[8.35547098177e-09,1.7357891513e-10,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0"
+      ],
+      "physical_command_samples": [
+        {
+          "step": 1.0,
+          "command_ms": 16552.058375,
+          "gpu_ms": 16551.3016251,
+          "host_copy_ms": 0.168875,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 2.0,
+          "command_ms": 22750.030458,
+          "gpu_ms": 22749.3032501,
+          "host_copy_ms": 2.389084,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 3.0,
+          "command_ms": 39501.944208,
+          "gpu_ms": 39501.2260417,
+          "host_copy_ms": 0.052375,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 4.0,
+          "command_ms": 22668.346916,
+          "gpu_ms": 22656.0027502,
+          "host_copy_ms": 0.23225,
+          "full_state_readback": 1.0
+        }
+      ],
+      "solver_work": [
+        {
+          "root": 0,
+          "used_columns_sum": 320,
+          "cycles_with_work": 20,
+          "budget_exhausted_solves": 3,
+          "active_newton_begins": 5,
+          "final_nonpressure_nontransport_relative_residual": 4.64838331e-06,
+          "status_code": 0
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 464,
+          "cycles_with_work": 29,
+          "budget_exhausted_solves": 5,
+          "active_newton_begins": 8,
+          "final_nonpressure_nontransport_relative_residual": 4.43016779e-06,
+          "status_code": 0
+        },
+        {
+          "root": 2,
+          "used_columns_sum": 864,
+          "cycles_with_work": 54,
+          "budget_exhausted_solves": 5,
+          "active_newton_begins": 16,
+          "final_nonpressure_nontransport_relative_residual": 1.14113691e-05,
+          "status_code": 0
+        },
+        {
+          "root": 3,
+          "used_columns_sum": 464,
+          "cycles_with_work": 29,
+          "budget_exhausted_solves": 6,
+          "active_newton_begins": 8,
+          "final_nonpressure_nontransport_relative_residual": 5.18391835e-06,
+          "status_code": 0
+        }
+      ],
+      "body_elapsed_s_if_published": null
+    },
+    {
+      "case": "resume-fgmres-halfwarp-001",
+      "native_binary": {
+        "bytes": 10556464,
+        "path": "/Users/numi/Work/skin-fat-native-integration-209/build-native/bin/numi-human-native",
+        "sha256": "3900d587e78526d70157f864ba438a48acf48b652fd873e6542319ebf3e2bc8a"
+      },
+      "step_seconds": 1.5625e-05,
+      "launch_plan_sha256": "b3bfa41deb4d6f87e79fd35614bb5d7b7d1b6e649e8dd70c5a4e8c538653a6f4",
+      "activation_cap": 0.0,
+      "execution": {
+        "exit_code": 0,
+        "elapsed_s": 321.9155080318451,
+        "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-fgmres-halfwarp-001/install-motion.plan.json",
+        "plan_sha256": "b3bfa41deb4d6f87e79fd35614bb5d7b7d1b6e649e8dd70c5a4e8c538653a6f4",
+        "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-fgmres-halfwarp-001/install-motion.stdout.log.gz",
+        "stdout_encoding": "gzip",
+        "stdout_compressor_exit_code": 0,
+        "stdout_sha256": "18682d2d2bd2b2519b6c6efcd3ea4d0215c5f9006d917e2cd2a2e586f8116033",
+        "stdout_uncompressed_sha256": "9d5de8e76b697d39801ab7f55a9937509f1797caf118e584ddefc7bc898b3c30",
+        "stderr_sha256": "f4f6415061bba6985fd7795c1cef00f9a5bde9d85d9c557607d353d8b7ab7707",
+        "physical_admission": false,
+        "resource_stop_reason": null,
+        "source_import_pass": true,
+        "accepted_steps_are_separately_recorded_in_native_report": true
+      },
+      "last_terminal_failure": null,
+      "accepted_motion": [
+        {
+          "accepted_step": 1,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.33750839552783,
+            "108": -580.5818162638435,
+            "119": -4.482699812683183,
+            "122": -572.32818273587
+          }
+        },
+        {
+          "accepted_step": 2,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.507292195463535,
+            "108": -579.0407974570379,
+            "119": -4.092151556033231,
+            "122": -570.9562045610355
+          }
+        },
+        {
+          "accepted_step": 3,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.440963110613996,
+            "108": -579.3484204824266,
+            "119": -4.270748021150355,
+            "122": -571.1747120706568
+          }
+        },
+        {
+          "accepted_step": 4,
+          "dt_s": 1.5625000742147677e-05,
+          "joint_acceleration_rad_s2": {
+            "105": 23.507273763464408,
+            "108": -578.9979372990736,
+            "119": -4.213038647891403,
+            "122": -570.8479600861768
+          }
+        }
+      ],
+      "initialization_and_bed": [
+        "resting_fem_skin_bed_compiled=validated pair_rows=76153 initial_outer_min_gap_m=1.0000000216336957e-05 initial_outer_max_gap_m=0.29480481707196304 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+        "resting_initialization=dynamic_release recruitment_activation_cap=0 recruited_muscles=416 active_muscles=0 maximum_activation=0 normalized_residual_rms=95.4933424424 maximum_acceleration_residual=575.5861459 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+        "resting_bed_contact_owner=fem_outer_skin articulated_support_rows=0 initialization_only_support_rows=32",
+        "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=9.85987469448e-09 mean_normal_force_N=0.000631031980447 valid_contact_sample_count=1 impulse_on_plane_xyz_Ns=[0,0,-9.85987469448e-09] angular_impulse_on_plane_xyz_Nms=[8.35547098177e-09,1.7357891513e-10,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0"
+      ],
+      "physical_command_samples": [
+        {
+          "step": 1.0,
+          "command_ms": 52887.315542,
+          "gpu_ms": 52880.7702917,
+          "host_copy_ms": 0.3905,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 2.0,
+          "command_ms": 33764.852292,
+          "gpu_ms": 33764.1454583,
+          "host_copy_ms": 0.132958,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 3.0,
+          "command_ms": 40148.41325,
+          "gpu_ms": 40147.7018751,
+          "host_copy_ms": 0.053375,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 4.0,
+          "command_ms": 11344.883042,
+          "gpu_ms": 11330.0832917,
+          "host_copy_ms": 0.208291,
+          "full_state_readback": 1.0
+        }
+      ],
+      "solver_work": [
+        {
+          "root": 0,
+          "used_columns_sum": 1024,
+          "cycles_with_work": 64,
+          "budget_exhausted_solves": 16,
+          "active_newton_begins": 16,
+          "final_nonpressure_nontransport_relative_residual": 6.89683839e-06,
+          "status_code": 0
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 720,
+          "cycles_with_work": 45,
+          "budget_exhausted_solves": 6,
+          "active_newton_begins": 13,
+          "final_nonpressure_nontransport_relative_residual": 5.94293579e-06,
+          "status_code": 0
+        },
+        {
+          "root": 2,
+          "used_columns_sum": 880,
+          "cycles_with_work": 55,
+          "budget_exhausted_solves": 7,
+          "active_newton_begins": 16,
+          "final_nonpressure_nontransport_relative_residual": 9.99061467e-06,
+          "status_code": 0
+        },
+        {
+          "root": 3,
+          "used_columns_sum": 192,
+          "cycles_with_work": 12,
+          "budget_exhausted_solves": 3,
+          "active_newton_begins": 3,
+          "final_nonpressure_nontransport_relative_residual": 4.04848697e-06,
+          "status_code": 0
+        }
+      ],
+      "body_elapsed_s_if_published": null
+    },
+    {
+      "case": "resume-bed-plane-004",
+      "native_binary": {
+        "path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-bed-plane-003/numi-human-native",
+        "sha256": "140e6ba54428780d353cc43eddf94d8670777d040cacdf919b5147d90bfc3e46",
+        "bytes": 10556800
+      },
+      "step_seconds": 1.5625e-05,
+      "launch_plan_sha256": "c65c2c6b7a47beb3d3609ae61b6d18ac672ac5108733d980cc76caae5f3d2c00",
+      "activation_cap": 0.1,
+      "execution": {
+        "exit_code": 1,
+        "elapsed_s": 190.54635787010193,
+        "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-bed-plane-004/install-motion.plan.json",
+        "plan_sha256": "c65c2c6b7a47beb3d3609ae61b6d18ac672ac5108733d980cc76caae5f3d2c00",
+        "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-bed-plane-004/install-motion.stdout.log.gz",
+        "stdout_encoding": "gzip",
+        "stdout_compressor_exit_code": 0,
+        "stdout_sha256": "eef5a55c6283e1c369f04af377d3164d87b4e359c321649724f1eb4ad35b5ad0",
+        "stdout_uncompressed_sha256": "d369aa676082c36596476c336f18873ea172b2d0da47ec579cfab3f8dbeba579",
+        "stderr_sha256": "2d25f211be8acdb3f717575d92c38fbba50af5ad603b8246eaab0e38cf53f79a",
+        "physical_admission": false,
+        "resource_stop_reason": null,
+        "source_import_pass": true,
+        "accepted_steps_are_separately_recorded_in_native_report": true
+      },
+      "last_terminal_failure": "myosim_articulated_visual=failed error=\"supported prelude requires the admitted horizontal FEM bed\"",
+      "accepted_motion": [],
+      "initialization_and_bed": [
+        "resting_trial_bed_plane=fixed normal=[0.001758502217544617,-0.0017949836362605501,0.99999684284686441] offset_m=0.0015430059869254932 gravity_unchanged=1 force_rows_added=0",
+        "resting_fem_skin_bed_compiled=validated pair_rows=76153 initial_outer_min_gap_m=9.1000585283145235e-06 initial_outer_max_gap_m=0.29617495936675936 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+        "resting_initialization=dynamic_release recruitment_activation_cap=0.1 recruited_muscles=416 active_muscles=146 maximum_activation=0.1 normalized_residual_rms=3.69891430971 maximum_acceleration_residual=199.328747703 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+        "resting_bed_contact_owner=fem_outer_skin articulated_support_rows=0 initialization_only_support_rows=32"
+      ],
+      "physical_command_samples": [
+        {
+          "step": 1.0,
+          "command_ms": 14621.893459,
+          "gpu_ms": 14621.1985,
+          "host_copy_ms": 57.468625,
+          "full_state_readback": 1.0
+        }
+      ],
+      "solver_work": [
+        {
+          "root": 0,
+          "used_columns_sum": 272,
+          "cycles_with_work": 17,
+          "budget_exhausted_solves": 2,
+          "active_newton_begins": 5,
+          "final_nonpressure_nontransport_relative_residual": 4.64927234e-06,
+          "status_code": 0
+        }
+      ],
+      "body_elapsed_s_if_published": null
+    },
+    {
+      "case": "resume-bed-plane-005",
+      "native_binary": {
+        "path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-bed-plane-005/numi-human-native",
+        "sha256": "c390f78a266680bd41fd4adc55a58360bb3bb67049cb7f2ab59fb1e29fb07ad3",
+        "bytes": 10556800
+      },
+      "step_seconds": 1.5625e-05,
+      "launch_plan_sha256": "e2f226fe8a1aa3f8bae2df6879aafa31fa6ff7dc37566d4dd82d3542bdda8ae9",
+      "activation_cap": 0.1,
+      "execution": {
+        "exit_code": 1,
+        "elapsed_s": 355.970232963562,
+        "plan_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-bed-plane-005/install-motion.plan.json",
+        "plan_sha256": "e2f226fe8a1aa3f8bae2df6879aafa31fa6ff7dc37566d4dd82d3542bdda8ae9",
+        "stdout_path": "/Users/numi/Work/human-integrated-gaps-20261104/resume-bed-plane-005/install-motion.stdout.log.gz",
+        "stdout_encoding": "gzip",
+        "stdout_compressor_exit_code": 0,
+        "stdout_sha256": "cf66768e8e46c0f058644189a2364c4a3732fe462bbc04bc3baf7c2ec4c47d76",
+        "stdout_uncompressed_sha256": "b7d0d069a8f5780c1a03b5032dbd26f57aaf286542b1bac873206faba08d1440",
+        "stderr_sha256": "f0d5070f5e9ccfab63fa8cf583cdb7eeb201c4eaa0c9e53254cab49ee6153e3b",
+        "physical_admission": false,
+        "resource_stop_reason": null,
+        "source_import_pass": true,
+        "accepted_steps_are_separately_recorded_in_native_report": true
+      },
+      "last_terminal_failure": "myosim_articulated_visual=failed error=\"supported prelude hard budget exhausted before 8 consecutive accepted states passed acceleration, support reaction, motion, equality, and physiology gates; failure_mask=7 settled_tail=0 max_acceleration=11053.539062 support_force_n=-0.000000 generalized_speed=0.024825 fem_speed=3.385499\"",
+      "accepted_motion": [
+        {
+          "accepted_step": 1,
+          "support_force_n": 18.6802558601,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 9.80891788307e-06,
+          "max_generalized_acceleration": 11477.1357422,
+          "max_generalized_speed": 0.00310267554596,
+          "max_fem_speed": 1.25850221681,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 2,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.03756762659e-05,
+          "max_generalized_acceleration": 10663.2939453,
+          "max_generalized_speed": 0.00620723236352,
+          "max_fem_speed": 2.31251704556,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 3,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.07413511365e-05,
+          "max_generalized_acceleration": 11083.1289062,
+          "max_generalized_speed": 0.00931086577475,
+          "max_fem_speed": 3.11496371621,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 4,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.09025442209e-05,
+          "max_generalized_acceleration": 10811.2304688,
+          "max_generalized_speed": 0.0124138556421,
+          "max_fem_speed": 3.64152160216,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 5,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.08753273618e-05,
+          "max_generalized_acceleration": 11207.3388672,
+          "max_generalized_speed": 0.0155172534287,
+          "max_fem_speed": 3.8957849804,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 6,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.06967068165e-05,
+          "max_generalized_acceleration": 11203.8496094,
+          "max_generalized_speed": 0.0186191685498,
+          "max_fem_speed": 3.90699586044,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 7,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.04173793125e-05,
+          "max_generalized_acceleration": 11064.0458984,
+          "max_generalized_speed": 0.0217223484069,
+          "max_fem_speed": 3.71969030595,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        },
+        {
+          "accepted_step": 8,
+          "support_force_n": -0.0,
+          "reference_support_force_n": 952.864493986,
+          "minimum_support_gap_m": 1.00936969227e-05,
+          "max_generalized_acceleration": 11053.5390625,
+          "max_generalized_speed": 0.0248245652765,
+          "max_fem_speed": 3.38549870106,
+          "failure_mask": 7,
+          "settled_consecutive_steps": 0
+        }
+      ],
+      "initialization_and_bed": [
+        "resting_trial_bed_plane=fixed normal=[0.001758502217544617,-0.0017949836362605501,0.99999684284686441] offset_m=0.0015430059869254932 gravity_unchanged=1 force_rows_added=0",
+        "resting_fem_skin_bed_compiled=validated pair_rows=76153 initial_outer_min_gap_m=9.1000585283145235e-06 initial_outer_max_gap_m=0.29617495936675936 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+        "resting_initialization=dynamic_release recruitment_activation_cap=0.1 recruited_muscles=416 active_muscles=146 maximum_activation=0.1 normalized_residual_rms=3.69891430971 maximum_acceleration_residual=199.328747703 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+        "resting_bed_contact_owner=fem_outer_skin articulated_support_rows=0 initialization_only_support_rows=32"
+      ],
+      "physical_command_samples": [
+        {
+          "step": 1.0,
+          "command_ms": 14570.669208,
+          "gpu_ms": 14566.7751667,
+          "host_copy_ms": 0.820167,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 2.0,
+          "command_ms": 22168.448917,
+          "gpu_ms": 22167.9384166,
+          "host_copy_ms": 0.090792,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 3.0,
+          "command_ms": 38256.150625,
+          "gpu_ms": 38255.5638752,
+          "host_copy_ms": 0.091708,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 4.0,
+          "command_ms": 13402.645209,
+          "gpu_ms": 13402.1086665,
+          "host_copy_ms": 0.077416,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 5.0,
+          "command_ms": 21119.587667,
+          "gpu_ms": 21118.99525,
+          "host_copy_ms": 0.055958,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 6.0,
+          "command_ms": 15990.781833,
+          "gpu_ms": 15990.253875,
+          "host_copy_ms": 0.0545,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 7.0,
+          "command_ms": 39882.7575,
+          "gpu_ms": 39882.2011249,
+          "host_copy_ms": 0.054375,
+          "full_state_readback": 1.0
+        },
+        {
+          "step": 8.0,
+          "command_ms": 10896.530583,
+          "gpu_ms": 10895.9592499,
+          "host_copy_ms": 0.055,
+          "full_state_readback": 1.0
+        }
+      ],
+      "solver_work": [
+        {
+          "root": 0,
+          "used_columns_sum": 272,
+          "cycles_with_work": 17,
+          "budget_exhausted_solves": 2,
+          "active_newton_begins": 5,
+          "final_nonpressure_nontransport_relative_residual": 4.64927234e-06,
+          "status_code": 0
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 464,
+          "cycles_with_work": 29,
+          "budget_exhausted_solves": 5,
+          "active_newton_begins": 8,
+          "final_nonpressure_nontransport_relative_residual": 4.52574068e-06,
+          "status_code": 0
+        },
+        {
+          "root": 2,
+          "used_columns_sum": 848,
+          "cycles_with_work": 53,
+          "budget_exhausted_solves": 5,
+          "active_newton_begins": 16,
+          "final_nonpressure_nontransport_relative_residual": 1.15539351e-05,
+          "status_code": 0
+        },
+        {
+          "root": 3,
+          "used_columns_sum": 256,
+          "cycles_with_work": 16,
+          "budget_exhausted_solves": 3,
+          "active_newton_begins": 4,
+          "final_nonpressure_nontransport_relative_residual": 5.08830999e-06,
+          "status_code": 0
+        },
+        {
+          "root": 4,
+          "used_columns_sum": 448,
+          "cycles_with_work": 28,
+          "budget_exhausted_solves": 7,
+          "active_newton_begins": 7,
+          "final_nonpressure_nontransport_relative_residual": 4.98120335e-06,
+          "status_code": 0
+        },
+        {
+          "root": 5,
+          "used_columns_sum": 320,
+          "cycles_with_work": 20,
+          "budget_exhausted_solves": 5,
+          "active_newton_begins": 5,
+          "final_nonpressure_nontransport_relative_residual": 5.20047888e-06,
+          "status_code": 0
+        },
+        {
+          "root": 6,
+          "used_columns_sum": 896,
+          "cycles_with_work": 56,
+          "budget_exhausted_solves": 8,
+          "active_newton_begins": 16,
+          "final_nonpressure_nontransport_relative_residual": 7.02063107e-06,
+          "status_code": 0
+        },
+        {
+          "root": 7,
+          "used_columns_sum": 192,
+          "cycles_with_work": 12,
+          "budget_exhausted_solves": 3,
+          "active_newton_begins": 3,
+          "final_nonpressure_nontransport_relative_residual": 6.10107645e-06,
+          "status_code": 0
+        }
+      ],
+      "body_elapsed_s_if_published": null
+    }
+  ],
+  "graph_fixture": {
+    "phases": [
+      [
+        1.37570826,
+        1.38862501
+      ],
+      [
+        1.37254153,
+        1.38833327
+      ],
+      [
+        1.37229171,
+        1.39000011
+      ],
+      [
+        1.37229147,
+        1.38708344
+      ],
+      [
+        1.37191662,
+        1.38908322
+      ],
+      [
+        1.37291662,
+        1.38716656
+      ],
+      [
+        1.37466658,
+        1.3891249
+      ],
+      [
+        1.37387495,
+        1.39279175
+      ],
+      [
+        1.37383328,
+        1.39000011
+      ],
+      [
+        1.37333316,
+        1.3898334
+      ],
+      [
+        1.37558323,
+        1.39029161
+      ],
+      [
+        1.37541653,
+        1.38849998
+      ]
+    ],
+    "reference_median_ms": 1.37358322,
+    "candidate_median_ms": 1.3891040600000002,
+    "byte_parity": true,
+    "patches": 8192,
+    "dofs_per_patch": 24,
+    "scope": "isolated synthetic batch"
+  },
+  "halfwarp_endpoint_comparison_sha256": "29755c4ee28880fc27e27bafb24103ffbf07f59d939a0fba2407cc402c4abe20",
+  "settlement_qualified": false,
+  "matched_prefix": {
+    "flat_recruited_four_step_columns": 2112,
+    "tilted_recruited_four_step_columns": 1840,
+    "flat_recruited_four_step_native_command_s": 101.472379957,
+    "tilted_recruited_four_step_native_command_s": 88.397913959,
+    "first_four_column_reduction_fraction": 0.12878787878787878,
+    "first_four_throughput_gain_fraction": 0.14790468929011258,
+    "tilted_eight_step_native_command_s": 176.287571542,
+    "tilted_eight_step_frequency_ratio_native_command_scope": 7.090687046546507e-07
+  }
+}

@@ -1,0 +1,26 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -7001,10 +7001,19 @@
+             supportContacts.header.groundPointX,
+             supportContacts.header.groundPointY,
+             supportContacts.header.groundPointZ, 0.0f};
+-        const mr_float4 captureGroundNormal{
+-            supportContacts.header.groundNormalX,
+-            supportContacts.header.groundNormalY,
+-            supportContacts.header.groundNormalZ, 0.0f};
++        // The global callback uses a registered upward-Z selector. On the
++        // FEM-bed path its rows carry identity only and are cleared before the
++        // physical solve. The compiled Matter plane owns gaps and reactions.
++        const bool observingFEMBed = useFEMSkinSupport &&
++            !supportGeometryProgram->usePerContactSupportPlanes;
++        const mr_float4 captureGroundNormal = observingFEMBed
++            ? mr_float4{0.0f, 0.0f, 1.0f, 0.0f}
++            : mr_float4{supportContacts.header.groundNormalX,
++                        supportContacts.header.groundNormalY,
++                        supportContacts.header.groundNormalZ, 0.0f};
++        if (observingFEMBed)
++            std::cout << "static_support_gap_scope=selector_observation_only"
++                         " physical_clearance_owner=compiled_matter_plane\n";
+         const MetalMujocoVisualQueries captureQueryTemplate =
+             makeMetalMujocoVisualQueries(
+                 model, &supportContacts, {}, deriveFootManifold, deriveOrganManifold);

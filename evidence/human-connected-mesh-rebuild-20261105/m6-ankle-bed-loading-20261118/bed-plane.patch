@@ -1,0 +1,99 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -27632,8 +27632,9 @@
+             maximumGap = std::max(maximumGap, gap);
+         }
+         const char* barrierRelease=std::getenv("NUMI_HUMAN_FEM_SUPPORT_BARRIER_RELEASE");
+-        const double targetGap=barrierRelease&&std::string_view(barrierRelease)=="1"
+-            ? source.contactSlop : 0.0;
++        const bool trialPlane = std::getenv("NUMI_HUMAN_FEM_TRIAL_BED_PLANE") != nullptr;
++        const double targetGap=(barrierRelease&&std::string_view(barrierRelease)=="1") ||
++            trialPlane ? source.contactSlop : 0.0;
+         require(minimumGap >= targetGap-1.0e-6 && minimumGap <= targetGap+1.0e-6,
+                 "compiled outer skin is not within 1um of its declared bed release target");
+         std::cout << "resting_fem_skin_bed_compiled=validated"
+@@ -37283,6 +37284,32 @@
+                 }
+                 overriddenPoseQ = std::move(supportedPose);
+                 poseQ = overriddenPoseQ;
++                if (const char* requestedPlane =
++                        std::getenv("NUMI_HUMAN_FEM_TRIAL_BED_PLANE")) {
++                    std::array<double, 3> normal{};
++                    double planeOffset = 0.0;
++                    int parsed = 0;
++                    const int count = std::sscanf(requestedPlane, "%lf,%lf,%lf,%lf%n",
++                        &normal[0], &normal[1], &normal[2], &planeOffset, &parsed);
++                    const double normalLength = std::hypot(normal[0], normal[1], normal[2]);
++                    require(femSkinSupportRequested() && restingBedSurface.empty() &&
++                                count == 4 && requestedPlane[parsed] == '\0' &&
++                                std::abs(normalLength - 1.0) <= 1.0e-6 &&
++                                normal[2] >= 0.9999 && std::abs(planeOffset) <= 0.01 &&
++                                !std::getenv("NUMI_HUMAN_FEM_SUPPORT_BARRIER_RELEASE"),
++                            "trial bed placement requires one near-horizontal unit plane and no separate barrier release offset");
++                    auto& header = supportContactPayload->header;
++                    header.groundNormalX = static_cast<float>(normal[0]);
++                    header.groundNormalY = static_cast<float>(normal[1]);
++                    header.groundNormalZ = static_cast<float>(normal[2]);
++                    header.groundPointX = 0.0f;
++                    header.groundPointY = 0.0f;
++                    header.groundPointZ = static_cast<float>(planeOffset / normal[2]);
++                    std::cout << std::setprecision(17) << "resting_trial_bed_plane=fixed"
++                              << " normal=[" << normal[0] << ',' << normal[1]
++                              << ',' << normal[2] << "] offset_m=" << planeOffset
++                              << " gravity_unchanged=1 force_rows_added=0\n";
++                }
+                 std::cout << std::setprecision(17)
+                     << "resting_initial_support_alignment=applied"
+                     << " owner=makeGroundAlignedSupport"
+--- a/apps/NumiHumanRestingVisual.hpp
++++ b/apps/NumiHumanRestingVisual.hpp
+@@ -2869,10 +2869,15 @@
+                 <<" distance_m="<<framing.distance<<" center_m="
+                 <<framing.center.x<<","<<framing.center.y<<","<<framing.center.z<<"\n";
+         }
+-        require(support.header.groundNormalX==0&&support.header.groundNormalY==0&&support.header.groundNormalZ==1,
+-                "resting visible bed must match the native +Z support plane");
+-        const float z=support.header.groundPointZ;
+-        require(z==0,"resting full-skin audit requires the authored zero-height bed plane");
++        const mr_float4 planeNormal{support.header.groundNormalX,
++            support.header.groundNormalY, support.header.groundNormalZ, 0.0f};
++        const mr_float4 planePoint{support.header.groundPointX,
++            support.header.groundPointY, support.header.groundPointZ, 1.0f};
++        require(std::abs(dotPoint(planeNormal, planeNormal) - 1.0f) <= 1.0e-5f &&
++                    planeNormal.z >= 0.9999f,
++                "resting visible bed requires the native near-horizontal support plane");
++        const float planeOffset = dotPoint(planeNormal, planePoint);
++        require(std::isfinite(planeOffset), "resting visible bed height is nonfinite");
+         const unsigned first=unsigned(pack.vertices.size()),index=unsigned(pack.indices.size()),instance=unsigned(pack.instances.size());
+         if(bedSurface) {
+             const auto& grid=bedSurface->gpu;
+@@ -2910,8 +2915,18 @@
+                     tangent.y/tangentNorm,tangent.z/tangentNorm,0};
+             }
+         } else {
+-        for(const auto& p:std::array<mr_float4,4>{{{framing.center.x-.65f,framing.center.y-1.15f,z,1},{framing.center.x+.65f,framing.center.y-1.15f,z,1},{framing.center.x+.65f,framing.center.y+1.15f,z,1},{framing.center.x-.65f,framing.center.y+1.15f,z,1}}})
+-            pack.vertices.push_back({p,{0,0,1,1},{1,0,0,0},{0,0,0,0},{1,1,1,1}});
++        const auto corner = [&](float x, float y) {
++            return mr_float4{x, y, (planeOffset-planeNormal.x*x-planeNormal.y*y)/planeNormal.z, 1.0f};
++        };
++        const float tangentLength = std::hypot(planeNormal.z, planeNormal.x);
++        const mr_float4 tangent{planeNormal.z/tangentLength, 0.0f, -planeNormal.x/tangentLength, 0.0f};
++        for(const auto& p : std::array<mr_float4,4>{
++                corner(framing.center.x-.65f,framing.center.y-1.15f),
++                corner(framing.center.x+.65f,framing.center.y-1.15f),
++                corner(framing.center.x+.65f,framing.center.y+1.15f),
++                corner(framing.center.x-.65f,framing.center.y+1.15f)})
++            pack.vertices.push_back({p,{planeNormal.x,planeNormal.y,planeNormal.z,1.0f},
++                tangent,{0,0,0,0},{1,1,1,1}});
+         pack.indices.insert(pack.indices.end(),{first,first+1,first+2,first,first+2,first+3});
+         }
+         maps.resize(pack.vertices.size());
+@@ -2919,7 +2934,7 @@
+         pack.materials.push_back(makeMaterial({.045f,.065f,.09f,1},{0,0,0,0},.9f));
+         MRVisualPrimitiveGPUV2 primitive{};primitive.geometry={index,unsigned(pack.indices.size())-index,bedMaterial,instance};primitive.identity={51999,1,MR_INVALID_INDEX,1};
+         primitive.boundsMinimum=pack.vertices[first].position;primitive.boundsMaximum=pack.vertices[first+2].position;
+-        if(bedSurface)for(unsigned i=first;i<pack.vertices.size();++i) {
++        for(unsigned i=first;i<pack.vertices.size();++i) {
+             const auto p=pack.vertices[i].position;
+             primitive.boundsMinimum={std::min(primitive.boundsMinimum.x,p.x),std::min(primitive.boundsMinimum.y,p.y),
+                 std::min(primitive.boundsMinimum.z,p.z),1};

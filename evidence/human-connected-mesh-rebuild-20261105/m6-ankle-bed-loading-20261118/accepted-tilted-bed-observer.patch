@@ -1,0 +1,70 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -10655,19 +10655,29 @@
+                             "supported prelude requires the sole accepted FEM bed owner");
+                     const auto& plane = world.contact.rigidProxies.front();
+                     const auto& row = plane.localCenterAndRadius;
++                    const double normalLength = std::hypot(double(row.x),
++                        double(row.y), double(row.z));
+                     require(plane.shapeKind == NM_RIGID_PLANE &&
+                                 plane.bodyIndex == NM_INVALID_INDEX &&
+-                                row.x == 0.0f && row.y == 0.0f && row.z == 1.0f &&
+-                                std::isfinite(row.w),
+-                            "supported prelude requires the admitted horizontal FEM bed");
++                                std::abs(normalLength - 1.0) <= 1.0e-6 &&
++                                row.z >= 0.9999f && std::isfinite(row.w),
++                            "supported prelude requires the admitted near-horizontal FEM bed");
++                    const std::array<double, 3> normal{
++                        double(row.x) / normalLength, double(row.y) / normalLength,
++                        double(row.z) / normalLength};
+                     const auto& impulse = matter.reactions.front().impulseAndCount;
+-                    require(std::isfinite(impulse.x) && std::isfinite(impulse.y) &&
+-                                std::isfinite(impulse.z) && std::isfinite(impulse.w) &&
+-                                impulse.z <= 0.0f && impulse.w >= 0.0f &&
+-                                (impulse.w > 0.0f || impulse.z == 0.0f),
++                    const double normalImpulse = -(
++                        normal[0] * impulse.x + normal[1] * impulse.y +
++                        normal[2] * impulse.z);
++                    require(std::isfinite(normalImpulse) && std::isfinite(impulse.w) &&
++                                normalImpulse >= 0.0 && impulse.w >= 0.0f &&
++                                (impulse.w > 0.0f || (impulse.x == 0.0f &&
++                                 impulse.y == 0.0f && impulse.z == 0.0f)),
+                             "supported prelude FEM bed reaction is invalid");
++                    // The scene gravity is vertical. Compare its weight to
++                    // the vertical bed reaction, including friction on a tilt.
+                     supportedPreludeLastSupportForce = -double(impulse.z) / timestepSeconds;
+-                    supportActive = impulse.w > 0.0f && impulse.z < 0.0f;
++                    supportActive = impulse.w > 0.0f && normalImpulse > 0.0;
+                     minimumSupportGap = std::numeric_limits<double>::infinity();
+                     for (const auto& pair : world.contact.pairs) {
+                         require(pair.rigidProxy == 0u &&
+@@ -10677,13 +10687,22 @@
+                                 "supported prelude FEM bed pair lost its physical outer node");
+                         const auto& node = matter.femNodes[
+                             pair.continuumNode - world.dispatch.gridNodeCount];
+-                        const double z = node.referenceDisplacementAndMode.w == 1.0f
+-                            ? double(node.restAndFixed.z) +
+-                                  double(node.referenceDisplacementAndMode.z) +
+-                                  double(node.referenceDisplacementLow.z)
+-                            : double(node.positionAndMass.z);
+-                        require(std::isfinite(z), "supported prelude FEM bed gap is invalid");
+-                        minimumSupportGap = std::min(minimumSupportGap, z - double(row.w));
++                        auto position = std::array<double, 3>{
++                            node.positionAndMass.x, node.positionAndMass.y,
++                            node.positionAndMass.z};
++                        if (node.referenceDisplacementAndMode.w == 1.0f) {
++                            position = {
++                                double(node.restAndFixed.x) +
++                                    node.referenceDisplacementAndMode.x + node.referenceDisplacementLow.x,
++                                double(node.restAndFixed.y) +
++                                    node.referenceDisplacementAndMode.y + node.referenceDisplacementLow.y,
++                                double(node.restAndFixed.z) +
++                                    node.referenceDisplacementAndMode.z + node.referenceDisplacementLow.z};
++                        }
++                        const double gap = normal[0]*position[0] + normal[1]*position[1] +
++                            normal[2]*position[2] - double(row.w);
++                        require(std::isfinite(gap), "supported prelude FEM bed gap is invalid");
++                        minimumSupportGap = std::min(minimumSupportGap, gap);
+                     }
+                     maximumPenetration = std::max(0.0, -minimumSupportGap);
+                 }
