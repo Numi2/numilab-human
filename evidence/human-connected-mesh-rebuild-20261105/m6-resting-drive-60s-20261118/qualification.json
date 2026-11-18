@@ -1,0 +1,49 @@
+{
+  "scope": "Matched sixty-second native viewer mechanism and recovery experiment, separate from the 330 s requirement",
+  "source": "360d278c6537c9640a2ca7aeb37f3224f31ecae7 and launch pins",
+  "intervention": {
+    "window_s": [
+      8,
+      20
+    ],
+    "scale": 0.6,
+    "motion_unchanged_before_s": 8
+  },
+  "predictions": {
+    "inspiredVolume_8_20_ratio": [
+      0,
+      0.9
+    ],
+    "lateInterventionGasWindow_s": [
+      20,
+      28
+    ],
+    "arterialCO2DifferenceMin_mmhg": 0.2,
+    "arterialO2DifferenceMax_mmhg": -0.3,
+    "recovery_window_s": [
+      52,
+      60
+    ],
+    "gas_abs_max_mmhg": 1,
+    "recovery_absolute_mean_errors_below_response": true,
+    "late_inspired_volume_ratio": [
+      0.85,
+      1.15
+    ]
+  },
+  "validity": {
+    "zero_root_assistance": true,
+    "no_rejected_steps": true,
+    "minimum_rendered_rtf": 0.1,
+    "late_bed_weight_ratio": [
+      0.98,
+      1.02
+    ],
+    "whole_viewer_triangle_and_bed_checks": true
+  },
+  "sources": [
+    "https://journals.physiology.org/doi/full/10.1152/ajpheart.00230.2014",
+    "https://journals.physiology.org/doi/full/10.1152/ajpheart.00923.2014"
+  ],
+  "notes": "Pressure guards use gas-waveform averages. Bands are engineering test thresholds, not physiological population calibration. Qualify or record failure. Intervention is a numerical change in delivered drive, not a clinical protocol."
+}

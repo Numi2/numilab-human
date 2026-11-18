@@ -1,0 +1,58 @@
+{
+  "scope": "Matched sixty-second native viewer mechanism and recovery experiment, separate from the 330 s requirement",
+  "runs": {
+    "reference": {
+      "viewer_rtf": 0.105395108309,
+      "mean_bed_force_late_n": 706.31910225756,
+      "body_weight_n": 706.3199941036769,
+      "breaths": 11,
+      "cardiac_cycles": 70,
+      "aortic_ejected_ml": 4910.60130298,
+      "max_blood_conservation_error_ml": 0.018160790205,
+      "checked_rendered_frames": 939,
+      "process": {
+        "exit_code": 0,
+        "seconds_process": 580.2523012498859,
+        "stopped": null
+      },
+      "physiology_trace_sha256": "c63e1211ad9d842923b55620f0be8ecc2e638844367274f6622ede2df69f7a65"
+    },
+    "drive-0p6": {
+      "viewer_rtf": 0.105375374,
+      "mean_bed_force_late_n": 706.31910225756,
+      "body_weight_n": 706.3199941036769,
+      "breaths": 11,
+      "cardiac_cycles": 70,
+      "aortic_ejected_ml": 4910.60130298,
+      "max_blood_conservation_error_ml": 0.018160790205,
+      "checked_rendered_frames": 939,
+      "process": {
+        "exit_code": 0,
+        "seconds_process": 580.3834385420196,
+        "stopped": null
+      },
+      "physiology_trace_sha256": "fdd6318147b4a65cb8da7bf1eefac475f220a41c4b42005799b02fb182968c6b"
+    }
+  },
+  "matched_prefix_samples": 500,
+  "inspired_volume_ratio_during_intervention": 0.732231461771625,
+  "gas_response_mean_difference_mmhg": {
+    "PaCO2_mmhg": 0.9689386333528915,
+    "PaO2_mmhg": -2.459041131037921
+  },
+  "inspired_volume_ratio_final_window": 1.3994525716563844,
+  "final_gas_mean_difference_mmhg": {
+    "PaCO2_mmhg": 0.0119647408710577,
+    "PaO2_mmhg": -0.2937879276806399
+  },
+  "aortic_ejection_identical_all_samples": true,
+  "mechanism_checks": {
+    "ventilation_reduction": true,
+    "arterial_co2_increase": true,
+    "arterial_o2_decrease": true,
+    "gas_recovery": true,
+    "ventilation_recovery": false,
+    "viewer_rate_both": true,
+    "bed_balance_both": true
+  }
+}
