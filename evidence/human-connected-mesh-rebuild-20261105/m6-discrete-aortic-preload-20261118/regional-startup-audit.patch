@@ -1,0 +1,62 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -10616,7 +10616,9 @@
+                 }
+ #ifdef NUMI_HUMAN_RESTING_SCENE
+                 double maximumFEMSpeed = 0.0;
+-                for (const auto& node : matter.femNodes) {
++                std::uint32_t peakFEMNode = NM_INVALID_INDEX;
++                for (std::uint32_t nodeIndex = 0; nodeIndex < matter.femNodes.size(); ++nodeIndex) {
++                    const auto& node = matter.femNodes[nodeIndex];
+                     const auto& position = node.positionAndMass;
+                     const auto& velocity = node.velocityAndInverseMass;
+                     require(std::isfinite(position.x) && std::isfinite(position.y) &&
+@@ -10624,10 +10626,44 @@
+                                 std::isfinite(velocity.x) && std::isfinite(velocity.y) &&
+                                 std::isfinite(velocity.z),
+                             "supported prelude FEM state contains a non-finite node");
+-                    maximumFEMSpeed = std::max(maximumFEMSpeed,
+-                        std::sqrt(double(velocity.x) * velocity.x +
+-                                  double(velocity.y) * velocity.y +
+-                                  double(velocity.z) * velocity.z));
++                    const double speed = std::hypot(
++                        double(velocity.x), double(velocity.y), double(velocity.z));
++                    if (speed > maximumFEMSpeed) {
++                        maximumFEMSpeed = speed;
++                        peakFEMNode = nodeIndex;
++                    }
++                }
++                if (useFEMSkinSupport) {
++                    const auto& objects = coupled.physiology.world.objects;
++                    std::uint32_t peakObject = NM_INVALID_INDEX;
++                    for (std::uint32_t i = 0; i < objects.size(); ++i) {
++                        const auto& object = objects[i];
++                        if (object.representation == NM_REPRESENTATION_FEM &&
++                            peakFEMNode >= object.stateOffset &&
++                            peakFEMNode - object.stateOffset < object.stateCount) {
++                            peakObject = i;
++                            break;
++                        }
++                    }
++                    require(currentV.size() > 122u, "startup audit requires the Human DOF domain");
++                    auto acceleration = [&](std::uint32_t dof) {
++                        return (double(segmentResult.standV[dof]) - currentV[dof]) / timestepSeconds;
++                    };
++                    std::cout << std::setprecision(12)
++                              << "resting_startup_load accepted_step=" << acceptedStep
++                              << " right_knee_rad_s2=" << acceleration(105u)
++                              << " left_knee_rad_s2=" << acceleration(119u)
++                              << " right_ankle_rad_s2=" << acceleration(108u)
++                              << " left_ankle_rad_s2=" << acceleration(122u)
++                              << " accepted_maximum_acceleration=" << stand.contactAndAcceleration.w
++                              << " accepted_maximum_acceleration_dof=" << stand.jointEqualityCounts.w
++                              << " free_maximum_acceleration=" << stand.velocityDiagnostics.x
++                              << " free_maximum_acceleration_dof=" << stand.velocityDiagnosticOwners.x
++                              << " fastest_fem_node=" << peakFEMNode
++                              << " fastest_fem_object=" << peakObject
++                              << " fastest_fem_node_m_s=" << maximumFEMSpeed
++                              << " aorta_mmhg=" << respiration->circulation.x
++                              << '\n';
+                 }
+ #else
+                 const double maximumFEMSpeed = 0.0;

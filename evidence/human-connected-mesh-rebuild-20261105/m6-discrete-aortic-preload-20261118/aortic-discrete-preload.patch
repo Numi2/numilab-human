@@ -1,0 +1,152 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -131,6 +131,7 @@
+ #ifdef NUMI_HUMAN_RESTING_SCENE
+ #include "NumiHumanRestingCoupling.hpp"
+ #include "NumiHumanVesselWallCoupling.hpp"
++#include "NumiHumanAorticDiscretePreload.hpp"
+ #include "NumiHumanOpticNerveFEMIntegration.hpp"
+ #include "NumiHumanRestingTransactionProbe.hpp"
+ #include "NumiHumanAcceptedFEMBoundaryRenderPass.hpp"
+@@ -7767,10 +7768,9 @@
+         row.compiledPassiveForce = compiledPassiveForce;
+         row.gravityTarget = gravityTarget;
+         row.residual = residual;
+-        if (useFEMSkinSupport && (row.name == "knee_angle_r" ||
+-                                  row.name == "knee_angle_l" ||
+-                                  row.name == "ankle_angle_r" ||
+-                                  row.name == "ankle_angle_l")) {
++        const bool sourceLegDof = row.dof == 105u || row.dof == 119u ||
++            row.dof == 108u || row.dof == 122u;
++        if (useFEMSkinSupport && sourceLegDof) {
+             std::cout << std::setprecision(12)
+                       << "resting_initial_joint_load dof=" << row.dof
+                       << " source_coordinate=" << row.name
+@@ -10630,7 +10630,9 @@
+                 }
+ #ifdef NUMI_HUMAN_RESTING_SCENE
+                 double maximumFEMSpeed = 0.0;
+-                for (const auto& node : matter.femNodes) {
++                std::size_t fastestFEMNode = 0u;
++                for (std::size_t i = 0; i < matter.femNodes.size(); ++i) {
++                    const auto& node = matter.femNodes[i];
+                     const auto& position = node.positionAndMass;
+                     const auto& velocity = node.velocityAndInverseMass;
+                     require(std::isfinite(position.x) && std::isfinite(position.y) &&
+@@ -10638,12 +10640,29 @@
+                                 std::isfinite(velocity.x) && std::isfinite(velocity.y) &&
+                                 std::isfinite(velocity.z),
+                             "supported prelude FEM state contains a non-finite node");
+-                    maximumFEMSpeed = std::max(maximumFEMSpeed,
+-                        std::sqrt(double(velocity.x) * velocity.x +
+-                                  double(velocity.y) * velocity.y +
+-                                  double(velocity.z) * velocity.z));
++                    const double speed = std::sqrt(
++                        double(velocity.x) * velocity.x +
++                        double(velocity.y) * velocity.y +
++                        double(velocity.z) * velocity.z);
++                    if (speed > maximumFEMSpeed) {
++                        maximumFEMSpeed = speed;
++                        fastestFEMNode = i;
++                    }
++                }
++                std::uint32_t fastestFEMObject = NM_INVALID_INDEX;
++                if (useFEMSkinSupport) {
++                    for (std::uint32_t i = 0; i < coupled.physiology.world.objects.size(); ++i) {
++                        const auto& object = coupled.physiology.world.objects[i];
++                        if (object.representation == NM_REPRESENTATION_FEM &&
++                            fastestFEMNode >= object.stateOffset &&
++                            fastestFEMNode - object.stateOffset < object.stateCount) {
++                            fastestFEMObject = i;
++                            break;
++                        }
++                    }
+                 }
+ #else
++                constexpr std::uint32_t fastestFEMObject = MR_INVALID_INDEX;
+                 const double maximumFEMSpeed = 0.0;
+ #endif
+                 require(currentV.size() == segmentResult.standV.size(),
+@@ -10873,6 +10892,11 @@
+                           << " intermediate_free_acceleration=" << stand.velocityDiagnostics.x
+                           << " max_generalized_speed=" << maximumGeneralizedSpeed
+                           << " max_fem_speed=" << maximumFEMSpeed
++                          << " fastest_fem_object=" << fastestFEMObject
++                          << " right_knee_rad_s2=" << (segmentResult.standV.size() > 122u
++                              ? (double(segmentResult.standV[105u]) - currentV[105u]) / timestepSeconds : 0.0)
++                          << " left_knee_rad_s2=" << (segmentResult.standV.size() > 122u
++                              ? (double(segmentResult.standV[119u]) - currentV[119u]) / timestepSeconds : 0.0)
+                           << " failure_mask=" << supportedPreludeLastFailureMask
+                           << " settled_consecutive_steps=" << supportedPreludeSettledSteps
+                           << std::endl;
+@@ -22153,6 +22177,70 @@
+         // Matter-side Human attachment rows before the single-world cook.
+         built.object.femHumanAttachments.clear();
+         source.objects[built.objectIndex].femHumanAttachments.clear();
++        const char* discreteReferenceSetting =
++            std::getenv("NUMI_HUMAN_RESTING_AORTIC_DISCRETE_PRELOAD");
++        require(!discreteReferenceSetting ||
++                    std::strcmp(discreteReferenceSetting,"0")==0 ||
++                    std::strcmp(discreteReferenceSetting,"1")==0,
++                "aortic discrete preload must be 0 or 1");
++        if (discreteReferenceSetting && std::strcmp(discreteReferenceSetting,"1")==0) {
++            // Verify the authored wall's exact current/mass data in a small
++            // immutable cook. The full scene remains the only runtime owner.
++            numi::matter::WorldSource wallCook;
++            wallCook.environmentCount = 1u;
++            wallCook.frameTimestep = source.frameTimestep;
++            wallCook.gravity = source.gravity;
++            wallCook.materials.push_back(source.materials.at(wallSourceObject.materialIndex));
++            wallCook.objects.push_back(wallSourceObject);
++            auto& frozenWall = wallCook.objects.front();
++            frozenWall.materialIndex = 0u;
++            frozenWall.twoWayCoupling = false;
++            frozenWall.rigidContactEnabled = false;
++            frozenWall.deformableContact = false;
++            frozenWall.femContactNodes.clear();
++            frozenWall.femDisabledContactSurfaceFaces.clear();
++            const auto compilationFailure = [](const auto& result) {
++                std::string messages;
++                for (const auto& row : result.diagnostics)
++                    messages += " [" + row.message + "]";
++                return messages;
++            };
++            const auto original = numi::matter::compileWorld(wallCook,{.maximumRateExponent=0u});
++            require(original.succeeded(), "aortic source wall mass cook failed" + compilationFailure(original));
++            const auto compartment = std::ranges::find_if(source.vascular.compartments,
++                [&](const auto& row){return row.stableIdentifier == built.cavity.compartment;});
++            require(compartment != source.vascular.compartments.end(),
++                    "aortic discrete preload lost current compartment identity");
++            const auto fit = numi::human::aortic_wall::fitDiscreteReference(
++                frozenWall,built.cavity,original.world.fem.tetrahedra,
++                original.world.fem.nodes,source.gravity,compartment->externalPressure,wallConfig);
++            const auto checked = numi::matter::compileWorld(wallCook,{.maximumRateExponent=0u});
++            require(checked.succeeded(), "discrete aortic source wall cook failed" + compilationFailure(checked));
++            const auto& oldNodes = original.world.fem.nodes;
++            const auto& newNodes = checked.world.fem.nodes;
++            require(oldNodes.size() == newNodes.size(),
++                    "discrete aortic preload changed node count");
++            for (std::size_t i = 0; i < oldNodes.size(); ++i) {
++                require(std::memcmp(&oldNodes[i].positionAndMass,&newNodes[i].positionAndMass,
++                                    sizeof(nm_float4)) == 0,
++                        "discrete aortic preload changed compiled current position or mass");
++            }
++            for (auto* target : {&wallSourceObject,&built.object}) {
++                target->femReferenceNodes = frozenWall.femReferenceNodes;
++                target->femReferenceSourceIdentity = frozenWall.femReferenceSourceIdentity;
++                target->femTetrahedronMassesKg = frozenWall.femTetrahedronMassesKg;
++                target->femTetrahedronMassSourceIdentity = frozenWall.femTetrahedronMassSourceIdentity;
++            }
++            std::cout << std::setprecision(12)
++                      << "resting_aortic_discrete_preload=compiled"
++                      << " initial_residual_L2_N=" << fit.initialResidualN
++                      << " final_residual_L2_N=" << fit.finalResidualN
++                      << " iterations=" << fit.acceptedIterations
++                      << " max_unloaded_coordinate_change_m=" << fit.maximumReferenceChangeM
++                      << " minimum_J=" << fit.minimumDeterminant
++                      << " active_coordinate_mass_parity=bitwise"
++                      << " outer_contact_load_during_fit=absent" << std::endl;
++        }
+         aorticWall=std::move(built);
+     }
+     using namespace metalrobo::human::coarse_tissue;

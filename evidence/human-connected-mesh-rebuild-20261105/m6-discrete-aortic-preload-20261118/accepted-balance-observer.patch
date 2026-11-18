@@ -1,0 +1,61 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -7767,6 +7767,20 @@
+         row.compiledPassiveForce = compiledPassiveForce;
+         row.gravityTarget = gravityTarget;
+         row.residual = residual;
++        if (useFEMSkinSupport && (row.name == "knee_angle_r" ||
++                                  row.name == "knee_angle_l" ||
++                                  row.name == "ankle_angle_r" ||
++                                  row.name == "ankle_angle_l")) {
++            std::cout << std::setprecision(12)
++                      << "resting_initial_joint_load dof=" << row.dof
++                      << " source_coordinate=" << row.name
++                      << " muscle_Nm=" << row.metalMuscleForce
++                      << " passive_Nm=" << row.passiveForce
++                      << " equality_Nm=" << row.equalityForce
++                      << " joint_stop_Nm=" << row.limitForce
++                      << " gravity_target_Nm=" << row.gravityTarget
++                      << " residual_Nm=" << row.residual << '\n';
++        }
+         dynamicForceAudit.push_back(std::move(row));
+     }
+     std::stable_sort(
+@@ -10632,9 +10646,25 @@
+ #else
+                 const double maximumFEMSpeed = 0.0;
+ #endif
+-                supportedPreludeLastAcceleration = std::max(
+-                    static_cast<double>(stand.contactAndAcceleration.w),
+-                    static_cast<double>(stand.velocityDiagnostics.x));
++                require(currentV.size() == segmentResult.standV.size(),
++                        "supported prelude lost its previous accepted velocity");
++                // The free velocity is the input to equality and contact
++                // projection. Even a supported body can accelerate in that
++                // intermediate solve. Judge equilibrium on the velocity the
++                // complete coupled transaction actually publishes.
++                supportedPreludeLastAcceleration = 0.0;
++                std::size_t supportMaximumAccelerationDof = 0u;
++                for (std::size_t dof = 0; dof < currentV.size(); ++dof) {
++                    const double acceleration = std::abs(
++                        double(segmentResult.standV[dof]) - double(currentV[dof])) /
++                        timestepSeconds;
++                    require(std::isfinite(acceleration),
++                            "supported prelude has non-finite accepted acceleration");
++                    if (acceleration > supportedPreludeLastAcceleration) {
++                        supportedPreludeLastAcceleration = acceleration;
++                        supportMaximumAccelerationDof = dof;
++                    }
++                }
+                 supportedPreludeLastSupportForce =
+                     double(stand.contactAndAcceleration.z) / timestepSeconds;
+                 bool supportActive = stand.activeContactCount != 0u;
+@@ -10839,6 +10869,8 @@
+                           << " reference_support_force_n=" << referenceSupportForce
+                           << " minimum_support_gap_m=" << minimumSupportGap
+                           << " max_generalized_acceleration=" << supportedPreludeLastAcceleration
++                          << " maximum_acceleration_dof=" << supportMaximumAccelerationDof
++                          << " intermediate_free_acceleration=" << stand.velocityDiagnostics.x
+                           << " max_generalized_speed=" << maximumGeneralizedSpeed
+                           << " max_fem_speed=" << maximumFEMSpeed
+                           << " failure_mask=" << supportedPreludeLastFailureMask

@@ -1,0 +1,11 @@
+[NumiMatter] mixed-field smoother skipped_empty: multiphysics_objects=0 field_boundaries=0; mechanical and vascular solve unchanged
+matter_stateless_material_specialization requested=0 eligible=1 material_count=1
+matter_all_native_float requested=0 eligible=1 enabled=0 materials=1 diagnostic_vm=0
+matter_empty_mpm_krylov_domain=1 capacity_proof=storage_active_rows_and_representation_zero
+matter_canonical_precision_materials=0 source=compiler_exact_energy_proof tangent_policy=unchanged
+wall_reference pressure_Pa=11223.5 length_m=0.102162 analytical_axial_residual_N=4.718e-12 analytical_outer_traction_residual_Pa=-1.92743e-08
+device=Apple M6 proof_scope=static_wall_without_external_contact
+static_arena nodes=432 fields=432 topology=1152 schedulers=1 adaptive=1 material=0 material_stride=0 parameters=3 statuses=1
+aorta_static phase=pressure nodes=432 free_nodes=408 peak_node=416 peak_x=-0.030296722427 peak_y=0.160262078047 peak_z=-0.0162069834769 peak_free_force_N=0.515522569616 free_resultant_L2_N=3.57861259458 peak_free_acceleration_m_s2=88129.9560596 anchor_reaction_N=-0.000895906239748,0.704328704625,-0.00409153848886 control_step=0 sealed_phase=1 world=3917931306737207283
+static_arena nodes=432 fields=432 topology=1152 schedulers=1 adaptive=1 material=0 material_stride=0 parameters=3 statuses=1
+aorta_static phase=pressure_and_gravity nodes=432 free_nodes=408 peak_node=416 peak_x=-0.030296722427 peak_y=0.160262078047 peak_z=-0.0162069834769 peak_free_force_N=0.515560733476 free_resultant_L2_N=3.57861374806 peak_free_acceleration_m_s2=88131.4972508 anchor_reaction_N=-0.000895906239748,0.704328704625,-0.00550009543076 control_step=0 sealed_phase=1 world=3917931306737207283

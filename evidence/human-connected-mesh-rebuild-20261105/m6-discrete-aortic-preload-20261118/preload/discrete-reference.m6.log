@@ -1,0 +1,17 @@
+wall_reference pressure_Pa=11223.5 length_m=0.102162 analytical_axial_residual_N=4.718e-12 analytical_outer_traction_residual_Pa=-1.92743e-08
+wall_inverse_iter count=1 residual_N=2.7256 minimum_J=0.991543 max_reference_delta_m=0.00420041
+wall_inverse_iter count=2 residual_N=1.49462 minimum_J=0.989375 max_reference_delta_m=0.00845004
+wall_inverse_iter count=3 residual_N=0.00319814 minimum_J=0.992931 max_reference_delta_m=0.00846331
+wall_inverse_iter count=4 residual_N=3.2557e-08 minimum_J=0.992938 max_reference_delta_m=0.00846324
+wall_inverse_iter count=5 residual_N=1.27701e-12 minimum_J=0.992938 max_reference_delta_m=0.00846324
+inverse_reference initial_L2_N=3.57858170198 final_L2_N=1.27701444332e-12 iterations=5 max_reference_change_m=0.00846323779505 min_J=0.992938017974
+[NumiMatter] mixed-field smoother skipped_empty: multiphysics_objects=0 field_boundaries=0; mechanical and vascular solve unchanged
+matter_stateless_material_specialization requested=0 eligible=1 material_count=1
+matter_all_native_float requested=0 eligible=1 enabled=0 materials=1 diagnostic_vm=0
+matter_empty_mpm_krylov_domain=1 capacity_proof=storage_active_rows_and_representation_zero
+matter_canonical_precision_materials=0 source=compiler_exact_energy_proof tangent_policy=unchanged
+device=Apple M6 proof_scope=static_wall_without_external_contact
+static_arena nodes=432 fields=432 topology=1152 schedulers=1 adaptive=1 material=0 material_stride=0 parameters=3 statuses=1
+aorta_static phase=pressure nodes=432 free_nodes=408 peak_node=392 peak_x=-0.0371865965426 peak_y=0.160262078047 peak_z=-0.00264916964807 peak_free_force_N=0.000237073508951 free_resultant_L2_N=0.00324865328383 peak_free_acceleration_m_s2=16.4962380824 anchor_reaction_N=2.271682024e-05,-2.72206962109e-05,-0.0629605324939 control_step=0 sealed_phase=1 world=7826271149098939307
+static_arena nodes=432 fields=432 topology=1152 schedulers=1 adaptive=1 material=0 material_stride=0 parameters=3 statuses=1
+aorta_static phase=pressure_and_gravity nodes=432 free_nodes=408 peak_node=392 peak_x=-0.0371865965426 peak_y=0.160262078047 peak_z=-0.00264916964807 peak_free_force_N=0.000100881400792 free_resultant_L2_N=0.000657944232478 peak_free_acceleration_m_s2=8.67787175504 anchor_reaction_N=2.271682024e-05,-2.72206962109e-05,-0.064369088097 control_step=0 sealed_phase=1 world=7826271149098939307
