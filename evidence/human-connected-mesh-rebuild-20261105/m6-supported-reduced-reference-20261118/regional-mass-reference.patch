@@ -1,0 +1,28 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -29423,8 +29423,15 @@
+     }
+     double initialPhysicalMass=0.0; for(const auto& b:model.bodies)initialPhysicalMass+=b.massAndInverseMass.x;
+     std::vector<std::array<double,3>> wholeBodyReferenceOffsets(model.bodies.size());
+-    if(enableWholeBodySkinFat) {
+-        // Skin binding identity and mechanical attachment stay unchanged. A
++    const char* inferredMassSetting=std::getenv("NUMI_HUMAN_RESTING_INFERRED_TISSUE_MASS");
++    require(inferredMassSetting==nullptr||std::strcmp(inferredMassSetting,"0")==0||
++                std::strcmp(inferredMassSetting,"1")==0,
++            "NUMI_HUMAN_RESTING_INFERRED_TISSUE_MASS must be 0 or 1");
++    const bool inferRegionalMass=inferredMassSetting&&std::strcmp(inferredMassSetting,"1")==0;
++    if(enableWholeBodySkinFat||inferRegionalMass) {
++        // Mass accounting changes frames only. Inferred regional preparations
++        // compose the cooked tissue moments inside the supplied total budget.
++        // Binding identities and mechanical attachments stay unchanged. A
+         // massless joint link cannot fund physical tissue; its existing dynamic
+         // ancestor owns that mass, expressed in the ancestor's exact rest frame.
+         std::vector<std::uint32_t> parent(model.bodies.size(),MR_INVALID_INDEX);
+@@ -29472,6 +29479,7 @@
+         model=std::move(reference.model);massNodes=std::move(reference.nodes);
+         massContributions=std::move(reference.contributions);
+         std::cout<<"whole_body_tissue_mass_reference=inferred"
++            <<" scope="<<(enableWholeBodySkinFat?"whole_body_skin_fat":"regional_tissue")
+             <<" original_total_kg="<<reference.originalMassKg<<" cooked_tissue_kg="<<reference.tissueMassKg
+             <<" residual_rigid_scale="<<reference.residualScale
+             <<" maximum_inertia_regularization_fraction="<<reference.maximumRelativeInertiaCorrection

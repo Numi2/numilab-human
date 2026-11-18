@@ -1,0 +1,24 @@
+# Supported resting control on Apple M6
+
+This control recovers a production-speed starting point for the stated 72 kg reference adult. It uses the retained native executable and libraries on SSH Numi with the current launch's registered articulated anatomy, MyoSim and tendon inputs, weighted skin-to-bed contact, and reduced respiratory and circulatory physiology. The initial pose uses the built-in bed first-touch alignment. Root assistance is off. The anatomical display includes layers whose physical loads are outside this control.
+
+| Run | Accepted simulated time | Accepted-segment rate | Process rate with startup |
+| --- | ---: | ---: | ---: |
+| Headless 005 | 16.000 s | 0.1138× | 0.1048× |
+| Live viewer 009 | 8.000 s | 0.1095× | 0.0948× |
+
+In the last two seconds of 005, weighted bed reaction averaged 706.27 N against 706.32 N weight. Terminal COM speed was 0.000018 m/s and both terminal knee speeds were below 0.000001 rad/s. Some other joints still had motion. The maximum sampled solver contact penetration was 0.099 mm. The model completed three breaths and 19 modeled filling/ejection cycles, with a last LV stroke of 70.05 mL. This is a short coupled control. Sustained skin/fat validity, wall-driven anatomical pumping, intervention and recovery, and five-minute qualification remain open.
+
+Run 009 submitted 126 live frames, about 1.7 frames per wall-clock second. Presentation handled 5.24 million triangles and used a median 21.21 ms of GPU time per frame. At the headless rate, a serialized 15 fps viewer would have roughly 8 ms per frame at 0.1× before reserving time for further physics. Native presentation needs its own geometry budget and cadence. The inspection mesh remains the full-detail source.
+
+## Why the full-resolution approach stalled
+
+The dense reference carried 318,226 nodes and 1,475,249 tetrahedra in the common nonlinear solve. Its accepted 125 µs required 197.528 s of GPU command span at a 15.625 µs step in the 97.13 kg reference configuration. The 0.1× target would allow 0.156 ms per root at that dense timestep, versus 24.7 s measured. It also failed to establish stable support. The historical 66× coordinate reduction retained fine material evaluation and contact and missed force and strain gates. The recoverable production and dense fidelity references therefore serve different purposes.
+
+The existing coarse three-layer skin/fat compilation fails its own admission. The registered regional tissue pilot verified that the same native mass compiler can account for 0.13730 kg of cooked tissue within the 72 kg budget, with 26 fascia regions, 34 ligament rows and a pressure-bound aortic wall prepared. The default general coupled solver accepted three 2 ms roots and then rejected a fascia element at its minimum determinant. The last accepted determinant for that element was 0.42874. The first accepted root of this 1,666-node variant took 23.62 s despite the small mesh. The trace counted 1,310,720 encoded indirect dispatches at that root, including work with potentially zero dispatch sizes. This points to the common solve graph as an independent cost even after reducing the mesh. The matched shortcut trial reduced the first three accepted roots from 70.44 s to 58.12 s total and failed nonlinear certification on the fourth. Regional tissue dynamics remain unqualified.
+
+Keep the accepted articulated and physiological transaction as the executable integration control. Use explicitly separate mechanical, collision and inspection resolutions in that transaction. Fit a coarse load-bearing skin/fat model that evaluates elastic energy and contact on bounded working geometry. Use the displacement transfer and its transpose for force transfer and conserve mass and inertia. Keep stiff region work local and pass balanced impulses to the common transaction. Keep local resolution at attachments, loaded skin, the thorax, and pressure-loaded wall interfaces. Compare bed reaction, knee loading, regional strain, interface force and contact validity against the fine reference before expanding its scope. Reserve cycle time for controlled breaths, pumping, gas feedback and 15 wall-clock fps through the same accepted-state transaction.
+
+## Reproduce
+
+`python3 replay.py 009 --verify` checks the pinned native binary, shaders and direct payloads on SSH Numi. `python3 replay.py 009 /path/to/new/output` launches the timed viewer control, and `005` selects the headless control. The launch records use the retained Numi asset paths. The source and binary identities, timing scope, compact traces and failed trials are in [metrics.json](metrics.json). The experimental regional mass compiler patch is retained for follow-up outside the launch baseline. It uses inferred mass allocation within the reference budget and does not claim measured segment masses.
