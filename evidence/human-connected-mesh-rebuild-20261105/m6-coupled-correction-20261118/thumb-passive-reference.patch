@@ -1,0 +1,46 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -5498,6 +5498,32 @@
+         : std::vector<Coupling>{};
+     require(sourceQToRuntime.empty() == sourceVToRuntime.empty(),
+         "passive separation remap requires both admitted q and V maps");
++
++    if (const char* thumb=std::getenv("NUMI_HUMAN_RESTING_THUMB_PASSIVE_REFERENCE");
++        thumb&&std::string_view(thumb)=="1") {
++        require(includeUpperBodyReference&&sourceQToRuntime.empty()&&
++            model.articulations.size()==1u&&model.world.nv==128u&&model.world.nq==129u&&
++            model.world.bodyCount==157u,
++            "thumb reference requires the intact upper-body source passive program");
++        // Reference linear impedances from their published model assumption
++        // (PMC2804669), in Nm/rad. Each MyoSim CMC axis uses the same
++        // coefficient. The neutral source pose is an inferred reference.
++        constexpr std::array<double,4> stiffness{0.15,0.15,0.10,0.05};
++        for (unsigned side=0;side<2;++side) {
++            const auto& art=model.articulations.front();
++            for (unsigned i=0;i<stiffness.size();++i) {
++                const unsigned v=42u+38u*side+i;
++                const unsigned jointIndex=50u+50u*side+i;
++                const auto& dof=model.dofs.at(art.vOffset+v);
++                const auto& joint=model.joints.at(jointIndex);
++                require(dof.vIndex==art.vOffset+v&&dof.qIndex==art.qOffset+v+1u&&
++                    dof.jointIndex==jointIndex&&joint.jointType==MR_JOINT_REVOLUTE&&
++                    joint.childBody==51u+50u*side+i,
++                    "thumb reference source joint identity mismatch");
++                result.push_back({v,v,0.0,stiffness[i]});
++            }
++        }
++    }
+ 
+     if (sharedMtpStiffnessNmPerRad.has_value()) {
+     require(!model.articulations.empty(),
+@@ -38446,6 +38472,10 @@
+                     appendSource("resting_hip_capsule_reference.c2_toe.v1", descriptor);
+                 }
+                 if(restingDriveIntervention)appendSource("resting_drive_intervention",std::as_bytes(std::span(*restingDriveIntervention)));
++                if(const char* thumb=std::getenv("NUMI_HUMAN_RESTING_THUMB_PASSIVE_REFERENCE");
++                   thumb&&std::string_view(thumb)=="1") {
++                    appendTextSource("resting_thumb_passive_reference","pmc2804669_cmc_0.15_mcp_0.10_ip_0.05_Nm_per_rad_v1");
++                }
+                 if(const char* pressureBoundary=std::getenv("NM_VASCULAR_STEP_EXTERNAL_PRESSURE");
+                    pressureBoundary&&std::string_view(pressureBoundary)=="1") {
+                     appendTextSource("resting_vascular_step_boundary","accepted_pleural_pressure_delta_v1");

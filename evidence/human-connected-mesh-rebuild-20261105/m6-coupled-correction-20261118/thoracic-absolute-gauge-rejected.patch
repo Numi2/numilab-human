@@ -1,0 +1,12 @@
+--- a/matter/shaders/human_respiration.metal
++++ b/matter/shaders/human_respiration.metal
+@@ -2158,7 +2158,8 @@
+ ) {
+     auto compartment=reference[row];
+     if ((thoracicMask & (1u<<row))!=0u)
+-        compartment.compliance.w += accepted[0].mechanics.z-pleuralReference;
++        // Both the mechanics state and the vascular exterior use gauge Pa.
++        compartment.compliance.w = accepted[0].mechanics.z;
+     trial[row]=compartment;
+ }
+ 

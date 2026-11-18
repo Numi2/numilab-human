@@ -1,0 +1,69 @@
+--- a/matter/tools/human_resting_runtime.hpp
++++ b/matter/tools/human_resting_runtime.hpp
+@@ -88,6 +88,7 @@
+     id<MTLComputePipelineState> predict,exchange,resolve,bloodMpmHandoff=nil;
+     id<MTLComputePipelineState> stageThoracicPressure=nil;
+     std::uint32_t thoracicPressureMask=0u;
++    std::array<float,2> thoracicStepAndRamp{};
+     bool localBloodCompaction=true;
+     uint32_t bloodHashCapacity=0u;
+     id<MTLBuffer> bloodBucketHeads=nil,bloodNextParticle=nil;
+@@ -341,8 +342,9 @@
+                 if (thoracic) thoracicPressureMask |= 1u<<i;
+             }
+             stageThoracicPressure=pipeline(@"nm_human_stage_thoracic_pressure");
+-            std::cout << "resting_vascular_external_pressure=accepted_pleural_delta"
+-                      << " reference_pa=" << parameters.environment.x
++            thoracicStepAndRamp={dt,5.0f};
++            std::cout << "resting_vascular_external_pressure=accepted_absolute_pleural_gauge"
++                      << " continuation_s=" << thoracicStepAndRamp[1]
+                       << " compartment_mask=" << thoracicPressureMask << "\n";
+         }
+         const bool subcycle=enabled("NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING");
+@@ -608,8 +610,7 @@
+                 [enc setBuffer:buffer(v.vascularExternalPressureSource) offset:0 atIndex:0];
+                 [enc setBuffer:buffer(v.vascularExternalPressureTrial) offset:0 atIndex:1];
+                 [enc setBuffer:accepted offset:0 atIndex:2];
+-                const float pleuralReference=parameters.environment.x;
+-                [enc setBytes:&pleuralReference length:sizeof(pleuralReference) atIndex:3];
++                [enc setBytes:&thoracicStepAndRamp length:sizeof(thoracicStepAndRamp) atIndex:3];
+                 [enc setBytes:&thoracicPressureMask length:sizeof(thoracicPressureMask) atIndex:4];
+                 [enc dispatchThreads:MTLSizeMake(v.compartmentCount,1,1)
+                     threadsPerThreadgroup:MTLSizeMake(stageThoracicPressure.threadExecutionWidth,1,1)];
+--- a/matter/shaders/human_respiration.metal
++++ b/matter/shaders/human_respiration.metal
+@@ -2152,14 +2152,19 @@
+     device const NMVascularCompartmentGPU* reference [[buffer(0)]],
+     device NMVascularCompartmentGPU* trial [[buffer(1)]],
+     device const NMHumanRespirationState* accepted [[buffer(2)]],
+-    constant float& pleuralReference [[buffer(3)]],
++    constant float2& timeAndRamp [[buffer(3)]], // accepted step seconds, load continuation seconds
+     constant uint& thoracicMask [[buffer(4)]],
+     uint row [[thread_position_in_grid]]
+ ) {
+     auto compartment=reference[row];
+-    if ((thoracicMask & (1u<<row))!=0u)
+-        // Both the mechanics state and the vascular exterior use gauge Pa.
+-        compartment.compliance.w = accepted[0].mechanics.z;
++    if ((thoracicMask & (1u<<row))!=0u) {
++        // This changes the pressure boundary only during initialization.
++        // After continuation it is the unscaled, accepted gauge pressure.
++        const float elapsed=float(accepted[0].status.x)*timeAndRamp.x;
++        const float x=clamp(elapsed/timeAndRamp.y,0.0f,1.0f);
++        const float alpha=x*x*(3.0f-2.0f*x);
++        compartment.compliance.w=mix(compartment.compliance.w,accepted[0].mechanics.z,alpha);
++    }
+     trial[row]=compartment;
+ }
+ 
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -38448,7 +38448,7 @@
+                 if(restingDriveIntervention)appendSource("resting_drive_intervention",std::as_bytes(std::span(*restingDriveIntervention)));
+                 if(const char* pressureBoundary=std::getenv("NM_VASCULAR_STEP_EXTERNAL_PRESSURE");
+                    pressureBoundary&&std::string_view(pressureBoundary)=="1") {
+-                    appendTextSource("resting_vascular_step_boundary","accepted_absolute_pleural_gauge_pa_v1");
++                    appendTextSource("resting_vascular_step_boundary","accepted_absolute_pleural_gauge_pa_continuation_5s_v1");
+                 }
+ 
+                 std::vector<std::uint32_t> activeSeparationBodyMap;

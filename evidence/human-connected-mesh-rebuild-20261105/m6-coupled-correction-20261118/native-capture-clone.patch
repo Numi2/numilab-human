@@ -1,0 +1,36 @@
+--- a/apps/NumiHumanRestingVisual.hpp
++++ b/apps/NumiHumanRestingVisual.hpp
+@@ -22,6 +22,7 @@
+ #include <cstdlib>
+ #include <cstring>
+ #include <filesystem>
++#include <sys/clonefile.h>
+ #include <set>
+ #include "NumiHumanAcceptedFEMSkinRenderPass.hpp"
+ #include <string_view>
+@@ -3210,9 +3211,22 @@
+                 const auto path=output/name;
+                 require(!std::filesystem::exists(path),"refusing to overwrite skin source map evidence");
+                 const auto digest=loadedKneeSHA256Hex(loadedKneeSHA256(data,size));
+-                NSData* blob=[NSData dataWithBytes:data length:size];NSError* error=nil;
+-                require([blob writeToURL:[NSURL fileURLWithPath:loadedKneeNSString(path.string())]
+-                    options:NSDataWritingAtomic error:&error],"skin source map evidence write failed");
++                bool cloned=false;
++                if(const char* sourceDirectory=std::getenv("NUMI_HUMAN_RESTING_CAPTURE_REUSE_SOURCE_DIR");
++                   sourceDirectory&&sourceDirectory[0]) {
++                    const auto sourcePath=std::filesystem::path(sourceDirectory)/name;
++                    if(std::filesystem::is_regular_file(std::filesystem::symlink_status(sourcePath))&&
++                       std::filesystem::file_size(sourcePath)==size&&
++                       loadedKneeSHA256Hex(loadedKneeFileSHA256(sourcePath))==digest) {
++                        cloned=clonefile(sourcePath.c_str(),path.c_str(),0)==0;
++                    }
++                }
++                if(!cloned) {
++                    NSData* blob=[NSData dataWithBytesNoCopy:const_cast<void*>(data)
++                        length:size freeWhenDone:NO];NSError* error=nil;
++                    require([blob writeToURL:[NSURL fileURLWithPath:loadedKneeNSString(path.string())]
++                        options:NSDataWritingAtomic error:&error],"skin source map evidence write failed");
++                }
+                 require(loadedKneeSHA256Hex(loadedKneeFileSHA256(path))==digest,
+                     "skin source map evidence file differs from uploaded bytes");
+                 return @{@"path":loadedKneeNSString(path.string()),@"sha256":loadedKneeNSString(digest),
