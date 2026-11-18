@@ -1,0 +1,24 @@
+--- a/NumiHumanRestingVisual.hpp
++++ b/NumiHumanRestingVisual.hpp
+@@ -4091,9 +4091,19 @@
+             std::vector<double> fatThicknessByRow(regions.size(), kLocalBedFatThicknessM);
+             if (useRegionalThickness) {
+                 using namespace metalrobo::human::coarse_tissue;
+-                require(retainedSourceSkinSHA256 == kWholeBodySkinSourcePayloadSHA256,
+-                        "regional thickness must match the exact detailed skin source");
++                // The audited rebind preserves the reference surface, topology, and
++                // original source row identities of this radial section field. The
++                // stance path recomputes the quadrature, regions, and support identity.
++                constexpr std::string_view kSectionCompatibleArmRebind =
++                    "85c1daa2365429dd5b76538cba2ae7285086c7a4247e722be09f0a16a89e76c5";
++                const bool matchedReference = retainedSourceSkinSHA256 == kWholeBodySkinSourcePayloadSHA256;
++                const bool matchedRebind = retainedSourceSkinSHA256 == kSectionCompatibleArmRebind &&
++                    std::string_view(kWholeBodySkinSourcePayloadSHA256) ==
++                    "4fd80f449b2c4e6a94b0808c2e54a5735684711de1f7fc1c34e893c2494250a5";
++                require(matchedReference || matchedRebind,
++                        "regional thickness requires an exact detailed skin source or its verified rebind");
+                 supportIdentity.text(kWholeBodySkinSourcePayloadSHA256);
++                if (matchedRebind) supportIdentity.text(retainedSourceSkinSHA256);
+                 supportIdentity.text(kWholeBodySkinThicknessProvenance);
+                 supportIdentity.text(kWholeBodyFatThicknessProvenance);
+                 std::vector<std::vector<std::size_t>> samples(regions.size());

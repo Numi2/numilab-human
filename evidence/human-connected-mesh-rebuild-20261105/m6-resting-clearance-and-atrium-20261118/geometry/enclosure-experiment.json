@@ -1,0 +1,54 @@
+{
+  "candidate": "inferred normal-direction source correction",
+  "input_skin_sha256": "85c1daa2365429dd5b76538cba2ae7285086c7a4247e722be09f0a16a89e76c5",
+  "vertices_in_patch": 7622,
+  "total_resolving_faces": 4569,
+  "max_displacement_mm": 4.0,
+  "unmet_plane_slack_sum_mm": 7073.397891121638,
+  "initial_witness_counts": [
+    0,
+    33
+  ],
+  "attempts": [
+    {
+      "scale": 1.0,
+      "pose_checks": [
+        {
+          "failing_projection_area_rows": 333,
+          "minimum_projection_area_ratio": -27.43686006273207
+        },
+        {
+          "failing_projection_area_rows": 322,
+          "minimum_projection_area_ratio": -29.40539336343766
+        }
+      ]
+    },
+    {
+      "scale": 0.5,
+      "pose_checks": [
+        {
+          "failing_projection_area_rows": 167,
+          "minimum_projection_area_ratio": -13.303828115298202
+        },
+        {
+          "failing_projection_area_rows": 160,
+          "minimum_projection_area_ratio": -14.290293742993505
+        }
+      ]
+    },
+    {
+      "scale": 0.25,
+      "pose_checks": [
+        {
+          "failing_projection_area_rows": 60,
+          "minimum_projection_area_ratio": -6.173282616343714
+        },
+        {
+          "failing_projection_area_rows": 54,
+          "minimum_projection_area_ratio": -6.667068085456943
+        }
+      ]
+    }
+  ],
+  "native_eligible": false
+}
