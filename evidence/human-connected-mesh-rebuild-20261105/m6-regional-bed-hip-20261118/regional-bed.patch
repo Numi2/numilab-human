@@ -1,0 +1,120 @@
+--- a/apps/NumiHumanLocalBedLayers.hpp
++++ b/apps/NumiHumanLocalBedLayers.hpp
+@@ -8,0 +9 @@
++    float stockThicknessM;
+@@ -14,0 +16,7 @@
++inline bool regionalBedThicknessRequested() {
++    const char* value = std::getenv("NUMI_HUMAN_LOCAL_BED_REGIONAL_THICKNESS");
++    require(!value || std::strcmp(value, "0") == 0 || std::strcmp(value, "1") == 0,
++            "NUMI_HUMAN_LOCAL_BED_REGIONAL_THICKNESS must be 0 or 1");
++    return value && std::strcmp(value, "1") == 0;
++}
++
+--- a/apps/NumiHumanRestingVisual.hpp
++++ b/apps/NumiHumanRestingVisual.hpp
+@@ -986 +986,2 @@
+-        std::span<const std::array<std::uint32_t,3>> acceptedBoundaryFatFaces={}):
++        std::span<const std::array<std::uint32_t,3>> acceptedBoundaryFatFaces={},
++        std::string_view retainedSourceSkinSHA256={}):
+@@ -4027,0 +4029,3 @@
++        const bool useRegionalThickness = regionalBedThicknessRequested();
++        require(!useRegionalThickness || localBedLayersRequested(),
++                "regional bed thickness requires local bed layers");
+@@ -4042,0 +4047 @@
++            std::vector<double> tributaryAreas(useRegionalThickness ? posedSkin.size() : 0u);
+@@ -4065 +4070 @@
+-                    if (posedSkin[v].z <= patchMinimum[row] + patchDepth)
++                    if (posedSkin[v].z <= patchMinimum[row] + patchDepth) {
+@@ -4066,0 +4072,2 @@
++                        if (useRegionalThickness) tributaryAreas[v] += vertexArea;
++                    }
+@@ -4069,2 +4076,61 @@
+-            constexpr double skinThickness = kLocalBedSkinThicknessM;
+-            constexpr double fatThickness = kLocalBedFatThicknessM;
++            std::vector<double> skinThicknessByRow(regions.size(), kLocalBedSkinThicknessM);
++            std::vector<double> fatThicknessByRow(regions.size(), kLocalBedFatThicknessM);
++            if (useRegionalThickness) {
++                using namespace metalrobo::human::coarse_tissue;
++                require(retainedSourceSkinSHA256 == kWholeBodySkinSourcePayloadSHA256,
++                        "regional thickness must match the exact detailed skin source");
++                supportIdentity.text(kWholeBodySkinSourcePayloadSHA256);
++                supportIdentity.text(kWholeBodySkinThicknessProvenance);
++                supportIdentity.text(kWholeBodyFatThicknessProvenance);
++                std::vector<std::vector<std::size_t>> samples(regions.size());
++                for (std::size_t i = 0; i < kWholeBodySkinSourceVertices.size(); ++i) {
++                    const auto vertex = kWholeBodySkinSourceVertices[i];
++                    if (vertex == MR_INVALID_INDEX) continue; // inferred vertices lack exact source ancestry
++                    require(vertex < posedSkin.size(), "regional thickness has invalid source identity");
++                    require(std::isfinite(kWholeBodySkinThicknessM[i]) &&
++                            std::isfinite(kWholeBodyFatThicknessM[i]) &&
++                            kWholeBodySkinThicknessM[i] > 0 && kWholeBodyFatThicknessM[i] > 0,
++                            "regional thickness has invalid section geometry");
++                    samples[regionForVertex[vertex]].push_back(i);
++                }
++                std::fill(skinThicknessByRow.begin(), skinThicknessByRow.end(), 0.0);
++                std::fill(fatThicknessByRow.begin(), fatThicknessByRow.end(), 0.0);
++                for (unsigned v = 0; v < posedSkin.size(); ++v) {
++                    if (tributaryAreas[v] == 0) continue;
++                    const auto row = regionForVertex[v];
++                    require(!samples[row].empty(),
++                            "a bed-contact region has no exact source thickness sample");
++                    std::size_t nearest = samples[row].front();
++                    float distance = INFINITY;
++                    for (const auto sample : samples[row]) {
++                        const auto delta = subtractPoint(posedSkin[v],
++                            posedSkin[kWholeBodySkinSourceVertices[sample]]);
++                        const float candidate = delta.x*delta.x + delta.y*delta.y + delta.z*delta.z;
++                        if (candidate < distance) {
++                            distance = candidate;
++                            nearest = sample;
++                        }
++                    }
++                    skinThicknessByRow[row] += tributaryAreas[v] * kWholeBodySkinThicknessM[nearest];
++                    fatThicknessByRow[row] += tributaryAreas[v] * kWholeBodyFatThicknessM[nearest];
++                }
++                for (std::size_t r = 0; r < regions.size(); ++r) {
++                    require(std::isfinite(areas[r]) && areas[r] > 1.0e-7,
++                            "regional bed section has no projected area");
++                    skinThicknessByRow[r] /= areas[r];
++                    fatThicknessByRow[r] /= areas[r];
++                }
++                auto* uploadedMaps = static_cast<MRHumanRestingVertexMap*>(mapping.contents);
++                for (unsigned v = 0; v < posedSkin.size(); ++v) {
++                    const auto row = regionForVertex[v];
++                    auto& vertex = uploadedMaps[skinFirstVertex + v];
++                    // For skin (kind 3), .y carries the condensed stock thickness.
++                    require(vertex.deformationKind == 3u && vertex.deformationWeight.y == 0,
++                            "bed section thickness lane conflicts with the skin map");
++                    vertex.deformationWeight.y = float(skinThicknessByRow[row] + fatThicknessByRow[row]);
++                }
++                std::cout << "resting_bed_thickness=registered_construction_field"
++                          << " exact_detailed_source_sha256=" << retainedSourceSkinSHA256
++                          << " assignment=within_region_nearest_then_projected_area_average"
++                          << " subject_measurements=0\n";
++            }
+@@ -4082,0 +4149,2 @@
++                const auto skinThickness = skinThicknessByRow[r];
++                const auto fatThickness = fatThicknessByRow[r];
+@@ -4085 +4153,2 @@
+-                        float(fatThickness/(fatModulus * areas[r])), retardation});
++                        float(fatThickness/(fatModulus * areas[r])), retardation,
++                        float(skinThickness + fatThickness)});
+@@ -4091 +4160,2 @@
+-                supportIdentity.bytes(&section, sizeof(section));
++                if (useRegionalThickness) supportIdentity.bytes(&section, sizeof(section));
++                else supportIdentity.bytes(&section, offsetof(NumiHumanLocalBedSection, stockThicknessM));
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -39813 +39813,3 @@
+-                            :std::span<const std::array<std::uint32_t,3>>{});
++                            :std::span<const std::array<std::uint32_t,3>>{},
++                        regionalBedThicknessRequested() && skinPayloadPath ?
++                            loadedKneeSHA256Hex(loadedKneeFileSHA256(*skinPayloadPath)) : std::string{});
+--- a/matter/src/metal/human_respiration.metal
++++ b/matter/src/metal/human_respiration.metal
+@@ -316,2 +316,3 @@
+-    const float stock = as_type<float>(d.w);
+-    if (m.deformationKind == 3u && stock > 0.0f &&
++    const float stock = m.deformationKind == 3u && m.deformationWeight.y > 0.0f
++        ? m.deformationWeight.y : as_type<float>(d.w);
++    if (m.deformationKind == 3u && d.w != 0u && stock > 0.0f &&
