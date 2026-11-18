@@ -1,0 +1,13 @@
+--- a/NumiHumanRestingVisual.hpp
++++ b/NumiHumanRestingVisual.hpp
+@@ -4097,7 +4097,9 @@
+                 constexpr std::string_view kSectionCompatibleArmRebind =
+                     "85c1daa2365429dd5b76538cba2ae7285086c7a4247e722be09f0a16a89e76c5";
+                 const bool matchedReference = retainedSourceSkinSHA256 == kWholeBodySkinSourcePayloadSHA256;
+-                const bool matchedRebind = retainedSourceSkinSHA256 == kSectionCompatibleArmRebind &&
++                const bool matchedRebind =
++                    (retainedSourceSkinSHA256 == kSectionCompatibleArmRebind ||
++                     retainedSourceSkinSHA256 == "00709724af1ae4684f057255e0f98297add7e83671d3e229f040a3d91daeb1c8") &&
+                     std::string_view(kWholeBodySkinSourcePayloadSHA256) ==
+                     "4fd80f449b2c4e6a94b0808c2e54a5735684711de1f7fc1c34e893c2494250a5";
+                 require(matchedReference || matchedRebind,

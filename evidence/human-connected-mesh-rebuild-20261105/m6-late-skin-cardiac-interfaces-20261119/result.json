@@ -1,0 +1,217 @@
+{
+  "device": "Apple M6",
+  "runtime": "f75955f08d6edf0f85027eac7614017ac9fbc996",
+  "combined_qualified": false,
+  "zero_crossing_gate": false,
+  "modified_default_assets": false,
+  "measured_controls": {
+    "wider-release-variable-4": {
+      "step": 2000,
+      "time_s": 4.000000189989805,
+      "sha256": "58d6285fcfd1a7c709d939711e42ff6b7b18551b8cb353d451f03c18ab5441f9",
+      "self_pairs": 36,
+      "skin_to_target": 13597,
+      "by_semantic": {
+        "51004": 2530,
+        "51005": 10767,
+        "51006": 0,
+        "51010": 0,
+        "51011": 300,
+        "51012": 0,
+        "51021": 0,
+        "51020": 0,
+        "51022": 0,
+        "51023": 0,
+        "51024": 0,
+        "51025": 0
+      },
+      "sustained_viewer_inclusive_rtf": 0.107656934418,
+      "launch_to_exit_rtf": 0.08093662925062867,
+      "body_and_terminal_rtf": 0.09801648846458673,
+      "breaths": 0,
+      "heart_filling_and_ejection_cycles": 5,
+      "mean_bed_reaction_last_2s_n": 706.3164367676001,
+      "max_sampled_root_assistance_n": 0.0,
+      "max_sampled_root_assistance_nm": 0.0
+    },
+    "wider-release-control-16": {
+      "step": 8000,
+      "time_s": 16.00000075995922,
+      "sha256": "15c691dc9dc1eaea968548e3c20589853ab123b00f589eaa6f835c8ef251773a",
+      "self_pairs": 55,
+      "skin_to_target": 14606,
+      "by_semantic": {
+        "51004": 2850,
+        "51005": 11486,
+        "51006": 0,
+        "51010": 0,
+        "51011": 270,
+        "51012": 0,
+        "51021": 0,
+        "51020": 0,
+        "51022": 0,
+        "51023": 0,
+        "51024": 0,
+        "51025": 0
+      },
+      "sustained_viewer_inclusive_rtf": 0.106887012575,
+      "launch_to_exit_rtf": 0.09873786832867394,
+      "body_and_terminal_rtf": 0.10431599589914928,
+      "breaths": 3,
+      "heart_filling_and_ejection_cycles": 19,
+      "mean_bed_reaction_last_2s_n": 706.3561720848401,
+      "max_sampled_root_assistance_n": 0.0,
+      "max_sampled_root_assistance_nm": 0.0
+    },
+    "late-rebind-control-16": {
+      "step": 8000,
+      "time_s": 16.00000075995922,
+      "sha256": "07d21f8769a074f05b5fb6933dd5067b2d3b40738464a32400275a3977e253ab",
+      "self_pairs": 51,
+      "skin_to_target": 14606,
+      "by_semantic": {
+        "51004": 2850,
+        "51005": 11486,
+        "51006": 0,
+        "51010": 0,
+        "51011": 270,
+        "51012": 0,
+        "51021": 0,
+        "51020": 0,
+        "51022": 0,
+        "51023": 0,
+        "51024": 0,
+        "51025": 0
+      },
+      "sustained_viewer_inclusive_rtf": 0.107263353995,
+      "launch_to_exit_rtf": 0.09875068979152682,
+      "body_and_terminal_rtf": 0.10459695632193254,
+      "breaths": 3,
+      "heart_filling_and_ejection_cycles": 19,
+      "mean_bed_reaction_last_2s_n": 706.3561720848401,
+      "max_sampled_root_assistance_n": 0.0,
+      "max_sampled_root_assistance_nm": 0.0
+    }
+  },
+  "rebind_native_delta": {
+    "removed_pairs": [
+      [
+        21765,
+        21787
+      ],
+      [
+        21765,
+        21788
+      ],
+      [
+        21766,
+        21788
+      ],
+      [
+        75689,
+        76736
+      ],
+      [
+        75689,
+        76741
+      ],
+      [
+        76736,
+        76739
+      ],
+      [
+        76739,
+        76741
+      ]
+    ],
+    "introduced_pairs": [
+      [
+        18443,
+        18446
+      ],
+      [
+        18443,
+        18449
+      ],
+      [
+        18444,
+        18449
+      ]
+    ]
+  },
+  "variable_pressure_failure": {
+    "accepted_steps": 2779,
+    "accepted_time_s": 5.558,
+    "failing_candidate_time_s": 5.5600000000000005,
+    "relative_residual": 1.138448715209961e-05,
+    "atrium_coordinate": 0.0995102971792221,
+    "box_96_atrium_upper": 0.09912943840026855,
+    "pressure_enabled": true,
+    "sustained_accepted_prefix_rtf": 0.10748389486603088
+  },
+  "cardiac_probe": {
+    "retained": {
+      "total_pairs": [
+        19,
+        31,
+        43
+      ],
+      "right_atrium_to_myocardium_pairs": [
+        0,
+        2,
+        7
+      ],
+      "by_owner_pair": [
+        {
+          "23/24": 3,
+          "24/320": 16
+        },
+        {
+          "1/318": 2,
+          "23/24": 3,
+          "23/319": 6,
+          "23/321": 4,
+          "24/320": 16
+        },
+        {
+          "1/23": 5,
+          "1/318": 7,
+          "23/319": 10,
+          "23/321": 11,
+          "24/320": 10
+        }
+      ]
+    },
+    "repair": {
+      "total_pairs": [
+        18,
+        24,
+        28
+      ],
+      "right_atrium_to_myocardium_pairs": [
+        0,
+        0,
+        3
+      ],
+      "by_owner_pair": [
+        {
+          "23/24": 3,
+          "24/320": 15
+        },
+        {
+          "23/24": 3,
+          "23/319": 6,
+          "24/320": 15
+        },
+        {
+          "1/23": 4,
+          "1/318": 3,
+          "23/319": 9,
+          "23/321": 3,
+          "24/320": 9
+        }
+      ]
+    }
+  },
+  "scope": "Native surface snapshots and discrete Metal local cardiac positions."
+}
