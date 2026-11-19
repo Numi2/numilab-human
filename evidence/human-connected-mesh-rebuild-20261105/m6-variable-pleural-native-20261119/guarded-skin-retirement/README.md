@@ -1,0 +1,9 @@
+# Regression-free subset of the supported skin patch
+
+The native Apple M6 scene accepted all 8,000 2 ms steps with variable pleural pressure under the prior certified cardiac atlas. Timed motion including native presentation ran at 0.10736×. Cold launch through terminal export and exit was 0.09880×. The three complete breaths and 19 cardiac cycles use the same physiological and articulated owners. The captured accepted body, respiratory, cardiac and bed reaction traces match the control exactly. The aggregate root fingerprint differs with the registered geometry payload.
+
+The bilateral source patch restores six rows implicated in five new crossing witnesses from the first combined run. The final native exact audit removed 96 of 14,605 skin-to-tissue pairs with zero new pairs. Remaining issues are 14,509 tissue crossings and 55 preexisting skin self-pairs. The frozen step-0 and step-2000 checks are counterfactuals for this candidate. The exact native terminal proof covers its step-8000 capture. No default release qualification is claimed.
+
+The source patch preserves all 32 support reference anchors and 9,306 guarded rows. In the terminal capture 2,898 remaining pairs involve triangles whose three vertices are guarded. Step 0 already has 8,596 tissue crossings in the unmodified native reference. At the patched terminal step 1,476 of 14,509 are the same indexed triangle-pair witnesses as step 0. This explains the need for both corrected reference geometry and pose-consistent registration. The inventory does not establish continuous clearance or solid containment.
+
+The exact integer-lattice shortcut was compared against every typed witness and count in the previous full native audit. It retains the original narrow phase for uncertain pairs. It is offline verification and does not change the integrated solver. The delta can be applied to the pinned source with the included emitter and launch scripts.
