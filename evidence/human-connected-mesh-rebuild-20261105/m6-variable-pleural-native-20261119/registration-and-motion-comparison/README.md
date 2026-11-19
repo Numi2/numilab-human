@@ -1,0 +1,9 @@
+# Historical skin registration and combined motion comparison
+
+The guarded native candidate remains the regression-free work product. A broader source patch passed frozen-pose orientation and exact pair-set checks at steps 0, 2,000 and 8,000. It accepted 16 seconds with live variable pleural pressure on the Apple M6 at 0.10719× during motion and 0.09856× launch through exit. In the actual terminal capture it removed 3,922 of the control's crossing pairs and introduced 3,649, with 14,332 total and 55 skin self-pairs. The accepted body and bed reaction changed. The broader patch remains an experiment. Exact qualification uses the body's actual native trajectories.
+
+The narrower candidate's 14,509 terminal tissue pairs all have transverse intersection segments. The median span was 0.512 mm. Span characterizes intersection geometry, and penetration depth is a separate quantity. These witnesses include mixed-source passive muscle meshes whose anatomical positions are displayed alongside the independently simulated muscle forces.
+
+A source recovery resolves the large archived-to-current skin discrepancy. The archived bone bank and the current step-0 geometry agreed across all 185 typed bone meshes under one rigid transform, with 0.120 micrometres maximum face-centre residual. The dominant translation is 5.663 micrometres normal to the bed. The registered archived skin has zero bone pairs and zero self-pairs on the frozen reference, but 14,609 pairs with other current tissues, including 13,125 muscle pairs. There are 45 boundary edges. Those are source and registration constraints on reusing the archived outer surface. No archived shape was substituted into the physical scene.
+
+The full skin-only displacement solve also created folds. Completion requires a jointly registered tissue envelope, supported physical transfer and exact motion verification. This record retains failed and passing controls without qualifying the complete anatomy.
