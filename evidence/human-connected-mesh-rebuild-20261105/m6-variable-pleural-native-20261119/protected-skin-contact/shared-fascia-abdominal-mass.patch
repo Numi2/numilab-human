@@ -1,0 +1,79 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -21011,6 +21011,7 @@
+     LoadedTorsoAnatomy* anatomy,
+     const std::filesystem::path* anatomyPayloadPath,
+     std::span<const std::uint32_t> sourceBodyMap,
++    const metalrobo::NumiHumanLoadedKneeDigest& rigidPayloadSHA,
+     bool includeInferredACL, bool includeProstate, bool includeOrganBatch, bool enableAorticWall, bool enableAorticWallOuterContact, bool enableWholeBodySkinFat, bool enableRegisteredLigaments, bool hipCapsuleAggregateOwner, const char* restingNetwork,
+     std::span<const float> q, double dt,
+     const std::filesystem::path& matterMetallib,
+@@ -29355,6 +29356,18 @@
+         aclFirstNode+=static_cast<std::uint32_t>(acl.object.femNodes.size());
+     }
+     double fasciaCookedMassKg=0.0;
++    std::vector<metalrobo::NumiHumanTissueMassContribution> abdominalSourceMass;
++    // The registered abdomen is an attachment frame with only 10 g in the
++    // source rig. For its explicit oblique sheets, exchange mass with the
++    // composite trunk budget at the torso frame. Preserve each source
++    // contribution's world position so the existing partition verifies
++    // mass, first moments and inertia. The attachment and contact frames
++    // remain on the authored route.
++    constexpr std::uint32_t kReferenceAbdomen=7u, kReferenceTorso=20u;
++    constexpr std::string_view kFasciaTrunkReferenceRigidSHA=
++        "c10924a45efc1cfb3916bd22baabeeca491da5e412bbaad37b1328fe364db53d";
++    const bool useFasciaTrunkMassReference =
++        sourceBodyMap.empty() && loadedKneeSHA256Hex(rigidPayloadSHA)==kFasciaTrunkReferenceRigidSHA;
+     for(std::uint32_t regionIndex=0u;
+         regionIndex<fascia.regions.size();++regionIndex) {
+         const auto& region=fascia.regions[regionIndex];
+@@ -29387,6 +29400,21 @@
+             fasciaCookedMassKg+=double(cookedMass);
+             massNodes.push_back({globalNode,donorBody,double(cookedMass),
+                 {donorLocal.x,donorLocal.y,donorLocal.z}});
++            if(useFasciaTrunkMassReference &&
++               regionIndex>=kLatissimusFasciaRegionEnd && donorBody==kReferenceAbdomen) {
++                require(kReferenceTorso<bodies.size() &&
++                            (region.softTissueStableId&~kFasciaRouteBodyBit)==kReferenceAbdomen,
++                        "abdominal fascia trunk source frame identity drifted");
++                const auto& torso=bodies[kReferenceTorso];
++                const auto& q=torso.orientation;
++                const mr_float4 local=rotatePoint(mr_float4{-q.x,-q.y,-q.z,q.w},
++                    femSubtract(points[sourceGlobal],torso.position));
++                const auto reconstructed=femAdd(torso.position,rotatePoint(q,local));
++                require(femLength(femSubtract(reconstructed,points[sourceGlobal]))<=1e-6f,
++                        "abdominal fascia source-mass transformation moved its reference point");
++                abdominalSourceMass.push_back({globalNode,kReferenceTorso,double(cookedMass),
++                    {local.x,local.y,local.z}});
++            }
+         }
+     }
+     const double fasciaExpectedMassKg=totalSourceVolume*density;
+@@ -29440,7 +29468,17 @@
+     // Keep one node/frame row per compiled FEM node, and build a separate
+     // source-mass ledger. Legacy tissues contribute one row; reconstructed
+     // volume tissues may split a node's mass across several original donors.
+-    std::vector<metalrobo::NumiHumanTissueMassContribution> massContributions;
++    if(!abdominalSourceMass.empty()) {
++        double transferKg=0.0;
++        for(const auto& row:abdominalSourceMass)transferKg+=row.massKg;
++        std::cout<<"resting_abdominal_fascia_source_mass owner=composite_reference_torso"
++                 <<" anchor_body="<<kReferenceAbdomen<<" source_body="<<kReferenceTorso
++                 <<" nodes="<<abdominalSourceMass.size()<<" mass_kg="<<transferKg
++                 <<" rigid_sha256="<<kFasciaTrunkReferenceRigidSHA
++                 <<" total_mass_added_kg=0 interpretation=inferred_trunk_mass_partition"
++                 <<std::endl;
++    }
++    auto massContributions=std::move(abdominalSourceMass);
+     const auto appendContributions=[&](const auto& prepared){
+         massContributions.insert(massContributions.end(),prepared.donorMassContributions.begin(),
+                                  prepared.donorMassContributions.end());
+@@ -39076,7 +39114,7 @@
+                             loadedKneeSHA256Hex(loadedKneeFileSHA256(*skinPayloadPath)):std::string{},
+                         torsoAnatomyPayload?&*torsoAnatomyPayload:nullptr,
+                         torsoAnatomyPayloadPath?&*torsoAnatomyPayloadPath:nullptr,
+-                        activeSeparationBodyMap,
++                        activeSeparationBodyMap,rigid.payloadSha256,
+                         selectInferredACL&&bonePayload.has_value()&&
+                             !openKneePayload.has_value()&&
+                             bonePayload->sourceOwnerBindingsVerified,

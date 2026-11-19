@@ -1,0 +1,41 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -21006,8 +21006,8 @@
+ std::unique_ptr<PassiveFasciaRuntimeOwner> makeRestingPassiveFasciaOwner(
+     const LoadedPectoralisFascia& fascia, LoadedSoftTissues& tissues,
+     LoadedMuscles& muscles, metalrobo::EngineModel& model,
+-    LoadedSupportContacts& support, LoadedBones* bones, LoadedSkin* skin,
+-    std::string skinSourceMember, std::string skinSourcePayloadSHA256,
++    LoadedSupportContacts& support, LoadedBones* bones, LoadedSkin* weightedSkin,
++    bool includeSkinFEM, std::string skinSourceMember, std::string skinSourcePayloadSHA256,
+     LoadedTorsoAnatomy* anatomy,
+     const std::filesystem::path* anatomyPayloadPath,
+     std::span<const std::uint32_t> sourceBodyMap,
+@@ -21022,6 +21022,7 @@
+     require(fascia.regions.size() == kThoracoabdominalFasciaRegionCount &&
+                 model.articulations.size() == 1u && dt > 0.0 && std::isfinite(dt),
+             "resting passive fascia source/model is invalid");
++    auto* const skin=includeSkinFEM ? weightedSkin : nullptr;
+     const bool includeOpticNerves = humanRestingOpticNerveFEMEnabledForApp();
+     const bool useFEMSkinSupport = femSkinSupportRequested();
+     require(!useFEMSkinSupport || enableWholeBodySkinFat,
+@@ -29773,7 +29774,9 @@
+             <<" per_step_CPU_refresh=0 construction_envelope_restriction=removed"
+             <<std::endl;
+     }
+-    rebaseNumiHumanSurfaceFrames(bones,skin,&tissues,anatomy,effectiveMassPartitions);
++    // Detailed skin is also the contact owner for the weighted bed. Rebase it
++    // along with the other surface frames even when no volumetric skin is cooked.
++    rebaseNumiHumanSurfaceFrames(bones,weightedSkin,&tissues,anatomy,effectiveMassPartitions);
+     double executedPhysicalMass=0.0;for(const auto& b:rebased.bodies)executedPhysicalMass+=b.massAndInverseMass.x;
+     double continuumMass=0.0;for(const auto& n:massNodes)continuumMass+=n.massKg;
+     executedPhysicalMass+=continuumMass;
+@@ -39108,7 +39111,7 @@
+                         *pectoralisFasciaPayload,*softTissuePayload,musclePayload,
+                         rigid.model,*supportContactPayload,
+                         bonePayload?&*bonePayload:nullptr,
+-                        restingSkinFatFEMEnabled&&skinPayload?&*skinPayload:nullptr,
++                        skinPayload?&*skinPayload:nullptr,restingSkinFatFEMEnabled,
+                         restingSkinFatFEMEnabled&&skinPayloadPath?skinPayloadPath->string():std::string{},
+                         restingSkinFatFEMEnabled&&skinPayloadPath?
+                             loadedKneeSHA256Hex(loadedKneeFileSHA256(*skinPayloadPath)):std::string{},
