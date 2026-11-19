@@ -1,0 +1,83 @@
+{
+  "target": {
+    "simulated_seconds": 16,
+    "minimum_launch_to_exit_real_time_factor": 0.1,
+    "allowed_unexplained_crossing_pairs": 0
+  },
+  "native_device": "Apple M6",
+  "best_matched_control": {
+    "accepted_time_s": 16.00000075995922,
+    "launch_to_exit_wall_s": 160.67679137503728,
+    "launch_to_exit_rtf": 0.09957879182820785,
+    "reported_sustained_viewer_inclusive_rtf": 0.107817326531,
+    "matched_32_to_8000_segment_rtf": 0.10781210236003969,
+    "breaths": 3,
+    "filling_ejection_cycles": 19,
+    "accepted_observer_rows": 250,
+    "root_assistance_force_and_torque_zero": true
+  },
+  "skin_trial": {
+    "physiology_contact_parity": {
+      "accepted_body_state_sha256": true,
+      "accepted_respiration_state_sha256": true,
+      "cardiac_cardiac_q": true,
+      "cardiac_cardiac_wall_q": true,
+      "cardiac_common_coordinates": true,
+      "bed_sections_byte_equal": true,
+      "resting-coupled.csv_byte_equal": true,
+      "resting-com-support-impulses.csv_byte_equal": true,
+      "resting-com-momentum-diagnostic.csv_byte_equal": true
+    },
+    "profile": {
+      "accepted_time_s": 16.00000075995922,
+      "launch_to_exit_wall_s": 160.71672091586515,
+      "launch_to_exit_rtf": 0.09955405180482238,
+      "reported_sustained_viewer_inclusive_rtf": 0.107804683815,
+      "matched_32_to_8000_segment_rtf": 0.10780050316488525,
+      "breaths": 3,
+      "filling_ejection_cycles": 19,
+      "accepted_observer_rows": 250,
+      "root_assistance_force_and_torque_zero": true
+    },
+    "native_self_pairs": {
+      "before": 55,
+      "after": 55,
+      "introduced": 0,
+      "removed": 0,
+      "new_witnesses": []
+    },
+    "native_tissue_pairs": {
+      "before": 14606,
+      "after": 14506,
+      "introduced": 0,
+      "removed": 100
+    },
+    "original_support_source": "e2e81a1eb1248415443fa18bdb558b39722409dde23fd50baf52c10775edfdd2",
+    "skin_trial_passed_terminal_regression": true,
+    "qualified_variable_pleural_pressure": false,
+    "default_model_changed": false
+  },
+  "cardiac": {
+    "rest_source_crossings": 0,
+    "exact_fitted_pose_pair_counts": [
+      0,
+      0,
+      0
+    ],
+    "additional_sample_count": 17,
+    "additional_samples_with_detected_crossings": 16,
+    "right_atrium_to_myocardium_samples_with_crossings": 15,
+    "last_retained_native_variable_pressure_step": 2779,
+    "last_retained_native_variable_pressure_time_s": 5.558,
+    "variable_pleural_pressure_geometry_qualified": false,
+    "coupled_full_horizon_qualification_performed": false
+  },
+  "body": {
+    "last_control_bed_support_n": 705.649733543,
+    "root_assistance_observations_zero": true
+  },
+  "zero_crossings_met": false,
+  "launch_to_exit_target_met_on_footprint_replay": false,
+  "qualification_complete": false,
+  "default_changed": false
+}

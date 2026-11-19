@@ -1,0 +1,32 @@
+--- a/NumiHumanRestingVisual.hpp
++++ b/NumiHumanRestingVisual.hpp
+@@ -3079,11 +3079,28 @@
+             require(available>=required,
+                 "native accepted capture budget exceeds available disk including 2 GiB safety reserve");
+         }
+-        require(metalrobo::writeVisualAssetPack(pack,packPath,&error),error);
++        const char* initialPackCache=std::getenv("NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE");
++        const char* initialPackCacheSHA=std::getenv("NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE_SHA256");
++        require((initialPackCache!=nullptr)==(initialPackCacheSHA!=nullptr),
++            "initial visual pack cache requires both its path and SHA-256");
++        if(initialPackCache) {
++            const std::filesystem::path cached(initialPackCache);
++            require(cached.is_absolute()&&std::filesystem::is_regular_file(
++                    std::filesystem::symlink_status(cached))&&!std::filesystem::exists(packPath),
++                "initial visual pack cache requires a regular file and a new output path");
++            require(clonefile(cached.c_str(),packPath.c_str(),0)==0,
++                "initial visual pack cache clone failed");
++        } else {
++            require(metalrobo::writeVisualAssetPack(pack,packPath,&error),error);
++        }
+         initialPackPath=packPath;initialPackContentHash=pack.contentHash;
+         std::cout<<"anatomy_vertex_frame=owner_local source_surfaces="<<localCardiacInstances.size()
+             <<" world_pose=existing_gpu_articulated_instance strict_area_guard=unchanged\n";
+         initialPackFileSHA256=loadedKneeSHA256Hex(loadedKneeFileSHA256(packPath));
++        require(!initialPackCacheSHA||initialPackFileSHA256==initialPackCacheSHA,
++            "initial visual pack cache SHA-256 mismatch");
++        if(initialPackCache)std::cout<<"resting_initial_visual_pack_cache=verified_clone"
++            <<" sha256="<<initialPackFileSHA256<<std::endl;
+         const float distance=framing.distance;
+         const auto c=framing.center;
+         const auto& thorax=initialBodies.at(functional.gpu.bodyAndFlags.x);

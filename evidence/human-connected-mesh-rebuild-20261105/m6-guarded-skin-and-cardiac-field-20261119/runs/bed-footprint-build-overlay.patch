@@ -1,0 +1,46 @@
+--- NumiHumanRestingVisual.hpp
++++ NumiHumanRestingVisual.hpp
+@@ -4099,7 +4099,7 @@
+                 const bool matchedReference = retainedSourceSkinSHA256 == kWholeBodySkinSourcePayloadSHA256;
+                 const bool matchedRebind =
+                     (retainedSourceSkinSHA256 == kSectionCompatibleArmRebind ||
+-                     retainedSourceSkinSHA256 == "6442daaf259a83e186183c9a32ee8d239945c11228bf5b0fe998ff8595c78965") &&
++                     (retainedSourceSkinSHA256 == "6442daaf259a83e186183c9a32ee8d239945c11228bf5b0fe998ff8595c78965" || retainedSourceSkinSHA256 == "00709724af1ae4684f057255e0f98297add7e83671d3e229f040a3d91daeb1c8")) &&
+                     std::string_view(kWholeBodySkinSourcePayloadSHA256) ==
+                     "4fd80f449b2c4e6a94b0808c2e54a5735684711de1f7fc1c34e893c2494250a5";
+                 require(matchedReference || matchedRebind,
+@@ -4121,6 +4121,7 @@
+                 }
+                 std::fill(skinThicknessByRow.begin(), skinThicknessByRow.end(), 0.0);
+                 std::fill(fatThicknessByRow.begin(), fatThicknessByRow.end(), 0.0);
++                std::vector<unsigned> chosenThicknessVertex(posedSkin.size(), MR_INVALID_INDEX);
+                 for (unsigned v = 0; v < posedSkin.size(); ++v) {
+                     if (tributaryAreas[v] == 0) continue;
+                     const auto row = regionForVertex[v];
+@@ -4137,6 +4138,7 @@
+                             nearest = sample;
+                         }
+                     }
++                    chosenThicknessVertex[v] = kWholeBodySkinSourceVertices[nearest];
+                     skinThicknessByRow[row] += tributaryAreas[v] * kWholeBodySkinThicknessM[nearest];
+                     fatThicknessByRow[row] += tributaryAreas[v] * kWholeBodyFatThicknessM[nearest];
+                 }
+@@ -4145,6 +4147,18 @@
+                             "regional bed section has no projected area");
+                     skinThicknessByRow[r] /= areas[r];
+                     fatThicknessByRow[r] /= areas[r];
++                }
++                if (std::getenv("NUMI_HUMAN_TEST_BED_SECTION_FOOTPRINT")) {
++                    std::ofstream footprint(outputDirectory / "resting-bed-section-footprint.csv");
++                    footprint << "vertex,region,x,y,z,region_min,tributary_area,nearest_thickness_vertex\n"
++                              << std::setprecision(17);
++                    for (unsigned v=0; v<posedSkin.size(); ++v) {
++                        const auto row=regionForVertex[v];
++                        footprint << v << ',' << row << ',' << posedSkin[v].x << ',' << posedSkin[v].y
++                                  << ',' << posedSkin[v].z << ',' << patchMinimum[row] << ','
++                                  << tributaryAreas[v] << ',' << chosenThicknessVertex[v] << '\n';
++                    }
++                    require(bool(footprint), "bed section footprint receipt write failed");
+                 }
+                 auto* uploadedMaps = static_cast<MRHumanRestingVertexMap*>(mapping.contents);
+                 for (unsigned v = 0; v < posedSkin.size(); ++v) {
