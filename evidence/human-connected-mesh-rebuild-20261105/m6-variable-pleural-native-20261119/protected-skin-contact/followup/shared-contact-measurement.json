@@ -1,0 +1,1600 @@
+{
+  "normal_gravity_control": {
+    "launch": {
+      "argv": [
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numi-human-native",
+        "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/joint-functional-owner-audit-20261023/knee-projection-envelope-001/myosim-fullbody-core-reference.nhrigid",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/bone-step-4/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-linked-registered-pose-32/native",
+        "--persistent-metal-stand",
+        "--muscle-step-seconds",
+        "0.002",
+        "--muscle-step-count",
+        "32",
+        "--support-contact-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt",
+        "--joint-equality-payload",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq",
+        "--tendon-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/compiled-tendon/numi-human-tendon-attachments.nhtendon",
+        "--resting-scene",
+        "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json",
+        "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json",
+        "--vascular-dense45",
+        "--resting-reference-mass-kg",
+        "72.0",
+        "--skin-payload",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin",
+        "--soft-tissue-payload",
+        "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/muscle158-precision-002/composed-receipt/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "--torso-anatomy-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy",
+        "--resting-anatomy-receipt",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-anatomy-receipt.json",
+        "--dimension",
+        "512",
+        "--muscle-activation",
+        "0.25",
+        "--stand-contact-iterations",
+        "64",
+        "--root-pose",
+        "-0.05000000074505806",
+        "0.20000000298023224",
+        "0.15885571897029876",
+        "-0.70316427946090698",
+        "-0.0014300436014309525",
+        "-0.0014054210623726249",
+        "0.71102458238601685",
+        "--resting-release-initialization",
+        "--pose-q",
+        "36",
+        "0.1",
+        "--pose-q",
+        "74",
+        "0.1",
+        "--pose-q",
+        "40",
+        "0.0",
+        "--pose-q",
+        "41",
+        "0.0",
+        "--pose-q",
+        "78",
+        "0.0",
+        "--pose-q",
+        "79",
+        "0.0",
+        "--resting-registered-ligaments",
+        "--persistent-source-passive-joint-tissue",
+        "--pectoralis-fascia-payload",
+        "/Users/n/numi-human-separation-20261018/passive-fascia-source-173/payload/bodyparts3d-pectoralis-fascia.nhfascia"
+      ],
+      "environment": {
+        "DYLD_LIBRARY_PATH": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib",
+        "MTL_DEBUG_LAYER": "0",
+        "NUMANX_COUPLED_HUMAN_COOPERATIVE_MASS_ACTION": "1",
+        "NUMI_GPU_PROGRESS": "0",
+        "NUMI_GPU_PROGRESS_ROOT": "0",
+        "NUMI_HUMAN_ACCEPTED_BODY_MOTION_AUDIT": "0",
+        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
+        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
+        "NUMI_HUMAN_BLEEDING_ENABLED": "0",
+        "NUMI_HUMAN_BLOOD_MPM_ENABLED": "0",
+        "NUMI_HUMAN_BLOOD_MPM_GRID_BOUNDS_M": "-0.2655323961,-0.1162754487,1.3001966098,0.2344676039,0.3837245513,1.8001966098",
+        "NUMI_HUMAN_BLOOD_MPM_MATERIAL": "/Users/n/numi-lab-native-replay-publish-20261017/matter/materials/blood_high_shear_newtonian_proxy.nmatter",
+        "NUMI_HUMAN_CAPTURE_FEM_ENDPOINT_STATE": "0",
+        "NUMI_HUMAN_CONTACT_AABB_EXCLUSION": "0",
+        "NUMI_HUMAN_CONTACT_COMPACT_QUERIES": "0",
+        "NUMI_HUMAN_CONTACT_EXACT_MOTION_CACHE": "0",
+        "NUMI_HUMAN_CONTACT_GPU_TIMING": "0",
+        "NUMI_HUMAN_CONTACT_ROW_CACHE": "0",
+        "NUMI_HUMAN_CONTACT_WORKING_SET_GUARD": "1",
+        "NUMI_HUMAN_EXECUTION_STAGES": "1",
+        "NUMI_HUMAN_FEM_SKIN_SUPPORT": "0",
+        "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
+        "NUMI_HUMAN_LOCAL_BLOOD_COMPACTION": "1",
+        "NUMI_HUMAN_MATERIAL_EXPRESSION_CACHE": "1",
+        "NUMI_HUMAN_PARALLEL_CONTACT_AUDIT": "1",
+        "NUMI_HUMAN_PARALLEL_CONTACT_WRENCH": "1",
+        "NUMI_HUMAN_PARALLEL_NODE_WORK": "1",
+        "NUMI_HUMAN_PARALLEL_RESPIRATORY_GAS": "0",
+        "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
+        "NUMI_HUMAN_PARTITIONED_MASS_WHITEN": "0",
+        "NUMI_HUMAN_PREPARATION_MEMORY": "1",
+        "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
+        "NUMI_HUMAN_RESTING_AORTIC_WALL": "0",
+        "NUMI_HUMAN_RESTING_AORTIC_WALL_OUTER_CONTACT": "0",
+        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-linked-registered-pose-32/failure.json",
+        "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS": "1.0",
+        "NUMI_HUMAN_RESTING_INSPECTION_TOUR": "0",
+        "NUMI_HUMAN_RESTING_OPTIC_NERVE_FEM": "0",
+        "NUMI_HUMAN_RESTING_ORGAN_BATCH_FEM": "0",
+        "NUMI_HUMAN_RESTING_PASSIVE_FASCIA": "1",
+        "NUMI_HUMAN_RESTING_PROSTATE_FEM": "0",
+        "NUMI_HUMAN_RESTING_SKIN_FAT_FEM": "0",
+        "NUMI_HUMAN_RESTING_TRANSACTION_PROBE": "0",
+        "NUMI_HUMAN_RESTING_WHOLE_BODY_SKIN_FAT_FEM": "0",
+        "NUMI_HUMAN_SKIN_BONE_STATIC_BVH": "0",
+        "NUMI_HUMAN_SKIN_BONE_TRIANGLE_CONTACT": "0",
+        "NUMI_HUMAN_SKIN_FAT_COMPACT_MASS_CAPTURE": "0",
+        "NUMI_HUMAN_SKIN_FAT_PARENT_MASS_CAPTURE_ONLY": "0",
+        "NUMI_HUMAN_SKIN_HARD_ATTACHMENT_REFERENCE": "0",
+        "NUMI_HUMAN_SKIN_INFLUENCE_TILE32": "0",
+        "NUMI_HUMAN_SPARSE_ANCHOR_PROJECTION": "1",
+        "NUMI_HUMAN_SPLIT_STAND": "1",
+        "NUMI_HUMAN_STAND_ANALYTIC_BODY_SPATIAL_JACOBIANS": "0",
+        "NUMI_HUMAN_STAND_CACHE_CONTACT_JACOBIAN": "0",
+        "NUMI_HUMAN_STAND_CACHE_LIMIT_EQUALITY": "0",
+        "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM": "1",
+        "NUMI_HUMAN_STAND_CONTACT_WARMSTART": "0",
+        "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA": "0",
+        "NUMI_HUMAN_STAND_DEFER_EQUALITY_DIAGNOSTICS": "0",
+        "NUMI_HUMAN_STAND_EQUALITY_DEFERRAL_FAULT": "none",
+        "NUMI_HUMAN_STAND_FIRST_SIMD_CONTACT_SWEEP": "0",
+        "NUMI_HUMAN_STAND_FORCE_PARITY_DIAGNOSTIC": "0",
+        "NUMI_HUMAN_STAND_FREE_SPLIT": "0",
+        "NUMI_HUMAN_STAND_FUSE_CANONICAL_BODY_PROBES": "0",
+        "NUMI_HUMAN_STAND_HYBRID_EQUALITY_FACTOR_CACHE": "0",
+        "NUMI_HUMAN_STAND_ONE_PASS_ORDERED_LIMITS": "0",
+        "NUMI_HUMAN_STAND_PGS_VELOCITY_RESIDUAL_TOLERANCE": "0.0",
+        "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION": "1",
+        "NUMI_HUMAN_STAND_REDUCED_CHOLESKY": "0",
+        "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES": "0",
+        "NUMI_HUMAN_STAND_SPARSE_OPERATOR": "0",
+        "NUMI_HUMAN_STAND_SPECULATIVE_CONTACT_DISTANCE_M": "0.02",
+        "NUMI_HUMAN_STAND_ZERO_CONTACT_RESPONSE_FASTPATH": "0",
+        "NUMI_HUMAN_STATIC_WEIGHTED_SKIN_SUPPORT": "1",
+        "NUMI_HUMAN_SUPPORT_ANCESTRY_PRUNE": "1",
+        "NUMI_HUMAN_TRAINING_PROFILE": "1",
+        "NUMI_HUMAN_UNPAIRED_IDENTITY_INSTALL": "0",
+        "NUMI_HUMAN_UNPAIRED_IDENTITY_PREFLIGHT": "0",
+        "NUMI_HUMAN_SUPPORTED_PRELUDE_STEPS": "0",
+        "NUMI_HUMAN_RESTING_AORTIC_DISCRETE_PRELOAD": "0",
+        "NUMI_HUMAN_ACCEPTED_FEM_BODY_LOAD_CAPTURE": "0",
+        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "32",
+        "NUMI_HUMAN_LOCAL_BED_LAYERS": "1",
+        "NUMI_HUMAN_LOCAL_BED_REGIONAL_THICKNESS": "1",
+        "NM_VASCULAR_STEP_EXTERNAL_PRESSURE": "1",
+        "NUMI_HUMAN_RESTING_THUMB_PASSIVE_REFERENCE": "1",
+        "NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-registered-pose-32/native/resting-human.mrvpack",
+        "NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE_SHA256": "537c2389acb94ea5bc69d0c3a0b4b1d36870ad4963451ba6dbe978b5fb60b41d"
+      },
+      "cwd": "/Users/numi/Work/skin-fat-native-integration-209",
+      "pins": {
+        "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/joint-functional-owner-audit-20261023/knee-projection-envelope-001/myosim-fullbody-core-reference.nhrigid": "c10924a45efc1cfb3916bd22baabeeca491da5e412bbaad37b1328fe364db53d",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/bone-step-4/bodyparts3d-myosim-major-bones.nhbones": "43a31ef4771e2a383ae2c7caab1b994f0c28076c2a43501860cd1ba3fe7708c0",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt": "4c31ce250a63bd730c066f6f92571295c761ddb51215a3eeb09275bc42d6992d",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/compiled-tendon/numi-human-tendon-attachments.nhtendon": "d0f5da8c63d5e3335eef72e7e79e8e5780ae43f0cf254e840dd7ad604b72da48",
+        "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+        "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+        "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/left-ankle-rest-preserving-weight-repair-128/candidate.nhskin": "4fd80f449b2c4e6a94b0808c2e54a5735684711de1f7fc1c34e893c2494250a5",
+        "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/muscle158-precision-002/composed-receipt/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "8874b3fede93825d2e4ddb248231dc9d2c598e0155f8473c624fcb935d6b1042",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy": "3b0acb6146358f3302f2b85e2214bafa9f2fae7b0e51af70fd0838d6609da4a4",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-anatomy-receipt.json": "76c6651a86e9353af9007ba6433beb2a7605b607d9c261def9537ab447d43a51",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/HumanRespiration.metallib": "880f60be6eb17b6af781665c6016c6d050da069685fcf1e8e2cafda0fc2115c8",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib": "683c00b6cac9699002c60e64abe472b07d81a02c7149e28b32f446b255e9c66e",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/shaders/MetalRobo.metallib": "b52b5c1c5736da382682e4412aa9b458603066c0c5728a8869d02627aef97672",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/numi-human-native": "a9e20a7f8c1cf7b4315485a53ce19fdfc848ff1d3031aaf8f6bb3acb8e6ae035",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/metalrobo/HumanRestingSkin.metallib": "ceb070d7b8ad357dc24606313780af9ab4651e4422c1035cdea7cc21698678e8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/numi-human-native": "97e6a61f510bb0563a755dacf75e003eee14e363480d95c421fa748c22e185b8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/runtime.mm.o": "099151d4e70ae46267bec2756244f1d33ac028fd7bc7fddcd9bd72f6aca3a1f8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/metalrobo/HumanRestingSkin.metallib": "ea4d3b14228fe7b708a77f6936eb013f61757a0e954deabd35af213646defe37",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/numi-human-native": "2970da932887deee02174a95490c4773c422b82c4beb71eeae5bdb575a7690bb",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/skin-rebound.nhskin": "85c1daa2365429dd5b76538cba2ae7285086c7a4247e722be09f0a16a89e76c5",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin.nhskin": "898d0124103117c8d52c0362b320b393dbb8523170982fcf210230ddf7dafd50",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/numi-human-native": "655fc2612cbe00b6ef3bfa0fa43188a8352f98652862710aac2fd8ce32d0d821",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/tube-contract.json": "865d85125ff93c0d179a96ca5e78b50459fbd4f321e3c9a72fcc0da3da5ce954",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/connected-skin-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/connected-skin-build/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/source-clearance-patches-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/source-clearance-patches-build/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/n/numi-human-separation-20261018/passive-fascia-source-173/payload/bodyparts3d-pectoralis-fascia.nhfascia": "5a89c6464564528d7f30ce03294793628a41b61bb1f3cdb98645344225d17de1",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-registered-pose-32/native/resting-human.mrvpack": "537c2389acb94ea5bc69d0c3a0b4b1d36870ad4963451ba6dbe978b5fb60b41d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib/libmetalrobo.dylib": "ce9f57103f8fdb55cf077dd6c81cb1b37cc9ff158ed742947ea7e7750393d084",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numi-human-native": "c248752e78619d743918131a2687fd5afebbd47e84394c3090ea83f99620d6b0",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin": "f554e6ded3807dba9d314a77311ce46c345022513bfa4c5b68c66ac1789b173a"
+      },
+      "design": {
+        "comparison": "Matched original load-balanced 2 ms release",
+        "gate": "Unchanged native adoption, including declared geometry union and material tolerances",
+        "candidate_skin": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/skin-rebound.nhskin",
+        "pressure": "1",
+        "shoulder_release_angle_rad": 0.18
+      },
+      "control": false,
+      "headless": false,
+      "mode": {
+        "output": "cardiac-split-native-8000-trimmed-guarded",
+        "steps": 8000,
+        "pressure": true,
+        "intervention": false,
+        "capture": 8000,
+        "passive_upper": true,
+        "thumb": true
+      },
+      "derived_from": "6234b8f1ce227e2e705a84df8cfd7a16fd46143d74c815bb2bc4038adf757e8e"
+    },
+    "execution": {
+      "wall_seconds": 64.56790974992327,
+      "exit_code": 1,
+      "requested_steps": 32
+    },
+    "rejected_root": {
+      "schema": "numi.human.common_field_failure.v1",
+      "segment_start": 2,
+      "stand_code": 0,
+      "stand_completed_steps": 0,
+      "stand_failing_index": 0,
+      "matter_code": 5,
+      "matter_environment": 0,
+      "matter_object_index": 3,
+      "matter_failing_index": 102,
+      "matter_microsteps": 90,
+      "matter_diagnostics": [
+        0.3499999940395355,
+        -2.9802322387695312e-08,
+        0,
+        0
+      ],
+      "terminal_world_status": {
+        "code": 0,
+        "environment": 0,
+        "control_step": 0,
+        "successful_substeps": 0,
+        "aba_code": 0,
+        "failing_substep": 0,
+        "failing_index": 0,
+        "flags": 0,
+        "diagnostics": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "common_status": 0,
+      "common_iterations": 1,
+      "common_box": 0,
+      "common_box_match": true,
+      "common_residual": 4.649162292480469e-06,
+      "candidate_common_coordinates": [
+        -0.0016252626664936543,
+        0.0020614315290004015,
+        -0.0013847202062606812,
+        0.0023590412456542253,
+        0.0010761612793430686,
+        -0.0009838889818638563,
+        0.0018742280080914497
+      ],
+      "accepted_common_coordinates": [
+        -0.0016252626664936543,
+        0.0020614315290004015,
+        -0.0013847202062606812,
+        0.0023590412456542253,
+        0.0010761612793430686,
+        -0.0009838889818638563,
+        0.0018742280080914497
+      ],
+      "respiratory_candidate_status": [
+        2,
+        0,
+        1,
+        0
+      ],
+      "respiratory_accepted_status": [
+        2,
+        0,
+        1,
+        0
+      ],
+      "chamber_targets_m3": [
+        3.214077150914818e-05,
+        0.00013880427286494523,
+        4.762730895890854e-05,
+        0.00011919871030841023
+      ],
+      "respiratory_candidate_control": [
+        0.0015079457079991698,
+        0.0009424660820513964,
+        12.000028610229492,
+        6.000028610229492
+      ],
+      "excitation_buffer": [
+        0.0015079457079991698,
+        0.0009424660820513964,
+        12.000028610229492,
+        6.000028610229492
+      ],
+      "brain_input": {
+        "source_time_us": 4000,
+        "target_time_us": 6000,
+        "source_root": 4937369950558400531,
+        "target_root": 11695163859457489927,
+        "validity_mask": 3,
+        "flags": 1,
+        "pa_o2_mmhg": 100.66173553466797,
+        "pa_co2_mmhg": 40.04690933227539
+      },
+      "brain_candidate": {
+        "timestamp_us": 6000,
+        "accepted_root": 11695163859457489927,
+        "flags": 1
+      },
+      "brain_output": {
+        "target_time_us": 6000,
+        "source_root": 4937369950558400531,
+        "target_root": 11695163859457489927,
+        "flags": 1,
+        "excitation": [
+          0.0015079457079991698,
+          0.0009424660820513964
+        ]
+      },
+      "trial_lower": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "trial_upper": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matched_box_lower": [
+        -0.06640367954969406,
+        -0.018000001087784767,
+        -0.028329282999038696,
+        -0.018000001087784767,
+        -0.018000001087784767,
+        -0.030208107084035873,
+        -0.018000001087784767
+      ],
+      "matched_box_upper": [
+        0.018000001087784767,
+        0.04811039939522743,
+        0.018000001087784767,
+        0.045903708785772324,
+        0.04544926434755325,
+        0.018000001087784767,
+        0.029235227033495903
+      ],
+      "first_failure_latch": {
+        "binding_note": "buffer(2) is bound to the authoritative NMMatterStatusGPU runtime status",
+        "step": 2,
+        "matter_code": 5,
+        "stand_code": 9,
+        "matter_status": [
+          0,
+          3,
+          102,
+          90
+        ],
+        "matter_diagnostics": [
+          0.3499999940395355,
+          -2.9802322387695312e-08,
+          0,
+          0
+        ],
+        "stand_status": [
+          2,
+          3,
+          64,
+          2097261
+        ],
+        "respiration_candidate_status": [
+          2,
+          0,
+          1,
+          0
+        ],
+        "respiration_accepted_status": [
+          2,
+          0,
+          1,
+          0
+        ],
+        "chamber_targets_m3": [
+          3.214077150914818e-05,
+          0.00013880427286494523,
+          4.762730895890854e-05,
+          0.00011919871030841023
+        ],
+        "respiration_control": [
+          0.0015079457079991698,
+          0.0009424660820513964,
+          12.000028610229492,
+          6.000028610229492
+        ],
+        "common_first": [
+          -0.0016252626664936543,
+          0.0020614315290004015,
+          -0.0013847202062606812,
+          0.0023590412456542253
+        ],
+        "common_second": [
+          0.0010761612793430686,
+          -0.0009838889818638563,
+          0.0018742280080914497,
+          0
+        ],
+        "common_status": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "common_diagnostics": [
+          4.649162292480469e-06,
+          0,
+          0,
+          0
+        ],
+        "brain_input_metadata": [
+          3,
+          1,
+          4000,
+          6000
+        ],
+        "brain_input_roots": [
+          2344136723,
+          1149571023,
+          150158343,
+          2722992529
+        ],
+        "brain_input_timestamp_highs": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "brain_accepted_metadata": [
+          1,
+          4000,
+          0,
+          0
+        ],
+        "brain_accepted_roots": [
+          2344136723,
+          1149571023,
+          0,
+          0
+        ],
+        "brain_candidate_metadata": [
+          1,
+          6000,
+          0,
+          0
+        ],
+        "brain_candidate_root": [
+          150158343,
+          2722992529,
+          0,
+          0
+        ],
+        "brain_output_metadata": [
+          1,
+          6000,
+          0,
+          0
+        ],
+        "brain_output_roots": [
+          2344136723,
+          1149571023,
+          150158343,
+          2722992529
+        ],
+        "brain_output_setpoints": [
+          6.000028610229492,
+          12.000028610229492,
+          0.5000011920928955,
+          0.0015079457079991698
+        ],
+        "brain_output_excitations": [
+          0.0009424660820513964,
+          0,
+          0,
+          0
+        ],
+        "excitation_buffer": [
+          0.0015079457079991698,
+          0.0009424660820513964,
+          12.000028610229492,
+          6.000028610229492
+        ]
+      }
+    },
+    "accepted_gpu_ms": [
+      17941.962,
+      18129.1741666
+    ]
+  },
+  "load": {
+    "launch": {
+      "argv": [
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numi-human-native",
+        "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/joint-functional-owner-audit-20261023/knee-projection-envelope-001/myosim-fullbody-core-reference.nhrigid",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/bone-step-4/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-load-registered-pose-6/native",
+        "--persistent-metal-stand",
+        "--muscle-step-seconds",
+        "0.002",
+        "--muscle-step-count",
+        "6",
+        "--support-contact-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt",
+        "--joint-equality-payload",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq",
+        "--tendon-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/compiled-tendon/numi-human-tendon-attachments.nhtendon",
+        "--resting-scene",
+        "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json",
+        "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json",
+        "--vascular-dense45",
+        "--resting-reference-mass-kg",
+        "72.0",
+        "--skin-payload",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin",
+        "--soft-tissue-payload",
+        "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/muscle158-precision-002/composed-receipt/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "--torso-anatomy-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy",
+        "--resting-anatomy-receipt",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-anatomy-receipt.json",
+        "--dimension",
+        "512",
+        "--muscle-activation",
+        "0.25",
+        "--stand-contact-iterations",
+        "64",
+        "--root-pose",
+        "-0.05000000074505806",
+        "0.20000000298023224",
+        "0.15885571897029876",
+        "-0.70316427946090698",
+        "-0.0014300436014309525",
+        "-0.0014054210623726249",
+        "0.71102458238601685",
+        "--resting-release-initialization",
+        "--pose-q",
+        "36",
+        "0.1",
+        "--pose-q",
+        "74",
+        "0.1",
+        "--pose-q",
+        "40",
+        "0.0",
+        "--pose-q",
+        "41",
+        "0.0",
+        "--pose-q",
+        "78",
+        "0.0",
+        "--pose-q",
+        "79",
+        "0.0",
+        "--resting-registered-ligaments",
+        "--persistent-source-passive-joint-tissue",
+        "--pectoralis-fascia-payload",
+        "/Users/n/numi-human-separation-20261018/passive-fascia-source-173/payload/bodyparts3d-pectoralis-fascia.nhfascia",
+        "--resting-gravity-ramp-steps",
+        "4"
+      ],
+      "environment": {
+        "DYLD_LIBRARY_PATH": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib",
+        "MTL_DEBUG_LAYER": "0",
+        "NUMANX_COUPLED_HUMAN_COOPERATIVE_MASS_ACTION": "1",
+        "NUMI_GPU_PROGRESS": "0",
+        "NUMI_GPU_PROGRESS_ROOT": "0",
+        "NUMI_HUMAN_ACCEPTED_BODY_MOTION_AUDIT": "0",
+        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
+        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
+        "NUMI_HUMAN_BLEEDING_ENABLED": "0",
+        "NUMI_HUMAN_BLOOD_MPM_ENABLED": "0",
+        "NUMI_HUMAN_BLOOD_MPM_GRID_BOUNDS_M": "-0.2655323961,-0.1162754487,1.3001966098,0.2344676039,0.3837245513,1.8001966098",
+        "NUMI_HUMAN_BLOOD_MPM_MATERIAL": "/Users/n/numi-lab-native-replay-publish-20261017/matter/materials/blood_high_shear_newtonian_proxy.nmatter",
+        "NUMI_HUMAN_CAPTURE_FEM_ENDPOINT_STATE": "0",
+        "NUMI_HUMAN_CONTACT_AABB_EXCLUSION": "0",
+        "NUMI_HUMAN_CONTACT_COMPACT_QUERIES": "0",
+        "NUMI_HUMAN_CONTACT_EXACT_MOTION_CACHE": "0",
+        "NUMI_HUMAN_CONTACT_GPU_TIMING": "0",
+        "NUMI_HUMAN_CONTACT_ROW_CACHE": "0",
+        "NUMI_HUMAN_CONTACT_WORKING_SET_GUARD": "1",
+        "NUMI_HUMAN_EXECUTION_STAGES": "1",
+        "NUMI_HUMAN_FEM_SKIN_SUPPORT": "0",
+        "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
+        "NUMI_HUMAN_LOCAL_BLOOD_COMPACTION": "1",
+        "NUMI_HUMAN_MATERIAL_EXPRESSION_CACHE": "1",
+        "NUMI_HUMAN_PARALLEL_CONTACT_AUDIT": "1",
+        "NUMI_HUMAN_PARALLEL_CONTACT_WRENCH": "1",
+        "NUMI_HUMAN_PARALLEL_NODE_WORK": "1",
+        "NUMI_HUMAN_PARALLEL_RESPIRATORY_GAS": "0",
+        "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
+        "NUMI_HUMAN_PARTITIONED_MASS_WHITEN": "0",
+        "NUMI_HUMAN_PREPARATION_MEMORY": "1",
+        "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
+        "NUMI_HUMAN_RESTING_AORTIC_WALL": "0",
+        "NUMI_HUMAN_RESTING_AORTIC_WALL_OUTER_CONTACT": "0",
+        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-load-registered-pose-6/failure.json",
+        "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS": "1.0",
+        "NUMI_HUMAN_RESTING_INSPECTION_TOUR": "0",
+        "NUMI_HUMAN_RESTING_OPTIC_NERVE_FEM": "0",
+        "NUMI_HUMAN_RESTING_ORGAN_BATCH_FEM": "0",
+        "NUMI_HUMAN_RESTING_PASSIVE_FASCIA": "1",
+        "NUMI_HUMAN_RESTING_PROSTATE_FEM": "0",
+        "NUMI_HUMAN_RESTING_SKIN_FAT_FEM": "0",
+        "NUMI_HUMAN_RESTING_TRANSACTION_PROBE": "0",
+        "NUMI_HUMAN_RESTING_WHOLE_BODY_SKIN_FAT_FEM": "0",
+        "NUMI_HUMAN_SKIN_BONE_STATIC_BVH": "0",
+        "NUMI_HUMAN_SKIN_BONE_TRIANGLE_CONTACT": "0",
+        "NUMI_HUMAN_SKIN_FAT_COMPACT_MASS_CAPTURE": "0",
+        "NUMI_HUMAN_SKIN_FAT_PARENT_MASS_CAPTURE_ONLY": "0",
+        "NUMI_HUMAN_SKIN_HARD_ATTACHMENT_REFERENCE": "0",
+        "NUMI_HUMAN_SKIN_INFLUENCE_TILE32": "0",
+        "NUMI_HUMAN_SPARSE_ANCHOR_PROJECTION": "1",
+        "NUMI_HUMAN_SPLIT_STAND": "1",
+        "NUMI_HUMAN_STAND_ANALYTIC_BODY_SPATIAL_JACOBIANS": "0",
+        "NUMI_HUMAN_STAND_CACHE_CONTACT_JACOBIAN": "0",
+        "NUMI_HUMAN_STAND_CACHE_LIMIT_EQUALITY": "0",
+        "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM": "1",
+        "NUMI_HUMAN_STAND_CONTACT_WARMSTART": "0",
+        "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA": "0",
+        "NUMI_HUMAN_STAND_DEFER_EQUALITY_DIAGNOSTICS": "0",
+        "NUMI_HUMAN_STAND_EQUALITY_DEFERRAL_FAULT": "none",
+        "NUMI_HUMAN_STAND_FIRST_SIMD_CONTACT_SWEEP": "0",
+        "NUMI_HUMAN_STAND_FORCE_PARITY_DIAGNOSTIC": "0",
+        "NUMI_HUMAN_STAND_FREE_SPLIT": "0",
+        "NUMI_HUMAN_STAND_FUSE_CANONICAL_BODY_PROBES": "0",
+        "NUMI_HUMAN_STAND_HYBRID_EQUALITY_FACTOR_CACHE": "0",
+        "NUMI_HUMAN_STAND_ONE_PASS_ORDERED_LIMITS": "0",
+        "NUMI_HUMAN_STAND_PGS_VELOCITY_RESIDUAL_TOLERANCE": "0.0",
+        "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION": "1",
+        "NUMI_HUMAN_STAND_REDUCED_CHOLESKY": "0",
+        "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES": "0",
+        "NUMI_HUMAN_STAND_SPARSE_OPERATOR": "0",
+        "NUMI_HUMAN_STAND_SPECULATIVE_CONTACT_DISTANCE_M": "0.02",
+        "NUMI_HUMAN_STAND_ZERO_CONTACT_RESPONSE_FASTPATH": "0",
+        "NUMI_HUMAN_STATIC_WEIGHTED_SKIN_SUPPORT": "1",
+        "NUMI_HUMAN_SUPPORT_ANCESTRY_PRUNE": "1",
+        "NUMI_HUMAN_TRAINING_PROFILE": "1",
+        "NUMI_HUMAN_UNPAIRED_IDENTITY_INSTALL": "0",
+        "NUMI_HUMAN_UNPAIRED_IDENTITY_PREFLIGHT": "0",
+        "NUMI_HUMAN_SUPPORTED_PRELUDE_STEPS": "0",
+        "NUMI_HUMAN_RESTING_AORTIC_DISCRETE_PRELOAD": "0",
+        "NUMI_HUMAN_ACCEPTED_FEM_BODY_LOAD_CAPTURE": "1",
+        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "32",
+        "NUMI_HUMAN_LOCAL_BED_LAYERS": "1",
+        "NUMI_HUMAN_LOCAL_BED_REGIONAL_THICKNESS": "1",
+        "NM_VASCULAR_STEP_EXTERNAL_PRESSURE": "1",
+        "NUMI_HUMAN_RESTING_THUMB_PASSIVE_REFERENCE": "1",
+        "NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-registered-pose-32/native/resting-human.mrvpack",
+        "NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE_SHA256": "537c2389acb94ea5bc69d0c3a0b4b1d36870ad4963451ba6dbe978b5fb60b41d"
+      },
+      "cwd": "/Users/numi/Work/skin-fat-native-integration-209",
+      "pins": {
+        "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/joint-functional-owner-audit-20261023/knee-projection-envelope-001/myosim-fullbody-core-reference.nhrigid": "c10924a45efc1cfb3916bd22baabeeca491da5e412bbaad37b1328fe364db53d",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/bone-step-4/bodyparts3d-myosim-major-bones.nhbones": "43a31ef4771e2a383ae2c7caab1b994f0c28076c2a43501860cd1ba3fe7708c0",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt": "4c31ce250a63bd730c066f6f92571295c761ddb51215a3eeb09275bc42d6992d",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/compiled-tendon/numi-human-tendon-attachments.nhtendon": "d0f5da8c63d5e3335eef72e7e79e8e5780ae43f0cf254e840dd7ad604b72da48",
+        "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+        "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+        "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/left-ankle-rest-preserving-weight-repair-128/candidate.nhskin": "4fd80f449b2c4e6a94b0808c2e54a5735684711de1f7fc1c34e893c2494250a5",
+        "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/muscle158-precision-002/composed-receipt/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "8874b3fede93825d2e4ddb248231dc9d2c598e0155f8473c624fcb935d6b1042",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy": "3b0acb6146358f3302f2b85e2214bafa9f2fae7b0e51af70fd0838d6609da4a4",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-anatomy-receipt.json": "76c6651a86e9353af9007ba6433beb2a7605b607d9c261def9537ab447d43a51",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/HumanRespiration.metallib": "880f60be6eb17b6af781665c6016c6d050da069685fcf1e8e2cafda0fc2115c8",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib": "683c00b6cac9699002c60e64abe472b07d81a02c7149e28b32f446b255e9c66e",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/shaders/MetalRobo.metallib": "b52b5c1c5736da382682e4412aa9b458603066c0c5728a8869d02627aef97672",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/numi-human-native": "a9e20a7f8c1cf7b4315485a53ce19fdfc848ff1d3031aaf8f6bb3acb8e6ae035",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/metalrobo/HumanRestingSkin.metallib": "ceb070d7b8ad357dc24606313780af9ab4651e4422c1035cdea7cc21698678e8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/numi-human-native": "97e6a61f510bb0563a755dacf75e003eee14e363480d95c421fa748c22e185b8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/runtime.mm.o": "099151d4e70ae46267bec2756244f1d33ac028fd7bc7fddcd9bd72f6aca3a1f8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/metalrobo/HumanRestingSkin.metallib": "ea4d3b14228fe7b708a77f6936eb013f61757a0e954deabd35af213646defe37",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/numi-human-native": "2970da932887deee02174a95490c4773c422b82c4beb71eeae5bdb575a7690bb",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/skin-rebound.nhskin": "85c1daa2365429dd5b76538cba2ae7285086c7a4247e722be09f0a16a89e76c5",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin.nhskin": "898d0124103117c8d52c0362b320b393dbb8523170982fcf210230ddf7dafd50",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/numi-human-native": "655fc2612cbe00b6ef3bfa0fa43188a8352f98652862710aac2fd8ce32d0d821",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/tube-contract.json": "865d85125ff93c0d179a96ca5e78b50459fbd4f321e3c9a72fcc0da3da5ce954",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/connected-skin-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/connected-skin-build/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/source-clearance-patches-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/source-clearance-patches-build/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/n/numi-human-separation-20261018/passive-fascia-source-173/payload/bodyparts3d-pectoralis-fascia.nhfascia": "5a89c6464564528d7f30ce03294793628a41b61bb1f3cdb98645344225d17de1",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-registered-pose-32/native/resting-human.mrvpack": "537c2389acb94ea5bc69d0c3a0b4b1d36870ad4963451ba6dbe978b5fb60b41d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib/libmetalrobo.dylib": "ce9f57103f8fdb55cf077dd6c81cb1b37cc9ff158ed742947ea7e7750393d084",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numi-human-native": "c248752e78619d743918131a2687fd5afebbd47e84394c3090ea83f99620d6b0",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin": "f554e6ded3807dba9d314a77311ce46c345022513bfa4c5b68c66ac1789b173a"
+      },
+      "design": {
+        "comparison": "Matched original load-balanced 2 ms release",
+        "gate": "Unchanged native adoption, including declared geometry union and material tolerances",
+        "candidate_skin": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/skin-rebound.nhskin",
+        "pressure": "1",
+        "shoulder_release_angle_rad": 0.18
+      },
+      "control": false,
+      "headless": false,
+      "mode": {
+        "output": "cardiac-split-native-8000-trimmed-guarded",
+        "steps": 8000,
+        "pressure": true,
+        "intervention": false,
+        "capture": 8000,
+        "passive_upper": true,
+        "thumb": true
+      },
+      "derived_from": "6234b8f1ce227e2e705a84df8cfd7a16fd46143d74c815bb2bc4038adf757e8e"
+    },
+    "execution": {
+      "wall_seconds": 82.09394258307293,
+      "exit_code": 1,
+      "requested_steps": 6
+    },
+    "rejected_root": {
+      "schema": "numi.human.common_field_failure.v1",
+      "segment_start": 3,
+      "stand_code": 0,
+      "stand_completed_steps": 0,
+      "stand_failing_index": 0,
+      "matter_code": 10,
+      "matter_environment": 0,
+      "matter_object_index": 0,
+      "matter_failing_index": 4294967295,
+      "matter_microsteps": 77,
+      "matter_diagnostics": [
+        0.0004425726365298033,
+        2.6425972521337826e-08,
+        0,
+        0
+      ],
+      "terminal_world_status": {
+        "code": 0,
+        "environment": 0,
+        "control_step": 0,
+        "successful_substeps": 0,
+        "aba_code": 0,
+        "failing_substep": 0,
+        "failing_index": 0,
+        "flags": 0,
+        "diagnostics": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "common_status": 0,
+      "common_iterations": 1,
+      "common_box": 0,
+      "common_box_match": true,
+      "common_residual": 1.0013580322265625e-05,
+      "candidate_common_coordinates": [
+        -0.002251895610243082,
+        0.0029969094321131706,
+        -0.001707223942503333,
+        0.0034066876396536827,
+        0.0014967587776482105,
+        -0.0013871771516278386,
+        0.0022265934385359287
+      ],
+      "accepted_common_coordinates": [
+        -0.002251895610243082,
+        0.0029969094321131706,
+        -0.001707223942503333,
+        0.0034066876396536827,
+        0.0014967587776482105,
+        -0.0013871771516278386,
+        0.0022265934385359287
+      ],
+      "respiratory_candidate_status": [
+        3,
+        0,
+        1,
+        0
+      ],
+      "respiratory_accepted_status": [
+        3,
+        0,
+        1,
+        0
+      ],
+      "chamber_targets_m3": [
+        3.209121496183798e-05,
+        0.00013901675993110985,
+        4.759378498420119e-05,
+        0.00011940805416088551
+      ],
+      "respiratory_candidate_control": [
+        0.002010573633015156,
+        0.001256608753465116,
+        12.000045776367188,
+        6.000046730041504
+      ],
+      "excitation_buffer": [
+        0.002010573633015156,
+        0.001256608753465116,
+        12.000045776367188,
+        6.000046730041504
+      ],
+      "brain_input": {
+        "source_time_us": 6000,
+        "target_time_us": 8000,
+        "source_root": 11695163859457489927,
+        "target_root": 15228616283895917,
+        "validity_mask": 3,
+        "flags": 1,
+        "pa_o2_mmhg": 100.72624969482422,
+        "pa_co2_mmhg": 40.051429748535156
+      },
+      "brain_candidate": {
+        "timestamp_us": 8000,
+        "accepted_root": 15228616283895917,
+        "flags": 1
+      },
+      "brain_output": {
+        "target_time_us": 8000,
+        "source_root": 11695163859457489927,
+        "target_root": 15228616283895917,
+        "flags": 1,
+        "excitation": [
+          0.002010573633015156,
+          0.001256608753465116
+        ]
+      },
+      "trial_lower": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "trial_upper": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matched_box_lower": [
+        -0.06640367954969406,
+        -0.018000001087784767,
+        -0.028329282999038696,
+        -0.018000001087784767,
+        -0.018000001087784767,
+        -0.030208107084035873,
+        -0.018000001087784767
+      ],
+      "matched_box_upper": [
+        0.018000001087784767,
+        0.04811039939522743,
+        0.018000001087784767,
+        0.045903708785772324,
+        0.04544926434755325,
+        0.018000001087784767,
+        0.029235227033495903
+      ],
+      "first_failure_latch": {
+        "binding_note": "buffer(2) is bound to the authoritative NMMatterStatusGPU runtime status",
+        "step": 3,
+        "matter_code": 10,
+        "stand_code": 9,
+        "matter_status": [
+          0,
+          0,
+          4294967295,
+          77
+        ],
+        "matter_diagnostics": [
+          0.0004425726365298033,
+          2.6425972521337826e-08,
+          0,
+          0
+        ],
+        "stand_status": [
+          3,
+          0,
+          64,
+          2097261
+        ],
+        "respiration_candidate_status": [
+          3,
+          0,
+          1,
+          0
+        ],
+        "respiration_accepted_status": [
+          3,
+          0,
+          1,
+          0
+        ],
+        "chamber_targets_m3": [
+          3.209121496183798e-05,
+          0.00013901675993110985,
+          4.759378498420119e-05,
+          0.00011940805416088551
+        ],
+        "respiration_control": [
+          0.002010573633015156,
+          0.001256608753465116,
+          12.000045776367188,
+          6.000046730041504
+        ],
+        "common_first": [
+          -0.002251895610243082,
+          0.0029969094321131706,
+          -0.001707223942503333,
+          0.0034066876396536827
+        ],
+        "common_second": [
+          0.0014967587776482105,
+          -0.0013871771516278386,
+          0.0022265934385359287,
+          0
+        ],
+        "common_status": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "common_diagnostics": [
+          1.0013580322265625e-05,
+          0,
+          0,
+          0
+        ],
+        "brain_input_metadata": [
+          3,
+          1,
+          6000,
+          8000
+        ],
+        "brain_input_roots": [
+          150158343,
+          2722992529,
+          2282076269,
+          3545688
+        ],
+        "brain_input_timestamp_highs": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "brain_accepted_metadata": [
+          1,
+          6000,
+          0,
+          0
+        ],
+        "brain_accepted_roots": [
+          150158343,
+          2722992529,
+          0,
+          0
+        ],
+        "brain_candidate_metadata": [
+          1,
+          8000,
+          0,
+          0
+        ],
+        "brain_candidate_root": [
+          2282076269,
+          3545688,
+          0,
+          0
+        ],
+        "brain_output_metadata": [
+          1,
+          8000,
+          0,
+          0
+        ],
+        "brain_output_roots": [
+          150158343,
+          2722992529,
+          2282076269,
+          3545688
+        ],
+        "brain_output_setpoints": [
+          6.000046730041504,
+          12.000045776367188,
+          0.5000019669532776,
+          0.002010573633015156
+        ],
+        "brain_output_excitations": [
+          0.001256608753465116,
+          0,
+          0,
+          0
+        ],
+        "excitation_buffer": [
+          0.002010573633015156,
+          0.001256608753465116,
+          12.000045776367188,
+          6.000046730041504
+        ]
+      }
+    },
+    "accepted_gpu_ms": [
+      17782.0335834,
+      17810.2116669,
+      17825.534875
+    ],
+    "events": [
+      "human_joint_failure completed_steps=3 matter_status=10 matter_failing_index=4294967295 matter_object_index=0 matter_diagnostics=[0.00044257263652980328,2.6425972521337826e-08,0,0] failure_owner=passive_tissue_runtime"
+    ],
+    "load_continuation": [
+      "resting_gravity_ramp=accepted_step_linear first_step=1 full_gravity_step=4 initial_scale=0 full_scale=1 matter_gravity=shared_accepted_step_ramp support_owner=articulated_contact qualification=load_continuation_not_settled_rest",
+      "accepted_fem_body_load_capture=accepted source_step=0 q_count=129 q_l2=1.0406215466671589 generalized_load_count=128 generalized_load_l2=0.17883301164471296 generalized_load_max_abs=0.088781289756298065 root_generalized_force_xyz_n=[0.017622221261262894,0.080778472125530243,-0.087382107973098755] generalized_load=[0.017622221261262894,0.080778472125530243,-0.087382107973098755,0.088781289756298065,-0.0012493653921410441,0.006208768580108881,0.011382569558918476,-0.0049987621605396271,-0.0015514231054112315,-0.00032408643164671957,0.0023141675628721714,1.1207544048374984e-05,0.0094165503978729248,-0.0043898290023207664,-0.0017254207050427794,0.007818157784640789,-0.0037675700150430202,-0.0017366661923006177,0.0062672770582139492,-0.0031097049359232187,-0.0016110899159684777,0.005106605589389801,-0.0025699145626276731,-0.0013974226312711835,-9.6635892987251282e-05,0.0001865025406004861,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-2.8104050215915777e-06,5.0257742259418592e-05,2.7536254492588341e-05,-1.8262358935317025e-05,-2.3262742615770549e-05,2.3965667423908599e-05,-1.2589833204401657e-05,-4.5160468289395794e-06,1.2718619473162107e-05,-2.4200006009778008e-05,-1.914637687150389e-05,1.6290305211441591e-05,-2.0180572391836904e-05,-2.0180572391836904e-05,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.012840058654546738,0.0046516545116901398,4.5131979277357459e-05,-0.015907345339655876,0.081678524613380432,-0.00050490873400121927,-2.5591289158910513e-05,-6.5309111960232258e-05,0,0,0,0,0,0,-0.0018730005249381065,0.0044225919991731644,-0.00016608013538643718,-0.00050252489745616913,0.044891238212585449,-1.1720985639840364e-05,0.00012191734276711941,-4.8652407713234425e-05,0,0,0,0,0,0] source_q=[-0.05000000074505806,0.20000000298023224,0.098861612379550934,-0.70316427946090698,-0.0014300436014309525,-0.0014054210623726249,0.71102458238601685,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.024199999868869781,0.010250000283122063,-0.010250000283122063,0.024199999868869781,-0.0049000000581145287,0.039599999785423279,0.017800001427531242,-0.017800001427531242,-0.039599999785423279,0.0049000000581145287,0,0.10000000149011612,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-0.024199999868869781,0.010250000283122063,-0.010250000283122063,0.024199999868869781,-0.0049000000581145287,0.039599999785423279,0.017800001427531242,-0.017800001427531242,-0.039599999785423279,0.0049000000581145287,0,0.10000000149011612,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,7.6925396608196195e-11,9.537330214470785e-08,0,-1.4732499664660281e-08,1.0893900004305124e-08,0,0,0,0,0,0.010506000369787216,0,0,0,-7.6925396608196195e-11,9.537330214470785e-08,0,-1.4732499664660281e-08,-1.0893900004305124e-08,0,0,0,0,0,0.010506000369787216]",
+      "accepted_fem_body_load_capture=accepted source_step=1 q_count=129 q_l2=1.0406193445026077 generalized_load_count=128 generalized_load_l2=0.80181344602824156 generalized_load_max_abs=0.5176619291305542 root_generalized_force_xyz_n=[0.01990538090467453,0.46915656328201294,0.5176619291305542]",
+      "accepted_fem_body_load_capture=accepted source_step=2 q_count=129 q_l2=1.0406138217991687 generalized_load_count=128 generalized_load_l2=0.84849039986140318 generalized_load_max_abs=0.54018115997314453 root_generalized_force_xyz_n=[-0.20165826380252838,0.092589385807514191,-0.54018115997314453]"
+    ]
+  },
+  "tail": {
+    "launch": {
+      "argv": [
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numi-human-native",
+        "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/joint-functional-owner-audit-20261023/knee-projection-envelope-001/myosim-fullbody-core-reference.nhrigid",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/bone-step-4/bodyparts3d-myosim-major-bones.nhbones",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-tail-registered-pose-4/native",
+        "--persistent-metal-stand",
+        "--muscle-step-seconds",
+        "0.002",
+        "--muscle-step-count",
+        "4",
+        "--support-contact-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt",
+        "--joint-equality-payload",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq",
+        "--tendon-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/compiled-tendon/numi-human-tendon-attachments.nhtendon",
+        "--resting-scene",
+        "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json",
+        "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json",
+        "--vascular-dense45",
+        "--resting-reference-mass-kg",
+        "72.0",
+        "--skin-payload",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin",
+        "--soft-tissue-payload",
+        "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/muscle158-precision-002/composed-receipt/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue",
+        "--torso-anatomy-payload",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy",
+        "--resting-anatomy-receipt",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-anatomy-receipt.json",
+        "--dimension",
+        "512",
+        "--muscle-activation",
+        "0.25",
+        "--stand-contact-iterations",
+        "64",
+        "--root-pose",
+        "-0.05000000074505806",
+        "0.20000000298023224",
+        "0.15885571897029876",
+        "-0.70316427946090698",
+        "-0.0014300436014309525",
+        "-0.0014054210623726249",
+        "0.71102458238601685",
+        "--resting-release-initialization",
+        "--pose-q",
+        "36",
+        "0.1",
+        "--pose-q",
+        "74",
+        "0.1",
+        "--pose-q",
+        "40",
+        "0.0",
+        "--pose-q",
+        "41",
+        "0.0",
+        "--pose-q",
+        "78",
+        "0.0",
+        "--pose-q",
+        "79",
+        "0.0",
+        "--resting-registered-ligaments",
+        "--persistent-source-passive-joint-tissue",
+        "--pectoralis-fascia-payload",
+        "/Users/n/numi-human-separation-20261018/passive-fascia-source-173/payload/bodyparts3d-pectoralis-fascia.nhfascia"
+      ],
+      "environment": {
+        "DYLD_LIBRARY_PATH": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib",
+        "MTL_DEBUG_LAYER": "0",
+        "NUMANX_COUPLED_HUMAN_COOPERATIVE_MASS_ACTION": "1",
+        "NUMI_GPU_PROGRESS": "0",
+        "NUMI_GPU_PROGRESS_ROOT": "0",
+        "NUMI_HUMAN_ACCEPTED_BODY_MOTION_AUDIT": "0",
+        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT": "1",
+        "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT": "0",
+        "NUMI_HUMAN_BLEEDING_ENABLED": "0",
+        "NUMI_HUMAN_BLOOD_MPM_ENABLED": "0",
+        "NUMI_HUMAN_BLOOD_MPM_GRID_BOUNDS_M": "-0.2655323961,-0.1162754487,1.3001966098,0.2344676039,0.3837245513,1.8001966098",
+        "NUMI_HUMAN_BLOOD_MPM_MATERIAL": "/Users/n/numi-lab-native-replay-publish-20261017/matter/materials/blood_high_shear_newtonian_proxy.nmatter",
+        "NUMI_HUMAN_CAPTURE_FEM_ENDPOINT_STATE": "0",
+        "NUMI_HUMAN_CONTACT_AABB_EXCLUSION": "0",
+        "NUMI_HUMAN_CONTACT_COMPACT_QUERIES": "0",
+        "NUMI_HUMAN_CONTACT_EXACT_MOTION_CACHE": "0",
+        "NUMI_HUMAN_CONTACT_GPU_TIMING": "0",
+        "NUMI_HUMAN_CONTACT_ROW_CACHE": "0",
+        "NUMI_HUMAN_CONTACT_WORKING_SET_GUARD": "1",
+        "NUMI_HUMAN_EXECUTION_STAGES": "1",
+        "NUMI_HUMAN_FEM_SKIN_SUPPORT": "0",
+        "NUMI_HUMAN_GAS_TRANSPORT_SUBCYCLING": "1",
+        "NUMI_HUMAN_LOCAL_BLOOD_COMPACTION": "1",
+        "NUMI_HUMAN_MATERIAL_EXPRESSION_CACHE": "1",
+        "NUMI_HUMAN_PARALLEL_CONTACT_AUDIT": "1",
+        "NUMI_HUMAN_PARALLEL_CONTACT_WRENCH": "1",
+        "NUMI_HUMAN_PARALLEL_NODE_WORK": "1",
+        "NUMI_HUMAN_PARALLEL_RESPIRATORY_GAS": "0",
+        "NUMI_HUMAN_PARALLEL_RESPIRATORY_MUSCLES": "1",
+        "NUMI_HUMAN_PARTITIONED_MASS_WHITEN": "0",
+        "NUMI_HUMAN_PREPARATION_MEMORY": "1",
+        "NUMI_HUMAN_RESPIRATORY_SUBCYCLING": "1",
+        "NUMI_HUMAN_RESTING_AORTIC_WALL": "0",
+        "NUMI_HUMAN_RESTING_AORTIC_WALL_OUTER_CONTACT": "0",
+        "NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-tail-registered-pose-4/failure.json",
+        "NUMI_HUMAN_RESTING_INSPECTION_PERIOD_SECONDS": "1.0",
+        "NUMI_HUMAN_RESTING_INSPECTION_TOUR": "0",
+        "NUMI_HUMAN_RESTING_OPTIC_NERVE_FEM": "0",
+        "NUMI_HUMAN_RESTING_ORGAN_BATCH_FEM": "0",
+        "NUMI_HUMAN_RESTING_PASSIVE_FASCIA": "1",
+        "NUMI_HUMAN_RESTING_PROSTATE_FEM": "0",
+        "NUMI_HUMAN_RESTING_SKIN_FAT_FEM": "0",
+        "NUMI_HUMAN_RESTING_TRANSACTION_PROBE": "0",
+        "NUMI_HUMAN_RESTING_WHOLE_BODY_SKIN_FAT_FEM": "0",
+        "NUMI_HUMAN_SKIN_BONE_STATIC_BVH": "0",
+        "NUMI_HUMAN_SKIN_BONE_TRIANGLE_CONTACT": "0",
+        "NUMI_HUMAN_SKIN_FAT_COMPACT_MASS_CAPTURE": "0",
+        "NUMI_HUMAN_SKIN_FAT_PARENT_MASS_CAPTURE_ONLY": "0",
+        "NUMI_HUMAN_SKIN_HARD_ATTACHMENT_REFERENCE": "0",
+        "NUMI_HUMAN_SKIN_INFLUENCE_TILE32": "0",
+        "NUMI_HUMAN_SPARSE_ANCHOR_PROJECTION": "1",
+        "NUMI_HUMAN_SPLIT_STAND": "1",
+        "NUMI_HUMAN_STAND_ANALYTIC_BODY_SPATIAL_JACOBIANS": "0",
+        "NUMI_HUMAN_STAND_CACHE_CONTACT_JACOBIAN": "0",
+        "NUMI_HUMAN_STAND_CACHE_LIMIT_EQUALITY": "0",
+        "NUMI_HUMAN_STAND_COMPENSATED_BODY_SUM": "1",
+        "NUMI_HUMAN_STAND_CONTACT_WARMSTART": "0",
+        "NUMI_HUMAN_STAND_DEFER_EQUALITY_DATA": "0",
+        "NUMI_HUMAN_STAND_DEFER_EQUALITY_DIAGNOSTICS": "0",
+        "NUMI_HUMAN_STAND_EQUALITY_DEFERRAL_FAULT": "none",
+        "NUMI_HUMAN_STAND_FIRST_SIMD_CONTACT_SWEEP": "0",
+        "NUMI_HUMAN_STAND_FORCE_PARITY_DIAGNOSTIC": "0",
+        "NUMI_HUMAN_STAND_FREE_SPLIT": "0",
+        "NUMI_HUMAN_STAND_FUSE_CANONICAL_BODY_PROBES": "0",
+        "NUMI_HUMAN_STAND_HYBRID_EQUALITY_FACTOR_CACHE": "0",
+        "NUMI_HUMAN_STAND_ONE_PASS_ORDERED_LIMITS": "0",
+        "NUMI_HUMAN_STAND_PGS_VELOCITY_RESIDUAL_TOLERANCE": "0.0",
+        "NUMI_HUMAN_STAND_REDUCED_BASE_PROJECTION": "1",
+        "NUMI_HUMAN_STAND_REDUCED_CHOLESKY": "0",
+        "NUMI_HUMAN_STAND_REDUCED_PROJECTED_RESPONSES": "0",
+        "NUMI_HUMAN_STAND_SPARSE_OPERATOR": "0",
+        "NUMI_HUMAN_STAND_SPECULATIVE_CONTACT_DISTANCE_M": "0.02",
+        "NUMI_HUMAN_STAND_ZERO_CONTACT_RESPONSE_FASTPATH": "0",
+        "NUMI_HUMAN_STATIC_WEIGHTED_SKIN_SUPPORT": "1",
+        "NUMI_HUMAN_SUPPORT_ANCESTRY_PRUNE": "1",
+        "NUMI_HUMAN_TRAINING_PROFILE": "1",
+        "NUMI_HUMAN_UNPAIRED_IDENTITY_INSTALL": "0",
+        "NUMI_HUMAN_UNPAIRED_IDENTITY_PREFLIGHT": "0",
+        "NUMI_HUMAN_SUPPORTED_PRELUDE_STEPS": "0",
+        "NUMI_HUMAN_RESTING_AORTIC_DISCRETE_PRELOAD": "0",
+        "NUMI_HUMAN_ACCEPTED_FEM_BODY_LOAD_CAPTURE": "0",
+        "NUMI_HUMAN_ACCEPTED_COM_MOMENTUM_AUDIT_SEGMENT_STEPS": "32",
+        "NUMI_HUMAN_LOCAL_BED_LAYERS": "1",
+        "NUMI_HUMAN_LOCAL_BED_REGIONAL_THICKNESS": "1",
+        "NM_VASCULAR_STEP_EXTERNAL_PRESSURE": "1",
+        "NUMI_HUMAN_RESTING_THUMB_PASSIVE_REFERENCE": "1",
+        "NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-registered-pose-32/native/resting-human.mrvpack",
+        "NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE_SHA256": "537c2389acb94ea5bc69d0c3a0b4b1d36870ad4963451ba6dbe978b5fb60b41d",
+        "NM_FEM_NEWTON_TAIL_DISPATCH": "1",
+        "NM_FEM_NEWTON_TAIL_ICB": "1"
+      },
+      "cwd": "/Users/numi/Work/skin-fat-native-integration-209",
+      "pins": {
+        "/Users/numi/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/joint-functional-owner-audit-20261023/knee-projection-envelope-001/myosim-fullbody-core-reference.nhrigid": "c10924a45efc1cfb3916bd22baabeeca491da5e412bbaad37b1328fe364db53d",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-muscle-reference.nhmyo": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/bone-step-4/bodyparts3d-myosim-major-bones.nhbones": "43a31ef4771e2a383ae2c7caab1b994f0c28076c2a43501860cd1ba3fe7708c0",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/skin729-flat-bed-native003-witness-registration-871/myosim-fullbody-resting-bed-support.nhcnt": "4c31ce250a63bd730c066f6f92571295c761ddb51215a3eeb09275bc42d6992d",
+        "/Users/n/numi-human-resting-build-20261005/resting-scene-20261005/Build/skin-source-fit-recovery-20261004/myosim-fullbody-joint-equalities.nheq": "0e3c593792a8c4ccd619f1999f6685b68e6ff0fd5ae5f6f0bca66b594a0e9b88",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/compiled-tendon/numi-human-tendon-attachments.nhtendon": "d0f5da8c63d5e3335eef72e7e79e8e5780ae43f0cf254e840dd7ad604b72da48",
+        "/Users/n/numi-human-resting-evidence-20261005/reference-circulation-001/resting_reference_lv15.native.v3.json": "43ff6b49daf1d42cf9e88d85d8577f70e112dfcc3756ec43954e544a3e4bc0dc",
+        "/Users/n/numi-human-resting-evidence-20261005/native-lung-free-apex-two-family-composition-1178/composition-024-attempt5/final/resting-reference-respiration.json": "70f4d235b988f9466b80e795ac0e793a82d6b13d03ebb01b84a313f0ad398e8a",
+        "/Users/n/numi-human-aortic-contact-opt-20261019/matter/tools/evidence/human-resting-20261005/supported-continuation-20261020/metal-optimization-080/visual-verification-20261022/wrist-connected-repair-001/left-ankle-rest-preserving-weight-repair-128/candidate.nhskin": "4fd80f449b2c4e6a94b0808c2e54a5735684711de1f7fc1c34e893c2494250a5",
+        "/Users/numi/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/muscle158-precision-002/composed-receipt/composed/bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": "8874b3fede93825d2e4ddb248231dc9d2c598e0155f8473c624fcb935d6b1042",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-thorax.nhanatomy": "3b0acb6146358f3302f2b85e2214bafa9f2fae7b0e51af70fd0838d6609da4a4",
+        "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/full-anatomy-delivery-audit-1378/rope-swing-eight-views-20261018-001/paired-bone49-precision/resting-anatomy-receipt.json": "76c6651a86e9353af9007ba6433beb2a7605b607d9c261def9537ab447d43a51",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/HumanRespiration.metallib": "880f60be6eb17b6af781665c6016c6d050da069685fcf1e8e2cafda0fc2115c8",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib": "683c00b6cac9699002c60e64abe472b07d81a02c7149e28b32f446b255e9c66e",
+        "/Users/numi/Work/skin-fat-native-integration-209/build-native/shaders/MetalRobo.metallib": "b52b5c1c5736da382682e4412aa9b458603066c0c5728a8869d02627aef97672",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/numi-human-native": "a9e20a7f8c1cf7b4315485a53ce19fdfc848ff1d3031aaf8f6bb3acb8e6ae035",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/local-bed-layers-002/metalrobo/HumanRestingSkin.metallib": "ceb070d7b8ad357dc24606313780af9ab4651e4422c1035cdea7cc21698678e8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/numi-human-native": "97e6a61f510bb0563a755dacf75e003eee14e363480d95c421fa748c22e185b8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/runtime.mm.o": "099151d4e70ae46267bec2756244f1d33ac028fd7bc7fddcd9bd72f6aca3a1f8",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/coupled-thumb-reference-001/metalrobo/HumanRestingSkin.metallib": "ea4d3b14228fe7b708a77f6936eb013f61757a0e954deabd35af213646defe37",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/numi-human-native": "2970da932887deee02174a95490c4773c422b82c4beb71eeae5bdb575a7690bb",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/skin-rebound.nhskin": "85c1daa2365429dd5b76538cba2ae7285086c7a4247e722be09f0a16a89e76c5",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin.nhskin": "898d0124103117c8d52c0362b320b393dbb8523170982fcf210230ddf7dafd50",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/numi-human-native": "655fc2612cbe00b6ef3bfa0fa43188a8352f98652862710aac2fd8ce32d0d821",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/tube-contract.json": "865d85125ff93c0d179a96ca5e78b50459fbd4f321e3c9a72fcc0da3da5ce954",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/connected-skin-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/connected-skin-build/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/source-clearance-patches-build/metalrobo/HumanRestingSkin.metallib": "53aadcd534cfeb0d4e745d29db0d104d2dda154935119e2c0d3523f40a853dc6",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-006/source-clearance-patches-build/metalrobo/MetalRobo.metallib": "353eadd9763b2afc9bd67cced62b52c325ee2115655b0843f4e129b0ec04a51d",
+        "/Users/n/numi-human-separation-20261018/passive-fascia-source-173/payload/bodyparts3d-pectoralis-fascia.nhfascia": "5a89c6464564528d7f30ce03294793628a41b61bb1f3cdb98645344225d17de1",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-registered-pose-32/native/resting-human.mrvpack": "537c2389acb94ea5bc69d0c3a0b4b1d36870ad4963451ba6dbe978b5fb60b41d",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib/libmetalrobo.dylib": "ce9f57103f8fdb55cf077dd6c81cb1b37cc9ff158ed742947ea7e7750393d084",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numi-human-native": "c248752e78619d743918131a2687fd5afebbd47e84394c3090ea83f99620d6b0",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin": "f554e6ded3807dba9d314a77311ce46c345022513bfa4c5b68c66ac1789b173a"
+      },
+      "design": {
+        "comparison": "Matched original load-balanced 2 ms release",
+        "gate": "Unchanged native adoption, including declared geometry union and material tolerances",
+        "candidate_skin": "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-002/skin-rebound.nhskin",
+        "pressure": "1",
+        "shoulder_release_angle_rad": 0.18
+      },
+      "control": false,
+      "headless": false,
+      "mode": {
+        "output": "cardiac-split-native-8000-trimmed-guarded",
+        "steps": 8000,
+        "pressure": true,
+        "intervention": false,
+        "capture": 8000,
+        "passive_upper": true,
+        "thumb": true
+      },
+      "derived_from": "6234b8f1ce227e2e705a84df8cfd7a16fd46143d74c815bb2bc4038adf757e8e"
+    },
+    "execution": {
+      "wall_seconds": 57.892246125033125,
+      "exit_code": 1,
+      "requested_steps": 4
+    },
+    "rejected_root": {
+      "schema": "numi.human.common_field_failure.v1",
+      "segment_start": 2,
+      "stand_code": 0,
+      "stand_completed_steps": 0,
+      "stand_failing_index": 0,
+      "matter_code": 5,
+      "matter_environment": 0,
+      "matter_object_index": 3,
+      "matter_failing_index": 102,
+      "matter_microsteps": 90,
+      "matter_diagnostics": [
+        0.3499999940395355,
+        -2.9802322387695312e-08,
+        0,
+        0
+      ],
+      "terminal_world_status": {
+        "code": 0,
+        "environment": 0,
+        "control_step": 0,
+        "successful_substeps": 0,
+        "aba_code": 0,
+        "failing_substep": 0,
+        "failing_index": 0,
+        "flags": 0,
+        "diagnostics": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "common_status": 0,
+      "common_iterations": 1,
+      "common_box": 0,
+      "common_box_match": true,
+      "common_residual": 4.649162292480469e-06,
+      "candidate_common_coordinates": [
+        -0.0016252626664936543,
+        0.0020614315290004015,
+        -0.0013847202062606812,
+        0.0023590412456542253,
+        0.0010761612793430686,
+        -0.0009838889818638563,
+        0.0018742280080914497
+      ],
+      "accepted_common_coordinates": [
+        -0.0016252626664936543,
+        0.0020614315290004015,
+        -0.0013847202062606812,
+        0.0023590412456542253,
+        0.0010761612793430686,
+        -0.0009838889818638563,
+        0.0018742280080914497
+      ],
+      "respiratory_candidate_status": [
+        2,
+        0,
+        1,
+        0
+      ],
+      "respiratory_accepted_status": [
+        2,
+        0,
+        1,
+        0
+      ],
+      "chamber_targets_m3": [
+        3.214077150914818e-05,
+        0.00013880427286494523,
+        4.762730895890854e-05,
+        0.00011919871030841023
+      ],
+      "respiratory_candidate_control": [
+        0.0015079457079991698,
+        0.0009424660820513964,
+        12.000028610229492,
+        6.000028610229492
+      ],
+      "excitation_buffer": [
+        0.0015079457079991698,
+        0.0009424660820513964,
+        12.000028610229492,
+        6.000028610229492
+      ],
+      "brain_input": {
+        "source_time_us": 4000,
+        "target_time_us": 6000,
+        "source_root": 4937369950558400531,
+        "target_root": 11695163859457489927,
+        "validity_mask": 3,
+        "flags": 1,
+        "pa_o2_mmhg": 100.66173553466797,
+        "pa_co2_mmhg": 40.04690933227539
+      },
+      "brain_candidate": {
+        "timestamp_us": 6000,
+        "accepted_root": 11695163859457489927,
+        "flags": 1
+      },
+      "brain_output": {
+        "target_time_us": 6000,
+        "source_root": 4937369950558400531,
+        "target_root": 11695163859457489927,
+        "flags": 1,
+        "excitation": [
+          0.0015079457079991698,
+          0.0009424660820513964
+        ]
+      },
+      "trial_lower": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "trial_upper": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "matched_box_lower": [
+        -0.06640367954969406,
+        -0.018000001087784767,
+        -0.028329282999038696,
+        -0.018000001087784767,
+        -0.018000001087784767,
+        -0.030208107084035873,
+        -0.018000001087784767
+      ],
+      "matched_box_upper": [
+        0.018000001087784767,
+        0.04811039939522743,
+        0.018000001087784767,
+        0.045903708785772324,
+        0.04544926434755325,
+        0.018000001087784767,
+        0.029235227033495903
+      ],
+      "first_failure_latch": {
+        "binding_note": "buffer(2) is bound to the authoritative NMMatterStatusGPU runtime status",
+        "step": 2,
+        "matter_code": 5,
+        "stand_code": 9,
+        "matter_status": [
+          0,
+          3,
+          102,
+          90
+        ],
+        "matter_diagnostics": [
+          0.3499999940395355,
+          -2.9802322387695312e-08,
+          0,
+          0
+        ],
+        "stand_status": [
+          2,
+          3,
+          64,
+          2097261
+        ],
+        "respiration_candidate_status": [
+          2,
+          0,
+          1,
+          0
+        ],
+        "respiration_accepted_status": [
+          2,
+          0,
+          1,
+          0
+        ],
+        "chamber_targets_m3": [
+          3.214077150914818e-05,
+          0.00013880427286494523,
+          4.762730895890854e-05,
+          0.00011919871030841023
+        ],
+        "respiration_control": [
+          0.0015079457079991698,
+          0.0009424660820513964,
+          12.000028610229492,
+          6.000028610229492
+        ],
+        "common_first": [
+          -0.0016252626664936543,
+          0.0020614315290004015,
+          -0.0013847202062606812,
+          0.0023590412456542253
+        ],
+        "common_second": [
+          0.0010761612793430686,
+          -0.0009838889818638563,
+          0.0018742280080914497,
+          0
+        ],
+        "common_status": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "common_diagnostics": [
+          4.649162292480469e-06,
+          0,
+          0,
+          0
+        ],
+        "brain_input_metadata": [
+          3,
+          1,
+          4000,
+          6000
+        ],
+        "brain_input_roots": [
+          2344136723,
+          1149571023,
+          150158343,
+          2722992529
+        ],
+        "brain_input_timestamp_highs": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "brain_accepted_metadata": [
+          1,
+          4000,
+          0,
+          0
+        ],
+        "brain_accepted_roots": [
+          2344136723,
+          1149571023,
+          0,
+          0
+        ],
+        "brain_candidate_metadata": [
+          1,
+          6000,
+          0,
+          0
+        ],
+        "brain_candidate_root": [
+          150158343,
+          2722992529,
+          0,
+          0
+        ],
+        "brain_output_metadata": [
+          1,
+          6000,
+          0,
+          0
+        ],
+        "brain_output_roots": [
+          2344136723,
+          1149571023,
+          150158343,
+          2722992529
+        ],
+        "brain_output_setpoints": [
+          6.000028610229492,
+          12.000028610229492,
+          0.5000011920928955,
+          0.0015079457079991698
+        ],
+        "brain_output_excitations": [
+          0.0009424660820513964,
+          0,
+          0,
+          0
+        ],
+        "excitation_buffer": [
+          0.0015079457079991698,
+          0.0009424660820513964,
+          12.000028610229492,
+          6.000028610229492
+        ]
+      }
+    },
+    "accepted_gpu_ms": [
+      15145.8886249,
+      15454.2907916
+    ],
+    "events": [
+      "newton_tail_dispatch_root={\"schema\":1,\"root\":0,\"enabled\":true,\"unknowns\":2513,\"fem_nodes\":1234,\"icb_graph_commands\":4,\"icb_tangent_cache_commands\":2}",
+      "newton_tail_dispatch_root={\"schema\":1,\"root\":1,\"enabled\":true,\"unknowns\":2513,\"fem_nodes\":1234,\"icb_graph_commands\":4,\"icb_tangent_cache_commands\":2}",
+      "newton_tail_dispatch_root={\"schema\":1,\"root\":2,\"enabled\":true,\"unknowns\":2513,\"fem_nodes\":1234,\"icb_graph_commands\":4,\"icb_tangent_cache_commands\":2}",
+      "human_joint_failure completed_steps=2 matter_status=5 matter_failing_index=102 matter_object_index=3 matter_diagnostics=[0.34999999403953552,-2.9802322387695312e-08,0,0] failure_owner=passive_tissue_runtime",
+      "resting_fem_failure_accepted_witness global_tet=102 rejected_J=0.34999999403953552 accepted_J=1.1946925967195605 rest_det_m3=6.9766419654668078e-09 state=rolled_back_accepted_not_rejected_candidate object=\"numi_human_regional_myofascia_1\" local_tet=12"
+    ],
+    "identical_traces": {
+      "resting-coupled.csv": "7d40659376049099f56a2ff8561d8d9c126cd672f4dec4c830eb5477f0ca6ee9",
+      "resting-local-bed-sections.csv": "ee2b753748270bae651e9c93116fd56b66094fb7b0ce3dfd70fd09bea1dbffc4",
+      "resting-com-support-impulses.csv": "949ea435c1a5af7b04c3a5019ada47ee2e45707488eba9b462da3793a6804c92",
+      "resting-com-momentum-diagnostic.csv": "b00d793b5666d3a0aed275fa5d2743c70c85c5723fac343ddafa133b7ae3f5c7",
+      "resting-surface-audit.csv": "8956faba8fa7caa58333816a4fe0fe95327bb3ab21b58fc70d8c1eaec78477a1"
+    },
+    "gpu_time_ratio": 0.8483286823893886
+  }
+}
