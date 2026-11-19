@@ -1,0 +1,21 @@
+In file included from /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/human_respiration.metal:3:
+/Users/numi/Work/skin-fat-native-integration-209/matter/../src/metal/MujocoMuscleReference.metal:340:10: warning: unused variable 'finiteJacobian' [-Wunused-variable]
+    bool finiteJacobian = true;
+         ^
+/Users/numi/Work/skin-fat-native-integration-209/matter/../src/metal/MujocoMuscleReference.metal:1021:10: warning: unused variable 'finiteForceRows' [-Wunused-variable]
+    bool finiteForceRows = true;
+         ^
+/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/human_respiration.metal:1879:8: warning: variable 'freeVolume' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+    if(lane==0u) {control[0]=valid?1u:0u;freeVolume=capacityVolume;}
+       ^~~~~~~~
+/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/human_respiration.metal:1881:41: note: uninitialized use occurs here
+    valid=control[0]!=0u;capacityVolume=freeVolume;
+                                        ^~~~~~~~~~
+/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/human_respiration.metal:1879:5: note: remove the 'if' if its condition is always true
+    if(lane==0u) {control[0]=valid?1u:0u;freeVolume=capacityVolume;}
+    ^~~~~~~~~~~~~
+/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/human_respiration.metal:1793:33: note: initialize the variable 'freeVolume' to silence this warning
+    threadgroup float freeVolume;
+                                ^
+                                 = 0.0
+3 warnings generated.

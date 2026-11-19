@@ -1,0 +1,38 @@
+// Admission only for independently certified bounded common-field geometry.
+// Eight floats per row carry seven coordinates and one integer-exact pivot.
+struct CardiacCertifiedTube {
+    float4 first[2];
+    float4 last[2];
+    float4 residualLow[2];
+    float4 residualHigh[2];
+};
+
+static inline bool cardiacInsideCertifiedTube(
+    constant CardiacCertifiedTube& tube, thread const float* coordinate) {
+#pragma clang fp reassociate(off)
+#pragma clang fp contract(off)
+    const uint pivot=uint(tube.first[1].w);
+    if(pivot>=7u) return false;
+    const float a=tube.first[pivot>>2][pivot&3u];
+    const float b=tube.last[pivot>>2][pivot&3u];
+    const float x=coordinate[pivot];
+    if(!isfinite(x)||x<min(a,b)||x>max(a,b)||abs(b-a)<0x1p-20f)
+        return false;
+    const float phase=(x-a)/(b-a);
+    // Inputs are bounded by one. The rounded phase uses two differences
+    // and one division; the resulting residual uses another difference
+    // and an FMA. An inward 2^-20 guard exceeds the combined absolute
+    // rounding error for Float32 round-to-nearest along a normalized tube.
+    constexpr float roundoff=0x1p-20f;
+    for(uint i=0u;i<7u;++i) {
+        if(i==pivot) continue;
+        const float start=tube.first[i>>2][i&3u];
+        const float end=tube.last[i>>2][i&3u];
+        const float xi=coordinate[i];
+        if(!isfinite(xi)||abs(xi)>1.f||abs(start)>1.f||abs(end)>1.f) return false;
+        const float residual=fma(-phase,end-start,xi-start);
+        if(!(residual>=tube.residualLow[i>>2][i&3u]+roundoff&&
+             residual<=tube.residualHigh[i>>2][i&3u]-roundoff)) return false;
+    }
+    return true;
+}

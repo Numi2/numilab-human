@@ -1,0 +1,36 @@
+[
+  [
+    "xcrun",
+    "-sdk",
+    "macosx",
+    "metal",
+    "-std=metal4.0",
+    "-O3",
+    "-fno-fast-math",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/../include",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/../src/metal",
+    "-I",
+    "/Users/numi/numi-human-resting-integration-20261005/numi-brain/Sources/NumiBrainABI/include",
+    "-I",
+    "/Users/numi/numi-human-resting-integration-20261005/numi-brain/Sources/NumiBrainMetal/Shaders",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/src",
+    "-c",
+    "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/human_respiration.metal",
+    "-o",
+    "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/HumanRestingSkin.air"
+  ],
+  [
+    "xcrun",
+    "-sdk",
+    "macosx",
+    "metallib",
+    "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/HumanRestingSkin.air",
+    "-o",
+    "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/cardiac-split-tube-native-build/metalrobo/HumanRestingSkin.metallib"
+  ]
+]

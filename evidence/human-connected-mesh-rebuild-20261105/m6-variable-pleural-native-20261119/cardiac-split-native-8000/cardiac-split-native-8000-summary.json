@@ -1,0 +1,124 @@
+{
+  "device": "Apple M6",
+  "run": "cardiac-split-native-8000",
+  "variable_pleural_pressure": true,
+  "launch_sha256": "e56bca1a27d6570bd2a7e79ad14f28b4b2a0b58422c6b2a6611e69b5ed82baa1",
+  "terminal_receipt_sha256": "b5ac3d791f0a99a0896bfa9c518a18923f0bd77f4c23977182b615b08543676a",
+  "terminal_pack_sha256": "b746b94d95d40e287fadfbfd49aa182e6c842bf96799d6cedbbaf49afc71adc0",
+  "timing": {
+    "simulated_seconds": 16.00000075995922,
+    "launch_to_exit_seconds": 161.53853804105893,
+    "launch_to_exit_rtf": 0.09904757684443345,
+    "motion_rtf_including_native_presentation": 0.107367005184,
+    "body_run_rtf": 0.10469994620868302,
+    "native_presentation_callbacks": 252
+  },
+  "complete_breaths": 3,
+  "complete_filling_ejection_cycles": 19,
+  "active_controller": true,
+  "cardiac_volume_residual_max": 1.63912773132e-05,
+  "native_geometry_volume_error_max": 2.33742375713e-05,
+  "sampled_tube_steps": [
+    [
+      2783,
+      0
+    ],
+    [
+      2815,
+      6
+    ],
+    [
+      3071,
+      12
+    ],
+    [
+      3231,
+      20
+    ],
+    [
+      3487,
+      29
+    ],
+    [
+      5375,
+      38
+    ],
+    [
+      5631,
+      43
+    ],
+    [
+      5791,
+      54
+    ],
+    [
+      6079,
+      71
+    ]
+  ],
+  "sampled_geometry_rows": 252,
+  "ranges": {
+    "pleural_pa": [
+      -770.013977051,
+      -470.339874268
+    ],
+    "alveolar_pa": [
+      -95.9355316162,
+      116.614311218
+    ],
+    "airflow_ml_s": [
+      -874.679128174,
+      719.575560652
+    ],
+    "lung_volume_ml": [
+      2500.00157394,
+      3036.00728512
+    ],
+    "diaphragm_mm": [
+      7.27736987756e-05,
+      20.5946807861
+    ],
+    "rib_mm": [
+      -0.0135816279799,
+      2.52426815033
+    ],
+    "PaO2_mmhg": [
+      99.9995498657,
+      102.713127136
+    ],
+    "PaCO2_mmhg": [
+      38.9005622864,
+      40.0000152588
+    ],
+    "blood_error_ml": [
+      0.000931322574615,
+      0.00419095158577
+    ],
+    "tidal_ml": [
+      0.0,
+      536.159146577
+    ],
+    "oxygen_balance_error_stpd_ml": [
+      0.000116415321827,
+      0.000232830643654
+    ],
+    "co2_balance_error_stpd_ml": [
+      0.000232830643654,
+      0.000465661287308
+    ]
+  },
+  "support": {
+    "normal_force_last_physical_step_n": [
+      633.802145417864,
+      720.1487079937159
+    ],
+    "com_z_m": [
+      0.09998980264530448,
+      0.10773222894820308
+    ],
+    "momentum_rows_with_residual": 0
+  },
+  "terminal_bed_normal_force_n": 705.6497000268338,
+  "no_recorded_root_assistance": true,
+  "whole_body_crossing_count_measured_by_this_tool": false
+}

@@ -1,0 +1,124 @@
+{
+  "scene_terminal_step": 8000,
+  "exact_audit_sha256": "c16ac88b7439b252679f124a5c0c3e47ea40502ba2697f851a19e614ba51257e",
+  "skin_to_tissue_pairs": 14605,
+  "self_pairs": 55,
+  "typed_totals": {
+    "51004": 2850,
+    "51005": 11484,
+    "51006": 0,
+    "51010": 0,
+    "51011": 271,
+    "51012": 0,
+    "51021": 0,
+    "51020": 0,
+    "51022": 0,
+    "51023": 0,
+    "51024": 0,
+    "51025": 0
+  },
+  "major_banks": [
+    [
+      51005,
+      138,
+      782
+    ],
+    [
+      51005,
+      133,
+      510
+    ],
+    [
+      51005,
+      76,
+      495
+    ],
+    [
+      51005,
+      137,
+      475
+    ],
+    [
+      51005,
+      112,
+      411
+    ],
+    [
+      51005,
+      110,
+      404
+    ],
+    [
+      51004,
+      13,
+      391
+    ],
+    [
+      51004,
+      12,
+      354
+    ],
+    [
+      51005,
+      131,
+      342
+    ],
+    [
+      51005,
+      120,
+      340
+    ],
+    [
+      51005,
+      132,
+      338
+    ],
+    [
+      51005,
+      103,
+      300
+    ],
+    [
+      51005,
+      147,
+      282
+    ],
+    [
+      51005,
+      114,
+      273
+    ],
+    [
+      51005,
+      109,
+      272
+    ]
+  ],
+  "skin_acceptance_passed": false,
+  "coupled_16s_cardiac_acceptance_passed": true,
+  "model_scope": "32 condensed skin and fat bed sections with reciprocal transfer to existing articulated support. Surrounding geometry has no general internal tissue contact guarantee.",
+  "combined_guarded_audit": {
+    "tissue_pairs_before": 14605,
+    "tissue_pairs_after": 14507,
+    "new_tissue_pairs": 5,
+    "removed_tissue_pairs": 103,
+    "skin_self_pairs_before": 55,
+    "skin_self_pairs_after": 55,
+    "new_skin_self_pairs": 0,
+    "physical_byte_parity": {
+      "accepted_body_state_sha256": true,
+      "accepted_respiration_state_sha256": true,
+      "accepted_root_fingerprint_hex": false,
+      "accepted_time_s": true,
+      "common_field_map_sha256": true,
+      "cardiac_q": true,
+      "cardiac_wall_q": true,
+      "common_coordinates": true,
+      "common_position_low": true,
+      "resting-coupled.csv": true,
+      "resting-local-bed-sections.csv": true,
+      "resting-com-support-impulses.csv": true,
+      "resting-com-momentum-diagnostic.csv": true
+    }
+  }
+}
