@@ -27,3 +27,11 @@ shasum -a 256 source-clearance-patches.nhskin
 ```
 
 The input and output SHA-256 values are in source-emission.json. The native build and comparison scripts reference the existing SSH Numi checkpoint. They use the original launch environment and compilation inputs recorded in the receipts.
+
+## Presentation timing with existing geometry evidence retained
+
+A repeat under the same pressure waveform and source assets accepted all 8,000 steps and completed 251 native presentation callbacks at 0.10739× during motion. From process launch to exit it took 159.61467 seconds, or 0.10024×, with the verified startup cache staged and no geometry re-export. Terminal generalized position and velocity, bed contact, momentum and physiological traces match the geometry-captured run. The result clears 0.1× by 0.24% on this measurement. The geometry-captured run still measures 0.09857× from launch to exit.
+
+An intervening repeat requested a redundant terminal pack and accepted the physical horizon before the stream write failed. Its exact-copy startup buffers were retired after recovery checks. The earlier successful 4.030- and 16-second packs remain the geometry evidence.
+
+The follow-up contour trial shortened one additional skin-to-bone intersection in the frozen late pose from 6.909 mm to 0.979 mm. That curve remained, and the trial was not promoted to the native candidate.
