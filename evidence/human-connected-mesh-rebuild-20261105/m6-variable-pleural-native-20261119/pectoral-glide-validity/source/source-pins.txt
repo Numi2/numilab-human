@@ -1,0 +1,85 @@
+Darwin 27.0.0 Darwin Kernel Version 27.0.0: Tue Aug 11 21:06:15 PDT 2026; root:xnu-13432.1.9~1/RELEASE_ARM64_T8152 arm64
+hw.model: Mac18,5
+hw.memsize: 17179869184
+f75955f08d6edf0f85027eac7614017ac9fbc996
+ M CMakeLists.txt
+ M apps/NumiHumanAcceptedFEMSkinRenderPass.hpp
+ M apps/NumiHumanAcceptedFEMSkinTransfer.hpp
+ M apps/NumiHumanCoarseTissuePreparation.hpp
+ M apps/NumiHumanParentReferenceMassTransfer.hpp
+ M apps/NumiHumanParentReferenceMassTransferCheck.cpp
+ M apps/NumiHumanRestingAnatomy.hpp
+ M apps/NumiHumanRestingTissueParents.hpp
+ M apps/NumiHumanRestingVisual.hpp
+ M apps/NumiHumanSkinFatReductionLabels.hpp
+ M apps/NumiHumanSkinFatReductionLabelsCheck.cpp
+ M apps/NumiHumanUnpairedSkinFatVolume.hpp
+ M apps/NumiHumanUnpairedSkinFatVolumeCheck.cpp
+ M apps/bodyparts3d_visual_probe.mm
+ M apps/compare_human_fem_endpoint_fidelity.py
+ M apps/numilab_human_myosim_visual_probe.mm
+ M apps/test_compare_human_fem_endpoint_fidelity.py
+ M include/metalrobo/NumiHumanMuscleEquilibrium.hpp
+ M matter/CMakeLists.txt
+ M matter/include/numi/matter/compiled_world_partitioned_reduction.hpp
+ M matter/include/numi/matter/detail.hpp
+ M matter/include/numi/matter/fem_body_contact_sample_grouping.hpp
+ M matter/include/numi/matter/fem_body_contact_static_bvh.hpp
+ M matter/include/numi/matter/partitioned_reduction_basis.hpp
+ M matter/include/numi/matter/partitioned_reduction_fem_tangent.h
+ M matter/include/numi/matter/partitioned_reduction_mass_whitening.hpp
+ M matter/include/numi/matter/partitioned_reduction_sparse_support.hpp
+ M matter/include/numi/matter/shared.h
+ M matter/src/compiler_impl.cpp
+ M matter/src/human_respiration.metal
+ M matter/src/metal/common.metalinc
+ M matter/src/metal/contact.metalinc
+ M matter/src/metal/fem.metalinc
+ M matter/src/metal/fgmres.metalinc
+ M matter/src/metal/generated_stateless_tangent.metalinc
+ M matter/src/metal/identification_scheduler.metalinc
+ M matter/src/metal/mixed_fem.metalinc
+ M matter/src/metal/numi_human.metalinc
+ M matter/src/metal/partitioned_reduction_fem_tangent.metalinc
+ M matter/src/metal/partitioned_reduction_projection.metalinc
+ M matter/src/metal/topology_mutation.metalinc
+ M matter/src/metal/vascular.metalinc
+ M matter/src/metal_encoder_timing.hpp
+ M matter/src/native_tangent_source.hpp
+ M matter/src/numi_human.mm
+ M matter/src/regional_graph_schwarz.hpp
+ M matter/src/runtime.mm
+ M matter/src/validation_impl.cpp
+ M matter/src/vascular_impl.cpp
+ M matter/tools/cardboard_contact_node_incidence_sort_native_check.mm
+ M matter/tools/cardboard_vtccd_iteration_budget_check.mm
+ M matter/tools/compiled_world_partitioned_reduction_check.cpp
+ M matter/tools/fem_material_frame_check.mm
+ M matter/tools/fem_reference_check.mm
+ M matter/tools/fem_static_surface_map_native_check.mm
+ M matter/tools/fgmres_true_residual_native_check.mm
+ M matter/tools/human_resting_runtime.hpp
+ M matter/tools/partitioned_reduction_basis_check.cpp
+ M matter/tools/partitioned_reduction_projection_gpu_check.mm
+ M matter/tools/regional_graph_schwarz_layout_check.cpp
+ M matter/tools/vascular_cavity_check.mm
+ M matter/tools/vascular_compiler_check.cpp
+ M src/core/NumiHumanMuscleEquilibrium.cpp
+ M src/metal/MetalArticulatedOperator.mm
+ M tests/numi_human_fem_body_triangle_contact/fem_body_contact_static_bvh_test.cpp
+ M tests/numi_human_fem_body_triangle_contact/fem_body_triangle_contact_math_test.cpp
+ M tests/numi_human_fem_surface_attachment/native_initialize_test.mm
+ M tests/numi_human_fem_surface_attachment/run.py
+ M tests/numi_human_static_support_test.cpp
+efd872daf59facabbfeae557309c56eacfa85359ba6c6248b9e5355486bebbf0  -
+407f9f0177e42d7d5b630ee688450f9e2c386a488c00ad5989e7222ca81af940  /Users/numi/Work/skin-fat-native-integration-209/matter/src/metal/fem.metalinc
+25370c8c4013eac439f7deff5029f0a0b5da1191cfb2a66e5b5ee06982dae4eb  /Users/numi/Work/skin-fat-native-integration-209/matter/src/metal/vascular.metalinc
+c8fdd86432c86f6d45e2080c9a263a2624f852eb775303bba6f2fee45bf0c67a  /Users/numi/Work/skin-fat-native-integration-209/matter/src/metal/fgmres.metalinc
+4aff34510ff640a929c50b55b1190833c7a7da52a3e82544b264f5e38e563742  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-pressure-build/runtime.mm
+0f6538f93d4cb1a3a4d9b4c4a96434b2af08f7d4386fef727f777da9725ace19  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/runtime.mm.o
+ce9f57103f8fdb55cf077dd6c81cb1b37cc9ff158ed742947ea7e7750393d084  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/lib/libmetalrobo.dylib
+05d1e9424e094e5a6f1e62679590320838f761fa7c6f919fffde53991e74f488  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/shared-fascia-rebase-build/numilab_human_myosim_visual_probe.mm
+f554e6ded3807dba9d314a77311ce46c345022513bfa4c5b68c66ac1789b173a  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-007/recomputed-support-skin.nhskin
+107ab01ce16c66652a3da70669c3d7fdd620017b6e9ec8b9e5f4d8a89e61cbe6  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-008/deep-pectoral-depth-build/numilab_human_myosim_visual_probe.mm
+e9d803f3510c22208a7bf8629c60b049461cd0c204d02c2e7c528354ad64d69a  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-008/canonical-glide-alpha-shader/NumiMatter.metallib
+ba8ac8eea01c2e3cac3b34cdeb9e57ef3981c543059c128be8c8c9347daa1e92  /Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-008/pectoral-alpha-trace-runtime/libmetalrobo.dylib

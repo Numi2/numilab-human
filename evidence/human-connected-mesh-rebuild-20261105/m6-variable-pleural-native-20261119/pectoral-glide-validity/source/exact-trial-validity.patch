@@ -1,0 +1,26 @@
+--- a/matter/src/metal/fem.metalinc
++++ b/matter/src/metal/fem.metalinc
+@@ -4876,12 +4876,19 @@
+             trialVelocity[1] - trialVelocity[0],
+             trialVelocity[2] - trialVelocity[0],
+             trialVelocity[3] - trialVelocity[0]) * inverseRest;
++        const float3x3 preciseLocalFdot =
++            femMaterialInput(object, tetrahedron, deformationRate);
++        float validityMargin = 1.0f;
++        if (!evaluateMaterialValidity(
++                material, programs, instructions,
++                environmentParameters + environment * dispatch.parameterCount,
++                nullptr, preciseLocalF, preciseLocalFdot, dt, material.bulk.y,
++                validityMargin, deformationLow) || !(validityMargin > 0.0f))
++            return false;
+         float3x3 stress = evaluateAlgorithmicStress(
+             material, programs, instructions,
+-            environmentParameters +
+-                environment * dispatch.parameterCount,
+-            nullptr, preciseLocalF,
+-            femMaterialInput(object, tetrahedron, deformationRate),
++            environmentParameters + environment * dispatch.parameterCount,
++            nullptr, preciseLocalF, preciseLocalFdot,
+             dt, material.bulk.y, stressValid, deformationLow);
+         stress = femMaterialOutput(object, tetrahedron, stress);
+         const float maximumStress = maximumAbs(stress);

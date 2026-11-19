@@ -1,0 +1,28 @@
+[
+  [
+    "xcrun",
+    "-sdk",
+    "macosx",
+    "metal",
+    "-std=metal4.0",
+    "-O3",
+    "-fno-fast-math",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/include",
+    "-c",
+    "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-008/canonical-glide-alpha-shader/src/matter_kernels.metal",
+    "-o",
+    "/Volumes/NumiHumanTrial/canonical-glide-alpha.air"
+  ],
+  [
+    "xcrun",
+    "-sdk",
+    "macosx",
+    "metallib",
+    "/Volumes/NumiHumanTrial/canonical-glide-alpha.air",
+    "-o",
+    "/Volumes/NumiHumanTrial/canonical-glide-alpha.metallib"
+  ]
+]

@@ -1,0 +1,38 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -23959,6 +23959,13 @@
+                 const char* traceRoot = std::getenv("NM_VASCULAR_TRACE_ROOT");
+                 if (traceRoot == nullptr || vascularTotal == 0u || vascularTotal > 4096u ||
+                     request.controlStep != std::strtoul(traceRoot, nullptr, 10)) return true;
++                if (state.humanSupportDispatch.contactCount == 0u &&
++                    (microtick < 30u || microtick > 34u)) return true;
++                const std::string_view name(stage);
++                if (name != "before_support_limit" &&
++                    name != "before_vascular_line_search" &&
++                    name != "after_vascular_line_search" &&
++                    name != "after_validating_line_search") return true;
+                 struct TraceArena { const char* name; id<MTLBuffer> source; NSUInteger offset; NSUInteger bytes; };
+                 const NSUInteger vectorOffset = state.fgmresLayout.vascularBase * sizeof(nm_float4);
+                 const NSUInteger vectorBytes = vascularTotal * sizeof(nm_float4);
+@@ -50347,6 +50354,10 @@
+                 encodeVascularLineSearchLimit();
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
++            if (!encodeVascularTrace("after_vascular_line_search")) {
++                ownership->preDynamicsOpen = false;
++                return diagnostics;
++            }
+             dispatchGroups32(
+                 "nm_human_support_validate_final_line_search",
+                 environments,
+@@ -50377,6 +50388,10 @@
+                                  offset:0u atIndex:11u];
+                 });
+             [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++            if (!encodeVascularTrace("after_validating_line_search")) {
++                ownership->preDynamicsOpen = false;
++                return diagnostics;
++            }
+             if (femCapsuleResidualArmijoEnabled ||
+                 femCapsuleBoxResidualArmijoEnabled ||
+                 femPureMultiFEMFullContactResidualArmijoEnabled) {

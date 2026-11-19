@@ -1,0 +1,69 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -21201,12 +21201,14 @@
+                 point.z+=kPreservedSurfaceRemapResidualFraction*
+                     remapResidualWorld.z;
+                 point.w = 1.0f;
+-                if (local >= layerWidth) {
++                // The registered muscle envelope is the deep fascia face.
++                // Build the exterior face one sheet thickness outward.
++                if (local < layerWidth) {
+                     normal = femNormalized(normal,
+                         "resting fascia projected source normal");
+-                    point.x -= fascia.header.thicknessMeters * normal.x;
+-                    point.y -= fascia.header.thicknessMeters * normal.y;
+-                    point.z -= fascia.header.thicknessMeters * normal.z;
++                    point.x += fascia.header.thicknessMeters * normal.x;
++                    point.y += fascia.header.thicknessMeters * normal.y;
++                    point.z += fascia.header.thicknessMeters * normal.z;
+                 }
+                 donorBody = static_cast<std::uint32_t>(std::distance(
+                     donorScores.begin(), std::max_element(
+@@ -21604,12 +21606,13 @@
+         double surfaceArea=0.0;
+         for(const auto& [face,use]:fasciaRegionFaceUse[regionIndex]) {
+             if(use!=1u) continue;
+-            const bool outer=std::all_of(face.begin(),face.end(),
++            const std::uint32_t interfaceStart = region.firstNode +
++                (regionIndex < kPectoralisFasciaRegionCount ? layerWidth : 0u);
++            const bool interfaceFace=std::all_of(face.begin(),face.end(),
+                 [&](std::uint32_t global) {
+-                    return global>=region.firstNode &&
+-                        global<region.firstNode+layerWidth;
++                    return global>=interfaceStart && global<interfaceStart+layerWidth;
+                 });
+-            if(!outer) continue;
++            if(!interfaceFace) continue;
+             const mr_float4 edge0=femSubtract(points[face[1]],points[face[0]]);
+             const mr_float4 edge1=femSubtract(points[face[2]],points[face[0]]);
+             const double area=0.5*femLength(femCross(edge0,edge1));
+@@ -21621,7 +21624,7 @@
+                 fasciaGlidingTributaryArea[global]+=area/3.0;
+         }
+         require(surfaceFaces>0u&&std::isfinite(surfaceArea)&&surfaceArea>0.0,
+-                "regional fascia has no outer gliding-contact surface");
++                "regional fascia has no gliding-contact surface");
+     }
+ 
+     // Build exact boundary-face ancestry before enabling contact. A seam is
+@@ -28006,7 +28009,10 @@
+             : regionIndex<kLatissimusFasciaRegionEnd ? 0.00175
+             : regionIndex<kExternalObliqueRegionEnd ? 0.0045 : 0.0060;
+         for(std::uint32_t local=0u;local<layerWidth;++local) {
+-            const std::uint32_t sourceNode=region.firstNode+local;
++            const std::uint32_t outerNode=region.firstNode+local;
++            const std::uint32_t innerNode=outerNode+layerWidth;
++            const std::uint32_t sourceNode=regionIndex < kPectoralisFasciaRegionCount
++                ? innerNode : outerNode;
+             const std::uint32_t bodyIndex=fasciaNodeDonorBody[sourceNode];
+             require(bodyIndex<bodies.size(),
+                     "regional fascia node has no articulated gliding-contact donor");
+@@ -28016,7 +28022,7 @@
+             if((fascia.nodes[sourceNode].flags&1u)!=0u||
+                fasciaGlidingTributaryArea[sourceNode]<=0.0) continue;
+             const mr_float4 thicknessVector=femSubtract(
+-                points[sourceNode],points[sourceNode+layerWidth]);
++                points[outerNode],points[innerNode]);
+             const float measuredThickness=femLength(thicknessVector);
+             require(std::isfinite(measuredThickness)&&
+                         measuredThickness>0.0001f&&measuredThickness<0.01f,

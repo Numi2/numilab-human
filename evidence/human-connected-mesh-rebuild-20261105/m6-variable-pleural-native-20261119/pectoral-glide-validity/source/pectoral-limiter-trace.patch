@@ -1,0 +1,47 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -23959,6 +23959,13 @@
+                 const char* traceRoot = std::getenv("NM_VASCULAR_TRACE_ROOT");
+                 if (traceRoot == nullptr || vascularTotal == 0u || vascularTotal > 4096u ||
+                     request.controlStep != std::strtoul(traceRoot, nullptr, 10)) return true;
++                if (microtick != 12u) return true;
++                const std::string_view name(stage);
++                if (name != "after_fem_backtracking" &&
++                    name != "after_deformable_limit" &&
++                    name != "before_support_limit" &&
++                    name != "after_validating_line_search" &&
++                    name != "certificate") return true;
+                 struct TraceArena { const char* name; id<MTLBuffer> source; NSUInteger offset; NSUInteger bytes; };
+                 const NSUInteger vectorOffset = state.fgmresLayout.vascularBase * sizeof(nm_float4);
+                 const NSUInteger vectorBytes = vascularTotal * sizeof(nm_float4);
+@@ -29176,7 +29183,7 @@
+                 const char* terminalTrace=std::getenv("NM_FEM_TERMINAL_CERTIFICATE_TRACE");
+                 const bool boundedTerminalOnly=terminalTrace&&std::strcmp(terminalTrace,"1")==0;
+                 if(boundedTerminalOnly)root=request.controlStep;
+-                if ((!boundedTerminalOnly&&!selectedFEMNewtonTraceRoot(root)) || microtick != 0u)
++                if (!boundedTerminalOnly || request.controlStep != 4u || microtick != 12u)
+                     return true;
+                 if (environments == 0u) {
+                     emitFEMNewtonTraceSkip(root, "zero_environments_at_certificate");
+@@ -50347,6 +50354,10 @@
+                 encodeVascularLineSearchLimit();
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
++            if (!encodeVascularTrace("after_vascular_line_search")) {
++                ownership->preDynamicsOpen = false;
++                return diagnostics;
++            }
+             dispatchGroups32(
+                 "nm_human_support_validate_final_line_search",
+                 environments,
+@@ -50377,6 +50388,10 @@
+                                  offset:0u atIndex:11u];
+                 });
+             [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++            if (!encodeVascularTrace("after_validating_line_search")) {
++                ownership->preDynamicsOpen = false;
++                return diagnostics;
++            }
+             if (femCapsuleResidualArmijoEnabled ||
+                 femCapsuleBoxResidualArmijoEnabled ||
+                 femPureMultiFEMFullContactResidualArmijoEnabled) {
