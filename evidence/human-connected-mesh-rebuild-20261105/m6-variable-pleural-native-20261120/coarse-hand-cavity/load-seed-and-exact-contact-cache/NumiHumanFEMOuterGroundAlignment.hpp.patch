@@ -1,0 +1,10 @@
+--- a/apps/NumiHumanFEMOuterGroundAlignment.hpp
++++ b/apps/NumiHumanFEMOuterGroundAlignment.hpp
+@@ -59 +59 @@
+-        std::string& error) {
++        std::string& error, double firstTouchMarginM = 1.0e-8) {
+@@ -118 +118,3 @@
+-    constexpr double firstTouchMarginM=1.0e-8;
++    if (!std::isfinite(firstTouchMarginM) || firstTouchMarginM < 1.0e-8 ||
++        firstTouchMarginM >= 1.0e-6)
++        return fail("FEM outer first-touch clearance is outside the supported positive range");

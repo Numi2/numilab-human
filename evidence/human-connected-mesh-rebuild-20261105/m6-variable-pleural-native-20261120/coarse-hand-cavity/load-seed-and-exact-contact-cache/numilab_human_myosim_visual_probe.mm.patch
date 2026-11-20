@@ -1,0 +1,18 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -39230,0 +39231,10 @@
++                    double firstTouchGapM = 1.0e-8;
++                    if (const char* requestedGap =
++                            std::getenv("NUMI_HUMAN_FEM_TRIAL_INITIAL_CLEARANCE_M")) {
++                        int parsed = 0;
++                        require(!std::getenv("NUMI_HUMAN_FEM_TRIAL_BED_PLANE") &&
++                            !std::getenv("NUMI_HUMAN_FEM_SUPPORT_BARRIER_RELEASE") &&
++                            std::sscanf(requestedGap, "%lf%n", &firstTouchGapM, &parsed) == 1 &&
++                            requestedGap[parsed] == '\0' && std::isfinite(firstTouchGapM),
++                            "seeded FEM bed clearance requires the unchanged fixed plane");
++                    }
+@@ -39237 +39247 @@
+-                                evaluateOuter,physicalAlignment,alignmentError),
++                                evaluateOuter,physicalAlignment,alignmentError,firstTouchGapM),
+@@ -39245,0 +39256 @@
++                        <<" requested_gap_m="<<firstTouchGapM
