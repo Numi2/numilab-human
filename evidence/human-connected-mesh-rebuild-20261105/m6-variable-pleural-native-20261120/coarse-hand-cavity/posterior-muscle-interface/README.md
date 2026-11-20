@@ -55,3 +55,8 @@ The candidate shell ran on Apple M6, macOS 27.0 (26A425), with variable pleural 
 - Terminal bed reaction was 0.4315 N over three loaded rows against approximately 953 N of body weight. Supported equilibrium and the shoulder check under settled load remain open.
 
 The native run exercises the physical shell and ligament owners. The two gluteal volumes remain in authoring. The installed scene remains on the prior qualified reference. Sustained end-to-end throughput, full-body clearance and 16 seconds through variable pleural pressure remain unqualified.
+
+The new cooked pack was compressed, published and independently downloaded.
+Decompression recovered every byte of the native pack before the local
+duplicate was removed. Its SHA-256 and recovery connection are retained in
+`paired-native-pack-recovery.txt`. [Private recovery release](https://github.com/Numi2/workstation-checkpoint-archive/releases/tag/numi-human-bed-column-20261120)
