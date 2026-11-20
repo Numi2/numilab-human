@@ -1,0 +1,137 @@
+{
+  "scope": "offline_exact_carrier_capacity_trial",
+  "complete_motion_certificate": false,
+  "native_mass_admission": false,
+  "transport_distance_limit_m": 0.187444,
+  "reference": {
+    "budget": "current_paired_reference",
+    "inputs_sha256": {
+      "../resting-clearance-and-atrium-010/paired-skin-fat-refit-001/paired-geometry-and-mass.npz": "562256073b6c6b97292208201ecb0c868516b0fda7b5bd80479f3e45e450dec0",
+      "../resting-clearance-and-atrium-010/paired-registration-with-face-ancestry/registration.npz": "dfbff6e8891f5d04059c6a44858213c079b16ec93a552049171a41feeaba5d39"
+    },
+    "same_ordered_tetrahedra_and_materials": 28632,
+    "current_nodal_reproduction_max_error_kg": 0.0,
+    "donor_frame_reconstruction_max_error_m": 2.7413136580638956e-07,
+    "maximum_reference_carrier_frame_change_m": 0.003220165553469107
+  },
+  "source_parent_count": 28632,
+  "carrier_count": 71639,
+  "source_mass_kg": 13.94458033634514,
+  "source_carrier_weight_moment_max_m": 1.3211653993039363e-13,
+  "additional_exact_carrier_edges": 32476,
+  "pruned_child_positions": 42706,
+  "groups": 45928,
+  "children_without_admitted_carrier": 0,
+  "uncovered_receiver_rows": {
+    "609642": [
+      609726
+    ],
+    "611526": [
+      611610
+    ],
+    "611529": [
+      611613
+    ],
+    "644619": [
+      644709
+    ],
+    "644621": [
+      644711
+    ],
+    "652193": [
+      652286
+    ],
+    "693595": [
+      693691
+    ],
+    "1407535": [
+      1407787
+    ]
+  },
+  "still_uncovered_receiver_rows": [],
+  "carrier_without_admitted_child": 0,
+  "missing_carrier_capacity_kg": 0.0,
+  "positive_candidate_edges": 542477,
+  "optimizer_status": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+  "status": "capacity_infeasible",
+  "minimum_density_bound_deficit_kg": 5.715529283745494e-06,
+  "affected_groups": 6,
+  "affected_cells": 32,
+  "maximum_receiver_violation_kg": 2.4630438337025245e-06,
+  "group_deficits": [
+    {
+      "group": 38699,
+      "over_capacity_kg": 1.486089017807899e-07,
+      "under_capacity_kg": 0.0,
+      "cells": [
+        1064346
+      ]
+    },
+    {
+      "group": 40258,
+      "over_capacity_kg": 4.157737712898282e-07,
+      "under_capacity_kg": 0.0,
+      "cells": [
+        1144729
+      ]
+    },
+    {
+      "group": 41620,
+      "over_capacity_kg": 1.6377009505608799e-06,
+      "under_capacity_kg": 0.0,
+      "cells": [
+        1247147
+      ]
+    },
+    {
+      "group": 44007,
+      "over_capacity_kg": 3.7671099188600365e-07,
+      "under_capacity_kg": 0.0,
+      "cells": [
+        1354287
+      ]
+    },
+    {
+      "group": 45753,
+      "over_capacity_kg": 2.4630438337025245e-06,
+      "under_capacity_kg": 0.0,
+      "cells": [
+        711623,
+        725853,
+        755702,
+        755842,
+        756131,
+        756168,
+        756275,
+        756287,
+        756307,
+        756527,
+        756538,
+        756543,
+        756551,
+        756555,
+        756556,
+        756557,
+        756565,
+        756567,
+        756571,
+        784231,
+        859550,
+        866806,
+        894853,
+        918893,
+        1088289,
+        1138823,
+        1143235
+      ]
+    },
+    {
+      "group": 45900,
+      "over_capacity_kg": 6.736908345254667e-07,
+      "under_capacity_kg": 0.0,
+      "cells": [
+        1190958
+      ]
+    }
+  ]
+}

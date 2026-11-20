@@ -1,0 +1,76 @@
+{
+  "scope": "offline_exact_carrier_capacity_trial",
+  "complete_motion_certificate": false,
+  "native_mass_admission": false,
+  "transport_distance_limit_m": 0.187444,
+  "reference": {
+    "budget": "current_paired_reference",
+    "inputs_sha256": {
+      "../resting-clearance-and-atrium-010/paired-skin-fat-refit-001/paired-geometry-and-mass.npz": "562256073b6c6b97292208201ecb0c868516b0fda7b5bd80479f3e45e450dec0",
+      "../resting-clearance-and-atrium-010/paired-registration-with-face-ancestry/registration.npz": "dfbff6e8891f5d04059c6a44858213c079b16ec93a552049171a41feeaba5d39"
+    },
+    "same_ordered_tetrahedra_and_materials": 28632,
+    "current_nodal_reproduction_max_error_kg": 0.0,
+    "donor_frame_reconstruction_max_error_m": 2.7413136580638956e-07,
+    "maximum_reference_carrier_frame_change_m": 0.003220165553469107
+  },
+  "source_parent_count": 28632,
+  "carrier_count": 71639,
+  "source_mass_kg": 13.94458033634514,
+  "source_carrier_weight_moment_max_m": 1.3211653993039363e-13,
+  "additional_exact_carrier_edges": 42306,
+  "pruned_child_positions": 42706,
+  "groups": 46016,
+  "children_without_admitted_carrier": 0,
+  "uncovered_receiver_rows": {
+    "609642": [
+      609726
+    ],
+    "611526": [
+      611610
+    ],
+    "611529": [
+      611613
+    ],
+    "644619": [
+      644709
+    ],
+    "644621": [
+      644711
+    ],
+    "652193": [
+      652286
+    ],
+    "693595": [
+      693691
+    ],
+    "1407535": [
+      1407787
+    ]
+  },
+  "still_uncovered_receiver_rows": [],
+  "carrier_without_admitted_child": 0,
+  "missing_carrier_capacity_kg": 0.0,
+  "positive_candidate_edges": 542735,
+  "material_center_conservation_requested": false,
+  "minimum_sum_material_moment_error_kg_m": 0.07025062736210898,
+  "optimizer_status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "status": "capacity_feasible",
+  "maximum_carrier_closure_kg": 9.181911883948385e-16,
+  "maximum_carrier_closure_relative": 1.0,
+  "child_density_min_kg_m3": {
+    "15": 899.999999999999,
+    "16": 849.9999999999995
+  },
+  "child_density_max_kg_m3": {
+    "15": 1100.0000000000005,
+    "16": 950.0000000000009
+  },
+  "child_mass_kg": 13.94458033634513,
+  "nodal_mass_kg": 13.94458033634513,
+  "child_center_of_mass_m": [
+    -0.026492616488829192,
+    -0.8572458370351138,
+    0.12516762239324478
+  ]
+}

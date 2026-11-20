@@ -1,0 +1,23 @@
+# Conservative skin and fat mass transfer
+
+The repaired fine geometry contains 311,020 nodes and 1,448,804 tetrahedra. At the emitted Float32 positions, both materials pass the existing (10^{-5}) normalized determinant floor. The full 596,721-face static layer audit reports zero crossings. Four shared inner vertices moved by at most 22.112 μm to close a local carrier-capacity gap. The exterior geometry stays identical to the preceding determinant repair.
+
+The mass allocator preserves each canonical source carrier quota and applies the original 0.187444 m transport bound and individual material density intervals. It groups cells with identical permitted carriers, solves the exact capacity problem for those groups, and apportions each accepted group flow by cell volume. All nodal masses are positive. The retained historical source allocation totals 13.93967896346047 kg. The reference rebase matches all 28,632 ordered source tetrahedra and typed materials, reproduces the current paired nodal mass weights, and maps 13.94458033634513 kg to the fine geometry. The independently checked maximum carrier quota error is about (9.18\times10^{-16}) kg for each reference. The transport witnesses for the rebase came from both verified source catalogs.
+
+The current paired source provenance and data are in [rebuilt paired registration](../rebuilt-paired-registration). The historical and current calculations share the fine geometry in [fine determinant repair](../fine-determinant-repair), with the subsequent four-position delta retained under [registered first touch](../registered-first-touch). Exact per-input hashes and intermediate infeasibility receipts are included. The selected current NPZ retains the sparse quota-to-receiver allocation and the resulting element and nodal masses. The historical allocation is identified by its retained verification hash. The unchanged source catalog assets used for reconstruction remain in the archived source compiler checkpoint.
+
+These are offline geometry and mass results. Production installation still needs the registered-volume compiler admission with the current fractional ancestry and recorded-flow receipts.
+
+## Coupled native equilibrium checks
+
+The [registered first-touch trial](../registered-first-touch) admitted all 34 source ligaments, including the repaired left superior glenohumeral witness. It measured up to 27.70 N of physical bed reaction with zero root assistance and accepted four 2 ms steps under varying pleural pressure. The five-step attempt ended after 144.54 s of process wall time. Its freshly assembled mechanical equilibrium residual was 0.00147049 at the next step, above the existing 0.0001 threshold.
+
+At identical timestep and physical configuration, the existing vascular block preconditioner ran 161.57 s for the same accepted 8 ms and rejected with residual 0.00247707. The 48-column budget ran 152.57 s for the same 8 ms and rejected with residual 0.000610956. These options remain off for the registered first-touch control. Rejected steps preserved the accepted controller clock.
+
+The native regional trials use explicit condensed physical bed layers and 26 registered fascia regions. They have neither installed nor motion-certified the repaired fine-volume mass model. The 16-second, 0.1×, zero-crossing qualification remains open.
+
+The eight-step gravity continuation accepted its first four steps in 130.03 s of process wall time including the failed fifth attempt. Bed reaction reached 12.10 N at half gravity, with zero root assistance and variable pleural pressure from −490.642 to −492.148 Pa. The fifth step rejected at microstep 61 with equilibrium residual 0.000586110. The accepted Brain timestamp stayed at 8 ms. The lighter start reduced the residual but failed before reaching full gravity, so the original full-gravity-by-step-three trial remains the first-touch control.
+
+The thin-cell Schwarz trial failed the existing cached selector-6 admission check before the first step. It was left disabled. No selector or admission rule was changed.
+
+Exact conservation of the separate skin and fat first moments is infeasible on the certified route graph. The selected allocation minimizes their summed absolute first-moment error while retaining the hard per-carrier quotas, nonnegative flows and original density and transport bounds. It reduces the combined skin/fat center offset from 9.115 mm to 4.331 mm. The remaining separate offsets are 12.480 mm for skin and 1.861 mm for fat. An independent audit evaluated every positive group route against every cell it supplies, with maximum distance 0.187443984 m. The selected allocation still passes the same static cell and crossing checks.
