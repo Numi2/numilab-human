@@ -1,0 +1,177 @@
+{
+  "exit": 0,
+  "wall_seconds": 186.91626866580918,
+  "accepted_rows": 3,
+  "fields_per_row": 77,
+  "root_profiled": 1,
+  "exact_physical_trace_match": true,
+  "mismatches": [],
+  "pleural_pressure_pa_range": [
+    -490.332489014,
+    -490.332489014
+  ],
+  "stage_totals": {
+    "matter_pre": {
+      "spans": 1,
+      "sum_ms": 7.812958,
+      "max_span_ms": 7.812958,
+      "duration_ns": [
+        7812958
+      ]
+    },
+    "brain_advance": {
+      "spans": 1,
+      "sum_ms": 0.015875,
+      "max_span_ms": 0.015875,
+      "duration_ns": [
+        15875
+      ]
+    },
+    "respiratory_mechanics": {
+      "spans": 1,
+      "sum_ms": 5.614708,
+      "max_span_ms": 5.614708,
+      "duration_ns": [
+        5614708
+      ]
+    },
+    "matter_after_frame_begin": {
+      "spans": 1,
+      "sum_ms": 40.283125,
+      "max_span_ms": 40.283125,
+      "duration_ns": [
+        40283125
+      ]
+    },
+    "matter_newton_assembly": {
+      "spans": 16,
+      "sum_ms": 1515.031502,
+      "max_span_ms": 254.758416,
+      "duration_ns": [
+        254758416,
+        254637083,
+        253802292,
+        253427500,
+        253687834,
+        22338125,
+        22259084,
+        22246708,
+        22270375,
+        22237958,
+        22291042,
+        22198834,
+        22234750,
+        22155834,
+        22273875,
+        22211792
+      ]
+    },
+    "matter_newton_linear": {
+      "spans": 16,
+      "sum_ms": 9164.970416,
+      "max_span_ms": 2051.219458,
+      "duration_ns": [
+        2051029500,
+        2050384084,
+        2051219458,
+        1438864458,
+        149552750,
+        112842625,
+        112880333,
+        112941709,
+        112954416,
+        112955250,
+        112919625,
+        112841416,
+        112920084,
+        112887708,
+        112943500,
+        294833500
+      ]
+    },
+    "matter_newton_globalization": {
+      "spans": 16,
+      "sum_ms": 575.627457,
+      "max_span_ms": 47.852792,
+      "duration_ns": [
+        47852792,
+        47745458,
+        47757667,
+        47765208,
+        32675958,
+        31984333,
+        32038125,
+        31898375,
+        31939542,
+        31995875,
+        31927958,
+        32091500,
+        31920291,
+        31913542,
+        32048541,
+        32072292
+      ]
+    },
+    "matter_final_certificate": {
+      "spans": 1,
+      "sum_ms": 294.092042,
+      "max_span_ms": 294.092042,
+      "duration_ns": [
+        294092042
+      ]
+    },
+    "respiratory_gas_exchange": {
+      "spans": 1,
+      "sum_ms": 1.820042,
+      "max_span_ms": 1.820042,
+      "duration_ns": [
+        1820042
+      ]
+    },
+    "matter_after_candidate_ready": {
+      "spans": 1,
+      "sum_ms": 13.156333,
+      "max_span_ms": 13.156333,
+      "duration_ns": [
+        13156333
+      ]
+    },
+    "matter_after_microstep": {
+      "spans": 1,
+      "sum_ms": 2.315958,
+      "max_span_ms": 2.315958,
+      "duration_ns": [
+        2315958
+      ]
+    },
+    "matter_post": {
+      "spans": 1,
+      "sum_ms": 15.239542,
+      "max_span_ms": 15.239542,
+      "duration_ns": [
+        15239542
+      ]
+    },
+    "brain_resolve": {
+      "spans": 1,
+      "sum_ms": 0.001333,
+      "max_span_ms": 0.001333,
+      "duration_ns": [
+        1333
+      ]
+    },
+    "respiratory_resolve": {
+      "spans": 1,
+      "sum_ms": 0.704667,
+      "max_span_ms": 0.704667,
+      "duration_ns": [
+        704667
+      ]
+    }
+  },
+  "integrated_window": [
+    "resting_integrated_throughput accepted_start_step=1 accepted_end_step=3 simulated_s=3.12500014843e-05 wall_s=22.084255458 real_time_factor=1.41503531979e-06 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=load_compile_initial_parity_first_accepted_observer_movie_finalization"
+  ],
+  "count_unavailable_markers": 0,
+  "scope": "Instrumented headless profile of one native root. Stage splits perturb encoding. Setup and presentation are outside stage spans."
+}

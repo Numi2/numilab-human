@@ -1,0 +1,42 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -21996,0 +21997,4 @@
++        const bool boundRowTransformWork = [] {
++            const char* value = std::getenv("NM_FGMRES_ROW_TRANSFORM_WORK_DOMAIN");
++            return value != nullptr && std::strcmp(value, "1") == 0;
++        }();
+@@ -21998 +22002,2 @@
+-            id<MTLBuffer> source, id<MTLBuffer> destination) {
++            id<MTLBuffer> source, id<MTLBuffer> destination,
++            bool arnoldiImage = false) {
+@@ -22000,3 +22005,6 @@
+-            dispatchThreads(
+-                "nm_fgmres_apply_left_row_equilibration",
+-                state.fgmresLayout.unknownCount, [&] {
++            const bool nodeOnly =
++                boundRowTransformWork && arnoldiImage && source == destination;
++            const NSUInteger rowCount = nodeOnly
++                ? environments * state.dispatch.femNodeCount
++                : state.fgmresLayout.unknownCount;
++            dispatchThreads("nm_fgmres_apply_left_row_equilibration", rowCount, [&] {
+@@ -22010 +22018 @@
+-            });
++            }, nodeOnly ? WorkDomain::femNodes : WorkDomain::generic);
+@@ -41969,0 +41978,6 @@
++                    const std::uint32_t useNodeDomain =
++                        boundRowTransformWork && fgmresColumnDispatch &&
++                        state.dispatch.femNodeCount >= 256u ? 1u : 0u;
++                    const NSUInteger rowCount = useNodeDomain
++                        ? state.dispatch.femNodeCount
++                        : state.fgmresLayout.unknownCount;
+@@ -41971 +41985 @@
+-                        state.fgmresLayout.unknownCount, [&] {
++                        rowCount, [&] {
+@@ -41981 +41995,3 @@
+-                    });
++                        [encoder setBytes:&useNodeDomain
++                                     length:sizeof(useNodeDomain) atIndex:4u];
++                    }, useNodeDomain ? WorkDomain::femNodes : WorkDomain::generic);
+@@ -45876 +45892 @@
+-                                           state.femOperatorValue);
++                                           state.femOperatorValue, true);

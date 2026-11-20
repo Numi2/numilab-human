@@ -1,0 +1,177 @@
+{
+  "exit": 0,
+  "wall_seconds": 186.40748883294873,
+  "accepted_rows": 3,
+  "fields_per_row": 77,
+  "root_profiled": 1,
+  "exact_physical_trace_match": true,
+  "mismatches": [],
+  "pleural_pressure_pa_range": [
+    -490.332489014,
+    -490.332489014
+  ],
+  "stage_totals": {
+    "matter_pre": {
+      "spans": 1,
+      "sum_ms": 7.83425,
+      "max_span_ms": 7.83425,
+      "duration_ns": [
+        7834250
+      ]
+    },
+    "brain_advance": {
+      "spans": 1,
+      "sum_ms": 0.015583,
+      "max_span_ms": 0.015583,
+      "duration_ns": [
+        15583
+      ]
+    },
+    "respiratory_mechanics": {
+      "spans": 1,
+      "sum_ms": 5.55975,
+      "max_span_ms": 5.55975,
+      "duration_ns": [
+        5559750
+      ]
+    },
+    "matter_after_frame_begin": {
+      "spans": 1,
+      "sum_ms": 40.281042,
+      "max_span_ms": 40.281042,
+      "duration_ns": [
+        40281042
+      ]
+    },
+    "matter_newton_assembly": {
+      "spans": 16,
+      "sum_ms": 1519.560208,
+      "max_span_ms": 258.863,
+      "duration_ns": [
+        258863000,
+        253992583,
+        254143416,
+        254504917,
+        253414625,
+        22272959,
+        22224500,
+        22140833,
+        22214292,
+        22299500,
+        22240958,
+        22168667,
+        22372542,
+        22320500,
+        22233583,
+        22153333
+      ]
+    },
+    "matter_newton_linear": {
+      "spans": 16,
+      "sum_ms": 9433.294583,
+      "max_span_ms": 2082.2045,
+      "duration_ns": [
+        2055838583,
+        2082204500,
+        2056991709,
+        1450631125,
+        167467917,
+        130685875,
+        130747041,
+        130722000,
+        130797333,
+        130812625,
+        130701542,
+        130635000,
+        130776625,
+        130830167,
+        130759583,
+        312692958
+      ]
+    },
+    "matter_newton_globalization": {
+      "spans": 16,
+      "sum_ms": 576.134292,
+      "max_span_ms": 48.013334,
+      "duration_ns": [
+        48013334,
+        47690667,
+        47920791,
+        47598708,
+        32961458,
+        32250375,
+        31979542,
+        32005000,
+        32015292,
+        31983625,
+        32073333,
+        32014125,
+        31834916,
+        32097292,
+        31955084,
+        31740750
+      ]
+    },
+    "matter_final_certificate": {
+      "spans": 1,
+      "sum_ms": 278.714959,
+      "max_span_ms": 278.714959,
+      "duration_ns": [
+        278714959
+      ]
+    },
+    "respiratory_gas_exchange": {
+      "spans": 1,
+      "sum_ms": 1.819916,
+      "max_span_ms": 1.819916,
+      "duration_ns": [
+        1819916
+      ]
+    },
+    "matter_after_candidate_ready": {
+      "spans": 1,
+      "sum_ms": 13.152542,
+      "max_span_ms": 13.152542,
+      "duration_ns": [
+        13152542
+      ]
+    },
+    "matter_after_microstep": {
+      "spans": 1,
+      "sum_ms": 2.308667,
+      "max_span_ms": 2.308667,
+      "duration_ns": [
+        2308667
+      ]
+    },
+    "matter_post": {
+      "spans": 1,
+      "sum_ms": 15.24375,
+      "max_span_ms": 15.24375,
+      "duration_ns": [
+        15243750
+      ]
+    },
+    "brain_resolve": {
+      "spans": 1,
+      "sum_ms": 0.001292,
+      "max_span_ms": 0.001292,
+      "duration_ns": [
+        1292
+      ]
+    },
+    "respiratory_resolve": {
+      "spans": 1,
+      "sum_ms": 0.701833,
+      "max_span_ms": 0.701833,
+      "duration_ns": [
+        701833
+      ]
+    }
+  },
+  "integrated_window": [
+    "resting_integrated_throughput accepted_start_step=1 accepted_end_step=3 simulated_s=3.12500014843e-05 wall_s=22.62195075 real_time_factor=1.38140171153e-06 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=load_compile_initial_parity_first_accepted_observer_movie_finalization"
+  ],
+  "count_unavailable_markers": 0,
+  "scope": "Instrumented headless profile of one native root. Stage splits perturb encoding. Setup and presentation are outside stage spans."
+}

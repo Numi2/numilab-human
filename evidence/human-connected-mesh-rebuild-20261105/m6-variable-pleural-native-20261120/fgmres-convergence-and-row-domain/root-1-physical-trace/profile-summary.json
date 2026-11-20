@@ -1,0 +1,177 @@
+{
+  "exit": 0,
+  "wall_seconds": 187.37505720788613,
+  "accepted_rows": 3,
+  "fields_per_row": 77,
+  "root_profiled": 1,
+  "exact_physical_trace_match": true,
+  "mismatches": [],
+  "pleural_pressure_pa_range": [
+    -490.332489014,
+    -490.332489014
+  ],
+  "stage_totals": {
+    "matter_pre": {
+      "spans": 1,
+      "sum_ms": 7.8095,
+      "max_span_ms": 7.8095,
+      "duration_ns": [
+        7809500
+      ]
+    },
+    "brain_advance": {
+      "spans": 1,
+      "sum_ms": 0.015375,
+      "max_span_ms": 0.015375,
+      "duration_ns": [
+        15375
+      ]
+    },
+    "respiratory_mechanics": {
+      "spans": 1,
+      "sum_ms": 4.605,
+      "max_span_ms": 4.605,
+      "duration_ns": [
+        4605000
+      ]
+    },
+    "matter_after_frame_begin": {
+      "spans": 1,
+      "sum_ms": 40.304709,
+      "max_span_ms": 40.304709,
+      "duration_ns": [
+        40304709
+      ]
+    },
+    "matter_newton_assembly": {
+      "spans": 16,
+      "sum_ms": 1495.200374,
+      "max_span_ms": 252.939541,
+      "duration_ns": [
+        252364167,
+        252187375,
+        252211500,
+        252939541,
+        240614875,
+        22224792,
+        22158916,
+        22460709,
+        22220916,
+        22010042,
+        22695083,
+        22226917,
+        22049500,
+        22213541,
+        22233666,
+        22388834
+      ]
+    },
+    "matter_newton_linear": {
+      "spans": 16,
+      "sum_ms": 9414.584167,
+      "max_span_ms": 2057.555666,
+      "duration_ns": [
+        2054061125,
+        2054045625,
+        2057555666,
+        1453932542,
+        167878875,
+        130909917,
+        130944292,
+        131095208,
+        130966292,
+        131483792,
+        134608000,
+        130992542,
+        130907208,
+        130945917,
+        131103875,
+        313153291
+      ]
+    },
+    "matter_newton_globalization": {
+      "spans": 16,
+      "sum_ms": 570.765542,
+      "max_span_ms": 47.892875,
+      "duration_ns": [
+        47892875,
+        47816375,
+        47844584,
+        47623875,
+        32740333,
+        31878625,
+        32063708,
+        31871792,
+        31887708,
+        31807958,
+        32116500,
+        32149875,
+        31987417,
+        36236667,
+        32063000,
+        22784250
+      ]
+    },
+    "matter_final_certificate": {
+      "spans": 1,
+      "sum_ms": 289.611625,
+      "max_span_ms": 289.611625,
+      "duration_ns": [
+        289611625
+      ]
+    },
+    "respiratory_gas_exchange": {
+      "spans": 1,
+      "sum_ms": 1.817208,
+      "max_span_ms": 1.817208,
+      "duration_ns": [
+        1817208
+      ]
+    },
+    "matter_after_candidate_ready": {
+      "spans": 1,
+      "sum_ms": 13.173375,
+      "max_span_ms": 13.173375,
+      "duration_ns": [
+        13173375
+      ]
+    },
+    "matter_after_microstep": {
+      "spans": 1,
+      "sum_ms": 2.308,
+      "max_span_ms": 2.308,
+      "duration_ns": [
+        2308000
+      ]
+    },
+    "matter_post": {
+      "spans": 1,
+      "sum_ms": 15.244416,
+      "max_span_ms": 15.244416,
+      "duration_ns": [
+        15244416
+      ]
+    },
+    "brain_resolve": {
+      "spans": 1,
+      "sum_ms": 0.001292,
+      "max_span_ms": 0.001292,
+      "duration_ns": [
+        1292
+      ]
+    },
+    "respiratory_resolve": {
+      "spans": 1,
+      "sum_ms": 0.702834,
+      "max_span_ms": 0.702834,
+      "duration_ns": [
+        702834
+      ]
+    }
+  },
+  "integrated_window": [
+    "resting_integrated_throughput accepted_start_step=1 accepted_end_step=3 simulated_s=3.12500014843e-05 wall_s=22.620745292 real_time_factor=1.38147532634e-06 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=load_compile_initial_parity_first_accepted_observer_movie_finalization"
+  ],
+  "count_unavailable_markers": 0,
+  "scope": "Instrumented headless profile of one native root. Stage splits perturb encoding. Setup and presentation are outside stage spans."
+}

@@ -1,0 +1,18 @@
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -9406,0 +9407 @@
++    constant uint& useNodeDomain [[buffer(4)]],
+@@ -9409 +9410,2 @@
+-    if (global >= layout.unknownCount) return;
++    const uint totalNodes = dispatch.environmentCount * dispatch.femNodeCount;
++    if (global >= (useNodeDomain != 0u ? totalNodes : layout.unknownCount)) return;
+@@ -9411 +9412,0 @@
+-    const uint totalNodes = dispatch.environmentCount * dispatch.femNodeCount;
+@@ -9413,0 +9415,7 @@
++    if (useNodeDomain != 0u) {
++        // The vector still has its complete original layout. Copy every
++        // identity-scaled row from the same Arnoldi column, including tails.
++        for (ulong row = ulong(global) + totalNodes; row < layout.unknownCount;
++             row += totalNodes)
++            destination[row] = source[row];
++    }
