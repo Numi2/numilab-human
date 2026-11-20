@@ -1,0 +1,105 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -9201,6 +9201,8 @@
+         }
+     };
+     std::uint32_t lastAuthoritativeSubmissionSteps = 0u;
++    std::vector<std::uint32_t> initialNewtonRejectedSteps;
++    std::vector<std::uint32_t> replayNewtonRejectedSteps;
+     const auto runAuthoritativeHorizon = [&context, &model,
+ #ifdef NUMI_HUMAN_RESTING_SCENE
+                                            &config,
+@@ -9221,7 +9223,8 @@
+         metalrobo::MetalArticulatedOperatorInput horizonInput,
+         metalrobo::MetalArticulatedOperatorResult& horizonResult,
+         std::vector<HumanTendonContinuumTransaction::AcceptedStep>*
+-            capturedSteps
++            capturedSteps,
++        [[maybe_unused]] std::vector<std::uint32_t>& newtonRejectedSteps
+     ) {
+         const std::uint32_t requestedSteps = horizonInput.stand.stepCount;
+         const auto emitAcceptedFEMBodyLoadCapture = [&](
+@@ -9997,6 +10000,7 @@
+                         require(runtime.setNewtonIterationBudget(normalBudget),
+                                 "the verified rollback did not release Matter for retry");
+                         rejectedAttemptMilliseconds += segmentDiagnostics.elapsedMilliseconds;
++                        newtonRejectedSteps.push_back(completedSteps);
+                         std::cout << "human_verified_newton_retry step=" << completedSteps + 1u
+                                   << " short_budget=" << shortBudget << " retry_budget=" << normalBudget
+                                   << " residual=" << afterMatter.statuses.front().diagnostics.x
+@@ -11525,7 +11529,8 @@
+     auto diagnostics = runAuthoritativeHorizon(
+         input, metalResult,
+         !captureExactContinuumSteps
+-            ? nullptr : &continuumTransaction->acceptedSteps);
++            ? nullptr : &continuumTransaction->acceptedSteps,
++        initialNewtonRejectedSteps);
+     reportHumanExecutionStage("native_horizon_end", diagnostics.completedStandSteps);
+     if (!diagnostics.succeeded() && continuumTransaction != nullptr) {
+         const auto failed = continuumTransaction->runtime->snapshot();
+@@ -12211,7 +12216,8 @@
+             organEventRollbackTest ? eventRollbackProbe->injectedCount() :
+             (sharedTissueRollbackTest ? sharedTissueRollbackProbe->injectedCount() : 0u);
+         const std::uint32_t expectedInitialAuditPasses =
+-            stepCount + expectedRejectedAuditPasses;
++            stepCount + expectedRejectedAuditPasses +
++            static_cast<std::uint32_t>(initialNewtonRejectedSteps.size());
+         tendonBorrowedConsumerVerified =
+             status.tendonTransferCount ==
+                 tendonProgram.bindings.size() * stepCount &&
+@@ -12321,7 +12327,8 @@
+             organEventRollbackTest ? eventRollbackProbe->injectedCount() :
+             (sharedTissueRollbackTest ? sharedTissueRollbackProbe->injectedCount() : 0u);
+         const std::uint32_t expectedAdapterAttempts =
+-            stepCount + terminalRejectedAuditAttempts;
++            stepCount + terminalRejectedAuditAttempts +
++            static_cast<std::uint32_t>(initialNewtonRejectedSteps.size());
+         const std::uint32_t actualAdapterAttempts =
+             continuumTransaction->acceptedAdapter.encodedPassCount -
+             continuumTransaction->initialAdapter.encodedPassCount;
+@@ -12443,7 +12450,8 @@
+                 std::to_string(a.physicsSubstep) + " adapter_attempts=" +
+                 std::to_string(actualAdapterAttempts) + " expected_adapter_attempts=" +
+                 std::to_string(expectedAdapterAttempts) + " rejected_attempts=" +
+-                std::to_string(terminalRejectedAuditAttempts));
++                std::to_string(terminalRejectedAuditAttempts) +
++                " verified_newton_retries=" + std::to_string(initialNewtonRejectedSteps.size()));
+         std::cout<<"resting_FEM_terminal_audit=passed expected_steps="<<stepCount<<" initial_control="<<z.controlStep<<" final_control="<<a.controlStep<<" initial_substep="<<z.physicsSubstep<<" final_substep="<<a.physicsSubstep<<" accepted_steps="<<stepCount
+             <<" adapter_passes="<<actualAdapterAttempts
+             <<" expected_adapter_passes="<<expectedAdapterAttempts
+@@ -13097,7 +13105,8 @@
+         auto replayDiagnostics = runAuthoritativeHorizon(
+             input, replayResult,
+             !captureExactContinuumSteps
+-                ? nullptr : &continuumTransaction->replayedSteps);
++                ? nullptr : &continuumTransaction->replayedSteps,
++            replayNewtonRejectedSteps);
+         reportHumanExecutionStage("deterministic_replay_end", replayDiagnostics.completedStandSteps);
+         require(replayDiagnostics.succeeded() && replayDiagnostics.published &&
+                     replayDiagnostics.completedStandSteps == stepCount,
+@@ -13234,13 +13243,24 @@
+             (sharedTissueRollbackTest ? sharedTissueRollbackProbe->rejectStep() :
+                                        MR_INVALID_INDEX);
+         const std::uint32_t expectedConsumerPasses =
+-            expectedAcceptedConsumerPasses + expectedRejectedAuditPasses;
++            expectedAcceptedConsumerPasses + expectedRejectedAuditPasses +
++            static_cast<std::uint32_t>(initialNewtonRejectedSteps.size() +
++                                       replayNewtonRejectedSteps.size());
+         std::vector<std::uint32_t> expectedConsumerStepIndices;
+         expectedConsumerStepIndices.reserve(expectedConsumerPasses);
+         const std::uint32_t consumerPhases =
+             phaseCount * (verifyDeterminism ? 2u : 1u);
+         for (std::uint32_t phase = 0u; phase < consumerPhases; ++phase) {
++            const auto* newtonRejectedSteps = phase == 0u ? &initialNewtonRejectedSteps :
++                (phase == phaseCount ? &replayNewtonRejectedSteps : nullptr);
++            std::size_t nextNewtonRejection = 0u;
+             for (std::uint32_t step = 0u; step < stepCount; ++step) {
++                if (newtonRejectedSteps != nullptr &&
++                    nextNewtonRejection < newtonRejectedSteps->size() &&
++                    (*newtonRejectedSteps)[nextNewtonRejection] == step) {
++                    expectedConsumerStepIndices.push_back(step);
++                    ++nextNewtonRejection;
++                }
+                 expectedConsumerStepIndices.push_back(step);
+                 if (expectedRejectedAuditPasses != 0u && phase == 0u &&
+                     step == rejectedAuditStep) {

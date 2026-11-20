@@ -1,0 +1,95 @@
+{
+  "terminal_fem_audit": {
+    "resting_FEM_terminal_audit": "passed",
+    "expected_steps": "18",
+    "initial_control": "0",
+    "final_control": "17",
+    "initial_substep": "0",
+    "final_substep": "0",
+    "accepted_steps": "18",
+    "adapter_passes": "21",
+    "expected_adapter_passes": "21",
+    "min_J": "0.960541082973",
+    "max_J": "1.03337237853",
+    "max_displacement_m": "0.010623312383",
+    "max_anchor_reaction_N": "1.10935904676",
+    "capture": "terminal_only"
+  },
+  "peak_bed_penetration_m": 0.00293804868124,
+  "status": "verified",
+  "execution": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 308.568181083072
+  },
+  "accepted_physical_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "verified_rejected_attempt_steps": [
+    16,
+    17,
+    18
+  ],
+  "completed_gpu_attempts": 21,
+  "full_budget_retries": [
+    [
+      16,
+      16,
+      1,
+      1
+    ],
+    [
+      17,
+      17,
+      1,
+      1
+    ],
+    [
+      18,
+      18,
+      1,
+      1
+    ]
+  ],
+  "simulated_seconds": 0.0360000017099,
+  "end_to_end_real_time_factor": 0.00011666790005223566,
+  "pleural_range_pa": [
+    -515.839111328,
+    -490.642364502
+  ],
+  "peak_bed_impulse_ns": 2.53375339508,
+  "peak_mass_residual_kg": 0.0,
+  "assistance_zero": true,
+  "physical_traces_against_pre_audit_fix": {
+    "resting-coupled": {
+      "identical": true,
+      "sha256": "4d73775a02b00d58868f753af45055fba63625731c8baf50bbfd6f3757207c40"
+    },
+    "resting-com-support-impulses": {
+      "identical": true,
+      "sha256": "dc261c680c7f60e53b8a6290c59ed938f6935dca10884064eadd23dd33f573fc"
+    },
+    "resting-com-momentum-diagnostic": {
+      "identical": true,
+      "sha256": "8146e7b720ebb562379b6956085353441acd7b0e804e4535d8822830357121dc"
+    }
+  },
+  "crossing_verification": "whole-scene trajectory not measured"
+}
