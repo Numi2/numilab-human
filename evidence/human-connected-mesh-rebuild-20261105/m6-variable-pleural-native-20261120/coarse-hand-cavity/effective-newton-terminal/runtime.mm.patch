@@ -1,0 +1,77 @@
+--- a/runtime.mm
++++ b/runtime.mm
+@@ -8667,6 +8667,7 @@
+             "nm_mixed_apply_operator_nodes",
+             "nm_mixed_build_residual_diagonal",
+             "nm_mixed_apply_kkt_solution",
++            "nm_mixed_require_latch_before_terminal_newton",
+             "nm_mixed_certify",
+             "nm_mixed_certify_partials",
+             "nm_mixed_certify_finish",
+@@ -32144,10 +32145,29 @@
+                 state.newtonIterationBudgetOverride.load(
+                     std::memory_order_acquire
+                 );
++            const std::uint32_t cookedNonlinearIterationBudget =
++                state.mixedSolverValue.nonlinearIterations.x;
++            const std::uint32_t scheduledNonlinearIterations =
++                nonlinearBudgetOverride == 0u
++                    ? cookedNonlinearIterationBudget : nonlinearBudgetOverride;
++            const char* terminalSchedule = std::getenv("NUMI_MATTER_KEEP_ORIGINAL_NEWTON_TERMINAL");
++            std::uint32_t referenceNonlinearIterationBudget = cookedNonlinearIterationBudget;
++            if (terminalSchedule != nullptr) {
++                // Reference cap includes an explicit runtime override, when used.
++                char* end = nullptr;
++                const auto reference = std::strtoul(terminalSchedule, &end, 10);
++                if (end != terminalSchedule && *end == '\0' &&
++                    reference >= 2u && reference <= 24u) {
++                    referenceNonlinearIterationBudget = static_cast<std::uint32_t>(reference);
++                }
++            }
++            const bool preserveTerminalSchedule =
++                terminalSchedule != nullptr && state.femDomainNonlinearLatchEnabled &&
++                scheduledNonlinearIterations >= 2u &&
++                scheduledNonlinearIterations < referenceNonlinearIterationBudget;
+             const std::uint32_t nonlinearIterationBudget =
+-                nonlinearBudgetOverride == 0u
+-                    ? state.mixedSolverValue.nonlinearIterations.x
+-                    : nonlinearBudgetOverride;
++                preserveTerminalSchedule
++                    ? referenceNonlinearIterationBudget : scheduledNonlinearIterations;
+             const id<MTLComputePipelineState> tailForcePipeline =
+                 state.pipeline("nm_fem_internal_forces");
+             const id<MTLComputePipelineState> tailResidualPipeline =
+@@ -32498,9 +32518,21 @@
+                 });
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
+-            for (std::uint32_t nonlinearIteration = 0u;
+-                 nonlinearIteration < nonlinearIterationBudget;
+-                 ++nonlinearIteration) {
++            for (std::uint32_t scheduled = 0u;
++                 scheduled < scheduledNonlinearIterations; ++scheduled) {
++            const bool jumpToTerminal = preserveTerminalSchedule &&
++                scheduled + 1u == scheduledNonlinearIterations;
++            const std::uint32_t nonlinearIteration =
++                jumpToTerminal ? nonlinearIterationBudget - 1u : scheduled;
++            if (jumpToTerminal) {
++                dispatchThreads("nm_mixed_require_latch_before_terminal_newton",
++                    environments, [&] {
++                    setDispatch();
++                    [encoder setBuffer:state.fgmresStates offset:0u atIndex:1u];
++                    [encoder setBuffer:state.statuses offset:0u atIndex:2u];
++                });
++                [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++            }
+             beginSolverStage("matter_newton_assembly");
+             if (encoder == nil) {
+                 diagnostics.message = "failed to open Newton assembly timing stage";
+@@ -52089,7 +52121,7 @@
+             constexpr std::uint32_t requireShortTrialNewtonLatch = 1u << 31u;
+             NMMatterDispatchGPU certificateDispatch = frameDispatch;
+             if (state.femDomainNonlinearLatchEnabled &&
+-                nonlinearIterationBudget < state.mixedSolverValue.nonlinearIterations.x) {
++                (preserveTerminalSchedule || scheduledNonlinearIterations < cookedNonlinearIterationBudget)) {
+                 certificateDispatch.flags |= requireShortTrialNewtonLatch;
+             }
+             const auto bindCertificateDispatch = [&]() {
