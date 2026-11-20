@@ -1,0 +1,3 @@
+# Local skin/fat interface repair trial
+
+The cut for skin regions 120 and 121 proves a shortage of 0.290039 g. The next candidate keeps the exposed and deep surfaces and tetrahedron connectivity fixed. Only shared skin/fat interface nodes inside or incident to the constrained patch can move, by at most 0.25 mm. The local solve targets the missing constrained volume, preserves the total skin volume to first order and imposes the original determinant quality gate on every affected cell. The prediction is a positive Float32 candidate that clears the regional volume cut after current-frame re-registration. Recompute both side capacities and all boundary crossings before reconsidering mass admission. No native or motion result follows from the fit alone.
