@@ -79,3 +79,17 @@ python3 map_mass.py "$R" "$T" reproduced-reference.npz reproduced-transport.json
 python3 check_candidate.py "$R" "$X" reproduced-reference.npz "$M" "$T" \
     reproduced-clearance.json
 ```
+
+## Anatomical asset attribution
+
+BodyParts3D, Copyright © 2008 The Database Center for Life Science,
+licensed under CC Attribution-Share Alike 2.1 Japan. The retained
+BodyParts3D 4.0 triangle data were registered, reduced and adapted for
+this mixed-source shell. The adapted geometry and derived anatomical
+witness coordinates in this directory are available under the original
+attribution and share-alike terms. The body pose and mass mapping are
+reference constructions. These files contain neither the full MyoSim
+input asset nor the original anatomical mesh archives.
+
+[Historical data license and attribution](https://dbarchive.biosciencedbc.jp/data/bodyparts3d/20100816/README_e.html)
+[CC BY-SA 2.1 Japan](https://creativecommons.org/licenses/by-sa/2.1/jp/)
