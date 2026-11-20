@@ -1,0 +1,128 @@
+{
+  "reference": {
+    "accepted_steps": 10,
+    "simulated_seconds": 0.0200000009499,
+    "end_to_end_real_time_factor": 7.438753849459523e-05,
+    "gpu_ms_per_step": [
+      22858.3447917,
+      22628.4731249,
+      22664.4011249,
+      22681.6389998,
+      22718.823625,
+      22717.976375,
+      24328.4179582,
+      23763.100375,
+      23222.373625,
+      23279.7134584
+    ],
+    "gpu_total_ms": 230863.2634579,
+    "execution": {
+      "exit": 0,
+      "wall_seconds": 268.86224970803596
+    },
+    "pleural_range_pa": [
+      -501.719207764,
+      -490.642364502
+    ],
+    "peak_bed_impulse_ns": 0.28353625536,
+    "peak_bed_penetration_m": 0.00077588413842,
+    "maximum_root_force_n": 0.0,
+    "maximum_root_torque_nm": 0.0,
+    "peak_mass_residual_kg": 0.0
+  },
+  "candidate": {
+    "accepted_steps": 18,
+    "simulated_seconds": 0.0360000017099,
+    "end_to_end_real_time_factor": 9.7687065300717e-05,
+    "gpu_ms_per_step": [
+      22720.3278751,
+      5515.41174995,
+      5542.36708325,
+      5560.67537493,
+      5611.98249995,
+      5628.51275015,
+      5815.06579183,
+      5829.85850004,
+      5900.41875001,
+      5889.4584165,
+      7295.66712491,
+      5985.18704157,
+      6027.57983329,
+      6072.57962506,
+      7251.89054175,
+      55433.0910416,
+      52399.111375,
+      54581.600375
+    ],
+    "gpu_total_ms": 269060.78574989,
+    "execution": {
+      "exit": 1,
+      "stop": "native_exit",
+      "wall_seconds": 368.52373033296317
+    },
+    "pleural_range_pa": [
+      -515.839111328,
+      -490.642364502
+    ],
+    "peak_bed_impulse_ns": 2.53375339508,
+    "peak_bed_penetration_m": 0.00293804868124,
+    "maximum_root_force_n": 0.0,
+    "maximum_root_torque_nm": 0.0,
+    "peak_mass_residual_kg": 0.0
+  },
+  "shared_profiled_accepted_steps": 10,
+  "shared_trace_comparisons": {
+    "resting-coupled.csv": {
+      "both_row_counts": [
+        11,
+        19
+      ],
+      "shared_lines_identical": false
+    },
+    "resting-com-support-impulses.csv": {
+      "both_row_counts": [
+        321,
+        577
+      ],
+      "shared_lines_identical": false
+    },
+    "resting-com-momentum-diagnostic.csv": {
+      "both_row_counts": [
+        11,
+        19
+      ],
+      "shared_lines_identical": false
+    }
+  },
+  "differing_trace_field_max_abs": {
+    "PaO2_mmhg": 0.0018920899999983476,
+    "PaCO2_mmhg": 0.00012969969999687692,
+    "SaO2": 1.370907000031174e-06,
+    "aorta_mmhg": 0.00011719719999803146,
+    "blood_ml": 0.00046566000037273625,
+    "blood_error_ml": 0.0004656612872999989,
+    "right_atrium_ml": 1.0914000000639135e-05,
+    "left_atrium_ml": 3.6379999954760933e-06,
+    "blood_continuity_residual_accum_ml": 0.00014902923339999916,
+    "blood_physical_delta_accum_ml": 0.00016007106759999973,
+    "blood_residual_minus_physical_ml": 1.702460394884e-05,
+    "blood_endpoint_minus_physical_ml": 0.000416548573412,
+    "gas_max_donor_fraction": 7.07805199997788e-08,
+    "normal_impulse_ns": 8.016825000012329e-06,
+    "pre_projection_contact_residual_m_s": 2.23153495682e-08,
+    "pre_projection_limit_residual_generalized_s": 1.606339461444e-08,
+    "pre_projection_equality_residual_generalized_s": 1.4236813683522e-06,
+    "post_projection_contact_residual_m_s": 2.23153495682e-08,
+    "post_projection_limit_residual_generalized_s": 1.606339461444e-08,
+    "post_projection_equality_residual_generalized_s": 1.378024805379e-09,
+    "equality_velocity_projection_max_generalized_s": 5.7473904746099997e-08,
+    "min_contact_gap_m": 6.001209799997957e-08,
+    "peak_penetration_m": 6.001209799997957e-08,
+    "equality_position_projection_max_generalized": 1.4435499906492e-08,
+    "lv_mmhg": 4.120209999847191e-06,
+    "rv_mmhg": 2.289005999966953e-06,
+    "lv_ml": 3.63799999973935e-05,
+    "rv_ml": 4.365600000255654e-05
+  },
+  "paired_GPU_speed_ratio": 3.119180394146283
+}
