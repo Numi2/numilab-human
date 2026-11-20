@@ -1,0 +1,59 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -25130,6 +25130,48 @@
+                 <<" max_normal_residual="<<skinPlacement.maximumNormalResidual
+                 <<" max_frame_residual="<<skinPlacement.maximumFrameResidual<<"\n";
+         }
++        const char* innerFitSetting=std::getenv("NUMI_HUMAN_LOAD_WITNESS_INNER_FIT");
++        if(innerFitSetting) {
++            struct InteriorMove {std::size_t row; V3 expected; V3 delta;};
++            constexpr std::array<InteriorMove,2> moves{{
++                {1292u, {-0.02161301087049285, -0.8221062963279884, 0.02093328143688733}, {-0.000355861242552713, -1.9502709436181043e-05, 0.000112674056558449}},
++                {1623u, {0.024557504421232206, -0.8549467960088102, 0.002510886753278152}, {0.00012246816120059859, 0.0004999999999999449, -1.741258972783391e-05}}
++            }};
++            require(std::string_view(innerFitSetting)=="1"&&enableWholeBodySkinFat&&
++                        handClearanceSetting!=nullptr&&!registeredVolumeInstallRequested&&
++                        region.worldPoints.size()==2411u,
++                    "load witness trial requires the matched coarse shell");
++            for(const auto& move:moves) {
++                const auto row=move.row;
++                require(norm(sub(skinLayer.innerWorld[row],move.expected))<1.0e-6,
++                        "load witness trial lost its pinned native reference row");
++                const auto& frame=region.worldToDonorLocalLinear[row];
++                V3 local{};
++                for(unsigned axis=0;axis<3;++axis)
++                    for(unsigned lane=0;lane<3;++lane)
++                        local[axis]+=frame[3u*axis+lane]*move.delta[lane];
++                skinLayer.innerWorld[row]=add(skinLayer.innerWorld[row],move.delta);
++                skinLayer.innerLocal[row]=add(skinLayer.innerLocal[row],local);
++                fatLayer.outerWorld[row]=skinLayer.innerWorld[row];
++                fatLayer.outerLocal[row]=skinLayer.innerLocal[row];
++                skinThickness[row]=norm(sub(skinLayer.outerWorld[row],skinLayer.innerWorld[row]));
++                fatThickness[row]=norm(sub(fatLayer.outerWorld[row],fatLayer.innerWorld[row]));
++                require(skinThickness[row]>=reference.minSkinThicknessM&&
++                            skinThickness[row]<=reference.maxSkinThicknessM&&
++                            fatThickness[row]>=reference.minFatThicknessM&&
++                            fatThickness[row]<=reference.maxFatThicknessM,
++                        "load witness trial violates the original layer thickness bounds");
++                skinLayer.thicknessByVertexM[row]=skinThickness[row];
++                fatLayer.thicknessByVertexM[row]=fatThickness[row];
++            }
++            const auto skinRange=std::minmax_element(skinThickness.begin(),skinThickness.end());
++            const auto fatRange=std::minmax_element(fatThickness.begin(),fatThickness.end());
++            skinLayer.minThicknessM=*skinRange.first;
++            skinLayer.maxThicknessM=*skinRange.second;
++            fatLayer.minThicknessM=*fatRange.first;
++            fatLayer.maxThicknessM=*fatRange.second;
++            std::cout<<"load_witness_inner_fit=installed interior_nodes=2 candidate_sha256=cc83c6c959f9c679f0253a3281b80b55c9cc1d4bb807c692faca78152269bbe7\n";
++        }
+         const double skinDebit=enableWholeBodySkinFat?kWholeBodySkinMassDebitKg:skinLayer.volumeM3*1000.0;
+         const double fatDebit=enableWholeBodySkinFat?kWholeBodyFatMassDebitKg:fatLayer.volumeM3*900.0;
+         if(enableWholeBodySkinFat) {
+@@ -25220,6 +25262,7 @@
+             identityText.append(reinterpret_cast<const char*>(fatLayer.innerLocal.data()),fatLayer.innerLocal.size()*sizeof(V3));
+         }
+         if(handClearanceSetting)identityText+="|coarse-hand-clearance-v1|f448605f2d315f52336c84b71e75685985fd80ad989f007165089a4a17e8d6a2";
++        if(innerFitSetting)identityText+="|load-witness-inner-fit-v1|cc83c6c959f9c679f0253a3281b80b55c9cc1d4bb807c692faca78152269bbe7";
+         const auto digest=loadedKneeSHA256(identityText.data(),identityText.size());std::array<std::uint64_t,4u> materialIdentity{};
+         for(unsigned w=0;w<4;w++){for(unsigned b=0;b<8;b++)materialIdentity[w]=(materialIdentity[w]<<8u)|digest[8u*w+b];if(materialIdentity[w]==0u)materialIdentity[w]=w+1u;}
+         std::vector<V3> explicitParentWorldPoints;

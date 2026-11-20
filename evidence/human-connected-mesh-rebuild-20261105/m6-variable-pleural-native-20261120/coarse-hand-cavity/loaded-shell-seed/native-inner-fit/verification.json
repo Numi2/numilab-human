@@ -1,0 +1,113 @@
+{
+  "input_sha256": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/shell-mass.csv.nodes.csv": "b481681d7ad5f4d9705892dc45e1f014bc18ca02d9efc7c7aff5c9860d026f48",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/shell-mass.csv.tets.csv": "5e0e9723b826748d61cd3ff8f4ad6bc3d2adeba28117c47b601f00651e2fdd1c",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/shell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/stdout.log": "4dddd7bb38dc46e10110a5647c3313def5a1515e6baa08272c8385c78040d27c",
+    "candidate-fresh/shell-mass.csv.nodes.csv": "f119f2702ce3902d4a36e3f0f62bf5d1ce3ae5d9ee013dc3798a8ae3df5a1a01",
+    "candidate-fresh/shell-mass.csv.tets.csv": "f534bdbfc660e249de8d492dd602caa8a05fb09fbb881b85006a6e7f5844502d",
+    "candidate-fresh/shell-mass.csv.labels.csv": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+    "candidate-fresh/stdout.log": "b68c2354fbb52101276fd92f6623730481a37a510c207814a2fcba7c0d2f8d2f"
+  },
+  "native_row_changes": [
+    3703,
+    4034
+  ],
+  "same_compiled_tet_topology_and_typed_donor_ancestry": true,
+  "reference_and_emitted_cells": {
+    "rest": {
+      "positive_cells": 28632,
+      "minimum_shape_before_after": [
+        2.6110654209135248e-05,
+        2.6110654209135248e-05
+      ],
+      "affected_skin_fat_thickness_m": [
+        [
+          0.0013059860371042713,
+          0.009999799999999993
+        ],
+        [
+          0.002483940366615504,
+          0.009934633719549741
+        ]
+      ]
+    },
+    "current": {
+      "positive_cells": 28632,
+      "minimum_shape_before_after": [
+        2.6467865329474477e-05,
+        2.6467865329474477e-05
+      ],
+      "affected_skin_fat_thickness_m": [
+        [
+          0.001305978858356855,
+          0.009999794050675305
+        ],
+        [
+          0.0024839453007111743,
+          0.009934634424383956
+        ]
+      ]
+    }
+  },
+  "native_skin_fat_mass_before_after_kg": [
+    13.939679828294647,
+    13.939679828346488
+  ],
+  "maximum_per_typed_bank_mass_delta_kg": 1.8740565799505934e-10,
+  "node_mass_delta_maximum_kg": 6.17068144492805e-06,
+  "mass_bank_count": 628,
+  "changed_boundary_faces_by_role": {
+    "outer": 0,
+    "interface": 12,
+    "deep": 0,
+    "side": 0
+  },
+  "new_exact_shell_face_pairs": {},
+  "bone_asset_sha256": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+  "local_bone_crossing_pairs_before_after": [
+    0,
+    0
+  ],
+  "new_local_bone_pairs": [],
+  "native_terminal": {
+    "ligaments": {
+      "resting_fascia_fem_terminal_audit": "passed",
+      "anatomical_regions": "26",
+      "objects": "12",
+      "nodes": "1202",
+      "tetrahedra": "2127",
+      "registered_ligament_force_rows": "34",
+      "legacy_fascia_reduced_ligament_rows": "0",
+      "passive_ligament_latest_transaction_accepted": "1",
+      "passive_ligament_max_tension_N": "0.0138707663864",
+      "passive_ligament_min_effective_stretch": "0.999996125698",
+      "passive_ligament_max_effective_stretch": "1.00000762939",
+      "passive_ligament_force_residual_N": "0",
+      "passive_ligament_moment_residual_Nm": "1.03226913065e-10",
+      "body_contact_samples": "413997",
+      "body_contact_audited_steps": "4",
+      "body_contact_closed_samples": "62",
+      "body_contact_normal_force_N": "0.00325688463636",
+      "body_contact_force_residual_N": "0",
+      "body_contact_moment_residual_Nm": "1.49366493306e-11",
+      "total_passive_ligament_force_rows": "34",
+      "legacy_passive_force_rows": "0",
+      "accepted_steps": "4",
+      "capture": "terminal_only"
+    },
+    "bed_impulse": {
+      "accepted_rows": "2411",
+      "loaded_rows": "3",
+      "normal_impulse_sum_Ns": "1.70062241978e-06",
+      "diagnostic_sample_rows": "0",
+      "scope": "accepted_terminal_microstep_not_integrated_load",
+      "articulated_support_rows": "0"
+    },
+    "last_coupled_time_s": 6.25000029686e-05,
+    "pleural_pressure_range_pa": [
+      -490.332489014,
+      -490.332489014
+    ]
+  }
+}

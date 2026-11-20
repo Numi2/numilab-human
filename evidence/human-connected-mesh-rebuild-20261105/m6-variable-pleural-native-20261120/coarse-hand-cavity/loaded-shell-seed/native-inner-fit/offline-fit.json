@@ -1,0 +1,94 @@
+{
+  "candidate_sha256": "cc83c6c959f9c679f0253a3281b80b55c9cc1d4bb807c692faca78152269bbe7",
+  "input_sha256": {
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/execution.json": "911457238772d34c8ae8b6caabf3c51b704b43d2c701ae8e49052391c9e4dc0a",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/shell-mass.csv.nodes.csv": "b481681d7ad5f4d9705892dc45e1f014bc18ca02d9efc7c7aff5c9860d026f48",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/compiled-reference/shell-mass.csv.tets.csv": "5e0e9723b826748d61cd3ff8f4ad6bc3d2adeba28117c47b601f00651e2fdd1c",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/exact-shell-bone-audit-032/build-commands.json": "4cb18dce591e5e3667305e2f80dc234c444eb7033051c69794a0f4d1b624b029",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/terminal-support-footprint.json": "7eee8a443b5a61451b7513561fca8bdb1a14d7c61a87899355fe27487c70a4c6",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/source-physical-bed-seed-031/prediction.json": "e8d50ca6dc64e5f26080791f67f72052ebb526ca906ae7bcb238b8ac72817fc4",
+    "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/floor-scene-build/NumiHumanWholeBodySkinReduction.hpp": "d55b1995fff2ee1841d000bd5453f97402a3af25c7bfbf184df81d2718caa772",
+    "mattress-confirm-17/seed.npz": "5174028411765f9d71368a10b9ed0cc14c8ca9360c7a6478b4a145dad6ed5f64",
+    "rigid-confirm-16/seed.npz": "fb31d8a79745faf5776c78c4181bef9c1d6c5ee9fd1b5f36b6b1c63f0127fc98"
+  },
+  "fits": [
+    {
+      "witness": 20754,
+      "node": 3703,
+      "move_mm": [
+        -0.3558612425527141,
+        -0.01950270943621501,
+        0.11267405655845059
+      ],
+      "J_old_loaded_state": 2.499912866303329,
+      "J_reauthored_at_same_displacement": 1.3929881253981502,
+      "reference_volume_ratio": 3.8166457942853302,
+      "maximum_relative_density_change": 4.0544734347669475e-07,
+      "incident_tetrahedra": 12
+    },
+    {
+      "witness": 22244,
+      "node": 4034,
+      "move_mm": [
+        0.12246816120059978,
+        0.5,
+        -0.017412589727834066
+      ],
+      "J_old_loaded_state": 0.350001000000004,
+      "J_reauthored_at_same_displacement": 0.3540921022742082,
+      "reference_volume_ratio": 1.0506689821127384,
+      "maximum_relative_density_change": 1.6068912978006722e-08,
+      "incident_tetrahedra": 36
+    }
+  ],
+  "unchanged_exterior_and_deep_nodes": true,
+  "unchanged_tetrahedron_topology": true,
+  "original_mass_kg": 13.939679828294647,
+  "new_mass_kg": 13.939679828294647,
+  "maximum_lumped_mass_change_kg": 6.170751570032676e-06,
+  "offline_runs": {
+    "rigid": {
+      "last": {
+        "load_fraction": 0.06,
+        "iteration": 6,
+        "energy_j": -0.21059550524881349,
+        "max_residual": 8.729111546219599,
+        "normal_n": 48.442752656765656,
+        "active_outer": 59,
+        "minimum_j": 0.35000100000000356,
+        "maximum_j": 1.1365317929475982,
+        "outcome": "geometry_limited"
+      },
+      "critical_minimum_cell": 22240,
+      "critical_maximum_cell": 14489,
+      "minimum_nominal_gap_m": 9.534420678697884e-06,
+      "converged_loads": [
+        0.05
+      ]
+    },
+    "mattress": {
+      "last": {
+        "load_fraction": 0.075,
+        "iteration": 5,
+        "energy_j": -1.2725365390902708,
+        "max_residual": 0.033392380160780555,
+        "normal_n": 71.46483025373158,
+        "active_outer": 263,
+        "minimum_j": 0.5980533378931778,
+        "maximum_j": 2.498990559230889,
+        "active_shape_search_rows": 1,
+        "outcome": "invalid_direction"
+      },
+      "critical_minimum_cell": 19901,
+      "critical_maximum_cell": 22659,
+      "minimum_nominal_gap_m": -0.025193325807451723,
+      "converged_loads": [
+        0.025,
+        0.05,
+        0.06
+      ]
+    }
+  }
+}

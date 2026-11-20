@@ -1,0 +1,53 @@
+--- a/fit_preload_cells.py
++++ b/fit_preload_cells.py
+@@ -4,0 +5 @@
++import re
+@@ -27 +28,27 @@
+-def fit_node(rest, world, loaded, tets, rows, labels, node, witness, limits, expand):
++def largest_admitted_move(rest, world, node, n, delta, thickness):
++    """Keep the candidate inside its existing skin/fat thickness interval."""
++    neighbors = np.array((node - n, node + n))
++    frames = (rest, world)
++    minimum, maximum = thickness.T
++
++    def admissible(scale):
++        for points in frames:
++            lengths = np.linalg.norm(points[node] + scale * delta - points[neighbors], axis=1)
++            if np.any(lengths <= minimum + 2.e-7) or np.any(lengths >= maximum - 2.e-7):
++                return False
++        return True
++
++    if admissible(1.):
++        return delta
++    assert admissible(0.)
++    lower, upper = 0., 1.
++    for _ in range(40):
++        trial = (lower + upper) * .5
++        if admissible(trial):
++            lower = trial
++        else:
++            upper = trial
++    return lower * delta
++
++
++def fit_node(rest, world, loaded, tets, rows, labels, node, witness, limits, expand, n, thickness):
+@@ -61 +88 @@
+-    delta = candidate.x * .001
++    delta = largest_admitted_move(rest, world, node, n, candidate.x * .001, thickness)
+@@ -68,3 +95,3 @@
+-    np.testing.assert_allclose(new_base, base + gradient @ candidate.x, rtol=1.e-10, atol=1.e-20)
+-    np.testing.assert_allclose(new_pose, pose + pose_gradient @ candidate.x, rtol=1.e-10, atol=1.e-20)
+-    np.testing.assert_allclose(new_target, target + target_gradient @ candidate.x, rtol=1.e-10, atol=1.e-20)
++    np.testing.assert_allclose(new_base, base + gradient @ (delta * 1.e3), rtol=1.e-10, atol=1.e-20)
++    np.testing.assert_allclose(new_pose, pose + pose_gradient @ (delta * 1.e3), rtol=1.e-10, atol=1.e-20)
++    np.testing.assert_allclose(new_target, target + target_gradient @ (delta * 1.e3), rtol=1.e-10, atol=1.e-20)
+@@ -92,0 +120,6 @@
++    header = (ROOT.parent / "resting-clearance-and-atrium-017/floor-scene-build"
++              / "NumiHumanWholeBodySkinReduction.hpp")
++    source = header.read_text()
++    thickness = np.array([[float(re.search(rf"kWholeBody{tissue}{edge}ThicknessM=([^;]+);", source)[1])
++                           for edge in ("Min", "Max")] for tissue in ("Skin", "Fat")])
++    pins[str(header)] = digest(header)
+@@ -107 +140 @@
+-                                                       labels, node, witness, (.3500001, 2.4999999), expand)
++                                                       labels, node, witness, (.3500001, 2.4999999), expand, baseline.outer, thickness)
