@@ -71,13 +71,31 @@ for name in sys.argv[1:]:
         arenas = item["arenas"]
         alpha, = struct.unpack("<f", bytes.fromhex(arenas["alpha"]))
         object_bytes = bytes.fromhex(arenas["fem_line_search"])
-        objects = [value[0] for value in struct.iter_unpack("<4f", object_bytes)]
-        line_search.append({
+        objects = list(struct.iter_unpack("<4f", object_bytes))
+        limiting_index, limiting = min(enumerate(objects), key=lambda entry: entry[1][0])
+        observation = {
             "iteration": item["iteration"], "stage": item["stage"],
-            "common_alpha": alpha, "minimum_object_alpha": min(objects),
-        })
+            "common_alpha": alpha, "minimum_object_alpha": limiting[0],
+        }
+        if item["stage"] == "after_fem_backtracking" and limiting[0] < 1:
+            observation.update(
+                limiting_constitutive_object=limiting_index,
+                limiting_constitutive_volume_ratio=limiting[1],
+            )
+        line_search.append(observation)
     if line_search:
         run_proofs["line_search"] = line_search
+    backtracking_trials = collect(stderr, "fem_backtracking_trials")
+    if backtracking_trials:
+        run_proofs["constitutive_witness"] = []
+        for entry in backtracking_trials:
+            trials = entry["trials"]
+            failure = next((trial for trial in reversed(trials) if trial["invalid_tiles"]), None)
+            run_proofs["constitutive_witness"].append({
+                **{key: entry[key] for key in ("root", "iteration", "object", "selected_alpha")},
+                "closest_rejected_trial": failure,
+                "smallest_tested_trial": trials[-1] if trials else None,
+            })
     boundary = sorted((item for item in collect(stderr, "gpu_progress")
                        if item["phase"] == "matter_pre"), key=lambda item: item["sequence"])
     groups = defaultdict(list)

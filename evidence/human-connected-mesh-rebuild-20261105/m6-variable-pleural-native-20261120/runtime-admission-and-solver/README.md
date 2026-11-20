@@ -70,3 +70,52 @@ body and respiratory indices and the Brain timestamp remained at
 step 12. The rejected candidate was never presented or published.
 This is an accepted microsecond-scale release prefix, with the
 settled bed, zero motion crossings and 0.1× targets still open.
+
+## Hydraulic predictor comparison
+
+Run 016 used the existing compensated hydraulic predictor and its
+compatible direct solver scheduling. It retained the same timestep,
+mesh, mass, loads, contact, and certificate thresholds as 014. It
+accepted the same 12 coupled steps and rejected the thirteenth. Its
+total invocation took 380.595 seconds (4.93e-7 times real time).
+The first ten accepted step submissions took 132.318 s in 016 versus
+109.851 s in 014. The runs also differ in presentation and command
+scheduling, so this is a comparison of the tested configurations.
+
+The thirteenth step's final vascular domain norm was 1.58e-8, below
+the 1e-5 tolerance. The final mechanical norm was 5.32407e-4 and the
+step exhausted all 1,024 Krylov columns. On Newton passes 0 and 15,
+the constitutive safeguard for object 15 (registered skin/fat)
+restricted the correction to 0.125 and 2.38419e-7. Its minimum
+volume ratio on the last such trial was 0.350000024. The last
+coupled fraction was 5.06089e-8 before the vascular line search and
+was unchanged by that search. The recorded mechanical certificate
+failure, on object 13, and the constitutive limiting object are
+different witnesses. The predictor configuration was not promoted.
+
+## Exact native surface endpoint
+
+Run 017 repeated the accepted 12-step prefix without the predictor,
+this time with native presentation and a terminal geometry capture.
+The body advanced 0.000187500009 s over 162.905 s of integrated
+body runtime (1.151e-6 times real time). The complete 304.517 s
+invocation ran at 6.157e-7 times real time. All 12 steps reported
+zero mass residual and zero root assistance. The last step carried
+zero measurable bed load, so the capture is early release motion.
+Variable pleural-pressure mode was enabled. The emitted pleural
+sample stayed at -490.33249 Pa over the completed interval.
+
+The final native surface and fascia certificates passed. The fascia
+audit recorded 26 regions and 34 ligament rows over 12 accepted
+steps, zero ligament force residual and maximum tension 0.033782 N.
+The independent exact surface check used the authenticated terminal
+pack and its 157 body poses. It found zero skin self-pairs and zero
+skin-to-bone triangle pairs. Other skin-to-structure triangle pairs
+totalled 14,536 across 13,044 muscle, 76 tendon, 624 organ, and 792
+vessel pairs. The organ total includes 350 pairs against ocular source
+surfaces. Counts are raw witness pairs. They require anatomical
+classification, and do not establish the number of distinct defects.
+No contained pairs or internal-interior combinations were measured.
+The complete report and the native accepted geometry receipt are
+retained in this directory. This single endpoint makes no claim about
+continuous motion clearance, supported equilibrium or 0.1× performance.

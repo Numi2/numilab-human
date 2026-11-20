@@ -30,6 +30,8 @@ parser.add_argument("--gravity-ramp-steps", type=int)
 parser.add_argument("--vascular-pressure-ramp-steps", type=int)
 parser.add_argument("--vascular-direction-witness", action="store_true")
 parser.add_argument("--vascular-trace-root", type=int)
+parser.add_argument("--backtracking-witness", type=int, nargs=3,
+                    metavar=("ROOT", "OBJECT", "NEWTON"))
 args = parser.parse_args()
 assert 0 < args.seconds_per_root <= 0.002 and args.roots >= 1
 steps = args.capture_geometry_step
@@ -155,6 +157,18 @@ if args.vascular_trace_root is not None:
     if not 0 <= args.vascular_trace_root < args.roots:
         parser.error("selected vascular trace root is outside the requested horizon")
     env["NM_VASCULAR_TRACE_ROOT"] = str(args.vascular_trace_root)
+if args.backtracking_witness is not None:
+    witness_root, witness_object, witness_newton = args.backtracking_witness
+    if not (0 <= witness_root < args.roots and witness_object >= 0 and
+            0 <= witness_newton < int(env["NUMI_HUMAN_PASSIVE_FEM_NEWTON_ITERATIONS"])):
+        parser.error("backtracking witness indices are outside the configured horizon")
+    if env.get("NM_FEM_PARALLEL_CONSTITUTIVE_BACKTRACKING") != "1":
+        parser.error("the bounded witness requires the tiled constitutive check")
+    env.update(
+        NM_FEM_BACKTRACKING_TRACE_ROOT=str(witness_root),
+        NM_FEM_BACKTRACKING_TRACE_OBJECT=str(witness_object),
+        NM_FEM_BACKTRACKING_TRACE_NEWTON=str(witness_newton),
+    )
 if args.vascular_direction_witness:
     env["NUMI_MATTER_VASCULAR_ROW16_DIRECTION_TRACE"] = "1"
 if args.seconds_per_root > .000015625:
