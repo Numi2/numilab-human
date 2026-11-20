@@ -1,0 +1,133 @@
+{
+  "device": "Apple M6 on SSH numi",
+  "control": {
+    "accepted_steps": 4,
+    "accepted_seconds": 0.00800000037998,
+    "exit": 1,
+    "process_seconds": 131.03945004194975,
+    "process_real_time_factor": 6.105032017013925e-05,
+    "accepted_native_span_seconds": 101.579251834,
+    "accepted_native_span_real_time_factor": 7.875624436625637e-05,
+    "pleural_pressure_pa_min_max": [
+      -492.148498535,
+      -490.642364502
+    ],
+    "peak_bed_normal_impulse_ns": 0.0242057293653,
+    "max_bed_penetration_m": 3.75011295546e-05,
+    "max_root_force_n": 0.0,
+    "max_root_torque_nm": 0.0,
+    "max_abs_body_mass_residual_kg": 0.0,
+    "per_accepted_step_gpu": [
+      {
+        "step": 1,
+        "command_ms": 22595.283875,
+        "gpu_ms": 22586.0635834
+      },
+      {
+        "step": 2,
+        "command_ms": 22644.927458,
+        "gpu_ms": 22632.3870001
+      },
+      {
+        "step": 3,
+        "command_ms": 22729.001417,
+        "gpu_ms": 22716.768625
+      },
+      {
+        "step": 4,
+        "command_ms": 22736.479083,
+        "gpu_ms": 22723.566625
+      }
+    ],
+    "failure": {
+      "matter_code": 10,
+      "matter_environment": 0,
+      "matter_object_index": 0,
+      "matter_failing_index": 4294967295,
+      "matter_microsteps": 61,
+      "matter_diagnostics": [
+        0.0005861102836206555,
+        2.8092802750734336e-08,
+        0.0005861103418283165,
+        -1048773
+      ]
+    },
+    "accepted_brain_us": 8000,
+    "rejected_brain_us": 10000
+  },
+  "refresh": {
+    "accepted_steps": 7,
+    "accepted_seconds": 0.014000000665,
+    "exit": 1,
+    "process_seconds": 210.41598108317703,
+    "process_real_time_factor": 6.653487341090232e-05,
+    "accepted_native_span_seconds": 179.19207191700002,
+    "accepted_native_span_real_time_factor": 7.812846023391403e-05,
+    "pleural_pressure_pa_min_max": [
+      -496.190307617,
+      -490.642364502
+    ],
+    "peak_bed_normal_impulse_ns": 0.0775324627757,
+    "max_bed_penetration_m": 0.000261072942521,
+    "max_root_force_n": 0.0,
+    "max_root_torque_nm": 0.0,
+    "max_abs_body_mass_residual_kg": 0.0,
+    "per_accepted_step_gpu": [
+      {
+        "step": 1,
+        "command_ms": 22643.209583,
+        "gpu_ms": 22642.5673333
+      },
+      {
+        "step": 2,
+        "command_ms": 22646.037875,
+        "gpu_ms": 22645.47425
+      },
+      {
+        "step": 3,
+        "command_ms": 22670.842,
+        "gpu_ms": 22670.3104584
+      },
+      {
+        "step": 4,
+        "command_ms": 22673.846166,
+        "gpu_ms": 22673.2978751
+      },
+      {
+        "step": 5,
+        "command_ms": 22722.359625,
+        "gpu_ms": 22721.815875
+      },
+      {
+        "step": 6,
+        "command_ms": 22717.712667,
+        "gpu_ms": 22717.1723335
+      },
+      {
+        "step": 7,
+        "command_ms": 23768.820792,
+        "gpu_ms": 23768.2705
+      }
+    ],
+    "failure": {
+      "matter_code": 10,
+      "matter_environment": 0,
+      "matter_object_index": 0,
+      "matter_failing_index": 4294967295,
+      "matter_microsteps": 85,
+      "matter_diagnostics": [
+        0.0004000304325018078,
+        5.999955828883685e-05,
+        0.0004000304325018078,
+        -1048934
+      ]
+    },
+    "accepted_brain_us": 14000,
+    "rejected_brain_us": 16000
+  },
+  "first_csv_row_identical": true,
+  "control_through_first_four_acceptances": 90658.7858335,
+  "refresh_through_first_four_acceptances": 90631.6499168,
+  "glide_refresh_admission": true,
+  "note": "Standalone split regional tissue run. No detailed fine skin/fat admission or crossing qualification."
+}
