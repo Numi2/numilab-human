@@ -1,0 +1,22 @@
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -15710,7 +15710,7 @@
+             recordFailure(statuses[environment],
+                 NM_STATUS_NONLINEAR_SOLVER_FAILURE,
+                 object, NM_INVALID_INDEX,
+-                float4(alpha, objectAlpha, 0.0f, 0.0f));
++                float4(alpha, objectAlpha, -901.0f, 0.0f));
+         valid = valid && objectValid;
+     }
+     const uint supportBase = environment * support.contactCount;
+--- a/matter/src/metal/mixed_fem.metalinc
++++ b/matter/src/metal/mixed_fem.metalinc
+@@ -873,7 +873,7 @@
+                 residualValid && correctionFinite && contactValid
+                     ? transport
+                     : float4(relativeResidual, relativeCorrection,
+-                             volumeResidual, pressureResidual));
++                             volumeResidual, -902.0f));
+         }
+     }
+ }

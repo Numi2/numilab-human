@@ -1,0 +1,69 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -20678,17 +20678,34 @@
+                 else diagnostics.message = "failed to resume Matter after selected kernel timing";
+             }
+         };
+-        const bool measureSolverStages = [] {
+-            const char* value = std::getenv("NUMI_MATTER_GPU_TIMING_STAGES");
+-            return value != nullptr && std::strcmp(value, "1") == 0;
+-        }();
++        // The timer's root selector must also gate encoder splitting. Full
++        // roots at high FEM rates can exhaust Metal's counter sample buffer;
++        // the optional microtick selector captures a complete bounded slice.
++        const auto timingIndex = [](const char* name, unsigned fallback) {
++            const char* setting = std::getenv(name);
++            if (setting == nullptr) return fallback;
++            if (*setting < '0' || *setting > '9') return ~0u;
++            char* end = nullptr;
++            const unsigned long value = std::strtoul(setting, &end, 10);
++            return *end == '\0' && value < ~0u
++                ? static_cast<unsigned>(value) : ~0u;
++        };
++        const char* stageSetting = std::getenv("NUMI_MATTER_GPU_TIMING_STAGES");
++        const char* counterSetting = std::getenv("NUMI_MATTER_GPU_TIMING");
++        const unsigned timingRoot = timingIndex("NUMI_MATTER_GPU_TIMING_ROOT", 100u);
++        const char* tickSetting = std::getenv("NUMI_MATTER_GPU_TIMING_MICROTICK");
++        const unsigned timingMicrotick = timingIndex("NUMI_MATTER_GPU_TIMING_MICROTICK", ~0u);
++        const bool measureSolverStages =
++            stageSetting != nullptr && std::strcmp(stageSetting, "1") == 0 &&
++            counterSetting != nullptr && std::strcmp(counterSetting, "1") == 0 &&
++            timingRoot != ~0u && timingRoot == request.controlStep &&
++            (tickSetting == nullptr || timingMicrotick != ~0u);
++        bool measureSolverMicrotick = false;
+         if (measureSolverStages) {
+-            const char* enabled = std::getenv("NUMI_MATTER_GPU_TIMING");
+-            const char* sampled = std::getenv("NUMI_MATTER_GPU_TIMING_ROOT");
+             std::fprintf(stderr,
+-                "matter_gpu_stage_timing_requested root=%u enabled=%s sampled_root=%s\n",
+-                request.controlStep, enabled != nullptr ? enabled : "unset",
+-                sampled != nullptr ? sampled : "100");
++                "matter_gpu_stage_timing_requested root=%u selector_microtick=%s physics_substep=%u\n",
++                request.controlStep, tickSetting != nullptr ? tickSetting : "all",
++                request.physicsSubstep);
+         }
+         detail::HostStageTiming hostStageTiming(request.controlStep,
+             request.phase == EncodePhase::preDynamics ? "pre" : "post");
+@@ -20712,11 +20729,11 @@
+         }
+         const auto beginSolverStage = [&](const char* stage) {
+             hostStageTiming.boundary(stage);
+-            if (!measureSolverStages && !gpuProgress.enabled()) return;
++            if (!measureSolverMicrotick && !gpuProgress.enabled()) return;
+             [encoder endEncoding]; encoder = nil;
+             gpuProgress.signal(commandBuffer,stage);
+             bool sampledBoundary = false;
+-            encoder = measureSolverStages
++            encoder = measureSolverMicrotick
+                 ? detail::timingSpanBoundary(commandBuffer,state.device,
+                     request.controlStep,stage,solverTimingSpan,&sampledBoundary)
+                 : [commandBuffer computeCommandEncoder];
+@@ -23755,6 +23772,8 @@
+         for (std::uint32_t microtick = 0u;
+              microtick < microtickCount;
+              ++microtick) {
++            measureSolverMicrotick = measureSolverStages &&
++                (tickSetting == nullptr || microtick == timingMicrotick);
+             NMMicrostepGPU micro{};
+             micro.controlStep = request.controlStep;
+             micro.microtick = microtick;

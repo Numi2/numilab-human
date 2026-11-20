@@ -1,0 +1,59 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -6744,6 +6744,11 @@
+     require(!restingSupportedInitialization || weightedSupportSetting == nullptr ||
+                 std::strcmp(weightedSupportSetting, "1") == 0,
+             "strict supported initialization conflicts with an explicit disabled weighted-support setting");
++    require(!std::getenv("NUMI_HUMAN_RESTING_REGISTERED_FIRST_TOUCH") ||
++                (weightedSupportSetting != nullptr &&
++                 std::strcmp(weightedSupportSetting, "1") == 0 &&
++                 !localBedSections.empty()),
++            "registered first touch requires the sole weighted skin and fat bed owner");
+     const bool useWeightedSkinSupport = restingSupportedInitialization ||
+         (weightedSupportSetting != nullptr &&
+          std::strcmp(weightedSupportSetting, "1") == 0);
+@@ -7187,6 +7192,17 @@
+         weightedCapture.emplace(captureAtPose(weightedCompileQ));
+         const auto initialWeightedGaps = summarizeWeightedSupportGaps(
+             weightedCapture->staticSupports);
++        if (std::getenv("NUMI_HUMAN_RESTING_REGISTERED_FIRST_TOUCH")) {
++            require(!localBedSections.empty() && !useFEMSkinSupport &&
++                        !supportGeometryProgram->usePerContactSupportPlanes &&
++                        initialWeightedGaps.minimumGapMeters >= -1.0e-6 &&
++                        initialWeightedGaps.minimumGapMeters <= 5.0e-5,
++                    "registered first-touch pose failed the weighted bed gap check");
++            std::cout << std::setprecision(12)
++                      << "resting_registered_first_touch=admitted minimum_gap_m="
++                      << initialWeightedGaps.minimumGapMeters
++                      << " force_rows_added=0 pose_updates=0" << std::endl;
++        }
+         require(!restingSupportedInitialization ||
+                     (initialWeightedGaps.minimumGapMeters >= -1.0e-6 &&
+                      initialWeightedGaps.closedRows >= 3u &&
+@@ -37515,12 +37531,25 @@
+                     <<" step_count="<<[state[@"step_count"] unsignedIntValue]<<" physical_steps_advanced=0\n";
+             }
+ #endif
++            // A premeasured flat-bed pose may already be aligned to the
++            // registered skin contact witnesses. Check it before recruitment
++            // instead of moving it with the legacy NHCNT proxies.
++            const bool useRegisteredFirstTouch =
++                std::getenv("NUMI_HUMAN_RESTING_REGISTERED_FIRST_TOUCH") != nullptr;
++            require(!useRegisteredFirstTouch ||
++                        (restingScene.has_value() && persistentMetalStand &&
++                         restingReleaseInitialization && requestedRootPose.has_value() &&
++                         restingInitialPosture.empty() && supportContactPayload.has_value() &&
++                         skinPayload.has_value() && !femSkinSupportRequested() &&
++                         restingBedSurface.empty() && muscleStepSeconds.has_value() &&
++                         muscleStepCount.has_value()),
++                    "registered first touch requires an explicit fresh flat-bed skin pose");
+             // One-time support-owned placement for a fresh authored release.
+             // This runs before skin/FEM registration, moves only the floating
+             // root translation, and never applies a per-step correction.
+             if (restingScene.has_value() && persistentMetalStand &&
+                 restingReleaseInitialization && requestedRootPose.has_value() &&
+-                restingInitialPosture.empty() && supportContactPayload.has_value() &&
++                !useRegisteredFirstTouch && restingInitialPosture.empty() && supportContactPayload.has_value() &&
+                 muscleStepSeconds.has_value() && muscleStepCount.has_value()) {
+                 require(poseQ.size() == rigid.model.world.nq &&
+                             !rigid.model.articulations.empty(),
