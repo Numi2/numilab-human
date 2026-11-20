@@ -1,0 +1,66 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -22194,11 +22194,33 @@
+     // Keep bilateral ACL objects as the compiled source prefix because their
+     // existing anchor/load maps are packed from node zero. All regional
+     // fascia owners follow in the same Matter world for cross-tissue contact.
++    constexpr std::uint32_t kCoupledPectoralFasciaObject=3u;
++    const bool coupledPectoralFascia =
++        std::getenv("NUMI_HUMAN_RESTING_COUPLED_PECTORAL_TRIAL") != nullptr;
+     fasciaObjectFirstIndex=static_cast<std::uint32_t>(source.objects.size());
+     require(fasciaObjects.size()==kRestingFasciaObjectCount,
+             "regional fascia object stack is incomplete");
+     for(auto& fasciaObject:fasciaObjects)
+         source.objects.push_back(std::move(fasciaObject));
++    if(coupledPectoralFascia) {
++        auto& object=source.objects[fasciaObjectFirstIndex+kCoupledPectoralFasciaObject];
++        const auto& rows=fasciaAnchorRows[kCoupledPectoralFasciaObject];
++        require(!rows.empty() && rows.size()==object.femFixedNodes.size(),
++            "coupled pectoral trial requires the complete original anchor band");
++        for(const auto& [node,anchor]:rows) {
++            require(std::ranges::find(object.femFixedNodes,node)!=object.femFixedNodes.end(),
++                "coupled pectoral trial source anchor lacks original ownership");
++            numi::matter::FEMHumanAttachmentSource row;
++            row.node=node;
++            row.bodyIndex=anchor.bodyIndex;
++            row.stableIdentifier=0x5fa00000u+node+1u;
++            row.localPoint={anchor.localPoint.x,anchor.localPoint.y,anchor.localPoint.z};
++            object.femHumanAttachments.push_back(row);
++        }
++        object.femFixedNodes.clear();
++        std::cout << "resting_pectoral_coupled_attachment_trial rows=" << rows.size()
++                  << " duplicate_external_rows=0" << std::endl;
++    }
+     std::optional<numi::human::vessel_wall_coupling::Built> aorticWall;
+     std::vector<std::pair<std::uint32_t,NMNumiHumanTendonFEMNodeAnchorGPU>> aorticWallAnchorRows;
+     std::vector<metalrobo::NumiHumanTissueMassNode> aorticWallMassNodes;
+@@ -27988,9 +28010,17 @@
+         objectIndex<kRestingFasciaObjectCount;++objectIndex) {
+         const auto& descriptor=
+             compiled.world.objects[fasciaObjectFirstIndex+objectIndex];
+-        validateExternalStaticAnchors(fasciaAnchorRows[objectIndex],
+-            "fascia_"+std::to_string(objectIndex),
+-            descriptor.stateOffset,descriptor.stateCount);
++        if(coupledPectoralFascia && objectIndex==kCoupledPectoralFasciaObject) {
++            for(const auto& [node,anchor]:fasciaAnchorRows[objectIndex]) {
++                const auto& cooked=compiled.world.fem.nodes[descriptor.stateOffset+node];
++                require(cooked.restAndFixed.w==2.0f && cooked.positionAndMass.w>0.0f,
++                    "coupled pectoral trial lost attachment ownership or mass");
++            }
++        } else {
++            validateExternalStaticAnchors(fasciaAnchorRows[objectIndex],
++                "fascia_"+std::to_string(objectIndex),
++                descriptor.stateOffset,descriptor.stateCount);
++        }
+     }
+     std::vector<NMNumiHumanFEMBodyContactSampleGPU>
+         fasciaBodyContactSamples;
+@@ -29421,6 +29451,8 @@
+         objectIndex<kRestingFasciaObjectCount;++objectIndex) {
+         const auto& descriptor=
+             compiled.world.objects[fasciaObjectFirstIndex+objectIndex];
++        if(coupledPectoralFascia && objectIndex==kCoupledPectoralFasciaObject)
++            continue; // Matter owns both kinematics and reaction for this entire band.
+         for(const auto& [localNode,anchor]:fasciaAnchorRows[objectIndex]) {
+             require(localNode<descriptor.stateCount,
+                     "registered fascia anchor node is outside its compiled object");

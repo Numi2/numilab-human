@@ -1,0 +1,70 @@
+--- a/matter/src/metal/fem.metalinc
++++ b/matter/src/metal/fem.metalinc
+@@ -4823,6 +4823,43 @@
+     candidate[global] = next;
+ }
+ 
++
++// The Human attachment correction is already lifted by the exact point
++// Jacobian. The rigid owner integrates it over the frame timestep, whereas
++// free FEM nodes advance on the object's own clock. This is the linearized
++// body motion for backtracking. Exact body kinematics and fresh FEM
++// certification still own the resulting candidate.
++inline NMFEMNodeStateGPU femBacktrackingNodeAtAlpha(
++    const NMFEMNodeStateGPU acceptedState,
++    NMFEMNodeStateGPU candidate,
++    const float3 correction,
++    const float alpha,
++    const float objectDt,
++    const float bodyDt
++) {
++    if (!femHumanAttachmentConstraint(candidate.restAndFixed.w))
++        return femTrialNodeAtAlpha(
++            acceptedState, candidate, correction, alpha, objectDt, true);
++
++    const float3 deltaVelocity = alpha * correction;
++    candidate.velocityAndInverseMass.xyz += deltaVelocity;
++    if (candidate.referenceDisplacementAndMode.w != 1.0f) {
++        candidate.positionAndMass.xyz += bodyDt * deltaVelocity;
++        return candidate;
++    }
++    for (uint axis = 0u; axis < 3u; ++axis) {
++        const auto update = mrCompensatedProduct(bodyDt, deltaVelocity[axis]);
++        const auto displacement = mrCompensatedAdd(
++            {candidate.referenceDisplacementAndMode[axis],
++             candidate.referenceDisplacementLow[axis]}, update);
++        candidate.referenceDisplacementAndMode[axis] = displacement.high;
++        candidate.referenceDisplacementLow[axis] = displacement.low;
++        candidate.positionAndMass[axis] = femReferencePositionProjection(
++            candidate.restAndFixed[axis], displacement.high, displacement.low);
++    }
++    return candidate;
++}
++
+ inline bool femBacktrackingConstitutiveValid(
+     constant NMMatterDispatchGPU& dispatch,
+     NMContinuumObjectGPU object, NMTetrahedronGPU tetrahedron,
+@@ -5034,9 +5071,9 @@
+                         isfinite(temperatureCorrection) &&
+                         temperatureCorrection == 0.0f;
+                 }
+-                const NMFEMNodeStateGPU trialNode = femTrialNodeAtAlpha(
++                const NMFEMNodeStateGPU trialNode = femBacktrackingNodeAtAlpha(
+                     accepted[index], candidate[index], nodeCorrection.xyz,
+-                    alpha, dt, true);
++                    alpha, dt, dispatch.gravityAndTimestep.w);
+                 x[slot] = trialNode.positionAndMass.xyz;
+                 u[slot] = trialNode.referenceDisplacementAndMode.xyz;
+                 uLow[slot] = trialNode.referenceDisplacementLow.xyz;
+@@ -5364,9 +5401,9 @@
+             float3 trialVelocity[4];
+             for (uint slot = 0u; slot < 4u; ++slot) {
+                 const uint index = nodeBase + tetrahedron.nodes[slot];
+-                const NMFEMNodeStateGPU trialNode = femTrialNodeAtAlpha(
++                const NMFEMNodeStateGPU trialNode = femBacktrackingNodeAtAlpha(
+                     accepted[index], candidate[index], correction[index].xyz,
+-                    alpha, dt, true);
++                    alpha, dt, dispatch.gravityAndTimestep.w);
+                 x[slot] = trialNode.positionAndMass.xyz;
+                 u[slot] = trialNode.referenceDisplacementAndMode.xyz;
+                 uLow[slot] = trialNode.referenceDisplacementLow.xyz;
