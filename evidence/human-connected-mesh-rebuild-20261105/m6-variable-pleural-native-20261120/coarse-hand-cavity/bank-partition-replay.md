@@ -73,3 +73,39 @@ group at body 61. The 32-step run used 281 active Krylov columns with
 zero exhausted linear solves. The body mass trace still has zero
 residual and no root assistance. Bed reaction is zero and pleural
 pressure remains constant in the retained interval.
+
+## 64-step follow-up
+
+The bone manifest identifies body 23 as head. The fitted group clears all
+three native initial point witnesses against head bone 29, including deep
+row 1693 at the most compressed 32-step cell. Compared with the 32-step
+candidate, this clears three pairs with zero additions. Relative to the
+128-pair baseline, 18 original pairs clear and one new 5.68 μm deep-fat
+pair remains. The final initial inventory therefore has 111 pairs.
+The bank 61/97 group and the guarded 109/114 proposal failed their
+offline fit constraints and were excluded.
+
+The existing native compiler passes the 27,714 parent and 28,632 child
+partition and regenerates nodal masses. The change in compiled skin/fat
+sum relative to the initial eight-step geometry is −0.132 mg with zero
+reported whole-body mass residual. The final step has no nonpositive
+skin/fat cells. Its J interval is [0.6502, 2.0760], versus a minimum of
+0.3803 in the preceding 32-step replay. The native tissue audit passes
+all 64 steps and retains 34 ligament rows. The solver uses 713 active
+Krylov columns with zero exhausted linear solves.
+
+The 64-step run completes 1.00 ms in 177.75 wall seconds (5.63e-6×).
+Pleural pressure varies by one Float32 increment near −490.3325 Pa.
+This amount and interval cannot establish dynamic breathing or cardiac
+geometry certification under a respiratory pressure cycle. The body
+still has zero support impulse and zero root assistance.
+
+The bed footprint check combines the 14,439 captured initial FEM nodal
+masses and positions with the native articulated mass moment. The compiled
+mass is 97.132 kg and weight is 952.86 N. The only source skin point
+within 10 μm of the flat bed lies 88.70 mm horizontally from the combined
+center of mass. The first source footprint whose convex hull contains
+that projection has 18 points and reaches 0.984 mm above the bed. These
+are geometric conditions for supporting the weight under unilateral
+normal reactions. The check introduces no forces or changes to initial
+placement.

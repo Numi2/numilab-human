@@ -28,7 +28,7 @@ def refinement_edges():
     return edges
 
 
-def fit_group(starting, topology, cell_material, constraints, columns, edges):
+def fit_group(starting, topology, cell_material, constraints, columns, edges, fixed):
     moved = np.sort(np.concatenate([columns + role * ROLE_COUNT for role in range(3)]))
     incident = np.flatnonzero(np.isin(topology, moved).any(axis=1))
     tets = topology[incident]
@@ -127,6 +127,8 @@ def fit_group(starting, topology, cell_material, constraints, columns, edges):
         return np.concatenate((weights @ (evaluate(x) - 1.),match_partition @ x))
 
     x = np.zeros(span)
+    pinned = set(fixed)
+    bounds = [(0.,0.) if row in pinned else (-3.,3.) for row in moved for _ in range(3)]
     steps = []
     for target in (.25, .5, .75, 1.):
         result = minimize(
@@ -136,7 +138,7 @@ def fit_group(starting, topology, cell_material, constraints, columns, edges):
                  "jac": lambda x: inequalities(x, target, True)},
                 {"type": "eq", "fun": volume, "jac": lambda x: volume(x, True)},
             ],
-            bounds=[(-3., 3.)] * span, method="SLSQP",
+            bounds=bounds, method="SLSQP",
             options={"maxiter": 60, "ftol": 1e-11},
         )
         minimum = float(inequalities(result.x, target).min())
@@ -203,8 +205,16 @@ def main():
     parser.add_argument("witness",type=Path)
     parser.add_argument("starting_fit",type=Path)
     parser.add_argument("out",type=Path)
-    parser.add_argument("--bodies",type=int,nargs="+")
+    selection=parser.add_mutually_exclusive_group()
+    selection.add_argument("--bodies",type=int,nargs="+")
+    selection.add_argument("--banks",nargs="+",help="Typed body/bone pair, e.g. 59/95")
+    parser.add_argument("--pin",type=int,nargs="+",default=[],
+                        help="Exact local volume nodes to retain")
+    parser.add_argument("--reserve-root-rows",action="store_true",
+                        help="Keep selected points in the old accepted finger repair")
     args=parser.parse_args()
+    banks={tuple(map(int,bank.split("/"))) for bank in args.banks or ()}
+    assert all(len(bank)==2 for bank in banks)
     node_path=PARENT.with_name(PARENT.name+".nodes.csv")
     cell_path=PARENT.with_name(PARENT.name+".tets.csv")
     ref=coordinates(table(node_path),"rest")
@@ -222,12 +232,16 @@ def main():
                 continue
             local=int(row["layer"])*ROLE_COUNT+int(row["row"])
             body,bone=int(row["body"]),int(row["bone"])
-            x,y,_=candidate[local]
-            if args.bodies is not None:
+            if banks:
+                if (body,bone) not in banks:
+                    continue
+            elif args.bodies is not None:
                 if body not in args.bodies:
                     continue
-            elif not (abs(x)>.20 and -1.10<y<-.83):
-                continue
+            else:
+                x,y,_=candidate[local]
+                if not (abs(x)>.20 and -1.10<y<-.83):
+                    continue
             normal=np.array([float(row[f"normal_{axis}"]) for axis in "xyz"])
             length=np.linalg.norm(normal)
             assert abs(length-1.)<1.e-5
@@ -235,9 +249,17 @@ def main():
             constraints.append((local,normal,float(row["closest_distance_m"])/MM+.05,(body,bone)))
     assert constraints, "no matching exact witnesses"
     reports=[]
+    assert all(0<=row<3*ROLE_COUNT for row in args.pin)
+    fixed=set(args.pin)
+    if args.reserve_root_rows:
+        old=json.loads((HERE/"hand-clearance-fit.json").read_text())
+        seeds={row[0] for row in constraints}
+        fixed.update(row["local_node"] for row in old["candidate_nodes"]
+                     if row["local_node"] not in seeds)
+    assert not fixed.intersection(row[0] for row in constraints)
     edges=refinement_edges()
     for columns,_,these in groups(topology,constraints,edges):
-        trial,report=fit_group(candidate,topology,materials,these,columns,edges)
+        trial,report=fit_group(candidate,topology,materials,these,columns,edges,fixed)
         report["accepted_fit"]=trial is not None
         reports.append(report)
         if trial is not None:
@@ -252,6 +274,7 @@ def main():
         "previous_fit_sha256":digest(args.starting_fit),
         "refinement_ancestor_edges_sha256":digest(ANCESTRY),
         "selected_pair_count":len(constraints),
+        **({"pinned_rows":sorted(fixed)} if fixed else {}),
         "group_reports":reports,
         "tangent_plane_fit_pass":bool(any(r["accepted_fit"] for r in reports)),
         "scope":"Connected local fits constrained by exact bone point witnesses. Validate under current native Float32 geometry.",
