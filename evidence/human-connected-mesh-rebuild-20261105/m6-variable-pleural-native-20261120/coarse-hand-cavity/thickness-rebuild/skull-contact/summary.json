@@ -1,0 +1,637 @@
+{
+  "source_commit": "73c3a6308ab6b34ebcfb94649575442e3344336f",
+  "base_pairs": 17878,
+  "variants": [
+    {
+      "name": "finite-sat-02",
+      "sha256": "29b918b207f6c889245b1510a3390bec346bfc6891da4fcc1680c31ce90b09ca",
+      "total_pairs": 17878,
+      "skull_pairs": {
+        "deep": 2685,
+        "interface": 2311,
+        "outer": 702
+      },
+      "parent_coupled_geometry_sha256": "f7b3a8014dc4dfbec5378116ca4f4cd9c7b8911e7c5f7d476177ab389a980c96",
+      "nonzero_line_search_steps": 0,
+      "new_external_pairs": 0,
+      "new_self_pairs": 0,
+      "candidate_mass_kg": 13.939679838734493,
+      "fit_and_audit_seconds": 28.77272458304651,
+      "note": "Exact cell guards stopped all movement before the line search queried contact."
+    },
+    {
+      "name": "sat-local-03",
+      "sha256": "f79b043f7c48ed8a9bdd0010f1d1ccba902720cb69318610ac018ec2c13eab0a",
+      "total_pairs": 16895,
+      "skull_pairs": {
+        "deep": 2565,
+        "interface": 1585,
+        "outer": 565
+      },
+      "parent_coupled_geometry_sha256": "f7b3a8014dc4dfbec5378116ca4f4cd9c7b8911e7c5f7d476177ab389a980c96",
+      "nonzero_line_search_steps": 1,
+      "new_external_pairs": 0,
+      "new_self_pairs": 0,
+      "candidate_mass_kg": 13.939679838734493,
+      "fit_and_audit_seconds": 34.22467320901342,
+      "note": "Excluded. A consumed iterator caused invalid repeated skull measurements."
+    },
+    {
+      "name": "sat-local-04",
+      "sha256": "48956256dff0ab39a760349c5960a5745486bf42991dd824ff3bb0640a416b9e",
+      "total_pairs": 16019,
+      "skull_pairs": {
+        "deep": 2471,
+        "interface": 944,
+        "outer": 424
+      },
+      "parent_coupled_geometry_sha256": "f7b3a8014dc4dfbec5378116ca4f4cd9c7b8911e7c5f7d476177ab389a980c96",
+      "nonzero_line_search_steps": 6,
+      "new_external_pairs": 0,
+      "new_self_pairs": 0,
+      "candidate_mass_kg": 13.939679838734493,
+      "fit_and_audit_seconds": 66.87433725013398,
+      "note": "Whole exact scan qualified only the pair counts. New inside pairs and overwide columns fail."
+    },
+    {
+      "name": "sat-local-solid-05",
+      "sha256": "6b0a1b1ad73d2d89698d72bcf595aad5e55b8084bd1e5cb0edd2feec456c1120",
+      "total_pairs": 16577,
+      "skull_pairs": {
+        "deep": 2539,
+        "outer": 508,
+        "interface": 1350
+      },
+      "parent_coupled_geometry_sha256": "f7b3a8014dc4dfbec5378116ca4f4cd9c7b8911e7c5f7d476177ab389a980c96",
+      "nonzero_line_search_steps": 7,
+      "new_external_pairs": 0,
+      "new_self_pairs": 0,
+      "candidate_mass_kg": 13.939679838734492,
+      "fit_and_audit_seconds": 89.75898741697893,
+      "note": "Offline reference motion and mass guards passed. Overall crossing gate remains open."
+    },
+    {
+      "name": "sat-continuation-06",
+      "sha256": "dbb7b5b9d2cee0ef5ac47b63f83d3f23483c69af2118ad2a914ca82ac888b209",
+      "total_pairs": 16569,
+      "skull_pairs": {
+        "deep": 2533,
+        "outer": 506,
+        "interface": 1350
+      },
+      "parent_coupled_geometry_sha256": "f7b3a8014dc4dfbec5378116ca4f4cd9c7b8911e7c5f7d476177ab389a980c96",
+      "nonzero_line_search_steps": 1,
+      "new_external_pairs": 0,
+      "new_self_pairs": 0,
+      "candidate_mass_kg": 13.939679838734492,
+      "fit_and_audit_seconds": 140.7323229999747,
+      "note": "Offline reference motion and mass guards passed. Overall crossing gate remains open."
+    }
+  ],
+  "continuation_limiting_parent_cells": [
+    [
+      13979,
+      54
+    ],
+    [
+      13925,
+      38
+    ],
+    [
+      12614,
+      28
+    ],
+    [
+      12824,
+      26
+    ],
+    [
+      13930,
+      18
+    ],
+    [
+      12311,
+      18
+    ],
+    [
+      27458,
+      16
+    ],
+    [
+      12308,
+      16
+    ],
+    [
+      12458,
+      12
+    ],
+    [
+      12307,
+      12
+    ],
+    [
+      13709,
+      12
+    ],
+    [
+      27983,
+      10
+    ],
+    [
+      26771,
+      10
+    ],
+    [
+      14015,
+      10
+    ],
+    [
+      13844,
+      10
+    ],
+    [
+      12144,
+      10
+    ],
+    [
+      14107,
+      10
+    ],
+    [
+      13745,
+      8
+    ],
+    [
+      14111,
+      8
+    ],
+    [
+      13769,
+      8
+    ],
+    [
+      27455,
+      8
+    ],
+    [
+      14144,
+      6
+    ],
+    [
+      12285,
+      6
+    ],
+    [
+      14072,
+      6
+    ],
+    [
+      28391,
+      6
+    ],
+    [
+      28283,
+      4
+    ],
+    [
+      28522,
+      4
+    ],
+    [
+      14183,
+      4
+    ],
+    [
+      13717,
+      4
+    ],
+    [
+      12616,
+      4
+    ],
+    [
+      12455,
+      4
+    ],
+    [
+      12280,
+      4
+    ],
+    [
+      12929,
+      4
+    ],
+    [
+      27083,
+      3
+    ],
+    [
+      13680,
+      3
+    ],
+    [
+      28009,
+      2
+    ],
+    [
+      13694,
+      2
+    ],
+    [
+      12818,
+      2
+    ],
+    [
+      13372,
+      2
+    ],
+    [
+      12607,
+      2
+    ],
+    [
+      13814,
+      2
+    ],
+    [
+      14210,
+      2
+    ],
+    [
+      12938,
+      2
+    ],
+    [
+      28367,
+      2
+    ],
+    [
+      13759,
+      2
+    ],
+    [
+      12767,
+      2
+    ],
+    [
+      13744,
+      2
+    ]
+  ],
+  "source_mass_and_independent_checks": {
+    "source": {
+      "source_nodal_rows": 9644,
+      "native_ancestry_labels_sha256": "99d643f71a735ee49223cdcd7b863d2d0978b8cc490a138bad4a63012438a457",
+      "nodal_source_mass_kg": {
+        "15": 3.4525712630897782,
+        "16": 10.487108575644697
+      },
+      "tet_source_mass_kg": {
+        "15": 3.4525712630897747,
+        "16": 10.487108575644719
+      }
+    },
+    "candidates": [
+      {
+        "candidate": "finite-sat-02",
+        "sha256": "29b918b207f6c889245b1510a3390bec346bfc6891da4fcc1680c31ce90b09ca",
+        "source_rows": 28632,
+        "total_mass_kg": 13.939679838734493,
+        "typed_mass_balance": {
+          "15": 0.0,
+          "16": -1.7763568394002505e-15
+        },
+        "maximum_source_residual_kg": 0.0,
+        "maximum_receiving_residual_kg": 1.734723475976807e-18,
+        "independent_maximum_child_route_m": 0.03917241845925629,
+        "density_limits_observed_kg_m3": {
+          "15": [
+            993.1178336895083,
+            1003.7749710890065
+          ],
+          "16": [
+            853.4126218436554,
+            914.1198483805325
+          ]
+        },
+        "invalid_rest_tets": 0,
+        "invalid_float32_world_tets": 0,
+        "interior_vertex_ancestry_and_exterior_isolation_verified": true,
+        "support_vertices_unchanged": 3,
+        "affected_existing_vertices": 0,
+        "affected_euclidean_thickness": {
+          "rest": {
+            "skin": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": null,
+              "max_mm": null,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": null,
+              "max_mm": null,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          },
+          "world": {
+            "skin": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": null,
+              "max_mm": null,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": null,
+              "max_mm": null,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          }
+        },
+        "new_external_pairs": 0,
+        "new_internal_pairs": 0,
+        "new_skull_pairs": 0
+      },
+      {
+        "candidate": "sat-local-04",
+        "sha256": "48956256dff0ab39a760349c5960a5745486bf42991dd824ff3bb0640a416b9e",
+        "source_rows": 28632,
+        "total_mass_kg": 13.939679838734493,
+        "typed_mass_balance": {
+          "15": 0.0,
+          "16": -1.7763568394002505e-15
+        },
+        "maximum_source_residual_kg": 8.673617379884035e-19,
+        "maximum_receiving_residual_kg": 1.734723475976807e-18,
+        "independent_maximum_child_route_m": 0.07369839763671952,
+        "density_limits_observed_kg_m3": {
+          "15": [
+            900.0000000999995,
+            1099.9999999000004
+          ],
+          "16": [
+            850.0000000999995,
+            949.9999999000004
+          ]
+        },
+        "invalid_rest_tets": 0,
+        "invalid_float32_world_tets": 0,
+        "interior_vertex_ancestry_and_exterior_isolation_verified": true,
+        "support_vertices_unchanged": 3,
+        "affected_existing_vertices": 486,
+        "affected_euclidean_thickness": {
+          "rest": {
+            "skin": {
+              "new_width_limit_failures": 116,
+              "maximum_over_limit_um": 3841.225093075099,
+              "min_mm": 0.5026094175787975,
+              "max_mm": 6.341225093075098,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 176,
+              "maximum_over_limit_um": 4677.450864440585,
+              "min_mm": 0.5203000468074874,
+              "max_mm": 14.677450864440585,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          },
+          "world": {
+            "skin": {
+              "new_width_limit_failures": 116,
+              "maximum_over_limit_um": 3841.225229103885,
+              "min_mm": 0.5026023478517414,
+              "max_mm": 6.341225229103885,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 176,
+              "maximum_over_limit_um": 4677.44317319504,
+              "min_mm": 0.5202979083769999,
+              "max_mm": 14.67744317319504,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          }
+        },
+        "new_external_pairs": 0,
+        "new_internal_pairs": 0,
+        "new_skull_pairs": 1987
+      },
+      {
+        "candidate": "sat-local-solid-05",
+        "sha256": "6b0a1b1ad73d2d89698d72bcf595aad5e55b8084bd1e5cb0edd2feec456c1120",
+        "source_rows": 28632,
+        "total_mass_kg": 13.939679838734492,
+        "typed_mass_balance": {
+          "15": 0.0,
+          "16": -1.7763568394002505e-15
+        },
+        "maximum_source_residual_kg": 8.673617379884035e-19,
+        "maximum_receiving_residual_kg": 1.734723475976807e-18,
+        "independent_maximum_child_route_m": 0.06449157653811709,
+        "density_limits_observed_kg_m3": {
+          "15": [
+            900.0000000999997,
+            1099.9999999000004
+          ],
+          "16": [
+            850.0000000999994,
+            949.9999999000006
+          ]
+        },
+        "invalid_rest_tets": 0,
+        "invalid_float32_world_tets": 0,
+        "interior_vertex_ancestry_and_exterior_isolation_verified": true,
+        "support_vertices_unchanged": 3,
+        "affected_existing_vertices": 462,
+        "affected_euclidean_thickness": {
+          "rest": {
+            "skin": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": 0.5034223964837163,
+              "max_mm": 2.499999307921071,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": 0.5251733661152669,
+              "max_mm": 9.999999307863977,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          },
+          "world": {
+            "skin": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.005609115070418641,
+              "min_mm": 0.5034214815970208,
+              "max_mm": 2.5000056091150706,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.006120490577896098,
+              "min_mm": 0.5251723803157972,
+              "max_mm": 10.000006120490578,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          }
+        },
+        "new_external_pairs": 0,
+        "new_internal_pairs": 0,
+        "new_skull_pairs": 1574
+      },
+      {
+        "candidate": "sat-continuation-06",
+        "sha256": "dbb7b5b9d2cee0ef5ac47b63f83d3f23483c69af2118ad2a914ca82ac888b209",
+        "source_rows": 28632,
+        "total_mass_kg": 13.939679838734492,
+        "typed_mass_balance": {
+          "15": 0.0,
+          "16": -1.7763568394002505e-15
+        },
+        "maximum_source_residual_kg": 1.734723475976807e-18,
+        "maximum_receiving_residual_kg": 1.734723475976807e-18,
+        "independent_maximum_child_route_m": 0.06816493783626902,
+        "density_limits_observed_kg_m3": {
+          "15": [
+            900.0000000999996,
+            1099.9999999000004
+          ],
+          "16": [
+            850.0000000999995,
+            949.9999999000004
+          ]
+        },
+        "invalid_rest_tets": 0,
+        "invalid_float32_world_tets": 0,
+        "interior_vertex_ancestry_and_exterior_isolation_verified": true,
+        "support_vertices_unchanged": 3,
+        "affected_existing_vertices": 474,
+        "affected_euclidean_thickness": {
+          "rest": {
+            "skin": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": 0.5033156134327271,
+              "max_mm": 2.499999329548529,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.0,
+              "min_mm": 0.5243867718763988,
+              "max_mm": 9.999999329493225,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          },
+          "world": {
+            "skin": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.004985004519418579,
+              "min_mm": 0.5033122834982993,
+              "max_mm": 2.5000049850045194,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            },
+            "fat": {
+              "new_width_limit_failures": 0,
+              "maximum_over_limit_um": 0.005998765798334582,
+              "min_mm": 0.5243929059625354,
+              "max_mm": 10.000005998765799,
+              "below_0p5_mm_before": 0,
+              "below_0p5_mm_after": 0,
+              "newly_below_0p5_mm": 0
+            }
+          }
+        },
+        "new_external_pairs": 0,
+        "new_internal_pairs": 0,
+        "new_skull_pairs": 1587
+      }
+    ]
+  },
+  "solid_check": {
+    "width_unguarded": {
+      "scope": "Moved shell boundary vertices against separate closed bones in one physical bank",
+      "candidate_sha256": "48956256dff0ab39a760349c5960a5745486bf42991dd824ff3bb0640a416b9e",
+      "bone_sha256": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+      "body": 23,
+      "changed_surface_vertices": 1587,
+      "baseline_inside": 168,
+      "candidate_inside": 132,
+      "new_inside": 41,
+      "baseline_boundary": 0,
+      "candidate_boundary": 0,
+      "indeterminate": 0,
+      "seconds": 3.869247541995719
+    },
+    "guarded": {
+      "scope": "Exact shell boundary vertex classification against separate closed bones in one physical bank",
+      "candidate_sha256": "6b0a1b1ad73d2d89698d72bcf595aad5e55b8084bd1e5cb0edd2feec456c1120",
+      "bone_sha256": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+      "body": 23,
+      "changed_surface_vertices": 1554,
+      "tested_surface_vertices": 8343,
+      "includes_unchanged": true,
+      "baseline_inside": 169,
+      "candidate_inside": 97,
+      "new_inside": 0,
+      "baseline_boundary": 0,
+      "candidate_boundary": 0,
+      "indeterminate": 0,
+      "seconds": 4.259825624991208
+    },
+    "guarded_continuation": {
+      "scope": "Exact shell boundary vertex classification against separate closed bones in one physical bank",
+      "candidate_sha256": "dbb7b5b9d2cee0ef5ac47b63f83d3f23483c69af2118ad2a914ca82ac888b209",
+      "bone_sha256": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+      "body": 23,
+      "changed_surface_vertices": 1575,
+      "tested_surface_vertices": 8343,
+      "includes_unchanged": true,
+      "baseline_inside": 169,
+      "candidate_inside": 96,
+      "new_inside": 0,
+      "baseline_boundary": 0,
+      "candidate_boundary": 0,
+      "indeterminate": 0,
+      "seconds": 4.214961874997243
+    }
+  }
+}

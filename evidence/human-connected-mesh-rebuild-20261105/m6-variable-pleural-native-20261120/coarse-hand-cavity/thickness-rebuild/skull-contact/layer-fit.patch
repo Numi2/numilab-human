@@ -1,0 +1,330 @@
+--- rebuild.py
++++ rebuild.py
+@@ -24,6 +24,8 @@
+ 
+ from fit_layers import fit_layers
+ from regional_mass import RegionalMass
++from skull_contact import SkullContact
++from solid_skull import SolidSkull
+ 
+ 
+ def prepare_surface_search(triangles, lower, upper):
+@@ -68,7 +70,15 @@
+     parser.add_argument("--hold-parent", type=int, action="append", default=[],
+                         help="keep all three layers of columns touching a measured pivot witness fixed")
+     parser.add_argument("--interior-edge", type=int, metavar=("A", "B"), nargs=2, required=True)
++    parser.add_argument("--depth-contact", action="store_true")
++    parser.add_argument("--restore-local", action="store_true")
++    parser.add_argument("--preserve-solid-and-width", action="store_true")
++    parser.add_argument("--resume", type=Path)
+     args = parser.parse_args()
++    if args.resume is not None and not args.preserve_solid_and_width:
++        parser.error("--resume requires the solid and layer-width guards")
++    if args.preserve_solid_and_width and not (args.depth_contact and args.restore_local):
++        parser.error("solid and width preservation requires contact-guided local restoration")
+     start = monotonic()
+     args.output.mkdir()
+     install_for_float32()
+@@ -213,20 +223,46 @@
+     if not columns:
+         raise RuntimeError("the target patch contains no aligned source/bone columns")
+     print(f"fitting {len(columns)} columns across {len(target_faces)} parent faces", flush=True)
++    faces, face_ancestry, layer_role = child_surfaces(
++        cells, regional.material[parents], surface, len(world), origins)
++    skull_bank = bone[bone["body"] == body]
++    contact = (SkullContact(faces, face_ancestry, layer_role, skull_bank)
++               if args.depth_contact else None)
++    solid_nodes = np.intersect1d(np.unique(faces), np.array([node for node, *_ in proposals]))
++    solid = SolidSkull(skull_bank, solid_nodes, new_world) if args.preserve_solid_and_width else None
++    resume = None
++    resume_hash = None
++    if args.resume is not None:
++        checkpoint = json.loads((args.resume / "receipt.json").read_text())
++        stored = args.resume / "rebuild.npz"
++        resume_hash = digest(stored)
++        assert resume_hash == checkpoint["candidate_sha256"]
++        assert checkpoint["preserve_solid_and_width"]
++        assert checkpoint["exact_baseline_sha256"] == digest(enum_base)
++        assert checkpoint["compiled_reference_receipt_sha256"] == digest(reference / "execution.json")
++        with np.load(stored, allow_pickle=False) as incoming:
++            assert np.array_equal(cells, incoming["elements"])
++            assert np.array_equal(parents, incoming["parent"])
++            assert np.array_equal(faces, incoming["surface"])
++            assert np.array_equal(face_ancestry, incoming["surface_parent"])
++            resume = incoming["world"].astype(np.float64), incoming["rest"]
+     candidate, rest, history = fit_layers(new_world, new_ref, cells, parents, regional, proposals, columns,
+-                                               all_edges=args.all_edges)
++                                         all_edges=args.all_edges, contact=contact,
++                                         restore_local=args.restore_local, solid=solid, resume=resume)
+     assert np.array_equal(candidate[list(support)], world[list(support)])
+     assert np.array_equal(candidate[list(fixed)], world[list(fixed)])
+     assert np.array_equal(candidate[held_nodes], new_world[held_nodes])
+     assert np.array_equal(rest[held_nodes], new_ref[held_nodes])
+     print(f"ran {len(history)} linearizations", flush=True)
++    if args.depth_contact:
++        report_path = args.output / "line-search.json"
++        report_path.write_text(json.dumps(history, indent=2, allow_nan=False) + "\n")
+     volume = determinant(rest, cells)
+     changed = np.any(rest != new_ref, axis=1)
+     active_parent = np.unique(parents[np.any(changed[cells], axis=1)])
+     mass, routing, ledger = regional.allocate(rest, cells, parents, volume, active_parent)
+     print(f"mass route status {ledger}", flush=True)
+ 
+-    faces, face_ancestry, _ = child_surfaces(cells, regional.material[parents], surface, len(world), origins)
+     before = {(face, bank_id, asset, tri)
+               for _, face, _, bank_id, asset, tri in base["witnesses"]}
+     bisected, bisected_raw, original_records = exact_bone_pairs(new_world, faces, face_ancestry, bone)
+@@ -251,7 +287,8 @@
+         "exact_baseline_sha256": digest(enum_base),
+         "compiled_reference_receipt_sha256": digest(reference / "execution.json"),
+         "registered_source_sha256": source["source"][source_path.name],
+-        "body": body, "whole_skull_footprint": args.whole_skull, "all_shape_edges": args.all_edges,
++        "body": body, "whole_skull_footprint": args.whole_skull, "all_shape_edges": args.all_edges, "depth_contact": args.depth_contact, "restore_local": args.restore_local,
++        "preserve_solid_and_width": args.preserve_solid_and_width, "resume_sha256": resume_hash,
+         "interior_edge_split": split_record, "held_parent_rows": args.hold_parent, "held_nodes": held_nodes.tolist(),
+         "parent_faces": len(target_faces), "active_columns": len(columns), "split_columns": len(edge_columns),
+         "world_and_rest_nodes": len(candidate), "tetrahedra": len(cells),
+--- fit_layers.py
++++ fit_layers.py
+@@ -8,11 +8,12 @@
+ 
+ from fit_hand_cavity import determinant, quality
+ from fit_refined_patch import determinant_gradient, layer_bounds, sparse_jacobian
++from skull_contact import admissible
+ 
+ EDGES = np.array(list(combinations(range(4), 2)))
+ 
+ 
+-def fit_layers(world, reference, cells, parent, regional, proposals, columns, *, all_edges=False):
++def fit_layers(world, reference, cells, parent, regional, proposals, columns, *, all_edges=False, contact=None, restore_local=False, solid=None, resume=None):
+     count = len(proposals)
+     assert count > 0
+     node_id = np.full(len(world), -1, dtype=np.int32)
+@@ -56,6 +57,23 @@
+     report = []
+     objective = np.r_[np.zeros(count), importance]
+     index = np.arange(len(local))
++    if resume is not None:
++        if solid is None:
++            raise ValueError("a warm start requires solid and width guards")
++        world_state, reference_state = resume
++        nodes = np.array([node for node, *_ in proposals])
++        displacement = reference_state[nodes] - reference[nodes]
++        update = np.einsum("nd,nd->n", displacement, direction[nodes])
++        np.testing.assert_allclose(displacement, update[:, None] * direction[nodes],
++                                   atol=1.e-14, rtol=0.)
++        assert np.array_equal(world_state[~active], world[~active])
++        assert np.array_equal(reference_state[~active], reference[~active])
++        expected = (world[nodes] + update[:, None] * direction[nodes]).astype(np.float32)
++        assert np.array_equal(world_state[nodes], expected)
++        for state, floor, shape in zip((world_state, reference_state), minimum_det, minimum_quality, strict=True):
++            assert determinant(state, cells).min() >= floor and quality(state, cells).min() >= shape
++        assert not solid.newly_unsafe(world_state, solid.nodes)
++    contact_state = contact.measure(world_state) if contact is not None else None
+ 
+     def limiting_rows(measurements, thresholds):
+         witnesses = {}
+@@ -101,7 +119,79 @@
+             system, bounds = system[keep], bounds[keep]
+         return system, bounds, total
+ 
+-    for radius in (.002, .002, .001, .001, .001, .0005, .0005, .00025):
++    if restore_local:
++        column_variables = node_id[np.asarray(columns)]
++        assert np.array_equal(np.sort(column_variables.ravel()), np.arange(count))
++        column_for_var = np.empty(count, dtype=np.intp)
++        column_for_var[column_variables.ravel()] = np.repeat(np.arange(len(columns)), 3)
++
++    if solid is not None:
++        columns_array = np.asarray(columns)
++        upper = columns_array[:, :-1].ravel()
++        lower = columns_array[:, 1:].ravel()
++        nominal = np.tile([.0025, .010], len(columns))
++        shifts = []
++        width_limits = []
++        for pts in (world, reference):
++            differences = pts[upper] - pts[lower]
++            projected = np.einsum("pt,pt->p", differences, direction[upper])
++            square = np.einsum("pt,pt->p", differences, differences)
++            cap = np.maximum(nominal, np.sqrt(square))
++            transverse = np.maximum(0., square - projected**2)
++            shifts.append(np.sqrt(np.maximum(0., cap**2 - transverse)) - projected)
++            width_limits.append(cap)
++        layer_upper = np.minimum(*shifts)
++
++    def width_failures(current_world, current_reference):
++        if solid is None:
++            return np.empty(0, dtype=np.intp)
++        affected = []
++        for pts, limit in zip((current_world, current_reference), width_limits, strict=True):
++            width = np.linalg.norm(pts[upper] - pts[lower], axis=1)
++            affected.extend(upper[width > limit + 2.e-7].tolist())
++        return np.asarray(affected, dtype=np.intp)
++
++    def trial_state(trial):
++        displacement = trial[node_id[active], None] * direction[active]
++        current_world = world.copy()
++        current_reference = reference.copy()
++        current_world[active] = (world[active] + displacement).astype(np.float32)
++        current_reference[active] = reference[active] + displacement
++        world_v = determinant(current_world, local)
++        ref_v = determinant(current_reference, local)
++        return current_world, current_reference, world_v, ref_v
++
++    def restore_columns(trial):
++        held = []
++        for _ in range(5):
++            current_world, current_reference, world_v, ref_v = trial_state(trial)
++            bad = ((world_v < minimum_det[0]) | (ref_v < minimum_det[1])
++                   | (quality(current_world, local) < minimum_quality[0])
++                   | (quality(current_reference, local) < minimum_quality[1]))
++            too_wide = width_failures(current_world, current_reference)
++            crosses_solid = []
++            if not np.any(bad) and not len(too_wide) and solid is not None:
++                moved = solid.nodes[np.any(current_world[solid.nodes] != world_state[solid.nodes], axis=1)]
++                crosses_solid = solid.newly_unsafe(current_world, moved)
++            if not np.any(bad) and not len(too_wide) and not crosses_solid:
++                break
++            implicated = np.r_[local[bad].ravel(), too_wide, np.asarray(crosses_solid, dtype=np.intp)]
++            affected = node_id[implicated]
++            affected = affected[affected >= 0]
++            repaired = column_variables[np.unique(column_for_var[affected])].ravel()
++            changed = repaired[trial[repaired] != update[repaired]]
++            if len(changed) == 0 or len(changed) >= count // 4:
++                break
++            trial[repaired] = update[repaired]
++            held.append({"variables": int(len(changed)), "invalid_cells": int(np.count_nonzero(bad)),
++                         "width_witnesses": len(too_wide), "solid_witnesses": len(crosses_solid)})
++        return held
++
++    if resume is not None:
++        assert np.all(thickness @ update <= thickness_margin + 1.e-10)
++        assert not len(width_failures(world_state, reference_state))
++    radii = (.002, .002, .001, .001, .001, .0005, .0005, .00025)
++    for radius in radii:
+         world_det = determinant(world_state, local)
+         ref_det = determinant(reference_state, local)
+         world_jac, ref_jac = (sparse_jacobian(determinant_gradient(state[local]), local, node_id, direction, count)
+@@ -117,15 +207,33 @@
+         rem = target - update
+         ineq_bound = np.r_[world_bound, ref_bound, (pool_high - pool) / initial_pool,
+                            (pool - pool_low) / initial_pool, thickness_margin - thickness @ update]
++        if solid is not None:
++            # All nodes in a column share its motion axis, so the exact
++            # Euclidean distance bound is linear in the relative shift.
++            ineq = vstack((ineq, -thickness), format="csr")
++            ineq_bound = np.r_[ineq_bound, layer_upper + thickness @ update]
+         system = vstack((absolute_error, 1.e-3 * hstack((ineq, csr_matrix((ineq.shape[0], count))))), format="csr")
+-        result = linprog(objective, A_ub=system, b_ub=np.r_[1.e3 * rem, -1.e3 * rem, ineq_bound],
+-                         bounds=[(-1.e3 * radius, 1.e3 * radius)] * count + [(0., None)] * count,
+-                         method="highs", options={"time_limit": 12.})
++        bound = np.r_[1.e3 * rem, -1.e3 * rem, ineq_bound]
++        limits = [(-1.e3 * radius, 1.e3 * radius)] * count + [(0., None)] * count
++        costs = objective
+         failed = Counter()
+-        entry = {"radius_m": radius, "status": int(result.status),
++        entry = {"radius_m": radius,
+                  "geometric_rows": int(world_rows + rest_rows),
+                  "retained_geometric_rows": int(len(world_bound) + len(ref_bound)),
+                  "trial_failures": failed, "geometric_witnesses": []}
++        if contact_state is not None:
++            planes, gaps, penalty, diagnostic = contact.inequalities(
++                world_state, contact_state, node_id, direction, radius, count)
++            extra = csr_matrix((system.shape[0], len(penalty)))
++            system = vstack((hstack((system, extra)), planes), format="csr")
++            bound = np.r_[bound, gaps]
++            costs = np.r_[objective, penalty]
++            limits.extend([(0., None)] * len(penalty))
++            entry["contact"] = {"starting_pairs": contact_state.counts, **diagnostic,
++                                "tried": []}
++        result = linprog(costs, A_ub=system, b_ub=bound, bounds=limits, method="highs",
++                         options={"time_limit": 12.})
++        entry.update(status=int(result.status), solver_message=result.message)
+         report.append(entry)
+         if not result.success:
+             break
+@@ -133,16 +241,13 @@
+         error_before = importance @ np.abs(rem)
+         for fraction in (1., .5, .25, .125, .0625, .03125):
+             trial = update + fraction * increment
+-            displacement = trial[node_id[active], None] * direction[active]
+-            current_world = world_state.copy()
+-            current_reference = reference_state.copy()
+-            current_world[active] = (world[active] + displacement).astype(np.float32)
+-            current_reference[active] = reference[active] + displacement
+-            world_v = determinant(current_world, local)
+-            ref_v = determinant(current_reference, local)
++            if restore_local:
++                held = restore_columns(trial)
++                entry.setdefault("restorations", []).append({"fraction": fraction, "restored_variables": held})
++            current_world, current_reference, world_v, ref_v = trial_state(trial)
+             actual_pool = initial_pool + aggregate @ (ref_v - initial_reference_det[incidence])
+             error = importance @ np.abs(target - trial)
+-            if error >= error_before:
++            if contact_state is None and error >= error_before:
+                 failed["objective"] += 1
+                 continue
+             if np.any(thickness @ trial > thickness_margin + 1.e-10):
+@@ -164,6 +269,21 @@
+             if np.any(actual_pool < pool_low) or np.any(actual_pool > pool_high):
+                 failed["mass_capacity"] += 1
+                 continue
++            if solid is not None:
++                if len(width_failures(current_world, current_reference)):
++                    failed["layer_width"] += 1
++                    continue
++                moved = solid.nodes[np.any(current_world[solid.nodes] != world_state[solid.nodes], axis=1)]
++                if solid.newly_unsafe(current_world, moved):
++                    failed["solid_vertex"] += 1
++                    continue
++            if contact_state is not None:
++                measured = contact.measure(current_world)
++                entry["contact"]["tried"].append({"fraction": fraction, "pairs": measured.counts})
++                if not admissible(contact_state, measured):
++                    failed["contact_regression_or_no_progress"] += 1
++                    continue
++                contact_state = measured
+             update, world_state, reference_state = trial, current_world, current_reference
+             entry.update(fraction=fraction, weighted_error_before_m=float(error_before), weighted_error_m=float(error))
+             break
+--- regional_mass.py
++++ regional_mass.py
+@@ -72,7 +72,16 @@
+         eligible = np.isin(group, np.unique(group[active_parent]))
+         old = np.flatnonzero(eligible)
+         if len(old) == 0:
+-            raise ValueError("the selected mass repair has no eligible carriers")
++            ids = np.arange(len(total))
++            density = self.source_kg / total
++            assert np.all(density >= self.density_limits[:, 0] - 1.e-5)
++            assert np.all(density <= self.density_limits[:, 1] + 1.e-5)
++            assert np.max(np.linalg.norm(self.source_centroid - new_center, axis=1)
++                          + max_offset) <= RADIUS_M
++            return (self.source_kg[parent] * volume / total[parent],
++                    (ids, ids, self.source_kg.copy()),
++                    {"success": True, "eligible_parents": 0, "eligible_groups": 0,
++                     "nonidentity_routes": 0, "rerouted_kg": 0., "seconds": monotonic() - start})
+ 
+         density_low, density_high = self.density_limits.T
+         lower = (density_low + 1.e-7) * total
+--- verify_rebuild.py
++++ verify_rebuild.py
+@@ -95,9 +95,16 @@
+         thickness[key] = {}
+         for layer, name in enumerate(names):
+             width, before = now[rows, layer], prev[rows, layer]
++            limit = np.maximum(before, (.0025, .010)[layer])
++            above = np.maximum(0., width - limit)
++            limit_failures = int(np.count_nonzero(above > 2.e-7))
++            if receipt.get("preserve_solid_and_width"):
++                assert limit_failures == 0, (key, name)
+             thickness[key][name] = {
+-                "min_mm": float(width.min() * 1000.),
+-                "max_mm": float(width.max() * 1000.),
++                "new_width_limit_failures": limit_failures,
++                "maximum_over_limit_um": float(above.max() * 1.e6) if len(above) else 0.,
++                "min_mm": float(width.min() * 1000.) if len(width) else None,
++                "max_mm": float(width.max() * 1000.) if len(width) else None,
+                 "below_0p5_mm_before": int(np.count_nonzero(before < .0005)),
+                 "below_0p5_mm_after": int(np.count_nonzero(width < .0005)),
+                 "newly_below_0p5_mm": int(np.count_nonzero((before >= .0005) & (width < .0005))),
