@@ -1,0 +1,134 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -3243,6 +3243,8 @@
+     id<MTLBuffer> vascularCavityNodeRanges = nil;
+     id<MTLBuffer> vascularCavitySchurDiagonal = nil;
+     bool vascularCooperativeCavityOperator = false;
++    bool vascularCacheCavityOperatorGeometry = false;
++    id<MTLBuffer> vascularCavityOperatorGeometry = nil;
+     bool vascularBlockCavitySchurEnabled = false;
+     bool vascularBlockPreconditionerEnabled = false;
+     bool vascularBloodMassTangentRequested = false;
+@@ -6020,6 +6022,18 @@
+             candidate->vascularCooperativeCavityOperator =
+                 std::strcmp(policy, "1") == 0;
+         }
++        if (const char* policy = std::getenv("NM_VASCULAR_CACHE_CAVITY_OPERATOR_GEOMETRY")) {
++            if (std::strcmp(policy, "0") != 0 && std::strcmp(policy, "1") != 0) {
++                diagnostics.message = "NM_VASCULAR_CACHE_CAVITY_OPERATOR_GEOMETRY must be 0 or 1";
++                return diagnostics;
++            }
++            candidate->vascularCacheCavityOperatorGeometry = std::strcmp(policy, "1") == 0;
++            if (candidate->vascularCacheCavityOperatorGeometry &&
++                (!candidate->vascularCooperativeCavityOperator || world.vascular.cavityFaces.empty())) {
++                diagnostics.message = "cavity geometry caching requires the cooperative operator and cavity faces";
++                return diagnostics;
++            }
++        }
+         if (const char* policy = std::getenv("NUMI_MATTER_VASCULAR_BLOCK_CAVITY_SCHUR")) {
+             if (std::strcmp(policy,"0") != 0 && std::strcmp(policy,"1") != 0) {
+                 diagnostics.message="NUMI_MATTER_VASCULAR_BLOCK_CAVITY_SCHUR must be exactly 0 or 1";
+@@ -8353,6 +8367,9 @@
+         if (candidate->vascularCooperativeCavityOperator)
+             candidate->executionFingerprint = mixFingerprint(
+                 candidate->executionFingerprint, 0x564153434f4f5031ull); // VASCOOP1
++        if (candidate->vascularCacheCavityOperatorGeometry)
++            candidate->executionFingerprint = mixFingerprint(
++                candidate->executionFingerprint, 0x5641534341434831ull); // VASCACH1
+         if (candidate->contactGeometryZeroStepReuseEnabled) {
+             candidate->executionFingerprint = mixFingerprint(
+                 candidate->executionFingerprint, 0x43545a45524f3031ull); // CTZERO01
+@@ -9036,6 +9053,7 @@
+             "nm_vascular_dense_solve",
+             "nm_vascular_operator",
+             "nm_vascular_operator_cooperative",
++            "nm_vascular_prepare_cavity_operator_geometry",
+             "nm_vascular_predictor_prepare",
+             "nm_vascular_cavity_forces",
+             "nm_vascular_cavity_operator",
+@@ -9967,6 +9985,9 @@
+             if (!candidate->vascularCooperativeCavityOperator &&
+                 std::strcmp(name, "nm_vascular_operator_cooperative") == 0)
+                 continue;
++            if (!candidate->vascularCacheCavityOperatorGeometry &&
++                std::strcmp(name, "nm_vascular_prepare_cavity_operator_geometry") == 0)
++                continue;
+             // These optional scheduler pipelines have no consumers when
+             // tiled observation is disabled; retain the legacy pipeline only.
+             if ((std::strcmp(name, "nm_scheduler_observe_fem_partials") == 0 ||
+@@ -11189,6 +11210,12 @@
+         candidate->vascularCavityFaces = uploads.one(
+             std::span<const NMVascularCavityFaceGPU>(world.vascular.cavityFaces),
+             valid, candidate->residentBytes);
++        if (candidate->vascularCooperativeCavityOperator) {
++            const std::size_t recordCount = candidate->vascularCacheCavityOperatorGeometry
++                ? environments * world.vascular.cavityFaces.size() : 1u;
++            candidate->vascularCavityOperatorGeometry = privateScratch<std::array<float, 36>>(
++                candidate->device, recordCount, valid, candidate->residentBytes);
++        }
+         candidate->vascularCompartmentCavity = uploads.one(
+             std::span<const std::uint32_t>(world.vascular.compartmentCavity),
+             valid, candidate->residentBytes);
+@@ -23875,8 +23902,12 @@
+                 };
+                 if (state.vascularCooperativeCavityOperator &&
+                     std::strcmp(kernel, "nm_vascular_operator") == 0) {
+-                    dispatchGroups32("nm_vascular_operator_cooperative",
+-                        vascularTotal, bindEquation);
++                    dispatchGroups32("nm_vascular_operator_cooperative", vascularTotal, [&] {
++                        bindEquation();
++                        const std::uint32_t useCache = 0u;
++                        [encoder setBuffer:state.vascularCavityOperatorGeometry offset:0u atIndex:28u];
++                        [encoder setBytes:&useCache length:sizeof(useCache) atIndex:29u];
++                    });
+                 } else {
+                     dispatchThreads(kernel, vascularTotal, bindEquation);
+                 }
+@@ -36027,6 +36058,22 @@
+                 state.statuses, state.femCandidate, nil);
+                         encodeCohesiveFaceForces(micro);
+             encodeCavityForces(WorkDomain::newtonAssemblyFemNodes);
++            // Cache is scoped to the current candidate and its Arnoldi ICB.
++            // Direct operator checks and final physical certification stay fresh.
++            if (state.vascularCacheCavityOperatorGeometry) {
++                dispatchGroups32("nm_vascular_prepare_cavity_operator_geometry",
++                    environments * state.vascularValue.layout.cavities.x, [&] {
++                        setDispatch();
++                        [encoder setBytes:&state.vascularValue.layout
++                            length:sizeof(state.vascularValue.layout) atIndex:1u];
++                        [encoder setBuffer:state.vascularCavities offset:0u atIndex:2u];
++                        [encoder setBuffer:state.vascularCavityFaces offset:0u atIndex:3u];
++                        [encoder setBuffer:state.femCandidate offset:0u atIndex:4u];
++                        [encoder setBuffer:state.femAccepted offset:0u atIndex:5u];
++                        [encoder setBuffer:state.vascularCavityOperatorGeometry offset:0u atIndex:6u];
++                        [encoder setBuffer:state.statuses offset:0u atIndex:7u];
++                    });
++            }
+             if (femNewtonTailICBEnabledForCurrentRoot) {
+                 executeNewtonTailICB(1u, "nm_fem_build_mechanical_residual");
+             } else {
+@@ -41204,6 +41251,7 @@
+                         std::uint32_t allowConverged;
+                         std::uint32_t springCount;
+                         std::uint32_t useWorkingSet;
++                        std::uint32_t useVascularGeometryCache;
+                         std::uint32_t currentBodyCount;
+                         std::uint32_t bodyStride;
+                         std::uint32_t compensatedTranslation;
+@@ -44036,6 +44084,7 @@
+                         state.vascularValue.layout, state.humanSupportDispatch,
+                         state.humanEqualityDispatch, coupledArticulatedNv, useCache,
+                         0u, 0u, request.humanImplicitSpringCount, 1u,
++                        state.vascularCacheCavityOperatorGeometry ? 1u : 0u,
+                         request.rigid.currentBodyCount, state.coupledBodyStride,
+                         state.coupledCandidateCompensatedTranslation ? 1u : 0u,
+                         assembledXYZNNZ,
+@@ -45187,6 +45236,8 @@
+                         bind(cmd, 25u, state.vascularCompartmentCavity);
+                         bind(cmd, 26u, state.femCandidate); bind(cmd, 27u, state.femAccepted);
+                         if (state.vascularCooperativeCavityOperator) {
++                            bind(cmd, 28u, state.vascularCavityOperatorGeometry);
++                            scalar(cmd, 29u, offsetof(OperatorICBConstants, useVascularGeometryCache));
+                             [cmd setBarrier];
+                             [cmd concurrentDispatchThreadgroups:
+                                 MTLSizeMake(vascularTotal, 1u, 1u)
