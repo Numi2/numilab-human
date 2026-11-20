@@ -2,6 +2,7 @@
 import difflib
 import hashlib
 import json
+import math
 import sys
 from pathlib import Path
 import subprocess
@@ -85,22 +86,25 @@ ENTRIES
         '        if(handFitSetting)identityText+="|coarse-hand-interface-v1|' + digest(fit_path) +
         '";\n' + before_hash)
 
-def inject_clearance(source):
-    fit = json.loads(CLEARANCE_FIT.read_text())
+def inject_clearance(source, fit_path=CLEARANCE_FIT):
+    fit = json.loads(fit_path.read_text())
     assert fit["tangent_plane_fit_pass"]
     nodes = fit["candidate_nodes"]
-    assert 4 <= len(nodes) <= 240
+    assert 4 <= len(nodes) <= 3 * 2411
     assert len({node["local_node"] for node in nodes}) == len(nodes)
     entries = []
     for node in nodes:
         role, row = divmod(node["local_node"], 2411)
         assert 0 <= role < 3
-        ref = ", ".join(map(repr, node["source_world_m"]))
-        delta = ", ".join(map(repr, node["world_delta_m"]))
+        coordinates, shifts = node["source_world_m"], node["world_delta_m"]
+        assert len(coordinates) == len(shifts) == 3
+        assert all(math.isfinite(value) for value in coordinates + shifts)
+        ref = ", ".join(map(repr, coordinates))
+        delta = ", ".join(map(repr, shifts))
         entries.append(f"                   {{{role}u, {row}u, {{{ref}}}, {{{delta}}}}}")
     point = "        const double skinDebit=enableWholeBodySkinFat?kWholeBodySkinMassDebitKg:"
     digest_point = "        const auto digest=loadedKneeSHA256(identityText.data(),identityText.size());"
-    fit_hash = digest(CLEARANCE_FIT)
+    fit_hash = digest(fit_path)
     assert source.count(point) == source.count(digest_point) == 1
     block = (HERE / "hand-clearance-trial.mm.inc").read_text()
     block = block.replace("POINT_COUNT", str(len(nodes))).replace("POINTS", ",\n".join(entries))
@@ -112,6 +116,21 @@ def inject_clearance(source):
 
 def main():
     mode = sys.argv[1:]
+    if mode and mode[0] == "--bank-audit":
+        import argparse
+        parser = argparse.ArgumentParser()
+        parser.add_argument("fit", type=Path)
+        parser.add_argument("out", type=Path)
+        options = parser.parse_args(mode[1:])
+        out = options.out.resolve()
+        out.mkdir(exist_ok=False)
+        source = (SOURCE / APP).read_text()
+        updated = inject_clearance(source, options.fit)
+        spot = '        const char* fullBankComparisonPath=std::getenv('
+        assert updated.count(spot) == 1
+        updated = updated.replace(spot, (HERE / "bank-witness.mm.inc").read_text() + spot)
+        build(source, updated, out, out / "native.patch")
+        return
     assert mode in ([], ["--connected"], ["--witness"], ["--clearance"])
     connected = bool(mode)
     witness = mode == ["--witness"]
@@ -125,12 +144,16 @@ def main():
         spot = '        const char* fullBankComparisonPath=std::getenv('
         assert updated.count(spot) == 1
         updated = updated.replace(spot, (HERE / "hand-solid-witness.mm.inc").read_text() + spot)
+    patch_name = ("hand-clearance-native.patch" if clearance else "hand-solid-witness.patch" if witness else "connected-interface-native.patch"
+                  if connected else "hand-interface-native.patch")
+    build(source, updated, out, HERE / patch_name)
+
+
+def build(source, updated, out, patch_path):
     (out / APP).write_text(updated)
     patch = difflib.unified_diff(source.splitlines(keepends=True), updated.splitlines(keepends=True),
                                 fromfile="a/apps/" + APP, tofile="b/apps/" + APP)
-    patch_name = ("hand-clearance-native.patch" if clearance else "hand-solid-witness.patch" if witness else "connected-interface-native.patch"
-                  if connected else "hand-interface-native.patch")
-    (HERE / patch_name).write_text("".join(patch))
+    patch_path.write_text("".join(patch))
     compile_app, link_app = json.loads((BASE / "build-commands.json").read_text())
     names = {APP, "numi-human-native.o", "numi-human-native"}
     compile_app = [str(out / Path(arg).name)
