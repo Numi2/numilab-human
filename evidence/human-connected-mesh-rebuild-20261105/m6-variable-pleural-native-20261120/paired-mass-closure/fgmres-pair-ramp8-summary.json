@@ -1,0 +1,494 @@
+{
+  "gpu_primary_window_median_reduction": -0.004030410227351844,
+  "target_gpu_time_reduction": 0.2,
+  "promote": false,
+  "pairs": [
+    {
+      "trial": 0,
+      "primary_window_gpu_time_reduction": 8.626264719158172e-05,
+      "control": {
+        "transaction_gpu_ms": [
+          22746.6145419,
+          5528.68829155,
+          5555.52687496,
+          5571.60599995,
+          5621.11874996,
+          5633.31329147,
+          5830.34412493,
+          5841.61641658
+        ],
+        "first_four_gpu_ms": 39402.43570836,
+        "entire_launch_wall_s": 78.37896783300675,
+        "realtime_factor_including_setup": 0.00020413639580058518,
+        "pleural_pa_range": [
+          -497.963897705,
+          -490.642364502
+        ],
+        "coupled_trace_sha256": "7d677e63bdfabc853facfd405bd35706cbc29dc2d98e2993a5ca19c751cb10b6"
+      },
+      "distributed": {
+        "transaction_gpu_ms": [
+          22687.0350833,
+          5547.92179167,
+          5574.26124997,
+          5589.81862501,
+          5636.33795828,
+          5654.11062515,
+          6177.98262485,
+          5850.24991655
+        ],
+        "first_four_gpu_ms": 39399.03674995,
+        "entire_launch_wall_s": 78.99964470788836,
+        "realtime_factor_including_setup": 0.00020253255643316013,
+        "pleural_pa_range": [
+          -497.963897705,
+          -490.642364502
+        ],
+        "coupled_trace_sha256": "68c0b850b76b9a15420b8eef322285fa79345fb7b23ef5307a0548b1ba460f15"
+      },
+      "changed_columns": {
+        "PaO2_mmhg": {
+          "maximum_absolute_difference": 0.005966186000009088,
+          "relative_to_maximum_absolute_control": 5.916052205847194e-05
+        },
+        "PaCO2_mmhg": {
+          "maximum_absolute_difference": 0.00041198730000502337,
+          "relative_to_maximum_absolute_control": 1.0284281225617296e-05
+        },
+        "SaO2": {
+          "maximum_absolute_difference": 4.231929999987116e-06,
+          "relative_to_maximum_absolute_control": 4.350127379481667e-06
+        },
+        "lv_mmhg": {
+          "maximum_absolute_difference": 3.662410000160321e-06,
+          "relative_to_maximum_absolute_control": 5.327192800215762e-07
+        },
+        "rv_mmhg": {
+          "maximum_absolute_difference": 3.7768609999488945e-06,
+          "relative_to_maximum_absolute_control": 4.312932707000212e-06
+        },
+        "aorta_mmhg": {
+          "maximum_absolute_difference": 8.789790000207631e-05,
+          "relative_to_maximum_absolute_control": 1.0321724554377165e-06
+        },
+        "pulmonary_artery_mmhg": {
+          "maximum_absolute_difference": 3.387729999992928e-05,
+          "relative_to_maximum_absolute_control": 2.4569763807136234e-06
+        },
+        "lv_ml": {
+          "maximum_absolute_difference": 3.63799999973935e-05,
+          "relative_to_maximum_absolute_control": 3.0221458700103086e-07
+        },
+        "rv_ml": {
+          "maximum_absolute_difference": 7.2759999994787e-05,
+          "relative_to_maximum_absolute_control": 5.195204113653597e-07
+        },
+        "blood_ml": {
+          "maximum_absolute_difference": 0.00046566000037273625,
+          "relative_to_maximum_absolute_control": 9.041902337681819e-08
+        },
+        "blood_error_ml": {
+          "maximum_absolute_difference": 0.00046566128731000047,
+          "relative_to_maximum_absolute_control": 0.02083333333340792
+        },
+        "right_atrium_ml": {
+          "maximum_absolute_difference": 1.4551900001436024e-05,
+          "relative_to_maximum_absolute_control": 4.519685016549133e-07
+        },
+        "left_atrium_ml": {
+          "maximum_absolute_difference": 2.546590000207516e-05,
+          "relative_to_maximum_absolute_control": 5.341735173152447e-07
+        },
+        "blood_continuity_residual_accum_ml": {
+          "maximum_absolute_difference": 0.00024738255890000005,
+          "relative_to_maximum_absolute_control": 0.011104724931121586
+        },
+        "blood_physical_delta_accum_ml": {
+          "maximum_absolute_difference": 0.0002673914422999992,
+          "relative_to_maximum_absolute_control": 0.011996082910722915
+        },
+        "blood_residual_minus_physical_ml": {
+          "maximum_absolute_difference": 3.01270119962e-05,
+          "relative_to_maximum_absolute_control": 0.9401330376925603
+        },
+        "blood_endpoint_minus_physical_ml": {
+          "maximum_absolute_difference": 0.000629370333627,
+          "relative_to_maximum_absolute_control": 0.6920000000000924
+        },
+        "gas_max_donor_fraction": {
+          "maximum_absolute_difference": 8.521601999999379e-08,
+          "relative_to_maximum_absolute_control": 1.2363807064456693e-05
+        },
+        "min_contact_gap_m": {
+          "maximum_absolute_difference": 1.5932346286000027e-07,
+          "relative_to_maximum_absolute_control": 0.000401982783999491
+        },
+        "peak_penetration_m": {
+          "maximum_absolute_difference": 1.5932346286000027e-07,
+          "relative_to_maximum_absolute_control": 0.000401982783999491
+        },
+        "normal_impulse_ns": {
+          "maximum_absolute_difference": 9.242445299999583e-06,
+          "relative_to_maximum_absolute_control": 8.979141532757829e-05
+        },
+        "pre_projection_contact_residual_m_s": {
+          "maximum_absolute_difference": 5.4345394850949994e-09,
+          "relative_to_maximum_absolute_control": 0.5459028784519623
+        },
+        "pre_projection_limit_residual_generalized_s": {
+          "maximum_absolute_difference": 2.5329895514399997e-08,
+          "relative_to_maximum_absolute_control": 0.8358468396644063
+        },
+        "pre_projection_equality_residual_generalized_s": {
+          "maximum_absolute_difference": 7.461871405219999e-07,
+          "relative_to_maximum_absolute_control": 0.5003209173389112
+        },
+        "post_projection_contact_residual_m_s": {
+          "maximum_absolute_difference": 5.4345394850949994e-09,
+          "relative_to_maximum_absolute_control": 0.5459028784519623
+        },
+        "post_projection_limit_residual_generalized_s": {
+          "maximum_absolute_difference": 2.5329895514399997e-08,
+          "relative_to_maximum_absolute_control": 0.8358468396644063
+        },
+        "post_projection_equality_residual_generalized_s": {
+          "maximum_absolute_difference": 1.395282112069e-09,
+          "relative_to_maximum_absolute_control": 1.6938723138119274
+        },
+        "equality_position_projection_max_generalized": {
+          "maximum_absolute_difference": 7.450580596880001e-09,
+          "relative_to_maximum_absolute_control": 0.49999999999865785
+        },
+        "equality_velocity_projection_max_generalized_s": {
+          "maximum_absolute_difference": 5.0322604750100005e-08,
+          "relative_to_maximum_absolute_control": 0.3852630620420273
+        }
+      }
+    },
+    {
+      "trial": 1,
+      "primary_window_gpu_time_reduction": -0.006345467764815593,
+      "control": {
+        "transaction_gpu_ms": [
+          22710.8082499,
+          5521.32270834,
+          5545.15141668,
+          5561.60233333,
+          5615.0304582,
+          5627.57624988,
+          5820.17441653,
+          5832.65662496
+        ],
+        "first_four_gpu_ms": 39338.88470825,
+        "entire_launch_wall_s": 78.2537188748829,
+        "realtime_factor_including_setup": 0.00020446312622639484,
+        "pleural_pa_range": [
+          -497.963897705,
+          -490.642364502
+        ],
+        "coupled_trace_sha256": "7d677e63bdfabc853facfd405bd35706cbc29dc2d98e2993a5ca19c751cb10b6"
+      },
+      "distributed": {
+        "transaction_gpu_ms": [
+          22851.1400416,
+          5556.13349983,
+          5591.63904167,
+          5589.59574997,
+          5638.05125002,
+          5637.54162495,
+          6162.86629182,
+          5850.88199982
+        ],
+        "first_four_gpu_ms": 39588.50833307,
+        "entire_launch_wall_s": 79.45199433295056,
+        "realtime_factor_including_setup": 0.00020137946359094014,
+        "pleural_pa_range": [
+          -497.963897705,
+          -490.642364502
+        ],
+        "coupled_trace_sha256": "68c0b850b76b9a15420b8eef322285fa79345fb7b23ef5307a0548b1ba460f15"
+      },
+      "changed_columns": {
+        "PaO2_mmhg": {
+          "maximum_absolute_difference": 0.005966186000009088,
+          "relative_to_maximum_absolute_control": 5.916052205847194e-05
+        },
+        "PaCO2_mmhg": {
+          "maximum_absolute_difference": 0.00041198730000502337,
+          "relative_to_maximum_absolute_control": 1.0284281225617296e-05
+        },
+        "SaO2": {
+          "maximum_absolute_difference": 4.231929999987116e-06,
+          "relative_to_maximum_absolute_control": 4.350127379481667e-06
+        },
+        "lv_mmhg": {
+          "maximum_absolute_difference": 3.662410000160321e-06,
+          "relative_to_maximum_absolute_control": 5.327192800215762e-07
+        },
+        "rv_mmhg": {
+          "maximum_absolute_difference": 3.7768609999488945e-06,
+          "relative_to_maximum_absolute_control": 4.312932707000212e-06
+        },
+        "aorta_mmhg": {
+          "maximum_absolute_difference": 8.789790000207631e-05,
+          "relative_to_maximum_absolute_control": 1.0321724554377165e-06
+        },
+        "pulmonary_artery_mmhg": {
+          "maximum_absolute_difference": 3.387729999992928e-05,
+          "relative_to_maximum_absolute_control": 2.4569763807136234e-06
+        },
+        "lv_ml": {
+          "maximum_absolute_difference": 3.63799999973935e-05,
+          "relative_to_maximum_absolute_control": 3.0221458700103086e-07
+        },
+        "rv_ml": {
+          "maximum_absolute_difference": 7.2759999994787e-05,
+          "relative_to_maximum_absolute_control": 5.195204113653597e-07
+        },
+        "blood_ml": {
+          "maximum_absolute_difference": 0.00046566000037273625,
+          "relative_to_maximum_absolute_control": 9.041902337681819e-08
+        },
+        "blood_error_ml": {
+          "maximum_absolute_difference": 0.00046566128731000047,
+          "relative_to_maximum_absolute_control": 0.02083333333340792
+        },
+        "right_atrium_ml": {
+          "maximum_absolute_difference": 1.4551900001436024e-05,
+          "relative_to_maximum_absolute_control": 4.519685016549133e-07
+        },
+        "left_atrium_ml": {
+          "maximum_absolute_difference": 2.546590000207516e-05,
+          "relative_to_maximum_absolute_control": 5.341735173152447e-07
+        },
+        "blood_continuity_residual_accum_ml": {
+          "maximum_absolute_difference": 0.00024738255890000005,
+          "relative_to_maximum_absolute_control": 0.011104724931121586
+        },
+        "blood_physical_delta_accum_ml": {
+          "maximum_absolute_difference": 0.0002673914422999992,
+          "relative_to_maximum_absolute_control": 0.011996082910722915
+        },
+        "blood_residual_minus_physical_ml": {
+          "maximum_absolute_difference": 3.01270119962e-05,
+          "relative_to_maximum_absolute_control": 0.9401330376925603
+        },
+        "blood_endpoint_minus_physical_ml": {
+          "maximum_absolute_difference": 0.000629370333627,
+          "relative_to_maximum_absolute_control": 0.6920000000000924
+        },
+        "gas_max_donor_fraction": {
+          "maximum_absolute_difference": 8.521601999999379e-08,
+          "relative_to_maximum_absolute_control": 1.2363807064456693e-05
+        },
+        "min_contact_gap_m": {
+          "maximum_absolute_difference": 1.5932346286000027e-07,
+          "relative_to_maximum_absolute_control": 0.000401982783999491
+        },
+        "peak_penetration_m": {
+          "maximum_absolute_difference": 1.5932346286000027e-07,
+          "relative_to_maximum_absolute_control": 0.000401982783999491
+        },
+        "normal_impulse_ns": {
+          "maximum_absolute_difference": 9.242445299999583e-06,
+          "relative_to_maximum_absolute_control": 8.979141532757829e-05
+        },
+        "pre_projection_contact_residual_m_s": {
+          "maximum_absolute_difference": 5.4345394850949994e-09,
+          "relative_to_maximum_absolute_control": 0.5459028784519623
+        },
+        "pre_projection_limit_residual_generalized_s": {
+          "maximum_absolute_difference": 2.5329895514399997e-08,
+          "relative_to_maximum_absolute_control": 0.8358468396644063
+        },
+        "pre_projection_equality_residual_generalized_s": {
+          "maximum_absolute_difference": 7.461871405219999e-07,
+          "relative_to_maximum_absolute_control": 0.5003209173389112
+        },
+        "post_projection_contact_residual_m_s": {
+          "maximum_absolute_difference": 5.4345394850949994e-09,
+          "relative_to_maximum_absolute_control": 0.5459028784519623
+        },
+        "post_projection_limit_residual_generalized_s": {
+          "maximum_absolute_difference": 2.5329895514399997e-08,
+          "relative_to_maximum_absolute_control": 0.8358468396644063
+        },
+        "post_projection_equality_residual_generalized_s": {
+          "maximum_absolute_difference": 1.395282112069e-09,
+          "relative_to_maximum_absolute_control": 1.6938723138119274
+        },
+        "equality_position_projection_max_generalized": {
+          "maximum_absolute_difference": 7.450580596880001e-09,
+          "relative_to_maximum_absolute_control": 0.49999999999865785
+        },
+        "equality_velocity_projection_max_generalized_s": {
+          "maximum_absolute_difference": 5.0322604750100005e-08,
+          "relative_to_maximum_absolute_control": 0.3852630620420273
+        }
+      }
+    },
+    {
+      "trial": 2,
+      "primary_window_gpu_time_reduction": -0.004030410227351844,
+      "control": {
+        "transaction_gpu_ms": [
+          22591.6580416,
+          5516.56254148,
+          5543.79112506,
+          5558.25474998,
+          5608.78774989,
+          5623.64137499,
+          5823.88891676,
+          5829.52237502
+        ],
+        "first_four_gpu_ms": 39210.26645812,
+        "entire_launch_wall_s": 78.00971691706218,
+        "realtime_factor_including_setup": 0.0002051026542887057,
+        "pleural_pa_range": [
+          -497.963897705,
+          -490.642364502
+        ],
+        "coupled_trace_sha256": "7d677e63bdfabc853facfd405bd35706cbc29dc2d98e2993a5ca19c751cb10b6"
+      },
+      "distributed": {
+        "transaction_gpu_ms": [
+          22767.5397084,
+          5509.74395848,
+          5540.77454167,
+          5550.24170852,
+          5614.62387489,
+          5619.24412497,
+          6142.49466662,
+          5817.59575009
+        ],
+        "first_four_gpu_ms": 39368.29991707,
+        "entire_launch_wall_s": 79.49588741594926,
+        "realtime_factor_including_setup": 0.00020126827336718202,
+        "pleural_pa_range": [
+          -497.963897705,
+          -490.642364502
+        ],
+        "coupled_trace_sha256": "68c0b850b76b9a15420b8eef322285fa79345fb7b23ef5307a0548b1ba460f15"
+      },
+      "changed_columns": {
+        "PaO2_mmhg": {
+          "maximum_absolute_difference": 0.005966186000009088,
+          "relative_to_maximum_absolute_control": 5.916052205847194e-05
+        },
+        "PaCO2_mmhg": {
+          "maximum_absolute_difference": 0.00041198730000502337,
+          "relative_to_maximum_absolute_control": 1.0284281225617296e-05
+        },
+        "SaO2": {
+          "maximum_absolute_difference": 4.231929999987116e-06,
+          "relative_to_maximum_absolute_control": 4.350127379481667e-06
+        },
+        "lv_mmhg": {
+          "maximum_absolute_difference": 3.662410000160321e-06,
+          "relative_to_maximum_absolute_control": 5.327192800215762e-07
+        },
+        "rv_mmhg": {
+          "maximum_absolute_difference": 3.7768609999488945e-06,
+          "relative_to_maximum_absolute_control": 4.312932707000212e-06
+        },
+        "aorta_mmhg": {
+          "maximum_absolute_difference": 8.789790000207631e-05,
+          "relative_to_maximum_absolute_control": 1.0321724554377165e-06
+        },
+        "pulmonary_artery_mmhg": {
+          "maximum_absolute_difference": 3.387729999992928e-05,
+          "relative_to_maximum_absolute_control": 2.4569763807136234e-06
+        },
+        "lv_ml": {
+          "maximum_absolute_difference": 3.63799999973935e-05,
+          "relative_to_maximum_absolute_control": 3.0221458700103086e-07
+        },
+        "rv_ml": {
+          "maximum_absolute_difference": 7.2759999994787e-05,
+          "relative_to_maximum_absolute_control": 5.195204113653597e-07
+        },
+        "blood_ml": {
+          "maximum_absolute_difference": 0.00046566000037273625,
+          "relative_to_maximum_absolute_control": 9.041902337681819e-08
+        },
+        "blood_error_ml": {
+          "maximum_absolute_difference": 0.00046566128731000047,
+          "relative_to_maximum_absolute_control": 0.02083333333340792
+        },
+        "right_atrium_ml": {
+          "maximum_absolute_difference": 1.4551900001436024e-05,
+          "relative_to_maximum_absolute_control": 4.519685016549133e-07
+        },
+        "left_atrium_ml": {
+          "maximum_absolute_difference": 2.546590000207516e-05,
+          "relative_to_maximum_absolute_control": 5.341735173152447e-07
+        },
+        "blood_continuity_residual_accum_ml": {
+          "maximum_absolute_difference": 0.00024738255890000005,
+          "relative_to_maximum_absolute_control": 0.011104724931121586
+        },
+        "blood_physical_delta_accum_ml": {
+          "maximum_absolute_difference": 0.0002673914422999992,
+          "relative_to_maximum_absolute_control": 0.011996082910722915
+        },
+        "blood_residual_minus_physical_ml": {
+          "maximum_absolute_difference": 3.01270119962e-05,
+          "relative_to_maximum_absolute_control": 0.9401330376925603
+        },
+        "blood_endpoint_minus_physical_ml": {
+          "maximum_absolute_difference": 0.000629370333627,
+          "relative_to_maximum_absolute_control": 0.6920000000000924
+        },
+        "gas_max_donor_fraction": {
+          "maximum_absolute_difference": 8.521601999999379e-08,
+          "relative_to_maximum_absolute_control": 1.2363807064456693e-05
+        },
+        "min_contact_gap_m": {
+          "maximum_absolute_difference": 1.5932346286000027e-07,
+          "relative_to_maximum_absolute_control": 0.000401982783999491
+        },
+        "peak_penetration_m": {
+          "maximum_absolute_difference": 1.5932346286000027e-07,
+          "relative_to_maximum_absolute_control": 0.000401982783999491
+        },
+        "normal_impulse_ns": {
+          "maximum_absolute_difference": 9.242445299999583e-06,
+          "relative_to_maximum_absolute_control": 8.979141532757829e-05
+        },
+        "pre_projection_contact_residual_m_s": {
+          "maximum_absolute_difference": 5.4345394850949994e-09,
+          "relative_to_maximum_absolute_control": 0.5459028784519623
+        },
+        "pre_projection_limit_residual_generalized_s": {
+          "maximum_absolute_difference": 2.5329895514399997e-08,
+          "relative_to_maximum_absolute_control": 0.8358468396644063
+        },
+        "pre_projection_equality_residual_generalized_s": {
+          "maximum_absolute_difference": 7.461871405219999e-07,
+          "relative_to_maximum_absolute_control": 0.5003209173389112
+        },
+        "post_projection_contact_residual_m_s": {
+          "maximum_absolute_difference": 5.4345394850949994e-09,
+          "relative_to_maximum_absolute_control": 0.5459028784519623
+        },
+        "post_projection_limit_residual_generalized_s": {
+          "maximum_absolute_difference": 2.5329895514399997e-08,
+          "relative_to_maximum_absolute_control": 0.8358468396644063
+        },
+        "post_projection_equality_residual_generalized_s": {
+          "maximum_absolute_difference": 1.395282112069e-09,
+          "relative_to_maximum_absolute_control": 1.6938723138119274
+        },
+        "equality_position_projection_max_generalized": {
+          "maximum_absolute_difference": 7.450580596880001e-09,
+          "relative_to_maximum_absolute_control": 0.49999999999865785
+        },
+        "equality_velocity_projection_max_generalized_s": {
+          "maximum_absolute_difference": 5.0322604750100005e-08,
+          "relative_to_maximum_absolute_control": 0.3852630620420273
+        }
+      }
+    }
+  ],
+  "scope": "26 fascia regions and two ACL objects, eight 2 ms release roots, headless. The paired calculation tests the first four roots."
+}

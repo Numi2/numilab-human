@@ -1,0 +1,1 @@
+The initial four-step launch was rejected at setup because it ended before the declared eight-root gravity ramp completed. The replacement schedules eight roots and retains the first four as the preregistered primary window. The scene, eight-root gravity ramp, tolerances and inputs are unchanged. Three pairs alternate launch order as before.
