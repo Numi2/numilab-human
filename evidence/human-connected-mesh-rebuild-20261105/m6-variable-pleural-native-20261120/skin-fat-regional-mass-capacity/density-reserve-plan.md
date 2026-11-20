@@ -1,0 +1,3 @@
+# Current-frame mass capacity trial
+
+The fixed-element-mass reroute left 0.306214 g outside the regional graph. This trial permits redistribution only within the admitted per-cell skin/fat density intervals and checks the original per-carrier quotas and current-frame typed region eligibility. The repaired mesh, source anatomy and prior accepted runtime configuration stay pinned. The trial predicts closures at both the lower density and carrier quota bounds. Any remaining domain shortage or carrier residual above 1e-10 relative rejects the candidate. Independent volume, mass, movement distance, provenance and native admission checks are required after closure.

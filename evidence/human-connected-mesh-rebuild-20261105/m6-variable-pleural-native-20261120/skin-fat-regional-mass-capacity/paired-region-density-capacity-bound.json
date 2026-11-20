@@ -1,0 +1,56 @@
+{
+  "Skin": {
+    "cell_count": 705091,
+    "domain_count": 220,
+    "legal_region_edges": 2162,
+    "strict_group_capacities_feasible": false,
+    "solver_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)",
+    "source_mass_kg": 3.453706733729182,
+    "relaxed_lower_mass_deficit_kg": 0.0002900391296898357,
+    "deficit_domains": [
+      {
+        "mass_underflow_kg": 0.0002900391296898357,
+        "region_ids": [
+          120,
+          121
+        ]
+      }
+    ],
+    "relaxed_dual_lower_bound_kg": 0.0002900391296898359,
+    "analytic_deficit_cut": {
+      "region_ids": [
+        120,
+        121
+      ],
+      "minimum_required_kg": 0.002203701426657503,
+      "maximum_available_kg": 0.001913662296967667,
+      "shortage_kg": 0.0002900391296898359,
+      "constrained_cells": 6180,
+      "region_quota_by_id_kg": {
+        "120": 0.0012485859908430165,
+        "121": 0.0006650763061246506
+      },
+      "min_world_position_m": [
+        0.23535455763339996,
+        -1.034430980682373,
+        0.0829082578420639
+      ],
+      "max_world_position_m": [
+        0.2646028995513916,
+        -1.0019512176513672,
+        0.10829300433397293
+      ]
+    }
+  },
+  "Fat": {
+    "cell_count": 743713,
+    "domain_count": 224,
+    "legal_region_edges": 2220,
+    "strict_group_capacities_feasible": true,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "source_mass_kg": 10.490873602615979,
+    "maximum_carrier_region_residual_kg": 4.440892098500626e-16,
+    "maximum_lower_mass_violation_kg": 4.440892098500626e-16,
+    "maximum_upper_mass_violation_kg": 2.7755575615628914e-17
+  }
+}
