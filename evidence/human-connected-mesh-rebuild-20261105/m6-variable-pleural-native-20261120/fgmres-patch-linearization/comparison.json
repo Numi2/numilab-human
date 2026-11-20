@@ -1,0 +1,44 @@
+{
+  "scope": "One stage-instrumented root per run, with identical accepted physiology/contact fields and Krylov work counts.",
+  "control": "/Users/numi/Work/human-integrated-gaps-20261104/fgmres-patch-linearization-019/control-root-1",
+  "accepted_simulated_s": 4.6875e-05,
+  "gpu_linear_control_ms": 9927.3875,
+  "gpu_linear_cache_ms": 9385.507581,
+  "relative_gpu_linear_time_reduction": 0.05458434245666355,
+  "wall_s_control": 188.89350708411075,
+  "wall_s_cache": 187.0702331669163,
+  "cache_bytes": 47207136,
+  "exact_shared_trace_fields": 231,
+  "exact_native_trace_sha256": {
+    "resting-body-motion-partition.csv": "c682456e29048da17887c4d40db25f34149f39d84f622f839be99700ecdb736b",
+    "resting-com-momentum-diagnostic.csv": "3398dd4fd7858a9d9bb1dd8d023c0a5d903b0f60083c4a34c90b75d24367548e",
+    "resting-com-q-index-map.csv": "0d28196086180ad69256142c3c68db5000d9f431319ac2b4c9310956469ff9ab",
+    "resting-com-q-integration.csv": "0e15ed4f7632bfdf9632cc929404ce697f371dc3561c9984a54ac42623136962",
+    "resting-com-q-support-slip.csv": "ef4df1ea809c22d7fd3ebca1d8c11a7fc74daf525917196df89cd1aa4de29fcd",
+    "resting-com-support-impulses.csv": "c88c2b5999f6b48603b86e2c2c80afa7a12ea3d0305cc2efdb9dd6d226a75af2",
+    "resting-coupled.csv": "38168b5ab3e2e0bb754dc40b4fc013e605eb967661931e4ef3158549a11d35f8",
+    "resting-support-point-motion.csv": "556de4a9741ccbb1cd67ce5139b0f233a8a25253f4f2d293fdcc31855b8a19a8",
+    "resting-support-selected-skin-witness.csv": "42955cafea168f8d021e327ad92befc45d15fe84f7c489eac13b49468be4d685",
+    "resting-surface-audit.csv": "349ac9a3ce763dbc924f712f2fcee9113a80f57cfed1242b9c62b8b5eef2ff3e"
+  },
+  "work_counts": {
+    "0": {
+      "columns": 416,
+      "restarts": 26,
+      "newton_begins": 11,
+      "exhausted_solves": 3
+    },
+    "1": {
+      "columns": 240,
+      "restarts": 15,
+      "newton_begins": 3,
+      "exhausted_solves": 4
+    },
+    "2": {
+      "columns": 128,
+      "restarts": 8,
+      "newton_begins": 2,
+      "exhausted_solves": 2
+    }
+  }
+}

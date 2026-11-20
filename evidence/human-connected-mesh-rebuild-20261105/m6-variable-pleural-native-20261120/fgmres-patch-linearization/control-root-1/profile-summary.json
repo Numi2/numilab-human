@@ -1,0 +1,177 @@
+{
+  "exit": 0,
+  "wall_seconds": 188.89350708411075,
+  "accepted_rows": 3,
+  "fields_per_row": 77,
+  "root_profiled": 1,
+  "exact_physical_trace_match": true,
+  "mismatches": [],
+  "pleural_pressure_pa_range": [
+    -490.332489014,
+    -490.332489014
+  ],
+  "stage_totals": {
+    "matter_pre": {
+      "spans": 1,
+      "sum_ms": 7.808583,
+      "max_span_ms": 7.808583,
+      "duration_ns": [
+        7808583
+      ]
+    },
+    "brain_advance": {
+      "spans": 1,
+      "sum_ms": 0.015083,
+      "max_span_ms": 0.015083,
+      "duration_ns": [
+        15083
+      ]
+    },
+    "respiratory_mechanics": {
+      "spans": 1,
+      "sum_ms": 5.531833,
+      "max_span_ms": 5.531833,
+      "duration_ns": [
+        5531833
+      ]
+    },
+    "matter_after_frame_begin": {
+      "spans": 1,
+      "sum_ms": 40.302125,
+      "max_span_ms": 40.302125,
+      "duration_ns": [
+        40302125
+      ]
+    },
+    "matter_newton_assembly": {
+      "spans": 16,
+      "sum_ms": 1517.431708,
+      "max_span_ms": 255.646375,
+      "duration_ns": [
+        255646375,
+        253000458,
+        254315750,
+        253816875,
+        253322750,
+        22474333,
+        22650916,
+        22515084,
+        23079166,
+        22433417,
+        22363584,
+        22378458,
+        22293209,
+        22862167,
+        22140958,
+        22138208
+      ]
+    },
+    "matter_newton_linear": {
+      "spans": 16,
+      "sum_ms": 9927.3875,
+      "max_span_ms": 2198.140417,
+      "duration_ns": [
+        2191764125,
+        2198140417,
+        2185743250,
+        1539766792,
+        169182750,
+        132651042,
+        135147292,
+        133386125,
+        135076042,
+        132765041,
+        131643125,
+        131230209,
+        132084916,
+        134580666,
+        131262708,
+        312963000
+      ]
+    },
+    "matter_newton_globalization": {
+      "spans": 16,
+      "sum_ms": 575.427459,
+      "max_span_ms": 47.852833,
+      "duration_ns": [
+        47840709,
+        47830625,
+        47621291,
+        47852833,
+        32672834,
+        31968000,
+        32050208,
+        32068875,
+        31782875,
+        31927750,
+        31947958,
+        32019041,
+        31925167,
+        32006334,
+        31830792,
+        32082167
+      ]
+    },
+    "matter_final_certificate": {
+      "spans": 1,
+      "sum_ms": 281.687583,
+      "max_span_ms": 281.687583,
+      "duration_ns": [
+        281687583
+      ]
+    },
+    "respiratory_gas_exchange": {
+      "spans": 1,
+      "sum_ms": 1.821333,
+      "max_span_ms": 1.821333,
+      "duration_ns": [
+        1821333
+      ]
+    },
+    "matter_after_candidate_ready": {
+      "spans": 1,
+      "sum_ms": 13.144083,
+      "max_span_ms": 13.144083,
+      "duration_ns": [
+        13144083
+      ]
+    },
+    "matter_after_microstep": {
+      "spans": 1,
+      "sum_ms": 2.308209,
+      "max_span_ms": 2.308209,
+      "duration_ns": [
+        2308209
+      ]
+    },
+    "matter_post": {
+      "spans": 1,
+      "sum_ms": 15.239583,
+      "max_span_ms": 15.239583,
+      "duration_ns": [
+        15239583
+      ]
+    },
+    "brain_resolve": {
+      "spans": 1,
+      "sum_ms": 0.001542,
+      "max_span_ms": 0.001542,
+      "duration_ns": [
+        1542
+      ]
+    },
+    "respiratory_resolve": {
+      "spans": 1,
+      "sum_ms": 0.702875,
+      "max_span_ms": 0.702875,
+      "duration_ns": [
+        702875
+      ]
+    }
+  },
+  "integrated_window": [
+    "resting_integrated_throughput accepted_start_step=1 accepted_end_step=3 simulated_s=3.12500014843e-05 wall_s=23.348561042 real_time_factor=1.3384123085e-06 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=load_compile_initial_parity_first_accepted_observer_movie_finalization"
+  ],
+  "count_unavailable_markers": 0,
+  "scope": "Instrumented headless profile of one native root. Stage splits perturb encoding. Setup and presentation are outside stage spans."
+}

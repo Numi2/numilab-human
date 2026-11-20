@@ -1,0 +1,77 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -4170,0 +4171,2 @@
++    bool fgmresPatchLinearizationCacheEnabled = false;
++    id<MTLBuffer> fgmresPatchLinearizationCache = nil;
+@@ -5996,0 +5999,11 @@
++        if (const char* value = std::getenv("NM_FGMRES_PATCH_LINEARIZATION_CACHE")) {
++            if ((std::strcmp(value,"0") != 0 && std::strcmp(value,"1") != 0) ||
++                (std::strcmp(value,"1") == 0 &&
++                 (!candidate->fgmresParallelBasePreconditionerEnabled ||
++                  (candidate->fgmresParallelBasePreconditionerMask & 1u) == 0u ||
++                  world.dispatch.femNodeCount >= (1u << 24u)))) {
++                diagnostics.message = "patch linearization cache requires parallel patches and 24-bit node indices";
++                return diagnostics;
++            }
++            candidate->fgmresPatchLinearizationCacheEnabled = std::strcmp(value,"1") == 0;
++        }
+@@ -8900,0 +8914,3 @@
++            "nm_fgmres_build_patch_linearization_cache",
++            "nm_fgmres_precondition_cached_patch_elements",
++            "nm_fgmres_precondition_cached_patch_gather",
+@@ -9955,0 +9972,4 @@
++            if (!candidate->fgmresPatchLinearizationCacheEnabled &&
++                (std::strcmp(name, "nm_fgmres_build_patch_linearization_cache") == 0 ||
++                 std::strcmp(name, "nm_fgmres_precondition_cached_patch_elements") == 0 ||
++                 std::strcmp(name, "nm_fgmres_precondition_cached_patch_gather") == 0)) continue;
+@@ -13881,0 +13902,18 @@
++        if (candidate->fgmresPatchLinearizationCacheEnabled) {
++            // One uint4 of masked node indices and one float4 diagonal per tetrahedron.
++            struct PatchLinearizationEntry { nm_uint4 nodes; nm_float4 diagonal; };
++            static_assert(sizeof(PatchLinearizationEntry) == 32u);
++            const std::size_t entries = multiplied(world.dispatch.tetrahedronCount);
++            if (!valid || entries > candidate->device.maxBufferLength / sizeof(PatchLinearizationEntry)) {
++                diagnostics.message = "patch linearization cache exceeds the Metal buffer limit";
++                return diagnostics;
++            }
++            candidate->fgmresPatchLinearizationCache = privateScratch<PatchLinearizationEntry>(
++                candidate->device, entries, valid, candidate->residentBytes);
++            if (!valid || candidate->fgmresPatchLinearizationCache == nil) {
++                diagnostics.message = "could not allocate patch linearization cache";
++                return diagnostics;
++            }
++            std::fprintf(stderr, "matter_patch_linearization_cache bytes=%lu\n",
++                static_cast<unsigned long>(candidate->fgmresPatchLinearizationCache.length));
++        }
+@@ -42103 +42141,17 @@
+-                    dispatchThreads("nm_fgmres_precondition_patch_elements",tetrahedronTotal,[&] {
++                    const bool cachePatchLinearization =
++                        state.fgmresPatchLinearizationCache != nil;
++                    if (cachePatchLinearization && column == 0u) {
++                        // Rebuild from the active tetrahedra and current preconditioner at
++                        // restart entry. GPU completion latches guard both build and uses.
++                        dispatchThreads("nm_fgmres_build_patch_linearization_cache", tetrahedronTotal, [&] {
++                            setDispatch();
++                            [encoder setBuffer:state.femTetrahedraCandidate offset:0u atIndex:1u];
++                            [encoder setBuffer:state.femPreconditioned offset:0u atIndex:2u];
++                            [encoder setBuffer:state.fgmresPatchLinearizationCache offset:0u atIndex:3u];
++                            [encoder setBuffer:state.fgmresStates offset:0u atIndex:4u];
++                        }, WorkDomain::tetrahedra);
++                        [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++                    }
++                    dispatchThreads(cachePatchLinearization
++                            ? "nm_fgmres_precondition_cached_patch_elements"
++                            : "nm_fgmres_precondition_patch_elements", tetrahedronTotal, [&] {
+@@ -42105 +42159,2 @@
+-                        [encoder setBuffer:state.femTetrahedraCandidate offset:0u atIndex:1u];
++                        [encoder setBuffer:cachePatchLinearization
++                            ? state.fgmresPatchLinearizationCache : state.femTetrahedraCandidate offset:0u atIndex:1u];
+@@ -42112 +42167,3 @@
+-                    dispatchThreads("nm_fgmres_precondition_patch_gather",femNodeTotal,[&] {
++                    dispatchThreads(cachePatchLinearization
++                            ? "nm_fgmres_precondition_cached_patch_gather"
++                            : "nm_fgmres_precondition_patch_gather", femNodeTotal, [&] {
+@@ -42114 +42171,2 @@
+-                        [encoder setBuffer:state.femTetrahedraCandidate offset:0u atIndex:1u];
++                        [encoder setBuffer:cachePatchLinearization
++                            ? state.fgmresPatchLinearizationCache : state.femTetrahedraCandidate offset:0u atIndex:1u];

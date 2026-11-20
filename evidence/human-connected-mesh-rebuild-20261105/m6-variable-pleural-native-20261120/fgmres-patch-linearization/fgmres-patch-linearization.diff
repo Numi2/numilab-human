@@ -1,0 +1,111 @@
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -2236 +2236,10 @@
+-kernel void nm_fgmres_precondition_patch_gather(
++struct NMFGMRESPatchLinearization {
++    uint4 maskedNodes;
++    float4 diagonal;
++};
++static_assert(sizeof(NMFGMRESPatchLinearization) == 32u);
++
++constant uint kPatchNodeIndexMask = 0x00ffffffu;
++constant uint4 kPatchComponentMasks = uint4(0x01000000u, 0x02000000u, 0x04000000u, 0x08000000u);
++
++kernel void nm_fgmres_build_patch_linearization_cache(
+@@ -2238,0 +2248,66 @@
++    device const float4* inverseDiagonal [[buffer(2)]],
++    device NMFGMRESPatchLinearization* cache [[buffer(3)]],
++    device const NMFGMRESStateGPU* states [[buffer(4)]],
++    uint global [[thread_position_in_grid]]
++) {
++    if (dispatch.tetrahedronCount == 0u ||
++        global >= dispatch.environmentCount * dispatch.tetrahedronCount) return;
++    const uint environment = global / dispatch.tetrahedronCount;
++    if (states[environment].diagnostics.z > 0.5f) return;
++    const NMTetrahedronGPU tetrahedron = tetrahedra[global];
++    if ((tetrahedron.identity.w & NM_OBJECT_ACTIVE) == 0u) {
++        cache[global].maskedNodes.x = NM_INVALID_INDEX;
++        return;
++    }
++    const uint nodeBase = environment * dispatch.femNodeCount;
++    uint4 maskedNodes(0u);
++    float4 diagonalSum(0.0f);
++    for (uint local = 0u; local < 4u; ++local) {
++        const uint node = tetrahedron.nodes[local];
++        if (node >= dispatch.femNodeCount) continue;
++        const float4 inverse = inverseDiagonal[nodeBase + node];
++        const bool4 active = inverse > float4(0.0f);
++        diagonalSum += select(float4(0.0f), 1.0f / max(inverse, float4(1.0e-30f)), active);
++        const uint4 mask = select(uint4(0u), kPatchComponentMasks, active);
++        maskedNodes[local] = node | mask.x | mask.y | mask.z | mask.w;
++    }
++    cache[global] = NMFGMRESPatchLinearization{maskedNodes, max(diagonalSum, float4(1.0e-30f))};
++}
++
++kernel void nm_fgmres_precondition_cached_patch_elements(
++    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
++    device const NMFGMRESPatchLinearization* cache [[buffer(1)]],
++    device const float4* basis [[buffer(2)]],
++    device float4* scratch [[buffer(4)]],
++    device const NMFGMRESStateGPU* states [[buffer(5)]],
++    uint global [[thread_position_in_grid]]
++) {
++    if (dispatch.tetrahedronCount == 0u ||
++        global >= dispatch.environmentCount * dispatch.tetrahedronCount) return;
++    const uint environment = global / dispatch.tetrahedronCount;
++    if (states[environment].diagnostics.z > 0.5f) return;
++    const NMFGMRESPatchLinearization patch = cache[global];
++    if (patch.maskedNodes.x == NM_INVALID_INDEX) return;
++    const uint nodeBase = environment * dispatch.femNodeCount;
++    float4 residualSum(0.0f);
++    for (uint local = 0u; local < 4u; ++local) {
++        const uint packed = patch.maskedNodes[local];
++        const bool4 active = (uint4(packed) & kPatchComponentMasks) != uint4(0u);
++        if (any(active))
++            residualSum += select(float4(0.0f), basis[nodeBase + (packed & kPatchNodeIndexMask)], active);
++    }
++    scratch[global] = residualSum / patch.diagonal;
++}
++
++inline bool nmFGMRESPatchIsActive(device const NMTetrahedronGPU& tetrahedron) {
++    return (tetrahedron.identity.w & NM_OBJECT_ACTIVE) != 0u;
++}
++
++inline bool nmFGMRESPatchIsActive(device const NMFGMRESPatchLinearization& patch) {
++    return patch.maskedNodes.x != NM_INVALID_INDEX;
++}
++
++template <typename PatchRow>
++kernel void nm_fgmres_precondition_patch_gather_impl(
++    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
++    device const PatchRow* patches [[buffer(1)]],
+@@ -2259 +2334 @@
+-            (tetrahedra[elementBase + tet].identity.w & NM_OBJECT_ACTIVE) == 0u)
++            !nmFGMRESPatchIsActive(patches[elementBase + tet]))
+@@ -2270,0 +2346,26 @@
++
++template [[host_name("numi_matter_metal::nm_fgmres_precondition_patch_gather")]]
++kernel void nm_fgmres_precondition_patch_gather_impl<NMTetrahedronGPU>(
++    constant NMMatterDispatchGPU& dispatch,
++    device const NMTetrahedronGPU* patches,
++    device const uint* nodeIncidence,
++    device const NMIncidenceRangeGPU* nodeRanges,
++    device const float4* scratch,
++    device const float4* inverseDiagonal,
++    device float4* preconditioned,
++    device const NMFGMRESStateGPU* states,
++    uint global
++);
++
++template [[host_name("numi_matter_metal::nm_fgmres_precondition_cached_patch_gather")]]
++kernel void nm_fgmres_precondition_patch_gather_impl<NMFGMRESPatchLinearization>(
++    constant NMMatterDispatchGPU& dispatch,
++    device const NMFGMRESPatchLinearization* patches,
++    device const uint* nodeIncidence,
++    device const NMIncidenceRangeGPU* nodeRanges,
++    device const float4* scratch,
++    device const float4* inverseDiagonal,
++    device float4* preconditioned,
++    device const NMFGMRESStateGPU* states,
++    uint global
++);
