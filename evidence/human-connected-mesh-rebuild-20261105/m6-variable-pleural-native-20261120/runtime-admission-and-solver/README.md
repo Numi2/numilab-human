@@ -32,3 +32,21 @@ assembly, 0.786 s for the linear solve and 0.075 s for globalization.
 The final certificate interval was 0.339 s. These are timings of
 the tested solver settings for this root; integrated real-time
 performance remains unqualified.
+
+## First accepted full-volume steps
+
+Run 013 used the normal 16-pass Newton budget and the admission fix.
+It accepted both requested roots on the Apple M6. Accepted simulated
+time was 31.25 microseconds. The coupled body and physiology clocks
+matched, the trace reported zero mass residual, and the existing
+bed owner received no measurable load at this early point. Root
+assistance was disabled. Fresh mechanical residuals were 4.57e-6
+and 3.40e-6 against the existing 1.25e-5 threshold. Vascular
+residuals were 7.21e-9 and 8.99e-9 against 1e-5. Both steps were
+physical accepts. Pleural pressure was -490.33249 Pa at both samples,
+within the resolution of this abbreviated interval.
+
+The integrated physics interval was 35.039 s (8.92e-7 times real
+time), and the total invocation took 176.698 s (1.77e-7 times real
+time). Presentation was disabled for this test. The run did not
+settle onto the bed or qualify whole-body crossing counts in motion.

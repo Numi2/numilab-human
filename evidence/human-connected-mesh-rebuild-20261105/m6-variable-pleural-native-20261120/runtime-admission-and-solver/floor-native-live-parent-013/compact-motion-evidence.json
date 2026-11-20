@@ -1,0 +1,166 @@
+{
+  "native_initialization": [
+    "whole_body_skin_fat_registered_volume_install=PASS replacement_route=registered_bundle O_rows=76153 I_rows=118196 D_rows=103505 volume_nodes=311020 child_tets=1448804 source_donors=74 maximum_source_mass_delta_kg=6.1095573045122364e-13 maximum_cooked_parent_node_mass_error_kg=5.3567854501126999e-08 maximum_cooked_parent_node_mass_relative_error=0.00018559389099858658 attachment_rows=14 direct_O_render=exact_topology_volume_node_map reduction_labels=typed_O_I_D support_witness_mapping=bounded_source_four_influence_surface source_world_mutated=1 physical_steps=0 motion_qualification=pending",
+    "resting_fem_skin_bed_compiled=validated pair_rows=76153 initial_outer_min_gap_m=4.0430236936117581e-08 initial_outer_max_gap_m=0.29479485750198364 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+    "resting_vascular_external_pressure=accepted_absolute_pleural_gauge continuation_s=5 compartment_mask=2080819",
+    "resting_FEM_bed_release_initialization=prepared activation_limit=0 observational_witnesses=32 static_proxy_reactions=0 rigid_support_seed_N=0 balanced=false qualification=fresh_release_not_settled_rest support_owner=existing_Matter_FEM_contact",
+    "registered_ligament_source_geometry=admitted rows=34 retained_source_bone_meshes=185 source_bone_records=185 bone_payload_sha256=43a31ef4771e2a383ae2c7caab1b994f0c28076c2a43501860cd1ba3fe7708c0 path_guard=all_current_pose_registered_meshes endpoint_projection=bounded_current_registered_surface",
+    "matter_parallel_constitutive_backtracking=1 validity_preserved=1",
+    "human_contact_row_cache requested=1 admitted=1 rows=15449893 bytes=247198288",
+    "human_compact_immutable_contacts rows=15449893 templates=180153 seeds=595 raw_bytes=1483189728 packed_bytes=135186096 exact_roundtrip=1 rows_removed=0",
+    "human_immutable_contact_storage=shared_upload_owner cpu_staging_released_bytes=1610790592 samples=15449893 sample_rows_unchanged=1 device_allocated_bytes=7816773632 recommended_working_set_bytes=12713115648"
+  ],
+  "solver_work": [
+    {
+      "root": 0,
+      "environment": 0,
+      "used_columns_sum": 416,
+      "cycles_with_work": 26,
+      "encoded_cycles": 64,
+      "budget_exhausted_solves": 3,
+      "active_newton_begins": 11,
+      "active_restart_begins": 15,
+      "has_outer_sample": true,
+      "last_newton_iteration": 15,
+      "last_newton_latched": true,
+      "last_newton_norm": 4.5699594e-06,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 4.5699594e-06,
+      "last_fgmres_residual_norm": 4.5699594e-06,
+      "last_fgmres_initial_norm": 4.5699594e-06,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 4.5699594e-06,
+      "last_newton_correction_ratio": 0,
+      "last_newton_converged": 1,
+      "final_nonpressure_nontransport_relative_residual": 4.56995394e-06,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 0,
+      "status_object": 4294967295,
+      "status_failing_index": 4294967295,
+      "status_residual": 0,
+      "status_correction": 0
+    },
+    {
+      "root": 1,
+      "environment": 0,
+      "used_columns_sum": 240,
+      "cycles_with_work": 15,
+      "encoded_cycles": 64,
+      "budget_exhausted_solves": 4,
+      "active_newton_begins": 3,
+      "active_restart_begins": 12,
+      "has_outer_sample": true,
+      "last_newton_iteration": 15,
+      "last_newton_latched": true,
+      "last_newton_norm": 3.40376437e-06,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 3.40376437e-06,
+      "last_fgmres_residual_norm": 3.40376437e-06,
+      "last_fgmres_initial_norm": 3.40376437e-06,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 3.40376437e-06,
+      "last_newton_correction_ratio": 0,
+      "last_newton_converged": 1,
+      "final_nonpressure_nontransport_relative_residual": 3.40375254e-06,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 0,
+      "status_object": 4294967295,
+      "status_failing_index": 4294967295,
+      "status_residual": 0,
+      "status_correction": 0
+    }
+  ],
+  "domain_norms": [
+    {
+      "root": 0,
+      "environment": 0,
+      "nonvascular_norm": 4.56995349e-06,
+      "vascular_norm": 7.20676763e-09,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    {
+      "root": 1,
+      "environment": 0,
+      "nonvascular_norm": 3.40375254e-06,
+      "vascular_norm": 8.98643293e-09,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    }
+  ],
+  "contact_work": [
+    {
+      "root": 0,
+      "environment": 0,
+      "last_workspace_active_contacts": 659007,
+      "last_workspace_candidates": 3635502,
+      "last_workspace_surface_primitives": 371794,
+      "geometry_reuse_hits_last_microstep": 4
+    },
+    {
+      "root": 1,
+      "environment": 0,
+      "last_workspace_active_contacts": 659008,
+      "last_workspace_candidates": 3635512,
+      "last_workspace_surface_primitives": 371794,
+      "geometry_reuse_hits_last_microstep": 12
+    }
+  ],
+  "deformable_limit_minima": [],
+  "accepted_time_s": 3.12500014843e-05,
+  "accepted_rows": 2,
+  "accepted_sample_ranges": {
+    "pleural_pa": {
+      "minimum": -490.332489014,
+      "maximum": -490.332489014
+    },
+    "body_mass_residual_kg": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    }
+  },
+  "execution": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 176.6979816670064
+  },
+  "verified_end_to_end_simulated_per_wall_second": 1.7685545239102808e-07,
+  "gpu_boundary_cpu_arrival_intervals_s": {
+    "matter_newton_assembly": {
+      "median": 0.25136115000000003,
+      "minimum": 0.022183500000000578,
+      "maximum": 0.2538493000000024,
+      "count": 16
+    },
+    "matter_newton_linear": {
+      "median": 1.01668952,
+      "minimum": 0.023578000000000543,
+      "maximum": 2.193857600000001,
+      "count": 16
+    },
+    "matter_newton_globalization": {
+      "median": 0.04774466000000066,
+      "minimum": 0.03173799999999716,
+      "maximum": 0.04791399999999868,
+      "count": 16
+    },
+    "end": {
+      "median": 1.1699999998171506e-05,
+      "minimum": 1.1699999998171506e-05,
+      "maximum": 1.1699999998171506e-05,
+      "count": 1
+    },
+    "matter_final_certificate": {
+      "median": 0.28638600000000025,
+      "minimum": 0.28638600000000025,
+      "maximum": 0.28638600000000025,
+      "count": 1
+    }
+  }
+}
