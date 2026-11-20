@@ -71,3 +71,43 @@ The full-bank audit is a preparation diagnostic. It uses the same loaded
 bone banks and independent inside/outside ray tests. It performs no
 per-step physics and does not alter any contact rows, tolerances, mass or
 constraints. The four witnessed rows are a localized audit.
+
+## Clear the early hand loading in the coupled scene
+
+The connected three-layer fit adjusts 14 local columns and checks the full
+294-cell stencil. It keeps the existing element IDs, layer thickness limits,
+material ownership and reference volumes. The changed reference volumes differ
+by less than 5e-20 m³ in both materials. The native scene regenerates the
+world/donor positions, geometric thickness, local normals, and lumped mass
+through the existing builder. The repaired coarse scene retains the exact
+97.131950691109523 kg body budget and all 34 ligament rows. It uses the same
+closed bone-contact ownership, material parameters and acceptance gates.
+
+The original and candidate solid tests evaluate the same four skin/fat
+nodes against the same four body/bone banks. All 16 candidate rows are
+unambiguously exterior, with minimum clearance 49.92 µm. This check is at
+the emitted Float32 initial state and does not cover every triangle or
+prove clearance throughout motion.
+
+The new scene accepted eight roots in two native runs, reaching 0.125 ms
+from the released starting pose. The matched original accepted two roots.
+The traced repeat rejects at root index eight with mechanical norm
+1.6491e-3 against 1.25e-5. The ninth-step upper-J witness is on the opposite
+hand at global fat tet 19641, authored row 16326, donor body 59. Its
+starting J is 2.45855, and the first full Newton correction requests
+J=2.72773 against the unchanged 2.5 ceiling. It does not involve the two
+earlier hand witnesses.
+
+The measured launch-to-exit ratio is 3.06e-6× for the short prefix.
+Accepted support impulse and root assistance are both zero. The trace
+pleural pressure stays at -490.332489014 Pa. The resulting candidate is a
+localized native experiment. The 16-second, variable-pressure, 0.1×
+qualification and whole-body crossing clearance remain open.
+
+~~~sh
+python3 fit_hand_clearance.py
+python3 build_hand_trial.py --clearance
+python3 run_hand_trial.py --connected --clearance
+python3 run_hand_trial.py --connected --clearance --clearance-trace-ninth
+python3 summarize_clearance_trial.py
+~~~

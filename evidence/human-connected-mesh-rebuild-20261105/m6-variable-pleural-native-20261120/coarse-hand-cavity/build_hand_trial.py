@@ -14,10 +14,12 @@ RUNTIME = SCENE / "guarded-runtime-admission-build"
 OUT = HERE / "native-build"
 CONNECTED_OUT = HERE / "connected-native-build"
 WITNESS_OUT = HERE / "witness-native-build"
+CLEARANCE_OUT = HERE / "clearance-native-build"
 CWD = Path.home() / "Work/skin-fat-native-integration-209/build-native"
 APP = "numilab_human_myosim_visual_probe.mm"
 FIT = HERE / "hand-interface-fit.json"
 CONNECTED_FIT = HERE / "connected-interface-fit.json"
+CLEARANCE_FIT = HERE / "hand-clearance-fit.json"
 
 def digest(path):
     with Path(path).open("rb") as stream:
@@ -83,24 +85,50 @@ ENTRIES
         '        if(handFitSetting)identityText+="|coarse-hand-interface-v1|' + digest(fit_path) +
         '";\n' + before_hash)
 
+def inject_clearance(source):
+    fit = json.loads(CLEARANCE_FIT.read_text())
+    assert fit["tangent_plane_fit_pass"]
+    nodes = fit["candidate_nodes"]
+    assert 4 <= len(nodes) <= 240
+    assert len({node["local_node"] for node in nodes}) == len(nodes)
+    entries = []
+    for node in nodes:
+        role, row = divmod(node["local_node"], 2411)
+        assert 0 <= role < 3
+        ref = ", ".join(map(repr, node["source_world_m"]))
+        delta = ", ".join(map(repr, node["world_delta_m"]))
+        entries.append(f"                   {{{role}u, {row}u, {{{ref}}}, {{{delta}}}}}")
+    point = "        const double skinDebit=enableWholeBodySkinFat?kWholeBodySkinMassDebitKg:"
+    digest_point = "        const auto digest=loadedKneeSHA256(identityText.data(),identityText.size());"
+    fit_hash = digest(CLEARANCE_FIT)
+    assert source.count(point) == source.count(digest_point) == 1
+    block = (HERE / "hand-clearance-trial.mm.inc").read_text()
+    block = block.replace("POINT_COUNT", str(len(nodes))).replace("POINTS", ",\n".join(entries))
+    block = block.replace("FIT_SHA", fit_hash)
+    return source.replace(point, block + point).replace(digest_point,
+        '        if(handClearanceSetting)identityText+="|coarse-hand-clearance-v1|' + fit_hash +
+        '";\n' + digest_point)
+
+
 def main():
     mode = sys.argv[1:]
-    assert mode in ([], ["--connected"], ["--witness"])
+    assert mode in ([], ["--connected"], ["--witness"], ["--clearance"])
     connected = bool(mode)
     witness = mode == ["--witness"]
-    out = WITNESS_OUT if witness else CONNECTED_OUT if connected else OUT
+    clearance = mode == ["--clearance"]
+    out = CLEARANCE_OUT if clearance else WITNESS_OUT if witness else CONNECTED_OUT if connected else OUT
     fit_path = CONNECTED_FIT if connected else FIT
     out.mkdir(exist_ok=True)
     source = (SOURCE / APP).read_text()
-    updated = inject(source, fit_path)
-    if witness:
+    updated = inject_clearance(source) if clearance else inject(source, fit_path)
+    if witness or clearance:
         spot = '        const char* fullBankComparisonPath=std::getenv('
         assert updated.count(spot) == 1
         updated = updated.replace(spot, (HERE / "hand-solid-witness.mm.inc").read_text() + spot)
     (out / APP).write_text(updated)
     patch = difflib.unified_diff(source.splitlines(keepends=True), updated.splitlines(keepends=True),
                                 fromfile="a/apps/" + APP, tofile="b/apps/" + APP)
-    patch_name = ("hand-solid-witness.patch" if witness else "connected-interface-native.patch"
+    patch_name = ("hand-clearance-native.patch" if clearance else "hand-solid-witness.patch" if witness else "connected-interface-native.patch"
                   if connected else "hand-interface-native.patch")
     (HERE / patch_name).write_text("".join(patch))
     compile_app, link_app = json.loads((BASE / "build-commands.json").read_text())

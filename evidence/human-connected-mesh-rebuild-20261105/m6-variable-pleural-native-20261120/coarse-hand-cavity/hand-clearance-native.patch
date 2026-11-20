@@ -1,0 +1,196 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -23692,6 +23692,113 @@
+                 <<" max_normal_residual="<<skinPlacement.maximumNormalResidual
+                 <<" max_frame_residual="<<skinPlacement.maximumFrameResidual<<"\n";
+         }
++        const char* handClearanceSetting=std::getenv("NUMI_HUMAN_HAND_CLEARANCE_TRIAL");
++        if(handClearanceSetting) {
++            struct ChangedPoint {std::size_t role,row; V3 reference, shift;};
++            constexpr std::array<ChangedPoint,42> fit{{
++                   {0u, 2189u, {0.2474025662121373, -0.9163761366015508, 0.08586378456224192}, {-0.0002154779702142895, 5.8454840852539824e-05, 8.404133787988377e-05}},
++                   {0u, 2206u, {0.25057253169567006, -0.9072769733212827, 0.09410976850060446}, {-0.0003078990957232075, -1.0151644508682445e-05, 1.4246782215510123e-05}},
++                   {0u, 2238u, {0.2551066100301471, -0.9338240319709894, 0.10910508378303968}, {-0.00023014932997478255, -2.312118929925777e-05, 1.836757325422711e-05}},
++                   {0u, 2245u, {0.26263394580662824, -0.9625418149721179, 0.12378578649877034}, {-0.0001454695228933489, 0.00011342253808066527, 0.00019256658674315918}},
++                   {0u, 2258u, {0.2522630986376482, -1.009301949125056, 0.1303300351169705}, {-0.00021098934340957332, 0.00020503285825612672, -0.00014102687654407586}},
++                   {0u, 2259u, {0.2622378902890157, -0.9974574855502876, 0.12773856024495908}, {9.32424576158275e-05, 0.00021368510739860902, -0.00025107403349156066}},
++                   {0u, 2261u, {0.2582801159830629, -0.9538176898600221, 0.13845823282507722}, {0.0023306626440987577, 0.000900377200441782, 0.000663645428390397}},
++                   {0u, 2262u, {0.2558965454033739, -0.9397504422270626, 0.13515010190555635}, {0.0007954861568667537, 8.254230467918955e-05, 0.0006739525980736516}},
++                   {0u, 2263u, {0.25712172199187655, -0.9300698116647581, 0.1306630098477209}, {-0.0003242722345933591, 0.00020216355369628847, -0.00011714350512856408}},
++                   {0u, 2266u, {0.25404195542858954, -0.9980088054652825, 0.13244214353052144}, {0.00027584979233430396, 1.5208033231295381e-05, -0.00013476599629200225}},
++                   {0u, 2270u, {0.24572594319826283, -0.9732213367086535, 0.1379705219481391}, {-5.0157843735687546e-05, 0.00013346233566169374, 0.0001129541881057794}},
++                   {0u, 2271u, {0.2549911429195846, -0.9697907909877863, 0.13957601870254657}, {-8.195658568466158e-08, 2.4435800325295354e-05, 8.139853394986685e-05}},
++                   {0u, 2282u, {0.256841240615998, -0.9481887550241983, 0.15468705715468758}, {-0.00025873675491411285, 0.0002571386105691964, -0.00027434722772268216}},
++                   {0u, 2283u, {0.2640123728292365, -1.0118771533476953, 0.1507880876636522}, {-0.0002527972333417061, 0.00029088174097036124, -1.5752324233453407e-05}},
++                   {1u, 2189u, {0.24580563123715873, -0.915739350276872, 0.08646235059363108}, {-9.266829586471181e-05, 3.9636863336633965e-05, 3.773849894123105e-05}},
++                   {1u, 2206u, {0.24898303478610695, -0.9071181934000283, 0.0944677297383161}, {-0.00013943395894952526, 0.0001242610328147098, 0.0002764476483851641}},
++                   {1u, 2238u, {0.2536727003267306, -0.9327377105250045, 0.10939626539818051}, {-0.0002097063638665242, 0.00010230781523201671, 0.00017916276766523354}},
++                   {1u, 2245u, {0.26203043152717664, -0.9618287520609348, 0.12389812712389409}, {-0.0001242533859740491, 8.433990984313411e-05, 0.00017360282688949624}},
++                   {1u, 2258u, {0.2521855883681702, -1.0074661531497862, 0.12998838170548635}, {-0.0002025298211027482, 7.81511381737765e-05, -0.00010999494278091104}},
++                   {1u, 2259u, {0.2610621036068861, -0.9960589082397542, 0.12776049490370503}, {0.0001548744723838813, 0.0001706628462405657, -0.0002509147408010781}},
++                   {1u, 2261u, {0.2579819133166157, -0.9526362493411131, 0.1382311842814553}, {0.0022499965090215235, 0.0005790230584314937, 0.0006953539916262907}},
++                   {1u, 2262u, {0.2552218072127058, -0.9391966759321229, 0.13503895419379408}, {-2.1074886346506005e-05, 0.0006925343189121413, -0.0005104761627913457}},
++                   {1u, 2263u, {0.25591035358166125, -0.9298080526109112, 0.1295880436258203}, {-0.00023611484700342134, 0.00014540766129023108, -3.0080518455682936e-05}},
++                   {1u, 2266u, {0.2538275524251792, -0.996431912299399, 0.13153891586348918}, {0.000196512129876647, 1.6360273308646534e-05, -4.305023155684595e-05}},
++                   {1u, 2270u, {0.24576189745999, -0.9713982484883883, 0.13785030117051397}, {-0.00011665916811853805, 0.00016886883559874555, 0.0001340746362037959}},
++                   {1u, 2271u, {0.25462023536413536, -0.968007072525358, 0.13967073444980255}, {7.493920693396605e-05, -0.00016709473158993404, 0.00019908527104917084}},
++                   {1u, 2282u, {0.2564318449319669, -0.9475978042149686, 0.15376323495264596}, {-0.000283526125722966, 0.00029794866897159267, -0.00022331586884907773}},
++                   {1u, 2283u, {0.2628528695277551, -1.0105727320918658, 0.1502501934316542}, {-0.0001602017441821868, 0.00019162172157805024, 9.648221735852891e-06}},
++                   {2u, 2189u, {0.24114952040401133, -0.9138783962282822, 0.08820954786644722}, {0.0001767082519592844, -0.00017957827000625315, -9.694912834350145e-05}},
++                   {2u, 2206u, {0.24560300552391817, -0.9067784171054141, 0.09523244905744938}, {2.8031493358476878e-05, -1.1357533080680327e-07, -0.0002779727244703739}},
++                   {2u, 2238u, {0.24949778776910944, -0.9295674892923136, 0.11024241889948841}, {9.134305180408253e-05, -0.0004348352096522623, -0.00030951984456971393}},
++                   {2u, 2245u, {0.25931585110395505, -0.9586015805203683, 0.12441177492578909}, {-4.589075598121495e-05, -0.00016283794518934247, -7.744225372169344e-05}},
++                   {2u, 2258u, {0.25205278819076904, -1.002367339394293, 0.1294374760976682}, {-0.00020748702807732444, -0.00020137151668264686, -6.701489181470954e-05}},
++                   {2u, 2259u, {0.2577139592330847, -0.9921127149004376, 0.12786102213694603}, {0.00032506515862784635, -9.233231913252649e-05, -0.00022702245574962587}},
++                   {2u, 2261u, {0.25455306023681656, -0.9459481550355717, 0.1372019266340805}, {0.0022370112720421775, -0.0015565097017878893, 0.000863171154986131}},
++                   {2u, 2262u, {0.24833332158431645, -0.9338718435250546, 0.13384355171282727}, {-0.001746153771975817, 0.0001931111558712839, -0.0009030699005214693}},
++                   {2u, 2263u, {0.25334575494979183, -0.9292558777203519, 0.12730466495888815}, {-8.105492081245114e-05, 9.110002897261271e-05, 0.00018716170116347963}},
++                   {2u, 2266u, {0.2524310982529395, -0.9919523473238876, 0.1293762772347417}, {3.963656751032607e-05, -0.00017906264789901982, 0.0002378951785177441}},
++                   {2u, 2270u, {0.2459354184636236, -0.9633394940658513, 0.1372875859351372}, {-0.00014226045917931085, -0.0004110873766558498, 0.00024195648825506288}},
++                   {2u, 2271u, {0.2534122426489571, -0.9623235296051555, 0.13999625496937887}, {-0.0001717175082768252, -0.00021198190692617302, 0.00031400928501565395}},
++                   {2u, 2282u, {0.25394577898662896, -0.9439684484476178, 0.14807353610072183}, {-0.0002335001284744509, -5.904208718587878e-05, 0.00014121439091441257}},
++                   {2u, 2283u, {0.2591144754352126, -1.0064288061853308, 0.14854064686544505}, {0.00013578541530467891, -0.0001354431305131687, 0.00011049145276448291}}
++            }};
++            require(std::string_view(handClearanceSetting)=="1"&&enableWholeBodySkinFat&&
++                    !registeredVolumeInstallRequested&&region.worldPoints.size()==2411u,
++                    "hand clearance trial requires the exact diagnostic coarse parent");
++            const std::array<std::vector<V3>*,3> world{&region.worldPoints,
++                &skinLayer.innerWorld,&fatLayer.innerWorld};
++            const std::array<std::vector<V3>*,3> local{&region.donorLocalPoints,
++                &skinLayer.innerLocal,&fatLayer.innerLocal};
++            std::vector<std::uint8_t> touched(region.worldPoints.size(),0u);
++            std::vector<std::uint8_t> outerTouched(region.worldPoints.size(),0u);
++            for(const auto& point:fit)
++                require(norm(sub((*world[point.role])[point.row],point.reference))<=2.0e-10,
++                    "hand clearance trial node row differs from compiled parent source");
++            for(const auto& point:fit) {
++                const auto row=point.row;
++                const auto& frame=region.worldToDonorLocalLinear[row];
++                V3 localShift{};
++                for(unsigned i=0;i<3u;++i)
++                    for(unsigned j=0;j<3u;++j)
++                        localShift[i]+=frame[3u*i+j]*point.shift[j];
++                auto& p=(*world[point.role])[row];
++                p=add(p,point.shift);
++                auto& x=(*local[point.role])[row];
++                x=add(x,localShift);
++                touched[row]=1u;
++                if(point.role==0u&&norm(point.shift)>0.0)outerTouched[row]=1u;
++            }
++            skinLayer.outerWorld=region.worldPoints;
++            skinLayer.outerLocal=region.donorLocalPoints;
++            fatLayer.outerWorld=skinLayer.innerWorld;
++            fatLayer.outerLocal=skinLayer.innerLocal;
++            std::vector<std::uint8_t> normalTouched=outerTouched;
++            for(const auto& face:region.faces)
++                if(outerTouched[face[0]]||outerTouched[face[1]]||outerTouched[face[2]])
++                    for(const auto row:face)normalTouched[row]=1u;
++            std::vector<V3> normals(region.worldPoints.size());
++            for(const auto& face:region.faces) {
++                if(!normalTouched[face[0]]&&!normalTouched[face[1]]&&!normalTouched[face[2]])continue;
++                const auto p=region.worldPoints[face[0]];
++                const auto normal=cross(sub(region.worldPoints[face[1]],p),
++                                        sub(region.worldPoints[face[2]],p));
++                for(const auto row:face)normals[row]=add(normals[row],normal);
++            }
++            for(std::size_t row=0;row<touched.size();++row) {
++                if(normalTouched[row]) {
++                    const double length=norm(normals[row]);
++                    require(std::isfinite(length)&&length>0.0,"hand clearance invalid outer normal");
++                    region.outwardWorldNormals[row]=mul(normals[row],1.0/length);
++                }
++                if(!touched[row])continue;
++                skinThickness[row]=norm(sub(skinLayer.outerWorld[row],skinLayer.innerWorld[row]));
++                fatThickness[row]=norm(sub(fatLayer.outerWorld[row],fatLayer.innerWorld[row]));
++                skinLayer.thicknessByVertexM[row]=skinThickness[row];
++                fatLayer.thicknessByVertexM[row]=fatThickness[row];
++            }
++            const auto s=std::minmax_element(skinThickness.begin(),skinThickness.end());
++            const auto f=std::minmax_element(fatThickness.begin(),fatThickness.end());
++            skinLayer.minThicknessM=*s.first;skinLayer.maxThicknessM=*s.second;
++            fatLayer.minThicknessM=*f.first;fatLayer.maxThicknessM=*f.second;
++            std::cout<<"coarse_hand_clearance_trial moved_nodes="<<fit.size()<<" fit_sha256=7bf8760ba5767cff67cc644ed89d95e613833d48cd011b99401e1ca9c7e7c4bb\n";
++        }
+         const double skinDebit=enableWholeBodySkinFat?kWholeBodySkinMassDebitKg:skinLayer.volumeM3*1000.0;
+         const double fatDebit=enableWholeBodySkinFat?kWholeBodyFatMassDebitKg:fatLayer.volumeM3*900.0;
+         if(enableWholeBodySkinFat) {
+@@ -23781,6 +23888,7 @@
+             identityText.append(reinterpret_cast<const char*>(fatLayer.innerWorld.data()),fatLayer.innerWorld.size()*sizeof(V3));
+             identityText.append(reinterpret_cast<const char*>(fatLayer.innerLocal.data()),fatLayer.innerLocal.size()*sizeof(V3));
+         }
++        if(handClearanceSetting)identityText+="|coarse-hand-clearance-v1|7bf8760ba5767cff67cc644ed89d95e613833d48cd011b99401e1ca9c7e7c4bb";
+         const auto digest=loadedKneeSHA256(identityText.data(),identityText.size());std::array<std::uint64_t,4u> materialIdentity{};
+         for(unsigned w=0;w<4;w++){for(unsigned b=0;b<8;b++)materialIdentity[w]=(materialIdentity[w]<<8u)|digest[8u*w+b];if(materialIdentity[w]==0u)materialIdentity[w]=w+1u;}
+         std::vector<V3> explicitParentWorldPoints;
+@@ -29255,6 +29363,71 @@
+                 <<" first_global_node="<<begin
+                 <<" nodes_per_layer="<<wholeBodySkinNodesPerLayer
+                 <<" coordinates=compiled_F32_initial_world"<<std::endl;
++        }
++        if(const char* path=std::getenv("NUMI_HUMAN_HAND_CONTACT_WITNESS_CSV")) {
++            require(staticBVHEnabled&&wholeBodySkinNodesPerLayer==2411u,
++                    "hand solid witness requires the complete pinned paired contact banks");
++            namespace witness=numi::human::initial_skin_bone_contact_witness;
++            std::ofstream out(path,std::ios::out|std::ios::trunc);
++            require(out.good(),"hand contact witness CSV open failed");
++            out<<std::setprecision(17)
++               <<"layer,row,node,body,bone,triangle,closest_distance_m,inside_rays,outside_rays,ambiguous,force_x_N,force_y_N,force_z_N\n";
++            constexpr std::uint32_t flags=NM_NUMI_HUMAN_FEM_BODY_CONTACT_ACTIVE |
++                NM_NUMI_HUMAN_FEM_BODY_CONTACT_TRIANGLE_CONTACT;
++            for(const bool deep:{false,true}) for(const std::uint32_t row:{2261u,2262u}) {
++                const auto local=(deep?wholeBodySkinBoundaryNodeMap.fatDeep:
++                                        wholeBodySkinBoundaryNodeMap.outer)[row];
++                const auto global=wholeBodySkinFirstGlobalFEMNode+local;
++                require(global<compiled.world.fem.nodes.size(),"hand contact witness invalid compiled node");
++                const auto p=witness::read3(compiled.world.fem.nodes[global].positionAndMass);
++                using Triangle=NMNumiHumanFEMBodyContactNeighborhoodTriangleGPU;
++                for(std::uint32_t bankId=0u;bankId<bodyBanks.size();++bankId) {
++                    const auto& bank=bodyBanks[bankId];
++                    if(bank.triangles.empty()||!bodyBankEligible[bankId])continue;
++                    const auto& pose=bodies[bankId];
++                    const witness::Vec3 origin{pose.position.x,pose.position.y,pose.position.z};
++                    const std::array<double,4> q{pose.orientation.x,pose.orientation.y,
++                        pose.orientation.z,pose.orientation.w};
++                    const auto localQuery=witness::rotate({-q[0],-q[1],-q[2],q[3]},
++                        witness::sub(p,origin));
++                    const witness::Vec3 query{float(localQuery.x),float(localQuery.y),float(localQuery.z)};
++                    const std::array<double,3> comp{query.x,query.y,query.z};
++                    bool close=true;
++                    for(unsigned axis=0;axis<3;++axis)
++                        close=close&&comp[axis]>=bank.minimum[axis]-0.015&&
++                                     comp[axis]<=bank.maximum[axis]+0.015;
++                    if(!close)continue;
++                    double nearest=std::numeric_limits<double>::infinity();
++                    const Triangle* winner=nullptr;
++                    witness::Vec3 bestDelta{};
++                    for(const auto& tri:bank.triangles) {
++                        const auto c=witness::closestPointOnTriangle(query,
++                            witness::read3(tri.bodyLocalVertex0),witness::read3(tri.bodyLocalVertex1),
++                            witness::read3(tri.bodyLocalVertex2));
++                        if(!c.valid)continue;
++                        const auto delta=witness::sub(query,c.point);
++                        const auto d=witness::norm2(delta);
++                        if(d<nearest) {nearest=d;winner=&tri;bestDelta=delta;}
++                    }
++                    if(!winner)continue;
++                    const auto distance=std::sqrt(nearest);
++                    const auto parity=witness::classifyClosedSolid(query,bank.triangles);
++                    const auto sample=std::find_if(fasciaBodyContactSamples.begin(),fasciaBodyContactSamples.end(),
++                        [&](const auto& s){return s.slaveNode==global&&s.flags==flags;});
++                    require(sample!=fasciaBodyContactSamples.end(),"hand contact witness lacks registered load sample");
++                    const double area=sample->bodyLocalPointAndArea.w;
++                    const double stiffness=sample->bodyLocalNormalAndReferenceSeparation.w;
++                    const double pressure=parity.insideRays==3?
++                        stiffness*std::max(0.0,distance-1.e-7):0.0;
++                    const auto force=pressure>0.0?witness::rotate(q,
++                        witness::mul(bestDelta,-area*pressure/distance)):witness::Vec3{};
++                    out<<(deep?2u:0u)<<','<<row<<','<<global<<','<<bankId<<','
++                       <<winner->boneStableId<<','<<winner->triangleStableId<<','<<distance<<','
++                       <<parity.insideRays<<','<<parity.outsideRays<<','<<parity.ambiguous<<','
++                       <<force.x<<','<<force.y<<','<<force.z<<'\n';
++                }
++            }
++            require(out.good(),"hand contact witness CSV write failed");
+         }
+         const char* fullBankComparisonPath=std::getenv(
+             "NUMI_HUMAN_INITIAL_SKIN_BONE_FULLBANK_COMPARISON_CSV");
