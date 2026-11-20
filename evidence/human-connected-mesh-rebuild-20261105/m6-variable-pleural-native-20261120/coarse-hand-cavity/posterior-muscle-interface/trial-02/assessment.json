@@ -1,0 +1,977 @@
+{
+  "bone_sha256": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+  "shell_sha256": "5e51fab11f693b5d554c2a963712f675a8e6d4453295f2889576fad12e38486a",
+  "posed_source_sha256": "8874b3fede93825d2e4ddb248231dc9d2c598e0155f8473c624fcb935d6b1042",
+  "fem_capture_sha256": "ea5e2dd3ab23ac5120332f3f1a131ceac5fcdfc3700800f0cf397cc5a5d20d73",
+  "pose_check": {
+    "accepted_step": 1,
+    "common_initial_body_count": 86,
+    "maximum_common_position_delta_m": 3.623656296828861e-07,
+    "maximum_common_quaternion_delta": 2.482785817985558e-07,
+    "accepted_pose_csv_sha256": "a693148006d68ae33e34ba07914ea22afc908fc2d6e84b192c039fb90ea916fb"
+  },
+  "assessment": {
+    "29": {
+      "input_sha256": "1c01d1f15ca0bd52050b130d55e83b07aefa0ce7dbd15e7a5378d89b0b96c9cb",
+      "baseline_pairs": {
+        "other_muscles": 661,
+        "layers": 115,
+        "bones": 584,
+        "other_gluteus": 199
+      },
+      "baseline_layers": {
+        "deep": 115
+      },
+      "original_minimum_quality": 9.857599026247967e-05,
+      "original_volume_m3": 0.0003698906631977193,
+      "bone_frozen_nodes": 224,
+      "adjustable_nodes": 578,
+      "rounds": [
+        {
+          "round": 1,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499604431349386,
+          "minimum_quality": 8.55708633176103e-05,
+          "absolute_relative_volume_change": 2.656602493544824e-09,
+          "moved_nodes": 199,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 94
+          },
+          "new_outside_pairs": {
+            "other_muscles": 58,
+            "other_gluteus": 26
+          },
+          "total_pairs": {
+            "layers": 94,
+            "other_muscles": 704,
+            "bones": 584,
+            "other_gluteus": 184
+          },
+          "new_self_pairs": 0,
+          "cut_rows": 115,
+          "slack_rows": 24
+        },
+        {
+          "round": 2,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499697351209043,
+          "minimum_quality": 4.270876053770678e-05,
+          "absolute_relative_volume_change": 4.754716842469975e-09,
+          "moved_nodes": 241,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 81
+          },
+          "new_outside_pairs": {
+            "other_gluteus": 5,
+            "other_muscles": 2
+          },
+          "total_pairs": {
+            "other_muscles": 661,
+            "layers": 81,
+            "bones": 584,
+            "other_gluteus": 198
+          },
+          "new_self_pairs": 5,
+          "cut_rows": 185,
+          "slack_rows": 89
+        },
+        {
+          "round": 3,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499268319601502,
+          "minimum_quality": 4.270876053770678e-05,
+          "absolute_relative_volume_change": 2.2978988711841453e-09,
+          "moved_nodes": 260,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 80
+          },
+          "new_outside_pairs": {
+            "other_gluteus": 28,
+            "other_muscles": 3
+          },
+          "total_pairs": {
+            "other_muscles": 661,
+            "layers": 80,
+            "bones": 584,
+            "other_gluteus": 203
+          },
+          "new_self_pairs": 5,
+          "cut_rows": 204,
+          "slack_rows": 103
+        },
+        {
+          "round": 4,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499268319601502,
+          "minimum_quality": 4.270876053770678e-05,
+          "absolute_relative_volume_change": 6.240757577380407e-09,
+          "moved_nodes": 246,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 80
+          },
+          "new_outside_pairs": {
+            "other_gluteus": 7
+          },
+          "total_pairs": {
+            "other_muscles": 661,
+            "layers": 80,
+            "bones": 584,
+            "other_gluteus": 197
+          },
+          "new_self_pairs": 5,
+          "cut_rows": 207,
+          "slack_rows": 106
+        }
+      ],
+      "selected": {
+        "round": 4,
+        "cells_nonpositive": 0,
+        "cells_low_quality": 0,
+        "minimum_determinant_ratio": 0.5499268319601502,
+        "minimum_quality": 4.270876053770678e-05,
+        "absolute_relative_volume_change": 6.240757577380407e-09,
+        "moved_nodes": 246,
+        "max_move_m": 0.007500000298023224,
+        "layer_pairs": {
+          "deep": 80
+        },
+        "new_outside_pairs": {
+          "other_gluteus": 7
+        },
+        "total_pairs": {
+          "other_muscles": 661,
+          "layers": 80,
+          "bones": 584,
+          "other_gluteus": 197
+        },
+        "new_self_pairs": 5,
+        "cut_rows": 207,
+        "slack_rows": 106,
+        "layer_witnesses": [
+          [
+            175,
+            11061
+          ],
+          [
+            176,
+            11061
+          ],
+          [
+            177,
+            11061
+          ],
+          [
+            180,
+            11061
+          ],
+          [
+            182,
+            11061
+          ],
+          [
+            183,
+            11061
+          ],
+          [
+            184,
+            11061
+          ],
+          [
+            200,
+            11061
+          ],
+          [
+            201,
+            11061
+          ],
+          [
+            202,
+            11061
+          ],
+          [
+            203,
+            11061
+          ],
+          [
+            210,
+            11061
+          ],
+          [
+            213,
+            11062
+          ],
+          [
+            214,
+            11062
+          ],
+          [
+            349,
+            11061
+          ],
+          [
+            354,
+            11062
+          ],
+          [
+            355,
+            11061
+          ],
+          [
+            355,
+            11062
+          ],
+          [
+            364,
+            11061
+          ],
+          [
+            367,
+            11061
+          ],
+          [
+            368,
+            11061
+          ],
+          [
+            369,
+            11061
+          ],
+          [
+            371,
+            11061
+          ],
+          [
+            373,
+            11061
+          ],
+          [
+            374,
+            11062
+          ],
+          [
+            375,
+            11062
+          ],
+          [
+            376,
+            11149
+          ],
+          [
+            377,
+            11149
+          ],
+          [
+            380,
+            11061
+          ],
+          [
+            381,
+            11061
+          ],
+          [
+            381,
+            11062
+          ],
+          [
+            384,
+            11062
+          ],
+          [
+            385,
+            11062
+          ],
+          [
+            386,
+            11062
+          ],
+          [
+            467,
+            11149
+          ],
+          [
+            469,
+            11062
+          ],
+          [
+            472,
+            11062
+          ],
+          [
+            595,
+            11062
+          ],
+          [
+            595,
+            11150
+          ],
+          [
+            595,
+            11151
+          ],
+          [
+            596,
+            11149
+          ],
+          [
+            596,
+            11151
+          ],
+          [
+            598,
+            11149
+          ],
+          [
+            599,
+            11149
+          ],
+          [
+            601,
+            11062
+          ],
+          [
+            668,
+            11062
+          ],
+          [
+            670,
+            11149
+          ],
+          [
+            675,
+            11062
+          ],
+          [
+            675,
+            11150
+          ],
+          [
+            741,
+            11062
+          ],
+          [
+            745,
+            11150
+          ],
+          [
+            745,
+            11151
+          ],
+          [
+            879,
+            11151
+          ],
+          [
+            880,
+            11149
+          ],
+          [
+            880,
+            11151
+          ],
+          [
+            883,
+            11151
+          ],
+          [
+            885,
+            11151
+          ],
+          [
+            888,
+            11151
+          ],
+          [
+            1175,
+            11286
+          ],
+          [
+            1201,
+            11286
+          ],
+          [
+            1215,
+            11286
+          ],
+          [
+            1232,
+            11286
+          ],
+          [
+            1239,
+            11286
+          ],
+          [
+            1260,
+            11286
+          ],
+          [
+            1303,
+            11286
+          ],
+          [
+            1308,
+            11286
+          ],
+          [
+            1309,
+            11286
+          ],
+          [
+            1852,
+            12129
+          ],
+          [
+            1857,
+            12129
+          ],
+          [
+            1901,
+            12129
+          ],
+          [
+            1901,
+            12138
+          ],
+          [
+            1935,
+            12129
+          ],
+          [
+            1935,
+            12138
+          ],
+          [
+            1936,
+            12129
+          ],
+          [
+            1936,
+            12138
+          ],
+          [
+            1946,
+            12138
+          ],
+          [
+            2020,
+            12129
+          ],
+          [
+            2020,
+            12138
+          ],
+          [
+            2072,
+            12129
+          ],
+          [
+            2072,
+            12138
+          ]
+        ],
+        "new_outside_witnesses": [
+          [
+            "other_gluteus",
+            2057,
+            2060
+          ],
+          [
+            "other_gluteus",
+            2057,
+            2061
+          ],
+          [
+            "other_gluteus",
+            2057,
+            2062
+          ],
+          [
+            "other_gluteus",
+            2058,
+            2001
+          ],
+          [
+            "other_gluteus",
+            2058,
+            2002
+          ],
+          [
+            "other_gluteus",
+            2058,
+            2003
+          ],
+          [
+            "other_gluteus",
+            2058,
+            2004
+          ]
+        ],
+        "self_witnesses": [
+          [
+            114,
+            116
+          ],
+          [
+            114,
+            117
+          ],
+          [
+            116,
+            122
+          ],
+          [
+            117,
+            122
+          ],
+          [
+            118,
+            122
+          ]
+        ]
+      }
+    },
+    "30": {
+      "input_sha256": "90e55357b3ca4cbdc09d4009529d77c8dd5821b9a9835a99907ee773f5efbf57",
+      "baseline_pairs": {
+        "other_muscles": 660,
+        "bones": 593,
+        "layers": 135,
+        "other_gluteus": 199
+      },
+      "baseline_layers": {
+        "deep": 129,
+        "interface": 6
+      },
+      "original_minimum_quality": 9.810655726993401e-05,
+      "original_volume_m3": 0.0003708418459833539,
+      "bone_frozen_nodes": 224,
+      "adjustable_nodes": 577,
+      "rounds": [
+        {
+          "round": 1,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499556301388968,
+          "minimum_quality": 9.810655726993401e-05,
+          "absolute_relative_volume_change": 1.0525244231729403e-08,
+          "moved_nodes": 157,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 94
+          },
+          "new_outside_pairs": {
+            "other_muscles": 93,
+            "other_gluteus": 9
+          },
+          "total_pairs": {
+            "other_muscles": 752,
+            "bones": 593,
+            "layers": 94,
+            "other_gluteus": 197
+          },
+          "new_self_pairs": 0,
+          "cut_rows": 135,
+          "slack_rows": 16
+        },
+        {
+          "round": 2,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.549917760154629,
+          "minimum_quality": 6.12340350834984e-05,
+          "absolute_relative_volume_change": 7.51772111229343e-09,
+          "moved_nodes": 215,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 83
+          },
+          "new_outside_pairs": {
+            "other_muscles": 62,
+            "other_gluteus": 5
+          },
+          "total_pairs": {
+            "other_muscles": 675,
+            "bones": 593,
+            "layers": 83,
+            "other_gluteus": 199
+          },
+          "new_self_pairs": 5,
+          "cut_rows": 213,
+          "slack_rows": 81
+        },
+        {
+          "round": 3,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499149569454741,
+          "minimum_quality": 9.810655726993401e-05,
+          "absolute_relative_volume_change": 4.308085110871218e-09,
+          "moved_nodes": 219,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 67
+          },
+          "new_outside_pairs": {
+            "other_muscles": 1
+          },
+          "total_pairs": {
+            "other_muscles": 660,
+            "bones": 593,
+            "other_gluteus": 199,
+            "layers": 67
+          },
+          "new_self_pairs": 5,
+          "cut_rows": 237,
+          "slack_rows": 86
+        },
+        {
+          "round": 4,
+          "cells_nonpositive": 0,
+          "cells_low_quality": 0,
+          "minimum_determinant_ratio": 0.5499656179193708,
+          "minimum_quality": 9.810655726993401e-05,
+          "absolute_relative_volume_change": 2.0488551966124646e-08,
+          "moved_nodes": 220,
+          "max_move_m": 0.007500000298023224,
+          "layer_pairs": {
+            "deep": 67
+          },
+          "new_outside_pairs": {},
+          "total_pairs": {
+            "other_muscles": 660,
+            "bones": 593,
+            "other_gluteus": 199,
+            "layers": 67
+          },
+          "new_self_pairs": 5,
+          "cut_rows": 240,
+          "slack_rows": 89
+        }
+      ],
+      "selected": {
+        "round": 4,
+        "cells_nonpositive": 0,
+        "cells_low_quality": 0,
+        "minimum_determinant_ratio": 0.5499656179193708,
+        "minimum_quality": 9.810655726993401e-05,
+        "absolute_relative_volume_change": 2.0488551966124646e-08,
+        "moved_nodes": 220,
+        "max_move_m": 0.007500000298023224,
+        "layer_pairs": {
+          "deep": 67
+        },
+        "new_outside_pairs": {},
+        "total_pairs": {
+          "other_muscles": 660,
+          "bones": 593,
+          "other_gluteus": 199,
+          "layers": 67
+        },
+        "new_self_pairs": 5,
+        "cut_rows": 240,
+        "slack_rows": 89,
+        "layer_witnesses": [
+          [
+            72,
+            13391
+          ],
+          [
+            73,
+            13391
+          ],
+          [
+            94,
+            13391
+          ],
+          [
+            95,
+            13391
+          ],
+          [
+            96,
+            13391
+          ],
+          [
+            98,
+            13391
+          ],
+          [
+            101,
+            13391
+          ],
+          [
+            186,
+            13391
+          ],
+          [
+            197,
+            13391
+          ],
+          [
+            212,
+            13391
+          ],
+          [
+            213,
+            13391
+          ],
+          [
+            214,
+            13391
+          ],
+          [
+            354,
+            13391
+          ],
+          [
+            364,
+            13391
+          ],
+          [
+            368,
+            13391
+          ],
+          [
+            371,
+            13391
+          ],
+          [
+            373,
+            13391
+          ],
+          [
+            374,
+            13391
+          ],
+          [
+            375,
+            13391
+          ],
+          [
+            381,
+            13391
+          ],
+          [
+            382,
+            13391
+          ],
+          [
+            384,
+            13391
+          ],
+          [
+            385,
+            13391
+          ],
+          [
+            386,
+            13391
+          ],
+          [
+            467,
+            13298
+          ],
+          [
+            469,
+            13391
+          ],
+          [
+            472,
+            13391
+          ],
+          [
+            595,
+            13299
+          ],
+          [
+            595,
+            13391
+          ],
+          [
+            596,
+            13298
+          ],
+          [
+            596,
+            13299
+          ],
+          [
+            598,
+            13298
+          ],
+          [
+            599,
+            13298
+          ],
+          [
+            601,
+            13391
+          ],
+          [
+            667,
+            13298
+          ],
+          [
+            668,
+            13391
+          ],
+          [
+            670,
+            13298
+          ],
+          [
+            671,
+            13298
+          ],
+          [
+            675,
+            13299
+          ],
+          [
+            675,
+            13391
+          ],
+          [
+            732,
+            13298
+          ],
+          [
+            741,
+            13391
+          ],
+          [
+            745,
+            13299
+          ],
+          [
+            879,
+            13298
+          ],
+          [
+            879,
+            13299
+          ],
+          [
+            880,
+            13298
+          ],
+          [
+            883,
+            13299
+          ],
+          [
+            885,
+            13299
+          ],
+          [
+            888,
+            13299
+          ],
+          [
+            1537,
+            12287
+          ],
+          [
+            1568,
+            12287
+          ],
+          [
+            1568,
+            12288
+          ],
+          [
+            1785,
+            12288
+          ],
+          [
+            1793,
+            12287
+          ],
+          [
+            1851,
+            12287
+          ],
+          [
+            1851,
+            12288
+          ],
+          [
+            1852,
+            12287
+          ],
+          [
+            1857,
+            12287
+          ],
+          [
+            1887,
+            12288
+          ],
+          [
+            1901,
+            12138
+          ],
+          [
+            1935,
+            12288
+          ],
+          [
+            1936,
+            12138
+          ],
+          [
+            1936,
+            12288
+          ],
+          [
+            1946,
+            12138
+          ],
+          [
+            2020,
+            12138
+          ],
+          [
+            2020,
+            12288
+          ],
+          [
+            2072,
+            12138
+          ]
+        ],
+        "new_outside_witnesses": [],
+        "self_witnesses": [
+          [
+            114,
+            116
+          ],
+          [
+            114,
+            117
+          ],
+          [
+            116,
+            122
+          ],
+          [
+            117,
+            122
+          ],
+          [
+            118,
+            122
+          ]
+        ]
+      }
+    }
+  }
+}
