@@ -1,0 +1,38 @@
+--- a/run_live_parent_native_mass_check.sh
++++ b/run_live_parent_native_mass_check.sh
+@@ -8,6 +8,10 @@
+ if [ "${NUMI_HUMAN_PAIRED_REFERENCE_FLOOR:-0}" = "1" ]; then
+     mesh="$dir/absolute-volume-repaired-tetgen"
+     generated="$dir/complete-fine-p1-live-parent"
++    if [ "${NUMI_HUMAN_CONSTITUTIVE_REFIT:-0}" = "1" ]; then
++        mesh="$dir/constitutive-witness-repaired-tetgen"
++        generated="$dir/refit-motion-qualification/p1"
++    fi
+     [ "${1:-}" = "--full-replay" ]
+ fi
+ state="$generated/current-paired-volume-state.json"
+@@ -73,6 +77,9 @@
+ fi
+ if [ "${NUMI_HUMAN_PAIRED_REFERENCE_FLOOR:-0}" = "1" ]; then
+     witness="$dir/paired-live-parent-flow-witness/receipt.json"
++    if [ "${NUMI_HUMAN_CONSTITUTIVE_REFIT:-0}" = "1" ]; then
++        witness="$dir/refit-motion-qualification/witnesses/receipt.json"
++    fi
+     extra[3]="$(jq -er '.roles[0].carrier_path' "$witness")"
+     extra[4]="$(jq -er '.roles[0].carrier_sha256' "$witness")"
+     extra[5]="$(jq -er '.roles[1].carrier_path' "$witness")"
+@@ -87,6 +94,14 @@
+     extra[18]="$dir/paired-floor-live-parent-density-closed-flow.npz"
+     extra[19]="$(jq -er .candidate_sha256 "$new_closure")"
+     extra[20]="$(awk -F'[= ]+' '/^(minimum|maximum) augmentations=/ { n += $3 } END { print n }' "$dir/close-live-parent-compiled-density-002.log")"
++    if [ "${NUMI_HUMAN_CONSTITUTIVE_REFIT:-0}" = "1" ]; then
++        refit="$dir/refit-motion-qualification"
++        extra[18]="$refit/refit-density-closed-flow.npz"
++        extra[19]="$(jq -er .candidate_sha256 "$refit/refit-density-closure.json")"
++        extra[20]="$(awk -F'[= ]+' '/^(minimum|maximum) augmentations=/ { n += $3 } END { print n }' "$refit/refit-density-closure.log")"
++        test "$(jq -er .verified_flow_sha256 "$witness")" = "${extra[19]}"
++        test "$(jq -er .current_state_sha256 "$witness")" = "$(shasum -a 256 "$state" | cut -d ' ' -f 1)"
++    fi
+     test "${extra[20]}" -gt 0
+ fi
+ /usr/bin/time -l "$dir/validate_complete_fine_p1" "$mass" "$labels" "$elements" \

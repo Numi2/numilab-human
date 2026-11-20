@@ -1,0 +1,102 @@
+--- a/launch_live_parent_floor_scene.py
++++ b/launch_live_parent_floor_scene.py
+@@ -30,8 +30,11 @@
+ parser.add_argument("--vascular-pressure-ramp-steps", type=int)
+ parser.add_argument("--vascular-direction-witness", action="store_true")
+ parser.add_argument("--vascular-trace-root", type=int)
++parser.add_argument("--deformable-trace-root", type=int)
++parser.add_argument("--terminal-certificate-trace", action="store_true")
+ parser.add_argument("--backtracking-witness", type=int, nargs=3,
+                     metavar=("ROOT", "OBJECT", "NEWTON"))
++parser.add_argument("--constitutive-refit", action="store_true")
+ args = parser.parse_args()
+ assert 0 < args.seconds_per_root <= 0.002 and args.roots >= 1
+ steps = args.capture_geometry_step
+@@ -39,11 +42,23 @@
+               len(set(steps)) != len(steps) or any(not 1 <= n <= args.roots for n in steps)):
+     parser.error("geometry capture requires presentation and up to eight distinct accepted steps")
+ run = args.run.resolve()
++storage = os.statvfs(run.parent)
++free = storage.f_bavail * storage.f_frsize
++if free < 2 * 1024**3:
++    parser.error(f"{free/1024**3:.2f} GiB available, below the native capture reserve")
+ run.mkdir()
+ roles = root/"paired-live-parent-native-role-flow"
+ p1 = root/"complete-fine-p1-live-parent"
+ mesh = root/"absolute-volume-repaired-tetgen"
+ sidecars = root/"paired-repaired-registration-live-parent"
++witness_receipt = root/"paired-live-parent-flow-witness/receipt.json"
++if args.constitutive_refit:
++    refit = root/"refit-motion-qualification"
++    roles = refit/"native-role-flow"
++    p1 = refit/"p1"
++    mesh = root/"constitutive-witness-repaired-tetgen"
++    sidecars = refit/"registration"
++    witness_receipt = refit/"witnesses/receipt.json"
+ compiler = root.parent/"captured-fat-sliver-495/proposal/compiler"
+ reg = compiler/"volume-export/registered"
+ known = Path.home()/"Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209"
+@@ -157,6 +172,15 @@
+     if not 0 <= args.vascular_trace_root < args.roots:
+         parser.error("selected vascular trace root is outside the requested horizon")
+     env["NM_VASCULAR_TRACE_ROOT"] = str(args.vascular_trace_root)
++if args.deformable_trace_root is not None:
++    if not 0 <= args.deformable_trace_root < args.roots:
++        parser.error("selected deformable trace root is outside the requested horizon")
++    if env.get("NM_FEM_TILED_DEFORMABLE_LIMIT") != "1":
++        parser.error("the bounded minimum witness requires tiled deformable bounds")
++    env.update(NM_FEM_DEFORMABLE_LIMIT_TRACE_ROOT=str(args.deformable_trace_root),
++               NM_FEM_DEFORMABLE_LIMIT_TRACE_MINIMA="1")
++if args.terminal_certificate_trace:
++    env["NM_FEM_TERMINAL_CERTIFICATE_TRACE"] = "1"
+ if args.backtracking_witness is not None:
+     witness_root, witness_object, witness_newton = args.backtracking_witness
+     if not (0 <= witness_root < args.roots and witness_object >= 0 and
+@@ -190,10 +214,27 @@
+     env["NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE"] = str(initial)
+     env["NUMI_HUMAN_RESTING_INITIAL_PACK_CACHE_SHA256"] = digest(initial)
+
++def restore_if_compacted(path, expected):
++    if path.is_file():
++        return
++    archive = Path(str(path)+".zst")
++    temporary = Path(str(path)+".incomplete")
++    subprocess.run(["/opt/homebrew/bin/zstd", "-qd", str(archive), "-o", str(temporary)],
++                   check=True)
++    if digest(temporary) != expected:
++        temporary.unlink()
++        raise ValueError(f"Restored backing file does not match its receipt: {path}")
++    temporary.rename(path)
++
++
+ def put(path_key, hash_key, path, verified_hash=None):
+     env[path_key] = str(path)
+     env[hash_key] = verified_hash or digest(path)
+
++registration = json.loads((sidecars/"receipt.json").read_text())
++for name, expected in registration["outputs"].items():
++    restore_if_compacted(sidecars/name, expected)
++
+ prefix = "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
+ def asset(path_key, hash_key, path, verified_hash=None):
+     put(prefix+path_key,prefix+hash_key,path,verified_hash)
+@@ -248,7 +289,7 @@
+ env[fractional+"SOURCE330_MASS_SHA256"]=digest(packet)
+ for key in ("NODES","TETS"):
+     put(fractional+"SOURCE330_"+key,fractional+"SOURCE330_"+key+"_SHA256",Path(str(packet)+"."+key.lower()+".csv"))
+-witnesses=json.loads((root/"paired-live-parent-flow-witness/receipt.json").read_text())
++witnesses=json.loads(witness_receipt.read_text())
+ stems=["CHILD_MASS","TRANSPORT_FLOW","SOURCE_CARRIER_FLOW","CHILD_SOURCE_DONOR","SOURCE_PARENT","SOURCE_PARENT_DONOR"]
+ for name, witness in zip(("skin","fat"),witnesses["roles"]):
+     key=name.upper()
+@@ -263,7 +304,9 @@
+     hashes=json.loads(receipt.read_text())["flow_csv"]
+     for stem in stems:
+         name_on_disk=name+"-"+stem.lower().replace("_","-")+".csv"
+-        put(recorded+stem+"_CSV",recorded+stem+"_CSV_SHA256",roles/name_on_disk,hashes[name_on_disk]["sha256"])
++        expected = hashes[name_on_disk]["sha256"]
++        restore_if_compacted(roles/name_on_disk, expected)
++        put(recorded+stem+"_CSV",recorded+stem+"_CSV_SHA256",roles/name_on_disk,expected)
+ pins={command[0]:digest(Path(command[0])),str(prior_plan):digest(prior_plan),
+       str(runtime):digest(runtime),str(pressure_metal):digest(pressure_metal),
+       str(qualified_pressure_run):digest(qualified_pressure_run)}
