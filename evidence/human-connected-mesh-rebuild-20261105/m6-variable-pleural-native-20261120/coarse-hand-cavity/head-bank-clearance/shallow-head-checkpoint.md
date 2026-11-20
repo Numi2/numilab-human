@@ -1,0 +1,9 @@
+# Connected head-bank clearance
+
+Matched native Float32 registration reduced initial point penetration from 81 to 71. Four cleared pairs are from body/bone 23/32 and six from 23/33. No new pairs or ambiguous classifications were recorded across 4,822 test points and 86 closed banks. Fifty-three witnesses remain in these two banks.
+
+The bounded sparse fit targeted 32 witnesses at depths up to 2 mm. Two independent groups met the existing feasibility checks. The connected 21-witness group missed the full-clearance gate and kept its previous coordinates. The parent-volume audit found zero nonpositive parent or child cells, zero escaped children and zero parent-volume violations. The emitted change affected 49 nodes and 437 tetrahedra. The minimum relative quality was 0.890223 against the 0.88 gate. Emitted skin/fat nodal mass was 13.939679391 kg, 0.02056 mg below the pinned comparison. The measured total-body mass-balance residual remained zero.
+
+The Apple M6 replay accepted 64 roots (1.00000005 ms) in 178.555 s end to end, 0.00000560×. All 28,632 skin/fat cells stayed positive at the audited endpoint, with relative Jacobians in [0.948991, 1.052369]. All 34 registered ligament rows were present. No assistance or bed reaction was recorded. Pleural pressure output spanned 0.000031 Pa from the enabled variable-pressure path over the short prefix. The full 16-second crossing, contact, physiology and speed gates remain open. The initial point audit is distinct from a swept surface-intersection audit.
+
+The launch manifest identifies the native executable and assets. The start witnesses are a subset of the prior exact Float32 audit, filtered by the two bank IDs and maximum depth. The final witness CSV and the complete 64-step physiology trace authenticate the replay with the exact native patch, build commands, cell partition check and compact storage receipt.
