@@ -1,0 +1,68 @@
+{
+  "control": {
+    "exit": 0,
+    "wall_seconds": 174.50330729200505,
+    "roots_certified": 64,
+    "work": {
+      "used_columns_sum": 625,
+      "budget_exhausted_solves": 0,
+      "cycles_with_work": 171,
+      "encoded_cycles": 6144,
+      "active_newton_begins": 139
+    },
+    "gpu_timing": [],
+    "instrumented_root": null,
+    "lean_observers": false,
+    "maximum_mechanical_residual_over_limit": 0.7996007671904184,
+    "maximum_vascular_residual_over_limit": 0.045781577044539425,
+    "simulated_seconds": 0.0010000000474974513,
+    "body_wall_seconds": 157.491744375,
+    "realtime_factor": 6.349539472471484e-06,
+    "terminal_skin_fat_minimum_J": 0.9888479065,
+    "pleural_pressure_pa_endpoints": [
+      -490.332489014,
+      -490.332519531
+    ]
+  },
+  "candidate": {
+    "exit": 0,
+    "wall_seconds": 142.7060469579883,
+    "roots_certified": 64,
+    "work": {
+      "used_columns_sum": 625,
+      "budget_exhausted_solves": 0,
+      "cycles_with_work": 171,
+      "encoded_cycles": 6144,
+      "active_newton_begins": 139
+    },
+    "gpu_timing": [],
+    "instrumented_root": null,
+    "lean_observers": false,
+    "maximum_mechanical_residual_over_limit": 0.7996007671904184,
+    "maximum_vascular_residual_over_limit": 0.045781577044539425,
+    "simulated_seconds": 0.0010000000474974513,
+    "body_wall_seconds": 125.8078285,
+    "realtime_factor": 7.948631332568078e-06,
+    "terminal_skin_fat_minimum_J": 0.9888479065,
+    "pleural_pressure_pa_endpoints": [
+      -490.332489014,
+      -490.332519531
+    ]
+  },
+  "body_time_reduction": 0.20117826493532354,
+  "same_initial-skin-fem_csv": true,
+  "same_skin-bone-witness_csv": true,
+  "same_native_resting-coupled_csv": true,
+  "regional_comparison": {
+    "region_count": 91,
+    "exact_element_connectivity": true,
+    "reference_positions_match": true,
+    "nodal_masses_match": true,
+    "fem_mass_change_kg": 0.0,
+    "max_accepted_position_difference_m": 1.135268538162589e-16,
+    "force_regions_over_1pct": 0,
+    "strain_metrics_over_1pct": 0,
+    "strain_metrics_over_5pct": 0,
+    "scope": "Comparison of captured FEM force channels and regional strain metrics. It omits force owners absent from the endpoint capture."
+  }
+}
