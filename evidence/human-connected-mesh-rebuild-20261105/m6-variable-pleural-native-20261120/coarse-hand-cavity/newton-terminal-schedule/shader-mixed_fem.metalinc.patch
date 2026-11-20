@@ -1,0 +1,24 @@
+--- a/mixed_fem.metalinc
++++ b/mixed_fem.metalinc
+@@ -1932,4 +1932,21 @@
+     if (global == 0u && !healthy) acceptedRevision[0] = checkpointRevision[0];
+ }
+ 
++
++// The staged host may omit only iterations after the ordinary GPU latch.
++// Check before the original terminal assembly, which still runs normally.
++kernel void nm_mixed_require_latch_before_terminal_newton(
++    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
++    device const NMFGMRESStateGPU* states [[buffer(1)]],
++    device NMMatterStatusGPU* statuses [[buffer(2)]],
++    uint environment [[thread_position_in_grid]]
++) {
++    if (environment >= dispatch.environmentCount ||
++        !environmentHealthy(statuses, environment)) return;
++    const float4 nonlinear = states[environment].nonlinear;
++    if (nonlinear.w != 1.0f)
++        recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++            NM_INVALID_INDEX, NM_INVALID_INDEX, nonlinear);
++}
++
+ } // namespace numi_matter_metal

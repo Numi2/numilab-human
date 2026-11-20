@@ -1,0 +1,32 @@
+[
+  [
+    "xcrun",
+    "-sdk",
+    "macosx",
+    "metal",
+    "-std=metal4.0",
+    "-O3",
+    "-fno-fast-math",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/include",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/src",
+    "-I",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/src/metal",
+    "-c",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/newton-terminal-schedule-043/shader/matter_kernels.metal",
+    "-o",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/newton-terminal-schedule-043/shader/temporary.air"
+  ],
+  [
+    "xcrun",
+    "-sdk",
+    "macosx",
+    "metallib",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/newton-terminal-schedule-043/shader/temporary.air",
+    "-o",
+    "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/newton-terminal-schedule-043/shader/guarded-short.metallib"
+  ]
+]

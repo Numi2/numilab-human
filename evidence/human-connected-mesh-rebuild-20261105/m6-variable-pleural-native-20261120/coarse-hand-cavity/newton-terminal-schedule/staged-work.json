@@ -1,0 +1,134 @@
+{
+  "control": {
+    "returncode": 0,
+    "wall_seconds": 84.49088012496941,
+    "ligaments_passed": 34,
+    "wall_s": 69.329127875,
+    "simulated_s": 0.001406250066793291,
+    "real_time_factor": 2.028368320641147e-05,
+    "root84_work": {
+      "root": 84,
+      "environment": 0,
+      "used_columns_sum": 95,
+      "cycles_with_work": 24,
+      "encoded_cycles": 96,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 14,
+      "active_restart_begins": 10,
+      "has_outer_sample": true,
+      "last_newton_iteration": 23,
+      "last_newton_latched": false,
+      "last_newton_norm": 1.49305597e-05,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 7.74655109e-06,
+      "last_fgmres_residual_norm": 2.08259124e-07,
+      "last_fgmres_initial_norm": 1.49305597e-05,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 1.49305597e-05,
+      "last_newton_correction_ratio": 0.00504056457,
+      "last_newton_converged": 0,
+      "final_nonpressure_nontransport_relative_residual": 1.30766221e-05,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 0,
+      "status_object": 4294967295,
+      "status_failing_index": 4294967295,
+      "status_residual": 0,
+      "status_correction": 0
+    },
+    "work": {
+      "used_columns_sum": 1108,
+      "cycles_with_work": 272,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 224
+    },
+    "domain_target_misses": [
+      {
+        "root": 84,
+        "environment": 0,
+        "nonvascular_norm": 1.49305597e-05,
+        "vascular_norm": 1.70182168e-09,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06
+      }
+    ],
+    "accepted_steps": 90,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ]
+  },
+  "candidate": {
+    "returncode": 0,
+    "wall_seconds": 54.47712679207325,
+    "verified_rollbacks": [
+      "human_staged_solver_rollback step=2 tier=0 rollback=byte_identical residual=0.000144836463733"
+    ],
+    "ligaments_passed": 34,
+    "wall_s": 39.885330291,
+    "simulated_s": 0.001406250066793291,
+    "real_time_factor": 3.525732535078459e-05,
+    "root84_work": {
+      "root": 84,
+      "environment": 0,
+      "used_columns_sum": 15,
+      "cycles_with_work": 3,
+      "encoded_cycles": 32,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 2,
+      "active_restart_begins": 1,
+      "has_outer_sample": true,
+      "last_newton_iteration": 15,
+      "last_newton_latched": true,
+      "last_newton_norm": 8.60066666e-06,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 8.60066666e-06,
+      "last_fgmres_residual_norm": 8.60066666e-06,
+      "last_fgmres_initial_norm": 8.60066666e-06,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 8.60066666e-06,
+      "last_newton_correction_ratio": 0,
+      "last_newton_converged": 1,
+      "final_nonpressure_nontransport_relative_residual": 8.60059481e-06,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 0,
+      "status_object": 4294967295,
+      "status_failing_index": 4294967295,
+      "status_residual": 0,
+      "status_correction": 0
+    },
+    "work": {
+      "used_columns_sum": 856,
+      "cycles_with_work": 208,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 188
+    },
+    "domain_target_misses": [],
+    "accepted_steps": 90,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ]
+  },
+  "coupled_trace_max_absolute_difference": {
+    "PaO2_mmhg": 0.00013732909999930598,
+    "PaCO2_mmhg": 1.144409999653817e-05,
+    "SaO2": 1.1920899989359413e-07,
+    "aorta_mmhg": 0.000146496399992202,
+    "blood_ml": 0.0009313199998359778,
+    "blood_continuity_residual_accum_ml": 2.30926389122e-08,
+    "blood_physical_delta_accum_ml": 2.30926389122e-08,
+    "blood_endpoint_minus_physical_ml": 0.0009313401161400001,
+    "gas_max_donor_fraction": 3.0294831960000042e-06,
+    "pre_projection_equality_residual_generalized_s": 8.731149999638465e-11,
+    "post_projection_equality_residual_generalized_s": 1.107801017588e-09,
+    "equality_position_projection_max_generalized": 2.84217094304e-14,
+    "equality_velocity_projection_max_generalized_s": 1.1641532180000181e-10
+  },
+  "body_time_reduction": 0.4246959176680686
+}
