@@ -1,0 +1,43 @@
+--- fit_contact_constrained.py	2026-11-20 05:06:03
++++ fit_neighbor_constrained.py	2026-11-20 05:07:38
+@@ -147 +147,20 @@
+-def fit(A, b, E, g, prior, volume_penalty, orientation, barriers):
++def neighbor_constraints(points, jacobian, groups, columns, left_ids, right_points):
++    """Protect exact neighboring witness triangles in the same frozen pose."""
++    u = points[left_ids].astype(float) * 1000.
++    v = right_points.astype(float) * 1000.
++    axis = separation_axes(u, v)
++    gap = np.einsum("pijd,pd->pij", v[:,None] - u[:,:,None], axis)
++    nearest = gap.min(axis=(1, 2))
++    margin = np.clip(.25 * nearest, 0., .025)
++    rhs = (np.minimum(nearest, 0.) + margin)[:,None,None] - gap
++    coefficients = np.einsum("pi,pvij->pvj", axis, jacobian[left_ids])
++    coefficients = np.broadcast_to(coefficients[:,:,None,:], (*rhs.shape,3)).ravel()
++    indices = (3 * columns[groups[left_ids]][:,:,None] + np.arange(3))
++    indices = np.broadcast_to(indices[:,:,None,:], (*rhs.shape,3)).ravel()
++    keep = indices >= 0
++    rows = np.repeat(np.arange(rhs.size), 3)
++    return sparse.coo_matrix((coefficients[keep],(rows[keep],indices[keep])),
++        shape=(rhs.size,3*np.count_nonzero(columns >= 0))).tocsr(), rhs.ravel()
++
++
++def fit(A, b, E, g, prior, volume_penalty, orientation, barriers, neighbors):
+@@ -161,0 +181,4 @@
++        for matrix, constraint in neighbors:
++            overlap = np.maximum(matrix@u_flat + constraint, 0.)
++            score += 4096. * (overlap@overlap)
++            output += 8192. * (matrix.T@overlap)
+@@ -186,0 +210 @@
++    parser.add_argument('--neighbor-witnesses', type=Path)
+@@ -190,0 +215 @@
++    neighbor_data = np.load(args.neighbor_witnesses) if args.neighbor_witnesses else {}
+@@ -252,0 +278,6 @@
++        neighbors = []
++        for index, view in enumerate(views):
++            key = f'pose{index}_b{sid}'
++            if key + '_left' in neighbor_data:
++                neighbors.append(neighbor_constraints(view[3], view[4], groups, col,
++                    neighbor_data[key + '_left'], neighbor_data[key + '_right']))
+@@ -269 +300 @@
+-            solution=fit(A,rhs,regularizer,gv,solution,1.e7,orientation,barriers)
++            solution=fit(A,rhs,regularizer,gv,solution,1.e7,orientation,barriers,neighbors)

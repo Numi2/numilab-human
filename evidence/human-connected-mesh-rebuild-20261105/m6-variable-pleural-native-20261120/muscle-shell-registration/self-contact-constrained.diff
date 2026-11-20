@@ -1,0 +1,90 @@
+--- fit_orientation_constrained.py	2026-11-20 05:02:05
++++ fit_contact_constrained.py	2026-11-20 05:06:03
+@@ -15,0 +16 @@
++from check_surrounding import self_pairs
+@@ -97 +98,50 @@
+-def fit(A, b, E, g, prior, volume_penalty, orientation):
++def separation_axes(left, right):
++    """Select the strongest separating projection in the unchanged pose."""
++    e1 = np.roll(left, -1, axis=1) - left
++    e2 = np.roll(right, -1, axis=1) - right
++    n1 = np.cross(e1[:, 0], e1[:, 1])
++    n2 = np.cross(e2[:, 0], e2[:, 1])
++    ee = np.cross(e1[:, :, None], e2[:, None, :]).reshape(-1, 9, 3)
++    axes = np.concatenate((n1[:, None], n2[:, None], ee,
++                           np.cross(n1[:, None], e1), np.cross(n2[:, None], e2)), axis=1)
++    length = np.linalg.norm(axes, axis=-1)
++    axes /= np.maximum(length[..., None], 1.e-30)
++    axes = np.concatenate((axes, -axes), axis=1)
++    origin = left[:, :1]
++    project_left = np.einsum("pvi,pai->pva", left - origin, axes)
++    project_right = np.einsum("pvi,pai->pva", right - origin, axes)
++    gaps = project_right.min(axis=1) - project_left.max(axis=1)
++    gaps[np.concatenate((length, length), axis=1) <= 1.e-14] = -np.inf
++    choices = gaps.argmax(axis=1)
++    assert np.isfinite(gaps[np.arange(len(choices)), choices]).all()
++    return axes[np.arange(len(choices)), choices]
++
++
++def contact_constraints(points, faces, jacobian, groups, columns, witnesses):
++    """Keep newly colliding triangle pairs within their certified rest halfspace."""
++    ids = np.asarray(sorted(witnesses), dtype=int).reshape(-1, 2)
++    left_ids, right_ids = np.moveaxis(faces[ids], 1, 0)
++    u, v = points[left_ids].astype(float) * 1000., points[right_ids].astype(float) * 1000.
++    axis = separation_axes(u, v)
++    gap = np.einsum("pijd,pd->pij", v[:,None] - u[:,:,None], axis)
++    margin = np.clip(.25 * gap.min(axis=(1,2)), 0., .025)
++    # New exact intersections may be associated with nearly coplanar Float32
++    # triangles. For a negative rest slack leave the original slack unchanged.
++    rhs = (np.minimum(gap.min(axis=(1,2)), 0.) + margin)[:,None,None] - gap
++    left = np.einsum("pi,pvij->pvj", axis, jacobian[left_ids])
++    right = -np.einsum("pi,pvij->pvj", axis, jacobian[right_ids])
++    terms = []
++    rows = np.repeat(np.arange(rhs.size), 3)
++    for vertex_ids, value, column_axis in ((left_ids, left, 2), (right_ids, right, 1)):
++        local = columns[groups[vertex_ids]]
++        local = np.broadcast_to(np.expand_dims(local, column_axis), rhs.shape).ravel()
++        local = (local[:,None]*3 + np.arange(3)).ravel()
++        coefficients = np.broadcast_to(np.expand_dims(value, column_axis), (*rhs.shape,3)).ravel()
++        keep = local >= 0
++        terms.append((coefficients[keep], rows[keep], local[keep]))
++    a, ii, jj = (np.concatenate(two) for two in zip(*terms))
++    n = np.count_nonzero(columns>=0)
++    return sparse.coo_matrix((a,(ii,jj)),shape=(rhs.size,3*n)).tocsr(), rhs.ravel()
++
++
++def fit(A, b, E, g, prior, volume_penalty, orientation, barriers):
+@@ -106,2 +156,7 @@
+-        return (y + 512. * (area_violation@area_violation),
+-                grad - 1024. * (orientation.T@area_violation))
++        score = y + 512. * (area_violation@area_violation)
++        output = grad - 1024. * (orientation.T@area_violation)
++        for matrix, constraint in barriers:
++            overlap = np.maximum(matrix@u_flat + constraint, 0.)
++            score += 64. * (overlap@overlap)
++            output += 128. * (matrix.T@overlap)
++        return score, output
+@@ -198 +253,3 @@
+-        for iteration in range(3):
++        unchanged = [self_pairs(view[3], faces) for view in views]
++        self_constraints = [set() for _ in views]
++        for iteration in range(4):
+@@ -210 +267,3 @@
+-            solution=fit(A,rhs,regularizer,gv,solution,1.e7,orientation)
++            barriers = [contact_constraints(view[3], faces, view[4], groups, col, pool)
++                        for view, pool in zip(views, self_constraints, strict=True) if pool]
++            solution=fit(A,rhs,regularizer,gv,solution,1.e7,orientation,barriers)
+@@ -228,0 +288,10 @@
++                self_counts = []
++                for view, baseline, pool in zip(views, unchanged, self_constraints, strict=True):
++                    posed = (view[3]+.001*np.einsum('vij,vj->vi',view[4],move)).astype(np.float32)
++                    self_new = self_pairs(posed, faces)-baseline
++                    fresh += len(self_new-pool)
++                    pool.update(self_new)
++                    self_counts.append(len(self_new))
++                row['new_self_pairs'] = self_counts
++                if any(self_counts):
++                    continue
+@@ -239 +308 @@
+-        result[sid]=dict(active_vertices=int(active.sum()),pinned_vertices=int(fixed.sum()),
++        result[sid]=dict(new_self_witness_counts=[len(p) for p in self_constraints],active_vertices=int(active.sum()),pinned_vertices=int(fixed.sum()),

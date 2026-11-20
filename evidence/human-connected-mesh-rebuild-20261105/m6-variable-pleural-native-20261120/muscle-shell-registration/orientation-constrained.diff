@@ -1,0 +1,52 @@
+--- fit_surface_clearance.py	2026-11-20 04:57:47
++++ fit_orientation_constrained.py	2026-11-20 05:02:05
+@@ -72 +72,26 @@
+-def fit(A, b, E, g, prior, volume_penalty):
++def orientation_constraints(points, faces, group, columns, jacobian=None):
++    """Linearize projected face areas with respect to the source displacement."""
++    local = columns[group[faces]]
++    keep = np.any(local >= 0, axis=1)
++    rows = local[keep]
++    triangle = points[faces[keep]].astype(float) * 1000.
++    e1 = triangle[:, 1] - triangle[:, 0]
++    e2 = triangle[:, 2] - triangle[:, 0]
++    n = np.cross(e1, e2)
++    denominator = np.einsum("ij,ij->i", n, n)
++    usable = denominator > 0.
++    d1 = np.cross(e2[usable], n[usable]) / denominator[usable, None]
++    d2 = np.cross(n[usable], e1[usable]) / denominator[usable, None]
++    coefficients = np.stack((-d1-d2, d1, d2), axis=1)
++    if jacobian is not None:
++        coefficients = np.einsum("rvi,rvij->rvj", coefficients, jacobian[faces[keep][usable]])
++    rows = rows[usable]
++    indices = (3 * rows[:, :, None] + np.arange(3)).ravel()
++    nonzero = indices >= 0
++    row = np.repeat(np.arange(len(rows)), 9)
++    return sparse.coo_matrix((coefficients.ravel()[nonzero],
++                              (row[nonzero], indices[nonzero])),
++                             shape=(len(rows), 3*np.count_nonzero(columns >= 0))).tocsr()
++
++
++def fit(A, b, E, g, prior, volume_penalty, orientation):
+@@ -80 +105,3 @@
+-        return y,grad
++        area_violation = np.maximum(-.17 - orientation@u_flat, 0.)
++        return (y + 512. * (area_violation@area_violation),
++                grad - 1024. * (orientation.T@area_violation))
+@@ -82 +109 @@
+-               options=dict(maxiter=130,ftol=2.e-10,gtol=1.e-7))
++               options=dict(maxiter=240,ftol=2.e-10,gtol=1.e-7))
+@@ -86 +113 @@
+-def trial_metrics(views, offset, pts, faces, force_audit=False):
++def trial_metrics(views, offset, pts, faces):
+@@ -161,0 +189,4 @@
++        orientation = sparse.vstack(
++            [orientation_constraints(pts, faces, groups, col),
++             *(orientation_constraints(view[3], faces, groups, col, view[4]) for view in views)],
++            format='csr')
+@@ -179 +210 @@
+-            solution=fit(A,rhs,regularizer,gv,solution,1.e7)
++            solution=fit(A,rhs,regularizer,gv,solution,1.e7,orientation)
+@@ -181 +212 @@
+-            for scale in (1.,.5,.25,.125):
++            for scale in (1.,.5,.25,.125,.0625):
