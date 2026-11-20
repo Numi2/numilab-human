@@ -15,6 +15,7 @@ parser.add_argument("--seconds-per-root", type=float, default=0.000015625)
 parser.add_argument("--budget-wall-seconds", type=int, default=210)
 parser.add_argument("--prelude-steps", type=int, default=0)
 parser.add_argument("--presentation", action="store_true")
+parser.add_argument("--capture-geometry-step", type=int, action="append", default=[])
 parser.add_argument("--exact-contact-cache", action="store_true")
 parser.add_argument("--initial-pack-verified-clone", type=Path)
 parser.add_argument("--progress", action="store_true")
@@ -28,8 +29,13 @@ parser.add_argument("--diagnostic-newton-passes", type=int, choices=(1, 2, 4))
 parser.add_argument("--gravity-ramp-steps", type=int)
 parser.add_argument("--vascular-pressure-ramp-steps", type=int)
 parser.add_argument("--vascular-direction-witness", action="store_true")
+parser.add_argument("--vascular-trace-root", type=int)
 args = parser.parse_args()
 assert 0 < args.seconds_per_root <= 0.002 and args.roots >= 1
+steps = args.capture_geometry_step
+if steps and (not args.presentation or not 0 < len(steps) <= 8 or
+              len(set(steps)) != len(steps) or any(not 1 <= n <= args.roots for n in steps)):
+    parser.error("geometry capture requires presentation and up to eight distinct accepted steps")
 run = args.run.resolve()
 run.mkdir()
 roles = root/"paired-live-parent-native-role-flow"
@@ -72,6 +78,8 @@ env.update(
     NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT=str(run/"failure.json"),
     NUMI_HUMAN_PREPARATION_MEMORY="1",
 )
+if steps:
+    env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = ",".join(map(str, steps))
 if args.exact_contact_cache:
     env.update(
         NM_HUMAN_COMPACT_IMMUTABLE_CONTACTS="1",
@@ -143,6 +151,10 @@ if args.gravity_ramp_steps is not None:
 if args.vascular_pressure_ramp_steps is not None:
     assert 2 <= args.vascular_pressure_ramp_steps <= args.roots + args.prelude_steps - 7
     command += ["--resting-vascular-pressure-ramp-steps", str(args.vascular_pressure_ramp_steps)]
+if args.vascular_trace_root is not None:
+    if not 0 <= args.vascular_trace_root < args.roots:
+        parser.error("selected vascular trace root is outside the requested horizon")
+    env["NM_VASCULAR_TRACE_ROOT"] = str(args.vascular_trace_root)
 if args.vascular_direction_witness:
     env["NUMI_MATTER_VASCULAR_ROW16_DIRECTION_TRACE"] = "1"
 if args.seconds_per_root > .000015625:

@@ -115,12 +115,27 @@
   "deformable_limit_minima": [],
   "accepted_time_s": 3.12500014843e-05,
   "accepted_rows": 2,
+  "native_terminal": [
+    "resting_integrated_throughput accepted_start_step=1 accepted_end_step=2 simulated_s=1.56250007421e-05 wall_s=12.290591 real_time_factor=1.27129775469e-06 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=load_compile_initial_parity_first_accepted_observer_movie_finalization",
+    "resting_fem_skin_bed_terminal_history accepted_rows=76153 loaded_rows=0 normal_impulse_sum_Ns=0 diagnostic_sample_rows=0 scope=accepted_terminal_microstep_not_integrated_load articulated_support_rows=0",
+    "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=-0 mean_normal_force_N=-0 valid_contact_sample_count=0 impulse_on_plane_xyz_Ns=[0,0,0] angular_impulse_on_plane_xyz_Nms=[0,0,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0",
+    "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0131231928244 passive_ligament_min_effective_stretch=0.999995589256 passive_ligament_max_effective_stretch=1.0000140667 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=1.35245627452e-09 body_contact_samples=15449893 body_contact_audited_steps=2 body_contact_closed_samples=1599 body_contact_normal_force_N=0.0321333482862 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=8.16797336938e-11 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=2 capture=terminal_only",
+    "resting_integrated_body=completed simulated_s=3.1250001484295353e-05 wall_s=35.038737374999997 real_time_factor=8.9187007938796647e-07 physiology_body_clock=matched root_assistance=false presentation_qualification=pending"
+  ],
   "accepted_sample_ranges": {
     "pleural_pa": {
       "minimum": -490.332489014,
       "maximum": -490.332489014
     },
     "body_mass_residual_kg": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "root_assistance_n": {
+      "minimum": 0.0,
+      "maximum": 0.0
+    },
+    "root_assistance_nm": {
       "minimum": 0.0,
       "maximum": 0.0
     }

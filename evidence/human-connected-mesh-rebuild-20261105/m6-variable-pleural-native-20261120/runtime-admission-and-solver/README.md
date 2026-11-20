@@ -50,3 +50,23 @@ The integrated physics interval was 35.039 s (8.92e-7 times real
 time), and the total invocation took 176.698 s (1.77e-7 times real
 time). Presentation was disabled for this test. The run did not
 settle onto the bed or qualify whole-body crossing counts in motion.
+
+## Extended full-volume replay
+
+Run 014 attempted 16 roots with the viewer disabled and accepted the
+first 12. It completed 187.5 microseconds of coupled physical time.
+The invocation took 354.398 seconds, including preparation and
+the rejected root (5.29e-7 times real time). Every accepted trace
+reported zero mass residual and zero root assistance. Pleural
+pressure remained -490.33249 Pa at the emitted precision over
+this interval.
+
+On the thirteenth attempt the right ventricular row (zero-based
+vascular row 16) failed its original normalized residual threshold.
+The residual was 1.35619e-5 and its threshold was 1.0e-5. The same
+attempt exhausted all 16 Newton solves and all 1,024 Krylov columns.
+Fresh mechanical residual telemetry was 4.95326e-4. The accepted
+body and respiratory indices and the Brain timestamp remained at
+step 12. The rejected candidate was never presented or published.
+This is an accepted microsecond-scale release prefix, with the
+settled bed, zero motion crossings and 0.1× targets still open.
