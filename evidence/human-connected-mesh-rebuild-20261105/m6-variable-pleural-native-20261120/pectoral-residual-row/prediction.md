@@ -1,0 +1,7 @@
+# First rejected equilibrium row family
+
+The smaller gravity continuation preserves accepted motion through 8 ms, but the fifth step fails the equilibrium limit at Matter microstep 61. This exploratory diagnostic predicts that a single equation family accounts for at least 80% of the squared rejecting residual. The rise in bed load suggests that family will be articulated momentum or support constraints. The alternative is a continuum internal/interface residual.
+
+The control is the retained eight-step gravity-continuation launch. The trial uses the same binary, model, scene, timestep, assets, initial geometry, passive forces, pressure drive and numerical gates. It adds a shader-only failure witness in the legacy residual certificate. No candidate state or acceptance tolerances change. The witness reports the largest of the same five equation blocks in the published equilibrium norm and its largest local row. Reject interpretation if the accepted pressure trace, rejection microstep, original candidate residual or correction diverges from the control.
+
+One matched replay on SSH Numi, with a 330 s process time limit. An absent witness, early failure, timeout or parity error is inconclusive. These measurements locate the equation set and do not establish its physical cause. The next repair must explain its equation/force ownership and extend the accepted horizon with the same acceptance limits.

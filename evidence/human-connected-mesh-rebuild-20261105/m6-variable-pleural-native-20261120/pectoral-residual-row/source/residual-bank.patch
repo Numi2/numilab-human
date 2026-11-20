@@ -1,0 +1,113 @@
+--- a/matter/src/metal/mixed_fem.metalinc
++++ b/matter/src/metal/mixed_fem.metalinc
+@@ -778,6 +778,18 @@
+     uint4 witness;
+     float4 invalidValues;
+ };
++
++// Diagnostic-only local witness. The normal certificate remains authoritative.
++inline void nmMixedObserveResidualRow(
++    thread float& sum, thread float& peak, thread uint& witness,
++    float normSquared, uint row) {
++    sum += normSquared;
++    if (normSquared > peak || (normSquared == peak && row < witness)) {
++        peak = normSquared;
++        witness = row;
++    }
++}
++
+ // Legacy and tiled measurement share one publication/acceptance authority.
+ inline void nmMixedPublishCertificate(
+     constant NMMatterDispatchGPU& dispatch,
+@@ -795,7 +807,8 @@
+     const float contactEnergy, const bool contactClearancesValid,
+     const uint fixedPlaneKKTCount, const bool fixedPlaneKKTValuesFinite,
+     const uint invalidContact, const float4 invalidContactValues,
+-    const float minimumJ, const float volumeNorm2, const uint activeElements
++    const float minimumJ, const float volumeNorm2, const uint activeElements,
++    const float2 residualWitness
+ ) {
+     if (lane == 0u) {
+         const float volumeResidual =
+@@ -873,7 +886,8 @@
+                 residualValid && correctionFinite && contactValid
+                     ? transport
+                     : float4(relativeResidual, relativeCorrection,
+-                             volumeResidual, -902.0f));
++                             residualWitness.y == 0.0f ? volumeResidual : residualWitness.x,
++                             residualWitness.y == 0.0f ? -902.0f : residualWitness.y));
+         }
+     }
+ }
+@@ -1213,6 +1227,53 @@
+     } else if (activeElements == 0u) {
+         minimumJ = 1.0f;
+     }
++    float2 residualWitness(0.0f);
++    if (lane == 0u && isfinite(relativeResidual) &&
++        relativeResidual > solver.residualTolerances.x &&
++        atomic_load_explicit(reinterpret_cast<device atomic_uint*>(
++            &statuses[environment].code), memory_order_relaxed) == NM_STATUS_SUCCESS &&
++        dispatch.femNodeCount < 1048575u &&
++        dispatch.rigidGeneralizedCapacity < 1048575u &&
++        layout.supportContactCount < 1048575u &&
++        dispatch.mpmActiveNodeCapacity == 0u) {
++        // Banks 1..5 encode FEM velocity, FEM pressure, transport,
++        // rigid generalized momentum, and fixed support constraints.
++        float norms[5] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
++        float peaks[5] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
++        uint witnesses[5] = {NM_INVALID_INDEX, NM_INVALID_INDEX, NM_INVALID_INDEX,
++                            NM_INVALID_INDEX, NM_INVALID_INDEX};
++        for (uint i = 0u; i < dispatch.objectCount; ++i) {
++            const NMContinuumObjectGPU localObject = objects[i];
++            if (localObject.representation != NM_REPRESENTATION_FEM) continue;
++            for (uint j = localObject.stateOffset;
++                 j < localObject.stateOffset + localObject.stateCount; ++j) {
++                const float4 r = generalizedResidual[nodeBase + j];
++                nmMixedObserveResidualRow(norms[0], peaks[0], witnesses[0], dot(r.xyz,r.xyz), j);
++                nmMixedObserveResidualRow(norms[1], peaks[1], witnesses[1], r.w*r.w, j);
++                if ((localObject.flags & NM_OBJECT_MULTIPHYSICS) != 0u) {
++                    const float4 f = physicalFieldResidual[nodeBase + j];
++                    nmMixedObserveResidualRow(norms[2], peaks[2], witnesses[2], dot(f,f), j);
++                }
++            }
++        }
++        for (uint j = 0u; j < dispatch.rigidGeneralizedCapacity; ++j) {
++            const float r = generalizedResidual[fgmresRigidIndex(dispatch, environment, j)].x;
++            nmMixedObserveResidualRow(norms[3], peaks[3], witnesses[3], r*r, j);
++        }
++        for (uint j = 0u; j < layout.supportContactCount; ++j) {
++            const float3 r = generalizedResidual[layout.supportBase +
++                environment * layout.supportContactCount + j].xyz;
++            nmMixedObserveResidualRow(norms[4], peaks[4], witnesses[4], dot(r,r), j);
++        }
++        uint selected = 0u;
++        for (uint j = 1u; j < 5u; ++j) {
++            if (norms[j] > norms[selected]) selected = j;
++        }
++        if (isfinite(norms[selected]) && witnesses[selected] != NM_INVALID_INDEX) {
++            const uint tag = ((selected + 1u) << 20u) + witnesses[selected] + 1u;
++            residualWitness = float2(sqrt(norms[selected]) / initialNorm, -float(tag));
++        }
++    }
+     nmMixedPublishCertificate(dispatch, solver, object, objectIndex,
+         telemetryWriterObject, environment, lane, certificates, statuses,
+         fgmresTelemetry, residualNorm2, pressureNorm2, transportNorm2,
+@@ -1220,7 +1281,7 @@
+         maximumBarrierImpulse, minimumSeparation, maximumTangentialImpulse,
+         contactEnergy, contactClearancesValid, fixedPlaneKKTCount,
+         fixedPlaneKKTValuesFinite, invalidContact, invalidContactValues,
+-        minimumJ, volumeNorm2, activeElements);
++        minimumJ, volumeNorm2, activeElements, residualWitness);
+ }
+ 
+ // Enumerate a contact once for this FEM owner, using the incidence that the
+@@ -1784,7 +1845,7 @@
+         maximumBarrierImpulse, minimumSeparation, maximumTangentialImpulse,
+         contactEnergy, contactClearancesValid, fixedPlaneKKTCount,
+         fixedPlaneKKTValuesFinite, invalidContact, invalidContactValues,
+-        minimumJ, volumeNorm2, activeElements);
++        minimumJ, volumeNorm2, activeElements, float2(0.0f));
+ }
+ 
+ 

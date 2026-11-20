@@ -1,0 +1,104 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -28768,6 +28768,66 @@
+                     }
+                 }];
+             }
++
++            // Observation of one identified pectoral FEM row. Never changes
++            // a solver buffer or affects the success criteria.
++            const auto capturePectoralRow = [&](const char* stage) -> bool {
++                constexpr NSUInteger node = 196u;
++                const bool selected = request.controlStep == 4u && microtick == 61u &&
++                    state.dispatch.environmentCount == 1u &&
++                    state.dispatch.femNodeCount > node &&
++                    std::getenv("NM_FEM_PECTORAL_ROW_TRACE") != nullptr;
++                if (!selected) return true;
++                using Vector = nm_float4;
++                struct Snapshot {
++                    Vector residual;
++                    Vector solution;
++                    NMFGMRESStateGPU solver;
++                    NMMatterStatusGPU status;
++                    float alpha;
++                };
++                id<MTLBuffer> snapshot = [state.device newBufferWithLength:sizeof(Snapshot)
++                    options:MTLResourceStorageModeShared];
++                if (snapshot == nil) return true;
++                [encoder endEncoding];
++                encoder = nil;
++                id<MTLBlitCommandEncoder> copy = [commandBuffer blitCommandEncoder];
++                if (copy != nil) {
++                    const auto observe = [&](id<MTLBuffer> buffer, NSUInteger src,
++                                             NSUInteger dst, NSUInteger size) {
++                        [copy copyFromBuffer:buffer sourceOffset:src toBuffer:snapshot
++                           destinationOffset:dst size:size];
++                    };
++                    observe(state.femResidual, node*sizeof(Vector), offsetof(Snapshot,residual), sizeof(Vector));
++                    observe(state.femSolution, node*sizeof(Vector), offsetof(Snapshot,solution), sizeof(Vector));
++                    observe(state.fgmresStates, 0u, offsetof(Snapshot,solver), sizeof(NMFGMRESStateGPU));
++                    observe(state.statuses, 0u, offsetof(Snapshot,status), sizeof(NMMatterStatusGPU));
++                    observe(state.environmentLineSearch, 0u, offsetof(Snapshot,alpha), sizeof(float));
++                    [copy endEncoding];
++                    const auto iteration = micro.solverIteration;
++                    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> finished) {
++                        if (finished.status != MTLCommandBufferStatusCompleted) return;
++                        const auto& sample = *static_cast<const Snapshot*>(snapshot.contents);
++                        const auto& r = sample.residual;
++                        const auto& d = sample.solution;
++                        const auto& n = sample.solver.nonlinear;
++                        const auto& l = sample.solver.diagnostics;
++                        std::fprintf(stderr, "pectoral_row stage=%s iter=%u status=%u "
++                            "rhs=(%.9g,%.9g,%.9g) correction=(%.9g,%.9g,%.9g) "
++                            "alpha=%.9g nonlinear=(%.9g,%.9g,%.9g,%.9g) "
++                            "linear=(%.9g,%.9g,%.9g,%.9g)\n",
++                            stage,iteration,sample.status.code,r.x,r.y,r.z,d.x,d.y,d.z,
++                            sample.alpha,n.x,n.y,n.z,n.w,l.x,l.y,l.z,l.w);
++                    }];
++                }
++                encoder = [commandBuffer computeCommandEncoder];
++                if (encoder == nil) {
++                    diagnostics.message = "failed to resume Matter after pectoral row capture";
++                    ownership->preDynamicsOpen = false;
++                    return false;
++                }
++                return true;
++            };
+             const auto encodeFEMNewtonTrace = [&](const char* stage) -> bool {
+                 std::uint32_t root = 0u;
+                 if (!selectedFEMNewtonTraceRoot(root)) return true;
+@@ -28776,9 +28836,8 @@
+                 // bounded alpha/status arenas (not per-node arrays); no contact
+                 // capture or physics eligibility is widened.
+                 const bool boundedHumanAlphaTrace =
+-                    state.femFullCoupledTrueResidualEnabled &&
+                     environments == 1u && state.dispatch.femNodeCount <= 524288u &&
+-                    objectTotal <= 512u && microtick <= 4u;
++                    objectTotal <= 512u && microtick == 61u;
+                 if (microtick != 0u && !boundedHumanAlphaTrace) {
+                     if (microtick == 1u && !femNewtonTraceCapturedAny &&
+                         std::strcmp(stage, "before_contact_limits") == 0)
+@@ -36312,6 +36371,7 @@
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
+ 
++            if (!capturePectoralRow("assembled_rhs")) return diagnostics;
+             beginSolverStage("matter_newton_linear");
+             if (encoder == nil) {
+                 diagnostics.message = "failed to open Newton linear timing stage";
+@@ -51229,6 +51289,7 @@
+                     return diagnostics;
+                 }
+             }
++            if (!capturePectoralRow("selected_step")) return diagnostics;
+             if (!encodeHumanSupportTrace("line_search", false) ||
+                 !encodeVascularTrace("line_search") ||
+                 !encodeFEMNewtonTrace("final_line_search") ||
+@@ -52109,6 +52170,7 @@
+                 });
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
++            if (!capturePectoralRow("fresh_certificate")) return diagnostics;
+             if (!encodeFEMNewtonCertificateTrace()) {
+                 ownership->preDynamicsOpen = false;
+                 return diagnostics;
