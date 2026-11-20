@@ -1,0 +1,9 @@
+# Same-cadence solver budget trial
+
+The native full check uses the existing pressure, anatomy, material and contact programs with 2 ms body steps and 256 tissue microsteps. The retained control (971169f) accepted and published 18 roots. Held-fixed resources and exact identities come from its published launch. Only the application binary and output destinations change.
+
+Measure application launch-to-exit, command times, accepted steps, exact retry attempts, rollback history, and the paired physiology, bed impulse and momentum traces. The native certificate must still pass, including the terminal deformation determinant floor and zero root assistance.
+
+The prediction is that the first 15 roots typically finish within 16 Krylov columns, and the late roots that rejected a two-pass Newton attempt can usually certify with four passes. Use a 2/16, 4/32, 24/32 (Newton/FGMRES) budget ladder on the whole existing transaction. Step one uses the original initial budget. The next step begins at 4/32 after a higher tier was needed, which avoids repeating a failed budget during brief contact events. A rejected nonlinear transaction can advance the ladder only after the immutable accepted state passes the existing byte-for-byte rollback test. Terminate immediately on any other rejection.
+
+For the matched 18-step trial, the performance prediction is at least 1.45× end-to-end over 308.568 s (≤212.81 s). The exact parallel schedule creates no new mathematical updates for a step that naturally converged within the smaller limits. Check whether accepted traces match byte for byte. Save all differences if they do not, including the first differing step, and withhold parity if the data diverge. The 420 s process deadline retains invalid or rejected output. A separate 24-step extension is gated on successful native exit and observed improvement. All results are short native checks and do not establish 16-second geometry or sustained throughput.

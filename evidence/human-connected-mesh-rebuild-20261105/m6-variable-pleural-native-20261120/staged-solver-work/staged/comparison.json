@@ -1,0 +1,758 @@
+{
+  "control": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 308.568181083072
+  },
+  "staged": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 275.74600441684015
+  },
+  "accepted_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "accepted_seconds": 0.0360000017099,
+  "staged_attempts": [
+    [
+      2,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      3,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      4,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      5,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      6,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      7,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      8,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      9,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      10,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      11,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      12,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      13,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      14,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      15,
+      0,
+      2,
+      16,
+      1,
+      1
+    ],
+    [
+      16,
+      0,
+      2,
+      16,
+      0,
+      0
+    ],
+    [
+      16,
+      1,
+      4,
+      32,
+      1,
+      1
+    ],
+    [
+      17,
+      1,
+      4,
+      32,
+      0,
+      0
+    ],
+    [
+      17,
+      2,
+      24,
+      32,
+      1,
+      1
+    ],
+    [
+      18,
+      1,
+      4,
+      32,
+      0,
+      0
+    ],
+    [
+      18,
+      2,
+      24,
+      32,
+      1,
+      1
+    ]
+  ],
+  "verified_rollbacks": [
+    [
+      16,
+      0
+    ],
+    [
+      17,
+      1
+    ],
+    [
+      18,
+      1
+    ]
+  ],
+  "terminal_audit": "resting_FEM_terminal_audit=passed expected_steps=18 initial_control=0 final_control=17 initial_substep=0 final_substep=0 accepted_steps=18 adapter_passes=21 expected_adapter_passes=21 min_J=0.954520176326 max_J=1.03997372386 max_displacement_m=0.0103849302816 max_anchor_reaction_N=1.11277616248 capture=terminal_only",
+  "end_to_end_rtf": 0.00013055493509700854,
+  "wall_speedup_same_scope": 1.1190304705797844,
+  "pressure_pa": [
+    -515.839111328,
+    -490.642364502
+  ],
+  "peak_bed_penetration_m": 0.00293801026419,
+  "max_root_assistance_n": 0.0,
+  "traces": {
+    "resting-coupled.csv": {
+      "row_counts": [
+        18,
+        18
+      ],
+      "byte_identical": false,
+      "staged_sha256": "6c96965fc948fe947034f0d05537f36e375f203e4c84e1dce0f58b172e2db9b9",
+      "first_changed_row": 7,
+      "changed_rows_by_field": {
+        "pre_projection_limit_residual_generalized_s": 12,
+        "blood_residual_minus_physical_ml": 12,
+        "aorta_mmhg": 12,
+        "normal_impulse_ns": 12,
+        "post_projection_limit_residual_generalized_s": 12,
+        "pre_projection_contact_residual_m_s": 11,
+        "blood_continuity_residual_accum_ml": 12,
+        "blood_endpoint_minus_physical_ml": 12,
+        "gas_max_donor_fraction": 12,
+        "equality_position_projection_max_generalized": 6,
+        "post_projection_contact_residual_m_s": 11,
+        "SaO2": 11,
+        "pre_projection_equality_residual_generalized_s": 12,
+        "equality_velocity_projection_max_generalized_s": 12,
+        "left_atrium_ml": 11,
+        "PaCO2_mmhg": 12,
+        "post_projection_equality_residual_generalized_s": 12,
+        "PaO2_mmhg": 12,
+        "blood_physical_delta_accum_ml": 12,
+        "peak_penetration_m": 11,
+        "min_contact_gap_m": 11,
+        "lv_ml": 11,
+        "lv_mmhg": 11,
+        "rv_mmhg": 9,
+        "right_atrium_ml": 10,
+        "rv_ml": 9,
+        "pulmonary_artery_mmhg": 8,
+        "blood_ml": 6,
+        "blood_error_ml": 1
+      },
+      "numeric_difference": {
+        "pre_projection_limit_residual_generalized_s": {
+          "max_abs": 3.3117606879100006e-08,
+          "at_row": 11,
+          "baseline": 3.85484462129e-08,
+          "staged": 5.4308393338e-09
+        },
+        "blood_residual_minus_physical_ml": {
+          "max_abs": 4.474998149818e-05,
+          "at_row": 14,
+          "baseline": -4.24336121796e-05,
+          "staged": 2.31636931858e-06
+        },
+        "aorta_mmhg": {
+          "max_abs": 0.00020509489999653852,
+          "at_row": 14,
+          "baseline": 83.1641100215,
+          "staged": 83.1639049266
+        },
+        "normal_impulse_ns": {
+          "max_abs": 0.00016069412000030425,
+          "at_row": 18,
+          "baseline": 2.53375339508,
+          "staged": 2.53359270096
+        },
+        "post_projection_limit_residual_generalized_s": {
+          "max_abs": 3.3117606879100006e-08,
+          "at_row": 11,
+          "baseline": 3.85484462129e-08,
+          "staged": 5.4308393338e-09
+        },
+        "pre_projection_contact_residual_m_s": {
+          "max_abs": 7.036396710000033e-08,
+          "at_row": 13,
+          "baseline": 1.88150952454e-05,
+          "staged": 1.87447312783e-05
+        },
+        "blood_continuity_residual_accum_ml": {
+          "max_abs": 0.0009730314331999994,
+          "at_row": 17,
+          "baseline": 0.0276744174244,
+          "staged": 0.0286474488576
+        },
+        "blood_endpoint_minus_physical_ml": {
+          "max_abs": 0.00046202330850099996,
+          "at_row": 18,
+          "baseline": 0.000698491930962,
+          "staged": 0.000236468622461
+        },
+        "gas_max_donor_fraction": {
+          "max_abs": 8.614733999941226e-08,
+          "at_row": 14,
+          "baseline": 0.00737035041675,
+          "staged": 0.00737043656409
+        },
+        "equality_position_projection_max_generalized": {
+          "max_abs": 1.117587089534e-08,
+          "at_row": 13,
+          "baseline": 3.72529029846e-09,
+          "staged": 1.49011611938e-08
+        },
+        "post_projection_contact_residual_m_s": {
+          "max_abs": 7.036396710000033e-08,
+          "at_row": 13,
+          "baseline": 1.88150952454e-05,
+          "staged": 1.87447312783e-05
+        },
+        "SaO2": {
+          "max_abs": 2.801418000020206e-06,
+          "at_row": 18,
+          "baseline": 0.972868621349,
+          "staged": 0.972865819931
+        },
+        "pre_projection_equality_residual_generalized_s": {
+          "max_abs": 1.126158792889e-06,
+          "at_row": 13,
+          "baseline": 3.72634360701e-07,
+          "staged": 1.49879315359e-06
+        },
+        "equality_velocity_projection_max_generalized_s": {
+          "max_abs": 1.7881393432589998e-07,
+          "at_row": 17,
+          "baseline": 2.68220901489e-07,
+          "staged": 8.94069671631e-08
+        },
+        "left_atrium_ml": {
+          "max_abs": 4.0017799996405756e-05,
+          "at_row": 17,
+          "baseline": 47.3457039334,
+          "staged": 47.3457439512
+        },
+        "PaCO2_mmhg": {
+          "max_abs": 0.00027084350000450286,
+          "at_row": 18,
+          "baseline": 40.0638084412,
+          "staged": 40.0635375977
+        },
+        "post_projection_equality_residual_generalized_s": {
+          "max_abs": 4.8222759119200006e-09,
+          "at_row": 16,
+          "baseline": 6.64369537162e-09,
+          "staged": 1.8214194597e-09
+        },
+        "PaO2_mmhg": {
+          "max_abs": 0.003898620000001074,
+          "at_row": 18,
+          "baseline": 100.903411865,
+          "staged": 100.899513245
+        },
+        "blood_physical_delta_accum_ml": {
+          "max_abs": 0.0010131770978000013,
+          "at_row": 17,
+          "baseline": 0.0276431819657,
+          "staged": 0.0286563590635
+        },
+        "peak_penetration_m": {
+          "max_abs": 1.9615980999991914e-07,
+          "at_row": 12,
+          "baseline": 0.00126029097009,
+          "staged": 0.00126009481028
+        },
+        "min_contact_gap_m": {
+          "max_abs": 1.9615980999991914e-07,
+          "at_row": 12,
+          "baseline": -0.00126029097009,
+          "staged": -0.00126009481028
+        },
+        "lv_ml": {
+          "max_abs": 0.00013096700000403416,
+          "at_row": 12,
+          "baseline": 121.100420074,
+          "staged": 121.100551041
+        },
+        "lv_mmhg": {
+          "max_abs": 1.3734040000379366e-05,
+          "at_row": 17,
+          "baseline": 7.03836330207,
+          "staged": 7.03837703611
+        },
+        "rv_mmhg": {
+          "max_abs": 4.520786999973048e-06,
+          "at_row": 14,
+          "baseline": 0.943888103455,
+          "staged": 0.943883582668
+        },
+        "right_atrium_ml": {
+          "max_abs": 1.818990000046483e-05,
+          "at_row": 17,
+          "baseline": 31.0284085572,
+          "staged": 31.0283903673
+        },
+        "rv_ml": {
+          "max_abs": 8.731200000511308e-05,
+          "at_row": 15,
+          "baseline": 141.601471114,
+          "staged": 141.601383802
+        },
+        "pulmonary_artery_mmhg": {
+          "max_abs": 1.7396500000543824e-05,
+          "at_row": 12,
+          "baseline": 13.306217793,
+          "staged": 13.3062351895
+        },
+        "blood_ml": {
+          "max_abs": 0.0009313300006397185,
+          "at_row": 12,
+          "baseline": 5150.02571046,
+          "staged": 5150.02664179
+        },
+        "blood_error_ml": {
+          "max_abs": 0.0004656612872999989,
+          "at_row": 13,
+          "baseline": 0.0311993062496,
+          "staged": 0.0316649675369
+        }
+      }
+    },
+    "resting-com-support-impulses.csv": {
+      "row_counts": [
+        576,
+        576
+      ],
+      "byte_identical": false,
+      "staged_sha256": "06b77ac3b62beb15225a448bae7126898ac08afb635db6c5a5706b9013a5ac7f",
+      "first_changed_row": 197,
+      "changed_rows_by_field": {
+        "impulse_world_x_ns": 46,
+        "impulse_world_z_ns": 46,
+        "normal_impulse_ns": 46,
+        "impulse_world_y_ns": 46,
+        "tangent1_impulse_ns": 46,
+        "tangent0_impulse_ns": 46
+      },
+      "numeric_difference": {
+        "impulse_world_x_ns": {
+          "max_abs": 0.00029481109231710434,
+          "at_row": 325,
+          "baseline": 0.01184967253357172,
+          "staged": 0.011554861441254616
+        },
+        "impulse_world_z_ns": {
+          "max_abs": 7.027387619018555e-05,
+          "at_row": 547,
+          "baseline": 0.6969848275184631,
+          "staged": 0.696914553642273
+        },
+        "normal_impulse_ns": {
+          "max_abs": 7.027387619018555e-05,
+          "at_row": 547,
+          "baseline": 0.6969848275184631,
+          "staged": 0.696914553642273
+        },
+        "impulse_world_y_ns": {
+          "max_abs": 0.0004804953932762146,
+          "at_row": 485,
+          "baseline": 0.04357623681426048,
+          "staged": 0.0440567322075367
+        },
+        "tangent1_impulse_ns": {
+          "max_abs": 0.0004804953932762146,
+          "at_row": 485,
+          "baseline": 0.04357623681426048,
+          "staged": 0.0440567322075367
+        },
+        "tangent0_impulse_ns": {
+          "max_abs": 0.00029481109231710434,
+          "at_row": 325,
+          "baseline": 0.01184967253357172,
+          "staged": 0.011554861441254616
+        }
+      }
+    },
+    "resting-com-momentum-diagnostic.csv": {
+      "row_counts": [
+        18,
+        18
+      ],
+      "byte_identical": false,
+      "staged_sha256": "96c8b11b03e2b297928ab04abf995af6ad00c8f2e10047134be1d44bb1c8f299",
+      "first_changed_row": 7,
+      "changed_rows_by_field": {
+        "root_vz_m_s": 12,
+        "com_px_kg_m_s": 12,
+        "unaccounted_delta_p_y_ns": 12,
+        "com_py_kg_m_s": 12,
+        "unaccounted_delta_p_z_ns": 12,
+        "com_pz_kg_m_s": 12,
+        "com_vx_m_s": 12,
+        "unaccounted_delta_p_x_ns": 12,
+        "delta_com_py_kg_m_s": 12,
+        "root_vx_m_s": 12,
+        "max_normal_contact_impulse_segment_ns": 12,
+        "equality_solver_iterate_work_segment_j": 12,
+        "world_external_support_impulse_z_ns": 12,
+        "com_z_m": 12,
+        "normal_force_last_physical_step_n": 12,
+        "delta_com_px_kg_m_s": 12,
+        "com_x_m": 12,
+        "delta_com_pz_kg_m_s": 12,
+        "world_external_support_impulse_y_ns": 12,
+        "contact_normal_solver_iterate_work_segment_j": 12,
+        "max_tangent_contact_impulse_segment_ns": 12,
+        "source_limit_absolute_solver_iterate_work_segment_j": 12,
+        "normal_impulse_last_physical_step_ns": 12,
+        "root_translation_fingerprint_fnv64": 12,
+        "contact_normal_absolute_solver_iterate_work_segment_j": 12,
+        "contact_tangent_solver_iterate_work_segment_j": 12,
+        "world_external_support_impulse_x_ns": 12,
+        "source_limit_solver_iterate_work_segment_j": 12,
+        "root_vy_m_s": 12,
+        "equality_absolute_solver_iterate_work_segment_j": 12,
+        "com_vz_m_s": 12,
+        "stand_v_fingerprint_fnv64": 12,
+        "stand_q_fingerprint_fnv64": 12,
+        "com_y_m": 12,
+        "contact_tangent_absolute_solver_iterate_work_segment_j": 12,
+        "com_vy_m_s": 12
+      },
+      "numeric_difference": {
+        "root_vz_m_s": {
+          "max_abs": 5.358457565307617e-05,
+          "at_row": 16,
+          "baseline": -0.5265429019927979,
+          "staged": -0.5264893174171448
+        },
+        "com_px_kg_m_s": {
+          "max_abs": 0.00036365170218409515,
+          "at_row": 10,
+          "baseline": -0.10542613209533855,
+          "staged": -0.10578978379752264
+        },
+        "unaccounted_delta_p_y_ns": {
+          "max_abs": 0.0005167440161526482,
+          "at_row": 15,
+          "baseline": 0.0045131180561714945,
+          "staged": 0.005029862072324143
+        },
+        "com_py_kg_m_s": {
+          "max_abs": 0.0002392416597106206,
+          "at_row": 7,
+          "baseline": 0.2055280385831949,
+          "staged": 0.20576728024290553
+        },
+        "unaccounted_delta_p_z_ns": {
+          "max_abs": 0.0002994427664013699,
+          "at_row": 15,
+          "baseline": 0.0021645055448815675,
+          "staged": 0.0024639483112829375
+        },
+        "com_pz_kg_m_s": {
+          "max_abs": 0.0010011200799908693,
+          "at_row": 17,
+          "baseline": -12.453084974623035,
+          "staged": -12.452083854543044
+        },
+        "com_vx_m_s": {
+          "max_abs": 5.059922315108368e-06,
+          "at_row": 10,
+          "baseline": -0.0014669202293867204,
+          "staged": -0.0014719801517018287
+        },
+        "unaccounted_delta_p_x_ns": {
+          "max_abs": 0.0001741270174882084,
+          "at_row": 7,
+          "baseline": 0.0008139701288925952,
+          "staged": 0.0006398431114043868
+        },
+        "delta_com_py_kg_m_s": {
+          "max_abs": 0.00030533798266652035,
+          "at_row": 15,
+          "baseline": 0.2765421591359758,
+          "staged": 0.2768474971186423
+        },
+        "root_vx_m_s": {
+          "max_abs": 7.01751559972763e-05,
+          "at_row": 10,
+          "baseline": -0.01680579036474228,
+          "staged": -0.016875965520739555
+        },
+        "max_normal_contact_impulse_segment_ns": {
+          "max_abs": 7.027387619018555e-05,
+          "at_row": 18,
+          "baseline": 0.6969848275184631,
+          "staged": 0.696914553642273
+        },
+        "equality_solver_iterate_work_segment_j": {
+          "max_abs": 0.00286102294921875,
+          "at_row": 14,
+          "baseline": -81.2215347290039,
+          "staged": -81.22439575195312
+        },
+        "world_external_support_impulse_z_ns": {
+          "max_abs": 0.00016030482947826385,
+          "at_row": 18,
+          "baseline": 2.533752997405827,
+          "staged": 2.533592692576349
+        },
+        "com_z_m": {
+          "max_abs": 9.885957716337934e-08,
+          "at_row": 9,
+          "baseline": 0.1043514888089184,
+          "staged": 0.10435138994934123
+        },
+        "normal_force_last_physical_step_n": {
+          "max_abs": 0.0803470573409868,
+          "at_row": 18,
+          "baseline": 1266.8766373668718,
+          "staged": 1266.7962903095308
+        },
+        "delta_com_px_kg_m_s": {
+          "max_abs": 0.00020984696351501048,
+          "at_row": 7,
+          "baseline": -0.021623758812547987,
+          "staged": -0.021833605776062998
+        },
+        "com_x_m": {
+          "max_abs": 5.930734392478598e-08,
+          "at_row": 17,
+          "baseline": -0.02225361099485713,
+          "staged": -0.022253670302201056
+        },
+        "delta_com_pz_kg_m_s": {
+          "max_abs": 0.00026667045632322584,
+          "at_row": 15,
+          "baseline": -0.7229957442003982,
+          "staged": -0.722729073744075
+        },
+        "world_external_support_impulse_y_ns": {
+          "max_abs": 0.00021140603348612785,
+          "at_row": 15,
+          "baseline": 0.2720290410798043,
+          "staged": 0.2718176350463182
+        },
+        "contact_normal_solver_iterate_work_segment_j": {
+          "max_abs": 5.123019218444824e-05,
+          "at_row": 18,
+          "baseline": -0.40455690026283264,
+          "staged": -0.4045056700706482
+        },
+        "max_tangent_contact_impulse_segment_ns": {
+          "max_abs": 0.0003682821989059448,
+          "at_row": 10,
+          "baseline": 0.12363969534635544,
+          "staged": 0.1232714131474495
+        },
+        "source_limit_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 2.874433994293213e-05,
+          "at_row": 12,
+          "baseline": 0.1266891062259674,
+          "staged": 0.12666036188602448
+        },
+        "normal_impulse_last_physical_step_ns": {
+          "max_abs": 0.00016069412231445312,
+          "at_row": 18,
+          "baseline": 2.5337533950805664,
+          "staged": 2.533592700958252
+        },
+        "root_translation_fingerprint_fnv64": {
+          "max_abs": 1.578543167301379e+19,
+          "at_row": 18,
+          "baseline": 4.1947195861046317e+17,
+          "staged": 1.6204903631624253e+19
+        },
+        "contact_normal_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 5.683302879333496e-05,
+          "at_row": 18,
+          "baseline": 0.45079943537712097,
+          "staged": 0.45074260234832764
+        },
+        "contact_tangent_solver_iterate_work_segment_j": {
+          "max_abs": 4.751607775688171e-06,
+          "at_row": 18,
+          "baseline": -0.03063879907131195,
+          "staged": -0.030634047463536263
+        },
+        "world_external_support_impulse_x_ns": {
+          "max_abs": 8.991058348328806e-05,
+          "at_row": 17,
+          "baseline": 0.06807371934337425,
+          "staged": 0.06798380875989096
+        },
+        "source_limit_solver_iterate_work_segment_j": {
+          "max_abs": 2.874433994293213e-05,
+          "at_row": 12,
+          "baseline": -0.1266891062259674,
+          "staged": -0.12666036188602448
+        },
+        "root_vy_m_s": {
+          "max_abs": 4.249159246683121e-06,
+          "at_row": 10,
+          "baseline": 0.004234005697071552,
+          "staged": 0.004229756537824869
+        },
+        "equality_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 0.00286102294921875,
+          "at_row": 14,
+          "baseline": 81.2215347290039,
+          "staged": 81.22439575195312
+        },
+        "com_vz_m_s": {
+          "max_abs": 1.3929784468014184e-05,
+          "at_row": 17,
+          "baseline": -0.1732747081247995,
+          "staged": -0.1732607783403315
+        },
+        "stand_v_fingerprint_fnv64": {
+          "max_abs": 1.6913734790130991e+19,
+          "at_row": 15,
+          "baseline": 1.7958362752649224e+19,
+          "staged": 1.0446279625182331e+18
+        },
+        "stand_q_fingerprint_fnv64": {
+          "max_abs": 1.6883308696033964e+19,
+          "at_row": 10,
+          "baseline": 3.9984803535667386e+17,
+          "staged": 1.7283156731390638e+19
+        },
+        "com_y_m": {
+          "max_abs": 2.155629175160101e-08,
+          "at_row": 18,
+          "baseline": -0.7548565177934439,
+          "staged": -0.7548565393497356
+        },
+        "contact_tangent_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 5.401670932769775e-06,
+          "at_row": 18,
+          "baseline": 0.034189771860837936,
+          "staged": 0.03418437018990517
+        },
+        "com_vy_m_s": {
+          "max_abs": 3.3288561703489518e-06,
+          "at_row": 7,
+          "baseline": 0.0028597581217455438,
+          "staged": 0.0028630869779158927
+        }
+      }
+    }
+  },
+  "terminal_error": null,
+  "parity": false
+}

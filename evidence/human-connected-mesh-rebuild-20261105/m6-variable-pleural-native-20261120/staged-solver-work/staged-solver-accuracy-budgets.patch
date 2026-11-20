@@ -1,0 +1,156 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -9227,6 +9227,7 @@
+         [[maybe_unused]] std::vector<std::uint32_t>& newtonRejectedSteps
+     ) {
+         const std::uint32_t requestedSteps = horizonInput.stand.stepCount;
++        [[maybe_unused]] std::size_t lastStagedSolverTier = 0u;
+         const auto emitAcceptedFEMBodyLoadCapture = [&](
+             const std::uint32_t sourceStep) {
+ #ifdef NUMI_HUMAN_RESTING_SCENE
+@@ -9957,65 +9958,88 @@
+                 auto& runtime = coupling.physiology.runtime;
+                 auto* adapter = continuumTransaction->adapter;
+                 constexpr std::uint32_t shortBudget = 2u;
+-                const std::uint32_t normalBudget = runtime.newtonIterationBudget();
++                constexpr std::uint32_t middleBudget = 8u;
++                const auto normalBudget = runtime.newtonIterationBudget();
++                const auto normalLinearBudget = runtime.fgmresIterationBudget();
+                 require(continuumTransaction->runtime == &runtime && adapter != nullptr &&
+-                            normalBudget > shortBudget,
+-                        "certified Newton budget trial requires shared Matter and a larger fallback budget");
++                            normalBudget > middleBudget,
++                        "staged Newton trial requires the full shared Matter budgets");
+                 const auto fingerprint = horizonInput.residentContinuation.previousTransactionFingerprint;
+                 const auto generation = horizonInput.residentContinuation.previousPhysicsGeneration;
+                 numi::human::transaction_probe::PhysicalSnapshot physical(
+                     coupling.physiology.device, model, horizonInput);
+-                require(runtime.setNewtonIterationBudget(shortBudget),
+-                        "failed to set certified trial budget before dispatch");
+                 const auto beforeBody = numi::human::transaction_probe::observePhysicalState(
+                     context, physical, fingerprint, generation);
+-                const auto beforeMatter = runtime.snapshot();
+                 const auto beforeAdapter = adapter->snapshot();
+                 const auto beforeMemory = numi::human::transaction_probe::captureCouplingMemory(coupling);
+-                require(beforeMatter.available && beforeAdapter.available,
++                require(beforeAdapter.available,
+                         "failed to inspect the trial's accepted predecessor");
+-                segmentDiagnostics = context.run(model, horizonInput, segmentResult);
+-
+-                if (segmentDiagnostics.dispatched && !segmentDiagnostics.succeeded() &&
+-                    !segmentDiagnostics.published &&
+-                    segmentDiagnostics.firstStandGPUStatusCode == MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED &&
+-                    segmentDiagnostics.completedStandSteps == completedSteps &&
+-                    segmentDiagnostics.residentStateGeneration == 0u &&
+-                    segmentDiagnostics.residentStateTransactionFingerprint == 0u) {
++
++                struct Budget {
++                    std::uint32_t newton;
++                    std::uint32_t linear;
++                };
++                const Budget budgets[] = {
++                    {shortBudget, normalLinearBudget},
++                    {middleBudget, normalLinearBudget},
++                    {normalBudget, normalLinearBudget},
++                };
++                // A contact event that needed the intermediate tier often
++                // persists into the next physical step. Restart each new
++                // horizon with the shortest budget.
++                const std::size_t startTier = lastStagedSolverTier == 0u ? 0u : 1u;
++                for (std::size_t tier = startTier; tier < std::size(budgets); ++tier) {
++                    const auto budget = budgets[tier];
++                    require(runtime.setNewtonIterationBudget(budget.newton) &&
++                                runtime.setFGMRESIterationBudget(budget.linear),
++                            "the current accepted predecessor did not release Matter for dispatch");
++                    const auto beforeMatter = runtime.snapshot();
++                    require(beforeMatter.available, "failed to inspect accepted Matter state");
++                    segmentResult = {};
++                    segmentDiagnostics = context.run(model, horizonInput, segmentResult);
++                    std::cout << "human_staged_solver_attempt step=" << completedSteps + 1u
++                              << " tier=" << tier << " newton=" << budget.newton
++                              << " linear=" << budget.linear
++                              << " accepted=" << segmentDiagnostics.succeeded()
++                              << " published=" << segmentDiagnostics.published
++                              << " elapsed_ms=" << segmentDiagnostics.elapsedMilliseconds << std::endl;
++                    if (segmentDiagnostics.succeeded() && segmentDiagnostics.published) {
++                        lastStagedSolverTier = tier;
++                        require(runtime.setNewtonIterationBudget(normalBudget) &&
++                                    runtime.setFGMRESIterationBudget(normalLinearBudget),
++                                "unable to restore solver budgets after acceptance");
++                        break;
++                    }
++
++                    if (tier + 1u == std::size(budgets) ||
++                        !segmentDiagnostics.dispatched || segmentDiagnostics.published ||
++                        segmentDiagnostics.firstStandGPUStatusCode != MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED ||
++                        segmentDiagnostics.completedStandSteps != completedSteps ||
++                        segmentDiagnostics.residentStateGeneration != 0u ||
++                        segmentDiagnostics.residentStateTransactionFingerprint != 0u) {
++                        break;
++                    }
+                     const auto afterMatter = runtime.snapshot();
+-                    if (afterMatter.available && afterMatter.statuses.size() == 1u &&
+-                        afterMatter.statuses.front().code == NM_STATUS_NONLINEAR_SOLVER_FAILURE) {
+-                        const auto afterBody = numi::human::transaction_probe::observePhysicalState(
+-                            context, physical, fingerprint, generation);
+-                        const auto afterAdapter = adapter->snapshot();
+-                        const auto afterMemory =
+-                            numi::human::transaction_probe::captureCouplingMemory(coupling);
+-                        require(afterAdapter.available &&
+-                                    numi::human::transaction_probe::samePhysicalState(beforeBody, afterBody) &&
+-                                    numi::human::transaction_probe::sameMatterAcceptedState(beforeMatter, afterMatter) &&
+-                                    numi::human::transaction_probe::sameMatterCirculation(beforeMatter, afterMatter) &&
+-                                    numi::human::transaction_probe::sameTendonAdapterAcceptedHistory(beforeAdapter, afterAdapter) &&
+-                                    numi::human::transaction_probe::sameAcceptedCouplingMemory(beforeMemory, afterMemory),
+-                                "certified Newton retry found a changed accepted state");
+-                        require(runtime.setNewtonIterationBudget(normalBudget),
+-                                "the verified rollback did not release Matter for retry");
+-                        rejectedAttemptMilliseconds += segmentDiagnostics.elapsedMilliseconds;
+-                        newtonRejectedSteps.push_back(completedSteps);
+-                        std::cout << "human_verified_newton_retry step=" << completedSteps + 1u
+-                                  << " short_budget=" << shortBudget << " retry_budget=" << normalBudget
+-                                  << " residual=" << afterMatter.statuses.front().diagnostics.x
+-                                  << " rollback=byte_identical" << std::endl;
+-                        segmentResult = {};
+-                        segmentDiagnostics = context.run(model, horizonInput, segmentResult);
+-                        std::cout << "human_verified_newton_retry_outcome step=" << completedSteps + 1u
+-                                  << " completed_steps=" << segmentDiagnostics.completedStandSteps
+-                                  << " accepted=" << segmentDiagnostics.succeeded()
+-                                  << " published=" << segmentDiagnostics.published << std::endl;
+-                    }
+-                }
+-                if (runtime.newtonIterationBudget() != normalBudget && segmentDiagnostics.succeeded()) {
+-                    require(runtime.setNewtonIterationBudget(normalBudget),
+-                            "unable to restore the configured Newton work budget after acceptance");
++                    if (!afterMatter.available || afterMatter.statuses.size() != 1u ||
++                        afterMatter.statuses.front().code != NM_STATUS_NONLINEAR_SOLVER_FAILURE)
++                        break;
++
++                    const auto afterBody = numi::human::transaction_probe::observePhysicalState(
++                        context, physical, fingerprint, generation);
++                    const auto afterAdapter = adapter->snapshot();
++                    const auto afterMemory = numi::human::transaction_probe::captureCouplingMemory(coupling);
++                    require(afterAdapter.available &&
++                                numi::human::transaction_probe::samePhysicalState(beforeBody, afterBody) &&
++                                numi::human::transaction_probe::sameMatterAcceptedState(beforeMatter, afterMatter) &&
++                                numi::human::transaction_probe::sameMatterCirculation(beforeMatter, afterMatter) &&
++                                numi::human::transaction_probe::sameTendonAdapterAcceptedHistory(beforeAdapter, afterAdapter) &&
++                                numi::human::transaction_probe::sameAcceptedCouplingMemory(beforeMemory, afterMemory),
++                            "staged solver retry found a changed accepted state");
++                    rejectedAttemptMilliseconds += segmentDiagnostics.elapsedMilliseconds;
++                    newtonRejectedSteps.push_back(completedSteps);
++                    std::cout << "human_staged_solver_rollback step=" << completedSteps + 1u
++                              << " tier=" << tier << " rollback=byte_identical"
++                              << " residual=" << afterMatter.statuses.front().diagnostics.x << std::endl;
+                 }
+             }
+ #endif
+@@ -13255,7 +13279,7 @@
+                 (phase == phaseCount ? &replayNewtonRejectedSteps : nullptr);
+             std::size_t nextNewtonRejection = 0u;
+             for (std::uint32_t step = 0u; step < stepCount; ++step) {
+-                if (newtonRejectedSteps != nullptr &&
++                while (newtonRejectedSteps != nullptr &&
+                     nextNewtonRejection < newtonRejectedSteps->size() &&
+                     (*newtonRejectedSteps)[nextNewtonRejection] == step) {
+                     expectedConsumerStepIndices.push_back(step);
