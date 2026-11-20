@@ -1,0 +1,7 @@
+# Regional native motion with swept collision clearance
+
+The monitored release replay used SSH Numi's Apple M6, the registered 34-ligament paths, condensed physical bed contact, 26 regional fascia representations and the microstep gliding refresh. It completed all ten requested 2 ms steps. It applied full gravity for steps 8 through 10 and held Brain, cardiac, and passive-tissue integration in the existing accepted transaction.
+
+The one configuration change enables the existing deformable normal-gap limiter to reference the swept collision thickness. It changes the Newton step selection while preserving the force law, continuous sweep, material bounds and final residual gate. The matched control rejected its first full-gravity attempt. The first six accepted rows match exactly, and the seventh has numerical differences, including 0.001236 mmHg in arterial O₂. The first seven rows agree on pleural pressure, bed impulse, penetration, and root assistance. These traces establish mechanical progress on this case. They do not establish numerical equivalence for other states.
+
+The ten-step trial ran in 268.862 s, or 0.00007439 times real time including preparation. Pleural pressure varied from −490.642 to −501.719 Pa. The peak measured bed penetration was 0.776 mm and peak bed normal impulse was 0.28354 N·s over 2 ms. Reported root assistance and mass residual were zero. It kept the condensed support and regional continuum package. Detailed skin/fat install, whole-body crossing certification over 16 seconds, and 0.1 times real time remain pending.

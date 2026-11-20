@@ -1,0 +1,156 @@
+{
+  "device": "Apple M6 on SSH numi",
+  "change": "existing numerical normal-gap globalization uses swept collision thickness",
+  "control": {
+    "accepted_steps": 7,
+    "accepted_seconds": 0.014000000665,
+    "exit": 1,
+    "process_seconds": 210.41598108317703,
+    "process_real_time_factor": 6.653487341090232e-05,
+    "accepted_native_span_seconds": 179.19207191700002,
+    "accepted_native_span_real_time_factor": 7.812846023391403e-05,
+    "pleural_pressure_pa_min_max": [
+      -496.190307617,
+      -490.642364502
+    ],
+    "peak_bed_normal_impulse_ns": 0.0775324627757,
+    "max_bed_penetration_m": 0.000261072942521,
+    "max_root_force_n": 0.0,
+    "max_root_torque_nm": 0.0,
+    "max_abs_body_mass_residual_kg": 0.0,
+    "per_accepted_step_gpu": [
+      {
+        "step": 1,
+        "command_ms": 22643.209583,
+        "gpu_ms": 22642.5673333
+      },
+      {
+        "step": 2,
+        "command_ms": 22646.037875,
+        "gpu_ms": 22645.47425
+      },
+      {
+        "step": 3,
+        "command_ms": 22670.842,
+        "gpu_ms": 22670.3104584
+      },
+      {
+        "step": 4,
+        "command_ms": 22673.846166,
+        "gpu_ms": 22673.2978751
+      },
+      {
+        "step": 5,
+        "command_ms": 22722.359625,
+        "gpu_ms": 22721.815875
+      },
+      {
+        "step": 6,
+        "command_ms": 22717.712667,
+        "gpu_ms": 22717.1723335
+      },
+      {
+        "step": 7,
+        "command_ms": 23768.820792,
+        "gpu_ms": 23768.2705
+      }
+    ],
+    "failure": {
+      "matter_code": 10,
+      "matter_environment": 0,
+      "matter_object_index": 0,
+      "matter_failing_index": 4294967295,
+      "matter_microsteps": 85,
+      "matter_diagnostics": [
+        0.0004000304325018078,
+        5.999955828883685e-05,
+        0.0004000304325018078,
+        -1048934
+      ]
+    },
+    "accepted_brain_us": 14000,
+    "rejected_brain_us": 16000
+  },
+  "collision_gap": {
+    "accepted_steps": 10,
+    "accepted_seconds": 0.0200000009499,
+    "exit": 0,
+    "process_seconds": 268.86224970803596,
+    "process_real_time_factor": 7.438753849459523e-05,
+    "accepted_native_span_seconds": 257.75166008300005,
+    "accepted_native_span_real_time_factor": 7.759407230766114e-05,
+    "pleural_pressure_pa_min_max": [
+      -501.719207764,
+      -490.642364502
+    ],
+    "peak_bed_normal_impulse_ns": 0.28353625536,
+    "max_bed_penetration_m": 0.00077588413842,
+    "max_root_force_n": 0.0,
+    "max_root_torque_nm": 0.0,
+    "max_abs_body_mass_residual_kg": 0.0,
+    "per_accepted_step_gpu": [
+      {
+        "step": 1,
+        "command_ms": 22860.098125,
+        "gpu_ms": 22858.3447917
+      },
+      {
+        "step": 2,
+        "command_ms": 22629.0085,
+        "gpu_ms": 22628.4731249
+      },
+      {
+        "step": 3,
+        "command_ms": 22664.940292,
+        "gpu_ms": 22664.4011249
+      },
+      {
+        "step": 4,
+        "command_ms": 22682.16725,
+        "gpu_ms": 22681.6389998
+      },
+      {
+        "step": 5,
+        "command_ms": 22719.376958,
+        "gpu_ms": 22718.823625
+      },
+      {
+        "step": 6,
+        "command_ms": 22718.528042,
+        "gpu_ms": 22717.976375
+      },
+      {
+        "step": 7,
+        "command_ms": 24328.889375,
+        "gpu_ms": 24328.4179582
+      },
+      {
+        "step": 8,
+        "command_ms": 23763.748416,
+        "gpu_ms": 23763.100375
+      },
+      {
+        "step": 9,
+        "command_ms": 23222.911084,
+        "gpu_ms": 23222.373625
+      },
+      {
+        "step": 10,
+        "command_ms": 23280.259458,
+        "gpu_ms": 23279.7134584
+      }
+    ]
+  },
+  "common_accepted_rows": 7,
+  "matched_control_prefix": false,
+  "last_candidate_row": {
+    "time_s": 0.0200000009499,
+    "pleural_pa": -501.719207764,
+    "normal_impulse_ns": 0.28353625536,
+    "peak_penetration_m": 0.00077588413842,
+    "root_assistance_n": 0.0,
+    "root_assistance_nm": 0.0,
+    "max_abs_body_mass_residual_kg": 0.0
+  },
+  "scope": "Short native mechanics-only motion with 26 fascia and variable pleural; no fine-volume install, whole-scene crossings, or duration qualification"
+}
