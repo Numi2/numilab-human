@@ -1,0 +1,106 @@
+{
+  "same_initial_emitted_nodal_geometry_and_mass": true,
+  "same_initial_closed_solid_contact_witness_bytes": true,
+  "same_initial_viewer_pack_bytes": true,
+  "same_first_coupled_trace_rows": 8,
+  "tilted_trial_launch_sha256": "b7499387dfabc20103795b689299182455aed080a577fa8039e21e74c0524c86",
+  "same_tilted_contact_witness_keys": true,
+  "point_penetrations_by_bank": {
+    "109/114": 1,
+    "128/19": 2,
+    "136/20": 1,
+    "136/4": 1,
+    "139/132": 2,
+    "139/133": 2,
+    "139/137": 1,
+    "142/24": 2,
+    "150/5": 4,
+    "152/7": 1,
+    "153/150": 1,
+    "20/26": 2,
+    "23/28": 2,
+    "23/30": 2,
+    "23/32": 54,
+    "23/33": 9,
+    "61/97": 1,
+    "79/9": 1,
+    "91/13": 5,
+    "93/17": 3,
+    "97/83": 2,
+    "98/73": 5
+  },
+  "tilted_accepted_steps": 16,
+  "tilted_terminal_seconds": 0.000250000011874,
+  "tilted_trace_ranges": {
+    "body_mass_residual_kg": [
+      0.0,
+      0.0
+    ],
+    "normal_impulse_ns": [
+      0.0,
+      0.0
+    ],
+    "root_assistance_n": [
+      0.0,
+      0.0
+    ],
+    "root_assistance_nm": [
+      0.0,
+      0.0
+    ],
+    "pleural_pa": [
+      -490.332489014,
+      -490.332489014
+    ]
+  },
+  "terminal_physical_bed_nodes": {
+    "940": {
+      "initial_z": 1.211067513e-08,
+      "accepted_z": 3.291006215e-05,
+      "vz": 0.1697761565,
+      "contact_force_z_N": 0.0,
+      "free_internal_force_z_N": 24.2142022
+    },
+    "1020": {
+      "initial_z": 1.241660925e-07,
+      "accepted_z": 1.734492071e-05,
+      "vz": 0.106484428,
+      "contact_force_z_N": 0.0,
+      "free_internal_force_z_N": 2.821821977
+    },
+    "1582": {
+      "initial_z": 7.785217804e-08,
+      "accepted_z": 2.956913886e-05,
+      "vz": -0.01320807729,
+      "contact_force_z_N": 0.0,
+      "free_internal_force_z_N": 0.1181384304
+    }
+  },
+  "detailed_skin_surface_samples": 2,
+  "detailed_skin_min_bed_gap_m": [
+    -0.000985972583294,
+    -0.000959161727224
+  ],
+  "terminal_checks": {
+    "terminal_skin_fat_cells": 28632,
+    "terminal_skin_fat_min_j": 0.9723954506,
+    "terminal_skin_fat_max_j": 1.139178328,
+    "terminal_nonpositive_skin_fat_cells": 0,
+    "active_krylov_columns": 198,
+    "budget_exhausted_linear_solves": 0,
+    "whole_body_tissue_mass_reference": "whole_body_tissue_mass_reference=inferred original_total_kg=97.131950691109523 cooked_tissue_kg=14.415723552728508 residual_rigid_scale=0.85158618302053746 maximum_inertia_regularization_fraction=7.672076591685492e-06 massless_link_rerouted_nodes=42 massless_link_rerouted_kg=0.20786706276291295 geometry_and_force_owners=unchanged reference=global_mass_budget_with_cooked_tissue_moments_not_measured_subject",
+    "resting_FEM_bed_release_initialization": "resting_FEM_bed_release_initialization=prepared activation_limit=0 observational_witnesses=32 static_proxy_reactions=0 rigid_support_seed_N=0 balanced=false qualification=fresh_release_not_settled_rest support_owner=existing_Matter_FEM_contact",
+    "resting_FEM_terminal_audit": "resting_FEM_terminal_audit=passed expected_steps=16 initial_control=0 final_control=15 initial_substep=0 final_substep=0 accepted_steps=16 adapter_passes=16 expected_adapter_passes=16 min_J=0.972395450596 max_J=1.2237979824 max_displacement_m=0.000589577751852 max_anchor_reaction_N=19.892381735 capture=terminal_only",
+    "resting_fascia_fem_terminal_audit": "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0244337003678 passive_ligament_min_effective_stretch=0.999980986118 passive_ligament_max_effective_stretch=1.00001370907 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=3.01707304028e-10 body_contact_samples=413997 body_contact_audited_steps=16 body_contact_closed_samples=254 body_contact_normal_force_N=16.2962112427 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=8.38073020848e-08 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=16 capture=terminal_only"
+  },
+  "tilted_receipts": [
+    "resting_initial_FEM_outer_alignment=applied outer_nodes=2411 initial_min_gap_m=0.0020008804276585579 aligned_min_gap_m=1.2110675129406445e-08 outward_rounding_steps=1 maximum_common_translation_residual_m=2.2351741790771484e-08 legacy_nhcnt_witnesses=32 force_rows_added=0 geometry=registered_physical_outer",
+    "resting_fem_skin_bed_compiled=validated pair_rows=2411 initial_outer_min_gap_m=1.2110675129406445e-08 initial_outer_max_gap_m=0.29616603255271912 max_initial_penetration_m=0 initial_state=source_float32_position_against_compiled_plane",
+    "resting_initialization=dynamic_release recruitment_activation_cap=0 recruited_muscles=416 active_muscles=0 maximum_activation=0 normalized_residual_rms=95.7685469974 maximum_acceleration_residual=575.543700947 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+    "resting_fem_skin_bed_terminal_history accepted_rows=2411 loaded_rows=0 normal_impulse_sum_Ns=0 diagnostic_sample_rows=0 scope=accepted_terminal_microstep_not_integrated_load articulated_support_rows=0",
+    "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=-0 mean_normal_force_N=-0 valid_contact_sample_count=0 impulse_on_plane_xyz_Ns=[0,0,0] angular_impulse_on_plane_xyz_Nms=[0,0,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0",
+    "resting_integrated_body=completed simulated_s=0.00025000001187436283 wall_s=40.303055499999999 real_time_factor=6.2030039353806025e-06 physiology_body_clock=matched root_assistance=false presentation_qualification=pending"
+  ],
+  "native_equilibrium_qualified": false,
+  "sustained_crossing_check_qualified": false
+}

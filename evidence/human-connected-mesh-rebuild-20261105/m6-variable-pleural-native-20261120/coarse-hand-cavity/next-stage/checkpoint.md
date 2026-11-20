@@ -4,8 +4,8 @@
 
 | Trial | Accepted roots | Process wall time | Native segment wall time | Outcome |
 | --- | ---: | ---: | ---: | --- |
-| Paired control, 24 Newton passes | 8 | 34.934 s | 20.225 s | All steps accepted |
-| Fixed 14 Newton passes | 8 | 31.913 s | 17.093 s | Diagnostic pass over 0.125 ms |
+| Paired control, 24 Newton passes | 8 | 34.934 s | 19.988 s | All steps accepted |
+| Fixed 14 Newton passes | 8 | 31.913 s | 16.892 s | Diagnostic pass over 0.125 ms |
 | Profile control, root 2 spans | 4 | 25.231 s | See comparison | Instrumented |
 | Extra completed-cycle suppression | 4 | 25.247 s | See comparison | No material total gain |
 | Full-prefix control, 24 Newton passes | 64 | 177.751 s | 157.726 s | All steps accepted |
