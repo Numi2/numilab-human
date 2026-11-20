@@ -1,0 +1,4707 @@
+{
+  "region_count": 91,
+  "exact_element_connectivity": true,
+  "reference_positions_match": true,
+  "nodal_masses_match": true,
+  "fem_mass_change_kg": 0.0,
+  "max_accepted_position_difference_m": 4.691855240916386e-06,
+  "force_regions_over_1pct": [
+    {
+      "region": "region:1",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0008411231048656732,
+          -0.0005415226455738777,
+          -0.0008853490020718591
+        ],
+        "nodal_l1_N": 0.0032041013837156643
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0008296792448822773,
+          -0.0005473674115576173,
+          -0.0008827256523262819
+        ],
+        "nodal_l1_N": 0.0032410696866102587
+      },
+      "resultant_delta_N": 1.311507470858895e-05,
+      "resultant_relative_to_reference_l1": 0.004093214645218229,
+      "nodal_l1_relative_change": 0.011537806850457348
+    },
+    {
+      "region": "region:4",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.0022721193431189998,
+          0.0013010731413739998,
+          0.0003813376541499996
+        ],
+        "nodal_l1_N": 0.008111110551529339
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.002196093338573,
+          0.0012868297040150001,
+          0.00011915596675000006
+        ],
+        "nodal_l1_N": 0.008887986117102157
+      },
+      "resultant_delta_N": 0.00027335337218139307,
+      "resultant_relative_to_reference_l1": 0.03370110300492115,
+      "nodal_l1_relative_change": 0.09577918592495804
+    },
+    {
+      "region": "region:20",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.016685765744271865,
+          0.018916654909782324,
+          0.005656235606264992
+        ],
+        "nodal_l1_N": 1.5309466541129784
+      },
+      "candidate": {
+        "resultant_N": [
+          0.016782760526422184,
+          0.019027842618155922,
+          0.005791021362779596
+        ],
+        "nodal_l1_N": 1.5541963986444256
+      },
+      "resultant_delta_N": 0.00019984467572836236,
+      "resultant_relative_to_reference_l1": 0.00013053666840151998,
+      "nodal_l1_relative_change": 0.015186515133617117
+    },
+    {
+      "region": "region:29",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -1.1222170633999999e-06,
+          2.5060430754299996e-06,
+          5.5639638705e-06
+        ],
+        "nodal_l1_N": 1.1813739907632297e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          -7.52771398362e-07,
+          2.7181005652100003e-06,
+          4.99490928143e-06
+        ],
+        "nodal_l1_N": 1.0515879848358135e-05
+      },
+      "resultant_delta_N": 7.108316282558e-07,
+      "resultant_relative_to_reference_l1": 0.06016990671993425,
+      "nodal_l1_relative_change": 0.10986021949202351
+    },
+    {
+      "region": "region:34",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          4.4531872174000005e-05,
+          -0.0001297110218178,
+          -6.840040226870001e-05
+        ],
+        "nodal_l1_N": 0.00019344103315977962
+      },
+      "candidate": {
+        "resultant_N": [
+          4.357301771744001e-05,
+          -0.00012916376659703,
+          -6.741196647440002e-05
+        ],
+        "nodal_l1_N": 0.0002007617766453814
+      },
+      "resultant_delta_N": 1.4818554129801048e-06,
+      "resultant_relative_to_reference_l1": 0.007660501956459841,
+      "nodal_l1_relative_change": 0.037844832433018234
+    },
+    {
+      "region": "region:41",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          4.451339554926013e-06,
+          -1.1635563028711284e-05,
+          1.6825136688798788e-05
+        ],
+        "nodal_l1_N": 0.0025653695687520863
+      },
+      "candidate": {
+        "resultant_N": [
+          -6.033025305460697e-06,
+          -1.648306522547705e-05,
+          9.863982912034997e-06
+        ],
+        "nodal_l1_N": 0.003016500439757978
+      },
+      "resultant_delta_N": 1.3486209474018761e-05,
+      "resultant_relative_to_reference_l1": 0.0052570240320497265,
+      "nodal_l1_relative_change": 0.17585414456496515
+    },
+    {
+      "region": "region:42",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -1.3587743062119408e-06,
+          -1.7201384294150119e-06,
+          -1.309868771126814e-05
+        ],
+        "nodal_l1_N": 0.001606251324821912
+      },
+      "candidate": {
+        "resultant_N": [
+          1.1324185259030883e-05,
+          -1.9771603628579735e-06,
+          9.975397602149617e-07
+        ],
+        "nodal_l1_N": 0.002508603888519523
+      },
+      "resultant_delta_N": 1.8963838022289953e-05,
+      "resultant_relative_to_reference_l1": 0.011806270743087176,
+      "nodal_l1_relative_change": 0.5617754517946665
+    },
+    {
+      "region": "region:43",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -7.754358625030006e-06,
+          1.8731908066129963e-06,
+          8.523138475100708e-07
+        ],
+        "nodal_l1_N": 0.0013480795560673806
+      },
+      "candidate": {
+        "resultant_N": [
+          -1.4680799902389987e-05,
+          7.705152861205112e-07,
+          6.86867791860014e-06
+        ],
+        "nodal_l1_N": 0.001972842823522083
+      },
+      "resultant_delta_N": 9.240569176631546e-06,
+      "resultant_relative_to_reference_l1": 0.0068546170995932515,
+      "nodal_l1_relative_change": 0.46344688237633574
+    },
+    {
+      "region": "region:46",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          7.483492760000001e-06,
+          1.36512082379e-05,
+          1.0628618636199998e-05
+        ],
+        "nodal_l1_N": 0.00011761956133438798
+      },
+      "candidate": {
+        "resultant_N": [
+          4.965187507000001e-06,
+          1.31320519263e-05,
+          8.014124766300002e-06
+        ],
+        "nodal_l1_N": 0.00011942396694212667
+      },
+      "resultant_delta_N": 3.6670100652856375e-06,
+      "resultant_relative_to_reference_l1": 0.031176872483484837,
+      "nodal_l1_relative_change": 0.015341033304901002
+    },
+    {
+      "region": "region:48",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -4.9829601360000015e-06,
+          -1.3909794342e-05,
+          7.3682452130000005e-06
+        ],
+        "nodal_l1_N": 3.267385522375332e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          -1.838769425681e-05,
+          -3.3094065353e-05,
+          2.0315124968e-05
+        ],
+        "nodal_l1_N": 5.885587291307252e-05
+      },
+      "resultant_delta_N": 2.6745931400187427e-05,
+      "resultant_relative_to_reference_l1": 0.8185728686446405,
+      "nodal_l1_relative_change": 0.8013140019756633
+    },
+    {
+      "region": "region:49",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -2.1556554583e-06,
+          8.403164266e-06,
+          8.9324270066e-06
+        ],
+        "nodal_l1_N": 2.0529293662727588e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          -2.3534477512000005e-06,
+          7.597233468399999e-06,
+          8.0538992342e-06
+        ],
+        "nodal_l1_N": 2.155158794595645e-05
+      },
+      "resultant_delta_N": 1.2084938098844022e-06,
+      "resultant_relative_to_reference_l1": 0.05886679930340272,
+      "nodal_l1_relative_change": 0.04979685614244548
+    },
+    {
+      "region": "region:50",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -9.656781838340002e-07,
+          3.993143090999999e-07,
+          1.2852820579000003e-06
+        ],
+        "nodal_l1_N": 5.547823838936152e-06
+      },
+      "candidate": {
+        "resultant_N": [
+          -9.190714340299999e-07,
+          7.015342382700001e-07,
+          1.5771211119e-06
+        ],
+        "nodal_l1_N": 5.900814896669679e-06
+      },
+      "resultant_delta_N": 4.2270451636388664e-07,
+      "resultant_relative_to_reference_l1": 0.0761928512216322,
+      "nodal_l1_relative_change": 0.06362694057733752
+    },
+    {
+      "region": "region:52",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -9.122564202410002e-05,
+          -1.811286261008999e-05,
+          -5.4330426809299996e-05
+        ],
+        "nodal_l1_N": 0.0004297838967368829
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0001148470193704,
+          -6.593365862000008e-06,
+          -4.635844465349998e-05
+        ],
+        "nodal_l1_N": 0.0004974938325324566
+      },
+      "resultant_delta_N": 2.7463080172441393e-05,
+      "resultant_relative_to_reference_l1": 0.06389974212843648,
+      "nodal_l1_relative_change": 0.157544143253525
+    },
+    {
+      "region": "region:53",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00037961752660169005,
+          7.309529478288e-05,
+          0.00031274217540499995
+        ],
+        "nodal_l1_N": 0.0012351808079115645
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0004105128518577099,
+          8.949203948564002e-05,
+          0.0003617448424806
+        ],
+        "nodal_l1_N": 0.001483882323642617
+      },
+      "resultant_delta_N": 6.020494780368837e-05,
+      "resultant_relative_to_reference_l1": 0.048741809634722626,
+      "nodal_l1_relative_change": 0.20134826750713153
+    },
+    {
+      "region": "region:54",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0004863765693563,
+          -7.020988165976e-05,
+          -0.00028962100063370397
+        ],
+        "nodal_l1_N": 0.003442192862859756
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0005420715581988901,
+          -8.034096799863e-05,
+          -0.00031726943531997984
+        ],
+        "nodal_l1_N": 0.00384118422971852
+      },
+      "resultant_delta_N": 6.300005264428859e-05,
+      "resultant_relative_to_reference_l1": 0.018302301804190155,
+      "nodal_l1_relative_change": 0.11591197319701718
+    },
+    {
+      "region": "region:56",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -1.3527741981899998e-05,
+          -9.643413911900003e-06,
+          1.2208346103000001e-05
+        ],
+        "nodal_l1_N": 7.614668615026102e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          -8.736322677300001e-06,
+          -1.2957789391000074e-06,
+          -1.2448027263e-05
+        ],
+        "nodal_l1_N": 0.0001409640686731187
+      },
+      "resultant_delta_N": 2.6468423756529237e-05,
+      "resultant_relative_to_reference_l1": 0.3475978416749329,
+      "nodal_l1_relative_change": 0.8512173779296563
+    },
+    {
+      "region": "region:57",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.000592005004173,
+          -0.000127924787862,
+          0.00011634327451999999
+        ],
+        "nodal_l1_N": 0.0008472377793241766
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.000566468549,
+          -0.00015373611919629999,
+          6.0757945452999996e-05
+        ],
+        "nodal_l1_N": 0.0009214222886907527
+      },
+      "resultant_delta_N": 6.639325399118747e-05,
+      "resultant_relative_to_reference_l1": 0.07836436902536138,
+      "nodal_l1_relative_change": 0.08756043601567375
+    },
+    {
+      "region": "region:59",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.0021931101211406187,
+          0.00015937276212855885,
+          0.00010068108388369865
+        ],
+        "nodal_l1_N": 0.011677673857277176
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0024084278495749545,
+          0.00017106023239024843,
+          0.00017505610795223112
+        ],
+        "nodal_l1_N": 0.012180523423504768
+      },
+      "resultant_delta_N": 0.00022810077892114938,
+      "resultant_relative_to_reference_l1": 0.019533066405943836,
+      "nodal_l1_relative_change": 0.043060764701373426
+    },
+    {
+      "region": "region:60",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00013955861699116806,
+          -0.0001286256100575481,
+          0.00017648089592774897
+        ],
+        "nodal_l1_N": 0.0017303943145982417
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.000177701737202144,
+          -0.00011748579398345702,
+          0.00017683020836490603
+        ],
+        "nodal_l1_N": 0.0019044502831930539
+      },
+      "resultant_delta_N": 3.973808174499987e-05,
+      "resultant_relative_to_reference_l1": 0.022964755148439188,
+      "nodal_l1_relative_change": 0.10058745982138993
+    },
+    {
+      "region": "region:62",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.000816674203825,
+          1.6613730569900005e-05,
+          -0.000205369736235
+        ],
+        "nodal_l1_N": 0.0011430609716993442
+      },
+      "candidate": {
+        "resultant_N": [
+          0.000840108805343,
+          1.1700675090000075e-07,
+          -0.000208486684361
+        ],
+        "nodal_l1_N": 0.0012532384166491883
+      },
+      "resultant_delta_N": 2.8827726422456235e-05,
+      "resultant_relative_to_reference_l1": 0.025219762669001968,
+      "nodal_l1_relative_change": 0.09638807349536878
+    },
+    {
+      "region": "region:64",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.001944919275196,
+          -0.00012423535468100003,
+          0.0014275730671909996
+        ],
+        "nodal_l1_N": 0.008714678404174144
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0020909580175449993,
+          -0.00018000697819500001,
+          0.0016615295018280003
+        ],
+        "nodal_l1_N": 0.010167564502153921
+      },
+      "resultant_delta_N": 0.000281377684908242,
+      "resultant_relative_to_reference_l1": 0.032287787553177884,
+      "nodal_l1_relative_change": 0.1667171214584208
+    },
+    {
+      "region": "region:65",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00032077857687,
+          5.4069064599000005e-05,
+          -0.0007935173101439999
+        ],
+        "nodal_l1_N": 0.004682650109941629
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00020907067213400007,
+          0.0001427981748210001,
+          -0.00106787923097
+        ],
+        "nodal_l1_N": 0.005662215730815884
+      },
+      "resultant_delta_N": 0.000309234497720787,
+      "resultant_relative_to_reference_l1": 0.06603835231341718,
+      "nodal_l1_relative_change": 0.209190436585164
+    },
+    {
+      "region": "region:66",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.0004226106133399999,
+          0.00011957925922800002,
+          0.00031999746181620006
+        ],
+        "nodal_l1_N": 0.0044699679586359745
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00041787916469000004,
+          7.883610211999996e-05,
+          0.00045998923776000006
+        ],
+        "nodal_l1_N": 0.004755759540369583
+      },
+      "resultant_delta_N": 0.000145876964560392,
+      "resultant_relative_to_reference_l1": 0.03263490161681312,
+      "nodal_l1_relative_change": 0.06393593519646147
+    },
+    {
+      "region": "region:67",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          3.4829914479999994e-07,
+          -1.2979054573999995e-06,
+          -8.419395567999999e-07
+        ],
+        "nodal_l1_N": 1.1507400237719369e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          -5.909460352e-07,
+          -6.140379082999998e-07,
+          -3.11053390418e-06
+        ],
+        "nodal_l1_N": 1.0067029760810216e-05
+      },
+      "resultant_delta_N": 2.5487990595238693e-06,
+      "resultant_relative_to_reference_l1": 0.22149217085274608,
+      "nodal_l1_relative_change": 0.12516906053096644
+    },
+    {
+      "region": "region:69",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00016946798938,
+          -6.053445101700002e-05,
+          0.0003141665900900001
+        ],
+        "nodal_l1_N": 0.0024455715763498334
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00036060163151000005,
+          -9.223681976199998e-05,
+          0.0004601483661699999
+        ],
+        "nodal_l1_N": 0.00339367669955353
+      },
+      "resultant_delta_N": 0.00024258563083042262,
+      "resultant_relative_to_reference_l1": 0.09919383802803951,
+      "nodal_l1_relative_change": 0.3876824266247002
+    },
+    {
+      "region": "region:70",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00023852549609020002,
+          -1.8378860945e-05,
+          -0.0016457313244499995
+        ],
+        "nodal_l1_N": 0.0026180514345007485
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00022692633877000002,
+          2.9419883321999984e-05,
+          -0.00210314785747
+        ],
+        "nodal_l1_N": 0.0030737250220094006
+      },
+      "resultant_delta_N": 0.00046005341546833235,
+      "resultant_relative_to_reference_l1": 0.1757235971019273,
+      "nodal_l1_relative_change": 0.17405066283411166
+    },
+    {
+      "region": "region:71",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0005064597658310001,
+          4.485072678460004e-05,
+          0.0001336875831461997
+        ],
+        "nodal_l1_N": 0.011721367880702365
+      },
+      "candidate": {
+        "resultant_N": [
+          0.000572983378316,
+          5.81609974300006e-06,
+          0.00034453550359209986
+        ],
+        "nodal_l1_N": 0.013090606551702895
+      },
+      "resultant_delta_N": 0.0002245126693144329,
+      "resultant_relative_to_reference_l1": 0.01915413555819389,
+      "nodal_l1_relative_change": 0.11681560419708303
+    },
+    {
+      "region": "region:72",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -3.1555682589099994e-05,
+          1.4769323495999997e-05,
+          3.9225220253e-05
+        ],
+        "nodal_l1_N": 0.00042291756333910234
+      },
+      "candidate": {
+        "resultant_N": [
+          -2.8699641100699984e-05,
+          5.899376333515e-05,
+          0.0001114176892963001
+        ],
+        "nodal_l1_N": 0.0014943826992300322
+      },
+      "resultant_delta_N": 8.470956639387258e-05,
+      "resultant_relative_to_reference_l1": 0.20029805743950868,
+      "nodal_l1_relative_change": 2.533508250239802
+    },
+    {
+      "region": "region:74",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -2.8029126754e-06,
+          2.2273139510300005e-05,
+          3.412801770000021e-07
+        ],
+        "nodal_l1_N": 0.00029255931395709997
+      },
+      "candidate": {
+        "resultant_N": [
+          -3.9780895478699996e-05,
+          1.9404533677500005e-05,
+          -6.182539345e-05
+        ],
+        "nodal_l1_N": 0.000365416089133261
+      },
+      "resultant_delta_N": 7.238988480078596e-05,
+      "resultant_relative_to_reference_l1": 0.24743660976522866,
+      "nodal_l1_relative_change": 0.24903249255925092
+    },
+    {
+      "region": "region:75",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00027885325047,
+          5.666346350809997e-05,
+          -0.00020878450634199996
+        ],
+        "nodal_l1_N": 0.0016664607119885632
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00031682016919,
+          8.1298779561e-05,
+          -0.0003102647048024
+        ],
+        "nodal_l1_N": 0.0019816417224923282
+      },
+      "resultant_delta_N": 0.00011111532924704648,
+      "resultant_relative_to_reference_l1": 0.06667743706628054,
+      "nodal_l1_relative_change": 0.189131977871632
+    },
+    {
+      "region": "region:76",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00044188769064500003,
+          -6.434901196126996e-05,
+          0.00024197837943887
+        ],
+        "nodal_l1_N": 0.004072416664852413
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0005430416198840001,
+          -8.4760059376e-05,
+          0.00029953371863550006
+        ],
+        "nodal_l1_N": 0.0037495730113301117
+      },
+      "resultant_delta_N": 0.00011815813694830387,
+      "resultant_relative_to_reference_l1": 0.02901425533592496,
+      "nodal_l1_relative_change": 0.07927569305681584
+    },
+    {
+      "region": "region:92",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -2.810013388101795e-05,
+          -0.00058041282659965,
+          0.00026507358364637987
+        ],
+        "nodal_l1_N": 0.001898002094528728
+      },
+      "candidate": {
+        "resultant_N": [
+          -3.4553662929799996e-05,
+          -0.0006265271034430603,
+          0.00027812832470658
+        ],
+        "nodal_l1_N": 0.0020110502159868308
+      },
+      "resultant_delta_N": 4.835908218859238e-05,
+      "resultant_relative_to_reference_l1": 0.02547894036997883,
+      "nodal_l1_relative_change": 0.059561642099332124
+    },
+    {
+      "region": "region:93",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -5.6972895644940045e-05,
+          -9.054574146183001e-05,
+          -0.00036257533139122
+        ],
+        "nodal_l1_N": 0.0027903207981273795
+      },
+      "candidate": {
+        "resultant_N": [
+          -8.765149033607006e-05,
+          -3.1459210077872075e-05,
+          -0.00026528945704493
+        ],
+        "nodal_l1_N": 0.0028252585107668687
+      },
+      "resultant_delta_N": 0.00011788526502719584,
+      "resultant_relative_to_reference_l1": 0.04224792543793179,
+      "nodal_l1_relative_change": 0.012521037961992153
+    },
+    {
+      "region": "region:95",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -6.7713427137e-05,
+          -0.00036150750700700003,
+          6.5621345653e-05
+        ],
+        "nodal_l1_N": 0.00044070472685856204
+      },
+      "candidate": {
+        "resultant_N": [
+          -6.66439470207e-05,
+          -0.000371984301742,
+          8.1527608316e-05
+        ],
+        "nodal_l1_N": 0.0004651606114786465
+      },
+      "resultant_delta_N": 1.9076587942890413e-05,
+      "resultant_relative_to_reference_l1": 0.0432865516983955,
+      "nodal_l1_relative_change": 0.05549267600193736
+    },
+    {
+      "region": "region:97",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          5.602412902999999e-06,
+          -0.000345137896936,
+          0.00015942651634
+        ],
+        "nodal_l1_N": 0.0004314651715993074
+      },
+      "candidate": {
+        "resultant_N": [
+          7.674363121699999e-06,
+          -0.00036299705187199996,
+          0.00016147807331500001
+        ],
+        "nodal_l1_N": 0.00045160765258734915
+      },
+      "resultant_delta_N": 1.8095614904127852e-05,
+      "resultant_relative_to_reference_l1": 0.04193992028847433,
+      "nodal_l1_relative_change": 0.04668390941818039
+    },
+    {
+      "region": "region:98",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          8.33513622142e-05,
+          0.0012989588202627807,
+          -0.0005624377634308003
+        ],
+        "nodal_l1_N": 0.012452501365723002
+      },
+      "candidate": {
+        "resultant_N": [
+          7.114681122070004e-05,
+          0.001376002714022129,
+          -0.0006005696766282797
+        ],
+        "nodal_l1_N": 0.005684685983816033
+      },
+      "resultant_delta_N": 8.682600667227996e-05,
+      "resultant_relative_to_reference_l1": 0.006972575559098425,
+      "nodal_l1_relative_change": 0.5434904348242988
+    },
+    {
+      "region": "region:99",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00014852163518099998,
+          -0.00042703172523000005,
+          -0.00044305096845000005
+        ],
+        "nodal_l1_N": 0.0011961989566024566
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00012900806060000002,
+          -0.00039167919022000005,
+          -0.00040826851264999997
+        ],
+        "nodal_l1_N": 0.0011170473893091734
+      },
+      "resultant_delta_N": 5.3295408395475156e-05,
+      "resultant_relative_to_reference_l1": 0.04455396663014085,
+      "nodal_l1_relative_change": 0.06616923284910406
+    },
+    {
+      "region": "region:100",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          9.95979983254e-05,
+          -0.00025651628935199997,
+          -0.00038662368770900005
+        ],
+        "nodal_l1_N": 0.0006365480632564034
+      },
+      "candidate": {
+        "resultant_N": [
+          9.8684693348e-05,
+          -0.000233620163747,
+          -0.00036917954947500003
+        ],
+        "nodal_l1_N": 0.0006470524602866264
+      },
+      "resultant_delta_N": 2.8798691852731427e-05,
+      "resultant_relative_to_reference_l1": 0.045241975453362164,
+      "nodal_l1_relative_change": 0.01650212707660345
+    },
+    {
+      "region": "region:102",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -3.6515068747400024e-05,
+          0.0006320763284748201,
+          0.0011792023882237896
+        ],
+        "nodal_l1_N": 0.009899582084296612
+      },
+      "candidate": {
+        "resultant_N": [
+          -2.5192529058699557e-06,
+          0.0005140480544038199,
+          0.0010407430663833793
+        ],
+        "nodal_l1_N": 0.006449678894251644
+      },
+      "resultant_delta_N": 0.00018508747331847365,
+      "resultant_relative_to_reference_l1": 0.018696493623914887,
+      "nodal_l1_relative_change": 0.3484897807471528
+    },
+    {
+      "region": "region:103",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00012225036868786004,
+          0.00012752624139016002,
+          -9.590611650248e-05
+        ],
+        "nodal_l1_N": 0.00046361551803835094
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00010324139992183998,
+          0.0001239569895421,
+          -9.899316022989999e-05
+        ],
+        "nodal_l1_N": 0.00046216941179814215
+      },
+      "resultant_delta_N": 1.9585971798136777e-05,
+      "resultant_relative_to_reference_l1": 0.04224615233115773,
+      "nodal_l1_relative_change": 0.0031191929172853347
+    },
+    {
+      "region": "region:104",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          2.5701335654379996e-05,
+          -2.7805049482490004e-05,
+          1.2105594615689996e-05
+        ],
+        "nodal_l1_N": 0.00019758086246109355
+      },
+      "candidate": {
+        "resultant_N": [
+          2.216264058337e-05,
+          -3.019414305996e-05,
+          1.0554953873039999e-05
+        ],
+        "nodal_l1_N": 0.00029511899022218894
+      },
+      "resultant_delta_N": 4.542534275078719e-06,
+      "resultant_relative_to_reference_l1": 0.022990760433456495,
+      "nodal_l1_relative_change": 0.4936618179825084
+    },
+    {
+      "region": "region:106",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          5.191486147e-06,
+          6.0417711863000006e-05,
+          5.47048724489e-05
+        ],
+        "nodal_l1_N": 0.00021450705773352977
+      },
+      "candidate": {
+        "resultant_N": [
+          1.6827537923e-05,
+          7.153408305500001e-05,
+          6.016513026059999e-05
+        ],
+        "nodal_l1_N": 0.00021580211931728323
+      },
+      "resultant_delta_N": 1.6993699561376006e-05,
+      "resultant_relative_to_reference_l1": 0.07922209992030349,
+      "nodal_l1_relative_change": 0.006037384491853134
+    },
+    {
+      "region": "region:107",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          3.7758957408799973e-06,
+          0.00010059636429840001,
+          4.6726496779999996e-05
+        ],
+        "nodal_l1_N": 0.00029552570046634805
+      },
+      "candidate": {
+        "resultant_N": [
+          2.484364056096e-05,
+          0.0001063900796857,
+          3.19881733175e-05
+        ],
+        "nodal_l1_N": 0.0003260603250140731
+      },
+      "resultant_delta_N": 2.6355932696042504e-05,
+      "resultant_relative_to_reference_l1": 0.08918321707537478,
+      "nodal_l1_relative_change": 0.10332307646861345
+    },
+    {
+      "region": "region:109",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          9.65603453565e-05,
+          -2.71944518561e-05,
+          0.00013921974180249996
+        ],
+        "nodal_l1_N": 0.0009341925724592822
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00010656707063789997,
+          -3.226591213809998e-05,
+          0.00024974187662289986
+        ],
+        "nodal_l1_N": 0.0019430714187641616
+      },
+      "resultant_delta_N": 0.00011109003801200162,
+      "resultant_relative_to_reference_l1": 0.11891556547014144,
+      "nodal_l1_relative_change": 1.0799474070415525
+    },
+    {
+      "region": "region:110",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          2.271863538e-05,
+          8.391792171e-07,
+          1.04305238136e-05
+        ],
+        "nodal_l1_N": 3.172302767482571e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          2.8578880873e-05,
+          -3.4596198159999998e-06,
+          8.159396964e-06
+        ],
+        "nodal_l1_N": 5.246086220053911e-05
+      },
+      "resultant_delta_N": 7.614470929236143e-06,
+      "resultant_relative_to_reference_l1": 0.24002976661898895,
+      "nodal_l1_relative_change": 0.6537154882656495
+    },
+    {
+      "region": "region:111",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -4.403732138041e-05,
+          4.135835354439976e-06,
+          -4.803842330180001e-05
+        ],
+        "nodal_l1_N": 0.0008371374131049605
+      },
+      "candidate": {
+        "resultant_N": [
+          -4.7973096126000005e-05,
+          1.3330489357500039e-05,
+          -6.863652825369999e-05
+        ],
+        "nodal_l1_N": 0.001017408365812133
+      },
+      "resultant_delta_N": 2.2897901927764016e-05,
+      "resultant_relative_to_reference_l1": 0.027352620453116785,
+      "nodal_l1_relative_change": 0.2153421288848431
+    },
+    {
+      "region": "region:112",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          6.4054375045e-05,
+          3.1128782890000005e-05,
+          4.48447982064e-05
+        ],
+        "nodal_l1_N": 0.00010342889220641796
+      },
+      "candidate": {
+        "resultant_N": [
+          7.8894247774e-05,
+          3.9416509446e-05,
+          5.359088964150001e-05
+        ],
+        "nodal_l1_N": 0.00012109785478029022
+      },
+      "resultant_delta_N": 1.911550024119367e-05,
+      "resultant_relative_to_reference_l1": 0.1848177992958095,
+      "nodal_l1_relative_change": 0.17083198124765248
+    },
+    {
+      "region": "region:114",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0017836907381419999,
+          -5.23948478404e-05,
+          0.001001308204856
+        ],
+        "nodal_l1_N": 0.008020364070009108
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0022339489504820003,
+          -6.596332533988198e-05,
+          0.0011295314032204995
+        ],
+        "nodal_l1_N": 0.0096661804268737
+      },
+      "resultant_delta_N": 0.0004683564347375711,
+      "resultant_relative_to_reference_l1": 0.058395907049770525,
+      "nodal_l1_relative_change": 0.2052046942630526
+    },
+    {
+      "region": "region:115",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          3.487922061400002e-05,
+          0.00016654187439209996,
+          -0.00011596837980799998
+        ],
+        "nodal_l1_N": 0.003098107943437502
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00013714158797099993,
+          0.00015217844565199997,
+          -0.00022645030221599992
+        ],
+        "nodal_l1_N": 0.0036638910088178374
+      },
+      "resultant_delta_N": 0.00020494809550316987,
+      "resultant_relative_to_reference_l1": 0.06615266454395065,
+      "nodal_l1_relative_change": 0.18262212799227764
+    },
+    {
+      "region": "region:116",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00042508672666899996,
+          -0.00019240566734599995,
+          -0.00013050839891480016
+        ],
+        "nodal_l1_N": 0.009808583378147665
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00040038634889999995,
+          -0.00018603579547599996,
+          -0.00012653396511699974
+        ],
+        "nodal_l1_N": 0.01166057782658205
+      },
+      "resultant_delta_N": 2.5816274974996398e-05,
+      "resultant_relative_to_reference_l1": 0.0026320085153695005,
+      "nodal_l1_relative_change": 0.18881365198570912
+    },
+    {
+      "region": "region:119",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00013685829409000003,
+          -0.000206051736053,
+          0.000256964786274
+        ],
+        "nodal_l1_N": 0.0010376368466297342
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00019403324644000003,
+          -0.00025628386334399997,
+          0.00022633916597000005
+        ],
+        "nodal_l1_N": 0.0012608211946639708
+      },
+      "resultant_delta_N": 8.20376158076816e-05,
+      "resultant_relative_to_reference_l1": 0.0790619724753814,
+      "nodal_l1_relative_change": 0.21508907356089363
+    },
+    {
+      "region": "region:120",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0007800614233727,
+          -0.00034547261835150004,
+          0.000316574085903
+        ],
+        "nodal_l1_N": 0.0027887171593848053
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0009441740750729999,
+          -0.00040061068312169997,
+          0.000443549308493
+        ],
+        "nodal_l1_N": 0.0035143042976028545
+      },
+      "resultant_delta_N": 0.00021469950113236577,
+      "resultant_relative_to_reference_l1": 0.07698862554412968,
+      "nodal_l1_relative_change": 0.2601867083494816
+    },
+    {
+      "region": "region:121",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.00038217307901329995,
+          0.00012940917399345003,
+          -0.0004540811005609998
+        ],
+        "nodal_l1_N": 0.0027148212066177534
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00046067094097879997,
+          0.00017401623481800001,
+          -0.0006176521658627998
+        ],
+        "nodal_l1_N": 0.003082746840107076
+      },
+      "resultant_delta_N": 0.00018683467989783249,
+      "resultant_relative_to_reference_l1": 0.06882025211914398,
+      "nodal_l1_relative_change": 0.13552481194431984
+    },
+    {
+      "region": "region:122",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.000691097987673702,
+          -0.0005763444703024677,
+          0.00022429938734961271
+        ],
+        "nodal_l1_N": 0.00189844734950113
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.000754572366783447,
+          -0.0006261900565678561,
+          0.00025363065212609967
+        ],
+        "nodal_l1_N": 0.0021242001017517604
+      },
+      "resultant_delta_N": 8.587142928178321e-05,
+      "resultant_relative_to_reference_l1": 0.04523245235341834,
+      "nodal_l1_relative_change": 0.11891441303860925
+    },
+    {
+      "region": "region:124",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.0008573182685899997,
+          0.000492361406155,
+          0.00022575294680800007
+        ],
+        "nodal_l1_N": 0.012062515785127733
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0010499483125600002,
+          0.0005210027955899999,
+          0.00043306608850700003
+        ],
+        "nodal_l1_N": 0.01352990848663452
+      },
+      "resultant_delta_N": 0.000284438748678448,
+      "resultant_relative_to_reference_l1": 0.02358038354064927,
+      "nodal_l1_relative_change": 0.12164897668494515
+    },
+    {
+      "region": "region:125",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.0008914168266699999,
+          0.0008259329916299999,
+          -0.00226508069912
+        ],
+        "nodal_l1_N": 0.006521845149894026
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0011375363645199999,
+          0.0009732714552699997,
+          -0.0027633563333900003
+        ],
+        "nodal_l1_N": 0.007488155362030145
+      },
+      "resultant_delta_N": 0.0005749452647743648,
+      "resultant_relative_to_reference_l1": 0.08815684082651166,
+      "nodal_l1_relative_change": 0.1481651572410947
+    },
+    {
+      "region": "region:126",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.000529295759237,
+          -0.0003795969868949999,
+          0.0008798830546599999
+        ],
+        "nodal_l1_N": 0.006176898888763549
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00065425047959,
+          -0.000442119883704,
+          0.0011072344121500002
+        ],
+        "nodal_l1_N": 0.007265838382627313
+      },
+      "resultant_delta_N": 0.00026685470675337774,
+      "resultant_relative_to_reference_l1": 0.043202051961513485,
+      "nodal_l1_relative_change": 0.17629226469040365
+    },
+    {
+      "region": "region:131",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -4.6470447299459915e-06,
+          -7.993094006150501e-06,
+          -2.7822048327900013e-06
+        ],
+        "nodal_l1_N": 0.00018881396108849543
+      },
+      "candidate": {
+        "resultant_N": [
+          -4.415364008603002e-06,
+          -8.1762776395376e-06,
+          -1.8911425274089977e-06
+        ],
+        "nodal_l1_N": 0.00019883857027020563
+      },
+      "resultant_delta_N": 9.387354431648015e-07,
+      "resultant_relative_to_reference_l1": 0.004971748051643409,
+      "nodal_l1_relative_change": 0.053092520933935364
+    },
+    {
+      "region": "region:136",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -5.576845458080008e-06,
+          1.5577070669563562e-06,
+          -1.831218671710179e-06
+        ],
+        "nodal_l1_N": 0.002024649391581158
+      },
+      "candidate": {
+        "resultant_N": [
+          -5.090448075074015e-06,
+          1.8055199373428102e-06,
+          -2.06891721796613e-06
+        ],
+        "nodal_l1_N": 0.0021526906197521286
+      },
+      "resultant_delta_N": 5.953941818799079e-07,
+      "resultant_relative_to_reference_l1": 0.0002940727339536711,
+      "nodal_l1_relative_change": 0.06324118571017191
+    },
+    {
+      "region": "region:138",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -3.839608764464031e-06,
+          -0.000434336433723879,
+          -8.268390112029998e-05
+        ],
+        "nodal_l1_N": 0.0018253796801742772
+      },
+      "candidate": {
+        "resultant_N": [
+          4.309274419951459e-06,
+          -0.0005826407974838261,
+          -0.00011397674536809993
+        ],
+        "nodal_l1_N": 0.0021797695922873097
+      },
+      "resultant_delta_N": 0.00015178877003425856,
+      "resultant_relative_to_reference_l1": 0.08315462896999412,
+      "nodal_l1_relative_change": 0.19414586234420958
+    },
+    {
+      "region": "region:139",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          9.163387361460193e-06,
+          0.00043277234263899974,
+          8.492942366087995e-05
+        ],
+        "nodal_l1_N": 0.005829903264139521
+      },
+      "candidate": {
+        "resultant_N": [
+          3.498364376598691e-07,
+          0.0005808701467632397,
+          0.00011636807698018998
+        ],
+        "nodal_l1_N": 0.006492510694706842
+      },
+      "resultant_delta_N": 0.00015165430158370035,
+      "resultant_relative_to_reference_l1": 0.0260131763277352,
+      "nodal_l1_relative_change": 0.11365667671419254
+    },
+    {
+      "region": "region:142",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          3.0158791036999996e-07,
+          -2.1068529846300013e-07,
+          -3.4939280486999923e-07
+        ],
+        "nodal_l1_N": 2.3198179864962182e-05
+      },
+      "candidate": {
+        "resultant_N": [
+          1.2110120655499976e-07,
+          -2.578796271709999e-07,
+          -3.741408224300002e-07
+        ],
+        "nodal_l1_N": 2.4700587149836144e-05
+      },
+      "resultant_delta_N": 1.881893176812979e-07,
+      "resultant_relative_to_reference_l1": 0.008112244959594148,
+      "nodal_l1_relative_change": 0.06476401569517752
+    },
+    {
+      "region": "region:145",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          6.1101442670220406e-06,
+          -2.3139979984645987e-05,
+          -1.237221898422999e-05
+        ],
+        "nodal_l1_N": 0.000780121559746293
+      },
+      "candidate": {
+        "resultant_N": [
+          7.723210843220982e-06,
+          -2.4640161500703992e-05,
+          -1.914815606400008e-06
+        ],
+        "nodal_l1_N": 0.000567014296099211
+      },
+      "resultant_delta_N": 1.0686899165193905e-05,
+      "resultant_relative_to_reference_l1": 0.013699017841103433,
+      "nodal_l1_relative_change": 0.27317186787708775
+    },
+    {
+      "region": "region:153",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -1.4094414787000041e-05,
+          5.6871198874900026e-05,
+          2.6682059680230067e-05
+        ],
+        "nodal_l1_N": 0.00800672249154988
+      },
+      "candidate": {
+        "resultant_N": [
+          -1.8426691644700174e-05,
+          5.38062052978e-05,
+          2.404314986380002e-05
+        ],
+        "nodal_l1_N": 0.006565005399369057
+      },
+      "resultant_delta_N": 5.926774284438325e-06,
+      "resultant_relative_to_reference_l1": 0.000740224766212806,
+      "nodal_l1_relative_change": 0.18006332724811921
+    },
+    {
+      "region": "region:156",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          4.975167802279996e-06,
+          4.455380207700001e-07,
+          5.543727942199986e-07
+        ],
+        "nodal_l1_N": 0.00011253900639610175
+      },
+      "candidate": {
+        "resultant_N": [
+          3.315570204419999e-06,
+          9.266198568599991e-08,
+          5.011817036900077e-07
+        ],
+        "nodal_l1_N": 0.000121987362051996
+      },
+      "resultant_delta_N": 1.6975320247556588e-06,
+      "resultant_relative_to_reference_l1": 0.01508394359535113,
+      "nodal_l1_relative_change": 0.08395627399302806
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          -0.015746123846000007,
+          -0.14517269887899997,
+          0.00913810684000001
+        ],
+        "nodal_l1_N": 0.614554291326099
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.024547693326999985,
+          -0.13666913215600002,
+          0.003221745145000003
+        ],
+        "nodal_l1_N": 0.7541211753681905
+      },
+      "resultant_delta_N": 0.013593439890161938,
+      "resultant_relative_to_reference_l1": 0.022119184719757972,
+      "nodal_l1_relative_change": 0.22710261080584265
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -4.982872200001015e-05,
+          0.04197998628000001,
+          0.0028206292780999943
+        ],
+        "nodal_l1_N": 0.82147022376025
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00875174287899999,
+          0.033476395438999995,
+          0.008736984202999995
+        ],
+        "nodal_l1_N": 0.9250161773539887
+      },
+      "resultant_delta_N": 0.013593453403607842,
+      "resultant_relative_to_reference_l1": 0.016547712881648108,
+      "nodal_l1_relative_change": 0.12604955188729886
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          -0.013253706971000003,
+          0.05705832039,
+          -0.085817090711
+        ],
+        "nodal_l1_N": 0.4830393535099821
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0195646117302,
+          0.0312801684519,
+          -0.065903612877
+        ],
+        "nodal_l1_N": 0.2541517498645049
+      },
+      "resultant_delta_N": 0.03317962078850015,
+      "resultant_relative_to_reference_l1": 0.06868927044432722,
+      "nodal_l1_relative_change": 0.4738487702550041
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.011194244256000019,
+          -0.018030857117999982,
+          0.012674334065
+        ],
+        "nodal_l1_N": 0.9932702990671485
+      },
+      "candidate": {
+        "resultant_N": [
+          0.01750514085789999,
+          0.007747294119999998,
+          -0.007239143739999999
+        ],
+        "nodal_l1_N": 0.6258996934476
+      },
+      "resultant_delta_N": 0.03317961867561622,
+      "resultant_relative_to_reference_l1": 0.033404420434978856,
+      "nodal_l1_relative_change": 0.36985965045423447
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_0",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0004299549724023999,
+          0.0009623777011679998,
+          0.00383195345238667
+        ],
+        "nodal_l1_N": 0.00811686288569036
+      },
+      "candidate": {
+        "resultant_N": [
+          0.000456156554784,
+          0.000999404659021,
+          0.0041039945337821996
+        ],
+        "nodal_l1_N": 0.008439948747284655
+      },
+      "resultant_delta_N": 0.00027579678840406515,
+      "resultant_relative_to_reference_l1": 0.0339782490215871,
+      "nodal_l1_relative_change": 0.03980427735989969
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_1",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00011762687007101959,
+          0.0016039676604901998,
+          -0.0011343833586782998
+        ],
+        "nodal_l1_N": 0.0082305299851788
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00011720855783910005,
+          0.0015757304105070992,
+          -0.0011207694942520004
+        ],
+        "nodal_l1_N": 0.008617770766147843
+      },
+      "resultant_delta_N": 3.135051158034185e-05,
+      "resultant_relative_to_reference_l1": 0.003809051377833088,
+      "nodal_l1_relative_change": 0.047049312944168926
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_2",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00010957305635005002,
+          0.0015814805790110005,
+          -0.0008053713501012015
+        ],
+        "nodal_l1_N": 0.021688139950562773
+      },
+      "candidate": {
+        "resultant_N": [
+          9.780762716709939e-05,
+          0.001565603313526,
+          -0.0008097930687758987
+        ],
+        "nodal_l1_N": 0.021417192862742438
+      },
+      "resultant_delta_N": 2.0250048868543084e-05,
+      "resultant_relative_to_reference_l1": 0.0009336922813437317,
+      "nodal_l1_relative_change": 0.012492868841585663
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          -0.001608747698,
+          -0.017564236404699996,
+          -0.011796299224
+        ],
+        "nodal_l1_N": 0.036819289799902434
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.0016194866185000002,
+          -0.017543000604580004,
+          -0.011974325374799998
+        ],
+        "nodal_l1_N": 0.037506491234017045
+      },
+      "resultant_delta_N": 0.00017960955984831341,
+      "resultant_relative_to_reference_l1": 0.004878137542152955,
+      "nodal_l1_relative_change": 0.01866416864228684
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -0.000216842522848,
+          0.00037496400831999984,
+          0.002495489763366
+        ],
+        "nodal_l1_N": 0.006957376846769261
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00020610355468150002,
+          0.0003537275361329997,
+          0.002673514383004
+        ],
+        "nodal_l1_N": 0.007534966296142503
+      },
+      "resultant_delta_N": 0.000179608124497432,
+      "resultant_relative_to_reference_l1": 0.02581549461142602,
+      "nodal_l1_relative_change": 0.08301827859755104
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          0.00829795424214,
+          -0.0181259129925,
+          0.0048748765979999996
+        ],
+        "nodal_l1_N": 0.03204769014527169
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0082531272087,
+          -0.018276581919899997,
+          0.0048681299372999995
+        ],
+        "nodal_l1_N": 0.033529779329619355
+      },
+      "resultant_delta_N": 0.00015734073230253272,
+      "resultant_relative_to_reference_l1": 0.004909581052154137,
+      "nodal_l1_relative_change": 0.04624636526468461
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00023788007290027007,
+          0.0018744114453334998,
+          -0.0007342527923903001
+        ],
+        "nodal_l1_N": 0.007093473360067136
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0002827070938551,
+          0.0020250810609363,
+          -0.0007275067315700003
+        ],
+        "nodal_l1_N": 0.007498132609347645
+      },
+      "resultant_delta_N": 0.00015734136204498657,
+      "resultant_relative_to_reference_l1": 0.022181145125707135,
+      "nodal_l1_relative_change": 0.05704670035959345
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_5",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.0006183674402892003,
+          0.0019621059227912995,
+          -0.0012342889890839012
+        ],
+        "nodal_l1_N": 0.0183080867138532
+      },
+      "candidate": {
+        "resultant_N": [
+          0.0006340462191977999,
+          0.0020111464983940002,
+          -0.0012359032767950006
+        ],
+        "nodal_l1_N": 0.01767204468694152
+      },
+      "resultant_delta_N": 5.151124234886162e-05,
+      "resultant_relative_to_reference_l1": 0.0028135786744927613,
+      "nodal_l1_relative_change": 0.0347410429529158
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          -0.5577380975099999,
+          -0.3682418940900001,
+          0.3754054759751
+        ],
+        "nodal_l1_N": 3.469729527058418
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.5669532138699999,
+          -0.36610230340000016,
+          0.386654275228
+        ],
+        "nodal_l1_N": 3.816440642185605
+      },
+      "resultant_delta_N": 0.014698016957437379,
+      "resultant_relative_to_reference_l1": 0.004236069942286863,
+      "nodal_l1_relative_change": 0.09992453660246065
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.036931359793520815,
+          -0.042556769448917,
+          -0.1705423527158719
+        ],
+        "nodal_l1_N": 0.3019863063264287
+      },
+      "candidate": {
+        "resultant_N": [
+          0.04614645567828377,
+          -0.04469635050337898,
+          -0.18179113659818089
+        ],
+        "nodal_l1_N": 0.3270865584753495
+      },
+      "resultant_delta_N": 0.014697990954034578,
+      "resultant_relative_to_reference_l1": 0.048671051124241874,
+      "nodal_l1_relative_change": 0.08311718651834821
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          -0.5538780384637,
+          -0.428776374547,
+          0.2660920949567
+        ],
+        "nodal_l1_N": 1.152415332391398
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.5455967850251999,
+          -0.42561260094049996,
+          0.2792110099722
+        ],
+        "nodal_l1_N": 1.348147145280772
+      },
+      "resultant_delta_N": 0.015833336765501034,
+      "resultant_relative_to_reference_l1": 0.013739262504122529,
+      "nodal_l1_relative_change": 0.16984485314266645
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.035301668467881006,
+          -0.0019806333292893994,
+          -0.09785584412816
+        ],
+        "nodal_l1_N": 0.5300535448465971
+      },
+      "candidate": {
+        "resultant_N": [
+          0.02702043731487417,
+          -0.005144412681748995,
+          -0.11097476682992002
+        ],
+        "nodal_l1_N": 0.5843011676501737
+      },
+      "resultant_delta_N": 0.01583333262630882,
+      "resultant_relative_to_reference_l1": 0.029871194675042026,
+      "nodal_l1_relative_change": 0.10234366571263374
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          -0.00011307829300999999,
+          0.00041947711177,
+          0.00058575225553
+        ],
+        "nodal_l1_N": 0.0007415786224687533
+      },
+      "candidate": {
+        "resultant_N": [
+          -0.00013764152025000001,
+          0.00043588241987000005,
+          0.00060543295696
+        ],
+        "nodal_l1_N": 0.0007725053505708763
+      },
+      "resultant_delta_N": 3.549389067257365e-05,
+      "resultant_relative_to_reference_l1": 0.04786261307589028,
+      "nodal_l1_relative_change": 0.04170390996327042
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          0.00018079898467648916,
+          -0.00030492935203792643,
+          -0.0004036837277368485
+        ],
+        "nodal_l1_N": 0.008016187346403242
+      },
+      "candidate": {
+        "resultant_N": [
+          0.00020536221780619683,
+          -0.0003213346173777526,
+          -0.00042336447935522107
+        ],
+        "nodal_l1_N": 0.007569080572790453
+      },
+      "resultant_delta_N": 3.54939028132797e-05,
+      "resultant_relative_to_reference_l1": 0.004427778603403693,
+      "nodal_l1_relative_change": 0.05577548955531837
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "channel": "bulk_reaction",
+      "reference": {
+        "resultant_N": [
+          6.774159188e-05,
+          0.00028717157329999994,
+          0.00041846808746
+        ],
+        "nodal_l1_N": 0.0006038646355094215
+      },
+      "candidate": {
+        "resultant_N": [
+          7.730427844999999e-05,
+          0.00029584257573,
+          0.00042880572797
+        ],
+        "nodal_l1_N": 0.0006212716865181033
+      },
+      "resultant_delta_N": 1.6537777023866275e-05,
+      "resultant_relative_to_reference_l1": 0.027386563231865647,
+      "nodal_l1_relative_change": 0.028826081186220032
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "channel": "free_internal_force",
+      "reference": {
+        "resultant_N": [
+          -5.6738525456815955e-05,
+          -0.0002670170436540737,
+          -0.00038452555949311404
+        ],
+        "nodal_l1_N": 0.00747645582506451
+      },
+      "candidate": {
+        "resultant_N": [
+          -6.630118031987036e-05,
+          -0.00027568813147254136,
+          -0.0003948632539794993
+        ],
+        "nodal_l1_N": 0.007106957915918706
+      },
+      "resultant_delta_N": 1.653783720077435e-05,
+      "resultant_relative_to_reference_l1": 0.002211988887212031,
+      "nodal_l1_relative_change": 0.04942153311560769
+    }
+  ],
+  "strain_metrics_over_1pct": [
+    {
+      "region": "region:29",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.4092276083901033e-13,
+      "candidate": 3.0208915047721384e-13,
+      "relative_change": 0.1139073562182444
+    },
+    {
+      "region": "region:29",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.02614920421849e-20,
+      "candidate": 1.7571199507644543e-20,
+      "relative_change": 0.13277859937161118
+    },
+    {
+      "region": "region:29",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.2737507936194505e-07,
+      "candidate": 1.2344533342016508e-07,
+      "relative_change": 0.030851764422562825
+    },
+    {
+      "region": "region:34",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.0429311949484282e-17,
+      "candidate": 1.030820657789936e-17,
+      "relative_change": 0.011612019294418541
+    },
+    {
+      "region": "region:41",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 8.688264132321145e-11,
+      "candidate": 9.161982516327621e-11,
+      "relative_change": 0.054523939050632686
+    },
+    {
+      "region": "region:41",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.889360062713925e-15,
+      "candidate": 4.6354847588109185e-15,
+      "relative_change": 0.19183739331563998
+    },
+    {
+      "region": "region:41",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0018339792469928768,
+      "candidate": 0.0028604802392676013,
+      "relative_change": 0.5597124362000545
+    },
+    {
+      "region": "region:42",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.003414121898019e-11,
+      "candidate": 4.494138399167576e-11,
+      "relative_change": 0.2514029004304763
+    },
+    {
+      "region": "region:42",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.487998155158119e-17,
+      "candidate": 4.1786271095150786e-17,
+      "relative_change": 0.3559450835859183
+    },
+    {
+      "region": "region:42",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.062275821340923e-05,
+      "candidate": 1.12545393327308e-05,
+      "relative_change": 0.05947430098936686
+    },
+    {
+      "region": "region:43",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.871251029553017e-11,
+      "candidate": 3.1468341700102536e-11,
+      "relative_change": 0.35399876727375207
+    },
+    {
+      "region": "region:43",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.730484214900726e-17,
+      "candidate": 3.731168401102402e-17,
+      "relative_change": 0.4456315055546956
+    },
+    {
+      "region": "region:46",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.923590490973904e-12,
+      "candidate": 7.279037866137045e-12,
+      "relative_change": 0.051338590233857416
+    },
+    {
+      "region": "region:46",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.4557228331489586e-17,
+      "candidate": 2.092663838840977e-17,
+      "relative_change": 0.4375427733823577
+    },
+    {
+      "region": "region:46",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.707654144605051e-06,
+      "candidate": 6.361190888167257e-06,
+      "relative_change": 0.35124431251117944
+    },
+    {
+      "region": "region:48",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.498212793353614e-12,
+      "candidate": 2.833476214353503e-12,
+      "relative_change": 0.1342013065867898
+    },
+    {
+      "region": "region:48",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.6905570372300864e-17,
+      "candidate": 1.8083390010778002e-17,
+      "relative_change": 0.06967050578825493
+    },
+    {
+      "region": "region:49",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.2660741751509967e-12,
+      "candidate": 2.483659517599691e-12,
+      "relative_change": 0.09601863206185463
+    },
+    {
+      "region": "region:49",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.4194506300292908e-18,
+      "candidate": 3.402330485946261e-18,
+      "relative_change": 0.4062409225126743
+    },
+    {
+      "region": "region:49",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.9461169363943657e-06,
+      "candidate": 2.7475209407824167e-06,
+      "relative_change": 0.4117964287761856
+    },
+    {
+      "region": "region:52",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.5334117148503622e-11,
+      "candidate": 2.9131775725330533e-11,
+      "relative_change": 0.14990293739330968
+    },
+    {
+      "region": "region:52",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.575677010362821e-16,
+      "candidate": 7.539459952353342e-16,
+      "relative_change": 0.3522052906473384
+    },
+    {
+      "region": "region:52",
+      "metric": "maximum_green_strain_norm",
+      "reference": 9.71714014945297e-05,
+      "candidate": 0.00011431790222342814,
+      "relative_change": 0.17645624602691054
+    },
+    {
+      "region": "region:53",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.4609496881396364e-11,
+      "candidate": 4.870464160893514e-11,
+      "relative_change": 0.09179984115101258
+    },
+    {
+      "region": "region:53",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3796032330151427e-15,
+      "candidate": 1.832207739568503e-15,
+      "relative_change": 0.3280686038725688
+    },
+    {
+      "region": "region:53",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00021086029497524914,
+      "candidate": 0.0002448748480283603,
+      "relative_change": 0.16131321952814198
+    },
+    {
+      "region": "region:54",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.392362244591731e-11,
+      "candidate": 1.0573754584049544e-10,
+      "relative_change": 0.1257822375982227
+    },
+    {
+      "region": "region:54",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.6830905521764e-15,
+      "candidate": 1.252662311960252e-14,
+      "relative_change": 0.29365960713720685
+    },
+    {
+      "region": "region:54",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0003167587310718837,
+      "candidate": 0.0003667721110193755,
+      "relative_change": 0.15789108567978835
+    },
+    {
+      "region": "region:56",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.5632221136538304e-12,
+      "candidate": 5.047120310274879e-12,
+      "relative_change": 0.4164484136239872
+    },
+    {
+      "region": "region:56",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.3166228395678635e-18,
+      "candidate": 1.7814107620530172e-17,
+      "relative_change": 1.8201949163310946
+    },
+    {
+      "region": "region:56",
+      "metric": "maximum_green_strain_norm",
+      "reference": 2.8367663687841175e-06,
+      "candidate": 5.742309808971724e-06,
+      "relative_change": 1.024244883949667
+    },
+    {
+      "region": "region:57",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.351548538564135e-10,
+      "candidate": 1.6599974772434116e-10,
+      "relative_change": 0.2282189132526221
+    },
+    {
+      "region": "region:57",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.0134139333995384e-14,
+      "candidate": 1.516525213225248e-14,
+      "relative_change": 0.49645190700901676
+    },
+    {
+      "region": "region:57",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0004069455346893183,
+      "candidate": 0.0004900886143984276,
+      "relative_change": 0.20431009219104643
+    },
+    {
+      "region": "region:59",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.061515433554918e-10,
+      "candidate": 4.576677229116183e-10,
+      "relative_change": 0.12683979760489544
+    },
+    {
+      "region": "region:59",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.223851912307777e-14,
+      "candidate": 8.73634568378579e-14,
+      "relative_change": 0.20937496917691134
+    },
+    {
+      "region": "region:59",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00318768348514264,
+      "candidate": 0.0036219022570151012,
+      "relative_change": 0.13621765582947498
+    },
+    {
+      "region": "region:60",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.635665298072704e-11,
+      "candidate": 8.210498084483775e-11,
+      "relative_change": 0.07528260655376859
+    },
+    {
+      "region": "region:60",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.350647248008817e-15,
+      "candidate": 8.588448648867748e-15,
+      "relative_change": 0.16839352496397272
+    },
+    {
+      "region": "region:61",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.986468203134676e-10,
+      "candidate": 5.335365332047312e-10,
+      "relative_change": 0.06996878646359503
+    },
+    {
+      "region": "region:61",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.034384293609901e-13,
+      "candidate": 2.4016187430606355e-13,
+      "relative_change": 0.18051380489135485
+    },
+    {
+      "region": "region:61",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.007982401419959886,
+      "candidate": 0.009293311160142004,
+      "relative_change": 0.164224983336995
+    },
+    {
+      "region": "region:62",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.636195128145635e-11,
+      "candidate": 8.368189205581323e-11,
+      "relative_change": 0.09585848254946897
+    },
+    {
+      "region": "region:62",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.705458191785018e-15,
+      "candidate": 4.868863305155732e-15,
+      "relative_change": 0.31397064901446664
+    },
+    {
+      "region": "region:62",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00013169448633559413,
+      "candidate": 0.000155918526788867,
+      "relative_change": 0.18394118939454535
+    },
+    {
+      "region": "region:64",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0495925251767216e-10,
+      "candidate": 2.3661199827715803e-10,
+      "relative_change": 0.15443433448683505
+    },
+    {
+      "region": "region:64",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.2231002980934716e-14,
+      "candidate": 4.073484681149253e-14,
+      "relative_change": 0.2638404965426613
+    },
+    {
+      "region": "region:64",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001743295143713319,
+      "candidate": 0.0018518127275516337,
+      "relative_change": 0.06224854364428851
+    },
+    {
+      "region": "region:65",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.394855955482211e-10,
+      "candidate": 1.5292362594048905e-10,
+      "relative_change": 0.09633991480949959
+    },
+    {
+      "region": "region:65",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.0989479322733015e-14,
+      "candidate": 1.9337357558647513e-14,
+      "relative_change": 0.07871189840789158
+    },
+    {
+      "region": "region:65",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0029509959569124777,
+      "candidate": 0.0009387171562920865,
+      "relative_change": 0.681898189628754
+    },
+    {
+      "region": "region:66",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.1996545302612486e-10,
+      "candidate": 3.464024761541783e-10,
+      "relative_change": 0.08262461737047251
+    },
+    {
+      "region": "region:66",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.236680605093049e-14,
+      "candidate": 9.686845157818282e-14,
+      "relative_change": 0.17606176835709056
+    },
+    {
+      "region": "region:66",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.005335643624446037,
+      "candidate": 0.00602336845869885,
+      "relative_change": 0.1288925727913875
+    },
+    {
+      "region": "region:69",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.3888062237033793e-10,
+      "candidate": 2.776555120035446e-10,
+      "relative_change": 0.16231910838332367
+    },
+    {
+      "region": "region:69",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.384849891748301e-14,
+      "candidate": 9.896712151285534e-14,
+      "relative_change": 0.34013721285573356
+    },
+    {
+      "region": "region:69",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0006196351518441153,
+      "candidate": 0.0006987447237360801,
+      "relative_change": 0.12767121370781562
+    },
+    {
+      "region": "region:70",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.243309627258597e-11,
+      "candidate": 4.5699048125582316e-11,
+      "relative_change": 0.07696708795455785
+    },
+    {
+      "region": "region:70",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.887710288275921e-15,
+      "candidate": 2.4339522196280064e-15,
+      "relative_change": 0.28936746000943714
+    },
+    {
+      "region": "region:70",
+      "metric": "maximum_green_strain_norm",
+      "reference": 8.562272434866887e-05,
+      "candidate": 0.00010447052997121575,
+      "relative_change": 0.22012620791877313
+    },
+    {
+      "region": "region:71",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.484147198750793e-10,
+      "candidate": 2.751349721350533e-10,
+      "relative_change": 0.10756307948824806
+    },
+    {
+      "region": "region:71",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.152876782431548e-13,
+      "candidate": 1.221384699758824e-13,
+      "relative_change": 0.05942345129267406
+    },
+    {
+      "region": "region:71",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.005564924057743614,
+      "candidate": 0.0037673356359971782,
+      "relative_change": 0.32302119545460545
+    },
+    {
+      "region": "region:72",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.2790337684138428e-11,
+      "candidate": 2.701524620655046e-11,
+      "relative_change": 0.1853815674417354
+    },
+    {
+      "region": "region:72",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.2536074239189533e-16,
+      "candidate": 9.00917248494517e-16,
+      "relative_change": 2.9976672020712907
+    },
+    {
+      "region": "region:72",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00016199999315479968,
+      "candidate": 0.0003823734692014182,
+      "relative_change": 1.3603301565330306
+    },
+    {
+      "region": "region:74",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3521407745373329e-11,
+      "candidate": 1.649258370769265e-11,
+      "relative_change": 0.21973865578722585
+    },
+    {
+      "region": "region:74",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.992633309011663e-17,
+      "candidate": 1.2628241831676458e-16,
+      "relative_change": 0.4042874203512216
+    },
+    {
+      "region": "region:74",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.5669144188912477e-05,
+      "candidate": 1.8410782400081604e-05,
+      "relative_change": 0.1749705139039512
+    },
+    {
+      "region": "region:75",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.511481210815633e-11,
+      "candidate": 3.8177314897832957e-11,
+      "relative_change": 0.08721398765409548
+    },
+    {
+      "region": "region:75",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.954660044097801e-16,
+      "candidate": 1.1664545691058053e-15,
+      "relative_change": 0.17176735713582272
+    },
+    {
+      "region": "region:75",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.607282337522508e-05,
+      "candidate": 7.734920433358316e-05,
+      "relative_change": 0.016778409183821046
+    },
+    {
+      "region": "region:76",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.1153518163960395e-10,
+      "candidate": 1.190805184972357e-10,
+      "relative_change": 0.06764983699952619
+    },
+    {
+      "region": "region:76",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.849123014395885e-14,
+      "candidate": 2.0474449460660388e-14,
+      "relative_change": 0.10725188650304389
+    },
+    {
+      "region": "region:76",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0034045366926812727,
+      "candidate": 0.0035421831221042212,
+      "relative_change": 0.04043029693844888
+    },
+    {
+      "region": "region:131",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.4748133959882874e-11,
+      "candidate": 1.5107638352157977e-11,
+      "relative_change": 0.024376263007442757
+    },
+    {
+      "region": "region:136",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.668285407712656e-11,
+      "candidate": 6.805511238788018e-11,
+      "relative_change": 0.020578877880158622
+    },
+    {
+      "region": "region:136",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.9369869220245104e-16,
+      "candidate": 4.751348895716065e-16,
+      "relative_change": 0.20684904212808172
+    },
+    {
+      "region": "region:136",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0001215715967849807,
+      "candidate": 0.00013217887123041604,
+      "relative_change": 0.08725125544082502
+    },
+    {
+      "region": "region:138",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 5.28952083167724e-11,
+      "candidate": 6.076448683593818e-11,
+      "relative_change": 0.148771103651567
+    },
+    {
+      "region": "region:138",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 4.4209529156987973e-16,
+      "candidate": 7.113517253297831e-16,
+      "relative_change": 0.6090461465983367
+    },
+    {
+      "region": "region:138",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00020995799831466334,
+      "candidate": 0.0002502644057455287,
+      "relative_change": 0.19197366975493008
+    },
+    {
+      "region": "region:139",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.529098174114452e-10,
+      "candidate": 2.6554515244971077e-10,
+      "relative_change": 0.04995984405662598
+    },
+    {
+      "region": "region:139",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.5104790346173855e-14,
+      "candidate": 1.585628878773318e-14,
+      "relative_change": 0.04975232521182815
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.5103661508605328e-11,
+      "candidate": 2.4323671793514193e-11,
+      "relative_change": 0.031070754950378882
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3094026705446113e-15,
+      "candidate": 1.1522737121270319e-15,
+      "relative_change": 0.12000048720858784
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 9.694057257840426e-05,
+      "candidate": 7.956896536386593e-05,
+      "relative_change": 0.17919852083077392
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.8210518325301577e-11,
+      "candidate": 1.7523557703880514e-11,
+      "relative_change": 0.03772328767087339
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.509908102177833e-16,
+      "candidate": 9.151922308469214e-16,
+      "relative_change": 0.07544314210949926
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.648125594466118e-05,
+      "candidate": 8.476644568519363e-05,
+      "relative_change": 0.10832967683646948
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_0",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.2240480118702362e-13,
+      "candidate": 1.2581163608631325e-13,
+      "relative_change": 0.027832526716695432
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_0",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00247604656024166,
+      "candidate": 0.002644048340320428,
+      "relative_change": 0.06785081620693406
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_1",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.1456716436422404e-10,
+      "candidate": 2.2229124435347708e-10,
+      "relative_change": 0.035998425071888204
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_1",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.281684522299165e-14,
+      "candidate": 6.447972173807346e-14,
+      "relative_change": 0.026471824702097215
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0012360602666663,
+      "candidate": 0.0012040699835345553,
+      "relative_change": 0.02588084415820885
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_2",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.003762457346231e-10,
+      "candidate": 7.283410130530653e-10,
+      "relative_change": 0.039928206430116735
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_2",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.9957528919308165e-13,
+      "candidate": 2.349132193802271e-13,
+      "relative_change": 0.17706565943120006
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_2",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.004231478972742435,
+      "candidate": 0.005845102552470678,
+      "relative_change": 0.38133796483985577
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.6087339347626615e-10,
+      "candidate": 3.820238786115888e-10,
+      "relative_change": 0.05860915633480666
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.2829446479600323e-13,
+      "candidate": 3.81003891498947e-13,
+      "relative_change": 0.160555331737611
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0028070732280924423,
+      "candidate": 0.0030635585558265025,
+      "relative_change": 0.09137108543062693
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0413309736191703e-10,
+      "candidate": 2.2007159064487104e-10,
+      "relative_change": 0.07807892737107651
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.265458289470864e-14,
+      "candidate": 9.340226006772504e-14,
+      "relative_change": 0.13003123113823672
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.003074269484319135,
+      "candidate": 0.0033837583543537037,
+      "relative_change": 0.10067070294688625
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_5",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.579892878659624e-10,
+      "candidate": 6.795398711419104e-10,
+      "relative_change": 0.0327521795162386
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_5",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.9951674831372506e-13,
+      "candidate": 2.076491113944615e-13,
+      "relative_change": 0.04076030282905829
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_5",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.010479471166376765,
+      "candidate": 0.009825281339438004,
+      "relative_change": 0.062425843494633634
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.2138110320700881e-09,
+      "candidate": 1.3096838910839455e-09,
+      "relative_change": 0.07898499558893564
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.2770754383065545e-13,
+      "candidate": 1.477947902316457e-13,
+      "relative_change": 0.15729099314310366
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.000228388361070753,
+      "candidate": 0.00024190781792256616,
+      "relative_change": 0.05919503423217324
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.2427790985355262e-09,
+      "candidate": 1.3989754875267776e-09,
+      "relative_change": 0.12568314769319106
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.75142198246896e-14,
+      "candidate": 1.1072899906544197e-13,
+      "relative_change": 0.26526865333721433
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00015965426144203272,
+      "candidate": 0.00018597735314048293,
+      "relative_change": 0.16487559718540679
+    },
+    {
+      "region": "region:1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00021447333215072716,
+      "candidate": 0.0002293578273907819,
+      "relative_change": 0.06940021442663209
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.745712260983687e-10,
+      "candidate": 1.9035359340825636e-10,
+      "relative_change": 0.0904064642416757
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.078770029389492e-16,
+      "candidate": 1.2771361835909524e-15,
+      "relative_change": 0.40672820156987083
+    },
+    {
+      "region": "region:4",
+      "metric": "maximum_green_strain_norm",
+      "reference": 8.437340290268912e-05,
+      "candidate": 0.00011691998396069509,
+      "relative_change": 0.3857445585730745
+    },
+    {
+      "region": "region:26",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0823188478459435e-10,
+      "candidate": 2.0449739373842466e-10,
+      "relative_change": 0.017934290178628687
+    },
+    {
+      "region": "region:92",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.1254670648415529e-10,
+      "candidate": 1.0911217118696432e-10,
+      "relative_change": 0.030516533130842852
+    },
+    {
+      "region": "region:92",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.348776093522592e-15,
+      "candidate": 9.301485396832625e-15,
+      "relative_change": 0.11411364883161665
+    },
+    {
+      "region": "region:92",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.003896413343623656,
+      "candidate": 0.004165000918571782,
+      "relative_change": 0.06893200265512395
+    },
+    {
+      "region": "region:93",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.1844666092977253e-10,
+      "candidate": 1.969321072498829e-10,
+      "relative_change": 0.09848881913926917
+    },
+    {
+      "region": "region:93",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 4.8921515616035876e-14,
+      "candidate": 1.9890581370032636e-14,
+      "relative_change": 0.5934185374356484
+    },
+    {
+      "region": "region:93",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0020319318336342604,
+      "candidate": 0.001116368187404585,
+      "relative_change": 0.45058777616182233
+    },
+    {
+      "region": "region:95",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.2262949602349705e-11,
+      "candidate": 4.460922517171645e-11,
+      "relative_change": 0.05551613390553085
+    },
+    {
+      "region": "region:95",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.680434016012906e-15,
+      "candidate": 4.084526732868807e-15,
+      "relative_change": 0.10979485438341414
+    },
+    {
+      "region": "region:95",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00020010258030897198,
+      "candidate": 0.00021090523071780464,
+      "relative_change": 0.0539855627656207
+    },
+    {
+      "region": "region:97",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.436820322768894e-11,
+      "candidate": 2.5703407730481565e-11,
+      "relative_change": 0.05479289918574992
+    },
+    {
+      "region": "region:97",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.6298050774686949e-15,
+      "candidate": 1.8354245244866793e-15,
+      "relative_change": 0.12616198701340336
+    },
+    {
+      "region": "region:97",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00014889670413662065,
+      "candidate": 0.00016487132540605649,
+      "relative_change": 0.10728660088257069
+    },
+    {
+      "region": "region:98",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.696695656863528e-10,
+      "candidate": 2.8338025642890375e-10,
+      "relative_change": 0.05084255877245556
+    },
+    {
+      "region": "region:98",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.865496144612668e-14,
+      "candidate": 9.685635966565504e-14,
+      "relative_change": 0.09250918488653492
+    },
+    {
+      "region": "region:98",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.01851982026466878,
+      "candidate": 0.020629148921552296,
+      "relative_change": 0.11389574125120386
+    },
+    {
+      "region": "region:99",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.401228171893657e-11,
+      "candidate": 3.554591548256165e-11,
+      "relative_change": 0.04509058746185846
+    },
+    {
+      "region": "region:99",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.369254945500193e-16,
+      "candidate": 8.37916729068153e-16,
+      "relative_change": 0.13704402312719674
+    },
+    {
+      "region": "region:99",
+      "metric": "maximum_green_strain_norm",
+      "reference": 5.413432676901096e-05,
+      "candidate": 5.819152338538069e-05,
+      "relative_change": 0.0749468379588727
+    },
+    {
+      "region": "region:100",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.4933365212521674e-11,
+      "candidate": 1.682139958349489e-11,
+      "relative_change": 0.12643060315635313
+    },
+    {
+      "region": "region:100",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.9835776215136927e-16,
+      "candidate": 3.970114960516328e-16,
+      "relative_change": 0.3306558314048903
+    },
+    {
+      "region": "region:100",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.035179623659213e-05,
+      "candidate": 4.8940559924386034e-05,
+      "relative_change": 0.21284712178451612
+    },
+    {
+      "region": "region:102",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.08151052022231e-10,
+      "candidate": 1.006877327323439e-10,
+      "relative_change": 0.06900829118474945
+    },
+    {
+      "region": "region:102",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3839867025208266e-14,
+      "candidate": 1.1326944842126887e-14,
+      "relative_change": 0.18157126643661256
+    },
+    {
+      "region": "region:102",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0016848653138685564,
+      "candidate": 0.0017020272781147362,
+      "relative_change": 0.010185956174013001
+    },
+    {
+      "region": "region:103",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 5.932407786579373e-11,
+      "candidate": 6.28655470318189e-11,
+      "relative_change": 0.059696994768918044
+    },
+    {
+      "region": "region:103",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.9663782388656565e-15,
+      "candidate": 3.432174301015616e-15,
+      "relative_change": 0.15702517502558275
+    },
+    {
+      "region": "region:103",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00011209894308826182,
+      "candidate": 0.00012120862472025386,
+      "relative_change": 0.0812646522886436
+    },
+    {
+      "region": "region:104",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.2479842513600275e-12,
+      "candidate": 9.208952401592976e-12,
+      "relative_change": 0.27055358872571894
+    },
+    {
+      "region": "region:104",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.085926270695594e-17,
+      "candidate": 5.852004026678406e-17,
+      "relative_change": 0.8963525092125142
+    },
+    {
+      "region": "region:104",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0001143446460660105,
+      "candidate": 0.00013039734959060498,
+      "relative_change": 0.1403887639420156
+    },
+    {
+      "region": "region:107",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3904716020857605e-11,
+      "candidate": 1.750716164282331e-11,
+      "relative_change": 0.2590808482936221
+    },
+    {
+      "region": "region:107",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.161282008408115e-16,
+      "candidate": 1.2880479000324761e-15,
+      "relative_change": 1.4955968263972972
+    },
+    {
+      "region": "region:107",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00017666643779123978,
+      "candidate": 0.00028632927220110556,
+      "relative_change": 0.620733829135392
+    },
+    {
+      "region": "region:109",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.755099388406542e-11,
+      "candidate": 1.0135023685409501e-10,
+      "relative_change": 0.5003515274407011
+    },
+    {
+      "region": "region:109",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 4.334160219458684e-15,
+      "candidate": 1.055810689503811e-14,
+      "relative_change": 1.436021365254644
+    },
+    {
+      "region": "region:109",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0018396825056387078,
+      "candidate": 0.002832847263540277,
+      "relative_change": 0.5398566083318592
+    },
+    {
+      "region": "region:111",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.2038681128075008e-11,
+      "candidate": 2.9305790616822534e-11,
+      "relative_change": 0.3297433928335202
+    },
+    {
+      "region": "region:111",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.350635177823907e-16,
+      "candidate": 9.238129060697587e-16,
+      "relative_change": 0.7265481113318429
+    },
+    {
+      "region": "region:111",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0006424712557778796,
+      "candidate": 0.0007894064807867122,
+      "relative_change": 0.22870318895579078
+    },
+    {
+      "region": "region:112",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.5649633013395567e-11,
+      "candidate": 1.729425243508843e-11,
+      "relative_change": 0.10508996730371407
+    },
+    {
+      "region": "region:112",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.1142172605150673e-15,
+      "candidate": 1.4176325271822384e-15,
+      "relative_change": 0.27231248107475187
+    },
+    {
+      "region": "region:112",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00012519967537068688,
+      "candidate": 0.00014272142096850314,
+      "relative_change": 0.13995040758642927
+    },
+    {
+      "region": "region:114",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.1121373404263904e-10,
+      "candidate": 3.5922873767497064e-10,
+      "relative_change": 0.15428304852944927
+    },
+    {
+      "region": "region:114",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.5695376838567163e-13,
+      "candidate": 2.1484021207795784e-13,
+      "relative_change": 0.36881206668479516
+    },
+    {
+      "region": "region:114",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0036488168640551196,
+      "candidate": 0.004301280644143593,
+      "relative_change": 0.17881516239303838
+    },
+    {
+      "region": "region:115",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.8879512497242442e-10,
+      "candidate": 2.2375376825149422e-10,
+      "relative_change": 0.18516708672523133
+    },
+    {
+      "region": "region:115",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.292493556654511e-14,
+      "candidate": 1.196757256953011e-13,
+      "relative_change": 0.44318141313796294
+    },
+    {
+      "region": "region:115",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001806167618318279,
+      "candidate": 0.0021735935735753393,
+      "relative_change": 0.20342849220116696
+    },
+    {
+      "region": "region:116",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0439738104353203e-10,
+      "candidate": 2.2942180368376575e-10,
+      "relative_change": 0.12243025087931086
+    },
+    {
+      "region": "region:116",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.523043855086413e-13,
+      "candidate": 3.3483312386179775e-13,
+      "relative_change": 0.3270998963683487
+    },
+    {
+      "region": "region:116",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.03625280216564982,
+      "candidate": 0.041731820329281015,
+      "relative_change": 0.15113364585159328
+    },
+    {
+      "region": "region:119",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.781113424643626e-11,
+      "candidate": 7.711424053693743e-11,
+      "relative_change": 0.13719142724692127
+    },
+    {
+      "region": "region:119",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.295278278774358e-15,
+      "candidate": 1.1288025327083263e-14,
+      "relative_change": 0.7930939391738778
+    },
+    {
+      "region": "region:119",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0007445847932591942,
+      "candidate": 0.0014329307239980247,
+      "relative_change": 0.9244694989348425
+    },
+    {
+      "region": "region:120",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.6329008633656467e-10,
+      "candidate": 1.856951855529647e-10,
+      "relative_change": 0.1372104070679457
+    },
+    {
+      "region": "region:120",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.4917215560519106e-14,
+      "candidate": 1.8734078848549716e-14,
+      "relative_change": 0.2558696877809136
+    },
+    {
+      "region": "region:121",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.877826766897588e-11,
+      "candidate": 7.853720576216996e-11,
+      "relative_change": 0.1418898501509669
+    },
+    {
+      "region": "region:121",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.359020922849662e-15,
+      "candidate": 6.804372555394315e-15,
+      "relative_change": 0.26970442051868065
+    },
+    {
+      "region": "region:121",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00036098039936173997,
+      "candidate": 0.00037807192318983947,
+      "relative_change": 0.04734751210403535
+    },
+    {
+      "region": "region:122",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.530327037130795e-11,
+      "candidate": 1.0418246566413e-10,
+      "relative_change": 0.09316779223029932
+    },
+    {
+      "region": "region:122",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.4371246358891903e-15,
+      "candidate": 4.034339267555664e-15,
+      "relative_change": 0.1737541389772656
+    },
+    {
+      "region": "region:122",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0002153728734365127,
+      "candidate": 0.00028194635147933916,
+      "relative_change": 0.3091079994456725
+    },
+    {
+      "region": "region:124",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.6826679922445446e-10,
+      "candidate": 4.0975214976692327e-10,
+      "relative_change": 0.11265025962110682
+    },
+    {
+      "region": "region:124",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.0953469067453983e-13,
+      "candidate": 1.3564067046608998e-13,
+      "relative_change": 0.23833526740052416
+    },
+    {
+      "region": "region:124",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0015291274120185336,
+      "candidate": 0.0017551427593551438,
+      "relative_change": 0.14780674622676296
+    },
+    {
+      "region": "region:125",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.12079161598195e-11,
+      "candidate": 7.853081161960143e-11,
+      "relative_change": 0.10283822157281461
+    },
+    {
+      "region": "region:125",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.7748716352126947e-14,
+      "candidate": 3.181143618659515e-14,
+      "relative_change": 0.14641109098211658
+    },
+    {
+      "region": "region:125",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001634783915689275,
+      "candidate": 0.0016130927804719319,
+      "relative_change": 0.013268502955754512
+    },
+    {
+      "region": "region:126",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.2266204963953346e-10,
+      "candidate": 1.3877469950604323e-10,
+      "relative_change": 0.13135806807288777
+    },
+    {
+      "region": "region:126",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.513716498410671e-13,
+      "candidate": 2.0354243099068935e-13,
+      "relative_change": 0.344653580801947
+    },
+    {
+      "region": "region:126",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.009099908569169002,
+      "candidate": 0.01074875461558297,
+      "relative_change": 0.1811936937476877
+    },
+    {
+      "region": "region:142",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.0419182338085695e-12,
+      "candidate": 1.0042185187208747e-12,
+      "relative_change": 0.03618298813131367
+    },
+    {
+      "region": "region:142",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.612412487753766e-20,
+      "candidate": 1.5271738952296235e-20,
+      "relative_change": 0.05286401164188902
+    },
+    {
+      "region": "region:142",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.6943909679772204e-08,
+      "candidate": 5.546841108499558e-08,
+      "relative_change": 0.18158908074281088
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.300125323902204e-11,
+      "candidate": 4.643051679555201e-11,
+      "relative_change": 0.26302233037495143
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.7923279791460115e-17,
+      "candidate": 1.8635070684615346e-17,
+      "relative_change": 0.33263317118232716
+    },
+    {
+      "region": "region:145",
+      "metric": "maximum_green_strain_norm",
+      "reference": 5.937846278521589e-06,
+      "candidate": 4.336281125915469e-06,
+      "relative_change": 0.2697215585387096
+    },
+    {
+      "region": "region:153",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.1946045389396277e-10,
+      "candidate": 4.2946427755913024e-10,
+      "relative_change": 0.02384926534146264
+    },
+    {
+      "region": "region:153",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.980177652835861e-14,
+      "candidate": 3.500482416098035e-14,
+      "relative_change": 0.17458850574463747
+    },
+    {
+      "region": "region:153",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00345168643067483,
+      "candidate": 0.004007553155651879,
+      "relative_change": 0.16104206918598143
+    },
+    {
+      "region": "region:156",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.274488616048407e-12,
+      "candidate": 5.490798689934586e-12,
+      "relative_change": 0.24519798163939444
+    },
+    {
+      "region": "region:156",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.442380735825779e-19,
+      "candidate": 4.8077296222253715e-19,
+      "relative_change": 0.43052442519875167
+    },
+    {
+      "region": "region:156",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.781653511103778e-07,
+      "candidate": 5.57268834245968e-07,
+      "relative_change": 0.28386835336372757
+    },
+    {
+      "region": "object:spleen-FJ2561",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.0889883593011686e-09,
+      "candidate": 4.132821076428585e-09,
+      "relative_change": 0.010719697215011785
+    },
+    {
+      "region": "object:spleen-FJ2561",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.7958187496596931,
+      "candidate": 0.7742367084238575,
+      "relative_change": 0.027119292232137666
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.3123286249353056e-10,
+      "candidate": 2.4419841530448106e-10,
+      "relative_change": 0.05607141074644289
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.915698807527835e-14,
+      "candidate": 1.092945526441942e-13,
+      "relative_change": 0.10223752017578003
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.01779381735654761,
+      "candidate": 0.01847658360604621,
+      "relative_change": 0.03837098222475358
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.02998941308493e-10,
+      "candidate": 2.186565510755543e-10,
+      "relative_change": 0.07713148485472526
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.984785319419861e-14,
+      "candidate": 9.034706048992894e-14,
+      "relative_change": 0.13149016380183862
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.017011369422201977,
+      "candidate": 0.016332168673122094,
+      "relative_change": 0.039926282959527076
+    }
+  ],
+  "strain_metrics_over_5pct": [
+    {
+      "region": "region:29",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.4092276083901033e-13,
+      "candidate": 3.0208915047721384e-13,
+      "relative_change": 0.1139073562182444
+    },
+    {
+      "region": "region:29",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.02614920421849e-20,
+      "candidate": 1.7571199507644543e-20,
+      "relative_change": 0.13277859937161118
+    },
+    {
+      "region": "region:41",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 8.688264132321145e-11,
+      "candidate": 9.161982516327621e-11,
+      "relative_change": 0.054523939050632686
+    },
+    {
+      "region": "region:41",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.889360062713925e-15,
+      "candidate": 4.6354847588109185e-15,
+      "relative_change": 0.19183739331563998
+    },
+    {
+      "region": "region:41",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0018339792469928768,
+      "candidate": 0.0028604802392676013,
+      "relative_change": 0.5597124362000545
+    },
+    {
+      "region": "region:42",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.003414121898019e-11,
+      "candidate": 4.494138399167576e-11,
+      "relative_change": 0.2514029004304763
+    },
+    {
+      "region": "region:42",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.487998155158119e-17,
+      "candidate": 4.1786271095150786e-17,
+      "relative_change": 0.3559450835859183
+    },
+    {
+      "region": "region:42",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.062275821340923e-05,
+      "candidate": 1.12545393327308e-05,
+      "relative_change": 0.05947430098936686
+    },
+    {
+      "region": "region:43",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.871251029553017e-11,
+      "candidate": 3.1468341700102536e-11,
+      "relative_change": 0.35399876727375207
+    },
+    {
+      "region": "region:43",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.730484214900726e-17,
+      "candidate": 3.731168401102402e-17,
+      "relative_change": 0.4456315055546956
+    },
+    {
+      "region": "region:46",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.923590490973904e-12,
+      "candidate": 7.279037866137045e-12,
+      "relative_change": 0.051338590233857416
+    },
+    {
+      "region": "region:46",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.4557228331489586e-17,
+      "candidate": 2.092663838840977e-17,
+      "relative_change": 0.4375427733823577
+    },
+    {
+      "region": "region:46",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.707654144605051e-06,
+      "candidate": 6.361190888167257e-06,
+      "relative_change": 0.35124431251117944
+    },
+    {
+      "region": "region:48",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.498212793353614e-12,
+      "candidate": 2.833476214353503e-12,
+      "relative_change": 0.1342013065867898
+    },
+    {
+      "region": "region:48",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.6905570372300864e-17,
+      "candidate": 1.8083390010778002e-17,
+      "relative_change": 0.06967050578825493
+    },
+    {
+      "region": "region:49",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.2660741751509967e-12,
+      "candidate": 2.483659517599691e-12,
+      "relative_change": 0.09601863206185463
+    },
+    {
+      "region": "region:49",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.4194506300292908e-18,
+      "candidate": 3.402330485946261e-18,
+      "relative_change": 0.4062409225126743
+    },
+    {
+      "region": "region:49",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.9461169363943657e-06,
+      "candidate": 2.7475209407824167e-06,
+      "relative_change": 0.4117964287761856
+    },
+    {
+      "region": "region:52",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.5334117148503622e-11,
+      "candidate": 2.9131775725330533e-11,
+      "relative_change": 0.14990293739330968
+    },
+    {
+      "region": "region:52",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.575677010362821e-16,
+      "candidate": 7.539459952353342e-16,
+      "relative_change": 0.3522052906473384
+    },
+    {
+      "region": "region:52",
+      "metric": "maximum_green_strain_norm",
+      "reference": 9.71714014945297e-05,
+      "candidate": 0.00011431790222342814,
+      "relative_change": 0.17645624602691054
+    },
+    {
+      "region": "region:53",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.4609496881396364e-11,
+      "candidate": 4.870464160893514e-11,
+      "relative_change": 0.09179984115101258
+    },
+    {
+      "region": "region:53",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3796032330151427e-15,
+      "candidate": 1.832207739568503e-15,
+      "relative_change": 0.3280686038725688
+    },
+    {
+      "region": "region:53",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00021086029497524914,
+      "candidate": 0.0002448748480283603,
+      "relative_change": 0.16131321952814198
+    },
+    {
+      "region": "region:54",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.392362244591731e-11,
+      "candidate": 1.0573754584049544e-10,
+      "relative_change": 0.1257822375982227
+    },
+    {
+      "region": "region:54",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.6830905521764e-15,
+      "candidate": 1.252662311960252e-14,
+      "relative_change": 0.29365960713720685
+    },
+    {
+      "region": "region:54",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0003167587310718837,
+      "candidate": 0.0003667721110193755,
+      "relative_change": 0.15789108567978835
+    },
+    {
+      "region": "region:56",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.5632221136538304e-12,
+      "candidate": 5.047120310274879e-12,
+      "relative_change": 0.4164484136239872
+    },
+    {
+      "region": "region:56",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.3166228395678635e-18,
+      "candidate": 1.7814107620530172e-17,
+      "relative_change": 1.8201949163310946
+    },
+    {
+      "region": "region:56",
+      "metric": "maximum_green_strain_norm",
+      "reference": 2.8367663687841175e-06,
+      "candidate": 5.742309808971724e-06,
+      "relative_change": 1.024244883949667
+    },
+    {
+      "region": "region:57",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.351548538564135e-10,
+      "candidate": 1.6599974772434116e-10,
+      "relative_change": 0.2282189132526221
+    },
+    {
+      "region": "region:57",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.0134139333995384e-14,
+      "candidate": 1.516525213225248e-14,
+      "relative_change": 0.49645190700901676
+    },
+    {
+      "region": "region:57",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0004069455346893183,
+      "candidate": 0.0004900886143984276,
+      "relative_change": 0.20431009219104643
+    },
+    {
+      "region": "region:59",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.061515433554918e-10,
+      "candidate": 4.576677229116183e-10,
+      "relative_change": 0.12683979760489544
+    },
+    {
+      "region": "region:59",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.223851912307777e-14,
+      "candidate": 8.73634568378579e-14,
+      "relative_change": 0.20937496917691134
+    },
+    {
+      "region": "region:59",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00318768348514264,
+      "candidate": 0.0036219022570151012,
+      "relative_change": 0.13621765582947498
+    },
+    {
+      "region": "region:60",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.635665298072704e-11,
+      "candidate": 8.210498084483775e-11,
+      "relative_change": 0.07528260655376859
+    },
+    {
+      "region": "region:60",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.350647248008817e-15,
+      "candidate": 8.588448648867748e-15,
+      "relative_change": 0.16839352496397272
+    },
+    {
+      "region": "region:61",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.986468203134676e-10,
+      "candidate": 5.335365332047312e-10,
+      "relative_change": 0.06996878646359503
+    },
+    {
+      "region": "region:61",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.034384293609901e-13,
+      "candidate": 2.4016187430606355e-13,
+      "relative_change": 0.18051380489135485
+    },
+    {
+      "region": "region:61",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.007982401419959886,
+      "candidate": 0.009293311160142004,
+      "relative_change": 0.164224983336995
+    },
+    {
+      "region": "region:62",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.636195128145635e-11,
+      "candidate": 8.368189205581323e-11,
+      "relative_change": 0.09585848254946897
+    },
+    {
+      "region": "region:62",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.705458191785018e-15,
+      "candidate": 4.868863305155732e-15,
+      "relative_change": 0.31397064901446664
+    },
+    {
+      "region": "region:62",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00013169448633559413,
+      "candidate": 0.000155918526788867,
+      "relative_change": 0.18394118939454535
+    },
+    {
+      "region": "region:64",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0495925251767216e-10,
+      "candidate": 2.3661199827715803e-10,
+      "relative_change": 0.15443433448683505
+    },
+    {
+      "region": "region:64",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.2231002980934716e-14,
+      "candidate": 4.073484681149253e-14,
+      "relative_change": 0.2638404965426613
+    },
+    {
+      "region": "region:64",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001743295143713319,
+      "candidate": 0.0018518127275516337,
+      "relative_change": 0.06224854364428851
+    },
+    {
+      "region": "region:65",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.394855955482211e-10,
+      "candidate": 1.5292362594048905e-10,
+      "relative_change": 0.09633991480949959
+    },
+    {
+      "region": "region:65",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.0989479322733015e-14,
+      "candidate": 1.9337357558647513e-14,
+      "relative_change": 0.07871189840789158
+    },
+    {
+      "region": "region:65",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0029509959569124777,
+      "candidate": 0.0009387171562920865,
+      "relative_change": 0.681898189628754
+    },
+    {
+      "region": "region:66",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.1996545302612486e-10,
+      "candidate": 3.464024761541783e-10,
+      "relative_change": 0.08262461737047251
+    },
+    {
+      "region": "region:66",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.236680605093049e-14,
+      "candidate": 9.686845157818282e-14,
+      "relative_change": 0.17606176835709056
+    },
+    {
+      "region": "region:66",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.005335643624446037,
+      "candidate": 0.00602336845869885,
+      "relative_change": 0.1288925727913875
+    },
+    {
+      "region": "region:69",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.3888062237033793e-10,
+      "candidate": 2.776555120035446e-10,
+      "relative_change": 0.16231910838332367
+    },
+    {
+      "region": "region:69",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.384849891748301e-14,
+      "candidate": 9.896712151285534e-14,
+      "relative_change": 0.34013721285573356
+    },
+    {
+      "region": "region:69",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0006196351518441153,
+      "candidate": 0.0006987447237360801,
+      "relative_change": 0.12767121370781562
+    },
+    {
+      "region": "region:70",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.243309627258597e-11,
+      "candidate": 4.5699048125582316e-11,
+      "relative_change": 0.07696708795455785
+    },
+    {
+      "region": "region:70",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.887710288275921e-15,
+      "candidate": 2.4339522196280064e-15,
+      "relative_change": 0.28936746000943714
+    },
+    {
+      "region": "region:70",
+      "metric": "maximum_green_strain_norm",
+      "reference": 8.562272434866887e-05,
+      "candidate": 0.00010447052997121575,
+      "relative_change": 0.22012620791877313
+    },
+    {
+      "region": "region:71",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.484147198750793e-10,
+      "candidate": 2.751349721350533e-10,
+      "relative_change": 0.10756307948824806
+    },
+    {
+      "region": "region:71",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.152876782431548e-13,
+      "candidate": 1.221384699758824e-13,
+      "relative_change": 0.05942345129267406
+    },
+    {
+      "region": "region:71",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.005564924057743614,
+      "candidate": 0.0037673356359971782,
+      "relative_change": 0.32302119545460545
+    },
+    {
+      "region": "region:72",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.2790337684138428e-11,
+      "candidate": 2.701524620655046e-11,
+      "relative_change": 0.1853815674417354
+    },
+    {
+      "region": "region:72",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.2536074239189533e-16,
+      "candidate": 9.00917248494517e-16,
+      "relative_change": 2.9976672020712907
+    },
+    {
+      "region": "region:72",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00016199999315479968,
+      "candidate": 0.0003823734692014182,
+      "relative_change": 1.3603301565330306
+    },
+    {
+      "region": "region:74",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3521407745373329e-11,
+      "candidate": 1.649258370769265e-11,
+      "relative_change": 0.21973865578722585
+    },
+    {
+      "region": "region:74",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.992633309011663e-17,
+      "candidate": 1.2628241831676458e-16,
+      "relative_change": 0.4042874203512216
+    },
+    {
+      "region": "region:74",
+      "metric": "maximum_green_strain_norm",
+      "reference": 1.5669144188912477e-05,
+      "candidate": 1.8410782400081604e-05,
+      "relative_change": 0.1749705139039512
+    },
+    {
+      "region": "region:75",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.511481210815633e-11,
+      "candidate": 3.8177314897832957e-11,
+      "relative_change": 0.08721398765409548
+    },
+    {
+      "region": "region:75",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.954660044097801e-16,
+      "candidate": 1.1664545691058053e-15,
+      "relative_change": 0.17176735713582272
+    },
+    {
+      "region": "region:76",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.1153518163960395e-10,
+      "candidate": 1.190805184972357e-10,
+      "relative_change": 0.06764983699952619
+    },
+    {
+      "region": "region:76",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.849123014395885e-14,
+      "candidate": 2.0474449460660388e-14,
+      "relative_change": 0.10725188650304389
+    },
+    {
+      "region": "region:136",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.9369869220245104e-16,
+      "candidate": 4.751348895716065e-16,
+      "relative_change": 0.20684904212808172
+    },
+    {
+      "region": "region:136",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0001215715967849807,
+      "candidate": 0.00013217887123041604,
+      "relative_change": 0.08725125544082502
+    },
+    {
+      "region": "region:138",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 5.28952083167724e-11,
+      "candidate": 6.076448683593818e-11,
+      "relative_change": 0.148771103651567
+    },
+    {
+      "region": "region:138",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 4.4209529156987973e-16,
+      "candidate": 7.113517253297831e-16,
+      "relative_change": 0.6090461465983367
+    },
+    {
+      "region": "region:138",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00020995799831466334,
+      "candidate": 0.0002502644057455287,
+      "relative_change": 0.19197366975493008
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3094026705446113e-15,
+      "candidate": 1.1522737121270319e-15,
+      "relative_change": 0.12000048720858784
+    },
+    {
+      "region": "object:inferred_registered_left_ACL_reference_v1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 9.694057257840426e-05,
+      "candidate": 7.956896536386593e-05,
+      "relative_change": 0.17919852083077392
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.509908102177833e-16,
+      "candidate": 9.151922308469214e-16,
+      "relative_change": 0.07544314210949926
+    },
+    {
+      "region": "object:inferred_registered_right_ACL_reference_v1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.648125594466118e-05,
+      "candidate": 8.476644568519363e-05,
+      "relative_change": 0.10832967683646948
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_0",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00247604656024166,
+      "candidate": 0.002644048340320428,
+      "relative_change": 0.06785081620693406
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_2",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.9957528919308165e-13,
+      "candidate": 2.349132193802271e-13,
+      "relative_change": 0.17706565943120006
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_2",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.004231478972742435,
+      "candidate": 0.005845102552470678,
+      "relative_change": 0.38133796483985577
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.6087339347626615e-10,
+      "candidate": 3.820238786115888e-10,
+      "relative_change": 0.05860915633480666
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.2829446479600323e-13,
+      "candidate": 3.81003891498947e-13,
+      "relative_change": 0.160555331737611
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_3",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0028070732280924423,
+      "candidate": 0.0030635585558265025,
+      "relative_change": 0.09137108543062693
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0413309736191703e-10,
+      "candidate": 2.2007159064487104e-10,
+      "relative_change": 0.07807892737107651
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.265458289470864e-14,
+      "candidate": 9.340226006772504e-14,
+      "relative_change": 0.13003123113823672
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_4",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.003074269484319135,
+      "candidate": 0.0033837583543537037,
+      "relative_change": 0.10067070294688625
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_5",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.010479471166376765,
+      "candidate": 0.009825281339438004,
+      "relative_change": 0.062425843494633634
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.2138110320700881e-09,
+      "candidate": 1.3096838910839455e-09,
+      "relative_change": 0.07898499558893564
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.2770754383065545e-13,
+      "candidate": 1.477947902316457e-13,
+      "relative_change": 0.15729099314310366
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_6",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.000228388361070753,
+      "candidate": 0.00024190781792256616,
+      "relative_change": 0.05919503423217324
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.2427790985355262e-09,
+      "candidate": 1.3989754875267776e-09,
+      "relative_change": 0.12568314769319106
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.75142198246896e-14,
+      "candidate": 1.1072899906544197e-13,
+      "relative_change": 0.26526865333721433
+    },
+    {
+      "region": "object:numi_human_regional_myofascia_7",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00015965426144203272,
+      "candidate": 0.00018597735314048293,
+      "relative_change": 0.16487559718540679
+    },
+    {
+      "region": "region:1",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00021447333215072716,
+      "candidate": 0.0002293578273907819,
+      "relative_change": 0.06940021442663209
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.745712260983687e-10,
+      "candidate": 1.9035359340825636e-10,
+      "relative_change": 0.0904064642416757
+    },
+    {
+      "region": "region:4",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.078770029389492e-16,
+      "candidate": 1.2771361835909524e-15,
+      "relative_change": 0.40672820156987083
+    },
+    {
+      "region": "region:4",
+      "metric": "maximum_green_strain_norm",
+      "reference": 8.437340290268912e-05,
+      "candidate": 0.00011691998396069509,
+      "relative_change": 0.3857445585730745
+    },
+    {
+      "region": "region:92",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.348776093522592e-15,
+      "candidate": 9.301485396832625e-15,
+      "relative_change": 0.11411364883161665
+    },
+    {
+      "region": "region:92",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.003896413343623656,
+      "candidate": 0.004165000918571782,
+      "relative_change": 0.06893200265512395
+    },
+    {
+      "region": "region:93",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.1844666092977253e-10,
+      "candidate": 1.969321072498829e-10,
+      "relative_change": 0.09848881913926917
+    },
+    {
+      "region": "region:93",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 4.8921515616035876e-14,
+      "candidate": 1.9890581370032636e-14,
+      "relative_change": 0.5934185374356484
+    },
+    {
+      "region": "region:93",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0020319318336342604,
+      "candidate": 0.001116368187404585,
+      "relative_change": 0.45058777616182233
+    },
+    {
+      "region": "region:95",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 4.2262949602349705e-11,
+      "candidate": 4.460922517171645e-11,
+      "relative_change": 0.05551613390553085
+    },
+    {
+      "region": "region:95",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.680434016012906e-15,
+      "candidate": 4.084526732868807e-15,
+      "relative_change": 0.10979485438341414
+    },
+    {
+      "region": "region:95",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00020010258030897198,
+      "candidate": 0.00021090523071780464,
+      "relative_change": 0.0539855627656207
+    },
+    {
+      "region": "region:97",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.436820322768894e-11,
+      "candidate": 2.5703407730481565e-11,
+      "relative_change": 0.05479289918574992
+    },
+    {
+      "region": "region:97",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.6298050774686949e-15,
+      "candidate": 1.8354245244866793e-15,
+      "relative_change": 0.12616198701340336
+    },
+    {
+      "region": "region:97",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00014889670413662065,
+      "candidate": 0.00016487132540605649,
+      "relative_change": 0.10728660088257069
+    },
+    {
+      "region": "region:98",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.696695656863528e-10,
+      "candidate": 2.8338025642890375e-10,
+      "relative_change": 0.05084255877245556
+    },
+    {
+      "region": "region:98",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.865496144612668e-14,
+      "candidate": 9.685635966565504e-14,
+      "relative_change": 0.09250918488653492
+    },
+    {
+      "region": "region:98",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.01851982026466878,
+      "candidate": 0.020629148921552296,
+      "relative_change": 0.11389574125120386
+    },
+    {
+      "region": "region:99",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.369254945500193e-16,
+      "candidate": 8.37916729068153e-16,
+      "relative_change": 0.13704402312719674
+    },
+    {
+      "region": "region:99",
+      "metric": "maximum_green_strain_norm",
+      "reference": 5.413432676901096e-05,
+      "candidate": 5.819152338538069e-05,
+      "relative_change": 0.0749468379588727
+    },
+    {
+      "region": "region:100",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.4933365212521674e-11,
+      "candidate": 1.682139958349489e-11,
+      "relative_change": 0.12643060315635313
+    },
+    {
+      "region": "region:100",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.9835776215136927e-16,
+      "candidate": 3.970114960516328e-16,
+      "relative_change": 0.3306558314048903
+    },
+    {
+      "region": "region:100",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.035179623659213e-05,
+      "candidate": 4.8940559924386034e-05,
+      "relative_change": 0.21284712178451612
+    },
+    {
+      "region": "region:102",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.08151052022231e-10,
+      "candidate": 1.006877327323439e-10,
+      "relative_change": 0.06900829118474945
+    },
+    {
+      "region": "region:102",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.3839867025208266e-14,
+      "candidate": 1.1326944842126887e-14,
+      "relative_change": 0.18157126643661256
+    },
+    {
+      "region": "region:103",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 5.932407786579373e-11,
+      "candidate": 6.28655470318189e-11,
+      "relative_change": 0.059696994768918044
+    },
+    {
+      "region": "region:103",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.9663782388656565e-15,
+      "candidate": 3.432174301015616e-15,
+      "relative_change": 0.15702517502558275
+    },
+    {
+      "region": "region:103",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00011209894308826182,
+      "candidate": 0.00012120862472025386,
+      "relative_change": 0.0812646522886436
+    },
+    {
+      "region": "region:104",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.2479842513600275e-12,
+      "candidate": 9.208952401592976e-12,
+      "relative_change": 0.27055358872571894
+    },
+    {
+      "region": "region:104",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.085926270695594e-17,
+      "candidate": 5.852004026678406e-17,
+      "relative_change": 0.8963525092125142
+    },
+    {
+      "region": "region:104",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0001143446460660105,
+      "candidate": 0.00013039734959060498,
+      "relative_change": 0.1403887639420156
+    },
+    {
+      "region": "region:107",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.3904716020857605e-11,
+      "candidate": 1.750716164282331e-11,
+      "relative_change": 0.2590808482936221
+    },
+    {
+      "region": "region:107",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.161282008408115e-16,
+      "candidate": 1.2880479000324761e-15,
+      "relative_change": 1.4955968263972972
+    },
+    {
+      "region": "region:107",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00017666643779123978,
+      "candidate": 0.00028632927220110556,
+      "relative_change": 0.620733829135392
+    },
+    {
+      "region": "region:109",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.755099388406542e-11,
+      "candidate": 1.0135023685409501e-10,
+      "relative_change": 0.5003515274407011
+    },
+    {
+      "region": "region:109",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 4.334160219458684e-15,
+      "candidate": 1.055810689503811e-14,
+      "relative_change": 1.436021365254644
+    },
+    {
+      "region": "region:109",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0018396825056387078,
+      "candidate": 0.002832847263540277,
+      "relative_change": 0.5398566083318592
+    },
+    {
+      "region": "region:111",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.2038681128075008e-11,
+      "candidate": 2.9305790616822534e-11,
+      "relative_change": 0.3297433928335202
+    },
+    {
+      "region": "region:111",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.350635177823907e-16,
+      "candidate": 9.238129060697587e-16,
+      "relative_change": 0.7265481113318429
+    },
+    {
+      "region": "region:111",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0006424712557778796,
+      "candidate": 0.0007894064807867122,
+      "relative_change": 0.22870318895579078
+    },
+    {
+      "region": "region:112",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.5649633013395567e-11,
+      "candidate": 1.729425243508843e-11,
+      "relative_change": 0.10508996730371407
+    },
+    {
+      "region": "region:112",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.1142172605150673e-15,
+      "candidate": 1.4176325271822384e-15,
+      "relative_change": 0.27231248107475187
+    },
+    {
+      "region": "region:112",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00012519967537068688,
+      "candidate": 0.00014272142096850314,
+      "relative_change": 0.13995040758642927
+    },
+    {
+      "region": "region:114",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.1121373404263904e-10,
+      "candidate": 3.5922873767497064e-10,
+      "relative_change": 0.15428304852944927
+    },
+    {
+      "region": "region:114",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.5695376838567163e-13,
+      "candidate": 2.1484021207795784e-13,
+      "relative_change": 0.36881206668479516
+    },
+    {
+      "region": "region:114",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0036488168640551196,
+      "candidate": 0.004301280644143593,
+      "relative_change": 0.17881516239303838
+    },
+    {
+      "region": "region:115",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.8879512497242442e-10,
+      "candidate": 2.2375376825149422e-10,
+      "relative_change": 0.18516708672523133
+    },
+    {
+      "region": "region:115",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.292493556654511e-14,
+      "candidate": 1.196757256953011e-13,
+      "relative_change": 0.44318141313796294
+    },
+    {
+      "region": "region:115",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.001806167618318279,
+      "candidate": 0.0021735935735753393,
+      "relative_change": 0.20342849220116696
+    },
+    {
+      "region": "region:116",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.0439738104353203e-10,
+      "candidate": 2.2942180368376575e-10,
+      "relative_change": 0.12243025087931086
+    },
+    {
+      "region": "region:116",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.523043855086413e-13,
+      "candidate": 3.3483312386179775e-13,
+      "relative_change": 0.3270998963683487
+    },
+    {
+      "region": "region:116",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.03625280216564982,
+      "candidate": 0.041731820329281015,
+      "relative_change": 0.15113364585159328
+    },
+    {
+      "region": "region:119",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.781113424643626e-11,
+      "candidate": 7.711424053693743e-11,
+      "relative_change": 0.13719142724692127
+    },
+    {
+      "region": "region:119",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 6.295278278774358e-15,
+      "candidate": 1.1288025327083263e-14,
+      "relative_change": 0.7930939391738778
+    },
+    {
+      "region": "region:119",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0007445847932591942,
+      "candidate": 0.0014329307239980247,
+      "relative_change": 0.9244694989348425
+    },
+    {
+      "region": "region:120",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.6329008633656467e-10,
+      "candidate": 1.856951855529647e-10,
+      "relative_change": 0.1372104070679457
+    },
+    {
+      "region": "region:120",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.4917215560519106e-14,
+      "candidate": 1.8734078848549716e-14,
+      "relative_change": 0.2558696877809136
+    },
+    {
+      "region": "region:121",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.877826766897588e-11,
+      "candidate": 7.853720576216996e-11,
+      "relative_change": 0.1418898501509669
+    },
+    {
+      "region": "region:121",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 5.359020922849662e-15,
+      "candidate": 6.804372555394315e-15,
+      "relative_change": 0.26970442051868065
+    },
+    {
+      "region": "region:122",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 9.530327037130795e-11,
+      "candidate": 1.0418246566413e-10,
+      "relative_change": 0.09316779223029932
+    },
+    {
+      "region": "region:122",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 3.4371246358891903e-15,
+      "candidate": 4.034339267555664e-15,
+      "relative_change": 0.1737541389772656
+    },
+    {
+      "region": "region:122",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0002153728734365127,
+      "candidate": 0.00028194635147933916,
+      "relative_change": 0.3091079994456725
+    },
+    {
+      "region": "region:124",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 3.6826679922445446e-10,
+      "candidate": 4.0975214976692327e-10,
+      "relative_change": 0.11265025962110682
+    },
+    {
+      "region": "region:124",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.0953469067453983e-13,
+      "candidate": 1.3564067046608998e-13,
+      "relative_change": 0.23833526740052416
+    },
+    {
+      "region": "region:124",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.0015291274120185336,
+      "candidate": 0.0017551427593551438,
+      "relative_change": 0.14780674622676296
+    },
+    {
+      "region": "region:125",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.12079161598195e-11,
+      "candidate": 7.853081161960143e-11,
+      "relative_change": 0.10283822157281461
+    },
+    {
+      "region": "region:125",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.7748716352126947e-14,
+      "candidate": 3.181143618659515e-14,
+      "relative_change": 0.14641109098211658
+    },
+    {
+      "region": "region:126",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 1.2266204963953346e-10,
+      "candidate": 1.3877469950604323e-10,
+      "relative_change": 0.13135806807288777
+    },
+    {
+      "region": "region:126",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.513716498410671e-13,
+      "candidate": 2.0354243099068935e-13,
+      "relative_change": 0.344653580801947
+    },
+    {
+      "region": "region:126",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.009099908569169002,
+      "candidate": 0.01074875461558297,
+      "relative_change": 0.1811936937476877
+    },
+    {
+      "region": "region:142",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 1.612412487753766e-20,
+      "candidate": 1.5271738952296235e-20,
+      "relative_change": 0.05286401164188902
+    },
+    {
+      "region": "region:142",
+      "metric": "maximum_green_strain_norm",
+      "reference": 4.6943909679772204e-08,
+      "candidate": 5.546841108499558e-08,
+      "relative_change": 0.18158908074281088
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 6.300125323902204e-11,
+      "candidate": 4.643051679555201e-11,
+      "relative_change": 0.26302233037495143
+    },
+    {
+      "region": "region:145",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.7923279791460115e-17,
+      "candidate": 1.8635070684615346e-17,
+      "relative_change": 0.33263317118232716
+    },
+    {
+      "region": "region:145",
+      "metric": "maximum_green_strain_norm",
+      "reference": 5.937846278521589e-06,
+      "candidate": 4.336281125915469e-06,
+      "relative_change": 0.2697215585387096
+    },
+    {
+      "region": "region:153",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 2.980177652835861e-14,
+      "candidate": 3.500482416098035e-14,
+      "relative_change": 0.17458850574463747
+    },
+    {
+      "region": "region:153",
+      "metric": "maximum_green_strain_norm",
+      "reference": 0.00345168643067483,
+      "candidate": 0.004007553155651879,
+      "relative_change": 0.16104206918598143
+    },
+    {
+      "region": "region:156",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 7.274488616048407e-12,
+      "candidate": 5.490798689934586e-12,
+      "relative_change": 0.24519798163939444
+    },
+    {
+      "region": "region:156",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 8.442380735825779e-19,
+      "candidate": 4.8077296222253715e-19,
+      "relative_change": 0.43052442519875167
+    },
+    {
+      "region": "region:156",
+      "metric": "maximum_green_strain_norm",
+      "reference": 7.781653511103778e-07,
+      "candidate": 5.57268834245968e-07,
+      "relative_change": 0.28386835336372757
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.3123286249353056e-10,
+      "candidate": 2.4419841530448106e-10,
+      "relative_change": 0.05607141074644289
+    },
+    {
+      "region": "object:registered_left_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 9.915698807527835e-14,
+      "candidate": 1.092945526441942e-13,
+      "relative_change": 0.10223752017578003
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_norm",
+      "reference": 2.02998941308493e-10,
+      "candidate": 2.186565510755543e-10,
+      "relative_change": 0.07713148485472526
+    },
+    {
+      "region": "object:registered_right_optic_nerve_reference_fem",
+      "metric": "volume_weighted_strain_squared",
+      "reference": 7.984785319419861e-14,
+      "candidate": 9.034706048992894e-14,
+      "relative_change": 0.13149016380183862
+    }
+  ],
+  "scope": "Comparison of captured FEM force channels and regional strain metrics. It omits force owners absent from the endpoint capture."
+}
