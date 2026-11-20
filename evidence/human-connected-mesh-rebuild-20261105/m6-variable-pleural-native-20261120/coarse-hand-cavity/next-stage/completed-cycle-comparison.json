@@ -1,0 +1,1019 @@
+{
+  "baseline": {
+    "execution": {
+      "exit": 0,
+      "wall_seconds": 25.231006583897397,
+      "profile_root": 2
+    },
+    "segments": 4,
+    "simulated_seconds": 6.25000029686e-05,
+    "process_realtime_factor": 2.4771109611016446e-06,
+    "segment_sum_wall_s": 10.147996084,
+    "segment_median_after_first_ms": 2429.736959,
+    "per_segment_wall_ms": [
+      2729.430417,
+      2573.5514160000002,
+      2429.736959,
+      2415.2772920000007
+    ],
+    "total_krylov_columns": 61,
+    "total_active_newton_begins": 19,
+    "budget_exhausted_solves": 0,
+    "krylov_columns_by_root": [
+      28,
+      22,
+      6,
+      5
+    ],
+    "timed_gpu_stages": {
+      "2": {
+        "matter_pre": {
+          "spans": 1,
+          "duration_ns": 611000
+        },
+        "brain_advance": {
+          "spans": 1,
+          "duration_ns": 7500
+        },
+        "respiratory_mechanics": {
+          "spans": 1,
+          "duration_ns": 1707209
+        },
+        "matter_after_frame_begin": {
+          "spans": 1,
+          "duration_ns": 1933833
+        },
+        "matter_newton_assembly": {
+          "spans": 24,
+          "duration_ns": 142361500
+        },
+        "matter_newton_linear": {
+          "spans": 24,
+          "duration_ns": 674016626
+        },
+        "matter_newton_globalization": {
+          "spans": 24,
+          "duration_ns": 136836541
+        },
+        "matter_final_certificate": {
+          "spans": 1,
+          "duration_ns": 8418708
+        },
+        "respiratory_gas_exchange": {
+          "spans": 1,
+          "duration_ns": 1803625
+        },
+        "matter_after_candidate_ready": {
+          "spans": 1,
+          "duration_ns": 32857708
+        },
+        "matter_after_microstep": {
+          "spans": 1,
+          "duration_ns": 61250
+        },
+        "matter_post": {
+          "spans": 1,
+          "duration_ns": 400834
+        },
+        "brain_resolve": {
+          "spans": 1,
+          "duration_ns": 1542
+        },
+        "respiratory_resolve": {
+          "spans": 1,
+          "duration_ns": 691250
+        }
+      }
+    },
+    "native_diagnostics": {
+      "whole_body_tissue_mass_reference": "whole_body_tissue_mass_reference=inferred original_total_kg=97.131950691109523 cooked_tissue_kg=14.415723566599482 residual_rigid_scale=0.85158618287773202 maximum_inertia_regularization_fraction=7.672076591685492e-06 massless_link_rerouted_nodes=42 massless_link_rerouted_kg=0.20786706276291289 geometry_and_force_owners=unchanged reference=global_mass_budget_with_cooked_tissue_moments_not_measured_subject",
+      "resting_FEM_bed_release_initialization": "resting_FEM_bed_release_initialization=prepared activation_limit=0 observational_witnesses=32 static_proxy_reactions=0 rigid_support_seed_N=0 balanced=false qualification=fresh_release_not_settled_rest support_owner=existing_Matter_FEM_contact",
+      "resting_FEM_terminal_audit": "resting_FEM_terminal_audit=passed expected_steps=4 initial_control=0 final_control=3 initial_substep=0 final_substep=0 accepted_steps=4 adapter_passes=4 expected_adapter_passes=4 min_J=0.901768056757 max_J=1.21431604538 max_displacement_m=0.000161193794729 max_anchor_reaction_N=23.8036654749 capture=terminal_only",
+      "resting_fascia_fem_terminal_audit": "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0138707663864 passive_ligament_min_effective_stretch=0.999996125698 passive_ligament_max_effective_stretch=1.00000584126 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=1.02956111472e-10 body_contact_samples=413997 body_contact_audited_steps=4 body_contact_closed_samples=181 body_contact_normal_force_N=17.2228012085 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=3.93603209909e-08 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=4 capture=terminal_only"
+    }
+  },
+  "candidate": {
+    "execution": {
+      "exit": 0,
+      "wall_seconds": 25.247062583919615,
+      "profile_root": 2
+    },
+    "segments": 4,
+    "simulated_seconds": 6.25000029686e-05,
+    "process_realtime_factor": 2.4755356295748866e-06,
+    "segment_sum_wall_s": 10.133663292,
+    "segment_median_after_first_ms": 2390.5161669999998,
+    "per_segment_wall_ms": [
+      2691.1677499999996,
+      2690.054417,
+      2390.5161669999998,
+      2361.9249580000005
+    ],
+    "total_krylov_columns": 95,
+    "total_active_newton_begins": 19,
+    "budget_exhausted_solves": 1,
+    "krylov_columns_by_root": [
+      28,
+      56,
+      6,
+      5
+    ],
+    "timed_gpu_stages": {
+      "2": {
+        "matter_pre": {
+          "spans": 1,
+          "duration_ns": 573666
+        },
+        "brain_advance": {
+          "spans": 1,
+          "duration_ns": 9333
+        },
+        "respiratory_mechanics": {
+          "spans": 1,
+          "duration_ns": 1704083
+        },
+        "matter_after_frame_begin": {
+          "spans": 1,
+          "duration_ns": 1930250
+        },
+        "matter_newton_assembly": {
+          "spans": 24,
+          "duration_ns": 143908875
+        },
+        "matter_newton_linear": {
+          "spans": 24,
+          "duration_ns": 625387627
+        },
+        "matter_newton_globalization": {
+          "spans": 24,
+          "duration_ns": 136142498
+        },
+        "matter_final_certificate": {
+          "spans": 1,
+          "duration_ns": 8556542
+        },
+        "respiratory_gas_exchange": {
+          "spans": 1,
+          "duration_ns": 1802167
+        },
+        "matter_after_candidate_ready": {
+          "spans": 1,
+          "duration_ns": 32814750
+        },
+        "matter_after_microstep": {
+          "spans": 1,
+          "duration_ns": 60375
+        },
+        "matter_post": {
+          "spans": 1,
+          "duration_ns": 393958
+        },
+        "brain_resolve": {
+          "spans": 1,
+          "duration_ns": 1542
+        },
+        "respiratory_resolve": {
+          "spans": 1,
+          "duration_ns": 688542
+        }
+      }
+    },
+    "native_diagnostics": {
+      "whole_body_tissue_mass_reference": "whole_body_tissue_mass_reference=inferred original_total_kg=97.131950691109523 cooked_tissue_kg=14.415723566599482 residual_rigid_scale=0.85158618287773202 maximum_inertia_regularization_fraction=7.672076591685492e-06 massless_link_rerouted_nodes=42 massless_link_rerouted_kg=0.20786706276291289 geometry_and_force_owners=unchanged reference=global_mass_budget_with_cooked_tissue_moments_not_measured_subject",
+      "resting_FEM_bed_release_initialization": "resting_FEM_bed_release_initialization=prepared activation_limit=0 observational_witnesses=32 static_proxy_reactions=0 rigid_support_seed_N=0 balanced=false qualification=fresh_release_not_settled_rest support_owner=existing_Matter_FEM_contact",
+      "resting_FEM_terminal_audit": "resting_FEM_terminal_audit=passed expected_steps=4 initial_control=0 final_control=3 initial_substep=0 final_substep=0 accepted_steps=4 adapter_passes=4 expected_adapter_passes=4 min_J=0.901774637177 max_J=1.21423663062 max_displacement_m=0.000161191306598 max_anchor_reaction_N=23.8036654749 capture=terminal_only",
+      "resting_fascia_fem_terminal_audit": "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0138707663864 passive_ligament_min_effective_stretch=0.999996125698 passive_ligament_max_effective_stretch=1.00000584126 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=1.02956111472e-10 body_contact_samples=413997 body_contact_audited_steps=4 body_contact_closed_samples=179 body_contact_normal_force_N=17.2227516174 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=4.38547485967e-08 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=4 capture=terminal_only"
+    }
+  },
+  "process_wall_speed_ratio": 0.999364044828231,
+  "native_segment_speed_ratio": 1.0014143742087145,
+  "coupled_trace": {
+    "time_s": {
+      "baseline_min": 1.56250007421e-05,
+      "baseline_max": 6.25000029686e-05,
+      "candidate_min": 1.56250007421e-05,
+      "candidate_max": 6.25000029686e-05,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "lung_volume_ml": {
+      "baseline_min": 2499.99994412,
+      "baseline_max": 2499.99994412,
+      "candidate_min": 2499.99994412,
+      "candidate_max": 2499.99994412,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "airflow_ml_s": {
+      "baseline_min": 2.05569805969e-06,
+      "baseline_max": 8.1667381191e-06,
+      "candidate_min": 2.05569805969e-06,
+      "candidate_max": 8.1667381191e-06,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "pleural_pa": {
+      "baseline_min": -490.332489014,
+      "baseline_max": -490.332489014,
+      "candidate_min": -490.332489014,
+      "candidate_max": -490.332489014,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "PaO2_mmhg": {
+      "baseline_min": 99.9998703003,
+      "baseline_max": 99.9998703003,
+      "candidate_min": 99.9998703003,
+      "candidate_max": 99.9998703003,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "PaCO2_mmhg": {
+      "baseline_min": 39.9999961853,
+      "baseline_max": 40.0,
+      "candidate_min": 39.9999961853,
+      "candidate_max": 40.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "lv_mmhg": {
+      "baseline_min": 6.70765454263,
+      "baseline_max": 6.70821534916,
+      "candidate_min": 6.70765454263,
+      "candidate_max": 6.70821534916,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "blood_ml": {
+      "baseline_min": 5149.99963343,
+      "baseline_max": 5150.00056475,
+      "candidate_min": 5149.99963343,
+      "candidate_max": 5150.00056475,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "blood_error_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.000465661287308,
+      "candidate_min": 0.0,
+      "candidate_max": 0.000465661287308,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "body_mass_residual_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "normal_impulse_ns": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "root_assistance_n": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "root_assistance_nm": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "peak_penetration_m": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "alveolar_pa": {
+      "baseline_min": -1.08880908556e-06,
+      "baseline_max": -2.74070572459e-07,
+      "candidate_min": -1.08880908556e-06,
+      "candidate_max": -2.74070572459e-07,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "diaphragm_mm": {
+      "baseline_min": 1.18053104185e-12,
+      "baseline_max": 1.17649241044e-11,
+      "candidate_min": 1.18053104185e-12,
+      "candidate_max": 1.17649241044e-11,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "rib_mm": {
+      "baseline_min": 1.67660780008e-13,
+      "baseline_max": 1.66481997459e-12,
+      "candidate_min": 1.67660780008e-13,
+      "candidate_max": 1.66481997459e-12,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "SaO2": {
+      "baseline_min": 0.972220122814,
+      "baseline_max": 0.972220122814,
+      "candidate_min": 0.972220122814,
+      "candidate_max": 0.972220122814,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "oxygen_balance_error_stpd_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.000116415321827,
+      "candidate_min": 0.0,
+      "candidate_max": 0.000116415321827,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "co2_balance_error_stpd_ml": {
+      "baseline_min": 0.000232830643654,
+      "baseline_max": 0.000232830643654,
+      "candidate_min": 0.000232830643654,
+      "candidate_max": 0.000232830643654,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "breaths": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "tidal_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "rv_mmhg": {
+      "baseline_min": 0.787997276824,
+      "baseline_max": 0.788278710145,
+      "candidate_min": 0.787997276824,
+      "candidate_max": 0.788278710145,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "aorta_mmhg": {
+      "baseline_min": 85.4649898288,
+      "baseline_max": 85.4780866071,
+      "candidate_min": 85.4649898288,
+      "candidate_max": 85.4780866071,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "pulmonary_artery_mmhg": {
+      "baseline_min": 13.8331644338,
+      "baseline_max": 13.8342466759,
+      "candidate_min": 13.8331644338,
+      "candidate_max": 13.8342466759,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "lv_ml": {
+      "baseline_min": 118.757161545,
+      "baseline_max": 118.762596685,
+      "candidate_min": 118.757161545,
+      "candidate_max": 118.762596685,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "rv_ml": {
+      "baseline_min": 138.360468554,
+      "baseline_max": 138.365896419,
+      "candidate_min": 138.360468554,
+      "candidate_max": 138.365896419,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "aortic_ejected_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "pulmonary_ejected_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "complete_filling_ejection_cycles": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "last_lv_stroke_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "right_atrium_ml": {
+      "baseline_min": 32.2616069752,
+      "baseline_max": 32.263360481,
+      "candidate_min": 32.2616069752,
+      "candidate_max": 32.263360481,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "left_atrium_ml": {
+      "baseline_min": 47.7351532027,
+      "baseline_max": 47.7369030705,
+      "candidate_min": 47.7351532027,
+      "candidate_max": 47.7369030705,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "blood_continuity_residual_accum_ml": {
+      "baseline_min": -1.11022302463e-10,
+      "baseline_max": 5.55111512313e-10,
+      "candidate_min": -6.66133814775e-10,
+      "candidate_max": 6.66133814775e-10,
+      "max_absolute_delta": 1.2212453270880002e-09,
+      "relative_to_baseline_peak": 2.1999999999989193
+    },
+    "blood_physical_delta_accum_ml": {
+      "baseline_min": -1.11022302463e-10,
+      "baseline_max": 5.55111512313e-10,
+      "candidate_min": -6.66133814775e-10,
+      "candidate_max": 6.66133814775e-10,
+      "max_absolute_delta": 1.2212453270880002e-09,
+      "relative_to_baseline_peak": 2.1999999999989193
+    },
+    "blood_residual_minus_physical_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "blood_endpoint_minus_physical_ml": {
+      "baseline_min": -0.000465661509352,
+      "baseline_max": 0.000465660732196,
+      "candidate_min": -0.000465661953442,
+      "candidate_max": 0.000465661953442,
+      "max_absolute_delta": 1.2212459999977505e-09,
+      "relative_to_baseline_peak": 2.622604564627208e-06
+    },
+    "inspired_volume_accum_ml": {
+      "baseline_min": 3.21202834533e-11,
+      "baseline_max": 3.19740882136e-10,
+      "candidate_min": 3.21202834533e-11,
+      "candidate_max": 3.19740882136e-10,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "last_inspiration_step": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "last_inspiration_time_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "last_inspiration_volume_accum_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "last_complete_breath_inspired_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "respiratory_net_volume_ml": {
+      "baseline_min": 3.21202834533e-11,
+      "baseline_max": 1.27605288511e-10,
+      "candidate_min": 3.21202834533e-11,
+      "candidate_max": 1.27605288511e-10,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "respiratory_volume_balance_ml": {
+      "baseline_min": -1.27605288511e-10,
+      "baseline_max": -3.21202834533e-11,
+      "candidate_min": -1.27605288511e-10,
+      "candidate_max": -3.21202834533e-11,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "gas_max_donor_fraction": {
+      "baseline_min": 5.61552551517e-05,
+      "baseline_max": 5.62172790524e-05,
+      "candidate_min": 5.61552551517e-05,
+      "candidate_max": 5.62172790524e-05,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "respiratory_gas_substeps": {
+      "baseline_min": 1.0,
+      "baseline_max": 1.0,
+      "candidate_min": 1.0,
+      "candidate_max": 1.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "external_blood_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "external_blood_mass_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "external_blood_o2_stpd_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "external_blood_co2_stpd_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "grounded_blood_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "grounded_blood_mass_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "reference_positive_body_mass_kg": {
+      "baseline_min": 82.7162246704,
+      "baseline_max": 82.7162246704,
+      "candidate_min": 82.7162246704,
+      "candidate_max": 82.7162246704,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "candidate_positive_body_mass_kg": {
+      "baseline_min": 82.7162246704,
+      "baseline_max": 82.7162246704,
+      "candidate_min": 82.7162246704,
+      "candidate_max": 82.7162246704,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "external_mass_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "max_abs_body_mass_residual_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "algebraic_transfer_momentum_residual_kg_m_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "algebraic_transfer_angular_residual_kg_m2_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "mpm_represented_blood_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "mpm_represented_blood_mass_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "mpm_represented_o2_stpd_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "mpm_represented_co2_stpd_ml": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "step": {
+      "baseline_min": 1.0,
+      "baseline_max": 4.0,
+      "candidate_min": 1.0,
+      "candidate_max": 4.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "min_contact_gap_m": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "diaphragm_excitation": {
+      "baseline_min": 4.02123851018e-06,
+      "baseline_max": 1.58336260938e-05,
+      "candidate_min": 4.02123851018e-06,
+      "candidate_max": 1.58336260938e-05,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "intercostal_excitation": {
+      "baseline_min": 2.51327423939e-06,
+      "baseline_max": 9.89601721813e-06,
+      "candidate_min": 2.51327423939e-06,
+      "candidate_max": 9.89601721813e-06,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "diaphragm_activation": {
+      "baseline_min": 1.25467645162e-08,
+      "baseline_max": 1.22731478314e-07,
+      "candidate_min": 1.25467645162e-08,
+      "candidate_max": 1.22731478314e-07,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "intercostal_activation": {
+      "baseline_min": 7.84172815571e-09,
+      "baseline_max": 7.67074084251e-08,
+      "candidate_min": 7.84172815571e-09,
+      "candidate_max": 7.67074084251e-08,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "pre_projection_contact_residual_m_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "pre_projection_limit_residual_generalized_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "pre_projection_equality_residual_generalized_s": {
+      "baseline_min": 1.43160691635e-11,
+      "baseline_max": 1.19208762044e-05,
+      "candidate_min": 1.43160691635e-11,
+      "candidate_max": 1.19208762044e-05,
+      "max_absolute_delta": 6.11547201768e-11,
+      "relative_to_baseline_peak": 5.130052449854967e-06
+    },
+    "post_projection_contact_residual_m_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "post_projection_limit_residual_generalized_s": {
+      "baseline_min": 0.0,
+      "baseline_max": 0.0,
+      "candidate_min": 0.0,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": null
+    },
+    "post_projection_equality_residual_generalized_s": {
+      "baseline_min": 9.29040178121e-12,
+      "baseline_max": 9.37656619016e-11,
+      "candidate_min": 9.29040178121e-12,
+      "candidate_max": 9.19500031671e-11,
+      "max_absolute_delta": 2.9024338488199998e-11,
+      "relative_to_baseline_peak": 0.30954123182811694
+    },
+    "equality_position_projection_max_generalized": {
+      "baseline_min": 2.22044604925e-16,
+      "baseline_max": 9.31322574615e-10,
+      "candidate_min": 2.22044604925e-16,
+      "candidate_max": 9.31322574615e-10,
+      "max_absolute_delta": 6.2172489379e-15,
+      "relative_to_baseline_peak": 6.6757202148462394e-06
+    },
+    "equality_velocity_projection_max_generalized_s": {
+      "baseline_min": 1.45519152284e-11,
+      "baseline_max": 9.09494701773e-11,
+      "candidate_min": 1.45519152284e-11,
+      "candidate_max": 1.16415321827e-10,
+      "max_absolute_delta": 6.36646291242e-11,
+      "relative_to_baseline_peak": 0.7000000000009896
+    },
+    "contact_sweeps": {
+      "baseline_min": 64.0,
+      "baseline_max": 64.0,
+      "candidate_min": 64.0,
+      "candidate_max": 64.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    }
+  },
+  "body_motion": {
+    "accepted_step": {
+      "baseline_min": 1.0,
+      "baseline_max": 4.0,
+      "candidate_min": 1.0,
+      "candidate_max": 4.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "time_s": {
+      "baseline_min": 1.5625000742147677e-05,
+      "baseline_max": 6.25000029685907e-05,
+      "candidate_min": 1.5625000742147677e-05,
+      "candidate_max": 6.25000029685907e-05,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "body_index": {
+      "baseline_min": 0.0,
+      "baseline_max": 156.0,
+      "candidate_min": 0.0,
+      "candidate_max": 156.0,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "mass_kg": {
+      "baseline_min": 0.0,
+      "baseline_max": 15.855682373046875,
+      "candidate_min": 0.0,
+      "candidate_max": 15.855682373046875,
+      "max_absolute_delta": 0.0,
+      "relative_to_baseline_peak": 0.0
+    },
+    "root_x_m": {
+      "baseline_min": -0.050000000678108315,
+      "baseline_max": -0.05000000064842279,
+      "candidate_min": -0.05000000067755173,
+      "candidate_max": -0.05000000064020725,
+      "max_absolute_delta": 8.215539359923696e-12,
+      "relative_to_baseline_peak": 1.6431078497006372e-10
+    },
+    "root_y_m": {
+      "baseline_min": 0.20000000058211342,
+      "baseline_max": 0.20000000277433874,
+      "candidate_min": 0.20000000058277667,
+      "candidate_max": 0.20000000277433874,
+      "max_absolute_delta": 6.632472349110685e-13,
+      "relative_to_baseline_peak": 3.3162361285535305e-12
+    },
+    "root_z_m": {
+      "baseline_min": 0.09885570158492649,
+      "baseline_max": 0.0988559245996518,
+      "candidate_min": 0.09885570158238718,
+      "candidate_max": 0.0988559245996518,
+      "max_absolute_delta": 2.539302101922658e-12,
+      "relative_to_baseline_peak": 2.5686898506147826e-11
+    },
+    "com_relative_root_x_m": {
+      "baseline_min": -0.2667998026447857,
+      "baseline_max": 0.31665826448463447,
+      "candidate_min": -0.26679980264208414,
+      "candidate_max": 0.3166582644873495,
+      "max_absolute_delta": 9.042419590876705e-12,
+      "relative_to_baseline_peak": 2.8555766910405333e-11
+    },
+    "com_relative_root_y_m": {
+      "baseline_min": -1.93013711723104,
+      "baseline_max": 0.0,
+      "candidate_min": -1.9301371172307147,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 2.7486901643669626e-12,
+      "relative_to_baseline_peak": 1.4240906202095178e-12
+    },
+    "com_relative_root_z_m": {
+      "baseline_min": -0.3595617377993139,
+      "baseline_max": 0.16251477462519118,
+      "candidate_min": -0.3595617377993139,
+      "candidate_max": 0.1625147746229386,
+      "max_absolute_delta": 7.256251155496329e-12,
+      "relative_to_baseline_peak": 2.0180821240624718e-11
+    },
+    "mass_weighted_relative_com_x_kg_m": {
+      "baseline_min": -0.37131530143776625,
+      "baseline_max": 0.7268573415445239,
+      "candidate_min": -0.37131530142145175,
+      "candidate_max": 0.7268573415597102,
+      "max_absolute_delta": 3.5659419861389097e-11,
+      "relative_to_baseline_peak": 4.905972303397966e-11
+    },
+    "mass_weighted_relative_com_y_kg_m": {
+      "baseline_min": -10.191503562714598,
+      "baseline_max": 0.0,
+      "candidate_min": -10.191503562714606,
+      "candidate_max": 0.0,
+      "max_absolute_delta": 2.724487302430134e-12,
+      "relative_to_baseline_peak": 2.673292793025765e-13
+    },
+    "mass_weighted_relative_com_z_kg_m": {
+      "baseline_min": -0.3252402323184618,
+      "baseline_max": 0.5672296331573063,
+      "candidate_min": -0.3252402323184618,
+      "candidate_max": 0.5672296331573063,
+      "max_absolute_delta": 2.417696598477903e-11,
+      "relative_to_baseline_peak": 4.2622889516906074e-11
+    },
+    "orientation_x": {
+      "baseline_min": -0.8508694820508615,
+      "baseline_max": 0.6797533893887105,
+      "candidate_min": -0.8508694820508615,
+      "candidate_max": 0.679753389389594,
+      "max_absolute_delta": 1.0263193940540649e-11,
+      "relative_to_baseline_peak": 1.2062007343127575e-11
+    },
+    "orientation_y": {
+      "baseline_min": -0.7493294492973473,
+      "baseline_max": 0.7587356036336972,
+      "candidate_min": -0.7493294492973473,
+      "candidate_max": 0.758735603634398,
+      "max_absolute_delta": 8.915757021554782e-12,
+      "relative_to_baseline_peak": 1.1750808817796214e-11
+    },
+    "orientation_z": {
+      "baseline_min": -0.9164115305167319,
+      "baseline_max": 0.8560002072714116,
+      "candidate_min": -0.9164115305167319,
+      "candidate_max": 0.8560002072714116,
+      "max_absolute_delta": 8.178225891636304e-12,
+      "relative_to_baseline_peak": 8.924184844144085e-12
+    },
+    "orientation_w": {
+      "baseline_min": 7.129286472754466e-05,
+      "baseline_max": 0.8139401540026212,
+      "candidate_min": 7.12928679122981e-05,
+      "candidate_max": 0.8139401540026212,
+      "max_absolute_delta": 7.970235582632768e-12,
+      "relative_to_baseline_peak": 9.792164133245477e-12
+    },
+    "linear_velocity_x_m_s": {
+      "baseline_min": -0.0009928490973861916,
+      "baseline_max": 0.0010277039407820135,
+      "candidate_min": -0.0009928315645018793,
+      "candidate_max": 0.0010277102765212977,
+      "max_absolute_delta": 2.0559400581987575e-07,
+      "relative_to_baseline_peak": 0.00020005178306841225
+    },
+    "linear_velocity_y_m_s": {
+      "baseline_min": -0.0054343601159219665,
+      "baseline_max": 0.00046098582073577683,
+      "candidate_min": -0.005434320750116826,
+      "candidate_max": 0.0004610000821240454,
+      "max_absolute_delta": 5.488021311266661e-08,
+      "relative_to_baseline_peak": 1.0098744275682935e-05
+    },
+    "linear_velocity_z_m_s": {
+      "baseline_min": -0.0063422382809221745,
+      "baseline_max": 2.9532126000652215e-05,
+      "candidate_min": -0.006342296022921801,
+      "candidate_max": 2.9529715398249627e-05,
+      "max_absolute_delta": 1.5403783443707615e-07,
+      "relative_to_baseline_peak": 2.4287613869764404e-05
+    },
+    "angular_velocity_x_rad_s": {
+      "baseline_min": -0.005881397519260645,
+      "baseline_max": 0.03709054521159835,
+      "candidate_min": -0.005881458520889282,
+      "candidate_max": 0.037090426580278175,
+      "max_absolute_delta": 4.3382956780999493e-07,
+      "relative_to_baseline_peak": 1.169650015482476e-05
+    },
+    "angular_velocity_y_rad_s": {
+      "baseline_min": -0.009957084616174897,
+      "baseline_max": 0.009920774580209284,
+      "candidate_min": -0.009957133321200533,
+      "candidate_max": 0.009920721641068657,
+      "max_absolute_delta": 2.1790451198462754e-07,
+      "relative_to_baseline_peak": 2.188436880717576e-05
+    },
+    "angular_velocity_z_rad_s": {
+      "baseline_min": -0.004254457457662337,
+      "baseline_max": 0.004510049928529622,
+      "candidate_min": -0.004254462271204774,
+      "candidate_max": 0.004510081604358614,
+      "max_absolute_delta": 2.1613327305658458e-07,
+      "relative_to_baseline_peak": 4.792258987852246e-05
+    },
+    "linear_momentum_x_kg_m_s": {
+      "baseline_min": -0.0002686487897598624,
+      "baseline_max": 0.000268415340983843,
+      "candidate_min": -0.00026864345142042003,
+      "candidate_max": 0.000268429843807633,
+      "max_absolute_delta": 1.5495961885083194e-07,
+      "relative_to_baseline_peak": 0.0005768111555214747
+    },
+    "linear_momentum_y_kg_m_s": {
+      "baseline_min": -0.0016105588751195534,
+      "baseline_max": 0.002938772737171466,
+      "candidate_min": -0.0016104265679340994,
+      "candidate_max": 0.0029388636531544584,
+      "max_absolute_delta": 2.2477291235787136e-07,
+      "relative_to_baseline_peak": 7.648529929340935e-05
+    },
+    "linear_momentum_z_kg_m_s": {
+      "baseline_min": -0.014402358809717547,
+      "baseline_max": -0.0,
+      "candidate_min": -0.014402386845595775,
+      "candidate_max": -0.0,
+      "max_absolute_delta": 4.417252581234325e-07,
+      "relative_to_baseline_peak": 3.0670341154491446e-05
+    }
+  },
+  "coupled_csv_byte_equal": false
+}

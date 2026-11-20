@@ -1,0 +1,47 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -9227,7 +9227,7 @@
+         [[maybe_unused]] std::vector<std::uint32_t>& newtonRejectedSteps
+     ) {
+         const std::uint32_t requestedSteps = horizonInput.stand.stepCount;
+-        [[maybe_unused]] std::size_t lastStagedSolverTier = 0u;
++        [[maybe_unused]] unsigned stagedSolverHoldSteps = 0u;
+         const auto emitAcceptedFEMBodyLoadCapture = [&](
+             const std::uint32_t sourceStep) {
+ #ifdef NUMI_HUMAN_RESTING_SCENE
+@@ -9957,7 +9957,7 @@
+                 auto& coupling = *static_cast<NumiHumanRestingCoupling*>(restingCouplingContext);
+                 auto& runtime = coupling.physiology.runtime;
+                 auto* adapter = continuumTransaction->adapter;
+-                constexpr std::uint32_t shortBudget = 2u;
++                constexpr std::uint32_t shortBudget = 4u;
+                 constexpr std::uint32_t middleBudget = 8u;
+                 const auto normalBudget = runtime.newtonIterationBudget();
+                 const auto normalLinearBudget = runtime.fgmresIterationBudget();
+@@ -9984,10 +9984,10 @@
+                     {middleBudget, normalLinearBudget},
+                     {normalBudget, normalLinearBudget},
+                 };
+-                // A contact event that needed the intermediate tier often
+-                // persists into the next physical step. Restart each new
+-                // horizon with the shortest budget.
+-                const std::size_t startTier = lastStagedSolverTier == 0u ? 0u : 1u;
++                // Keep two accepted intermediate starts after an escalation.
++                // Recovery to the shortest budget avoids staying at eight
++                // Newton passes for the lifetime of the settled state.
++                const std::size_t startTier = stagedSolverHoldSteps == 0u ? 0u : 1u;
+                 for (std::size_t tier = startTier; tier < std::size(budgets); ++tier) {
+                     const auto budget = budgets[tier];
+                     require(runtime.setNewtonIterationBudget(budget.newton) &&
+@@ -10004,7 +10004,10 @@
+                               << " published=" << segmentDiagnostics.published
+                               << " elapsed_ms=" << segmentDiagnostics.elapsedMilliseconds << std::endl;
+                     if (segmentDiagnostics.succeeded() && segmentDiagnostics.published) {
+-                        lastStagedSolverTier = tier;
++                        if (tier > startTier)
++                            stagedSolverHoldSteps = 2u;
++                        else if (stagedSolverHoldSteps != 0u)
++                            --stagedSolverHoldSteps;
+                         require(runtime.setNewtonIterationBudget(normalBudget) &&
+                                     runtime.setFGMRESIterationBudget(normalLinearBudget),
+                                 "unable to restore solver budgets after acceptance");
