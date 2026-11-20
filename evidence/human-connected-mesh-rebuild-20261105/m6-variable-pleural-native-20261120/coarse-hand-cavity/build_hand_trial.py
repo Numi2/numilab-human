@@ -13,6 +13,7 @@ BASE = HERE.parent / "resting-clearance-and-atrium-015/staged-solver-accuracy-bu
 RUNTIME = SCENE / "guarded-runtime-admission-build"
 OUT = HERE / "native-build"
 CONNECTED_OUT = HERE / "connected-native-build"
+WITNESS_OUT = HERE / "witness-native-build"
 CWD = Path.home() / "Work/skin-fat-native-integration-209/build-native"
 APP = "numilab_human_myosim_visual_probe.mm"
 FIT = HERE / "hand-interface-fit.json"
@@ -83,17 +84,25 @@ ENTRIES
         '";\n' + before_hash)
 
 def main():
-    connected = sys.argv[1:] == ["--connected"]
-    assert connected or sys.argv[1:] == []
-    out = CONNECTED_OUT if connected else OUT
+    mode = sys.argv[1:]
+    assert mode in ([], ["--connected"], ["--witness"])
+    connected = bool(mode)
+    witness = mode == ["--witness"]
+    out = WITNESS_OUT if witness else CONNECTED_OUT if connected else OUT
     fit_path = CONNECTED_FIT if connected else FIT
     out.mkdir(exist_ok=True)
     source = (SOURCE / APP).read_text()
     updated = inject(source, fit_path)
+    if witness:
+        spot = '        const char* fullBankComparisonPath=std::getenv('
+        assert updated.count(spot) == 1
+        updated = updated.replace(spot, (HERE / "hand-solid-witness.mm.inc").read_text() + spot)
     (out / APP).write_text(updated)
     patch = difflib.unified_diff(source.splitlines(keepends=True), updated.splitlines(keepends=True),
                                 fromfile="a/apps/" + APP, tofile="b/apps/" + APP)
-    (HERE / ("connected-interface-native.patch" if connected else "hand-interface-native.patch")).write_text("".join(patch))
+    patch_name = ("hand-solid-witness.patch" if witness else "connected-interface-native.patch"
+                  if connected else "hand-interface-native.patch")
+    (HERE / patch_name).write_text("".join(patch))
     compile_app, link_app = json.loads((BASE / "build-commands.json").read_text())
     names = {APP, "numi-human-native.o", "numi-human-native"}
     compile_app = [str(out / Path(arg).name)

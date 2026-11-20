@@ -28,3 +28,46 @@ python3 run_hand_trial.py --connected --trace-fourth
 ~~~
 
 The two native patches and compile receipts preserve the exact observed builds. The default builder produces the same one-node edit through the newer shared overlay path. The small proof scripts use NumPy and SciPy in the existing Numi prep environment. The attached launch records and compact output preserve process status, accepted clocks, residuals and physical limit witnesses.
+
+## Initial hand contact confirmed
+
+The separate three-step endpoint capture completed normally with matching
+body and physiology clocks. The independent constitutive audit uses the
+existing registered material parameters and the exact split displacements.
+It reproduces the native deformation determinants to within 5.0e-10 and
+the witness-node material force within 1.24e-6 N. At local interface row
+4672 the skin supplies +27.56 N along the adverse motion axis, and the
+adjacent fat supplies −0.18 N.
+
+The first-step force balance places the original load at outer row 2261
+(compiled node 3927). Three independent closed-solid rays place it inside
+registered bone 114 on body 109, at 1.665 mm nearest distance. The registered
+unilateral force of 30.01 N matches the native step's nonbulk force to
+within 0.0018 N. Outer row 2262 also lies 0.922 mm inside bone 108 on body
+107. The two audited deep-fat points are inside bone 108 by 2.133 and
+1.854 mm. The connected internal fit preserves these initial outer/deep
+geometry defects. Moving the internal interface again would leave the
+source of the release transient in place.
+
+There is a separate bed initialization issue. The first Matter contact
+assembly adds a 0.21532 N·s trial impulse at the single outer node with
+24 nm initial bed clearance. This is an initial residual contribution.
+It does not measure the accepted physical support reaction. The accepted
+trace continues to report zero support impulse. The fourth-step limb
+contact diagnosis and the bed equilibrium problem have separate owners.
+
+### Reproduce the load attribution on SSH Numi
+
+~~~sh
+python3 run_hand_trial.py --connected --capture-three
+python3 audit_native_endpoint_force.py connected-interface-replay-capture-three
+python3 run_hand_trial.py --connected --contact-rhs
+python3 build_hand_trial.py --witness
+python3 run_hand_trial.py --connected --solid-witness
+python3 compare_initial_hand_load.py
+~~~
+
+The full-bank audit is a preparation diagnostic. It uses the same loaded
+bone banks and independent inside/outside ray tests. It performs no
+per-step physics and does not alter any contact rows, tolerances, mass or
+constraints. The four witnessed rows are a localized audit.

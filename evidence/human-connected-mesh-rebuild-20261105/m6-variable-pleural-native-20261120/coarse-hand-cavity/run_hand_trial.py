@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import time
 
-from build_hand_trial import HERE, OUT, CONNECTED_OUT, digest
+from build_hand_trial import HERE, OUT, CONNECTED_OUT, WITNESS_OUT, digest
 
 BASE = (HERE.parent / "loaded-initialization-023/"
         "same-source-parent-16-compensated-vascular-vascular-predictor-"
@@ -16,14 +16,24 @@ TRIAL = HERE / "hand-interface-replay"
 def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--connected", action="store_true")
-    parser.add_argument("--trace-fourth", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--trace-fourth", action="store_true")
+    mode.add_argument("--capture-three", action="store_true")
+    mode.add_argument("--contact-rhs", action="store_true")
+    mode.add_argument("--solid-witness", action="store_true")
     options = parser.parse_args()
-    if options.trace_fourth and not options.connected:
-        parser.error("--trace-fourth requires --connected")
-    binary_dir = CONNECTED_OUT if options.connected else OUT
+    if (options.trace_fourth or options.capture_three or options.contact_rhs or options.solid_witness) and not options.connected:
+        parser.error("the extended trials require --connected")
+    binary_dir = WITNESS_OUT if options.solid_witness else CONNECTED_OUT if options.connected else OUT
     trial = HERE / "connected-interface-replay" if options.connected else TRIAL
     if options.trace_fourth:
         trial = trial.with_name(trial.name + "-fourth")
+    if options.capture_three:
+        trial = trial.with_name(trial.name + "-capture-three")
+    if options.contact_rhs:
+        trial = trial.with_name(trial.name + "-contact-rhs")
+    if options.solid_witness:
+        trial = trial.with_name(trial.name + "-solid-witness")
     launch = json.loads(BASE.read_text())
     for path, expected in launch["pins"].items():
         assert digest(path) == expected, path
@@ -32,6 +42,10 @@ def main():
     assert digest(old_binary) == launch["native_binary_sha256"]
     argv[0] = str(binary_dir / "numi-human-native")
     argv[4] = str(trial / "native")
+    if options.capture_three:
+        argv[argv.index("--muscle-step-count") + 1] = "3"
+    if options.contact_rhs or options.solid_witness:
+        argv[argv.index("--muscle-step-count") + 1] = "1"
     launch["pins"].pop(old_binary)
     launch["pins"][argv[0]] = digest(argv[0])
     launch["native_binary_sha256"] = launch["pins"][argv[0]]
@@ -45,6 +59,10 @@ def main():
         assert key in environment
         environment[key] = str(trial / name)
     environment["NUMI_HUMAN_COARSE_HAND_IFACE_TRIAL"] = "1"
+    if options.solid_witness:
+        environment["NUMI_HUMAN_HAND_CONTACT_WITNESS_CSV"] = str(trial / "hand-solid.csv")
+    if options.contact_rhs:
+        environment["NM_FEM_CONTACT_RHS_WITNESS"] = "1"
     if options.trace_fourth:
         for key in ("NM_FEM_BACKTRACKING_TRACE_ROOT", "NM_FEM_DEFORMABLE_LIMIT_TRACE_ROOT",
                     "NM_VASCULAR_TRACE_ROOT"):

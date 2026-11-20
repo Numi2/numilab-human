@@ -1,0 +1,51 @@
+{
+  "native_endpoint_stdout_sha256": "141b144b61ef0d20e44d0eeeb11d00d20384abc8048a994363977bba6b1a5d48",
+  "solid_witness_launch_sha256": "707fc1629512413beb5a5ff305793270f275e8bb274daf5f0da95ad2a519f771",
+  "solid_witness_csv_sha256": "a1ed34bb9210c7c3ebb85e63eea3152c9df52c4de87fa0aa9f945a66b20a8545",
+  "outer_surface_node": 3927,
+  "node_mass_kg": 0.0001589816093,
+  "runtime_dt_s": 1.562500074e-05,
+  "native_lumped_acceleration_force_N": [
+    10.417622664809345,
+    6.4738274462496594,
+    -1.4914698645433437
+  ],
+  "native_bulk_material_force_N": [
+    -18.03043601,
+    -2.698082464,
+    1.237213533
+  ],
+  "inferred_nonbulk_nongravity_force_N": [
+    28.448058674809346,
+    9.17190991024966,
+    -2.7271237879561108
+  ],
+  "three_ray_inside_banks": [
+    {
+      "layer": "0",
+      "row": "2261",
+      "node": "3927",
+      "body": "109",
+      "bone": "114",
+      "triangle": "87",
+      "closest_distance_m": "0.0016653177233964995",
+      "inside_rays": "3",
+      "outside_rays": "0",
+      "ambiguous": "0",
+      "force_x_N": "28.449737647584442",
+      "force_y_N": "9.1724502198376658",
+      "force_z_N": "-2.7272801839147753"
+    }
+  ],
+  "solid_contact_model_force_N": [
+    28.449737647584442,
+    9.172450219837666,
+    -2.7272801839147753
+  ],
+  "inferred_minus_solid_force_N": [
+    -0.0016789727750960992,
+    -0.0005403095880058828,
+    0.000156395958664568
+  ],
+  "scope": "The load balance uses one backward-Euler step from zero velocity. The solid test reconstructs unilateral body-bank contact at the authored initial pose. It is a diagnostic calculation, not an additional stepping implementation."
+}
