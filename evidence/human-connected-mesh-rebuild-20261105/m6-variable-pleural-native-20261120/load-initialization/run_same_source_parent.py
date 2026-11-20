@@ -14,11 +14,26 @@ def main():
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--steps", default=16, type=int, choices=(2, 16))
     parser.add_argument("--compensated-contact", action="store_true")
+    parser.add_argument("--compensated-vascular", action="store_true")
+    parser.add_argument("--vascular-predictor", action="store_true")
+    parser.add_argument("--trace-third-root", action="store_true")
+    parser.add_argument("--reset-direction-bound", action="store_true")
+    parser.add_argument("--parallel-constitutive-screen", action="store_true")
     args = parser.parse_args()
     authored_launch = SOURCE / "launch.json"
     declaration = json.loads(authored_launch.read_text())
     fine = json.loads((CONTROL / "launch.json").read_text())
     suffix = "-compensated-contact" if args.compensated_contact else ""
+    if args.compensated_vascular:
+        suffix += "-compensated-vascular"
+    if args.vascular_predictor:
+        suffix += "-vascular-predictor"
+    if args.trace_third_root:
+        suffix += "-trace-third-root"
+    if args.reset_direction_bound:
+        suffix += "-reset-direction-bound"
+    if args.parallel_constitutive_screen:
+        suffix += "-parallel-constitutive-screen"
     output = HERE / f"same-source-parent-{args.steps}{suffix}"
     assert os.statvfs(HERE).f_bavail * os.statvfs(HERE).f_frsize > 2 * 1024**3
     pins = {path: sha for path, sha in declaration["pins"].items()
@@ -47,6 +62,30 @@ def main():
         for key in ("NM_FEM_COMPENSATED_CONTACT_PLANE_CCD",
                     "NM_FEM_CLEARANCE_ALIGNED_BARRIER", "NM_FEM_REFERENCE_SELF_CONTACT_WIDTH"):
             environment[key] = fine["environment"][key]
+    if args.compensated_vascular:
+        for key in ("NM_VASCULAR_COMPENSATED_CAVITY_WORDS", "NM_VASCULAR_PERSISTENT_LOW_WORDS"):
+            environment[key] = fine["environment"][key]
+    if args.vascular_predictor:
+        environment["NUMI_MATTER_VASCULAR_BLOCK_PREDICTOR"] = fine["environment"][
+            "NUMI_MATTER_VASCULAR_BLOCK_PREDICTOR"]
+        # The coarse predictor cannot use selector-6 prefix ICB. Keep the
+        # existing direct dispatch and disable the graph variants that require it.
+        for key in ("NM_FGMRES_PREFIX_PRECONDITIONER_ICB", "NM_FGMRES_FLAT_COLUMN_ICB",
+                    "NM_FGMRES_AGGREGATE_CYCLE_ICB", "NM_FGMRES_AGGREGATE_FIRST_CYCLE_ICB"):
+            environment[key] = "0"
+    if args.reset_direction_bound:
+        environment["NM_FEM_FRESH_DIRECTION_ALPHA_RESET"] = fine["environment"][
+            "NM_FEM_FRESH_DIRECTION_ALPHA_RESET"]
+    if args.parallel_constitutive_screen:
+        environment["NM_FEM_PARALLEL_CONSTITUTIVE_BACKTRACKING"] = fine["environment"][
+            "NM_FEM_PARALLEL_CONSTITUTIVE_BACKTRACKING"]
+    if args.trace_third_root:
+        environment.update(
+            NM_FEM_BACKTRACKING_TRACE_ROOT="2", NM_FEM_BACKTRACKING_TRACE_OBJECT="15",
+            NM_FEM_BACKTRACKING_TRACE_NEWTON="0", NM_FEM_DEFORMABLE_LIMIT_TRACE_ROOT="2",
+            NM_FEM_CONTACT_TRACE_ITERATION="0", NM_VASCULAR_TRACE_ROOT="2",
+            NM_FEM_TERMINAL_CERTIFICATE_TRACE="1",
+        )
     assert environment["NUMI_HUMAN_FEM_SKIN_SUPPORT"] == "1"
     del environment["NUMI_HUMAN_SKIN_FAT_PARENT_MASS_LEDGER_CSV"]
     environment.update(

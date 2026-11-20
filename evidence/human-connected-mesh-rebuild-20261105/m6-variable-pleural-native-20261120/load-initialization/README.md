@@ -66,3 +66,26 @@ launches. `run_recruitment.py` reproduces the activation comparison,
 `run_same_source_parent.py --steps 2` captures the native parent endpoint,
 `prolong_accepted_parent.py same-source-parent-2` transfers its positions
 offline, and `verify_prolongation.py` runs the manufactured translations.
+
+## Third-root rejection isolated
+
+The compensated vascular state alone left vascular residual 3.8673e−5.
+The existing fixed-geometry vascular predictor reduced that block to
+3.3415e−9 against the unchanged 1e−5 limit. It uses that result as a guess
+for the existing coupled solve. The third step still failed the mechanical
+certificate at 1.5746e−3 against the 1.25e−5 domain threshold. Only the same
+two roots were published. The equivalent direct preconditioner dispatch was
+required by the runtime's coarse predictor admission.
+
+A paired trace shows that the fresh-direction reset works on the Metal
+buffer. Newton iterations 1 and 2 started with a shared bound of one,
+while the subsequent tissue calculation independently selected the same
+small bounds as the original. The applied fraction was 3.7253e−10 in the
+last iteration in both trials. The parallel constitutive trace maps the
+upper-determinant witnesses to source parent fat cells 26104 and 26201,
+which share three nodes. The two-root accepted native determinants are
+2.2095 and 2.4461. One free node moved about 20.52 μm while its neighbors
+moved less than 0.69 μm. The reference edge bases have condition numbers
+2,456 and 1,424. This isolates the next geometry work to a real material
+limit at the hand and supplies the exact attachment-free stencil. The
+predictor and reset have no production promotion from this aborted run.
