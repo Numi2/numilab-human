@@ -1,0 +1,651 @@
+{
+  "hand-interface-replay": {
+    "launch_sha256": "89f68f741a448f40e1b8fc62cb995807e7f289b7a4bec02b07063f889421d4c5",
+    "stderr_sha256": "38a722d770a168319c8af3d53ee263ee03cfcd385c122b9ac138daa65c70efcb",
+    "execution": {
+      "exit": 1,
+      "stop": "exit",
+      "wall_seconds": 26.082594541832805
+    },
+    "accepted_roots": 2,
+    "accepted_seconds": 3.12500014843e-05,
+    "third_root_skin_backtracking": {
+      "root": 2,
+      "iteration": 0,
+      "object": 15,
+      "selected_alpha": 0.5,
+      "trials": [
+        {
+          "alpha": 1,
+          "valid_tile_min_J": 0.947341,
+          "first_bad_tet": 29419,
+          "trial_J": 2.73693,
+          "current_J": 1.81058,
+          "reason": 4,
+          "invalid_tiles": 2,
+          "tile_witness_tets": [
+            29419,
+            29516
+          ],
+          "tile_witnesses_complete": true
+        },
+        {
+          "alpha": 0.5,
+          "valid_tile_min_J": 0.963116,
+          "first_bad_tet": 4294967295,
+          "trial_J": 0,
+          "current_J": 0,
+          "reason": 0,
+          "invalid_tiles": 0,
+          "tile_witness_tets": [],
+          "tile_witnesses_complete": true
+        }
+      ]
+    },
+    "third_root_initial_contact_limit": {
+      "contact_count": [
+        8
+      ],
+      "line_search_alpha": [
+        0.5
+      ],
+      "witnesses": [
+        {
+          "contact_slot": 2625,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            15602,
+            16217,
+            2625,
+            1
+          ],
+          "nodes": [
+            10302,
+            10299,
+            10304,
+            10054,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 0.5
+        },
+        {
+          "contact_slot": 3068,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16177,
+            16218,
+            3068,
+            1
+          ],
+          "nodes": [
+            10303,
+            10301,
+            10278,
+            10326,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 3069,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16177,
+            16220,
+            3069,
+            1
+          ],
+          "nodes": [
+            10303,
+            10301,
+            10278,
+            10326,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4389,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16366,
+            16364,
+            4389,
+            1
+          ],
+          "nodes": [
+            10388,
+            10389,
+            10399,
+            10387,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4513,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16409,
+            16422,
+            4513,
+            1
+          ],
+          "nodes": [
+            10418,
+            10416,
+            10425,
+            10410,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 0.5
+        },
+        {
+          "contact_slot": 4515,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16409,
+            16427,
+            4515,
+            1
+          ],
+          "nodes": [
+            10418,
+            10416,
+            10425,
+            10410,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 0.5
+        },
+        {
+          "contact_slot": 4662,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16408,
+            16415,
+            4662,
+            1
+          ],
+          "nodes": [
+            10428,
+            10448,
+            10427,
+            10413,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4827,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16405,
+            16445,
+            4827,
+            1
+          ],
+          "nodes": [
+            10427,
+            10448,
+            10428,
+            10431,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        }
+      ]
+    },
+    "third_root_residuals": {
+      "root": 2,
+      "environment": 0,
+      "nonvascular_norm": 0.000694409187,
+      "vascular_norm": 6.97914686e-08,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    "failure_receipt": "human_joint_failure completed_steps=2 matter_status=10 matter_failing_index=4294967295 matter_object_index=1 matter_diagnostics=[0.00069440907100215554,3.6480563014862355e-09,0,0] failure_owner=passive_tissue_runtime",
+    "third_root_alpha_trace": [
+      {
+        "iteration": 0,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 0.5
+      },
+      {
+        "iteration": 0,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 0.5
+      },
+      {
+        "iteration": 0,
+        "stage": "line_search",
+        "allocated_alpha": 0.5
+      },
+      {
+        "iteration": 1,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 0.125
+      },
+      {
+        "iteration": 1,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 0.125
+      },
+      {
+        "iteration": 1,
+        "stage": "line_search",
+        "allocated_alpha": 0.125
+      },
+      {
+        "iteration": 2,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 0.015625
+      },
+      {
+        "iteration": 2,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 0.015625
+      },
+      {
+        "iteration": 2,
+        "stage": "line_search",
+        "allocated_alpha": 0.015625
+      },
+      {
+        "iteration": 3,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 0.00390625
+      },
+      {
+        "iteration": 3,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 0.00390625
+      },
+      {
+        "iteration": 3,
+        "stage": "line_search",
+        "allocated_alpha": 0.00390625
+      },
+      {
+        "iteration": 4,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 0.0001220703125
+      },
+      {
+        "iteration": 4,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 0.0001220703125
+      },
+      {
+        "iteration": 4,
+        "stage": "line_search",
+        "allocated_alpha": 0.0001220703125
+      },
+      {
+        "iteration": 5,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 7.62939453125e-06
+      },
+      {
+        "iteration": 5,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 7.62939453125e-06
+      },
+      {
+        "iteration": 5,
+        "stage": "line_search",
+        "allocated_alpha": 7.62939453125e-06
+      },
+      {
+        "iteration": 6,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 4.76837158203125e-07
+      },
+      {
+        "iteration": 6,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.76837158203125e-07
+      },
+      {
+        "iteration": 6,
+        "stage": "line_search",
+        "allocated_alpha": 4.76837158203125e-07
+      },
+      {
+        "iteration": 7,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 5.960464477539063e-08
+      },
+      {
+        "iteration": 7,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 5.960464477539063e-08
+      },
+      {
+        "iteration": 7,
+        "stage": "line_search",
+        "allocated_alpha": 5.960464477539063e-08
+      },
+      {
+        "iteration": 8,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 8,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.8026018717450825e-09
+      },
+      {
+        "iteration": 8,
+        "stage": "line_search",
+        "allocated_alpha": 4.8026018717450825e-09
+      },
+      {
+        "iteration": 9,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 9,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 9,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 10,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 10,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 10,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 11,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 11,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 11,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 12,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 12,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 12,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 13,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 13,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 13,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 14,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 14,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 14,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 15,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 15,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 15,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 16,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 16,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 16,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 17,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 17,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 17,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 18,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 18,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 18,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 19,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 19,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 19,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 20,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 20,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 20,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 21,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 21,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 21,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 22,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 22,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 22,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 23,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.1920928955078125e-07
+      },
+      {
+        "iteration": 23,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      },
+      {
+        "iteration": 23,
+        "stage": "line_search",
+        "allocated_alpha": 4.802599207209823e-09
+      }
+    ]
+  }
+}

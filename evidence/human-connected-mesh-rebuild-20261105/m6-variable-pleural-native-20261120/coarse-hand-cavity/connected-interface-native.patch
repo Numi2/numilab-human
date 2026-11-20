@@ -1,0 +1,64 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -23692,6 +23692,53 @@
+                 <<" max_normal_residual="<<skinPlacement.maximumNormalResidual
+                 <<" max_frame_residual="<<skinPlacement.maximumFrameResidual<<"\n";
+         }
++        const char* handFitSetting=std::getenv("NUMI_HUMAN_COARSE_HAND_IFACE_TRIAL");
++        if(handFitSetting) {
++            struct HandInterfacePoint {std::size_t row; V3 expectedWorld; V3 shift;};
++            constexpr std::array<HandInterfacePoint, 10> fit{{
++                    {2245u, {0.26203043152717664, -0.9618287520609348, 0.12389812712389409}, {-1.0611954081489918e-05, -6.3544585367179445e-06, -4.3562304751809286e-07}},
++                    {2258u, {0.2521855883681702, -1.0074661531497862, 0.12998838170548635}, {-1.1174624188778308e-06, -6.089281253742673e-07, 7.300828847977649e-07}},
++                    {2259u, {0.2610621036068861, -0.9960589082397542, 0.12776049490370503}, {1.121269944470701e-06, 8.0432791211852e-08, 5.278768704443129e-07}},
++                    {2261u, {0.2579819133166157, -0.9526362493411131, 0.1382311842814553}, {-8.93214124614429e-06, 7.466933663856254e-05, -1.8094949749039546e-05}},
++                    {2262u, {0.2552218072127058, -0.9391966759321229, 0.13503895419379408}, {2.4345493273857333e-05, 6.365073743719123e-06, 2.9532931181555605e-06}},
++                    {2266u, {0.2538275524251792, -0.996431912299399, 0.13153891586348918}, {2.0704759205768947e-07, -4.410390299603184e-08, 5.992535302679362e-07}},
++                    {2270u, {0.24576189745999, -0.9713982484883883, 0.13785030117051397}, {1.0191602909375353e-07, -4.214726221709964e-07, -1.990547649234047e-06}},
++                    {2271u, {0.25462023536413536, -0.968007072525358, 0.13967073444980255}, {-8.240444855072543e-07, 2.203993088767977e-07, 3.913331609039882e-06}},
++                    {2282u, {0.2564318449319669, -0.9475978042149686, 0.15376323495264596}, {1.502822985188408e-06, 3.960032339325428e-07, 1.529411198115965e-06}},
++                    {2283u, {0.2628528695277551, -1.0105727320918658, 0.1502501934316542}, {1.3436415199405122e-06, 4.686820709494975e-08, 6.523448636402644e-08}}
++            }};
++            require(std::string_view(handFitSetting)=="1"&&enableWholeBodySkinFat&&
++                    !registeredVolumeInstallRequested&&region.worldPoints.size()==2411u,
++                    "hand interface trial requires the exact diagnostic coarse parent");
++            for(const auto& point:fit) {
++                require(norm(sub(skinLayer.innerWorld[point.row],point.expectedWorld))<=2.0e-10,
++                        "hand interface trial donor world row differs from its diagnostic source");
++            }
++            double maxShift=0.;
++            for(const auto& point:fit) {
++                const auto row=point.row;
++                const auto shift=point.shift;
++                const auto& frame=region.worldToDonorLocalLinear[row];
++                V3 localShift{};
++                for(unsigned i=0;i<3u;++i)
++                    for(unsigned j=0;j<3u;++j)localShift[i]+=frame[3u*i+j]*shift[j];
++                skinLayer.innerWorld[row]=add(skinLayer.innerWorld[row],shift);
++                skinLayer.innerLocal[row]=add(skinLayer.innerLocal[row],localShift);
++                fatLayer.outerWorld[row]=skinLayer.innerWorld[row];
++                fatLayer.outerLocal[row]=skinLayer.innerLocal[row];
++                skinThickness[row]=norm(sub(skinLayer.outerWorld[row],skinLayer.innerWorld[row]));
++                fatThickness[row]=norm(sub(fatLayer.outerWorld[row],fatLayer.innerWorld[row]));
++                skinLayer.thicknessByVertexM[row]=skinThickness[row];
++                fatLayer.thicknessByVertexM[row]=fatThickness[row];
++                maxShift=std::max(maxShift,norm(shift));
++            }
++            const auto s=std::minmax_element(skinThickness.begin(),skinThickness.end());
++            const auto f=std::minmax_element(fatThickness.begin(),fatThickness.end());
++            skinLayer.minThicknessM=*s.first;skinLayer.maxThicknessM=*s.second;
++            fatLayer.minThicknessM=*f.first;fatLayer.maxThicknessM=*f.second;
++            std::cout<<"coarse_hand_interface_trial moved_nodes="<<fit.size()
++                     <<" maximum_displacement_m="<<maxShift<<" fit_sha256=b935fb017f338db04fc3293660028e8633386972b291e163be8252554cfc696d\\n";
++        }
+         const double skinDebit=enableWholeBodySkinFat?kWholeBodySkinMassDebitKg:skinLayer.volumeM3*1000.0;
+         const double fatDebit=enableWholeBodySkinFat?kWholeBodyFatMassDebitKg:fatLayer.volumeM3*900.0;
+         if(enableWholeBodySkinFat) {
+@@ -23781,6 +23828,7 @@
+             identityText.append(reinterpret_cast<const char*>(fatLayer.innerWorld.data()),fatLayer.innerWorld.size()*sizeof(V3));
+             identityText.append(reinterpret_cast<const char*>(fatLayer.innerLocal.data()),fatLayer.innerLocal.size()*sizeof(V3));
+         }
++        if(handFitSetting)identityText+="|coarse-hand-interface-v1|b935fb017f338db04fc3293660028e8633386972b291e163be8252554cfc696d";
+         const auto digest=loadedKneeSHA256(identityText.data(),identityText.size());std::array<std::uint64_t,4u> materialIdentity{};
+         for(unsigned w=0;w<4;w++){for(unsigned b=0;b<8;b++)materialIdentity[w]=(materialIdentity[w]<<8u)|digest[8u*w+b];if(materialIdentity[w]==0u)materialIdentity[w]=w+1u;}
+         std::vector<V3> explicitParentWorldPoints;

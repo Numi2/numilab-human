@@ -1,0 +1,83 @@
+{
+  "execution": {
+    "exit": 1,
+    "stop": "exit",
+    "wall_seconds": 27.862899125088006
+  },
+  "stdout_sha256": "366eee1324cc2bc5d0edbee38d16db8ba7162d2340adb27f5a7b0cd77da3d85d",
+  "stderr_sha256": "9284dfb7ab109357aa9c1e7ef3dd93dcf40e1b694b8dd7a695317317f72ab103",
+  "launch_sha256": "2e95a7a038ab2e652d4794e3bf37659d19c4b5b994d69d67abbdfe5f4f948da1",
+  "accepted_seconds": [
+    1.56250007421e-05,
+    3.12500014843e-05,
+    4.68750022264e-05
+  ],
+  "domain_residuals": [
+    {
+      "root": 0,
+      "environment": 0,
+      "nonvascular_norm": 7.98649944e-06,
+      "vascular_norm": 5.38464739e-09,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    {
+      "root": 1,
+      "environment": 0,
+      "nonvascular_norm": 9.60723264e-06,
+      "vascular_norm": 6.22400904e-08,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    {
+      "root": 2,
+      "environment": 0,
+      "nonvascular_norm": 8.21605317e-06,
+      "vascular_norm": 1.19925957e-07,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    {
+      "root": 3,
+      "environment": 0,
+      "nonvascular_norm": 0.00057150767,
+      "vascular_norm": 1.73647564e-07,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    }
+  ],
+  "fourth_step_backtracking": {
+    "root": 3,
+    "iteration": 0,
+    "object": 15,
+    "selected_alpha": 0.5,
+    "trials": [
+      {
+        "alpha": 1,
+        "valid_tile_min_J": 0.901532,
+        "first_bad_tet": 29419,
+        "trial_J": 2.56954,
+        "current_J": 1.91139,
+        "reason": 4,
+        "invalid_tiles": 2,
+        "tile_witness_tets": [
+          29419,
+          29516
+        ],
+        "tile_witnesses_complete": true
+      },
+      {
+        "alpha": 0.5,
+        "valid_tile_min_J": 0.924566,
+        "first_bad_tet": 4294967295,
+        "trial_J": 0,
+        "current_J": 0,
+        "reason": 0,
+        "invalid_tiles": 0,
+        "tile_witness_tets": [],
+        "tile_witnesses_complete": true
+      }
+    ]
+  },
+  "failure_receipt": "human_joint_failure completed_steps=3 matter_status=10 matter_failing_index=4294967295 matter_object_index=1 matter_diagnostics=[0.00057150761131197214,3.0856697197378935e-09,0,0] failure_owner=passive_tissue_runtime"
+}

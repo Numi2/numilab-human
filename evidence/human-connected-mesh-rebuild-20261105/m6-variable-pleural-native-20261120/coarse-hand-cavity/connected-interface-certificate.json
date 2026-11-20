@@ -1,0 +1,637 @@
+{
+  "connected-interface-replay": {
+    "launch_sha256": "303703f00ad8f606b9b333af61dbf1b0eb1de3c3cc71c34310d6d66aa37193db",
+    "stderr_sha256": "b15d3a29fec8680338a92f0b566fc6f9d4a0f52e8550b9ee984169d70e7cd27b",
+    "execution": {
+      "exit": 1,
+      "stop": "exit",
+      "wall_seconds": 28.367773375008255
+    },
+    "accepted_roots": 3,
+    "accepted_seconds": 4.68750022264e-05,
+    "third_root_skin_backtracking": {
+      "root": 2,
+      "iteration": 0,
+      "object": 15,
+      "selected_alpha": 1,
+      "trials": [
+        {
+          "alpha": 1,
+          "valid_tile_min_J": 0.947336,
+          "first_bad_tet": 4294967295,
+          "trial_J": 0,
+          "current_J": 0,
+          "reason": 0,
+          "invalid_tiles": 0,
+          "tile_witness_tets": [],
+          "tile_witnesses_complete": true
+        }
+      ]
+    },
+    "third_root_initial_contact_limit": {
+      "contact_count": [
+        8
+      ],
+      "line_search_alpha": [
+        1
+      ],
+      "witnesses": [
+        {
+          "contact_slot": 2625,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            15602,
+            16217,
+            2625,
+            1
+          ],
+          "nodes": [
+            10302,
+            10299,
+            10304,
+            10054,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 3068,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16177,
+            16218,
+            3068,
+            1
+          ],
+          "nodes": [
+            10303,
+            10301,
+            10278,
+            10326,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 3069,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16177,
+            16220,
+            3069,
+            1
+          ],
+          "nodes": [
+            10303,
+            10301,
+            10278,
+            10326,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4389,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16366,
+            16364,
+            4389,
+            1
+          ],
+          "nodes": [
+            10388,
+            10389,
+            10399,
+            10387,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4513,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16409,
+            16422,
+            4513,
+            1
+          ],
+          "nodes": [
+            10418,
+            10416,
+            10425,
+            10410,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4515,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16409,
+            16427,
+            4515,
+            1
+          ],
+          "nodes": [
+            10418,
+            10416,
+            10425,
+            10410,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4662,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16408,
+            16415,
+            4662,
+            1
+          ],
+          "nodes": [
+            10428,
+            10448,
+            10427,
+            10413,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        },
+        {
+          "contact_slot": 4827,
+          "identity": [
+            19,
+            19,
+            0,
+            1
+          ],
+          "source": [
+            16405,
+            16445,
+            4827,
+            1
+          ],
+          "nodes": [
+            10427,
+            10448,
+            10428,
+            10431,
+            4294967295,
+            4294967295
+          ],
+          "diagnostic_reason": "none",
+          "lane_bound_after": 1
+        }
+      ]
+    },
+    "third_root_residuals": {
+      "root": 2,
+      "environment": 0,
+      "nonvascular_norm": 8.21605317e-06,
+      "vascular_norm": 1.19925957e-07,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    "failure_receipt": "human_joint_failure completed_steps=3 matter_status=10 matter_failing_index=4294967295 matter_object_index=1 matter_diagnostics=[0.00057150761131197214,3.0856697197378935e-09,0,0] failure_owner=passive_tissue_runtime",
+    "third_root_alpha_trace": [
+      {
+        "iteration": 0,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 0,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 0,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 1,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 1,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 1,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 2,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 2,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 2,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 3,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 3,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 3,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 4,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 4,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 4,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 5,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 5,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 5,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 6,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 6,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 6,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 7,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 7,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 7,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 8,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 8,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 8,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 9,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 9,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 9,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 10,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 10,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 10,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 11,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 11,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 11,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 12,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 12,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 12,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 13,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 13,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 13,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 14,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 14,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 14,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 15,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 15,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 15,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 16,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 16,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 16,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 17,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 17,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 17,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 18,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 18,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 18,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 19,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 19,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 19,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 20,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 20,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 20,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 21,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 21,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 21,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 22,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 22,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 22,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 23,
+        "stage": "after_fem_backtracking",
+        "allocated_alpha": 1.0,
+        "skin_alpha": 1.0
+      },
+      {
+        "iteration": 23,
+        "stage": "before_vascular_line_search",
+        "allocated_alpha": 1.0
+      },
+      {
+        "iteration": 23,
+        "stage": "line_search",
+        "allocated_alpha": 1.0
+      }
+    ]
+  }
+}
