@@ -1,0 +1,58 @@
+--- a/tests/numi_human_registered_ligaments_test.cpp
++++ b/tests/numi_human_registered_ligaments_test.cpp
+@@ -83,8 +83,14 @@
+   check(left!=catalog.end()&&right!=catalog.end(),"bilateral named row");
+   check(!left->seedLateralityMirrored&&!right->seedLateralityMirrored,
+         "catalog carries side-specific surface witnesses");
+-  check(inferred_acl::detail::norm(inferred_acl::detail::sub(left->seed0,right->seed0))>1e-6,
+-        "source witnesses are independently stored by side");
++  if(name==std::string_view("superior_glenohumeral_capsuloligament")){
++   check(left->materialAttachments[0].triangle==53u&&left->materialAttachments[1].triangle==645u&&
++         right->materialAttachments[0].triangle==22990u&&right->materialAttachments[1].triangle==2787u,
++         "superior shoulders use side-specific source material faces");
++  }else{
++   check(inferred_acl::detail::norm(inferred_acl::detail::sub(left->seed0,right->seed0))>1e-6,
++         "source witnesses are independently stored by side");
++  }
+   if(name==std::string_view("iliofemoral_lateral")||
+      name==std::string_view("iliofemoral_medial"))
+    check(left->areaIsAssumedSplit&&right->areaIsAssumedSplit&&
+@@ -195,6 +201,38 @@
+        !detail::segmentHitsSurface({0,0,0},{.1,0,0},surfaces[1]),
+        "endpoint-only intersections are excluded");
+  auto built=cookReference(synthetic,model,poses,surfaces);
++ auto material=synthetic;
++ material.requiresPinnedSourceIdentity=true;
++ material.materialAttachments={MaterialAttachment{0,{.25,.50,.25}},MaterialAttachment{0,{.25,.25,.50}}};
++ auto registered=surfaces;
++ registered[0].payloadSha256=kReferenceBonesPayloadSha256;
++ registered[1].payloadSha256=kReferenceBonesPayloadSha256;
++ const auto exact=cookReference(material,model,poses,registered);
++ check(near(exact.row.firstLocalPoint.y,.005,1e-8)&&
++       near(exact.row.firstLocalPoint.z,-.010,1e-8)&&
++       near(exact.row.secondLocalPoint.y,0.0,1e-8),
++       "exact material point uses the declared triangle weights");
++ auto movedPoses=poses;
++ const mr_float4 twist{0.1305261922f,0,0,0.9914448614f};
++ movedPoses[1].orientation=twist;
++ auto movedVertices=vb;
++ for(auto& vertex:movedVertices){
++  const V3 origin{.1,0,0};
++  vertex=inferred_acl::detail::add(origin,
++       inferred_acl::detail::rotate(twist,inferred_acl::detail::sub(vertex,origin)));
++ }
++ registered[1].worldVertices=movedVertices;
++ const auto twisted=cookReference(material,model,movedPoses,registered);
++ check(near(exact.row.secondLocalPoint.x,twisted.row.secondLocalPoint.x,1e-8)&&
++       near(exact.row.secondLocalPoint.y,twisted.row.secondLocalPoint.y,1e-8)&&
++       near(exact.row.secondLocalPoint.z,twisted.row.secondLocalPoint.z,1e-8),
++       "relative joint rotation preserves the same body-local material insertion");
++ registered[1].payloadSha256=hash1;
++ bool sourceMismatchRejected=false;
++ try{(void)cookReference(material,model,poses,registered);}
++ catch(const std::runtime_error&){sourceMismatchRejected=true;}
++ check(sourceMismatchRejected,"exact source faces reject a different bone payload");
++
+  BoneSurface thirdBodyCrossing{2u,12u,9u,hash0,midVerts,midNormals,midTri};
+  std::array<BoneSurface,3> allRegisteredSurfaces{{
+   surfaces[0],surfaces[1],thirdBodyCrossing}};

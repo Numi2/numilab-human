@@ -1,0 +1,72 @@
+--- a/tools/audit_final_registered_ligament_catalog.py
++++ b/tools/audit_final_registered_ligament_catalog.py
+@@ -2,6 +2,7 @@
+ """Audit the exact per-side seed data in NumiHumanRegisteredLigaments.hpp against native-supported-003 source geometry."""
+ import hashlib,json,re,sys
+ from pathlib import Path
++from fractions import Fraction
+ import numpy as np
+ ROOT=Path("/Users/numi/numi-human-aortic-contact-opt-20261019")
+ sys.path.insert(0,str(ROOT/"tools"))
+@@ -48,10 +49,37 @@
+    name=mid.group(1)
+    if name in witness:raise ValueError(f"duplicate witness branch {name}")
+    witness[name]={2:(parse_vec(mid.group(2)),parse_vec(mid.group(3)))}
++ material_branch=re.compile(
++  r'else if\(n=="([^"]+)"\)\{(?:(?!\n  \}).)*?'
++  r'if\(side==0\)spec\.materialAttachments=\{(.*?)\};\s*'
++  r'else spec\.materialAttachments=\{(.*?)\};',re.S)
++ attachment_pattern=re.compile(r'MaterialAttachment\{(\d+),\{([^}]+)\}\}')
++ for name,left,right in material_branch.findall(text):
++  if name in witness:raise ValueError(f"duplicate witness branch {name}")
++  witness[name]={}
++  for side,row in enumerate((left,right)):
++   endpoints=[]
++   for triangle,values in attachment_pattern.findall(row):
++    weights=tuple(float(Fraction(x.strip().replace("./","/"))) for x in values.split(","))
++    if len(weights)!=3 or not all(0<w<1 for w in weights) or abs(sum(weights)-1)>1e-12:
++     raise ValueError(f"invalid material weights for {name} side {side}")
++    endpoints.append((int(triangle),weights))
++   if len(endpoints)!=2:raise ValueError(f"incomplete material pair for {name} side {side}")
++   witness[name][side]=tuple(endpoints)
+  adds=set(re.findall(r'\badd\("([^"]+)"',text))
+  if adds!=set(witness):raise ValueError(f"catalog add/witness mismatch add={sorted(adds)} witness={sorted(witness)}")
+  if not adds<=set(CATALOG):raise ValueError(f"unmapped final catalog entries: {sorted(adds-set(CATALOG))}")
+  return text,witness,adds
++def resolve_witness(witness,mesh):
++ if len(witness)==3:
++  seed=np.asarray(witness,dtype=np.float64)
++  point,residual,triangle=ag.project(tuple(seed),mesh)
++  return seed,point,residual,triangle
++ triangle,weights=witness
++ vertices,faces=mesh
++ if not 0<=triangle<len(faces):raise ValueError("material attachment triangle outside pinned source mesh")
++ point=np.asarray(weights)@vertices[faces[triangle]]
++ return point,point,0.0,triangle
+ def frame_pair(region,side,name=None):
+  if region=="hip":return (144,145) if side==0 else (130,131)
+  if region=="shoulder":return (90,91) if side==0 else (40,41)
+@@ -110,8 +138,8 @@
+    m0=allm[s0];m1=allm[s1]
+    if (s0,fk) not in normal_cache:normal_cache[(s0,fk)]=load_vertex_normals(s0,frame,bb,bodypose,records,vertex0)
+    if (s1,fk) not in normal_cache:normal_cache[(s1,fk)]=load_vertex_normals(s1,frame,bb,bodypose,records,vertex0)
+-   seed0=np.asarray(witness[name][side][0],dtype=np.float64);seed1=np.asarray(witness[name][side][1],dtype=np.float64)
+-   p0,d0,t0=ag.project(tuple(seed0),m0);p1,d1,t1=ag.project(tuple(seed1),m1)
++   seed0,p0,d0,t0=resolve_witness(witness[name][side][0],m0)
++   seed1,p1,d1,t1=resolve_witness(witness[name][side][1],m1)
+    # Projected frame-local points are the native cooker endpoints before body-local float32 storage.
+    body0=records[s0]["body"];body1=records[s1]["body"]
+    def local_from_frame(point,body):
+--- a/tools/audit_actual_pose_registered_ligament_catalog.py
++++ b/tools/audit_actual_pose_registered_ligament_catalog.py
+@@ -178,8 +178,8 @@
+    allm=meshes_cache[key]
+    if (s0,key) not in norm_cache:norm_cache[(s0,key)]=base.load_vertex_normals(s0,frame,bb,currentPose,records,vertex0)
+    if (s1,key) not in norm_cache:norm_cache[(s1,key)]=base.load_vertex_normals(s1,frame,bb,currentPose,records,vertex0)
+-   seed0=np.asarray(witness[name][side][0],float);seed1=np.asarray(witness[name][side][1],float)
+-   p0,d0,t0=ag.project(tuple(seed0),allm[s0]);p1,d1,t1=ag.project(tuple(seed1),allm[s1])
++   seed0,p0,d0,t0=base.resolve_witness(witness[name][side][0],allm[s0])
++   seed1,p1,d1,t1=base.resolve_witness(witness[name][side][1],allm[s1])
+    body0=records[s0]["body"];body1=records[s1]["body"]
+    # Reproduce current frame-world point -> body local float32 GPU storage -> source frame point.
+    def frame_to_bodylocal(pt,b):

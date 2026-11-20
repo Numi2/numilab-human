@@ -1,0 +1,122 @@
+--- a/apps/NumiHumanRegisteredLigaments.hpp
++++ b/apps/NumiHumanRegisteredLigaments.hpp
+@@ -10,6 +10,7 @@
+ #include <stdexcept>
+ #include <string>
+ #include <string_view>
++#include <utility>
+ #include <vector>
+ namespace metalrobo::registered_ligaments {
+ using V3=inferred_acl::V3;
+@@ -19,6 +20,10 @@
+ inline constexpr std::array<std::uint8_t,32> kReferenceBonesPayloadSha256{{
+  0x43,0xa3,0x1e,0xf4,0x77,0x1e,0x2a,0x38,0x3a,0xe2,0xc7,0xca,0xab,0x1b,0x99,0x4f,
+  0x0c,0x28,0x07,0x6c,0x2a,0x43,0x50,0x18,0x60,0xcd,0x1b,0xa3,0xfe,0x77,0x08,0xc0}};
++struct MaterialAttachment {
++ std::uint32_t triangle=MR_INVALID_INDEX;
++ V3 barycentric{};
++};
+ struct Spec {
+  std::string_view name;Group group{};std::uint32_t side=0;
+  std::uint32_t body0=MR_INVALID_INDEX,stable0=0,body1=MR_INVALID_INDEX,stable1=0;
+@@ -31,6 +36,8 @@
+  // Literature cohort area input; never a measurement on the registered person.
+  bool areaMeasured=false,areaIsAssumedSplit=false;
+  std::string_view stiffnessSource,geometrySource,limitations;
++ std::array<MaterialAttachment,2> materialAttachments{};
++
+ };
+ struct OwnershipPolicy {bool openKneeOwner=false,inferredACLOwner=false,hipCapsuleAggregateOwner=false,overlappingSourcePassiveCoordinateOwner=false;};
+ struct Provenance {
+@@ -73,6 +80,40 @@
+  for(const auto& s:ss)if(s.body==b&&(id==0||s.stableId==id)){if(!s.stableId||s.sourceRecord==MR_INVALID_INDEX)throw std::runtime_error("ligament surface lacks source provenance");auto x=inferred_acl::detail::project(p,s);if(x.d2<d){d=x.d2;best=&s;}}
+  if(!best)throw std::runtime_error("ligament registered source surface absent");return *best;
+ }
++inline std::pair<const inferred_acl::BoneSurface*,inferred_acl::detail::Projection> materialPoint(
++ std::span<const inferred_acl::BoneSurface> surfaces,std::uint32_t body,std::uint32_t stable,
++ const MaterialAttachment& attachment){
++ using namespace inferred_acl::detail;
++ const inferred_acl::BoneSurface* surface=nullptr;
++ for(const auto& candidate:surfaces){
++  if(candidate.body!=body||candidate.stableId!=stable)continue;
++  if(surface)throw std::runtime_error("ligament material attachment surface is ambiguous");
++  surface=&candidate;
++ }
++ if(!surface||stable==0||surface->sourceRecord==MR_INVALID_INDEX||
++    surface->payloadSha256!=kReferenceBonesPayloadSha256)
++  throw std::runtime_error("ligament material attachment source identity is invalid");
++ const auto& s=*surface;
++ const std::uint64_t base=3ull*attachment.triangle;
++ if(s.triangleIndices.size()%3!=0||base+2>=s.triangleIndices.size()||
++    s.worldNormals.size()!=s.worldVertices.size())
++  throw std::runtime_error("ligament material attachment triangle is invalid");
++ const V3& weights=attachment.barycentric;
++ double sum=0;
++ V3 p{},n{};
++ for(std::size_t i=0;i<3;++i){
++  const auto vertex=s.triangleIndices[base+i];
++  const double weight=weights[i];
++  if(vertex>=s.worldVertices.size()||!std::isfinite(weight)||weight<=0.0||weight>=1.0)
++   throw std::runtime_error("ligament material attachment vertex or weight is invalid");
++  p=add(p,mul(s.worldVertices[vertex],weight));
++  n=add(n,mul(s.worldNormals[vertex],weight));
++  sum+=weight;
++ }
++ if(std::abs(sum-1.0)>1e-12||!std::isfinite(norm(p)))
++  throw std::runtime_error("ligament material attachment coordinates are invalid");
++ return {surface,{p,unit(n,"ligament material attachment normal is invalid"),attachment.triangle,0.0}};
++}
+ inline V3 local(const MRBodyStateGPU& p,V3 x){return inferred_acl::detail::invRotate(p.orientation,inferred_acl::detail::sub(x,xyz(p.position)));}
+ inline std::string vectorString(V3 v){return "["+std::to_string(v[0])+","+std::to_string(v[1])+","+std::to_string(v[2])+"]";}
+ inline bool segmentHitsSurface(V3 a,V3 b,const inferred_acl::BoneSurface& s){
+@@ -147,7 +188,14 @@
+   else if(n=="iliofemoral_medial") witness(side==0?V3{0.019594874636638723,0.023924648030869168,0.0060271978263282356}:V3{.022738156840205193,.02266797050833702,-.01300419308245182},side==0?V3{0.02032277688820424,0.00065628843262975048,0.0056658919559013669}:V3{.02070983313024044,-.0015570733230561018,-.006645498797297478});
+   else if(n=="pubofemoral") witness(side==0?V3{0.024804848364207016,0.010845961796812957,0.028941788514528562}:V3{0.025251167139580446,0.010848438800489871,-0.03160740297280408},side==0?V3{0.011046848257064597,-0.013958050769583214,0.013442392778639721}:V3{0.013255431477978806,-0.014243163593697908,-0.010497714405601214});
+   else if(n=="ischiofemoral") witness(side==0?V3{-.024657,.039298,-.009126}:V3{-.024690,.039468,.009012},side==0?V3{-.018644,-.023469,-.027584}:V3{-.018456,-.023710,.027856});
+-  else if(n=="superior_glenohumeral_capsuloligament") witness(side==0?V3{0.0036922855010298808,0.0018202984816950984,0.0030755841063247386}:V3{0.0067769149534304823,0.00025279346584137011,-0.0087320774412531377},side==0?V3{0.023912218550287918,-0.0056688866783210718,-0.0031781568274249425}:V3{0.022129312318886107,-0.0045875574342026009,-0.0027924554281075825});
++  else if(n=="superior_glenohumeral_capsuloligament"){
++   // Bone-record-local material points shared by the supported and release poses.
++   spec.seedLateralityMirrored=false;
++   if(side==0)spec.materialAttachments={MaterialAttachment{53,{4./9,1./9,4./9}},MaterialAttachment{645,{1./3,1./3,1./3}}};
++   else spec.materialAttachments={MaterialAttachment{22990,{6./9,1./9,2./9}},MaterialAttachment{2787,{7./9,1./9,1./9}}};
++   spec.limitations="Inferred bone-surface anchors. All registered bones are checked for straight-span crossings at construction; open surface meshes cannot establish closed-solid clearance. The reference length sets zero prestrain at initialization. Stiffness and area are literature cohort priors.";
++   spec.geometrySource="Inferred superior glenoid to proximal humeral capsular course. Side-specific barycentric points on pinned NHBONES faces were fitted within the registered shoulder landmark patches and checked in three native reference poses.";
++  }
+   else if(n=="coracohumeral_capsuloligament") witness(side==0?V3{.0219944774023,-.0057980709895,.0368455091244}:V3{.0220194916719,-.0058712032429,-.0368796293892},side==0?V3{.0167655609548,.0007808510563,.0135440574959}:V3{.0162193756551,.0005840471131,-.0131858745590});
+   else if(n=="anterior_talofibular_superior") witness(side==0?V3{.003912,.003813,-.022334}:V3{.004979,.003812,.023618},side==0?V3{.009882,-.000752,-.015468}:V3{.014512,.001264,.014345});
+   else if(n=="anterior_talofibular_inferior") witness(side==0?V3{.0017184370663,.0012525668135,-.0233985316008}:V3{.0040541850030,.0028941668570,.0245388466865},side==0?V3{.0074792266823,-.0056220921688,-.0168760288507}:V3{.0134015027434,-.0014928911114,.0152084706351});
+@@ -197,10 +245,19 @@
+  auto f=detail::frame(s,m,poses,map);
+  if(s.expectedFrameJoint!=MR_INVALID_INDEX&&f.index!=s.expectedFrameJoint)
+   throw std::runtime_error("registered ligament source joint identity changed name="+std::string(s.name)+" expected="+std::to_string(s.expectedFrameJoint)+" actual="+std::to_string(f.index));
+- auto x=detail::seed(f,s.seed0,s.side,s.seedLateralityMirrored),y=detail::seed(f,s.seed1,s.side,s.seedLateralityMirrored);auto& u=detail::surface(surfaces,b0,s.stable0,x);auto& v=detail::surface(surfaces,b1,s.stable1,y);
++ const auto resolve=[&](std::uint32_t body,std::uint32_t stable,V3 seed,const MaterialAttachment& point){
++  if(point.triangle!=MR_INVALID_INDEX)return detail::materialPoint(surfaces,body,stable,point);
++  const V3 worldSeed=detail::seed(f,seed,s.side,s.seedLateralityMirrored);
++  const auto& surface=detail::surface(surfaces,body,stable,worldSeed);
++  return std::pair{&surface,inferred_acl::detail::project(worldSeed,surface)};
++ };
++ const auto [first,p0]=resolve(b0,s.stable0,s.seed0,s.materialAttachments[0]);
++ const auto [second,p1]=resolve(b1,s.stable1,s.seed1,s.materialAttachments[1]);
++ const auto& u=*first;
++ const auto& v=*second;
+  if(s.requiresPinnedSourceIdentity&&(u.payloadSha256!=kReferenceBonesPayloadSha256||v.payloadSha256!=kReferenceBonesPayloadSha256))
+   throw std::runtime_error("registered ligament source bones payload does not match admitted reference catalog name="+std::string(s.name)+" side="+std::to_string(s.side));
+- auto p0=inferred_acl::detail::project(x,u),p1=inferred_acl::detail::project(y,v);double d0=std::sqrt(p0.d2),d1=std::sqrt(p1.d2);
++ const double d0=std::sqrt(p0.d2),d1=std::sqrt(p1.d2);
+  if(!std::isfinite(d0)||!std::isfinite(d1)||d0>kMaxProjectionM||d1>kMaxProjectionM)
+   throw std::runtime_error("registered ligament projection rejected name="+
+       std::string(s.name)+" side="+std::to_string(s.side)+
+@@ -240,6 +297,12 @@
+  auto& q=out.provenance;q.name=std::string(s.name);q.side=s.side;q.group=unsigned(s.group);q.body0=b0;q.body1=b1;q.stable0=u.stableId;q.stable1=v.stableId;q.record0=u.sourceRecord;q.record1=v.sourceRecord;q.payloadSha0=u.payloadSha256;q.payloadSha1=v.payloadSha256;q.frameJoint=f.index;q.frameParent=f.parent;q.frameChild=f.child;q.triangle0=p0.tri;q.triangle1=p1.tri;q.residual0M=d0;q.residual1M=d1;q.stiffnessNPerM=s.stiffnessNPerM;q.areaM2=s.areaM2;q.areaMeasured=s.areaMeasured;q.areaIsAssumedSplit=s.areaIsAssumedSplit;q.seedLateralityMirrored=s.seedLateralityMirrored;
+  q.seedOffset0FrameM=s.seed0;q.seedOffset1FrameM=s.seed1;
+  if(s.seedLateralityMirrored&&s.side==0u){q.seedOffset0FrameM[2]=-q.seedOffset0FrameM[2];q.seedOffset1FrameM[2]=-q.seedOffset1FrameM[2];}
++ const auto framePoint=[&](V3 world){
++  return inferred_acl::detail::invRotate(f.q,inferred_acl::detail::sub(world,f.p));
++ };
++ if(s.materialAttachments[0].triangle!=MR_INVALID_INDEX)q.seedOffset0FrameM=framePoint(p0.p);
++ if(s.materialAttachments[1].triangle!=MR_INVALID_INDEX)q.seedOffset1FrameM=framePoint(p1.p);
++
+  q.referenceBody0Pose={poses[b0].position.x,poses[b0].position.y,poses[b0].position.z,poses[b0].orientation.x,poses[b0].orientation.y,poses[b0].orientation.z,poses[b0].orientation.w};
+  q.referenceBody1Pose={poses[b1].position.x,poses[b1].position.y,poses[b1].position.z,poses[b1].orientation.x,poses[b1].orientation.y,poses[b1].orientation.z,poses[b1].orientation.w};
+  q.referenceFramePose={f.p[0],f.p[1],f.p[2],f.q.x,f.q.y,f.q.z,f.q.w};
