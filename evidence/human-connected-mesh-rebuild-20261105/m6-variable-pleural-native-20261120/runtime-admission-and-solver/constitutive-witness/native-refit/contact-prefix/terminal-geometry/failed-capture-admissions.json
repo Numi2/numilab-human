@@ -1,0 +1,24 @@
+[
+  {
+    "exit": 1,
+    "stop": "native_exit",
+    "wall_seconds": 4.890917916083708,
+    "trial": "024",
+    "runtime_error": [
+      "myosim_articulated_visual=failed error=\"accepted geometry step is not an initial, submission-cadence, or true terminal accepted state: 16\""
+    ],
+    "storage_preflight": []
+  },
+  {
+    "exit": 1,
+    "stop": "native_exit",
+    "wall_seconds": 139.27246112492867,
+    "trial": "025",
+    "runtime_error": [
+      "myosim_articulated_visual=failed error=\"native accepted capture budget exceeds available disk including 2 GiB safety reserve\""
+    ],
+    "storage_preflight": [
+      "native_visual_pack_storage_preflight vertices=3155714 indices=17177583 raw_payload_bytes=321299964 estimated_pack_copies=2 metadata_margin_per_pack_bytes=33554432 safety_reserve_bytes=2147483648 required_bytes=2857192440 available_bytes=2857140224 tet_cells_serialized=0"
+    ]
+  }
+]
