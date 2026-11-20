@@ -1,0 +1,446 @@
+{
+  "input_fine_map_sha256": "e674709f531f0f471f8a6a96bae8e94f880f5c34af6ff590862a67738f4038c3",
+  "base_topology_sha256": "3a3b26d3731b02cc15af34e4c732b6b595e09a0e00723f70d95ebf1e0c8b0252",
+  "positive_minimum_gate": 1e-05,
+  "tested": {
+    "2-3": 71,
+    "3-2": 17,
+    "4-4": 80
+  },
+  "accepted_flips": 11,
+  "starting_quality_failures": 30,
+  "remaining_quality_failures": 19,
+  "remaining_inverted": 8,
+  "remaining_all_exterior": 2,
+  "remaining_inverted_rows": [
+    9345,
+    72110,
+    126363,
+    486694,
+    557832,
+    649956,
+    659729,
+    915568,
+    1113022,
+    1175460,
+    1197933,
+    1314776,
+    1360389,
+    1361961,
+    1388744,
+    1388746,
+    1390151,
+    1390773,
+    1391335
+  ],
+  "remaining_positive_subthreshold": 11,
+  "replacements": [
+    {
+      "kind": "3-2",
+      "retired": [
+        11244,
+        75042,
+        377969
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          97976,
+          97799,
+          98137,
+          97953
+        ],
+        [
+          97799,
+          97976,
+          98137,
+          98202
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.028882414530314773,
+      "parent_union_from_retired_current_rows": [
+        11244,
+        75042,
+        377969
+      ]
+    },
+    {
+      "kind": "3-2",
+      "retired": [
+        11464,
+        11465,
+        90161
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          13621,
+          13623,
+          13635,
+          13620
+        ],
+        [
+          13623,
+          13621,
+          13635,
+          13642
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.002896327771631571,
+      "parent_union_from_retired_current_rows": [
+        11464,
+        11465,
+        90161
+      ]
+    },
+    {
+      "kind": "4-4",
+      "retired": [
+        114639,
+        114881,
+        114929,
+        114933
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          95057,
+          93485,
+          95034,
+          93452
+        ],
+        [
+          93485,
+          95057,
+          95034,
+          93692
+        ],
+        [
+          95034,
+          93485,
+          93411,
+          93452
+        ],
+        [
+          93485,
+          95034,
+          93411,
+          93692
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.00041054676679818167,
+      "parent_union_from_retired_current_rows": [
+        114639,
+        114881,
+        114929,
+        114933
+      ]
+    },
+    {
+      "kind": "3-2",
+      "retired": [
+        72679,
+        74949,
+        372687
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          98158,
+          98301,
+          98383,
+          98156
+        ],
+        [
+          98301,
+          98158,
+          98383,
+          98380
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.040030511923149194,
+      "parent_union_from_retired_current_rows": [
+        72679,
+        74949,
+        372687
+      ]
+    },
+    {
+      "kind": "4-4",
+      "retired": [
+        178449,
+        389436,
+        389437,
+        441296
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          149049,
+          149130,
+          149233,
+          149048
+        ],
+        [
+          149130,
+          149049,
+          149233,
+          149081
+        ],
+        [
+          149049,
+          149233,
+          149232,
+          149048
+        ],
+        [
+          149233,
+          149049,
+          149232,
+          149081
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.00039403541383492346,
+      "parent_union_from_retired_current_rows": [
+        178449,
+        389436,
+        389437,
+        441296
+      ]
+    },
+    {
+      "kind": "4-4",
+      "retired": [
+        617449,
+        617451,
+        1448615,
+        1448617
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          95859,
+          95888,
+          199082,
+          95917
+        ],
+        [
+          95888,
+          95859,
+          199082,
+          95885
+        ],
+        [
+          95859,
+          199082,
+          95970,
+          95917
+        ],
+        [
+          199082,
+          95859,
+          95970,
+          95885
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.0007420871729208334,
+      "parent_union_from_retired_current_rows": [
+        617449,
+        617451,
+        1448615,
+        1448617
+      ]
+    },
+    {
+      "kind": "4-4",
+      "retired": [
+        631375,
+        631376,
+        631377,
+        631378
+      ],
+      "material_id": 15,
+      "new": [
+        [
+          131802,
+          131833,
+          131861,
+          199860
+        ],
+        [
+          131833,
+          131802,
+          131861,
+          131832
+        ],
+        [
+          131802,
+          131861,
+          131851,
+          199860
+        ],
+        [
+          131861,
+          131802,
+          131851,
+          131832
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.002499079068063259,
+      "parent_union_from_retired_current_rows": [
+        631375,
+        631376,
+        631377,
+        631378
+      ]
+    },
+    {
+      "kind": "4-4",
+      "retired": [
+        813909,
+        925755,
+        1102520,
+        1175098
+      ],
+      "material_id": 16,
+      "new": [
+        [
+          92804,
+          93361,
+          93212,
+          93214
+        ],
+        [
+          93361,
+          92804,
+          93212,
+          92805
+        ],
+        [
+          92804,
+          93212,
+          92801,
+          93214
+        ],
+        [
+          93212,
+          92804,
+          92801,
+          92805
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.0004883927868808287,
+      "parent_union_from_retired_current_rows": [
+        813909,
+        925755,
+        1102520,
+        1175098
+      ]
+    },
+    {
+      "kind": "3-2",
+      "retired": [
+        779012,
+        1156757,
+        1409037
+      ],
+      "material_id": 16,
+      "new": [
+        [
+          98628,
+          98385,
+          98702,
+          98707
+        ],
+        [
+          98385,
+          98628,
+          98702,
+          98629
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.00029387155086522265,
+      "parent_union_from_retired_current_rows": [
+        779012,
+        1156757,
+        1409037
+      ]
+    },
+    {
+      "kind": "3-2",
+      "retired": [
+        984184,
+        1211395,
+        1211397
+      ],
+      "material_id": 16,
+      "new": [
+        [
+          95787,
+          207224,
+          207249,
+          96010
+        ],
+        [
+          207224,
+          95787,
+          207249,
+          207246
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 0.00018070261166230122,
+      "parent_union_from_retired_current_rows": [
+        984184,
+        1211395,
+        1211397
+      ]
+    },
+    {
+      "kind": "2-3",
+      "retired": [
+        1362417,
+        1390759
+      ],
+      "material_id": 16,
+      "new": [
+        [
+          311019,
+          283524,
+          130646,
+          284144
+        ],
+        [
+          311019,
+          283524,
+          284144,
+          284953
+        ],
+        [
+          311019,
+          283524,
+          284953,
+          130646
+        ]
+      ],
+      "removed_quality_failures": 1,
+      "replacement_normalized_det_min": 4.54859451188639e-05,
+      "parent_union_from_retired_current_rows": [
+        1362417,
+        1390759
+      ]
+    }
+  ],
+  "externally_certified": false,
+  "semantic_mass_compiled": false,
+  "physical_admission": false
+}
