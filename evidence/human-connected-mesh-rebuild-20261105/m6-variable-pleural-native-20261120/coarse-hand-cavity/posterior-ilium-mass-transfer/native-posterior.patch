@@ -1,0 +1,140 @@
+--- a/numilab_human_myosim_visual_probe.mm
++++ b/numilab_human_myosim_visual_probe.mm
+@@ -23634,7 +23634,7 @@
+         const std::string skinThicknessProvenance=enableWholeBodySkinFat?
+             std::string(kWholeBodySkinThicknessProvenance):
+             (reference.skinEvidence?reference.skinEvidence:"skin thickness reference");
+-        const std::string fatThicknessProvenance=enableWholeBodySkinFat?
++        std::string fatThicknessProvenance=enableWholeBodySkinFat?
+             std::string(kWholeBodyFatThicknessProvenance):
+             (reference.fatEvidence?reference.fatEvidence:"fat thickness reference");
+         if(enableWholeBodySkinFat){
+@@ -25172,6 +25172,50 @@
+             fatLayer.maxThicknessM=*fatRange.second;
+             std::cout<<"load_witness_inner_fit=installed interior_nodes=2 candidate_sha256=cc83c6c959f9c679f0253a3281b80b55c9cc1d4bb807c692faca78152269bbe7\n";
+         }
++        const bool posteriorBedReference=std::getenv("NUMI_HUMAN_POSTERIOR_BED_REFERENCE")!=nullptr;
++        #include "PosteriorBedReference.inc"
++
++        if(posteriorBedReference) {
++            require(enableWholeBodySkinFat && handClearanceSetting && innerFitSetting &&
++                    !registeredVolumeInstallRequested && region.worldPoints.size()==2411u,
++                    "posterior bed reference requires the matched three-layer source");
++            for(const auto& fit:kPosteriorDeepMoves) {
++                const auto row=static_cast<std::size_t>(fit[0]);
++                const V3 expected{fit[1],fit[2],fit[3]};
++                require(norm(sub(fatLayer.innerWorld[row],expected))<1e-6,
++                        "posterior fat source geometry differs from its verified fit");
++                const V3 worldDelta{0.,0.,fit[4]};
++                const auto& frame=region.worldToDonorLocalLinear[row];
++                const V3 localDelta{frame[2]*fit[4],frame[5]*fit[4],frame[8]*fit[4]};
++                fatLayer.innerWorld[row]=add(fatLayer.innerWorld[row],worldDelta);
++                fatLayer.innerLocal[row]=add(fatLayer.innerLocal[row],localDelta);
++                fatThickness[row]=norm(sub(fatLayer.innerWorld[row],fatLayer.outerWorld[row]));
++                fatLayer.thicknessByVertexM[row]=fatThickness[row];
++            }
++            const auto range=std::minmax_element(fatThickness.begin(),fatThickness.end());
++            fatLayer.minThicknessM=*range.first;
++            fatLayer.maxThicknessM=*range.second;
++            require(fatLayer.minThicknessM>=reference.minFatThicknessM &&
++                    fatLayer.maxThicknessM<=kPosteriorMaximumFatThicknessM,
++                    "posterior fat layer violates the source-derived fitted thickness bound");
++            reference.maxFatThicknessM=std::max(reference.maxFatThicknessM,fatLayer.maxThicknessM);
++            const auto n=region.worldPoints.size();
++            const auto point=[&](std::uint32_t row)->const V3& {
++                return row<n?region.worldPoints[row]:
++                    (row<2*n?skinLayer.innerWorld[row-n]:fatLayer.innerWorld[row-2*n]);
++            };
++            std::array<double,2> volume{};
++            for(std::size_t t=0;t<kElbowRefinementChildTetrahedra.size();++t) {
++                const auto& cell=kElbowRefinementChildTetrahedra[t];
++                const auto material=kElbowRefinementChildMaterialCodes[t];
++                require(material==1u||material==2u,"posterior shell child material identity is invalid");
++                volume[material-1u]+=tetVolume(point(cell[0]),point(cell[1]),point(cell[2]),point(cell[3]));
++            }
++            skinLayer.volumeM3=volume[0];
++            fatLayer.volumeM3=volume[1];
++            fatThicknessProvenance+="|registered posterior gluteal witnesses and pelvic clearance";
++            fatLayer.thicknessProvenance=fatThicknessProvenance;
++        }
+         const double skinDebit=enableWholeBodySkinFat?kWholeBodySkinMassDebitKg:skinLayer.volumeM3*1000.0;
+         const double fatDebit=enableWholeBodySkinFat?kWholeBodyFatMassDebitKg:fatLayer.volumeM3*900.0;
+         if(enableWholeBodySkinFat) {
+@@ -25263,6 +25307,7 @@
+         }
+         if(handClearanceSetting)identityText+="|coarse-hand-clearance-v1|f448605f2d315f52336c84b71e75685985fd80ad989f007165089a4a17e8d6a2";
+         if(innerFitSetting)identityText+="|load-witness-inner-fit-v1|cc83c6c959f9c679f0253a3281b80b55c9cc1d4bb807c692faca78152269bbe7";
++        if(posteriorBedReference){identityText+="|posterior-bed-reference-v1|";identityText+=kPosteriorFitSHA256;identityText+=kPosteriorMassSHA256;}
+         const auto digest=loadedKneeSHA256(identityText.data(),identityText.size());std::array<std::uint64_t,4u> materialIdentity{};
+         for(unsigned w=0;w<4;w++){for(unsigned b=0;b<8;b++)materialIdentity[w]=(materialIdentity[w]<<8u)|digest[8u*w+b];if(materialIdentity[w]==0u)materialIdentity[w]=w+1u;}
+         std::vector<V3> explicitParentWorldPoints;
+@@ -25500,6 +25545,69 @@
+                 <<" self_contact=deferred_material_column_binding"<<std::endl;
+         }
+         auto& shell=source.objects.back();
++
++        if(posteriorBedReference) {
++            require(!shell.mixedFEM && shell.tetrahedra.size()==kPosteriorTetMassKg.size() &&
++                    preparedSkin.donorMassNodes.size()==shell.femNodes.size() &&
++                    preparedFat.donorMassNodes.empty(),
++                    "posterior mass ledger no longer matches the bonded shell owner");
++            // Explicit cell masses own inertia. Restore the original fixed
++            // constitutive parameters to retain the generated Metal bundle.
++            auto restoreDensity=[&](std::uint32_t material,double density) {
++                auto& parameters=source.materials[material].parameters;
++                auto field=std::find_if(parameters.begin(),parameters.end(),
++                                      [](const auto& p){return p.name=="density";});
++                require(field!=parameters.end() && density>=field->lower && density<=field->upper,
++                        "posterior shell lost its original constitutive density");
++                field->defaultValue=density;
++            };
++            restoreDensity(skinMaterialIndex,skinDebit/kWholeBodySkinLayerVolumeM3);
++            restoreDensity(fatMaterialIndex,fatDebit/kWholeBodyFatLayerVolumeM3);
++            std::vector<double> nodalMass(shell.femNodes.size());
++            std::array<double,2> layerMass{};
++            for(std::size_t t=0;t<shell.tetrahedra.size();++t) {
++                const auto& nodes=shell.tetrahedra[t].nodes;
++                auto actual=nodes;
++                std::sort(actual.begin(),actual.end());
++                require(actual==kPosteriorTetNodeIdentities[t],
++                        "posterior mass ledger no longer matches its source tetrahedron order");
++                const auto material=shell.femMaterialIndices[t];
++                require(material==skinMaterialIndex||material==fatMaterialIndex,
++                        "posterior mass ledger encountered another material owner");
++                const auto volume=std::abs(tetVolume(shell.femNodes[nodes[0]],shell.femNodes[nodes[1]],
++                    shell.femNodes[nodes[2]],shell.femNodes[nodes[3]]));
++                const auto mass=kPosteriorTetMassKg[t];
++                const auto& parameters=source.materials[material].parameters;
++                const auto density=std::find_if(parameters.begin(),parameters.end(),
++                    [](const auto& param){return param.name=="density";});
++                require(density!=parameters.end() && volume>0. && std::isfinite(mass) && mass>0.,
++                        "posterior mass ledger needs a positive reference cell and material density");
++                // The stored solver reference was rounded from these same
++                // double coordinates. Keep the authored density bounds.
++                require(mass/volume>=density->lower-1e-5 && mass/volume<=density->upper+1e-5,
++                        "posterior mapped mass escapes its constitutive density limits");
++                layerMass[material==fatMaterialIndex]+=mass;
++                for(auto n:nodes)nodalMass[n]+=mass*.25;
++            }
++            // The mapper conserves original cooked masses. The legacy nominal
++            // debits were computed before rounding reference nodes to Float32.
++            constexpr double kSourceCookedMassAgreementKg=1e-6;
++            require(std::abs(layerMass[0]-skinDebit)<=kSourceCookedMassAgreementKg &&
++                    std::abs(layerMass[1]-fatDebit)<=kSourceCookedMassAgreementKg,
++                    "posterior mass map disagrees with the nominal source tissue mass debit");
++            for(auto& row:preparedSkin.donorMassNodes) {
++                const std::size_t n=row.nodeIndex-preparedSkin.firstGlobalFEMNode;
++                require(n<nodalMass.size() && nodalMass[n]>0.,
++                        "posterior mass ledger does not cover every physical shell node");
++                row.massKg=nodalMass[n];
++            }
++            shell.femTetrahedronMassesKg.assign(kPosteriorTetMassKg.begin(),kPosteriorTetMassKg.end());
++            shell.femTetrahedronMassSourceIdentity=kPosteriorMassIdentity;
++            std::cout<<"posterior_reference_mass_install=PASS deep_nodes="<<kPosteriorDeepMoves.size()
++                     <<" tetrahedra="<<shell.femTetrahedronMassesKg.size()
++                     <<" skin_kg="<<layerMass[0]<<" fat_kg="<<layerMass[1]
++                     <<" source_sha256="<<kPosteriorMassSHA256<<std::endl;
++        }
+         shell.femReferenceNodes=shell.femNodes;
+         std::string referenceIdentityText="numi.human.skin-fat.current-pose-reference.v1|"+identityText;
+         referenceIdentityText.append(reinterpret_cast<const char*>(shell.femReferenceNodes.data()),
