@@ -1,0 +1,389 @@
+{
+  "mesh_node_sha256": "3871a00cb9974128ff6c1e60e4e9831a97787b2dd1446b5402bdeb276756c006",
+  "mesh_ele_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755",
+  "witness_log_sha256": "696c5a2d25cc168e0b0e1f94b1e2117fbe975d500e7279ca763004b5d0737335",
+  "witnesses": [
+    {
+      "contact_slot": 1208564,
+      "source": [
+        49573,
+        49585,
+        1208564,
+        1
+      ],
+      "contact_identity": [
+        15,
+        15,
+        0,
+        1
+      ],
+      "runtime_nodes": [
+        24336,
+        24341,
+        24338,
+        24337
+      ],
+      "tetgen_nodes": [
+        22671,
+        22676,
+        22673,
+        22672
+      ],
+      "maximum_rest_coordinate_matching_error_m": 5.485420383451894e-10,
+      "weights": [
+        1,
+        0,
+        0,
+        -1
+      ],
+      "point_triangle_corner_adjacency": [
+        {
+          "tetgen_node": 22676,
+          "distance_m": 1.3335815002445284e-05,
+          "shared_tetgen_cells": []
+        },
+        {
+          "tetgen_node": 22673,
+          "distance_m": 5.283948397541214e-06,
+          "shared_tetgen_cells": []
+        },
+        {
+          "tetgen_node": 22672,
+          "distance_m": 4.324983422869328e-06,
+          "shared_tetgen_cells": [
+            662261,
+            662262,
+            662263,
+            662264,
+            662265,
+            667739,
+            667740
+          ]
+        }
+      ],
+      "all_four_in_one_tetrahedron": false,
+      "incident_tet_count": 43,
+      "minimum_signed_volume_m3": 7.795012603009813e-18,
+      "minimum_normalized_volume": 2.1644456845534434e-06,
+      "worst_basis_cell": {
+        "tetgen_cell_id": 662265,
+        "material": 15,
+        "tetgen_nodes": [
+          22672,
+          22671,
+          112737,
+          112804
+        ],
+        "signed_volume_m3": 2.7843878738396735e-13,
+        "normalized_volume": 2.4255751054685006e-06,
+        "basis_condition_number": 17291.7654988686
+      },
+      "ccd_certified": true,
+      "ccd_hit": false,
+      "collision_thickness_m": 9.99999972e-10,
+      "initial_separation_m": 4.32498337e-06,
+      "incoming_fraction": 0.001953125,
+      "post_contact_fraction": 1.95312514e-05,
+      "trial_motion_m": [
+        [
+          -1.27524729e-07,
+          -4.39149659e-07,
+          4.09237913e-07
+        ],
+        [
+          1.844387000000022e-08,
+          -1.1839893000000057e-07,
+          -1.3694259999999986e-07
+        ],
+        [
+          -4.2677667819999995e-05,
+          1.8740474799999996e-06,
+          -2.305772339999999e-06
+        ],
+        [
+          -1.3855685700000003e-07,
+          -4.1832391e-07,
+          2.7700389e-07
+        ]
+      ],
+      "raw_newton_direction_m": [
+        [
+          -6.5292661248e-05,
+          -0.000224844625408,
+          0.000209529811456
+        ],
+        [
+          9.443261440000112e-06,
+          -6.062025216000029e-05,
+          -7.011461119999993e-05
+        ],
+        [
+          -0.021850965923839998,
+          0.0009595123097599998,
+          -0.0011805554380799996
+        ],
+        [
+          -7.094111078400001e-05,
+          -0.00021418184192,
+          0.00014182599168
+        ]
+      ]
+    },
+    {
+      "contact_slot": 1208222,
+      "source": [
+        49433,
+        49585,
+        1208222,
+        1
+      ],
+      "contact_identity": [
+        15,
+        15,
+        0,
+        1
+      ],
+      "runtime_nodes": [
+        24344,
+        24341,
+        24338,
+        24337
+      ],
+      "tetgen_nodes": [
+        22679,
+        22676,
+        22673,
+        22672
+      ],
+      "maximum_rest_coordinate_matching_error_m": 4.999771972241861e-10,
+      "weights": [
+        1,
+        -1,
+        0,
+        0
+      ],
+      "point_triangle_corner_adjacency": [
+        {
+          "tetgen_node": 22676,
+          "distance_m": 8.35811697030371e-06,
+          "shared_tetgen_cells": [
+            530625
+          ]
+        },
+        {
+          "tetgen_node": 22673,
+          "distance_m": 1.6410028504391156e-05,
+          "shared_tetgen_cells": []
+        },
+        {
+          "tetgen_node": 22672,
+          "distance_m": 1.7370159032735272e-05,
+          "shared_tetgen_cells": [
+            530619,
+            530620,
+            530625,
+            530627,
+            645113,
+            667739,
+            699833
+          ]
+        }
+      ],
+      "all_four_in_one_tetrahedron": false,
+      "incident_tet_count": 40,
+      "minimum_signed_volume_m3": 1.0093092398248447e-17,
+      "minimum_normalized_volume": 2.252521812843548e-06,
+      "worst_basis_cell": {
+        "tetgen_cell_id": 662265,
+        "material": 15,
+        "tetgen_nodes": [
+          22672,
+          22671,
+          112737,
+          112804
+        ],
+        "signed_volume_m3": 2.7843878738396735e-13,
+        "normalized_volume": 2.4255751054685006e-06,
+        "basis_condition_number": 17291.7654988686
+      },
+      "ccd_certified": true,
+      "ccd_hit": false,
+      "collision_thickness_m": 9.99999972e-10,
+      "initial_separation_m": 8.35811716e-06,
+      "incoming_fraction": 0.001953125,
+      "post_contact_fraction": 3.55235238e-06,
+      "trial_motion_m": [
+        [
+          -1.05853367e-07,
+          -3.74503685e-07,
+          3.55422003e-07
+        ],
+        [
+          1.8443880000000044e-08,
+          -1.1839893000000057e-07,
+          -1.369426199999995e-07
+        ],
+        [
+          -4.26776678e-05,
+          1.8740474799999996e-06,
+          -2.305771900000001e-06
+        ],
+        [
+          -1.3855697000000022e-07,
+          -4.1832389999999975e-07,
+          2.7700390000000023e-07
+        ]
+      ],
+      "raw_newton_direction_m": [
+        [
+          -5.4196923904e-05,
+          -0.00019174588672,
+          0.000181976065536
+        ],
+        [
+          9.443266560000023e-06,
+          -6.062025216000029e-05,
+          -7.011462143999975e-05
+        ],
+        [
+          -0.0218509659136,
+          0.0009595123097599998,
+          -0.0011805552128000005
+        ],
+        [
+          -7.094116864000011e-05,
+          -0.00021418183679999987,
+          0.00014182599680000012
+        ]
+      ]
+    },
+    {
+      "contact_slot": 1208247,
+      "source": [
+        49594,
+        49585,
+        1208247,
+        1
+      ],
+      "contact_identity": [
+        15,
+        15,
+        0,
+        1
+      ],
+      "runtime_nodes": [
+        24344,
+        24341,
+        24338,
+        24337
+      ],
+      "tetgen_nodes": [
+        22679,
+        22676,
+        22673,
+        22672
+      ],
+      "maximum_rest_coordinate_matching_error_m": 4.999771972241861e-10,
+      "weights": [
+        1,
+        -1,
+        0,
+        0
+      ],
+      "point_triangle_corner_adjacency": [
+        {
+          "tetgen_node": 22676,
+          "distance_m": 8.35811697030371e-06,
+          "shared_tetgen_cells": [
+            530625
+          ]
+        },
+        {
+          "tetgen_node": 22673,
+          "distance_m": 1.6410028504391156e-05,
+          "shared_tetgen_cells": []
+        },
+        {
+          "tetgen_node": 22672,
+          "distance_m": 1.7370159032735272e-05,
+          "shared_tetgen_cells": [
+            530619,
+            530620,
+            530625,
+            530627,
+            645113,
+            667739,
+            699833
+          ]
+        }
+      ],
+      "all_four_in_one_tetrahedron": false,
+      "incident_tet_count": 40,
+      "minimum_signed_volume_m3": 1.0093092398248447e-17,
+      "minimum_normalized_volume": 2.252521812843548e-06,
+      "worst_basis_cell": {
+        "tetgen_cell_id": 662265,
+        "material": 15,
+        "tetgen_nodes": [
+          22672,
+          22671,
+          112737,
+          112804
+        ],
+        "signed_volume_m3": 2.7843878738396735e-13,
+        "normalized_volume": 2.4255751054685006e-06,
+        "basis_condition_number": 17291.7654988686
+      },
+      "ccd_certified": true,
+      "ccd_hit": false,
+      "collision_thickness_m": 9.99999972e-10,
+      "initial_separation_m": 8.35811716e-06,
+      "incoming_fraction": 0.001953125,
+      "post_contact_fraction": 3.55235238e-06,
+      "trial_motion_m": [
+        [
+          -1.05853367e-07,
+          -3.74503685e-07,
+          3.55422003e-07
+        ],
+        [
+          1.8443880000000044e-08,
+          -1.1839893000000057e-07,
+          -1.369426199999995e-07
+        ],
+        [
+          -4.26776678e-05,
+          1.8740474799999996e-06,
+          -2.305771900000001e-06
+        ],
+        [
+          -1.3855697000000022e-07,
+          -4.1832389999999975e-07,
+          2.7700390000000023e-07
+        ]
+      ],
+      "raw_newton_direction_m": [
+        [
+          -5.4196923904e-05,
+          -0.00019174588672,
+          0.000181976065536
+        ],
+        [
+          9.443266560000023e-06,
+          -6.062025216000029e-05,
+          -7.011462143999975e-05
+        ],
+        [
+          -0.0218509659136,
+          0.0009595123097599998,
+          -0.0011805552128000005
+        ],
+        [
+          -7.094116864000011e-05,
+          -0.00021418183679999987,
+          0.00014182599680000012
+        ]
+      ]
+    }
+  ]
+}
