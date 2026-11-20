@@ -1,0 +1,139 @@
+{
+  "scope": "Same material, anatomical region and rigid donor, dosed by original native source quotas and existing density bounds. Source masses are unchanged.",
+  "launch_sha256": "e04f8f0004fe5ea5d0520ef2e82667bafe3fdb6bc815a502a1f8b4b7556ce989",
+  "candidate_sha256": "1afdd8ad16d4f6165f2a5a5e82a8c978712f5d2c9849309bcfd5091ddd729eff",
+  "affected_typed_pools": 6,
+  "all_pools": 628,
+  "minimum_mass_deficit_kg": 0.0,
+  "minimum_mass_surplus_kg": 0.0,
+  "witnesses": [],
+  "transport": {
+    "success": true,
+    "pools": [
+      {
+        "pool": 314,
+        "cell_count": 272,
+        "seed": {
+          "full_radius_edges": 73879,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 543
+        },
+        "attempts": [
+          {
+            "neighbors": 8,
+            "route_count": 3340,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 315,
+        "cell_count": 24,
+        "seed": {
+          "full_radius_edges": 568,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 47
+        },
+        "attempts": [
+          {
+            "neighbors": 8,
+            "route_count": 226,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 316,
+        "cell_count": 2,
+        "seed": {
+          "full_radius_edges": 4,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 3
+        },
+        "attempts": [
+          {
+            "neighbors": 2,
+            "route_count": 4,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 319,
+        "cell_count": 4,
+        "seed": {
+          "full_radius_edges": 12,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 7
+        },
+        "attempts": [
+          {
+            "neighbors": 4,
+            "route_count": 12,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 590,
+        "cell_count": 2,
+        "seed": {
+          "full_radius_edges": 4,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 3
+        },
+        "attempts": [
+          {
+            "neighbors": 2,
+            "route_count": 4,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 592,
+        "cell_count": 2094,
+        "seed": {
+          "full_radius_edges": 1295902,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 4227
+        },
+        "attempts": [
+          {
+            "neighbors": 8,
+            "route_count": 26349,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      }
+    ],
+    "positive_routes": 31020,
+    "maximum_source_mass_error_kg": 1.734723475976807e-18,
+    "maximum_source_target_distance_m": 0.0749551020733211,
+    "rerouted_mass_kg": 0.7545166502994363,
+    "total_mass_distance_kg_m": 0.026802897665492844,
+    "density_bounds_by_material_kg_m3": {
+      "15": [
+        993.1178336895082,
+        1003.7749710890065
+      ],
+      "16": [
+        850.0000005019334,
+        918.9789113882101
+      ]
+    },
+    "reference_mass_centroid_shift_m": [
+      -1.2081649284396146e-05,
+      0.0005426972755177772,
+      -0.0008649487835235194
+    ]
+  },
+  "mapped_mass_sha256": "3af100b5e7da30d74cb67d42ea14e51970ce7f927c0d239a7c77e00875ce45d9",
+  "total_mapped_mass_kg": 13.939679838742222
+}

@@ -1,0 +1,99 @@
+{
+  "scope": "Same material, anatomical region and rigid donor, dosed by original native source quotas and existing density bounds. Source masses are unchanged.",
+  "launch_sha256": "e04f8f0004fe5ea5d0520ef2e82667bafe3fdb6bc815a502a1f8b4b7556ce989",
+  "candidate_sha256": "1afdd8ad16d4f6165f2a5a5e82a8c978712f5d2c9849309bcfd5091ddd729eff",
+  "affected_typed_pools": 6,
+  "all_pools": 628,
+  "minimum_mass_deficit_kg": 0.0,
+  "minimum_mass_surplus_kg": 0.0,
+  "witnesses": [],
+  "transport": {
+    "success": false,
+    "pools": [
+      {
+        "pool": 314,
+        "cell_count": 272,
+        "attempts": [
+          {
+            "neighbors": 24,
+            "route_count": 8306,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 315,
+        "cell_count": 24,
+        "attempts": [
+          {
+            "neighbors": 24,
+            "route_count": 568,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 316,
+        "cell_count": 2,
+        "attempts": [
+          {
+            "neighbors": 2,
+            "route_count": 4,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 319,
+        "cell_count": 4,
+        "attempts": [
+          {
+            "neighbors": 4,
+            "route_count": 12,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 590,
+        "cell_count": 2,
+        "attempts": [
+          {
+            "neighbors": 2,
+            "route_count": 4,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 592,
+        "cell_count": 2094,
+        "attempts": [
+          {
+            "neighbors": 24,
+            "route_count": 66214,
+            "status": 2,
+            "message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+          },
+          {
+            "neighbors": 64,
+            "route_count": 159685,
+            "status": 1,
+            "message": "Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)"
+          },
+          {
+            "neighbors": 128,
+            "route_count": 288681,
+            "status": 1,
+            "message": "Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)"
+          }
+        ]
+      }
+    ]
+  }
+}

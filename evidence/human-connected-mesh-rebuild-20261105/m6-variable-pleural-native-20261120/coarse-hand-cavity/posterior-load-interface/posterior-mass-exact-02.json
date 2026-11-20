@@ -1,0 +1,57 @@
+{
+  "scope": "Same material, anatomical region and rigid donor, dosed by original native source quotas and existing density bounds. Source masses are unchanged.",
+  "launch_sha256": "e04f8f0004fe5ea5d0520ef2e82667bafe3fdb6bc815a502a1f8b4b7556ce989",
+  "candidate_sha256": "1afdd8ad16d4f6165f2a5a5e82a8c978712f5d2c9849309bcfd5091ddd729eff",
+  "affected_typed_pools": 6,
+  "all_pools": 628,
+  "minimum_mass_deficit_kg": 0.0,
+  "minimum_mass_surplus_kg": 0.0,
+  "witnesses": [],
+  "transport": {
+    "success": false,
+    "pools": [
+      {
+        "pool": 314,
+        "route_count": 73879,
+        "cell_count": 272,
+        "status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      {
+        "pool": 315,
+        "route_count": 568,
+        "cell_count": 24,
+        "status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      {
+        "pool": 316,
+        "route_count": 4,
+        "cell_count": 2,
+        "status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      {
+        "pool": 319,
+        "route_count": 12,
+        "cell_count": 4,
+        "status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      {
+        "pool": 590,
+        "route_count": 4,
+        "cell_count": 2,
+        "status": 0,
+        "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      },
+      {
+        "pool": 592,
+        "route_count": 1295902,
+        "cell_count": 2094,
+        "status": 1,
+        "message": "Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)"
+      }
+    ]
+  }
+}
