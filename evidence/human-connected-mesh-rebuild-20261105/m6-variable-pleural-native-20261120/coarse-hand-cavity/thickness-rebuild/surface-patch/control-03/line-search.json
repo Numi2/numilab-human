@@ -1,0 +1,245 @@
+[
+  {
+    "radius_m": 0.001,
+    "geometric_rows": 108052,
+    "retained_geometric_rows": 81276,
+    "trial_failures": {
+      "determinant": 1,
+      "solid_vertex": 1,
+      "contact_regression_or_no_progress": 1
+    },
+    "geometric_witnesses": [
+      {
+        "fraction": 1.0,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 56,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                31844,
+                14120,
+                -2.717914046762714e-08
+              ],
+              [
+                31859,
+                28373,
+                -2.694749320622389e-08
+              ],
+              [
+                31982,
+                14156,
+                -1.8114518345174005e-08
+              ],
+              [
+                31692,
+                14012,
+                -1.706523478983427e-08
+              ],
+              [
+                28376,
+                12487,
+                -8.41087728360973e-09
+              ],
+              [
+                31376,
+                13651,
+                -7.708915988469249e-09
+              ],
+              [
+                32186,
+                14053,
+                -7.64431364826309e-09
+              ],
+              [
+                31784,
+                13967,
+                -7.452308925573574e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 56,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                31844,
+                14120,
+                -2.7181596208756046e-08
+              ],
+              [
+                31859,
+                28373,
+                -2.6943591912805458e-08
+              ],
+              [
+                31982,
+                14156,
+                -1.811291124975971e-08
+              ],
+              [
+                31692,
+                14012,
+                -1.7063307654551474e-08
+              ],
+              [
+                28376,
+                12487,
+                -8.410770733875324e-09
+              ],
+              [
+                31376,
+                13651,
+                -7.70772394290648e-09
+              ],
+              [
+                32186,
+                14053,
+                -7.642252983793756e-09
+              ],
+              [
+                31784,
+                13967,
+                -7.449923745045722e-09
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "contact": {
+      "starting_pairs": {
+        "outer": 480,
+        "interface": 1244,
+        "deep": 2504,
+        "side": 0
+      },
+      "active_pairs": 4579,
+      "frozen_pairs": 200,
+      "tried": [
+        {
+          "fraction": 0.25,
+          "attempt": 0,
+          "pairs": {
+            "outer": 484,
+            "interface": 1208,
+            "deep": 2512,
+            "side": 0
+          }
+        },
+        {
+          "fraction": 0.25,
+          "attempt": 1,
+          "pairs": {
+            "outer": 484,
+            "interface": 1213,
+            "deep": 2476,
+            "side": 0
+          }
+        }
+      ]
+    },
+    "status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "restorations": [
+      {
+        "fraction": 1.0,
+        "restored_variables": []
+      },
+      {
+        "fraction": 0.5,
+        "restored_variables": [
+          {
+            "variables": 35,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 134,
+            "invalid_cells": 27,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 133,
+            "invalid_cells": 27,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 26,
+            "invalid_cells": 6,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 8,
+            "invalid_cells": 1,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.25,
+        "restored_variables": [
+          {
+            "variables": 254,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 72
+          },
+          {
+            "variables": 158,
+            "invalid_cells": 33,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 57,
+            "invalid_cells": 12,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 13,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      }
+    ],
+    "deep_restorations": [
+      {
+        "fraction": 0.25,
+        "variables": 348
+      }
+    ],
+    "fraction": 0.25,
+    "weighted_error_before_m": 5.40170490132923,
+    "weighted_error_m": 5.373903886108669
+  },
+  {
+    "radius_m": 0.001,
+    "geometric_rows": 108052,
+    "retained_geometric_rows": 81268,
+    "trial_failures": {},
+    "geometric_witnesses": [],
+    "contact": {
+      "starting_pairs": {
+        "outer": 484,
+        "interface": 1213,
+        "deep": 2476,
+        "side": 0
+      },
+      "active_pairs": 4519,
+      "frozen_pairs": 200,
+      "tried": []
+    },
+    "status": 1,
+    "solver_message": "Time limit reached. (HiGHS Status 13: model_status is Time limit reached; primal_status is None)"
+  }
+]

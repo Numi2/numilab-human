@@ -1,0 +1,8 @@
+--- fit_layers.py
++++ fit_layers.py
+@@ -17 +17 @@
+-def fit_layers(world, reference, cells, parent, regional, proposals, columns, *, all_edges=False, contact=None, restore_local=False, solid=None, resume=None, tangent=False, restore_deep=False):
++def fit_layers(world, reference, cells, parent, regional, proposals, columns, *, all_edges=False, contact=None, restore_local=False, solid=None, resume=None, tangent=False, restore_deep=False, lp_method="highs"):
+@@ -251 +251 @@
+-        result = linprog(costs, A_ub=system, b_ub=bound, bounds=limits, method="highs",
++        result = linprog(costs, A_ub=system, b_ub=bound, bounds=limits, method=lp_method,

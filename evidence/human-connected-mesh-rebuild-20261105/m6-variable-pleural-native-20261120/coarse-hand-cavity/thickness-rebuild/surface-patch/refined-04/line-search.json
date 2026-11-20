@@ -1,0 +1,2022 @@
+[
+  {
+    "radius_m": 0.001,
+    "geometric_rows": 132020,
+    "retained_geometric_rows": 106104,
+    "trial_failures": {
+      "determinant": 3,
+      "contact_regression_or_no_progress": 1
+    },
+    "geometric_witnesses": [
+      {
+        "fraction": 1.0,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 108,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34427,
+                14180,
+                -3.578487768031435e-08
+              ],
+              [
+                33899,
+                14012,
+                -3.494223208690852e-08
+              ],
+              [
+                34043,
+                13874,
+                -2.7231942044114978e-08
+              ],
+              [
+                31197,
+                14120,
+                -2.717914046762714e-08
+              ],
+              [
+                31212,
+                28373,
+                -2.694749320622389e-08
+              ],
+              [
+                31062,
+                14012,
+                -2.6126810560977194e-08
+              ],
+              [
+                31483,
+                14179,
+                -2.5657900013895984e-08
+              ],
+              [
+                31277,
+                14011,
+                -2.5315106659306762e-08
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 108,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34427,
+                14180,
+                -3.5784652425004076e-08
+              ],
+              [
+                33899,
+                14012,
+                -3.49380472346989e-08
+              ],
+              [
+                34043,
+                13874,
+                -2.7233406335105408e-08
+              ],
+              [
+                31197,
+                14120,
+                -2.7181596208756046e-08
+              ],
+              [
+                31212,
+                28373,
+                -2.6943591912805458e-08
+              ],
+              [
+                31062,
+                14012,
+                -2.611721985485291e-08
+              ],
+              [
+                31483,
+                14179,
+                -2.565714356940328e-08
+              ],
+              [
+                31277,
+                14011,
+                -2.5327653842015894e-08
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.5,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 1,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                30350,
+                13662,
+                -2.5107446032634246e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 1,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                30350,
+                13662,
+                -2.50952245730654e-09
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.25,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 3,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                28591,
+                12800,
+                -1.955634003506323e-08
+              ],
+              [
+                27875,
+                12767,
+                -6.411387301739901e-09
+              ],
+              [
+                33396,
+                13283,
+                -2.1357039621882e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 3,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                28591,
+                12800,
+                -1.9560319600399836e-08
+              ],
+              [
+                27875,
+                12767,
+                -6.413663580304144e-09
+              ],
+              [
+                33396,
+                13283,
+                -2.1356553014036012e-09
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "contact": {
+      "starting_pairs": {
+        "outer": 480,
+        "interface": 1244,
+        "deep": 2504,
+        "side": 0
+      },
+      "active_pairs": 5035,
+      "frozen_pairs": 200,
+      "tried": [
+        {
+          "fraction": 0.125,
+          "attempt": 0,
+          "pairs": {
+            "outer": 481,
+            "interface": 1212,
+            "deep": 2533,
+            "side": 0
+          }
+        },
+        {
+          "fraction": 0.125,
+          "attempt": 1,
+          "pairs": {
+            "outer": 481,
+            "interface": 1218,
+            "deep": 2489,
+            "side": 0
+          }
+        }
+      ]
+    },
+    "status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "restorations": [
+      {
+        "fraction": 1.0,
+        "restored_variables": []
+      },
+      {
+        "fraction": 0.5,
+        "restored_variables": [
+          {
+            "variables": 37,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 130,
+            "invalid_cells": 26,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 110,
+            "invalid_cells": 24,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 48,
+            "invalid_cells": 10,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 16,
+            "invalid_cells": 5,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.25,
+        "restored_variables": [
+          {
+            "variables": 257,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 72
+          },
+          {
+            "variables": 135,
+            "invalid_cells": 30,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 49,
+            "invalid_cells": 11,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 70,
+            "invalid_cells": 9,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 33,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.125,
+        "restored_variables": [
+          {
+            "variables": 248,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 69
+          },
+          {
+            "variables": 108,
+            "invalid_cells": 24,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 32,
+            "invalid_cells": 7,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      }
+    ],
+    "deep_restorations": [
+      {
+        "fraction": 0.125,
+        "variables": 359
+      }
+    ],
+    "fraction": 0.125,
+    "weighted_error_before_m": 8.157778234969104,
+    "weighted_error_m": 8.116621870842874
+  },
+  {
+    "radius_m": 0.001,
+    "geometric_rows": 132020,
+    "retained_geometric_rows": 106106,
+    "trial_failures": {
+      "determinant": 3,
+      "solid_vertex": 1,
+      "contact_regression_or_no_progress": 1
+    },
+    "geometric_witnesses": [
+      {
+        "fraction": 1.0,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 102,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34427,
+                14180,
+                -3.367070597335212e-08
+              ],
+              [
+                34421,
+                28496,
+                -2.9747652018409567e-08
+              ],
+              [
+                33899,
+                14012,
+                -2.449514199285108e-08
+              ],
+              [
+                31197,
+                14120,
+                -2.412449662724276e-08
+              ],
+              [
+                31483,
+                14179,
+                -2.343924044780981e-08
+              ],
+              [
+                31277,
+                14011,
+                -2.2204580675728694e-08
+              ],
+              [
+                31062,
+                14012,
+                -2.05449233654522e-08
+              ],
+              [
+                34114,
+                14064,
+                -2.040312883472448e-08
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 102,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34427,
+                14180,
+                -3.3671013759422965e-08
+              ],
+              [
+                34421,
+                28496,
+                -2.9748583448486628e-08
+              ],
+              [
+                33899,
+                14012,
+                -2.4490393808401173e-08
+              ],
+              [
+                31197,
+                14120,
+                -2.4119463370983994e-08
+              ],
+              [
+                31483,
+                14179,
+                -2.3439397686716805e-08
+              ],
+              [
+                31277,
+                14011,
+                -2.2211377654472028e-08
+              ],
+              [
+                31062,
+                14012,
+                -2.0545154875523164e-08
+              ],
+              [
+                34114,
+                14064,
+                -2.04014098438804e-08
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.25,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 3,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                28591,
+                12800,
+                -1.8022375366527794e-08
+              ],
+              [
+                27875,
+                12767,
+                -6.4337903220004145e-09
+              ],
+              [
+                33396,
+                13283,
+                -1.7333007847703539e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 3,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                28591,
+                12800,
+                -1.8030328312418076e-08
+              ],
+              [
+                27875,
+                12767,
+                -6.4381442279261774e-09
+              ],
+              [
+                33396,
+                13283,
+                -1.7332522092590037e-09
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.125,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 2,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                27885,
+                12590,
+                -7.912417425674114e-09
+              ],
+              [
+                33647,
+                13364,
+                -7.84455594264776e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 2,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                27885,
+                12590,
+                -7.907707908831956e-09
+              ],
+              [
+                33647,
+                13364,
+                -7.846593063901527e-09
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "contact": {
+      "starting_pairs": {
+        "outer": 481,
+        "interface": 1218,
+        "deep": 2489,
+        "side": 0
+      },
+      "active_pairs": 4966,
+      "frozen_pairs": 200,
+      "tried": [
+        {
+          "fraction": 0.0625,
+          "attempt": 0,
+          "pairs": {
+            "outer": 480,
+            "interface": 1193,
+            "deep": 2529,
+            "side": 0
+          }
+        },
+        {
+          "fraction": 0.0625,
+          "attempt": 1,
+          "pairs": {
+            "outer": 481,
+            "interface": 1193,
+            "deep": 2486,
+            "side": 0
+          }
+        }
+      ]
+    },
+    "status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "restorations": [
+      {
+        "fraction": 1.0,
+        "restored_variables": []
+      },
+      {
+        "fraction": 0.5,
+        "restored_variables": [
+          {
+            "variables": 54,
+            "invalid_cells": 4,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 168,
+            "invalid_cells": 31,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 141,
+            "invalid_cells": 31,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 50,
+            "invalid_cells": 10,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 16,
+            "invalid_cells": 5,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.25,
+        "restored_variables": [
+          {
+            "variables": 268,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 74
+          },
+          {
+            "variables": 164,
+            "invalid_cells": 35,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 74,
+            "invalid_cells": 16,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 62,
+            "invalid_cells": 7,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 33,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.125,
+        "restored_variables": [
+          {
+            "variables": 244,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 68
+          },
+          {
+            "variables": 130,
+            "invalid_cells": 26,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 50,
+            "invalid_cells": 9,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 44,
+            "invalid_cells": 5,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 20,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.0625,
+        "restored_variables": [
+          {
+            "variables": 204,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 57
+          },
+          {
+            "variables": 100,
+            "invalid_cells": 17,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 24,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 3,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      }
+    ],
+    "deep_restorations": [
+      {
+        "fraction": 0.0625,
+        "variables": 349
+      }
+    ],
+    "fraction": 0.0625,
+    "weighted_error_before_m": 8.116621870842874,
+    "weighted_error_m": 8.096808117022697
+  },
+  {
+    "radius_m": 0.0005,
+    "geometric_rows": 132020,
+    "retained_geometric_rows": 71894,
+    "trial_failures": {
+      "determinant": 3,
+      "contact_regression_or_no_progress": 1
+    },
+    "geometric_witnesses": [
+      {
+        "fraction": 1.0,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 55,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34043,
+                13874,
+                -1.5766958709546935e-08
+              ],
+              [
+                34427,
+                14180,
+                -9.75355554151974e-09
+              ],
+              [
+                33899,
+                14012,
+                -7.741421190764853e-09
+              ],
+              [
+                31483,
+                14179,
+                -5.018690982408955e-09
+              ],
+              [
+                31145,
+                13967,
+                -4.773965174295799e-09
+              ],
+              [
+                32397,
+                12273,
+                -4.127811173347899e-09
+              ],
+              [
+                34309,
+                14150,
+                -2.7858250889411728e-09
+              ],
+              [
+                33863,
+                13823,
+                -2.7308943420381256e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 55,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34043,
+                13874,
+                -1.576634907944338e-08
+              ],
+              [
+                34427,
+                14180,
+                -9.75431338919855e-09
+              ],
+              [
+                33899,
+                14012,
+                -7.736883810001025e-09
+              ],
+              [
+                31483,
+                14179,
+                -5.020372836838565e-09
+              ],
+              [
+                31145,
+                13967,
+                -4.771848881539981e-09
+              ],
+              [
+                32397,
+                12273,
+                -4.126512301867375e-09
+              ],
+              [
+                34309,
+                14150,
+                -2.789591225885357e-09
+              ],
+              [
+                33863,
+                13823,
+                -2.732508022205951e-09
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.5,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 44,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -2.447093573581745e-07
+              ],
+              [
+                30839,
+                13979,
+                -2.2101470838339705e-07
+              ],
+              [
+                27627,
+                12614,
+                -1.1987878070096922e-07
+              ],
+              [
+                27215,
+                12148,
+                -1.1209164104472242e-07
+              ],
+              [
+                29571,
+                12460,
+                -1.1148967257816468e-07
+              ],
+              [
+                30837,
+                13925,
+                -8.676642366981649e-08
+              ],
+              [
+                29641,
+                13373,
+                -8.595845690780843e-08
+              ],
+              [
+                34259,
+                14084,
+                -7.937846266047352e-08
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 44,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -2.447050807033237e-07
+              ],
+              [
+                30839,
+                13979,
+                -2.210119250581414e-07
+              ],
+              [
+                27627,
+                12614,
+                -1.1988658434210014e-07
+              ],
+              [
+                27215,
+                12148,
+                -1.1209637353210879e-07
+              ],
+              [
+                29571,
+                12460,
+                -1.1148651979217695e-07
+              ],
+              [
+                30837,
+                13925,
+                -8.67658193812176e-08
+              ],
+              [
+                29641,
+                13373,
+                -8.595705838248859e-08
+              ],
+              [
+                34259,
+                14084,
+                -7.93797546440144e-08
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.25,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 33,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -1.0601536911549522e-07
+              ],
+              [
+                30839,
+                13979,
+                -1.0023213495918379e-07
+              ],
+              [
+                27627,
+                12614,
+                -4.773823656244473e-08
+              ],
+              [
+                30837,
+                13925,
+                -4.010619284322415e-08
+              ],
+              [
+                34259,
+                14084,
+                -3.556213009972494e-08
+              ],
+              [
+                31541,
+                14083,
+                -2.670298237557498e-08
+              ],
+              [
+                27573,
+                12458,
+                -2.0842629851749023e-08
+              ],
+              [
+                29885,
+                12824,
+                -2.030566616366151e-08
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 33,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -1.0601460852265355e-07
+              ],
+              [
+                30839,
+                13979,
+                -1.002299721064046e-07
+              ],
+              [
+                27627,
+                12614,
+                -4.774038697645152e-08
+              ],
+              [
+                30837,
+                13925,
+                -4.010550825627426e-08
+              ],
+              [
+                34259,
+                14084,
+                -3.556313962494923e-08
+              ],
+              [
+                31541,
+                14083,
+                -2.6702727444458304e-08
+              ],
+              [
+                27573,
+                12458,
+                -2.084681542626605e-08
+              ],
+              [
+                29885,
+                12824,
+                -2.0306716679615744e-08
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "contact": {
+      "starting_pairs": {
+        "outer": 481,
+        "interface": 1193,
+        "deep": 2486,
+        "side": 0
+      },
+      "active_pairs": 4931,
+      "frozen_pairs": 200,
+      "tried": [
+        {
+          "fraction": 0.125,
+          "attempt": 0,
+          "pairs": {
+            "outer": 477,
+            "interface": 1192,
+            "deep": 2521,
+            "side": 0
+          }
+        },
+        {
+          "fraction": 0.125,
+          "attempt": 1,
+          "pairs": {
+            "outer": 481,
+            "interface": 1185,
+            "deep": 2466,
+            "side": 0
+          }
+        }
+      ]
+    },
+    "status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "restorations": [
+      {
+        "fraction": 1.0,
+        "restored_variables": []
+      },
+      {
+        "fraction": 0.5,
+        "restored_variables": [
+          {
+            "variables": 53,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 140,
+            "invalid_cells": 23,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 68,
+            "invalid_cells": 11,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 59,
+            "invalid_cells": 10,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 236,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 65
+          }
+        ]
+      },
+      {
+        "fraction": 0.25,
+        "restored_variables": [
+          {
+            "variables": 37,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 93,
+            "invalid_cells": 12,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 40,
+            "invalid_cells": 7,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 18,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 244,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 68
+          }
+        ]
+      },
+      {
+        "fraction": 0.125,
+        "restored_variables": [
+          {
+            "variables": 236,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 65
+          },
+          {
+            "variables": 154,
+            "invalid_cells": 24,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 102,
+            "invalid_cells": 13,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 102,
+            "invalid_cells": 12,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 34,
+            "invalid_cells": 4,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      }
+    ],
+    "deep_restorations": [
+      {
+        "fraction": 0.125,
+        "variables": 405
+      }
+    ],
+    "fraction": 0.125,
+    "weighted_error_before_m": 8.096808117022697,
+    "weighted_error_m": 8.082200011644655
+  },
+  {
+    "radius_m": 0.0005,
+    "geometric_rows": 132020,
+    "retained_geometric_rows": 71769,
+    "trial_failures": {
+      "determinant": 4,
+      "contact_regression_or_no_progress": 1
+    },
+    "geometric_witnesses": [
+      {
+        "fraction": 1.0,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 63,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34427,
+                14180,
+                -1.0720384605186645e-08
+              ],
+              [
+                34043,
+                13874,
+                -9.058504645649384e-09
+              ],
+              [
+                34114,
+                14064,
+                -7.4423352234433225e-09
+              ],
+              [
+                34309,
+                14150,
+                -6.222118704271342e-09
+              ],
+              [
+                33899,
+                14012,
+                -5.864209240152121e-09
+              ],
+              [
+                31483,
+                14179,
+                -4.3338445405184135e-09
+              ],
+              [
+                32397,
+                12273,
+                -3.982284406622105e-09
+              ],
+              [
+                34415,
+                14180,
+                -3.5752839322315273e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 63,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34427,
+                14180,
+                -1.0721063728596154e-08
+              ],
+              [
+                34043,
+                13874,
+                -9.058392206073958e-09
+              ],
+              [
+                34114,
+                14064,
+                -7.441522136204262e-09
+              ],
+              [
+                34309,
+                14150,
+                -6.219794551314423e-09
+              ],
+              [
+                33899,
+                14012,
+                -5.858685745174012e-09
+              ],
+              [
+                31483,
+                14179,
+                -4.333668814555728e-09
+              ],
+              [
+                32397,
+                12273,
+                -3.982211768888363e-09
+              ],
+              [
+                34415,
+                14180,
+                -3.574813247284692e-09
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.5,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 9,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -2.51274697860839e-07
+              ],
+              [
+                34259,
+                14084,
+                -7.285488210203749e-08
+              ],
+              [
+                34319,
+                14150,
+                -7.188106010374919e-08
+              ],
+              [
+                34308,
+                14150,
+                -6.007997784379224e-08
+              ],
+              [
+                34283,
+                14156,
+                -5.761372212765018e-08
+              ],
+              [
+                34067,
+                13886,
+                -1.740350065858249e-08
+              ],
+              [
+                34284,
+                14156,
+                -1.675454922630308e-08
+              ],
+              [
+                34073,
+                28202,
+                -1.5791920060874052e-08
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 9,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -2.512794173798418e-07
+              ],
+              [
+                34259,
+                14084,
+                -7.285647642753396e-08
+              ],
+              [
+                34319,
+                14150,
+                -7.187800603001269e-08
+              ],
+              [
+                34308,
+                14150,
+                -6.00799984896083e-08
+              ],
+              [
+                34283,
+                14156,
+                -5.761020000517196e-08
+              ],
+              [
+                34067,
+                13886,
+                -1.7402639763134874e-08
+              ],
+              [
+                34284,
+                14156,
+                -1.6754750094320748e-08
+              ],
+              [
+                34073,
+                28202,
+                -1.5792364081244985e-08
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.25,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 38,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -1.092725833432954e-07
+              ],
+              [
+                30839,
+                13979,
+                -1.002321087244166e-07
+              ],
+              [
+                29571,
+                12460,
+                -6.514116503806172e-08
+              ],
+              [
+                29641,
+                13373,
+                -4.885070466280406e-08
+              ],
+              [
+                27627,
+                12614,
+                -4.773823656244473e-08
+              ],
+              [
+                30837,
+                13925,
+                -4.010619284322415e-08
+              ],
+              [
+                34259,
+                14084,
+                -3.64995545141789e-08
+              ],
+              [
+                31541,
+                14083,
+                -2.7312381042508708e-08
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 38,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                34307,
+                14150,
+                -1.0926961832288732e-07
+              ],
+              [
+                30839,
+                13979,
+                -1.002299330528899e-07
+              ],
+              [
+                29571,
+                12460,
+                -6.513753354183821e-08
+              ],
+              [
+                29641,
+                13373,
+                -4.884863466868304e-08
+              ],
+              [
+                27627,
+                12614,
+                -4.774038697645152e-08
+              ],
+              [
+                30837,
+                13925,
+                -4.010550825627426e-08
+              ],
+              [
+                34259,
+                14084,
+                -3.649923397262672e-08
+              ],
+              [
+                31541,
+                14083,
+                -2.7311887723374535e-08
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.125,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 1,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                28591,
+                12800,
+                -3.311734684883945e-10
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 1,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                28591,
+                12800,
+                -3.35945489980011e-10
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "contact": {
+      "starting_pairs": {
+        "outer": 481,
+        "interface": 1185,
+        "deep": 2466,
+        "side": 0
+      },
+      "active_pairs": 4900,
+      "frozen_pairs": 200,
+      "tried": [
+        {
+          "fraction": 0.0625,
+          "attempt": 0,
+          "pairs": {
+            "outer": 477,
+            "interface": 1181,
+            "deep": 2545,
+            "side": 0
+          }
+        },
+        {
+          "fraction": 0.0625,
+          "attempt": 1,
+          "pairs": {
+            "outer": 480,
+            "interface": 1182,
+            "deep": 2462,
+            "side": 0
+          }
+        }
+      ]
+    },
+    "status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "restorations": [
+      {
+        "fraction": 1.0,
+        "restored_variables": []
+      },
+      {
+        "fraction": 0.5,
+        "restored_variables": [
+          {
+            "variables": 52,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 146,
+            "invalid_cells": 24,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 79,
+            "invalid_cells": 13,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 76,
+            "invalid_cells": 13,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 52,
+            "invalid_cells": 8,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.25,
+        "restored_variables": [
+          {
+            "variables": 36,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 96,
+            "invalid_cells": 13,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 39,
+            "invalid_cells": 6,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 18,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 246,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 68
+          }
+        ]
+      },
+      {
+        "fraction": 0.125,
+        "restored_variables": [
+          {
+            "variables": 233,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 64
+          },
+          {
+            "variables": 157,
+            "invalid_cells": 26,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 54,
+            "invalid_cells": 9,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 80,
+            "invalid_cells": 9,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 33,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.0625,
+        "restored_variables": [
+          {
+            "variables": 188,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 51
+          },
+          {
+            "variables": 102,
+            "invalid_cells": 16,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 27,
+            "invalid_cells": 5,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 11,
+            "invalid_cells": 1,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      }
+    ],
+    "deep_restorations": [
+      {
+        "fraction": 0.0625,
+        "variables": 504
+      }
+    ],
+    "fraction": 0.0625,
+    "weighted_error_before_m": 8.082200011644655,
+    "weighted_error_m": 8.07255227715879
+  },
+  {
+    "radius_m": 0.00025,
+    "geometric_rows": 132020,
+    "retained_geometric_rows": 36884,
+    "trial_failures": {
+      "determinant": 3,
+      "contact_regression_or_no_progress": 1
+    },
+    "geometric_witnesses": [
+      {
+        "fraction": 1.0,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 26,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                27862,
+                26900,
+                -5.917045183687498e-10
+              ],
+              [
+                29830,
+                13145,
+                -5.591188289777081e-10
+              ],
+              [
+                30522,
+                13709,
+                -3.839422055816057e-10
+              ],
+              [
+                33851,
+                13823,
+                -3.6856624023411403e-10
+              ],
+              [
+                30593,
+                13823,
+                -2.779426462735924e-10
+              ],
+              [
+                33613,
+                13676,
+                -2.3089491586671e-10
+              ],
+              [
+                32279,
+                12248,
+                -1.8903077321563807e-10
+              ],
+              [
+                27604,
+                12286,
+                -1.8828025394522353e-10
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 26,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                27862,
+                26900,
+                -5.914627095686863e-10
+              ],
+              [
+                29830,
+                13145,
+                -5.584214881068997e-10
+              ],
+              [
+                30522,
+                13709,
+                -3.840594000550558e-10
+              ],
+              [
+                33851,
+                13823,
+                -3.6682052008593706e-10
+              ],
+              [
+                30593,
+                13823,
+                -2.7929510697105716e-10
+              ],
+              [
+                33613,
+                13676,
+                -2.3001973335547502e-10
+              ],
+              [
+                32279,
+                12248,
+                -1.8914588676560563e-10
+              ],
+              [
+                33283,
+                27602,
+                -1.849488058522209e-10
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.5,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 3,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                28011,
+                13367,
+                -2.0224603243615596e-08
+              ],
+              [
+                30252,
+                13367,
+                -1.1046442468233147e-08
+              ],
+              [
+                28009,
+                13208,
+                -2.3369006249222246e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 3,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                28011,
+                13367,
+                -2.0222623579682056e-08
+              ],
+              [
+                30252,
+                13367,
+                -1.1030318872363784e-08
+              ],
+              [
+                28009,
+                13208,
+                -2.335448471854671e-09
+              ]
+            ]
+          }
+        }
+      },
+      {
+        "fraction": 0.25,
+        "quantity": "determinant",
+        "frames": {
+          "world": {
+            "below_floor": 1,
+            "floor": 2.5822336410114965e-12,
+            "worst_children": [
+              [
+                28011,
+                13367,
+                -4.9540058673741e-09
+              ]
+            ]
+          },
+          "rest": {
+            "below_floor": 1,
+            "floor": 2.723196450417924e-12,
+            "worst_children": [
+              [
+                28011,
+                13367,
+                -4.9559996774998806e-09
+              ]
+            ]
+          }
+        }
+      }
+    ],
+    "contact": {
+      "starting_pairs": {
+        "outer": 480,
+        "interface": 1182,
+        "deep": 2462,
+        "side": 0
+      },
+      "active_pairs": 4896,
+      "frozen_pairs": 200,
+      "tried": [
+        {
+          "fraction": 0.125,
+          "attempt": 0,
+          "pairs": {
+            "outer": 477,
+            "interface": 1175,
+            "deep": 2548,
+            "side": 0
+          }
+        },
+        {
+          "fraction": 0.125,
+          "attempt": 1,
+          "pairs": {
+            "outer": 480,
+            "interface": 1177,
+            "deep": 2459,
+            "side": 0
+          }
+        }
+      ]
+    },
+    "status": 0,
+    "solver_message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "restorations": [
+      {
+        "fraction": 1.0,
+        "restored_variables": []
+      },
+      {
+        "fraction": 0.5,
+        "restored_variables": [
+          {
+            "variables": 32,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 108,
+            "invalid_cells": 15,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 91,
+            "invalid_cells": 10,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 63,
+            "invalid_cells": 10,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 12,
+            "invalid_cells": 3,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.25,
+        "restored_variables": [
+          {
+            "variables": 32,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 104,
+            "invalid_cells": 11,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 32,
+            "invalid_cells": 4,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 12,
+            "invalid_cells": 1,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 9,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      },
+      {
+        "fraction": 0.125,
+        "restored_variables": [
+          {
+            "variables": 14,
+            "invalid_cells": 1,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 17,
+            "invalid_cells": 2,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 177,
+            "invalid_cells": 0,
+            "width_witnesses": 0,
+            "solid_witnesses": 49
+          },
+          {
+            "variables": 155,
+            "invalid_cells": 21,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          },
+          {
+            "variables": 28,
+            "invalid_cells": 6,
+            "width_witnesses": 0,
+            "solid_witnesses": 0
+          }
+        ]
+      }
+    ],
+    "deep_restorations": [
+      {
+        "fraction": 0.125,
+        "variables": 572
+      }
+    ],
+    "fraction": 0.125,
+    "weighted_error_before_m": 8.07255227715879,
+    "weighted_error_m": 8.064522727638598
+  }
+]

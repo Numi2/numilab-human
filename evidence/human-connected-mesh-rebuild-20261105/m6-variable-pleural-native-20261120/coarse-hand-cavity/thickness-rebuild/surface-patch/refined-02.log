@@ -1,0 +1,12 @@
+{'source_sha256': '11040de78e77e64eb355c953418a3c8242cfe88103701f665eef4ddf9b66da0d', 'skull_bank': 23, 'source_document_sha256': 'a50f13bea797ebbe1fd0abf26db453a9baeb5b7ef156fb9b47a660f2a1f98589', 'footprint_crossed_child_faces': 377, 'initial_columns': 590, 'source_skull_pairs': {'outer': 480, 'interface': 1244, 'deep': 2504, 'side': 0}, 'source_raw_pairs': 16959, 'source_whole_body_pairs': 16408, 'unsplit': {'new_bone_containment': 153, 'child_frame_floor': 10}, 'seed_raw_pairs': 17415, 'seed_pairs_cleared': 0, 'seed_new_pair_count': 0, 'seed_nodes': 8988, 'seed_cells': 34712, 'fitted_columns': 804, 'measured_ray_gaps': 641, 'ray_gap_quantiles_mm': [np.float64(1.2836835981542378), np.float64(4.112014351101385), np.float64(6.887556187871805), np.float64(11.694736156126199), np.float64(20.14894223750963)], 'ray_gaps_below_1_mm': 0}
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/surface-patch-038/run_patch.py", line 248, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/surface-patch-038/run_patch.py", line 218, in main
+    mass, routing, ledger = regional.allocate(final_rest, split_cells, parent, rest_det, active_parent)
+                            ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/thickness-rebuild-034/surface-patch-038/regional_mass.py", line 77, in allocate
+    assert np.all(density >= self.density_limits[:, 0] - 1.e-5)
+           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
