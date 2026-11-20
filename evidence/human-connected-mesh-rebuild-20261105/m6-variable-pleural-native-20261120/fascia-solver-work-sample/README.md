@@ -1,0 +1,5 @@
+# Native regional tissue solver-work sample
+
+The two accepted 2 ms steps use the same initial condition, variable pleural pressure, swept clearance and eight-step release ramp as the ten-step swept-clearance replay. An external monitor stops only this trial process after the second accepted-step timing is written. The native runtime admits the distributed measurements, CGS2, prefix and operator ICBs, empty-field suppression and completed-cycle suppression together.
+
+The paired first two GPU steps sum to 45.487 s for the control and 44.781 s for the sample. The measured 1.55 percent drop is a short single-pair result and the accepted traces differ numerically. The largest absolute O₂ partial-pressure difference is 0.001404 mmHg, the maximum contact-gap difference is 5.58 nm, and the maximum blood volume difference is 0.000466 mL. This sample leaves long-horizon parity and performance unqualified. The saved comparison enumerates all nonzero fields. The swept-clearance ten-step result remains the longer verified run.

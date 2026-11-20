@@ -1,0 +1,48 @@
+{
+  "scope": "Two accepted 2 ms steps of the unchanged horizon, stopped intentionally before the third step completed",
+  "control_step_gpu_ms": [
+    22858.3447917,
+    22628.4731249
+  ],
+  "candidate_step_gpu_ms": [
+    22364.3167501,
+    22417.0605
+  ],
+  "control_total_gpu_ms": 45486.817916600005,
+  "candidate_total_gpu_ms": 44781.3772501,
+  "short_gpu_time_drop_fraction": 0.015508683588142613,
+  "matched_rows_byte_identity": false,
+  "nonzero_trace_field_differences": {
+    "PaO2_mmhg": 0.0014038089999957037,
+    "PaCO2_mmhg": 0.00010299689999726525,
+    "SaO2": 1.0132790000394465e-06,
+    "lv_mmhg": 3.662410000160321e-06,
+    "rv_mmhg": 7.439270000020315e-07,
+    "aorta_mmhg": 8.789780000029168e-05,
+    "pulmonary_artery_mmhg": 3.387729999992928e-05,
+    "lv_ml": 3.63799999973935e-05,
+    "rv_ml": 1.4551999981904373e-05,
+    "blood_ml": 0.00046566000037273625,
+    "right_atrium_ml": 3.6380000025815207e-06,
+    "left_atrium_ml": 1.8189899996912118e-05,
+    "blood_continuity_residual_accum_ml": 0.00021309176645999996,
+    "blood_physical_delta_accum_ml": 0.0001982698449900001,
+    "blood_residual_minus_physical_ml": 1.482192146794e-05,
+    "blood_endpoint_minus_physical_ml": 0.000560248736292,
+    "gas_max_donor_fraction": 2.2817410000493255e-08,
+    "min_contact_gap_m": 5.57974998999995e-09,
+    "normal_impulse_ns": 3.380118869999657e-07,
+    "pre_projection_contact_residual_m_s": 7.91499255022e-10,
+    "pre_projection_limit_residual_generalized_s": 9.8661256942e-09,
+    "pre_projection_equality_residual_generalized_s": 9.873701899998659e-11,
+    "post_projection_contact_residual_m_s": 3.2583796771500004e-10,
+    "post_projection_limit_residual_generalized_s": 9.8661256942e-09,
+    "post_projection_equality_residual_generalized_s": 7.95961629943e-11,
+    "equality_velocity_projection_max_generalized_s": 8.595851142000003e-09
+  },
+  "candidate_execution": {
+    "exit": -15,
+    "stop_reason": "completed_two_accepted_samples",
+    "wall_seconds": 60.22021283302456
+  }
+}
