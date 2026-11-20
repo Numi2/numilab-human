@@ -1,0 +1,31 @@
+--- a/matter/tools/human_resting_runtime.hpp
++++ b/matter/tools/human_resting_runtime.hpp
+@@ -330,9 +330,15 @@
+         if (enabled("NM_VASCULAR_STEP_EXTERNAL_PRESSURE")) {
+             constexpr std::array<unsigned,11> thoracicIDs{{1,2,5,6,15,16,17,18,19,20,21}};
+             need(world.vascular.compartments.size()==21u && dispatch.environmentCount==1u &&
+-                 world.vascular.cavities.empty() && world.vascular.tissueBindings.empty() &&
+-                 dispatch.particleCount==0u,
+-                 "thoracic pressure is registered for the 21-compartment lumped resting network");
++                 world.vascular.tissueBindings.empty() && dispatch.particleCount==0u,
++                 "thoracic pressure requires the registered 21-compartment resting network without continuum blood exchange");
++            // The supported abdominal wall owns compartment 7's mechanical
++            // pressure row. Its extramural pressure must stay unchanged.
++            need(world.vascular.cavities.size() <= 1u &&
++                 (world.vascular.cavities.empty() ||
++                  (world.vascular.cavities[0].identity.x == 9007u &&
++                   world.vascular.cavities[0].identity.y == 6u)),
++                 "thoracic pressure cannot stage a boundary for an unverified FEM cavity");
+             for (std::size_t i=0; i<world.vascular.compartments.size(); ++i) {
+                 const auto& compartment=world.vascular.compartments[i];
+                 need(compartment.identity.x==i+1u,"thoracic pressure compartment identity mismatch");
+@@ -342,6 +348,9 @@
+                      "thoracic pressure does not match the authored extramural compartment map");
+                 if (thoracic) thoracicPressureMask |= 1u<<i;
+             }
++            for (const auto& cavity : world.vascular.cavities)
++                need((thoracicPressureMask & (1u << cavity.identity.y)) == 0u,
++                     "thoracic pressure would alter the abdominal FEM cavity boundary");
+             stageThoracicPressure=pipeline(@"nm_human_stage_thoracic_pressure");
+             thoracicStepAndRamp={dt,5.0f};
+             std::cout << "resting_vascular_external_pressure=accepted_absolute_pleural_gauge"

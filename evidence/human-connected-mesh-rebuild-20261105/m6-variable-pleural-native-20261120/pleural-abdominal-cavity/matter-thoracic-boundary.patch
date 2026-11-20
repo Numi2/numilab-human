@@ -1,0 +1,14 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -11247,10 +11247,9 @@
+                 // microticks in this frame reuse that same trial buffer,
+                 // including retries that begin from the accepted checkpoint.
+                 if (environments != 1u || world.vascular.compartments.empty() ||
+-                    !world.vascular.cavities.empty() ||
+                     !world.vascular.tissueBindings.empty() ||
+                     world.dispatch.particleCount != 0u) {
+-                    diagnostics.message = "step external pressure requires a single lumped vascular network without continuum blood exchange";
++                    diagnostics.message = "step external pressure requires one vascular environment without continuum blood exchange";
+                     return diagnostics;
+                 }
+                 candidate->vascularExternalPressureSource = candidate->vascularCompartments;
