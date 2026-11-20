@@ -1,0 +1,204 @@
+--- a/apps/NumiHumanCurrentFractionalSupportNPZ.hpp
++++ b/apps/NumiHumanCurrentFractionalSupportNPZ.hpp
+@@ -2473,6 +2473,7 @@
+ // this callback binds the two current CSV proofs to the owner-built transport
+ // input before either solve or deterministic replay begins.
+ struct CurrentFractionalSemanticProofFiles {
++    bool carrierWitnessOnly=false;
+     std::filesystem::path exactProjectionCSVPath,sourceCentroidSlotsCSVPath;
+     std::filesystem::path skinCarrierWitnessCSVPath,fatCarrierWitnessCSVPath;
+     std::string exactProjectionCSV_SHA256,sourceCentroidSlotsCSV_SHA256;
+@@ -2543,7 +2544,8 @@
+     const auto fail=[&](std::string message){error=std::move(message);return false;};
+     auto* context=static_cast<CurrentFractionalSemanticProofFiles*>(opaqueContext);
+     if(context==nullptr||context->carriers==nullptr||
+-       context->exactProjectionCSVPath.empty()||context->sourceCentroidSlotsCSVPath.empty()||
++       context->exactProjectionCSVPath.empty()!=context->carrierWitnessOnly||
++       context->sourceCentroidSlotsCSVPath.empty()!=context->carrierWitnessOnly||
+        context->skinCarrierWitnessCSVPath.empty()||context->fatCarrierWitnessCSVPath.empty()||
+        !physical_skin_child_mass_detail::validSHA256(context->exactProjectionCSV_SHA256)||
+        !physical_skin_child_mass_detail::validSHA256(context->sourceCentroidSlotsCSV_SHA256)||
+@@ -2552,24 +2554,23 @@
+         return fail("current fractional proof callback lacks a complete explicit path/SHA/carrier input set");
+     std::vector<CurrentExactTupleProjectionRow> projections;
+     std::vector<CurrentExactTupleProjectionReject> restRejects;
+-    if(!loadCurrentExactTupleProjectionCSV(context->exactProjectionCSVPath,
+-            context->exactProjectionCSV_SHA256,input,parent,input.maximumTransportDistanceM,
+-            projections,error,&restRejects))
+-        return fail("current exact-projection CSV replay failed: "+error);
+     std::vector<CurrentSourceCentroidSlotWitnessRow> centroidRows;
+-    if(!loadCurrentSourceCentroidSlotWitnessCSV(context->sourceCentroidSlotsCSVPath,
+-            context->sourceCentroidSlotsCSV_SHA256,centroidRows,error))
+-        return fail("current source-centroid slot CSV failed its pinned read: "+error);
+-
+-    // Work on an unpublished copy. A bad/truncated carrier file cannot leave
+-    // exact-projection or centroid additions partially installed in the caller.
+     auto nextSupport=support;
+-    if(!bindCurrentExactTupleProjectionRows(nextSupport,input,parent,projections,
+-                                             context->exactProjectionCSV_SHA256,error))
+-        return fail("current exact-projection proof binding failed: "+error);
+-    if(!bindCurrentSourceCentroidSlotWitnesses(nextSupport,input,parent,centroidRows,
+-                                                context->sourceCentroidSlotsCSV_SHA256,error))
+-        return fail("current 008 source-centroid slot proof binding failed: "+error);
++    if(!context->carrierWitnessOnly) {
++        if(!loadCurrentExactTupleProjectionCSV(context->exactProjectionCSVPath,
++                context->exactProjectionCSV_SHA256,input,parent,input.maximumTransportDistanceM,
++                projections,error,&restRejects))
++            return fail("current exact-projection CSV replay failed: "+error);
++        if(!loadCurrentSourceCentroidSlotWitnessCSV(context->sourceCentroidSlotsCSVPath,
++                context->sourceCentroidSlotsCSV_SHA256,centroidRows,error))
++            return fail("current source-centroid slot CSV failed its pinned read: "+error);
++        if(!bindCurrentExactTupleProjectionRows(nextSupport,input,parent,projections,
++                                                context->exactProjectionCSV_SHA256,error))
++            return fail("current exact-projection proof binding failed: "+error);
++        if(!bindCurrentSourceCentroidSlotWitnesses(nextSupport,input,parent,centroidRows,
++                                                   context->sourceCentroidSlotsCSV_SHA256,error))
++            return fail("current 008 source-centroid slot proof binding failed: "+error);
++    }
+
+     spatial_mass_transport_detail::SHA256Builder carrierEvidenceHash;
+     carrierEvidenceHash.string("numi.human.current-paired-1046c-carrier-witness-csvs.v1");
+--- a/apps/NumiHumanCurrentFractionalRecordedFlowBinding.hpp
++++ b/apps/NumiHumanCurrentFractionalRecordedFlowBinding.hpp
+@@ -20,7 +20,7 @@
+     std::filesystem::path admissionReceiptPath,massTransportEnvelopeReceiptPath;
+     std::string admissionReceiptSHA256,massTransportEnvelopeReceiptSHA256,transportReceiptSHA256,source330LabelSHA256;
+     double transportDistanceLimitM=0.0;
+-    bool massTransportEnvelopeEnabled=false;
++    bool massTransportEnvelopeEnabled=false,directRoleReplay=false;
+     std::array<PhysicalSkinRecordedCarrierAllocationCSVAssets,2> roleAssets{};
+     std::array<PhysicalSkinRecordedCarrierAllocationCSVImportReport,2> roleReports{};
+     std::array<std::string,2> roleP1SHA256{},roleCarrierPacketSHA256{};
+@@ -635,12 +635,57 @@
+     binding.candidateParentRows=input.parentMassKg.size();
+     binding.candidateChildRows=input.childMaterialIndices.size();
+     binding.admissionVerified=true;return true;
++}
++// The current-geometry importer has already verified these files. Use
++// their live hashes to bind the two solver-free role replay receipts.
++// The assembly owner still reconstructs and certifies the full paired flow.
++inline bool bindDirectRoleReplay(CurrentFractionalRecordedFlowBinding& binding,
++        const ConservativeSpatialMassTransportInput& input,std::string& error) {
++    constexpr std::string_view prefix="NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_";
++    std::string nodes,elements,labels;
++    if(!envSHA(std::string(prefix)+"TETGEN_NODE_SHA256",nodes,error)||
++       !envSHA(std::string(prefix)+"TETGEN_ELEMENTS_SHA256",elements,error)||
++       !envSHA(std::string(prefix)+"CHILD_LABELS_SHA256",labels,error))return false;
++    if(input.maximumTransportDistanceM!=binding.transportDistanceLimitM||
++       labels!=input.regionLabelSHA256||!validSHA256(input.childMeshSHA256)||
++       !validSHA256(input.coordinateFrameSHA256)||!validSHA256(input.parentMassPacketSHA256)||
++       !validSHA256(input.parentSourceContributionSHA256)||!validSHA256(binding.source330LabelSHA256)) {
++        error="direct recorded role replay is detached from the pinned native volume, parent, or distance limit";
++        return false;
++    }
++    for(std::size_t role=0;role<binding.roleAssets.size();++role) {
++        binding.roleAssets[role].expectedInputSHA256={
++            std::string(input.parentMassPacketSHA256),std::string(input.parentSourceContributionSHA256),
++            std::string(input.childMeshSHA256),labels,std::string(input.coordinateFrameSHA256),
++            nodes,elements,labels,binding.roleP1SHA256[role],binding.roleCarrierPacketSHA256[role]};
++    }
++    binding.candidateParentRows=input.parentMassKg.size();
++    binding.candidateChildRows=input.childMaterialIndices.size();
++    return true;
+ }
+ inline bool loadEnvironment(CurrentFractionalRecordedFlowBinding& binding,std::string& error) {
+     const std::string prefix="NUMI_H706_FRACTIONAL_RECORDED_FLOW_ADMISSION_RECEIPT_";
+-    if(!envPath(prefix+"JSON",binding.admissionReceiptPath,error)||
+-       !envSHA(prefix+"SHA256",binding.admissionReceiptSHA256,error))return false;
+-    if(!configureMassTransportEnvelopeFromEnvironment(binding,error))return false;
++    if(const char* direct=std::getenv("NUMI_H706_FRACTIONAL_RECORDED_FLOW_DIRECT_ROLE_REPLAY")) {
++        if(std::string_view(direct)!="1") {
++            error="direct recorded role replay opt-in must be 1 when supplied";return false;
++        }
++        if(std::getenv((prefix+"JSON").c_str())||std::getenv((prefix+"SHA256").c_str())||
++           std::getenv("NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_MASS_TRANSPORT_ENVELOPE_RECEIPT")||
++           std::getenv("NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_MASS_TRANSPORT_ENVELOPE_RECEIPT_SHA256")) {
++            error="direct recorded role replay cannot mix receipt contracts";return false;
++        }
++        std::string distance;
++        if(!env("NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_MAXIMUM_MASS_TRANSPORT_DISTANCE_M",
++                distance,error)||
++           !parseFinitePositiveDistanceDecimal(distance,binding.transportDistanceLimitM)) {
++            error="direct recorded role replay needs a finite, pinned import distance";return false;
++        }
++        binding.directRoleReplay=true;
++    } else {
++        if(!envPath(prefix+"JSON",binding.admissionReceiptPath,error)||
++           !envSHA(prefix+"SHA256",binding.admissionReceiptSHA256,error)||
++           !configureMassTransportEnvelopeFromEnvironment(binding,error))return false;
++    }
+     for(unsigned role=0;role<2u;++role)if(!loadRoleEnvironment(role,binding,error))return false;
+     binding.environmentLoaded=true;return true;
+ }
+@@ -660,7 +705,9 @@
+     auto* binding=static_cast<CurrentFractionalRecordedFlowBinding*>(opaque);
+     if(!binding||!binding->environmentLoaded){error="recorded-flow environment binding is not initialized";return false;}
+     static_cast<void>(support);
+-    if(!admission(*binding,input,carrier,error))return false;
++    if(binding->directRoleReplay) {
++        if(!bindDirectRoleReplay(*binding,input,error))return false;
++    } else if(!admission(*binding,input,carrier,error))return false;
+     for(unsigned role=0;role<2u;++role){
+         const std::uint32_t material=role==0u?15u:16u;
+         const auto parentCount=static_cast<std::size_t>(std::count(
+@@ -670,6 +717,7 @@
+         PhysicalSkinRecordedCarrierAllocationCSVImportReport report;
+         if(!loadPhysicalSkinRecordedCarrierAllocationCSVs(binding->roleAssets[role],material,
+                 parentCount,childCount,binding->transportDistanceLimitM,roles[role],report,error))return false;
++        if(binding->directRoleReplay&&role==0u)binding->transportReceiptSHA256=report.transportReceiptSHA256;
+         if(!report.verified||report.physicalAdmission||report.nativeSteps!=0u||
+            !report.solverFreeFeasibility||report.deterministicOptimizerReplay||
+            report.transportReceiptSHA256!=binding->transportReceiptSHA256||
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -24937,10 +24937,23 @@
+
+                 emitHumanPreparationMemory("after_fractional_carrier_load");
+                 CurrentFractionalSemanticProofFiles proofFiles;
+-                proofFiles.exactProjectionCSVPath=fractionalPath("EXACT_PROJECTION_CSV");
+-                proofFiles.exactProjectionCSV_SHA256=requireSHA("EXACT_PROJECTION_SHA256");
+-                proofFiles.sourceCentroidSlotsCSVPath=fractionalPath("SOURCE_CENTROID_CSV");
+-                proofFiles.sourceCentroidSlotsCSV_SHA256=requireSHA("SOURCE_CENTROID_SHA256");
++                proofFiles.carrierWitnessOnly=recordedFlowBinding.directRoleReplay;
++                if(proofFiles.carrierWitnessOnly) {
++                    require(!std::getenv("NUMI_H706_FRACTIONAL_EXACT_PROJECTION_CSV")&&
++                            !std::getenv("NUMI_H706_FRACTIONAL_SOURCE_CENTROID_CSV")&&
++                            !std::getenv("NUMI_H706_FRACTIONAL_EXACT_PROJECTION_SHA256")&&
++                            !std::getenv("NUMI_H706_FRACTIONAL_SOURCE_CENTROID_SHA256"),
++                            "direct recorded role replay cannot mix carrier-only and supplemental-slot proof modes");
++                    constexpr std::string_view emptySHA=
++                        "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855";
++                    proofFiles.exactProjectionCSV_SHA256=emptySHA;
++                    proofFiles.sourceCentroidSlotsCSV_SHA256=emptySHA;
++                } else {
++                    proofFiles.exactProjectionCSVPath=fractionalPath("EXACT_PROJECTION_CSV");
++                    proofFiles.exactProjectionCSV_SHA256=requireSHA("EXACT_PROJECTION_SHA256");
++                    proofFiles.sourceCentroidSlotsCSVPath=fractionalPath("SOURCE_CENTROID_CSV");
++                    proofFiles.sourceCentroidSlotsCSV_SHA256=requireSHA("SOURCE_CENTROID_SHA256");
++                }
+                 proofFiles.skinCarrierWitnessCSVPath=fractionalPath("CARRIER_WITNESS_SKIN_CSV");
+                 proofFiles.skinCarrierWitnessCSV_SHA256=requireSHA("CARRIER_WITNESS_SKIN_SHA256");
+                 proofFiles.fatCarrierWitnessCSVPath=fractionalPath("CARRIER_WITNESS_FAT_CSV");
+@@ -24964,13 +24977,17 @@
+                 require(bundle.spatialMassTransportResult.usesFractionalSemanticSupport,
+                         "registered-volume fractional mass owner returned a legacy transport result");
+                 if(registeredRecordedCarrierAllocationRequested) {
+-                    require(recordedFlowBinding.admissionVerified&&recordedFlowBinding.rolesVerified,
+-                            "paired role flow did not retain its independent source-only admission receipts");
++                    require(recordedFlowBinding.rolesVerified&&
++                                (recordedFlowBinding.directRoleReplay||recordedFlowBinding.admissionVerified),
++                            "paired role flow did not retain its verified source receipts");
+                     const auto& skinRecorded=recordedFlowBinding.roleReports[0];
+                     const auto& fatRecorded=recordedFlowBinding.roleReports[1];
+-                    std::cout<<"registered_volume_current_fractional_recorded_carrier_allocation=PASS"
+-                        <<" admission_receipt_sha256="<<recordedFlowBinding.admissionReceiptSHA256
+-                        <<" transport_receipt_sha256="<<recordedFlowBinding.transportReceiptSHA256
++                    std::cout<<"registered_volume_current_fractional_recorded_carrier_allocation=PASS";
++                    if(recordedFlowBinding.directRoleReplay)
++                        std::cout<<" source_proof=paired_role_replay";
++                    else
++                        std::cout<<" admission_receipt_sha256="<<recordedFlowBinding.admissionReceiptSHA256;
++                    std::cout<<" transport_receipt_sha256="<<recordedFlowBinding.transportReceiptSHA256
+                         <<" mass_transport_receipt_sha256="
+                         <<bundle.spatialMassTransportResult.receiptSHA256
+                         <<" candidate_parent_rows="<<recordedFlowBinding.candidateParentRows
