@@ -1,0 +1,77 @@
+{
+  "reference": {
+    "execution": {
+      "returncode": 0,
+      "wall_seconds": 90.25366908288561
+    },
+    "accepted_steps": 90,
+    "simulated_seconds": 0.00140625006679,
+    "final_body_seconds": 69.259003917,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ],
+    "zero_root_assistance": true
+  },
+  "candidate": {
+    "execution": {
+      "returncode": 0,
+      "wall_seconds": 42.87029604194686
+    },
+    "accepted_steps": 90,
+    "simulated_seconds": 0.00140625006679,
+    "final_body_seconds": 28.094453083,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ],
+    "zero_root_assistance": true
+  },
+  "shared_accepted_steps": 90,
+  "first_accepted_difference": {
+    "accepted_step": 3,
+    "fields": {
+      "blood_continuity_residual_accum_ml": [
+        "6.66133814775e-10",
+        "-2.22044604925e-10"
+      ],
+      "blood_physical_delta_accum_ml": [
+        "6.66133814775e-10",
+        "-2.22044604925e-10"
+      ],
+      "blood_endpoint_minus_physical_ml": [
+        "0.000465660621174",
+        "0.000465661509352"
+      ],
+      "pre_projection_equality_residual_generalized_s": [
+        "1.19208798424e-05",
+        "1.19208789329e-05"
+      ],
+      "post_projection_equality_residual_generalized_s": [
+        "4.07892608578e-11",
+        "4.27735624697e-11"
+      ],
+      "equality_velocity_projection_max_generalized_s": [
+        "1.16415321827e-10",
+        "5.82076609135e-11"
+      ]
+    }
+  },
+  "max_accepted_difference": {
+    "blood_continuity_residual_accum_ml": 4.61852778249e-08,
+    "blood_physical_delta_accum_ml": 4.61852778249e-08,
+    "blood_endpoint_minus_physical_ml": 0.0009313441129417789,
+    "pre_projection_equality_residual_generalized_s": 6.184560000487829e-11,
+    "post_projection_equality_residual_generalized_s": 1.4604002451810001e-09,
+    "equality_velocity_projection_max_generalized_s": 1.1641532180000181e-10,
+    "equality_position_projection_max_generalized": 4.2632564145600003e-14,
+    "aorta_mmhg": 0.00030031759999360474,
+    "gas_max_donor_fraction": 4.7010762500000015e-06,
+    "PaCO2_mmhg": 1.144409999653817e-05,
+    "PaO2_mmhg": 0.00013732909999930598,
+    "SaO2": 1.1920899989359413e-07,
+    "blood_ml": 0.0009313199998359778,
+    "blood_error_ml": 0.00046566128730699994
+  },
+  "rejections": []
+}

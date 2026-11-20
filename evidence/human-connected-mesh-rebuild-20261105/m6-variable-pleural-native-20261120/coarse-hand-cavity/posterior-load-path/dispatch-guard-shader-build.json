@@ -1,0 +1,36 @@
+{
+  "commands": [
+    [
+      "xcrun",
+      "-sdk",
+      "macosx",
+      "metal",
+      "-std=metal4.0",
+      "-O3",
+      "-fno-fast-math",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/include",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/src",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/src/metal",
+      "-c",
+      "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/guarded-dispatch-shader/matter_kernels.metal",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/guarded-dispatch-shader/temporary.air"
+    ],
+    [
+      "xcrun",
+      "-sdk",
+      "macosx",
+      "metallib",
+      "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/guarded-dispatch-shader/temporary.air",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/guarded-dispatch-shader/guarded-short.metallib"
+    ]
+  ],
+  "parent_shader_sha256": "4957f70c80ae1011cee5b9d132cc28008f9789863c3cbb89e9f9a1163c3c612f",
+  "metallib_sha256": "2795f246f1e83462319dc0d6134298e0da3f4d360165db42ca8d80a9a917d036"
+}

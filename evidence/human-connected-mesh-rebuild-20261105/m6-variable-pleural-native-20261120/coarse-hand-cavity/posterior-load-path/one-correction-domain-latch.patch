@@ -1,0 +1,15 @@
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -12012,7 +12012,11 @@
+     const bool hasActiveContact = layout.supportContactCount > 0u ||
+         contact.activeCounts[environment] > 0u ||
+         contact.deformableActiveCounts[environment] > 0u;
+-    const bool correctionFinite = nonlinearIteration > 1u &&
++    // Iteration one already follows a measured Newton correction. Only the
++    // initial guess lacks that history. For the independently certified domains,
++    // let a fresh physical residual stop the next correction at either point.
++    const uint correctionHistoryStart = (layout.reserved & 2u) != 0u ? 0u : 1u;
++    const bool correctionFinite = nonlinearIteration > correctionHistoryStart &&
+         isfinite(previousNonlinear.z);
+     const float nonlinearReferenceNorm = (layout.reserved & 4u) != 0u
+         ? sqrt(max(mechanicalNorm2 + vascularNorm2, 0.0f))

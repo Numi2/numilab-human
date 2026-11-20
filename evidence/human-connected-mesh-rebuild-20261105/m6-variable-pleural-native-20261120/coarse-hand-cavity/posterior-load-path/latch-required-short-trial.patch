@@ -1,0 +1,56 @@
+--- a/matter/src/metal/mixed_fem.metalinc
++++ b/matter/src/metal/mixed_fem.metalinc
+@@ -903,6 +903,7 @@
+     device const float* rigidCandidate [[buffer(20)]],
+     device NMFGMRESTelemetryGPU* fgmresTelemetry [[buffer(21)]],
+     device const uint* deformableActiveIndices [[buffer(22)]],
++    constant uint& shortNewtonBudget [[buffer(29)]],
+     uint lane [[thread_index_in_threadgroup]],
+     uint group [[threadgroup_position_in_grid]]
+ ) {
+@@ -1221,6 +1222,18 @@
+         contactEnergy, contactClearancesValid, fixedPlaneKKTCount,
+         fixedPlaneKKTValuesFinite, invalidContact, invalidContactValues,
+         minimumJ, volumeNorm2, activeElements);
++
++    // A short trial may remove encoded Newton work only after the same
++    // nonlinear latch used by the full budget has fired. Without it the
++    // outer transaction must roll back before retrying from the predecessor.
++    if (lane == 0u && objectIndex == telemetryWriterObject &&
++        shortNewtonBudget != 0u &&
++        fgmresStates[environment].nonlinear.w != 1.0f) {
++        recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++            objectIndex, NM_INVALID_INDEX,
++            float4(relativeResidual, relativeCorrection, 0.0f,
++                float(shortNewtonBudget)));
++    }
+ }
+ 
+ // Enumerate a contact once for this FEM owner, using the incidence that the
+@@ -1687,6 +1700,7 @@
+     device const float4* lineSearch [[buffer(18)]],
+     device NMFGMRESTelemetryGPU* fgmresTelemetry [[buffer(21)]],
+     device const NMMixedCertificatePartialGPU* partials [[buffer(23)]],
++    constant uint& shortNewtonBudget [[buffer(29)]],
+     uint lane [[thread_index_in_threadgroup]],
+     uint group [[threadgroup_position_in_grid]]
+ ) {
+@@ -1785,6 +1799,18 @@
+         contactEnergy, contactClearancesValid, fixedPlaneKKTCount,
+         fixedPlaneKKTValuesFinite, invalidContact, invalidContactValues,
+         minimumJ, volumeNorm2, activeElements);
++
++    // A short trial may remove encoded Newton work only after the same
++    // nonlinear latch used by the full budget has fired. Without it the
++    // outer transaction must roll back before retrying from the predecessor.
++    if (lane == 0u && objectIndex == telemetryWriterObject &&
++        shortNewtonBudget != 0u &&
++        fgmresStates[environment].nonlinear.w != 1.0f) {
++        recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++            objectIndex, NM_INVALID_INDEX,
++            float4(relativeResidual, relativeCorrection, 0.0f,
++                float(shortNewtonBudget)));
++    }
+ }
+ 
+ 

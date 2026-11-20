@@ -1,0 +1,45 @@
+--- a/matter/src/metal/mixed_fem.metalinc
++++ b/matter/src/metal/mixed_fem.metalinc
+@@ -1,3 +1,4 @@
++constant uint kRequireShortTrialNewtonLatch = 1u << 31u;
+ namespace numi_matter_metal {
+ 
+ inline NMFieldBoundaryGPU mixedBoundaryForNode(
+@@ -1221,6 +1222,18 @@
+         contactEnergy, contactClearancesValid, fixedPlaneKKTCount,
+         fixedPlaneKKTValuesFinite, invalidContact, invalidContactValues,
+         minimumJ, volumeNorm2, activeElements);
++
++    // A short trial may remove encoded Newton work only after the same
++    // nonlinear latch used by the full budget has fired. Without it the
++    // outer transaction must roll back before retrying from the predecessor.
++    if (lane == 0u && objectIndex == telemetryWriterObject &&
++        (dispatch.flags & kRequireShortTrialNewtonLatch) != 0u &&
++        fgmresStates[environment].nonlinear.w != 1.0f) {
++        recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++            objectIndex, NM_INVALID_INDEX,
++            float4(relativeResidual, relativeCorrection, 0.0f,
++                0.0f));
++    }
+ }
+ 
+ // Enumerate a contact once for this FEM owner, using the incidence that the
+@@ -1785,6 +1798,18 @@
+         contactEnergy, contactClearancesValid, fixedPlaneKKTCount,
+         fixedPlaneKKTValuesFinite, invalidContact, invalidContactValues,
+         minimumJ, volumeNorm2, activeElements);
++
++    // A short trial may remove encoded Newton work only after the same
++    // nonlinear latch used by the full budget has fired. Without it the
++    // outer transaction must roll back before retrying from the predecessor.
++    if (lane == 0u && objectIndex == telemetryWriterObject &&
++        (dispatch.flags & kRequireShortTrialNewtonLatch) != 0u &&
++        fgmresStates[environment].nonlinear.w != 1.0f) {
++        recordFailure(statuses[environment], NM_STATUS_NONLINEAR_SOLVER_FAILURE,
++            objectIndex, NM_INVALID_INDEX,
++            float4(relativeResidual, relativeCorrection, 0.0f,
++                0.0f));
++    }
+ }
+ 
+ 

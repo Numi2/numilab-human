@@ -1,0 +1,30 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -52055,11 +52055,19 @@
+                     return diagnostics;
+                 }
+             }
++
++            // A shorter budget can publish only a candidate that reached
++            // the standard domain latch. The outer transaction owns retries.
++            const std::uint32_t shortNewtonBudget =
++                state.femDomainNonlinearLatchEnabled &&
++                nonlinearIterationBudget < state.mixedSolverValue.nonlinearIterations.x
++                    ? nonlinearIterationBudget : 0u;
+             dispatchGroups32(
+                 state.mixedCertificateTiledEnabled ? "nm_mixed_certify_partials" :
+                     "nm_mixed_certify",
+                 objectTotal * (state.mixedCertificateTiledEnabled ? 128u : 1u), [&] {
+                 setDispatch();
++                 [encoder setBytes:&shortNewtonBudget length:sizeof(shortNewtonBudget) atIndex:29u];
+                 [encoder setBuffer:state.mixedSolver offset:0u atIndex:1u];
+                 [encoder setBuffer:state.objects offset:0u atIndex:2u];
+                 [encoder setBuffer:state.femAccepted offset:0u atIndex:3u];
+@@ -52097,6 +52105,7 @@
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+                 dispatchGroups32("nm_mixed_certify_finish", objectTotal, [&] {
+                     setDispatch();
++                 [encoder setBytes:&shortNewtonBudget length:sizeof(shortNewtonBudget) atIndex:29u];
+                     [encoder setBuffer:state.mixedSolver offset:0u atIndex:1u];
+                     [encoder setBuffer:state.objects offset:0u atIndex:2u];
+                     [encoder setBuffer:state.solverCertificates offset:0u atIndex:8u];

@@ -1,0 +1,105 @@
+{
+  "sha256": {
+    "matter/src/matter_kernels.metal": "5ded9e541d0303112905ea6187ad1d9e01fee37a6a8e9d2474a60ecbccf9333f",
+    "matter/src/metal/accepted_state_proof.metalinc": "ccd73d2977f3f00df13bc7422e8acfc11e72934ebf739d72abfdd6528b315917",
+    "matter/src/metal/adaptive.metalinc": "48575bba875c8e7b6eba0138d542ac521acce8261a544a01390997d3eef0a332",
+    "matter/src/metal/base_cgls.metalinc": "54fc273e8e8e12a9472f2fe2defec45709c7f36d24b6886b862e477aa54260a2",
+    "matter/src/metal/base_cgls_runtime.metalinc": "c9e8a1b91d05c2103420ad146ae75545cb2b60e60b32f8c17aef5de3016f6a4a",
+    "matter/src/metal/common.metalinc": "316c1f597c73d71e9d79f068d583f0d70ac2b92391205cd4e2ab017e93b4b0e2",
+    "matter/src/metal/contact.metalinc": "5104f469597f1989a9379c4372cfcb184894c84833c148f2e3fd6ba5a040a6ea",
+    "matter/src/metal/fem.metalinc": "407f9f0177e42d7d5b630ee688450f9e2c386a488c00ad5989e7222ca81af940",
+    "matter/src/metal/fem_backtracking_failure_witness.metalinc": "9074eea5dc8a29ab0d13276663db78bb48137c83a61404e698d246a6aa84df90",
+    "matter/src/metal/fgmres.metalinc": "c8fdd86432c86f6d45e2080c9a263a2624f852eb775303bba6f2fee45bf0c67a",
+    "matter/src/metal/generated_stateless_tangent.metalinc": "5367b3458c69ac67505c627b9a6c8c8e9b8fb10c1f770122426041758893c5a0",
+    "matter/src/metal/human_equality.metalinc": "7d258cd6479fd54655d17dc16668713209ae418e62d73d44e1992c7e34b0c927",
+    "matter/src/metal/human_implicit_spring.metalinc": "240859627c1b3b60b775af427d55fe96cbb559aa481718c3282448c6bf320088",
+    "matter/src/metal/human_limits.metalinc": "cb63fbad03fe852e532acbdf984f5147d5897595c21b68572de430793a15a87e",
+    "matter/src/metal/human_skin_spring_linearization.metalinc": "6991936af5a4610e41424b5444d2ca3efcf43b0227e3babb14fe334bf374ce58",
+    "matter/src/metal/identification_scheduler.metalinc": "2ef3415bdb5a1c153fa314f39bb1c7904e70810bb56a33293888572092efaf29",
+    "matter/src/metal/mixed_fem.metalinc": "4957f70c80ae1011cee5b9d132cc28008f9789863c3cbb89e9f9a1163c3c612f",
+    "matter/src/metal/mpm.metalinc": "87be026086c9b547d302eb9be46e6865c0a10d24ee1439219dc62bee9e8259ff",
+    "matter/src/metal/newton_tail.metalinc": "ee9ed86401b9738e0cff889170af8b16694b9669b615bc70aee8946e320c9708",
+    "matter/src/metal/numi_human.metalinc": "1451adc88ac405e33f825fb06b53dbe53d1c9fc8c94a4a98b88bd81b28f7a1b5",
+    "matter/src/metal/partitioned_reduction_fem_tangent.metalinc": "8018aadd5eac0b048f24b8927640a043854ce64917c215e73c5a75f8740e90d4",
+    "matter/src/metal/partitioned_reduction_projection.metalinc": "2879706df66438ece04f5d3c27ca19d929b0ae1d73fc591f373673b04a4355f5",
+    "matter/src/metal/physical_state_digest.metalinc": "d3ceee9e4fc00d2b426e4d84e294d1c7c68702708acb49ad4459217d4baa6cec",
+    "matter/src/metal/sha256.metalinc": "c74148c9ce8ec4949edae4170341ab5a7dc3d791637d5147a165c76c653aff64",
+    "matter/src/metal/sha256_kernels.metalinc": "849e78fe9cb80b79019e26f659f1ee42930c9d787bf0ceb7a8976df0b53618bc",
+    "matter/src/metal/topology_mutation.metalinc": "a14dcac24f3f8277ae7ee86c24d816baa48db80a66d40a3d2dbd16404610caf7",
+    "matter/src/metal/vascular.metalinc": "25370c8c4013eac439f7deff5029f0a0b5da1191cfb2a66e5b5ee06982dae4eb",
+    "control.metallib": "683c00b6cac9699002c60e64abe472b07d81a02c7149e28b32f446b255e9c66e",
+    "one-correction.metallib": "571b0e073e280c1c7d68f38d5f6109af1fd09b991b8a935f4cd39476a7e3f8a5"
+  },
+  "variants": [
+    {
+      "variant": "control",
+      "commands": [
+        [
+          "xcrun",
+          "-sdk",
+          "macosx",
+          "metal",
+          "-std=metal4.0",
+          "-O3",
+          "-fno-fast-math",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/include",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/src",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/src/metal",
+          "-c",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/matter_kernels.metal",
+          "-o",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/temporary.air"
+        ],
+        [
+          "xcrun",
+          "-sdk",
+          "macosx",
+          "metallib",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/temporary.air",
+          "-o",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/control.metallib"
+        ]
+      ]
+    },
+    {
+      "variant": "one-correction",
+      "commands": [
+        [
+          "xcrun",
+          "-sdk",
+          "macosx",
+          "metal",
+          "-std=metal4.0",
+          "-O3",
+          "-fno-fast-math",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/include",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/src",
+          "-I",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/src/metal",
+          "-c",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/matter_kernels.metal",
+          "-o",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/temporary.air"
+        ],
+        [
+          "xcrun",
+          "-sdk",
+          "macosx",
+          "metallib",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/temporary.air",
+          "-o",
+          "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/posterior-load-path-042/latch-build-03/one-correction.metallib"
+        ]
+      ]
+    }
+  ]
+}

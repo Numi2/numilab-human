@@ -1,0 +1,140 @@
+{
+  "reference": {
+    "execution": {
+      "returncode": 1,
+      "wall_seconds": 66.47477075015195
+    },
+    "accepted_steps": 67,
+    "simulated_seconds": 0.00104687504972,
+    "final_body_seconds": null,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ],
+    "zero_root_assistance": true
+  },
+  "candidate": {
+    "execution": {
+      "returncode": 0,
+      "wall_seconds": 60.286869374802336
+    },
+    "accepted_steps": 90,
+    "simulated_seconds": 0.00140625006679,
+    "final_body_seconds": 39.86325875,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ],
+    "zero_root_assistance": true
+  },
+  "shared_accepted_steps": 67,
+  "first_accepted_difference": {
+    "accepted_step": 3,
+    "fields": {
+      "blood_continuity_residual_accum_ml": [
+        "6.66133814775e-10",
+        "0"
+      ],
+      "blood_physical_delta_accum_ml": [
+        "6.66133814775e-10",
+        "0"
+      ],
+      "blood_endpoint_minus_physical_ml": [
+        "0.000465660621174",
+        "0.000465661287308"
+      ]
+    }
+  },
+  "max_accepted_difference": {
+    "blood_continuity_residual_accum_ml": 2.30926389122e-08,
+    "blood_physical_delta_accum_ml": 2.30926389122e-08,
+    "blood_endpoint_minus_physical_ml": 0.0004656788288311317,
+    "post_projection_equality_residual_generalized_s": 1.107801017588e-09,
+    "pre_projection_equality_residual_generalized_s": 8.731149999638465e-11,
+    "equality_velocity_projection_max_generalized_s": 5.820766100000043e-11,
+    "gas_max_donor_fraction": 3.0294831960000042e-06,
+    "equality_position_projection_max_generalized": 2.84217094304e-14,
+    "blood_ml": 0.00046566000037273625,
+    "PaO2_mmhg": 0.00013732909999930598,
+    "PaCO2_mmhg": 1.144409999653817e-05,
+    "aorta_mmhg": 1.4649700005975319e-05,
+    "SaO2": 1.1920899989359413e-07
+  },
+  "rejections": [
+    {
+      "root": 67,
+      "stand_code": 0,
+      "matter_code": 10,
+      "matter_diagnostics": [
+        1.3028260582359508e-05,
+        0.005364307202398777,
+        0,
+        1024469440
+      ],
+      "reference": {
+        "root": 67,
+        "environment": 0,
+        "used_columns_sum": 96,
+        "cycles_with_work": 24,
+        "encoded_cycles": 96,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 8,
+        "has_outer_sample": true,
+        "last_newton_iteration": 23,
+        "last_newton_latched": true,
+        "last_newton_norm": 1.20461837e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.03483562e-05,
+        "last_fgmres_residual_norm": 1.54439064e-07,
+        "last_fgmres_initial_norm": 1.20461837e-05,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 1.20461837e-05,
+        "last_newton_correction_ratio": 0.0053643072,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 1.30282606e-05,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 0,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 1024469440.0
+      },
+      "candidate": {
+        "root": 67,
+        "environment": 0,
+        "used_columns_sum": 12,
+        "cycles_with_work": 2,
+        "encoded_cycles": 32,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 2,
+        "active_restart_begins": 0,
+        "has_outer_sample": true,
+        "last_newton_iteration": 7,
+        "last_newton_latched": true,
+        "last_newton_norm": 9.09976643e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.01288695e-06,
+        "last_fgmres_residual_norm": 9.09976643e-06,
+        "last_fgmres_initial_norm": 9.09976643e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 9.09976643e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 9.09785376e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -52055,11 +52055,25 @@
+                     return diagnostics;
+                 }
+             }
++
++            // A shorter budget can publish only a candidate that reached
++            // the standard domain latch. The outer transaction owns retries.
++            constexpr std::uint32_t requireShortTrialNewtonLatch = 1u << 31u;
++            NMMatterDispatchGPU certificateDispatch = frameDispatch;
++            if (state.femDomainNonlinearLatchEnabled &&
++                nonlinearIterationBudget < state.mixedSolverValue.nonlinearIterations.x) {
++                certificateDispatch.flags |= requireShortTrialNewtonLatch;
++            }
++            const auto bindCertificateDispatch = [&]() {
++                setDispatch();
++                [encoder setBytes:&certificateDispatch
++                             length:sizeof(certificateDispatch) atIndex:0u];
++            };
+             dispatchGroups32(
+                 state.mixedCertificateTiledEnabled ? "nm_mixed_certify_partials" :
+                     "nm_mixed_certify",
+                 objectTotal * (state.mixedCertificateTiledEnabled ? 128u : 1u), [&] {
+-                setDispatch();
++                bindCertificateDispatch();
+                 [encoder setBuffer:state.mixedSolver offset:0u atIndex:1u];
+                 [encoder setBuffer:state.objects offset:0u atIndex:2u];
+                 [encoder setBuffer:state.femAccepted offset:0u atIndex:3u];
+@@ -52096,7 +52110,7 @@
+             if (state.mixedCertificateTiledEnabled) {
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+                 dispatchGroups32("nm_mixed_certify_finish", objectTotal, [&] {
+-                    setDispatch();
++                    bindCertificateDispatch();
+                     [encoder setBuffer:state.mixedSolver offset:0u atIndex:1u];
+                     [encoder setBuffer:state.objects offset:0u atIndex:2u];
+                     [encoder setBuffer:state.solverCertificates offset:0u atIndex:8u];
