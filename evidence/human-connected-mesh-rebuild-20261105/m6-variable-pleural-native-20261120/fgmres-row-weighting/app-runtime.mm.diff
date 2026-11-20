@@ -1,0 +1,26 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -4333,0 +4334 @@
++    bool femTemperedRowEquilibrationEnabled = false;
+@@ -13800,0 +13802,17 @@
++            }
++        }
++        if (const char* requested = std::getenv("NM_FGMRES_ROW_SCALE_SQRT")) {
++            const bool enable = std::strcmp(requested, "1") == 0;
++            if ((!enable && std::strcmp(requested, "0") != 0) ||
++                (enable && (!candidate->femLeftRowEquilibrationEnabled ||
++                 !candidate->femCoupledRowEquilibrationEnabled ||
++                 !candidate->femFullCoupledTrueResidualEnabled))) {
++                diagnostics.message =
++                    "square-root row scaling requires the admitted coupled row equilibration with a fresh physical certificate";
++                return diagnostics;
++            }
++            candidate->femTemperedRowEquilibrationEnabled = enable;
++            if (enable) {
++                candidate->executionFingerprint = mixFingerprint(
++                    candidate->executionFingerprint, 0x524f575351525431ull);
++                std::fprintf(stderr, "matter_fgmres_row_scale_power=0.5 physical_certificate=unscaled\n");
+@@ -38527,0 +38546,3 @@
++                    const std::uint32_t tempered =
++                        state.femTemperedRowEquilibrationEnabled ? 1u : 0u;
++                    [encoder setBytes:&tempered length:sizeof(tempered) atIndex:3u];

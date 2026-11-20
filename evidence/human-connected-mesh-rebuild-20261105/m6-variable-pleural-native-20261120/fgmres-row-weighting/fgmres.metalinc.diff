@@ -1,0 +1,7 @@
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -9357,0 +9358 @@
++    constant uint& tempered [[buffer(3)]],
+@@ -9380 +9381 @@
+-    rowScale[global] = scale;
++    rowScale[global] = tempered != 0u ? sqrt(scale) : scale;
