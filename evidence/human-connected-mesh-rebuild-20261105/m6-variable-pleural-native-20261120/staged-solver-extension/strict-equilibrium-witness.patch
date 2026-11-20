@@ -1,0 +1,31 @@
+--- a/apps/numilab_human_myosim_visual_probe.mm
++++ b/apps/numilab_human_myosim_visual_probe.mm
+@@ -5696,6 +5696,28 @@
+                 muscles.referenceMuscles, muscles.referenceArchitectures,
+                 jointEqualities.payload.records, selectedSourceMuscleIndices,
+                 staticSupports, passiveCouplings, compiled, config));
++    if (requireBalanced && diagnostics.succeeded() && !diagnostics.balanced) {
++        const auto& a = model.articulations.front();
++        for (std::size_t v = 0u;
++             v < compiled.generalizedAccelerationResidual.size(); ++v) {
++            const auto& dof = model.dofs[a.vOffset + v];
++            std::cout << std::setprecision(17)
++                << "strict_equilibrium_residual"
++                << " v_index=" << v
++                << " q_index=" << dof.qIndex
++                << " acceleration=" << compiled.generalizedAccelerationResidual.at(v)
++                << " force=" << compiled.generalizedForceResidual.at(v)
++                << " muscle_force=" << compiled.generalizedMuscleForce.at(v)
++                << " support_force=" << compiled.generalizedSupportForce.at(v)
++                << '\n';
++        }
++        std::cout << "strict_equilibrium_peak"
++            << " acceleration_dof=" << diagnostics.maximumAccelerationResidualDof
++            << " normalized_acceleration_dof=" << diagnostics.maximumNormalizedResidualDof
++            << " active_joint_stop_rows=" << diagnostics.activePositionLimitCount
++            << " activation_polish_steps=" << diagnostics.acceptedGlobalActivationPolishSteps
++            << std::endl;
++    }
+     std::string positionLimitDetails;
+     if (diagnostics.status ==
+             metalrobo::NumiHumanMuscleEquilibriumStatus::positionLimitViolation &&

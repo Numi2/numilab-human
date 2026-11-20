@@ -1,0 +1,94 @@
+{
+  "requested_steps": 24,
+  "completed_steps": 21,
+  "accepted_seconds": 0.0420000019949,
+  "simulated_seconds_per_wall_second": 0.00012240370620714272,
+  "execution": {
+    "exit": 1,
+    "stop": "native_exit",
+    "wall_seconds": 343.1268815000076
+  },
+  "initialization": "resting_initialization=dynamic_release recruitment_activation_cap=0.25 recruited_muscles=416 active_muscles=264 maximum_activation=0.25 normalized_residual_rms=0.947404332241 maximum_acceleration_residual=274.25576619 floating_root_residual_evaluated=1 maximum_root_acceleration_residual=3.88914948395 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+  "pressure_pa": [
+    -520.593139648,
+    -490.642364502
+  ],
+  "peak_bed_penetration_m": 0.00358611065894,
+  "peak_normal_support_impulse_ns": 2.92488288879,
+  "max_root_assistance_n": 0.0,
+  "terminal_audit": null,
+  "terminal_error": "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 21 accepted steps: GPU rejected the Numi Human stand horizon: code=9 completed_steps=21 failing_index=0\"",
+  "retries_with_verified_rollback": [
+    [
+      16,
+      0
+    ],
+    [
+      22,
+      1
+    ]
+  ],
+  "staged_attempts_after_prefix": [
+    [
+      19,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      20,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      21,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      22,
+      1,
+      8,
+      32,
+      0,
+      0
+    ],
+    [
+      22,
+      2,
+      24,
+      32,
+      0,
+      0
+    ]
+  ],
+  "prefix_traces": {
+    "resting-coupled.csv": {
+      "reference_bytes": 16194,
+      "extension_bytes": 18613,
+      "prefix_bytes": 16194,
+      "prefix_identical": true
+    },
+    "resting-com-support-impulses.csv": {
+      "reference_bytes": 50139,
+      "extension_bytes": 62117,
+      "prefix_bytes": 50139,
+      "prefix_identical": true
+    },
+    "resting-com-momentum-diagnostic.csv": {
+      "reference_bytes": 19941,
+      "extension_bytes": 22799,
+      "prefix_bytes": 19941,
+      "prefix_identical": true
+    }
+  },
+  "native_surface_audit": []
+}

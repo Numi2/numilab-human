@@ -1,0 +1,3 @@
+# Motion extension of the staged Newton trial
+
+Continue the 2/8/24 Newton, 32 Krylov trial through 24 physical steps at the same 2 ms cadence, 256 tissue microticks per root, verified rollback, unchanged coupled acceptance and variable pleural pressure. This is a diagnostic extension of a physically accepted 18-step trial whose exact trace equivalence failed. The prediction is a matching 18-step trial prefix and eight-pass acceptance through step 24. Preserve accepted time, the first failed physical step if any, wall time, and each rejected attempt. The deadline is 540 s. Zero-crossing motion and physiological fidelity are outside what this headless prefix can certify.

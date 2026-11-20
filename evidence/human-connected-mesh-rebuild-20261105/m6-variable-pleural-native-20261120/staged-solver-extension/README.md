@@ -1,0 +1,17 @@
+# Staged motion extension and full-gravity bed stance
+
+## Native release motion
+
+The staged Newton replay on the SSH Numi Apple M6 reproduced all three staged reference traces through 36 ms, then accepted three more 2 ms steps. In total it accepted 21 steps through 42 ms in 343.127 s from process launch, including rejected work and the failed exit. That is 0.0001224× headless end-to-end. Variable pleural pressure ranged from −520.593 to −490.642 Pa. Maximum summed bed impulse was 2.92488 N·s, peak bed penetration was 3.58611 mm, and recorded root assistance was zero.
+
+The 44 ms attempt rejected with both 8 and 24 Newton passes. The first rejection passed byte-identical accepted-state rollback. The full-budget failure is in the passive FEM velocity certificate after 191 completed tissue microsteps. Its relative equilibrium residual was 0.00411038. The compiled peak row is node 1181, local node 19 of fascia object 11, which contains source regions 23–25. This is a residual witness and does not independently identify the mechanism generating the residual. The respiratory/heart common-field candidate reported success. No terminal whole-body surface export or motion crossing certificate was produced.
+
+## Strict full-gravity initialization
+
+The released scene starts with no active support rows. A separate experiment used the original strict supported initializer at full gravity with the same registered weighted skin/fat bed contact. The first attempted stance (rows 4, 5, and 6) was infeasible. A lower-hull screen on the actual native witnesses found rows 1, 4, and 5 enclose the projected center of mass. The native solver recaptured three noncollinear supports with minimum gap −0.1124 µm and recruited 705.035 N of support. The strict articulated equilibrium still rejected the frozen pose. Its maximum angular acceleration residual was 245.391 rad/s² and normalized residual RMS 0.134958.
+
+The per-DOF witness resolves the two largest residuals to left and right thumb CMC abduction. The other large rows are thumb MCP and wrist flexion/deviation. The named source rows were checked against the pinned NHRIGID table and embedded source archive hash. The strict fit used the 34 registered ligament rows and the same 26 fascia regions. It did not produce an accepted physical step.
+
+One force-derived correction used the existing wrist/thumb passive blocks and changed only the twelve initial pose coordinates within their source limits. The first attempt correctly rejected a stale pose-dependent pack. A fresh pack passed its content checks, but the old bed triangle became infeasible. Recapturing and screening the revised pose allowed rows 1, 4, and 8. The left and right thumb peak residuals fell to 26.568 and 9.501 rad/s², but the new load-bearing arm raised the right wrist flexion residual to 342.732 rad/s² and increased the overall RMS to 2.096146. This result contradicts the prediction that a fixed passive-block correction would halve the maximum. The candidate was rejected by the unchanged equilibrium gate.
+
+The next equilibrium correction must account for hand pose, muscle recruitment, and the changing support footprint together. The 44 ms tissue failure has its own compiled residual witness. Neither the rejected hand candidate nor the reduced Newton-budget experiment replaces the default runtime. Fine skin/fat mass routing remains offline. Zero whole-body crossings through motion, 16 seconds, and the 0.1× native target remain unqualified.

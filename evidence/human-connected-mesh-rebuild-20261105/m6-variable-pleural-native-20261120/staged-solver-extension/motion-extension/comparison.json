@@ -1,0 +1,760 @@
+{
+  "control": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 308.568181083072
+  },
+  "staged": {
+    "exit": 1,
+    "stop": "native_exit",
+    "wall_seconds": 343.1268815000076
+  },
+  "accepted_steps": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21
+  ],
+  "accepted_seconds": 0.0420000019949,
+  "staged_attempts": [
+    [
+      2,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      3,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      4,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      5,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      6,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      7,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      8,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      9,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      10,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      11,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      12,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      13,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      14,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      15,
+      0,
+      2,
+      32,
+      1,
+      1
+    ],
+    [
+      16,
+      0,
+      2,
+      32,
+      0,
+      0
+    ],
+    [
+      16,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      17,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      18,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      19,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      20,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      21,
+      1,
+      8,
+      32,
+      1,
+      1
+    ],
+    [
+      22,
+      1,
+      8,
+      32,
+      0,
+      0
+    ],
+    [
+      22,
+      2,
+      24,
+      32,
+      0,
+      0
+    ]
+  ],
+  "verified_rollbacks": [
+    [
+      16,
+      0
+    ],
+    [
+      22,
+      1
+    ]
+  ],
+  "terminal_audit": null,
+  "end_to_end_rtf": 0.00012240370620714272,
+  "wall_speedup_same_scope": null,
+  "pressure_pa": [
+    -520.593139648,
+    -490.642364502
+  ],
+  "peak_bed_penetration_m": 0.00358611065894,
+  "max_root_assistance_n": 0.0,
+  "traces": {
+    "resting-coupled.csv": {
+      "row_counts": [
+        18,
+        21
+      ],
+      "byte_identical": false,
+      "staged_sha256": "70f7893a0261545b961d177a783be7a62304a57b8ebf6d1a3819bed9c62633c0",
+      "first_changed_row": 16,
+      "changed_rows_by_field": {
+        "post_projection_equality_residual_generalized_s": 3,
+        "pre_projection_limit_residual_generalized_s": 3,
+        "left_atrium_ml": 1,
+        "SaO2": 3,
+        "blood_residual_minus_physical_ml": 3,
+        "blood_continuity_residual_accum_ml": 3,
+        "post_projection_contact_residual_m_s": 3,
+        "equality_velocity_projection_max_generalized_s": 3,
+        "PaO2_mmhg": 3,
+        "blood_physical_delta_accum_ml": 3,
+        "PaCO2_mmhg": 3,
+        "pre_projection_equality_residual_generalized_s": 3,
+        "post_projection_limit_residual_generalized_s": 3,
+        "blood_endpoint_minus_physical_ml": 3,
+        "normal_impulse_ns": 3,
+        "pre_projection_contact_residual_m_s": 3,
+        "aorta_mmhg": 3,
+        "right_atrium_ml": 2,
+        "min_contact_gap_m": 2,
+        "lv_ml": 2,
+        "gas_max_donor_fraction": 2,
+        "pulmonary_artery_mmhg": 2,
+        "peak_penetration_m": 2,
+        "lv_mmhg": 2,
+        "rv_ml": 1,
+        "rv_mmhg": 1
+      },
+      "numeric_difference": {
+        "post_projection_equality_residual_generalized_s": {
+          "max_abs": 5.12743270064e-09,
+          "at_row": 16,
+          "baseline": 6.64369537162e-09,
+          "staged": 1.51626267098e-09
+        },
+        "pre_projection_limit_residual_generalized_s": {
+          "max_abs": 2.820188171885e-08,
+          "at_row": 18,
+          "baseline": 7.49707851355e-09,
+          "staged": 3.56989602324e-08
+        },
+        "left_atrium_ml": {
+          "max_abs": 3.6380000025815207e-06,
+          "at_row": 16,
+          "baseline": 47.3714317195,
+          "staged": 47.3714280815
+        },
+        "SaO2": {
+          "max_abs": 2.3841899998711114e-07,
+          "at_row": 16,
+          "baseline": 0.972861468792,
+          "staged": 0.972861230373
+        },
+        "blood_residual_minus_physical_ml": {
+          "max_abs": 7.6170181273e-06,
+          "at_row": 16,
+          "baseline": 2.59063881458e-05,
+          "staged": 1.82893700185e-05
+        },
+        "blood_continuity_residual_accum_ml": {
+          "max_abs": 0.0001817994642999976,
+          "at_row": 18,
+          "baseline": 0.0337719825438,
+          "staged": 0.0335901830795
+        },
+        "post_projection_contact_residual_m_s": {
+          "max_abs": 3.4579933583199996e-08,
+          "at_row": 18,
+          "baseline": 4.79231871964e-08,
+          "staged": 8.25031207796e-08
+        },
+        "equality_velocity_projection_max_generalized_s": {
+          "max_abs": 1.992083085154e-07,
+          "at_row": 17,
+          "baseline": 2.68220901489e-07,
+          "staged": 6.90125929736e-08
+        },
+        "PaO2_mmhg": {
+          "max_abs": 0.00039672900000198297,
+          "at_row": 16,
+          "baseline": 100.893348694,
+          "staged": 100.892951965
+        },
+        "blood_physical_delta_accum_ml": {
+          "max_abs": 0.00018917489800000103,
+          "at_row": 18,
+          "baseline": 0.0337604433298,
+          "staged": 0.0335712684318
+        },
+        "PaCO2_mmhg": {
+          "max_abs": 3.433230000382537e-05,
+          "at_row": 16,
+          "baseline": 40.0631103516,
+          "staged": 40.0630760193
+        },
+        "pre_projection_equality_residual_generalized_s": {
+          "max_abs": 1.4062948139999996e-08,
+          "at_row": 17,
+          "baseline": 7.36068386686e-07,
+          "staged": 7.50131334826e-07
+        },
+        "post_projection_limit_residual_generalized_s": {
+          "max_abs": 2.820188171885e-08,
+          "at_row": 18,
+          "baseline": 7.49707851355e-09,
+          "staged": 3.56989602324e-08
+        },
+        "blood_endpoint_minus_physical_ml": {
+          "max_abs": 0.00018917489796800005,
+          "at_row": 18,
+          "baseline": 0.000698491930962,
+          "staged": 0.00088766682893
+        },
+        "normal_impulse_ns": {
+          "max_abs": 0.00010895729000015564,
+          "at_row": 18,
+          "baseline": 2.53375339508,
+          "staged": 2.53364443779
+        },
+        "pre_projection_contact_residual_m_s": {
+          "max_abs": 6.0275525016e-08,
+          "at_row": 17,
+          "baseline": 1.48155720581e-07,
+          "staged": 8.7880195565e-08
+        },
+        "aorta_mmhg": {
+          "max_abs": 0.00013184670000043752,
+          "at_row": 18,
+          "baseline": 82.6659197088,
+          "staged": 82.6657878621
+        },
+        "right_atrium_ml": {
+          "max_abs": 3.637999999028807e-06,
+          "at_row": 17,
+          "baseline": 31.0284085572,
+          "staged": 31.0284049192
+        },
+        "min_contact_gap_m": {
+          "max_abs": 1.4971010000013746e-07,
+          "at_row": 18,
+          "baseline": -0.00293804868124,
+          "staged": -0.00293789897114
+        },
+        "lv_ml": {
+          "max_abs": 1.4551999996115228e-05,
+          "at_row": 18,
+          "baseline": 122.129393276,
+          "staged": 122.129407828
+        },
+        "gas_max_donor_fraction": {
+          "max_abs": 1.3969829999391226e-08,
+          "at_row": 17,
+          "baseline": 0.00791222788393,
+          "staged": 0.0079122139141
+        },
+        "pulmonary_artery_mmhg": {
+          "max_abs": 1.2818500000122413e-05,
+          "at_row": 17,
+          "baseline": 13.1003106915,
+          "staged": 13.100297873
+        },
+        "peak_penetration_m": {
+          "max_abs": 1.4971010000013746e-07,
+          "at_row": 18,
+          "baseline": 0.00293804868124,
+          "staged": 0.00293789897114
+        },
+        "lv_mmhg": {
+          "max_abs": 1.831200000523836e-06,
+          "at_row": 18,
+          "baseline": 7.05568604375,
+          "staged": 7.05568787495
+        },
+        "rv_ml": {
+          "max_abs": 2.9104000020652165e-05,
+          "at_row": 18,
+          "baseline": 142.333665281,
+          "staged": 142.333636177
+        },
+        "rv_mmhg": {
+          "max_abs": 1.487854000004063e-06,
+          "at_row": 18,
+          "baseline": 0.993989300528,
+          "staged": 0.993987812674
+        }
+      }
+    },
+    "resting-com-support-impulses.csv": {
+      "row_counts": [
+        576,
+        672
+      ],
+      "byte_identical": false,
+      "staged_sha256": "c2dfc59cb300290afb5e2cffdbb28ebeada9fe0dee9d4377d6740cdb31f82f00",
+      "first_changed_row": 482,
+      "changed_rows_by_field": {
+        "impulse_world_x_ns": 23,
+        "normal_impulse_ns": 23,
+        "tangent0_impulse_ns": 23,
+        "impulse_world_z_ns": 23,
+        "impulse_world_y_ns": 23,
+        "tangent1_impulse_ns": 23
+      },
+      "numeric_difference": {
+        "impulse_world_x_ns": {
+          "max_abs": 0.00012604892253875732,
+          "at_row": 519,
+          "baseline": 0.09018394351005554,
+          "staged": 0.09005789458751678
+        },
+        "normal_impulse_ns": {
+          "max_abs": 2.6881694793701172e-05,
+          "at_row": 547,
+          "baseline": 0.6969848275184631,
+          "staged": 0.6969579458236694
+        },
+        "tangent0_impulse_ns": {
+          "max_abs": 0.00012604892253875732,
+          "at_row": 519,
+          "baseline": 0.09018394351005554,
+          "staged": 0.09005789458751678
+        },
+        "impulse_world_z_ns": {
+          "max_abs": 2.6881694793701172e-05,
+          "at_row": 547,
+          "baseline": 0.6969848275184631,
+          "staged": 0.6969579458236694
+        },
+        "impulse_world_y_ns": {
+          "max_abs": 6.67870044708252e-05,
+          "at_row": 519,
+          "baseline": 0.17070145905017853,
+          "staged": 0.17076824605464935
+        },
+        "tangent1_impulse_ns": {
+          "max_abs": 6.67870044708252e-05,
+          "at_row": 519,
+          "baseline": 0.17070145905017853,
+          "staged": 0.17076824605464935
+        }
+      }
+    },
+    "resting-com-momentum-diagnostic.csv": {
+      "row_counts": [
+        18,
+        21
+      ],
+      "byte_identical": false,
+      "staged_sha256": "118a72ddc2eb28f789b3b07c74f8b59e1068f66ad3a344f1533ee2121261ae7b",
+      "first_changed_row": 16,
+      "changed_rows_by_field": {
+        "equality_solver_iterate_work_segment_j": 3,
+        "com_vy_m_s": 3,
+        "contact_normal_absolute_solver_iterate_work_segment_j": 3,
+        "world_external_support_impulse_x_ns": 3,
+        "equality_absolute_solver_iterate_work_segment_j": 3,
+        "delta_com_px_kg_m_s": 3,
+        "world_external_support_impulse_z_ns": 3,
+        "unaccounted_delta_p_y_ns": 3,
+        "stand_v_fingerprint_fnv64": 3,
+        "unaccounted_delta_p_x_ns": 3,
+        "delta_com_pz_kg_m_s": 3,
+        "com_y_m": 3,
+        "delta_com_py_kg_m_s": 3,
+        "stand_q_fingerprint_fnv64": 3,
+        "contact_tangent_absolute_solver_iterate_work_segment_j": 3,
+        "com_py_kg_m_s": 3,
+        "root_vz_m_s": 3,
+        "normal_impulse_last_physical_step_ns": 3,
+        "world_external_support_impulse_y_ns": 3,
+        "max_tangent_contact_impulse_segment_ns": 3,
+        "com_vz_m_s": 3,
+        "source_limit_solver_iterate_work_segment_j": 3,
+        "com_x_m": 3,
+        "com_z_m": 3,
+        "com_px_kg_m_s": 3,
+        "max_normal_contact_impulse_segment_ns": 3,
+        "root_translation_fingerprint_fnv64": 3,
+        "root_vy_m_s": 3,
+        "unaccounted_delta_p_z_ns": 3,
+        "com_vx_m_s": 3,
+        "contact_tangent_solver_iterate_work_segment_j": 3,
+        "root_vx_m_s": 3,
+        "normal_force_last_physical_step_n": 3,
+        "com_pz_kg_m_s": 3,
+        "contact_normal_solver_iterate_work_segment_j": 3,
+        "source_limit_absolute_solver_iterate_work_segment_j": 3
+      },
+      "numeric_difference": {
+        "equality_solver_iterate_work_segment_j": {
+          "max_abs": 0.00299072265625,
+          "at_row": 17,
+          "baseline": -81.53600311279297,
+          "staged": -81.53301239013672
+        },
+        "com_vy_m_s": {
+          "max_abs": 1.8536356106262086e-06,
+          "at_row": 18,
+          "baseline": 0.01464132622252778,
+          "staged": 0.014639472586917154
+        },
+        "contact_normal_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 2.2530555725097656e-05,
+          "at_row": 18,
+          "baseline": 0.45079943537712097,
+          "staged": 0.4507769048213959
+        },
+        "world_external_support_impulse_x_ns": {
+          "max_abs": 2.967251930385828e-05,
+          "at_row": 18,
+          "baseline": 0.08694814186310396,
+          "staged": 0.08697781438240781
+        },
+        "equality_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 0.00299072265625,
+          "at_row": 17,
+          "baseline": 81.53600311279297,
+          "staged": 81.53301239013672
+        },
+        "delta_com_px_kg_m_s": {
+          "max_abs": 5.981331066562401e-05,
+          "at_row": 17,
+          "baseline": 0.07064822313368968,
+          "staged": 0.0707080364443553
+        },
+        "world_external_support_impulse_z_ns": {
+          "max_abs": 0.00010864902287721634,
+          "at_row": 18,
+          "baseline": 2.533752997405827,
+          "staged": 2.53364434838295
+        },
+        "unaccounted_delta_p_y_ns": {
+          "max_abs": 0.00034844412876489095,
+          "at_row": 18,
+          "baseline": -0.008234586916596509,
+          "staged": -0.0085830310453614
+        },
+        "stand_v_fingerprint_fnv64": {
+          "max_abs": 1.0451968145175749e+19,
+          "at_row": 18,
+          "baseline": 1.3154842012301573e+18,
+          "staged": 1.1767452346405906e+19
+        },
+        "unaccounted_delta_p_x_ns": {
+          "max_abs": 8.251560081828924e-05,
+          "at_row": 17,
+          "baseline": 0.00257450379031543,
+          "staged": 0.002657019391133719
+        },
+        "delta_com_pz_kg_m_s": {
+          "max_abs": 0.00014246930813754943,
+          "at_row": 18,
+          "baseline": 1.1259325080826308,
+          "staged": 1.1257900387744932
+        },
+        "com_y_m": {
+          "max_abs": 6.957004083929519e-09,
+          "at_row": 17,
+          "baseline": -0.7548857024187153,
+          "staged": -0.7548856954617112
+        },
+        "delta_com_py_kg_m_s": {
+          "max_abs": 0.0002587454248053067,
+          "at_row": 18,
+          "baseline": -0.9229356265866318,
+          "staged": -0.9231943720114371
+        },
+        "stand_q_fingerprint_fnv64": {
+          "max_abs": 1.1055377037246972e+19,
+          "at_row": 17,
+          "baseline": 2.4599335270974874e+18,
+          "staged": 1.351531056434446e+19
+        },
+        "contact_tangent_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 5.234032869338989e-06,
+          "at_row": 18,
+          "baseline": 0.034189771860837936,
+          "staged": 0.0341845378279686
+        },
+        "com_py_kg_m_s": {
+          "max_abs": 0.00013321899093599043,
+          "at_row": 18,
+          "baseline": 1.0522578947816994,
+          "staged": 1.0521246757907634
+        },
+        "root_vz_m_s": {
+          "max_abs": 1.4692544937133789e-05,
+          "at_row": 18,
+          "baseline": -0.36280742287635803,
+          "staged": -0.3627927303314209
+        },
+        "normal_impulse_last_physical_step_ns": {
+          "max_abs": 0.00010895729064941406,
+          "at_row": 18,
+          "baseline": 2.5337533950805664,
+          "staged": 2.533644437789917
+        },
+        "world_external_support_impulse_y_ns": {
+          "max_abs": 8.969870395958424e-05,
+          "at_row": 18,
+          "baseline": -0.9147010396700352,
+          "staged": -0.9146113409660757
+        },
+        "max_tangent_contact_impulse_segment_ns": {
+          "max_abs": 2.682209014892578e-05,
+          "at_row": 18,
+          "baseline": 0.6969847679138184,
+          "staged": 0.6969579458236694
+        },
+        "com_vz_m_s": {
+          "max_abs": 1.1876907783925361e-06,
+          "at_row": 17,
+          "baseline": -0.1732747081247995,
+          "staged": -0.1732735204340211
+        },
+        "source_limit_solver_iterate_work_segment_j": {
+          "max_abs": 8.150935173034668e-06,
+          "at_row": 16,
+          "baseline": -0.1310994029045105,
+          "staged": -0.13110755383968353
+        },
+        "com_x_m": {
+          "max_abs": 2.9949086439995387e-09,
+          "at_row": 18,
+          "baseline": -0.02225800896346037,
+          "staged": -0.022258005968551726
+        },
+        "com_z_m": {
+          "max_abs": 5.268356025045495e-08,
+          "at_row": 16,
+          "baseline": 0.10233926181748203,
+          "staged": 0.10233931450104228
+        },
+        "com_px_kg_m_s": {
+          "max_abs": 3.6852310175777836e-05,
+          "at_row": 18,
+          "baseline": -0.15964636041843597,
+          "staged": -0.1596095081082602
+        },
+        "max_normal_contact_impulse_segment_ns": {
+          "max_abs": 2.6881694793701172e-05,
+          "at_row": 18,
+          "baseline": 0.6969848275184631,
+          "staged": 0.6969579458236694
+        },
+        "root_translation_fingerprint_fnv64": {
+          "max_abs": 1.318865169287704e+19,
+          "at_row": 18,
+          "baseline": 4.1947195861046317e+17,
+          "staged": 1.3608123651487502e+19
+        },
+        "root_vy_m_s": {
+          "max_abs": 1.248437911272049e-06,
+          "at_row": 18,
+          "baseline": 0.005813686642795801,
+          "staged": 0.005812438204884529
+        },
+        "unaccounted_delta_p_z_ns": {
+          "max_abs": 8.137420268639062e-05,
+          "at_row": 17,
+          "baseline": 0.003138698016944108,
+          "staged": 0.0032200722196304987
+        },
+        "com_vx_m_s": {
+          "max_abs": 5.127703940383151e-07,
+          "at_row": 18,
+          "baseline": -0.0022213513005863357,
+          "staged": -0.0022208385301922973
+        },
+        "contact_tangent_solver_iterate_work_segment_j": {
+          "max_abs": 4.583969712257385e-06,
+          "at_row": 18,
+          "baseline": -0.03063879907131195,
+          "staged": -0.030634215101599693
+        },
+        "root_vx_m_s": {
+          "max_abs": 5.312729626893997e-05,
+          "at_row": 17,
+          "baseline": -0.010017686523497105,
+          "staged": -0.010070813819766045
+        },
+        "normal_force_last_physical_step_n": {
+          "max_abs": 0.054478642737194605,
+          "at_row": 18,
+          "baseline": 1266.8766373668718,
+          "staged": 1266.8221587241346
+        },
+        "com_pz_kg_m_s": {
+          "max_abs": 8.535818266075523e-05,
+          "at_row": 17,
+          "baseline": -12.453084974623035,
+          "staged": -12.452999616440374
+        },
+        "contact_normal_solver_iterate_work_segment_j": {
+          "max_abs": 1.901388168334961e-05,
+          "at_row": 18,
+          "baseline": -0.40455690026283264,
+          "staged": -0.4045378863811493
+        },
+        "source_limit_absolute_solver_iterate_work_segment_j": {
+          "max_abs": 8.150935173034668e-06,
+          "at_row": 16,
+          "baseline": 0.1310994029045105,
+          "staged": 0.13110755383968353
+        }
+      }
+    }
+  },
+  "terminal_error": "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 21 accepted steps: GPU rejected the Numi Human stand horizon: code=9 completed_steps=21 failing_index=0\"",
+  "parity": false
+}
