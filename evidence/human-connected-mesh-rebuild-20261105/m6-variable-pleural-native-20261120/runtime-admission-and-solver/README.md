@@ -119,3 +119,46 @@ No contained pairs or internal-interior combinations were measured.
 The complete report and the native accepted geometry receipt are
 retained in this directory. This single endpoint makes no claim about
 continuous motion clearance, supported equilibrium or 0.1× performance.
+
+The named muscle/tendon witnesses use the exact launch NHTISSUE
+SHA-256 and the typed stable IDs from its bound manifest. The three
+largest muscle banks are right extensor digitorum (1,794 pairs), left
+external oblique (890), and left brachioradialis (746). Their scope is
+the authored anatomical display surfaces at this accepted state.
+
+The active compiled object order has two ACL objects, followed by 12
+regional fascia objects, then the aortic wall and skin/fat shell.
+The predictor's object 13 residual is the last fascia object,
+covering source regions 23–25 and compiled elements 2055–2162.
+Neither that residual nor the skin/fat line-search limit identifies a
+failing anatomical intersection by itself.
+
+All 77 shared fields in the 12 accepted physiology rows matched
+exactly between headless run 014 and presented run 017.
+
+## Limiting fat tetrahedron and bounded refit
+
+Run 018 repeated the predictor failure with one bounded native GPU
+witness at root 12, Newton pass 15. It accepted the same 12 steps.
+At trial fraction 4.76837e-7, the constitutive check identified one
+failing 256-element tile. Its deterministic witness is compiled
+tetrahedron 864861. Reason 8 denotes constitutive stress validity.
+The trial determinant passed its bound on that call. The next
+smaller fraction 2.38419e-7 passed constitution checks for the shell.
+The fresh mechanical certificate still rejected on fascia object 13.
+
+The verified 2,163-element ACL/fascia prefix and 1,152-element
+aortic wall map the witness to TetGen fat cell 861547 (one-based ID).
+A local reference-only refit changes fewer than 0.09 micrometres at
+the four candidate interface vertices, keeping the element bytes.
+It increases the witness cell volume from 1.44922e-18 to 3.11324e-17
+m³ and lowers its edge-basis condition number from 9,344 to 435.
+All 49 incident cells pass the reference shape and volume gates.
+An exact audit found zero crossings incident to the 38 affected
+material boundary faces.
+
+The refit's unchanged-mass control gives 39.57 kg/m³ in the repaired
+cell, down from 850 kg/m³. The patch thus needs a new conservative
+local mass flow and native tests. The accepted launch continues to
+use the already verified runtime mass map and mesh. The candidate
+positions and diagnostics are preserved for recovery.

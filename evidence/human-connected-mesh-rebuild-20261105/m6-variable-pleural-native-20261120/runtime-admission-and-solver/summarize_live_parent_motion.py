@@ -1,6 +1,7 @@
 """Record compact first-step evidence without promoting a rejected candidate."""
 import csv
 from collections import defaultdict
+from hashlib import file_digest
 import json
 from pathlib import Path
 import statistics
@@ -66,6 +67,34 @@ for name in sys.argv[1:]:
             accepted_time / run_proofs["execution"]["wall_seconds"])
     if failure.is_file():
         run_proofs["failure"] = json.loads(failure.read_text())
+    surface_path = run / "exact-skin-surface.json"
+    if surface_path.is_file() and surface_path.stat().st_size:
+        surface = json.loads(surface_path.read_text())
+        muscle_payload, = (
+            Path(arg) for arg in json.loads((run / "launch.json").read_text())["argv"]
+            if arg.endswith(".nhtissue")
+        )
+        manifest = json.loads(muscle_payload.with_suffix(".manifest.json").read_text())
+        with muscle_payload.open("rb") as stream:
+            if file_digest(stream, "sha256").hexdigest() != manifest["payload"]["sha256"]:
+                raise ValueError("native muscle payload differs from its source manifest")
+        records = {row["stable_id"]: row for row in manifest["source"]["surfaces"]}
+        named_witnesses = []
+        for row in surface["surfaces"]:
+            if row["semantic"] not in (51005, 51006) or not row["count"]:
+                continue
+            record = records[row["stable_id"]]
+            named_witnesses.append({
+                "semantic": row["semantic"], "stable_id": row["stable_id"],
+                "label": record.get("label") or record["source_name"],
+                "source_id": record["member_id"], "source_member": record.get("member"),
+                "source_member_sha256": record.get("member_sha256"),
+                "source_array_export_sha256": record.get("external_source", {}).get(
+                    "source_array_export_sha256"),
+                "triangle_pairs": row["count"],
+            })
+        run_proofs["named_surface_witnesses"] = sorted(
+            named_witnesses, key=lambda row: (-row["triangle_pairs"], row["stable_id"]))
     line_search = []
     for item in collect(stderr, "vascular_iterate"):
         arenas = item["arenas"]
