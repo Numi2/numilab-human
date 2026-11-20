@@ -1,0 +1,644 @@
+--- rebuild.py
++++ rebuild.py
+@@ -58,6 +58,14 @@
+     return np.array(new_world, np.float32).astype(np.float64), np.array(new_reference), cells, parents, origins, columns
+ 
+ 
++def at_fraction_for_edge(points, edge, fraction, emitted=False):
++    a, b = edge
++    center = (1. - fraction) * points[a] + fraction * points[b]
++    if emitted:
++        center = center.astype(np.float32).astype(np.float64)
++    return np.vstack((points, center))
++
++
+ def all_role_pair_counts(pairs, roles, body):
+     return dict(Counter(roles[face] for face, bank, *_ in pairs if bank == body))
+ 
+@@ -74,7 +82,14 @@
+     parser.add_argument("--restore-local", action="store_true")
+     parser.add_argument("--preserve-solid-and-width", action="store_true")
+     parser.add_argument("--resume", type=Path)
++    parser.add_argument("--tangent", action="store_true")
++    parser.add_argument("--split-screen", type=Path)
++    parser.add_argument("--restore-deep", action="store_true")
+     args = parser.parse_args()
++    if args.restore_deep and not (args.tangent and args.preserve_solid_and_width):
++        parser.error("--restore-deep requires tangential motion and the solid and width guards")
++    if args.split_screen is not None and args.resume is None:
++        parser.error("the screened batch requires its measured source checkpoint")
+     if args.resume is not None and not args.preserve_solid_and_width:
+         parser.error("--resume requires the solid and layer-width guards")
+     if args.preserve_solid_and_width and not (args.depth_contact and args.restore_local):
+@@ -150,16 +165,10 @@
+     local_split, split_parents = confined_bisect(local, local_parents, a, b, node)
+     original_shapes = [quality(p, local).min() for p in (new_world, new_ref)]
+ 
+-    def at_fraction(points, fraction, emitted=False):
+-        new = (1. - fraction) * points[a] + fraction * points[b]
+-        if emitted:
+-            new = new.astype(np.float32).astype(np.float64)
+-        return np.vstack((points, new))
+-
+     best = None
+     for fraction in np.linspace(.1, .9, 33):
+-        current = at_fraction(new_world, fraction, emitted=True)
+-        reference_trial = at_fraction(new_ref, fraction)
++        current = at_fraction_for_edge(new_world, (a, b), fraction, emitted=True)
++        reference_trial = at_fraction_for_edge(new_ref, (a, b), fraction)
+         poses = ((current, new_world), (reference_trial, new_ref))
+         gains = []
+         for (after, before), old_shape in zip(poses, original_shapes, strict=True):
+@@ -183,6 +192,32 @@
+         "old_cells": len(local), "new_cells": len(local_split),
+         "world_and_rest_shape_gains": list(map(float, shape_gains)),
+     }
++    resume_elements, resume_parents = cells, parents
++    added_edges, added_weights, added_nodes = [], [], []
++    batch_record = None
++    if args.split_screen is not None:
++        prior = args.resume / "rebuild.npz"
++        batch_record = json.loads(args.split_screen.read_text())
++        assert digest(prior) == batch_record["checkpoint_sha256"]
++        with np.load(prior, allow_pickle=False) as previous:
++            assert np.array_equal(previous["elements"], cells)
++            assert np.array_equal(previous["parent"], parents)
++        disjoint = set()
++        for screened in batch_record["retained_cavities"]:
++            edge = tuple(screened["edge"])
++            fraction = float(screened["fraction"])
++            assert 0. < fraction < 1. and disjoint.isdisjoint(screened["rows"])
++            disjoint.update(screened["rows"])
++            added = len(new_world)
++            new_world = at_fraction_for_edge(new_world, edge, fraction, emitted=True)
++            new_ref = at_fraction_for_edge(new_ref, edge, fraction)
++            before = len(cells)
++            cells, parents = confined_bisect(cells, parents, *edge, added)
++            assert len(cells) - before == len(screened["rows"])
++            origins.append(set())
++            added_edges.append(edge)
++            added_weights.append(fraction)
++            added_nodes.append(added)
+     column_groups = edge_columns + [[node + role * ROLE_COUNT for role in range(3)] for node in free]
+     if any(not 0 <= row < len(rows) for row in args.hold_parent):
+         parser.error("--hold-parent must name an original compiled tetrahedron")
+@@ -225,6 +260,7 @@
+     print(f"fitting {len(columns)} columns across {len(target_faces)} parent faces", flush=True)
+     faces, face_ancestry, layer_role = child_surfaces(
+         cells, regional.material[parents], surface, len(world), origins)
++    assert not np.any(np.isin(faces, added_nodes))
+     skull_bank = bone[bone["body"] == body]
+     contact = (SkullContact(faces, face_ancestry, layer_role, skull_bank)
+                if args.depth_contact else None)
+@@ -241,14 +277,16 @@
+         assert checkpoint["exact_baseline_sha256"] == digest(enum_base)
+         assert checkpoint["compiled_reference_receipt_sha256"] == digest(reference / "execution.json")
+         with np.load(stored, allow_pickle=False) as incoming:
+-            assert np.array_equal(cells, incoming["elements"])
+-            assert np.array_equal(parents, incoming["parent"])
++            assert np.array_equal(resume_elements, incoming["elements"])
++            assert np.array_equal(resume_parents, incoming["parent"])
+             assert np.array_equal(faces, incoming["surface"])
+             assert np.array_equal(face_ancestry, incoming["surface_parent"])
+-            resume = incoming["world"].astype(np.float64), incoming["rest"]
++            resume = (np.vstack((incoming["world"].astype(np.float64), new_world[added_nodes])),
++                      np.vstack((incoming["rest"], new_ref[added_nodes])))
+     candidate, rest, history = fit_layers(new_world, new_ref, cells, parents, regional, proposals, columns,
+                                          all_edges=args.all_edges, contact=contact,
+-                                         restore_local=args.restore_local, solid=solid, resume=resume)
++                                         restore_local=args.restore_local, solid=solid, resume=resume, tangent=args.tangent,
++                                         restore_deep=args.restore_deep)
+     assert np.array_equal(candidate[list(support)], world[list(support)])
+     assert np.array_equal(candidate[list(fixed)], world[list(fixed)])
+     assert np.array_equal(candidate[held_nodes], new_world[held_nodes])
+@@ -277,6 +315,8 @@
+                   surface=faces, surface_parent=np.array(face_ancestry),
+                   edge_parent=original_node_ancestry, interior_edge_parent=np.array([a, b]),
+                   interior_edge_fraction=split_fraction)
++    if added_edges:
++        arrays.update(batch_edge_parents=np.array(added_edges), batch_edge_fractions=np.array(added_weights))
+     if routing is not None:
+         arrays.update(cell_mass_kg=mass, route_source=routing[0], route_receiver=routing[1],
+                       route_mass_kg=routing[2])
+@@ -289,6 +329,8 @@
+         "registered_source_sha256": source["source"][source_path.name],
+         "body": body, "whole_skull_footprint": args.whole_skull, "all_shape_edges": args.all_edges, "depth_contact": args.depth_contact, "restore_local": args.restore_local,
+         "preserve_solid_and_width": args.preserve_solid_and_width, "resume_sha256": resume_hash,
++        "tangent_motion": args.tangent, "deep_restoration": args.restore_deep, "additional_interior_splits": [] if batch_record is None
++            else batch_record["retained_cavities"],
+         "interior_edge_split": split_record, "held_parent_rows": args.hold_parent, "held_nodes": held_nodes.tolist(),
+         "parent_faces": len(target_faces), "active_columns": len(columns), "split_columns": len(edge_columns),
+         "world_and_rest_nodes": len(candidate), "tetrahedra": len(cells),
+--- fit_layers.py
++++ fit_layers.py
+@@ -7,13 +7,14 @@
+ from scipy.sparse import coo_matrix, csr_matrix, hstack, identity, vstack
+ 
+ from fit_hand_cavity import determinant, quality
+-from fit_refined_patch import determinant_gradient, layer_bounds, sparse_jacobian
++from fit_refined_patch import determinant_gradient, layer_bounds
++from column_motion import ColumnMotion, TANGENT_BOUND_M
+ from skull_contact import admissible
+ 
+ EDGES = np.array(list(combinations(range(4), 2)))
+ 
+ 
+-def fit_layers(world, reference, cells, parent, regional, proposals, columns, *, all_edges=False, contact=None, restore_local=False, solid=None, resume=None):
++def fit_layers(world, reference, cells, parent, regional, proposals, columns, *, all_edges=False, contact=None, restore_local=False, solid=None, resume=None, tangent=False, restore_deep=False):
+     count = len(proposals)
+     assert count > 0
+     node_id = np.full(len(world), -1, dtype=np.int32)
+@@ -24,6 +25,11 @@
+         assert node_id[node] == -1
+         node_id[node] = i
+         direction[node] = axis
++    motion = ColumnMotion(direction, node_id, columns, tangent)
++    count = motion.count
++    if motion.tangent_count:
++        target = np.r_[target, np.zeros(motion.tangent_count)]
++        importance = np.r_[importance, np.full(motion.tangent_count, 1.5)]
+     active = node_id >= 0
+     incidence = np.any(active[cells], axis=1)
+     local_rows = np.flatnonzero(incidence)
+@@ -61,15 +67,11 @@
+         if solid is None:
+             raise ValueError("a warm start requires solid and width guards")
+         world_state, reference_state = resume
+-        nodes = np.array([node for node, *_ in proposals])
+-        displacement = reference_state[nodes] - reference[nodes]
+-        update = np.einsum("nd,nd->n", displacement, direction[nodes])
+-        np.testing.assert_allclose(displacement, update[:, None] * direction[nodes],
+-                                   atol=1.e-14, rtol=0.)
++        update = motion.recover(reference_state - reference)
+         assert np.array_equal(world_state[~active], world[~active])
+         assert np.array_equal(reference_state[~active], reference[~active])
+-        expected = (world[nodes] + update[:, None] * direction[nodes]).astype(np.float32)
+-        assert np.array_equal(world_state[nodes], expected)
++        expected = (world + motion.displacement(update)).astype(np.float32)
++        assert np.array_equal(world_state, expected)
+         for state, floor, shape in zip((world_state, reference_state), minimum_det, minimum_quality, strict=True):
+             assert determinant(state, cells).min() >= floor and quality(state, cells).min() >= shape
+         assert not solid.newly_unsafe(world_state, solid.nodes)
+@@ -106,7 +108,7 @@
+             diameter_gradient[index, EDGES[edge_index, 0]] = -selected
+             required = (1.002 * shape) * square**1.5
+             offset = gradient - (3. * required / square)[:, None, None] * diameter_gradient
+-            shape_derivative = sparse_jacobian(offset, local, node_id, direction, count)
++            shape_derivative = motion.jacobian(offset, local)
+             rows.append(-shape_derivative.multiply(scale[:, None]).tocsr())
+             bounds.append((volume - required) * scale)
+         system = vstack(rows, format="csr")
+@@ -120,10 +122,10 @@
+         return system, bounds, total
+ 
+     if restore_local:
+-        column_variables = node_id[np.asarray(columns)]
++        column_variables = motion.groups
+         assert np.array_equal(np.sort(column_variables.ravel()), np.arange(count))
+         column_for_var = np.empty(count, dtype=np.intp)
+-        column_for_var[column_variables.ravel()] = np.repeat(np.arange(len(columns)), 3)
++        column_for_var[column_variables.ravel()] = np.repeat(np.arange(len(columns)), column_variables.shape[1])
+ 
+     if solid is not None:
+         columns_array = np.asarray(columns)
+@@ -152,7 +154,7 @@
+         return np.asarray(affected, dtype=np.intp)
+ 
+     def trial_state(trial):
+-        displacement = trial[node_id[active], None] * direction[active]
++        displacement = motion.displacement(trial)[active]
+         current_world = world.copy()
+         current_reference = reference.copy()
+         current_world[active] = (world[active] + displacement).astype(np.float32)
+@@ -161,6 +163,16 @@
+         ref_v = determinant(current_reference, local)
+         return current_world, current_reference, world_v, ref_v
+ 
++    def restore_nodes(trial, implicated):
++        affected = node_id[implicated]
++        affected = affected[affected >= 0]
++        repaired = column_variables[np.unique(column_for_var[affected])].ravel()
++        changed = repaired[trial[repaired] != update[repaired]]
++        if len(changed) == 0 or len(changed) >= count // 4:
++            return 0
++        trial[repaired] = update[repaired]
++        return int(len(changed))
++
+     def restore_columns(trial):
+         held = []
+         for _ in range(5):
+@@ -176,25 +188,22 @@
+             if not np.any(bad) and not len(too_wide) and not crosses_solid:
+                 break
+             implicated = np.r_[local[bad].ravel(), too_wide, np.asarray(crosses_solid, dtype=np.intp)]
+-            affected = node_id[implicated]
+-            affected = affected[affected >= 0]
+-            repaired = column_variables[np.unique(column_for_var[affected])].ravel()
+-            changed = repaired[trial[repaired] != update[repaired]]
+-            if len(changed) == 0 or len(changed) >= count // 4:
++            changed = restore_nodes(trial, implicated)
++            if not changed:
+                 break
+-            trial[repaired] = update[repaired]
+-            held.append({"variables": int(len(changed)), "invalid_cells": int(np.count_nonzero(bad)),
++            held.append({"variables": changed, "invalid_cells": int(np.count_nonzero(bad)),
+                          "width_witnesses": len(too_wide), "solid_witnesses": len(crosses_solid)})
+         return held
+ 
+     if resume is not None:
+         assert np.all(thickness @ update <= thickness_margin + 1.e-10)
+         assert not len(width_failures(world_state, reference_state))
+-    radii = (.002, .002, .001, .001, .001, .0005, .0005, .00025)
++    radii = ((.001, .001, .0005, .0005, .00025) if tangent
++             else (.002, .002, .001, .001, .001, .0005, .0005, .00025))
+     for radius in radii:
+         world_det = determinant(world_state, local)
+         ref_det = determinant(reference_state, local)
+-        world_jac, ref_jac = (sparse_jacobian(determinant_gradient(state[local]), local, node_id, direction, count)
++        world_jac, ref_jac = (motion.jacobian(determinant_gradient(state[local]), local)
+                               for state in (world_state, reference_state))
+         world_system, world_bound, world_rows = constraints_at(world_state, world_det, world_jac,
+                                                   minimum_det[0], minimum_quality[0], radius)
+@@ -214,7 +223,15 @@
+             ineq_bound = np.r_[ineq_bound, layer_upper + thickness @ update]
+         system = vstack((absolute_error, 1.e-3 * hstack((ineq, csr_matrix((ineq.shape[0], count))))), format="csr")
+         bound = np.r_[1.e3 * rem, -1.e3 * rem, ineq_bound]
+-        limits = [(-1.e3 * radius, 1.e3 * radius)] * count + [(0., None)] * count
++        lower_limit = np.full(count, -radius)
++        upper_limit = np.full(count, radius)
++        if motion.tangent_count:
++            # The two orthonormal tangent components jointly stay within 2 mm.
++            indices = slice(motion.normal_count, None)
++            component_limit = TANGENT_BOUND_M / np.sqrt(2.)
++            lower_limit[indices] = np.maximum(lower_limit[indices], -component_limit - update[indices])
++            upper_limit[indices] = np.minimum(upper_limit[indices], component_limit - update[indices])
++        limits = list(zip(1.e3 * lower_limit, 1.e3 * upper_limit, strict=True)) + [(0., None)] * count
+         costs = objective
+         failed = Counter()
+         entry = {"radius_m": radius,
+@@ -223,7 +240,7 @@
+                  "trial_failures": failed, "geometric_witnesses": []}
+         if contact_state is not None:
+             planes, gaps, penalty, diagnostic = contact.inequalities(
+-                world_state, contact_state, node_id, direction, radius, count)
++                world_state, contact_state, motion, radius)
+             extra = csr_matrix((system.shape[0], len(penalty)))
+             system = vstack((hstack((system, extra)), planes), format="csr")
+             bound = np.r_[bound, gaps]
+@@ -239,54 +256,76 @@
+             break
+         increment = 1.e-3 * result.x[:count]
+         error_before = importance @ np.abs(rem)
+-        for fraction in (1., .5, .25, .125, .0625, .03125):
+-            trial = update + fraction * increment
+-            if restore_local:
+-                held = restore_columns(trial)
+-                entry.setdefault("restorations", []).append({"fraction": fraction, "restored_variables": held})
++        def check_trial(trial, fraction, error):
+             current_world, current_reference, world_v, ref_v = trial_state(trial)
+             actual_pool = initial_pool + aggregate @ (ref_v - initial_reference_det[incidence])
+-            error = importance @ np.abs(target - trial)
+             if contact_state is None and error >= error_before:
+                 failed["objective"] += 1
+-                continue
++                return None
+             if np.any(thickness @ trial > thickness_margin + 1.e-10):
+                 failed["world_thickness"] += 1
+-                continue
++                return None
+             determinant_failures = limiting_rows((world_v, ref_v), minimum_det)
+             if determinant_failures:
+                 failed["determinant"] += 1
+                 entry["geometric_witnesses"].append({"fraction": fraction, "quantity": "determinant",
+                                                       "frames": determinant_failures})
+-                continue
++                return None
+             shape = (quality(current_world, local), quality(current_reference, local))
+             shape_failures = limiting_rows(shape, minimum_quality)
+             if shape_failures:
+                 failed["shape"] += 1
+                 entry["geometric_witnesses"].append({"fraction": fraction, "quantity": "shape",
+                                                       "frames": shape_failures})
+-                continue
++                return None
+             if np.any(actual_pool < pool_low) or np.any(actual_pool > pool_high):
+                 failed["mass_capacity"] += 1
+-                continue
++                return None
+             if solid is not None:
+                 if len(width_failures(current_world, current_reference)):
+                     failed["layer_width"] += 1
+-                    continue
++                    return None
+                 moved = solid.nodes[np.any(current_world[solid.nodes] != world_state[solid.nodes], axis=1)]
+                 if solid.newly_unsafe(current_world, moved):
+                     failed["solid_vertex"] += 1
+-                    continue
+-            if contact_state is not None:
+-                measured = contact.measure(current_world)
+-                entry["contact"]["tried"].append({"fraction": fraction, "pairs": measured.counts})
+-                if not admissible(contact_state, measured):
+-                    failed["contact_regression_or_no_progress"] += 1
+-                    continue
+-                contact_state = measured
+-            update, world_state, reference_state = trial, current_world, current_reference
+-            entry.update(fraction=fraction, weighted_error_before_m=float(error_before), weighted_error_m=float(error))
+-            break
++                    return None
++            return current_world, current_reference
++
++        for fraction in (1., .5, .25, .125, .0625, .03125):
++            trial = update + fraction * increment
++            if restore_local:
++                held = restore_columns(trial)
++                entry.setdefault("restorations", []).append({"fraction": fraction, "restored_variables": held})
++            for attempt in range(2 if restore_deep else 1):
++                error = importance @ np.abs(target - trial)
++                checked = check_trial(trial, fraction, error)
++                if checked is None:
++                    break
++                current_world, current_reference = checked
++                if contact_state is not None:
++                    measured = contact.measure(current_world)
++                    entry["contact"]["tried"].append({"fraction": fraction, "attempt": attempt,
++                                                       "pairs": measured.counts})
++                    if not admissible(contact_state, measured):
++                        failed["contact_regression_or_no_progress"] += 1
++                        if not restore_deep or attempt or measured.counts["deep"] <= contact_state.counts["deep"]:
++                            break
++                        changed = restore_nodes(trial, contact.deep_regression_nodes(contact_state, measured))
++                        entry.setdefault("deep_restorations", []).append({"fraction": fraction,
++                                                                        "variables": changed})
++                        if not changed:
++                            break
++                        restore_columns(trial)
++                        continue
++                    contact_state = measured
++                update, world_state, reference_state = trial, current_world, current_reference
++                entry.update(fraction=fraction, weighted_error_before_m=float(error_before), weighted_error_m=float(error))
++                break
++            if "fraction" in entry:
++                break
+         else:
+             entry["fraction"] = 0.
++    if motion.tangent_count:
++        cap = np.linalg.norm(update[motion.groups[:, 3:]], axis=1)
++        assert np.max(cap) <= TANGENT_BOUND_M + 1.e-12
+     return world_state, reference_state, report
+--- skull_contact.py
++++ skull_contact.py
+@@ -31,14 +31,17 @@
+     a_dot = np.einsum("pnd,pvd->pnv", axes, a - center[:, None])
+     b_dot = np.einsum("pnd,pvd->pnv", axes, b - center[:, None])
+     gaps = a_dot - b_dot.max(axis=-1)[:, :, None]
+-    motion_dot = np.einsum("pnd,pvd->pnv", axes, motion)
+-    attainable = np.min(gaps + bound_m * np.abs(motion_dot), axis=-1)
++    scalar = motion.ndim == 3
++    vectors = motion[:, :, None] if scalar else motion
++    motion_dot = np.einsum("pnd,pvkd->pnvk", axes, vectors)
++    attainable = np.min(gaps + bound_m * np.abs(motion_dot).sum(axis=-1), axis=-1)
+     score = attainable + .05 * np.min(gaps, axis=-1)
+     score[np.abs(alignment) < .15] = -np.inf
+     assert np.isfinite(score.max(axis=1)).all()
+     choice = score.argmax(axis=1)
+     pair = np.arange(len(choice))
+-    return gaps[pair, choice], motion_dot[pair, choice], axes[pair, choice]
++    selected = motion_dot[pair, choice]
++    return gaps[pair, choice], selected[..., 0] if scalar else selected, axes[pair, choice]
+ 
+ 
+ @dataclass
+@@ -72,22 +75,42 @@
+         counts = {role: int(np.count_nonzero(roles == role)) for role in ROLE_WEIGHT}
+         return Snapshot(faces, bones, counts)
+ 
+-    def inequalities(self, points, snapshot, column_for_node, direction, radius, count):
++    def deep_regression_nodes(self, previous, candidate):
++        def key(snapshot):
++            deep = self.roles[snapshot.face_rows] == "deep"
++            child = snapshot.face_rows[deep]
++            parent = self.parent_faces[child]
++            bone = snapshot.triangle_rows[deep]
++            return parent, bone, child
++
++        parent_old, bone_old, _ = key(previous)
++        parent_new, bone_new, child_new = key(candidate)
++        base = set(zip(parent_old.tolist(), bone_old.tolist(), strict=True))
++        prior_by_parent = np.bincount([row[0] for row in base], minlength=len(self.faces))
++        present = set(zip(parent_new.tolist(), bone_new.tolist(), strict=True))
++        current_by_parent = np.bincount([row[0] for row in present], minlength=len(self.faces))
++        increased = current_by_parent > prior_by_parent
++        novel = np.array([row not in base for row in zip(parent_new.tolist(), bone_new.tolist(), strict=True)],
++                         dtype=bool)
++        return np.unique(self.faces[child_new[novel & increased[parent_new]]])
++
++    def inequalities(self, points, snapshot, motion, radius):
+         indices = self.faces[snapshot.face_rows]
+-        columns = column_for_node[indices]
+-        participates = np.any(columns >= 0, axis=1)
++        columns = motion.node_id[indices]
++        participates = np.any(columns >= 0, axis=(1, 2))
+         frozen = int(np.count_nonzero(~participates))
+         indices = indices[participates]
+         columns = columns[participates]
+         faces = snapshot.face_rows[participates]
+         bone = snapshot.triangle_rows[participates]
+         gaps, gradients, _ = finite_outward_planes(
+-            points[indices], self.bone[bone], direction[indices], radius)
++            points[indices], self.bone[bone], motion.axes[indices], radius)
+         active = columns >= 0
+         pair_count = len(columns)
+         rows = np.arange(3 * pair_count).reshape(-1, 3)
+-        active_system = coo_matrix((-gradients[active], (rows[active], columns[active])),
+-                                   shape=(3 * pair_count, count)).tocsr()
++        corner_rows = np.broadcast_to(rows[:, :, None], columns.shape)
++        active_system = coo_matrix((-gradients[active], (corner_rows[active], columns[active])),
++                                   shape=(3 * pair_count, motion.count)).tocsr()
+         slack_rows = coo_matrix((-np.ones(3 * pair_count),
+                                  (rows.ravel(), np.repeat(np.arange(pair_count), 3))),
+                                 shape=(3 * pair_count, pair_count)).tocsr()
+--- verify_rebuild.py
++++ verify_rebuild.py
+@@ -1,6 +1,7 @@
+ """Independently verify saved source routes against every receiving child."""
+ from argparse import ArgumentParser
+ from collections import Counter
++from itertools import combinations
+ import json
+ from pathlib import Path
+ 
+@@ -10,7 +11,17 @@
+ from regional_mass import DENSITY_KG_M3, RADIUS_M, RegionalMass
+ 
+ 
+-def verify(candidate, base_points, world_points, base_cells, ledger, expected_masses):
++def signed_boundary(tetrahedra):
++    signed = Counter()
++    for tet in tetrahedra.tolist():
++        for slot, face in enumerate(combinations(tet, 3)):
++            orientation = (-1) ** (slot + sum(a > b for a, b in combinations(face, 2)))
++            signed[tuple(sorted(face))] += orientation
++    assert max((abs(value) for value in signed.values()), default=0) <= 1
++    return {face: sign for face, sign in signed.items() if sign}
++
++
++def verify(candidate, base_points, world_points, base_cells, ledger, expected_masses, source_checkpoint):
+     receipt = json.loads((candidate / "receipt.json").read_text())
+     path = candidate / "rebuild.npz"
+     assert digest(path) == receipt["candidate_sha256"]
+@@ -69,13 +80,14 @@
+     assert np.array_equal(world[unchanged], world_points[unchanged])
+ 
+     paired_rows = len(data["edge_parent"])
+-    assert paired_rows % 3 == 0 and len(rest) == len(base_points) + paired_rows + 1
++    extra_edges = data.get("batch_edge_parents", np.empty((0, 2), dtype=np.intp))
++    assert paired_rows % 3 == 0 and len(rest) == len(base_points) + paired_rows + 1 + len(extra_edges)
+     cols = np.r_[np.arange(3 * ROLE_COUNT).reshape(3, ROLE_COUNT).T,
+                  np.arange(len(base_points), len(base_points) + paired_rows).reshape(-1, 3)]
+     old_world = np.concatenate((world_points,
+         world_points[data["edge_parent"]].mean(axis=1).astype(np.float32).astype(np.float64)))
+     old_rest = np.concatenate((base_points, base_points[data["edge_parent"]].mean(axis=1)))
+-    added = len(rest) - 1
++    added = len(base_points) + paired_rows
+     a, b = data["interior_edge_parent"]
+     fraction = float(data["interior_edge_fraction"])
+     assert [int(a), int(b)] == receipt["interior_edge_split"]["ancestry"]
+@@ -86,6 +98,49 @@
+     np.testing.assert_array_equal(world[added],
+                                   ((1. - fraction) * world_points[a] + fraction * world_points[b]).astype(np.float32))
+     assert np.count_nonzero(np.any(cells == added, axis=1)) == receipt["interior_edge_split"]["new_cells"]
++    seed_rest = np.vstack((old_rest, rest[added]))
++    seed_world = np.vstack((old_world, world[added]))
++    signed_cavities = []
++    if len(extra_edges):
++        assert source_checkpoint is not None and digest(source_checkpoint) == receipt["resume_sha256"]
++        with np.load(source_checkpoint, allow_pickle=False) as source_mesh:
++            old_cavity_cells = source_mesh["elements"]
++            old_cavity_parent = source_mesh["parent"]
++            np.testing.assert_array_equal(data["surface"], source_mesh["surface"])
++            np.testing.assert_array_equal(data["surface_parent"], source_mesh["surface_parent"])
++    for i, row in enumerate(receipt.get("additional_interior_splits", [])):
++        a, b = extra_edges[i]
++        fraction = float(data["batch_edge_fractions"][i])
++        assert [int(a), int(b)] == row["edge"] and fraction == row["fraction"]
++        midpoint = added + 1 + i
++        assert midpoint not in data["surface"]
++        np.testing.assert_array_equal(rest[midpoint], (1. - fraction) * seed_rest[a] + fraction * seed_rest[b])
++        np.testing.assert_array_equal(world[midpoint],
++                                      ((1. - fraction) * seed_world[a] + fraction * seed_world[b]).astype(np.float32))
++        incident = np.any(cells == midpoint, axis=1)
++        parents_here = Counter(parent[incident].tolist())
++        assert len(cells[incident]) == 2 * len(row["rows"])
++        assert sorted(parents_here) == row["parent_rows"]
++        assert parents_here == Counter(np.repeat(old_cavity_parent[row["rows"]], 2).tolist())
++        old_cavity = old_cavity_cells[row["rows"]]
++        new_cavity = cells[incident]
++        assert signed_boundary(new_cavity) == signed_boundary(old_cavity)
++        for points in (rest, world):
++            np.testing.assert_allclose(determinant(points, new_cavity).sum(),
++                                       determinant(points, old_cavity).sum(),
++                                       atol=1.e-18, rtol=2.e-10)
++        signed_cavities.append([int(a), int(b)])
++    displacement = rest[cols] - old_rest[cols]
++    moved_columns = np.any(displacement != 0., axis=(1, 2))
++    axes = old_world[cols[moved_columns, 0]] - old_world[cols[moved_columns, 2]]
++    axes /= np.linalg.norm(axes, axis=1)[:, None]
++    present = displacement[moved_columns]
++    normal_shift = np.einsum("nld,nd->nl", present, axes)
++    tangent = present - normal_shift[:, :, None] * axes[:, None]
++    max_tangent = float(np.linalg.norm(tangent, axis=-1).max()) if len(tangent) else 0.
++    if receipt.get("tangent_motion"):
++        np.testing.assert_allclose(np.diff(tangent, axis=1), 0., atol=1.e-14, rtol=0.)
++        assert max_tangent <= .002 + 1.e-14
+     thickness = {}
+     for key, old, current in (("rest", old_rest, rest), ("world", old_world, world)):
+         prev = np.linalg.norm(np.diff(old[cols], axis=1), axis=2)
+@@ -100,6 +155,7 @@
+             limit_failures = int(np.count_nonzero(above > 2.e-7))
+             if receipt.get("preserve_solid_and_width"):
+                 assert limit_failures == 0, (key, name)
++                assert not np.any((before >= .0005) & (width + 2.e-7 < .0005)), (key, name)
+             thickness[key][name] = {
+                 "new_width_limit_failures": limit_failures,
+                 "maximum_over_limit_um": float(above.max() * 1.e6) if len(above) else 0.,
+@@ -121,6 +177,8 @@
+         "invalid_rest_tets": int(np.count_nonzero(det <= 0.)),
+         "invalid_float32_world_tets": int(np.count_nonzero(world_det <= 0.)),
+         "interior_vertex_ancestry_and_exterior_isolation_verified": True,
++        "signed_cavity_boundary_and_volume_verified": signed_cavities,
++        "maximum_tangential_column_motion_m": max_tangent,
+         "support_vertices_unchanged": len(support),
+         "affected_existing_vertices": len(changed),
+         "affected_euclidean_thickness": thickness,
+@@ -133,6 +191,7 @@
+ def main():
+     parser = ArgumentParser(description=__doc__)
+     parser.add_argument("candidates", metavar="CANDIDATE", type=Path, nargs="+")
++    parser.add_argument("--source-checkpoint", type=Path, help="the rebuild.npz before the batch splits")
+     args = parser.parse_args()
+     reference = HERE / "compiled-reference"
+     receipt = json.loads((reference / "execution.json").read_text())
+@@ -164,7 +223,8 @@
+         "tet_source_mass_kg": {int(t): float(expected[ledger.material == t].sum()) for t in DENSITY_KG_M3},
+     }
+     print(json.dumps({"source": label_summary, "candidates": [
+-        verify(candidate, rest_points, world_points, base_cells, ledger, expected) for candidate in args.candidates
++        verify(candidate, rest_points, world_points, base_cells, ledger, expected, args.source_checkpoint)
++        for candidate in args.candidates
+     ]}, indent=2, allow_nan=False))
+ 
+ 
+--- test_skull_contact.py
++++ test_skull_contact.py
+@@ -5,8 +5,10 @@
+ 
+ import rebuild  # installs the native authoring tool paths
+ from human_skin_contact_planes import finite_triangle_support_planes
+-from skull_contact import SkullContact, finite_outward_planes
++from skull_contact import SkullContact, Snapshot, finite_outward_planes
+ from solid_skull import SolidSkull
++from column_motion import ColumnMotion
++from fit_refined_patch import determinant_gradient
+ 
+ 
+ class FinitePlaneTest(unittest.TestCase):
+@@ -53,6 +55,39 @@
+         trial = np.array([[.25, .25, .5], [.2, .2, .2], [.25, .25, .25]], dtype=np.float32)
+         self.assertEqual(solid.newly_unsafe(trial, np.arange(3)), [0, 1])
+ 
++    def test_shared_tangent_motion_and_determinant_jacobian(self):
++        rng = np.random.default_rng(29)
++        normals = np.array([[0., 1., 0.]] * 3 + [[0., 0., 1.]] * 3 + [[0., 0., 0.]])
++        normal_id = np.r_[np.arange(6), -1]
++        columns = np.arange(6).reshape(-1, 3)
++        motion = ColumnMotion(normals, normal_id, columns, tangent=True)
++        self.assertEqual(motion.count, 10)
++        vals = rng.uniform(-1.e-3, 1.e-3, motion.count)
++        displacement = motion.displacement(vals)
++        np.testing.assert_allclose(motion.recover(displacement), vals, atol=1.e-15)
++        np.testing.assert_array_equal(displacement[-1], [0., 0., 0.])
++        tangent = vals.copy()
++        tangent[:motion.normal_count] = 0.
++        projected = motion.displacement(tangent)[columns]
++        np.testing.assert_allclose(np.diff(projected, axis=1), 0., atol=1.e-15)
++        points = rng.normal(size=(len(normals), 3)) * .02
++        cells = np.array([[0, 1, 3, 5], [1, 2, 4, 6]])
++        jacobian = motion.jacobian(determinant_gradient(points[cells]), cells)
++        step = 1.e-4
++        derivative = (rebuild.determinant(points + step * displacement, cells)
++                      - rebuild.determinant(points - step * displacement, cells)) / (2. * step)
++        np.testing.assert_allclose(jacobian @ vals, derivative, atol=1.e-14, rtol=1.e-8)
++
++    def test_deep_restoration_uses_net_parent_pairs(self):
++        rebuild.install_for_float32()
++        bank = np.zeros(3, dtype=rebuild.TRIANGLE_ROW)
++        bank["triangle"] = [0, 1, 2]
++        contact = SkullContact(np.arange(9).reshape(-1, 3), [0, 0, 1], ["deep"] * 3, bank)
++        faces = np.arange(3)
++        old = Snapshot(faces, np.array([0, 0, 2]), {})
++        new = Snapshot(faces, np.array([0, 1, 1]), {})
++        np.testing.assert_array_equal(contact.deep_regression_nodes(old, new), [3, 4, 5])
++
+     def test_affine_constraints_cover_every_corner(self):
+         rng = np.random.default_rng(832)
+         a, b = 0.015 * rng.normal(size=(2, 96, 3, 3))
