@@ -34,8 +34,11 @@ endurance remains unqualified.
 The bed-normal source screen sampled 523 gluteal quadrature rays. Five found
 admissible chords to the pelvis without an intervening bone, totaling
 12.40 cm² of projected area. None supplied an admissible femur chord. This
-rejects the sampled direct load-path proposal. Oblique or continuous posterior
-load paths remain eligible; the native forces and supports are unchanged.
+rejects the sampled direct load-path proposal. The native articulated
+center of mass accelerated downward at 9.799 m/s², with a momentum change
+within 0.12% of the gravity impulse. The separate Matter skin–bed reaction
+accounts for less than 0.05% of full body weight at the endpoint. The native
+forces and supports are unchanged.
 
 ## Solvers and acceptance
 
@@ -45,20 +48,29 @@ load paths remain eligible; the native forces and supports are unchanged.
 | First-correction latch | 67.30 s | 90 | 116 force and 271 strain metrics exceed 1% |
 | Independent-argument guarded stage | 39.86 s | 90 | 96 force and 221 strain metrics exceed 1% against the reference |
 | Independent-argument full budget | Incomplete | 67 | Spurious certificate rejection at root 67; active solve telemetry matches reference |
-| Corrected dispatch guard, full budget | 69.26 s | 90 | Identical coupled CSV; zero force and strain metrics exceed 1% |
-| Corrected dispatch guard, staged budget | 28.09 s | 90 | 107 force and 246 strain metrics exceed 1% |
+| Dispatch guard, full budget with unchanged shared owner | 69.26 s | 90 | Identical coupled CSV and regional force/strain parity |
+| Dispatch guard, staged budget with unchanged shared owner | 28.09 s | 90 | Guard bypass confirmed by accepted unlatched roots. 107 force and 246 strain metrics exceed 1% |
+| Dispatch guard in loaded Matter owner, full budget | 69.24 s | 90 | Identical coupled CSV and regional force/strain parity |
+| Dispatch guard in loaded Matter owner, staged budget | 39.80 s | 90 | Byte-identical rollback verified. 96 force and 221 strain metrics exceed 1% |
 
-All completed rows reach 1.40625 ms. The final two rows use the same binary,
-shader and input pack. Relaying the guard through the certificate's existing
-dispatch structure restores full-budget parity. Staged control first diverges
-at accepted step three. Its 59.4% body-time reduction reaches 0.0000501×
-headless; process time is 42.87 s. Both the reference and corrected staged run
-have one strict mechanical-domain monitor overrun. The original final
-certificate remains the acceptance authority. The staged candidate is
-excluded from production because force and strain differ. The separately
-verified rollback restores the mechanics, pressure, circulation, tendon
-adapter and Brain predecessor before retry. The runtime investigation does
-not identify the exact origin of the old argument's value.
+All completed rows reach 1.40625 ms. Native replay loads a separate shared
+Matter runtime through `DYLD_LIBRARY_PATH`. The first executable-only patch
+missed that owner. It left the standalone shader argument unreadied and the
+dispatch guard disabled. The final pair patches both owners and shares
+identical executable, library, shader and input pack. It rejects the
+unlatched two-iteration attempt at accepted step two. The outer transaction
+verifies byte-identical mechanics, pressure, circulation, tendon adapter and
+Brain state, before retrying at eight iterations. The original certificate
+continues to own physical validation.
+
+The guarded stage cuts body runtime by 42.5%, reaches 0.0000353× in headless
+body timing and takes 54.44 s from process launch. It passes the strict
+domain monitors on all accepted roots. The largest observed regional force
+resultant difference is 0.0561 N. The same-build staged comparison fails
+the existing 1% force and strain gates, which makes the staged candidate
+ineligible for production. The first loaded staged run lost its final log
+to disk exhaustion. The validated repeat wrote its output to a RAM-backed
+volume and copied back the results with byte comparison.
 
 At reference root 84 the strict mechanical monitor reads 1.493e−5 against
 1.250e−5. Reassembled true linear residuals track Arnoldi and no linear solve

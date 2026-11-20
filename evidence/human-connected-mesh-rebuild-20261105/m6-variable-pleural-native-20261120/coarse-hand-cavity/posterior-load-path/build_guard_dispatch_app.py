@@ -23,15 +23,20 @@ NEW = """
 """
 
 
-def build(app, runtime, recipes, out, cwd):
-    out.mkdir()
-    original = runtime.read_text()
+def patch(original):
     start = original.index('            dispatchGroups32(\n                state.mixedCertificateTiledEnabled ? "nm_mixed_certify_partials"')
     end = original.index("            if (!encodeFEMNewtonCertificateTrace())", start)
     section = original[start:end]
     assert section.count("                setDispatch();\n") == 2
     section = section.replace("setDispatch();", "bindCertificateDispatch();")
     variant = original[:start] + NEW + section + original[end:]
+    return variant
+
+
+def build(app, runtime, recipes, out, cwd):
+    out.mkdir()
+    original = runtime.read_text()
+    variant = patch(original)
     patched_runtime = out / "app-runtime.mm"
     patched_runtime.write_text(variant)
     (out / "short-guard-app-runtime.patch").write_text("".join(difflib.unified_diff(

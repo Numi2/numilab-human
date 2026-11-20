@@ -1,0 +1,64 @@
+{
+  "reference": {
+    "execution": {
+      "returncode": 0,
+      "wall_seconds": 84.15571979107335
+    },
+    "accepted_steps": 90,
+    "simulated_seconds": 0.00140625006679,
+    "final_body_seconds": 69.243049333,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ],
+    "zero_root_assistance": true
+  },
+  "candidate": {
+    "execution": {
+      "returncode": 0,
+      "wall_seconds": 54.444964749971405
+    },
+    "accepted_steps": 90,
+    "simulated_seconds": 0.00140625006679,
+    "final_body_seconds": 39.801670583,
+    "pleural_range_pa": [
+      -490.332519531,
+      -490.332489014
+    ],
+    "zero_root_assistance": true
+  },
+  "shared_accepted_steps": 90,
+  "first_accepted_difference": {
+    "accepted_step": 3,
+    "fields": {
+      "blood_continuity_residual_accum_ml": [
+        "6.66133814775e-10",
+        "0"
+      ],
+      "blood_physical_delta_accum_ml": [
+        "6.66133814775e-10",
+        "0"
+      ],
+      "blood_endpoint_minus_physical_ml": [
+        "0.000465660621174",
+        "0.000465661287308"
+      ]
+    }
+  },
+  "max_accepted_difference": {
+    "blood_continuity_residual_accum_ml": 2.30926389122e-08,
+    "blood_physical_delta_accum_ml": 2.30926389122e-08,
+    "blood_endpoint_minus_physical_ml": 0.0009313401161400001,
+    "post_projection_equality_residual_generalized_s": 1.107801017588e-09,
+    "pre_projection_equality_residual_generalized_s": 8.731149999638465e-11,
+    "equality_velocity_projection_max_generalized_s": 1.1641532180000181e-10,
+    "gas_max_donor_fraction": 3.0294831960000042e-06,
+    "equality_position_projection_max_generalized": 2.84217094304e-14,
+    "blood_ml": 0.0009313199998359778,
+    "PaO2_mmhg": 0.00013732909999930598,
+    "PaCO2_mmhg": 1.144409999653817e-05,
+    "aorta_mmhg": 0.000146496399992202,
+    "SaO2": 1.1920899989359413e-07
+  },
+  "rejections": []
+}

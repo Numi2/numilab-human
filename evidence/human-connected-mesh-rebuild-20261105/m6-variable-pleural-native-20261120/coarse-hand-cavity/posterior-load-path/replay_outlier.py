@@ -15,7 +15,7 @@ def digest(path):
         return hashlib.file_digest(f, "sha256").hexdigest()
 
 
-def run(reference, pack, out, root, steps, trace, shader, fields, scratch, staged, binary):
+def run(reference, pack, out, root, steps, trace, shader, fields, scratch, staged, binary, library):
     assert 0 <= root < steps
     launch = json.loads(reference.read_text())
     assert digest(pack) == EXPECTED
@@ -25,6 +25,11 @@ def run(reference, pack, out, root, steps, trace, shader, fields, scratch, stage
         launch["argv"][0] = str(binary)
         launch["native_binary_sha256"] = digest(binary)
     env = launch["environment"]
+    if library is not None:
+        if library.name != "libmetalrobo.dylib":
+            raise ValueError("Expected libmetalrobo.dylib override")
+        env["DYLD_LIBRARY_PATH"] = str(library.parent)
+        launch["loaded_library_sha256"] = digest(library)
     assert env["NM_VASCULAR_STEP_EXTERNAL_PRESSURE"] == "1"
     for name in tuple(env):
         if name in {"NUMI_HUMAN_INITIAL_SKIN_FEM_NODES_CSV", "NUMI_HUMAN_SKIN_FAT_PARENT_MASS_LEDGER_CSV",
@@ -83,5 +88,6 @@ if __name__ == "__main__":
     parser.add_argument("--fields", action="store_true")
     parser.add_argument("--staged", action="store_true")
     parser.add_argument("--binary", type=lambda v: Path(v).resolve())
+    parser.add_argument("--library", type=lambda v: Path(v).resolve())
     parser.add_argument("--scratch", type=lambda v: Path(v).resolve())
     raise SystemExit(run(**vars(parser.parse_args())))

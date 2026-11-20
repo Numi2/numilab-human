@@ -9,6 +9,19 @@ import sys
 root=Path(sys.argv[1])
 stage=Path(sys.argv[2])
 source_paths = {
+    "free-fall-momentum.json": "free-fall-momentum.json",
+    "transient-build-reclaimed.tsv": "transient-build-reclaimed.tsv",
+    "build_guard_dispatch_library.py": "build_guard_dispatch_library.py",
+    "verify_loaded_dispatch_guard.sh": "verify_loaded_dispatch_guard.sh",
+    "verify_loaded_guard.py": "verify_loaded_guard.py",
+    "guarded-dispatch-library/build.json": "loaded-dispatch-library-build.json",
+    "guarded-dispatch-library/commands.json": "loaded-dispatch-library-commands.json",
+    "guarded-dispatch-library/short-guard-runtime.patch": "loaded-dispatch-library.patch",
+    "loaded-dispatch-comparison.json": "loaded-dispatch-comparison.json",
+    "loaded-dispatch-control-comparison.json": "loaded-dispatch-control-comparison.json",
+    "loaded-dispatch-staged-comparison.json": "loaded-dispatch-staged-comparison.json",
+    "loaded-dispatch-control-fields.json": "loaded-dispatch-control-fields.json",
+    "loaded-dispatch-staged-fields.json": "loaded-dispatch-staged-fields.json",
     "capture-evidence.py": "capture-evidence.py",
     "audit_shoulder_prefix.py": "audit_shoulder_prefix.py",
     "shoulder-prefix-audit.json": "shoulder-prefix-audit.json",
@@ -54,11 +67,13 @@ source_paths = {
 }
 for f, dest in source_paths.items():
     shutil.copyfile(root / f, stage / dest)
-for name in ("guarded-comparison.json", "guarded-field-comparison.json"):
+for name in ("guarded-comparison.json", "guarded-field-comparison.json",
+             "rejected-binary-recovery.json"):
     if (root / name).exists():
         shutil.copyfile(root / name, stage / name)
 for mode in ("control", "one-correction", "guarded-prefix", "guarded-full-budget",
-             "dispatch-full-budget", "dispatch-short-budget"):
+             "dispatch-full-budget", "dispatch-short-budget",
+             "loaded-dispatch-full", "loaded-dispatch-short"):
     base=root/mode
     for name in ("launch.json","execution.json","native/resting-coupled.csv"):
         if (base / name).is_file():
