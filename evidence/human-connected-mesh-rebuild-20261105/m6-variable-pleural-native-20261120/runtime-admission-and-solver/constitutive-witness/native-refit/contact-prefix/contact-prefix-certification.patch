@@ -1,0 +1,15 @@
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -14028,9 +14028,10 @@
+         // A real closing sweep must not force a needlessly tiny global step
+         // merely because no fixed plane tracks its rotating feature. Each
+         // returned dyadic prefix is certified over its ENTIRE time interval.
+-        // Four bounded attempts; unchanged fallback if none proves separation.
++        // Six bounded dyadic prefixes reach 1/64. These two smaller checks
++        // preserve the clearance when a feature has a narrow feasible range.
+         float prefix=0.5f;
+-        for(uint attempt=0u;attempt<4u&&prefix>fraction;++attempt,prefix*=0.5f)
++        for(uint attempt=0u;attempt<6u&&prefix>fraction;++attempt,prefix*=0.5f)
+             if(nmReferenceContactPolynomialPrefixSeparated(kind,start,finish,normal,clearance,prefix))
+                 return prefix;
+     }
