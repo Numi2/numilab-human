@@ -1,0 +1,151 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -28796,6 +28796,112 @@
+                     }
+                 }];
+             }
++            // Sample one registered fascia object without modifying its transaction.
++            const auto capturePectoralEnergy = [&](const char* stage) -> bool {
++                constexpr NSUInteger node = 270u, nodeCount = 88u;
++                constexpr NSUInteger element = 378u, elementCount = 129u;
++                const auto* outputPath = std::getenv("NM_FEM_PECTORAL_ENERGY_TRACE");
++                const bool first = std::strcmp(stage, "assembled_rhs") == 0;
++                const bool final = std::strcmp(stage, "fresh_certificate") == 0;
++                const bool sampleTick = microtick < 4u || microtick % 16u == 0u ||
++                    (microtick >= 81u && microtick <= 85u) ||
++                    microtick + 1u == microtickCount;
++                if (outputPath == nullptr || request.controlStep != 7u ||
++                    state.dispatch.environmentCount != 1u ||
++                    state.dispatch.femNodeCount < node + nodeCount ||
++                    state.dispatch.tetrahedronCount < element + elementCount ||
++                    !sampleTick || !(final || (first && micro.solverIteration == 0u))) {
++                    return true;
++                }
++                struct Snapshot {
++                    NMFEMNodeStateGPU accepted[nodeCount];
++                    NMFEMNodeStateGPU candidate[nodeCount];
++                    nm_float4 external[nodeCount];
++                    nm_float4 reactions[nodeCount];
++                    nm_float4 residual[nodeCount];
++                    NMTetrahedronGPU elements[elementCount];
++                    NMFEMElementVectorGPU internal[elementCount];
++                    NMMatterStatusGPU status;
++                };
++                id<MTLBuffer> snapshot = [state.device newBufferWithLength:sizeof(Snapshot)
++                    options:MTLResourceStorageModeShared];
++                if (snapshot == nil) return true;
++                [encoder endEncoding];
++                encoder = nil;
++                id<MTLBlitCommandEncoder> copy = [commandBuffer blitCommandEncoder];
++                if (copy != nil) {
++                    const auto read = [&](id<MTLBuffer> src, NSUInteger from,
++                                          NSUInteger to, NSUInteger bytes) {
++                        [copy copyFromBuffer:src sourceOffset:from toBuffer:snapshot
++                            destinationOffset:to size:bytes];
++                    };
++                    using Node = NMFEMNodeStateGPU;
++                    using Tet = NMTetrahedronGPU;
++                    using Element = NMFEMElementVectorGPU;
++                    using Vector = nm_float4;
++                    read(state.femAccepted, node*sizeof(Node), offsetof(Snapshot,accepted), nodeCount*sizeof(Node));
++                    read(state.femCandidate, node*sizeof(Node), offsetof(Snapshot,candidate), nodeCount*sizeof(Node));
++                    const bool forcePresent = hasFEMMechanicalForces != 0u;
++                    if (forcePresent) {
++                        read(femMechanicalForces, node*sizeof(Vector), offsetof(Snapshot,external), nodeCount*sizeof(Vector));
++                    }
++                    read(state.femConstraintReactions, node*sizeof(Vector), offsetof(Snapshot,reactions), nodeCount*sizeof(Vector));
++                    read(state.femResidual, node*sizeof(Vector), offsetof(Snapshot,residual), nodeCount*sizeof(Vector));
++                    read(state.femTetrahedraCandidate, element*sizeof(Tet), offsetof(Snapshot,elements), elementCount*sizeof(Tet));
++                    read(state.elementForces, element*sizeof(Element), offsetof(Snapshot,internal), elementCount*sizeof(Element));
++                    read(state.statuses, 0u, offsetof(Snapshot,status), sizeof(NMMatterStatusGPU));
++                    [copy endEncoding];
++                    const auto rootIndex = request.controlStep;
++                    const auto tick = microtick;
++                    const auto rootDt = state.dispatch.gravityAndTimestep.w;
++                    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> finished) {
++                        if (finished.status != MTLCommandBufferStatusCompleted) return;
++                        const auto& s = *static_cast<const Snapshot*>(snapshot.contents);
++                        static std::mutex outputMutex;
++                        const std::lock_guard<std::mutex> lock(outputMutex);
++                        auto* out = std::fopen(outputPath, "a");
++                        if (out == nullptr) return;
++                        for (unsigned i = 0; i < nodeCount; ++i) {
++                            const auto& a = s.accepted[i];
++                            const auto& b = s.candidate[i];
++                            const auto& x = b.restAndFixed;
++                            const auto& f = s.external[i];
++                            const auto& k = s.reactions[i];
++                            const auto& r = s.residual[i];
++                            const auto write = [&](nm_float4 v) {
++                                std::fprintf(out, ",%.9g,%.9g,%.9g", v.x, v.y, v.z);
++                            };
++                            std::fprintf(out, "n,%u,%u,%u,%u,%u,%.9g,%.9g,%.9g",
++                                rootIndex,tick,final?1u:0u,s.status.code,i,rootDt,a.positionAndMass.w,x.w);
++                            write(x); write(Vector{a.referenceDisplacementAndMode.x+a.referenceDisplacementLow.x, a.referenceDisplacementAndMode.y+a.referenceDisplacementLow.y, a.referenceDisplacementAndMode.z+a.referenceDisplacementLow.z,0.0f});
++                            write(a.velocityAndInverseMass);
++                            write(Vector{b.referenceDisplacementAndMode.x+b.referenceDisplacementLow.x, b.referenceDisplacementAndMode.y+b.referenceDisplacementLow.y, b.referenceDisplacementAndMode.z+b.referenceDisplacementLow.z,0.0f});
++                            write(b.velocityAndInverseMass); write(forcePresent?f:Vector{});
++                            write(k); write(r);
++                            std::fputc(10, out);
++                        }
++                        for (unsigned i = 0; i < elementCount; ++i) {
++                            const auto& t = s.elements[i];
++                            const auto& f = s.internal[i];
++                            std::fprintf(out, "e,%u,%u,%u,%u,%u,%u,%u,%u,%u,%.9g",
++                                rootIndex,tick,final?1u:0u,s.status.code,i,
++                                t.nodes.x,t.nodes.y,t.nodes.z,t.nodes.w,t.inverseRestRow0.w);
++                            for (const auto& v : {t.inverseRestRow0,t.inverseRestRow1,t.inverseRestRow2,
++                                    t.materialFrameRotation,f.node0,f.node1,f.node2,f.node3})
++                                std::fprintf(out, ",%.9g,%.9g,%.9g,%.9g", v.x,v.y,v.z,v.w);
++                            std::fputc(10, out);
++                        }
++                        std::fclose(out);
++                    }];
++                }
++                encoder = [commandBuffer computeCommandEncoder];
++                if (encoder == nil) {
++                    diagnostics.message = "failed to resume Matter after fascia energy observation";
++                    ownership->preDynamicsOpen = false;
++                    return false;
++                }
++                return true;
++            };
+             const auto encodeFEMNewtonTrace = [&](const char* stage) -> bool {
+                 std::uint32_t root = 0u;
+                 if (!selectedFEMNewtonTraceRoot(root)) return true;
+@@ -28804,9 +28910,7 @@
+                 // bounded alpha/status arenas (not per-node arrays); no contact
+                 // capture or physics eligibility is widened.
+                 const bool boundedHumanAlphaTrace =
+-                    state.femFullCoupledTrueResidualEnabled &&
+-                    environments == 1u && state.dispatch.femNodeCount <= 524288u &&
+-                    objectTotal <= 512u && microtick <= 4u;
++                    environments == 1u && objectTotal == 14u && microtick == 85u;
+                 if (microtick != 0u && !boundedHumanAlphaTrace) {
+                     if (microtick == 1u && !femNewtonTraceCapturedAny &&
+                         std::strcmp(stage, "before_contact_limits") == 0)
+@@ -36340,6 +36444,7 @@
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
+ 
++            if (!capturePectoralEnergy("assembled_rhs")) return diagnostics;
+             beginSolverStage("matter_newton_linear");
+             if (encoder == nil) {
+                 diagnostics.message = "failed to open Newton linear timing stage";
+@@ -49569,7 +49674,7 @@
+                 ? 0u : std::strtoul(backtrackingNewtonSetting, nullptr, 10);
+ 
+             if (backtrackingObjectSetting != nullptr && backtrackingRootSetting != nullptr &&
+-                micro.solverIteration == backtrackingNewton && environments == 1u &&
++                microtick == 85u && micro.solverIteration == backtrackingNewton && environments == 1u &&
+                 request.controlStep == std::strtoul(backtrackingRootSetting,nullptr,10) &&
+                 state.femParallelBacktrackingEnabled && state.femParallelBacktrackingPartials != nil) {
+                 const std::uint32_t objectIndex = std::strtoul(backtrackingObjectSetting,nullptr,10);
+@@ -52137,6 +52242,7 @@
+                 });
+                 [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+             }
++            if (!capturePectoralEnergy("fresh_certificate")) return diagnostics;
+             if (!encodeFEMNewtonCertificateTrace()) {
+                 ownership->preDynamicsOpen = false;
+                 return diagnostics;
