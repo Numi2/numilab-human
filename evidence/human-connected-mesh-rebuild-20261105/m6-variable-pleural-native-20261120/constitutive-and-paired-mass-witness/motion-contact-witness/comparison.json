@@ -1,0 +1,89 @@
+{
+  "accepted_trace_byte_identity": [
+    "resting-coupled.csv",
+    "resting-com-support-impulses.csv",
+    "resting-com-momentum-diagnostic.csv"
+  ],
+  "failure_receipt_byte_identity": true,
+  "tier_one_rollback": "byte_identical",
+  "completed_steps": 21,
+  "accepted_seconds": 0.042,
+  "wall_seconds": 344.1233442919329,
+  "end_to_end_headless_rtf": 0.00012204926139614001,
+  "failed_root": 21,
+  "successful_microsteps_in_failed_root": 191,
+  "rejection_diagnostics": [
+    0.00411037914454937,
+    1.1198544598300941e-06,
+    0.00411037914454937,
+    -1049758
+  ],
+  "reported_contact_bounds": [
+    {
+      "schema": 1,
+      "root": 21,
+      "microtick": 191,
+      "iteration": 1,
+      "environment": 0,
+      "tiled": true,
+      "tiles": 128,
+      "active_slot": 12,
+      "contact_slot": 410,
+      "object": 12,
+      "reason": 8,
+      "bound": 0.015625,
+      "prior_bound": 1,
+      "incoming_alpha": 0.015625
+    },
+    {
+      "schema": 1,
+      "root": 21,
+      "microtick": 191,
+      "iteration": 2,
+      "environment": 0,
+      "tiled": true,
+      "tiles": 128,
+      "active_slot": 4,
+      "contact_slot": 143,
+      "object": 12,
+      "reason": 8,
+      "bound": 0.125,
+      "prior_bound": 1,
+      "incoming_alpha": 0.125
+    },
+    {
+      "schema": 1,
+      "root": 21,
+      "microtick": 191,
+      "iteration": 3,
+      "environment": 0,
+      "tiled": true,
+      "tiles": 128,
+      "active_slot": 8,
+      "contact_slot": 156,
+      "object": 12,
+      "reason": 8,
+      "bound": 0.5,
+      "prior_bound": 1,
+      "incoming_alpha": 0.5
+    },
+    {
+      "schema": 1,
+      "root": 21,
+      "microtick": 191,
+      "iteration": 9,
+      "environment": 0,
+      "tiled": true,
+      "tiles": 128,
+      "active_slot": 4,
+      "contact_slot": 143,
+      "object": 12,
+      "reason": 8,
+      "bound": 0.5,
+      "prior_bound": 1,
+      "incoming_alpha": 0.5
+    }
+  ],
+  "reported_bounds_under_0_05": 1,
+  "prediction": "Only one reported restriction below 0.05 in the 24-pass retry"
+}

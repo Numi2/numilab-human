@@ -1,0 +1,3 @@
+# Identify the correction limiter at 44 ms
+
+Replay the staged regional scene, with the same pins and accepted-state and rollback checks. After 21 accepted physical steps, capture the tiled per-contact limit minima through both attempts at microtick 191. This diagnostic changes no admitted forces. Expected accepted trace prefix is byte-identical to the prior 42 ms. The failure status should reproduce. Predict the active contact limiter drops the accepted Newton fraction below 0.05 on at least half the active passes of the failed full-budget microtick. The alternate explanation is force/conditioning failure with ordinary step lengths. Preserve valid, failed, and inconclusive observations. Stop at the first rejected physical step or 540 wall seconds.

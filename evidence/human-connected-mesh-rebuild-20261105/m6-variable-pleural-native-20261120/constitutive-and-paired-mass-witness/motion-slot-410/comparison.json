@@ -1,0 +1,433 @@
+{
+  "accepted_trace_byte_identity": [
+    "resting-coupled.csv",
+    "resting-com-support-impulses.csv",
+    "resting-com-momentum-diagnostic.csv"
+  ],
+  "failure_receipt_byte_identity": true,
+  "tier_one_rollback": "byte_identical",
+  "completed_steps": 21,
+  "accepted_seconds": 0.042,
+  "wall_seconds": 344.0884942081757,
+  "end_to_end_headless_rtf": 0.00012206162282947404,
+  "failed_root": 21,
+  "successful_microsteps_in_failed_root": 191,
+  "rejection_diagnostics": [
+    0.00411037914454937,
+    1.1198544598300941e-06,
+    0.00411037914454937,
+    -1049758
+  ],
+  "selected_feature": [
+    {
+      "schema": 1,
+      "root": 21,
+      "microtick": 191,
+      "iteration": 1,
+      "stage": "after_deformable_limit",
+      "trace_slots_per_environment": 1,
+      "active_counts": [
+        69
+      ],
+      "line_search_alpha": [
+        0.015625
+      ],
+      "truncated": [
+        true
+      ],
+      "contacts": [
+        {
+          "environment": 0,
+          "active_slot": 12,
+          "active_count": 69,
+          "contact_slot": 410,
+          "identity": [
+            12,
+            10,
+            1,
+            1
+          ],
+          "source": [
+            2906,
+            2447,
+            410,
+            1
+          ],
+          "nodes": [
+            1102,
+            1093,
+            908,
+            907,
+            4294967295,
+            4294967295
+          ],
+          "weights": [
+            0.88063699,
+            0.119363002,
+            -0.534620762,
+            -0.465379238,
+            0,
+            0
+          ],
+          "feature_side_by_vertex": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "feature_barycentric": [
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "geometry_coordinate_frame": "reference_local",
+          "reference_origin_m": [
+            -0.0470486321,
+            -0.61080724,
+            0.194726929
+          ],
+          "feature_start": [
+            [
+              -0.000272898877,
+              0.000126332408,
+              -0.00571078435
+            ],
+            [
+              -0.000284447422,
+              -0.0129145673,
+              -0.0130455717
+            ],
+            [
+              -0.00720459688,
+              -0.00144946575,
+              -0.00648815185
+            ],
+            [
+              0.00768684596,
+              -0.00139768422,
+              -0.00671774521
+            ]
+          ],
+          "feature_end": [
+            [
+              -0.000272890175,
+              0.000126367537,
+              -0.00571073405
+            ],
+            [
+              -0.000284436363,
+              -0.0129145673,
+              -0.0130455066
+            ],
+            [
+              -0.00720459688,
+              -0.00144946575,
+              -0.00648815185
+            ],
+            [
+              0.00768684596,
+              -0.00139768422,
+              -0.00671774521
+            ]
+          ],
+          "feature_endpoint_role": "ccd_projected",
+          "potential_feature_start_high": [
+            [
+              -0.000272898877,
+              0.000126332408,
+              -0.00571078435
+            ],
+            [
+              -0.000284447422,
+              -0.0129145673,
+              -0.0130455717
+            ],
+            [
+              -0.00720459688,
+              -0.00144946575,
+              -0.00648815185
+            ],
+            [
+              0.00768684596,
+              -0.00139768422,
+              -0.00671774521
+            ]
+          ],
+          "potential_feature_start_low": [
+            [
+              -9.8233149e-12,
+              6.66858539e-12,
+              -1.6236594e-10
+            ],
+            [
+              -1.12012942e-11,
+              1.26609265e-10,
+              -5.25766132e-11
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "potential_feature_end_high": [
+            [
+              -0.000272890175,
+              0.000126367537,
+              -0.00571073405
+            ],
+            [
+              -0.000284436363,
+              -0.0129145673,
+              -0.0130455066
+            ],
+            [
+              -0.00720459688,
+              -0.00144946575,
+              -0.00648815185
+            ],
+            [
+              0.00768684596,
+              -0.00139768422,
+              -0.00671774521
+            ]
+          ],
+          "potential_feature_end_low": [
+            [
+              5.07825943e-12,
+              -1.76985737e-12,
+              -2.24878602e-10
+            ],
+            [
+              5.21379251e-12,
+              -3.34020728e-10,
+              -1.87382457e-10
+            ],
+            [
+              0,
+              0,
+              0
+            ],
+            [
+              0,
+              0,
+              0
+            ]
+          ],
+          "collision_thickness_m": 2.48824534e-08,
+          "ccd_toi": 0,
+          "ccd_separation_m": 9.99786153e-06,
+          "lane_bound_before": 1,
+          "lane_bound_after": 0.015625,
+          "requested_alpha": 0.015625,
+          "ccd_hit": false,
+          "ccd_certified": true,
+          "zero_bound_source": false,
+          "ccd_shortened_sweep_retries": 0,
+          "ccd_tested_fraction": 1,
+          "diagnostic_reason_code": 0,
+          "diagnostic_reason": "none",
+          "normal": [
+            0.0151409525,
+            -0.490178764,
+            0.871490359
+          ],
+          "numerical_clearance_offset_m": 0,
+          "initial_toi": 0,
+          "contact_point_and_separation": [
+            -0.0473229848,
+            -0.612235069,
+            0.18813628,
+            9.99793883e-06
+          ],
+          "barrier_parameters": [
+            3.06657411e-09,
+            2.32500224e-05,
+            9.99999975e-06,
+            3.85186652e+17
+          ],
+          "barrier": [
+            9.97310599e-06,
+            3.03507512e-08,
+            2.69789616e-13,
+            9.99793883e-06
+          ],
+          "per_alpha_trace": {
+            "schema": 1,
+            "microtick": 191,
+            "reason_codes": {
+              "1": "ccd_uncertified",
+              "2": "ccd_shortened_fraction",
+              "3": "nonfinite_toi",
+              "4": "hit_not_initial_touch_nonclosing",
+              "5": "invalid_barrier_energy",
+              "6": "barrier_armijo_rejected",
+              "7": "accepted"
+            },
+            "selected_contact_slot": 410,
+            "contact_active_slot": 12,
+            "solver_iteration": 1,
+            "is_failure": false,
+            "accepted_snapshot": {
+              "path": "",
+              "sha256": ""
+            },
+            "accepted_snapshot_bound": false,
+            "trials": [
+              {
+                "index": 0,
+                "active_slot": 12,
+                "contact_slot": 410,
+                "reason_code": 7,
+                "ccd_hit": false,
+                "ccd_certified": true,
+                "tested_full_fraction": true,
+                "initial_touch_gate_evaluated": true,
+                "initial_touch_nonclosing_or_not_required": true,
+                "barrier_evaluated": true,
+                "finite_barrier": true,
+                "accepted_by_feature_gate": true,
+                "geometry_coordinate_frame": "reference_local",
+                "reference_origin_m": [
+                  -0.0470486321,
+                  -0.61080724,
+                  0.194726929
+                ],
+                "base": [
+                  2.69789616e-13,
+                  -1.19056041e-11,
+                  0.015625,
+                  9.99793883e-06
+                ],
+                "ccd": [
+                  0.015625,
+                  0,
+                  9.99786153e-06,
+                  1
+                ],
+                "ccd_normal": [
+                  0,
+                  0,
+                  0
+                ],
+                "ccd_point": [
+                  0,
+                  0,
+                  0
+                ],
+                "energy": [
+                  1.23246343e-13,
+                  9.99841268e-06,
+                  2.69771022e-13
+                ],
+                "weighted_direction_and_normal_dot": [
+                  1.23363167e-10,
+                  4.86968299e-10,
+                  5.21243992e-10,
+                  2.17425425e-10
+                ],
+                "trial_feature_endpoints": [
+                  [
+                    -0.00027289876,
+                    0.000126332961,
+                    -0.00571078388
+                  ],
+                  [
+                    -0.000284447247,
+                    -0.0129145673,
+                    -0.0130455708
+                  ],
+                  [
+                    -0.00720459688,
+                    -0.00144946575,
+                    -0.00648815185
+                  ],
+                  [
+                    0.00768684596,
+                    -0.00139768422,
+                    -0.00671774521
+                  ]
+                ],
+                "feature_endpoint_role": "ccd_projected",
+                "potential_feature_endpoint_high": [
+                  [
+                    -0.00027289876,
+                    0.000126332961,
+                    -0.00571078388
+                  ],
+                  [
+                    -0.000284447247,
+                    -0.0129145673,
+                    -0.0130455708
+                  ],
+                  [
+                    -0.00720459688,
+                    -0.00144946575,
+                    -0.00648815185
+                  ],
+                  [
+                    0.00768684596,
+                    -0.00139768422,
+                    -0.00671774521
+                  ]
+                ],
+                "potential_feature_endpoint_low": [
+                  [
+                    9.96729522e-12,
+                    2.4485559e-12,
+                    1.56786681e-10
+                  ],
+                  [
+                    -1.2772893e-11,
+                    1.19413326e-10,
+                    3.26394502e-11
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ],
+                  [
+                    0,
+                    0,
+                    0
+                  ]
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "minimum_lane_bounds": [],
+      "recorded_count": 1,
+      "trial_trace_capture_summary": {
+        "contact_slot": 410,
+        "payload_bytes": 11264,
+        "contact_records_attached": 1,
+        "trial_records_attached": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,170 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -49565,86 +49565,98 @@
+             const char* backtrackingRootSetting = std::getenv("NM_FEM_BACKTRACKING_TRACE_ROOT");
+             const char* backtrackingNewtonSetting =
+                 std::getenv("NM_FEM_BACKTRACKING_TRACE_NEWTON");
++            const char* backtrackingTickSetting = std::getenv("NM_FEM_BACKTRACKING_TRACE_MICROTICK");
++            const bool selectedBacktrackingTick = backtrackingTickSetting == nullptr ||
++                microtick == std::strtoul(backtrackingTickSetting, nullptr, 10);
++            const bool allBacktrackingNewton = backtrackingNewtonSetting != nullptr &&
++                std::strcmp(backtrackingNewtonSetting, "all") == 0;
+             const std::uint32_t backtrackingNewton = backtrackingNewtonSetting == nullptr
+                 ? 0u : std::strtoul(backtrackingNewtonSetting, nullptr, 10);
+ 
+             if (backtrackingObjectSetting != nullptr && backtrackingRootSetting != nullptr &&
+-                micro.solverIteration == backtrackingNewton && environments == 1u &&
++                selectedBacktrackingTick && environments == 1u &&
++                (allBacktrackingNewton || micro.solverIteration == backtrackingNewton) &&
+                 request.controlStep == std::strtoul(backtrackingRootSetting,nullptr,10) &&
+                 state.femParallelBacktrackingEnabled && state.femParallelBacktrackingPartials != nil) {
+-                const std::uint32_t objectIndex = std::strtoul(backtrackingObjectSetting,nullptr,10);
+-                if (objectIndex >= state.objectLayout.size()) {
++                const bool allObjects = std::strcmp(backtrackingObjectSetting, "all") == 0;
++                const auto firstObject = allObjects ? 0u :
++                    std::uint32_t(std::strtoul(backtrackingObjectSetting,nullptr,10));
++                if (firstObject >= state.objectLayout.size()) {
+                     diagnostics.message = "backtracking trace object is outside object layout";
+                     ownership->preDynamicsOpen = false;
+                     return diagnostics;
+                 }
+-                const auto object = state.objectLayout[objectIndex];
+-                const std::uint32_t trials = std::min<std::uint32_t>(
+-                    state.mixedSolverValue.nonlinearIterations.w,NM_MIXED_LINE_SEARCH_MAX_STEPS);
+-                const std::uint32_t maximumTiles = state.femParallelBacktrackingMaximumTiles;
+-                const std::uint32_t tiles = object.elementCount/256u + (object.elementCount%256u != 0u);
+-                const NSUInteger partialBytes = NSUInteger(trials)*maximumTiles*sizeof(nm_float4);
+-                const NSUInteger partialOffset = NSUInteger(objectIndex)*
+-                    NM_MIXED_LINE_SEARCH_MAX_STEPS*maximumTiles*sizeof(nm_float4);
+-                if ((object.flags & NM_OBJECT_MIXED_FEM) == 0u && tiles <= maximumTiles &&
+-                    partialBytes <= 4u*1024u*1024u &&
+-                    partialOffset <= state.femParallelBacktrackingPartials.length &&
+-                    partialBytes <= state.femParallelBacktrackingPartials.length-partialOffset) {
+-                    id<MTLBuffer> snapshot = [state.device newBufferWithLength:
+-                        partialBytes+sizeof(nm_float4) options:MTLResourceStorageModeShared];
+-                    [encoder endEncoding]; encoder=nil;
+-                    id<MTLBlitCommandEncoder> copy = [commandBuffer blitCommandEncoder];
+-                    if (snapshot == nil || copy == nil) {
+-                        if (copy != nil) [copy endEncoding];
+-                        diagnostics.message="failed to allocate bounded FEM backtracking diagnostic";
+-                        ownership->preDynamicsOpen=false; return diagnostics;
++                const auto lastObject = allObjects ? state.objectLayout.size() : firstObject + 1u;
++                for (auto objectIndex = firstObject; objectIndex < lastObject; ++objectIndex) {
++                    const auto object = state.objectLayout[objectIndex];
++                    const std::uint32_t trials = std::min<std::uint32_t>(
++                        state.mixedSolverValue.nonlinearIterations.w,NM_MIXED_LINE_SEARCH_MAX_STEPS);
++                    const std::uint32_t maximumTiles = state.femParallelBacktrackingMaximumTiles;
++                    const std::uint32_t tiles = object.elementCount/256u + (object.elementCount%256u != 0u);
++                    const NSUInteger partialBytes = NSUInteger(trials)*maximumTiles*sizeof(nm_float4);
++                    const NSUInteger partialOffset = NSUInteger(objectIndex)*
++                        NM_MIXED_LINE_SEARCH_MAX_STEPS*maximumTiles*sizeof(nm_float4);
++                    if ((object.flags & NM_OBJECT_MIXED_FEM) == 0u && tiles <= maximumTiles &&
++                        partialBytes <= 4u*1024u*1024u &&
++                        partialOffset <= state.femParallelBacktrackingPartials.length &&
++                        partialBytes <= state.femParallelBacktrackingPartials.length-partialOffset) {
++                        id<MTLBuffer> snapshot = [state.device newBufferWithLength:
++                            partialBytes+sizeof(nm_float4) options:MTLResourceStorageModeShared];
++                        [encoder endEncoding]; encoder=nil;
++                        id<MTLBlitCommandEncoder> copy = [commandBuffer blitCommandEncoder];
++                        if (snapshot == nil || copy == nil) {
++                            if (copy != nil) [copy endEncoding];
++                            diagnostics.message="failed to allocate bounded FEM backtracking diagnostic";
++                            ownership->preDynamicsOpen=false; return diagnostics;
++                        }
++                        [copy copyFromBuffer:state.femParallelBacktrackingPartials sourceOffset:partialOffset
++                            toBuffer:snapshot destinationOffset:0u size:partialBytes];
++                        [copy copyFromBuffer:state.femLineSearch sourceOffset:objectIndex*sizeof(nm_float4)
++                            toBuffer:snapshot destinationOffset:partialBytes size:sizeof(nm_float4)];
++                        [copy endEncoding];
++                        const auto root=request.controlStep;
++                        const auto tick=microtick;
++                        const auto iteration=micro.solverIteration;
++                        [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> completed) {
++                            if (completed.status != MTLCommandBufferStatusCompleted) return;
++                            const auto* records=static_cast<const nm_float4*>(snapshot.contents);
++                            const nm_float4 selected=records[partialBytes/sizeof(nm_float4)];
++                            std::ostringstream line;
++                            line<<"fem_backtracking_trials={\"root\":"<<root<<",\"microtick\":"<<tick<<",\"iteration\":"<<iteration<<",\"object\":"
++                                <<objectIndex<<",\"selected_alpha\":"<<selected.x<<",\"trials\":[";
++                            bool first=true;
++                            for (std::uint32_t trial=0u;selected.z>0.0f && trial<trials;++trial) {
++                                const float alpha=std::exp2(-float(trial));
++                                if (selected.x>0.0f && alpha<selected.x) break;
++                                std::uint32_t firstBad=0xffffffffu; nm_float4 witness{};
++                                std::vector<std::uint32_t> tileWitnesses;
++                                float minimumJ=INFINITY;
++                                for (std::uint32_t tile=0u;tile<tiles;++tile) {
++                                    const auto record=records[trial*maximumTiles+tile];
++                                    if (record.w != 0.0f) {
++                                        std::uint32_t index;std::memcpy(&index,&record.x,sizeof(index));
++                                        if (index<firstBad) {firstBad=index;witness=record;}
++                                        tileWitnesses.push_back(index);
++                                    } else minimumJ=std::min(minimumJ,record.x);
++                                }
++                                if (!first) line<<",";first=false;
++                                line<<"{\"alpha\":"<<alpha<<",\"valid_tile_min_J\":";
++                                if (std::isfinite(minimumJ)) line<<minimumJ;else line<<"null";
++                                line<<",\"first_bad_tet\":"<<firstBad<<",\"trial_J\":"<<witness.y
++                                    <<",\"current_J\":"<<witness.z<<",\"reason\":"<<witness.w
++                                    <<",\"invalid_tiles\":"<<tileWitnesses.size()<<",\"tile_witness_tets\":[";
++                                for (std::size_t w=0;w<tileWitnesses.size();++w) {
++                                    if(w)line<<",";line<<tileWitnesses[w];
++                                }
++                                line<<"],\"tile_witnesses_complete\":true}";
++                            }
++                            line<<"]}\n";const auto text=line.str();
++                            std::fwrite(text.data(),1u,text.size(),stderr);
++                        }];
++                        encoder=[commandBuffer computeCommandEncoder];
++                        if (encoder==nil) {diagnostics.message="failed to resume after FEM backtracking diagnostic";
++                            ownership->preDynamicsOpen=false;return diagnostics;}
+                     }
+-                    [copy copyFromBuffer:state.femParallelBacktrackingPartials sourceOffset:partialOffset
+-                        toBuffer:snapshot destinationOffset:0u size:partialBytes];
+-                    [copy copyFromBuffer:state.femLineSearch sourceOffset:objectIndex*sizeof(nm_float4)
+-                        toBuffer:snapshot destinationOffset:partialBytes size:sizeof(nm_float4)];
+-                    [copy endEncoding];
+-                    const auto root=request.controlStep;
+-                    const auto iteration=micro.solverIteration;
+-                    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> completed) {
+-                        if (completed.status != MTLCommandBufferStatusCompleted) return;
+-                        const auto* records=static_cast<const nm_float4*>(snapshot.contents);
+-                        const nm_float4 selected=records[partialBytes/sizeof(nm_float4)];
+-                        std::ostringstream line;
+-                        line<<"fem_backtracking_trials={\"root\":"<<root<<",\"iteration\":"<<iteration<<",\"object\":"
+-                            <<objectIndex<<",\"selected_alpha\":"<<selected.x<<",\"trials\":[";
+-                        bool first=true;
+-                        for (std::uint32_t trial=0u;selected.z>0.0f && trial<trials;++trial) {
+-                            const float alpha=std::exp2(-float(trial));
+-                            if (selected.x>0.0f && alpha<selected.x) break;
+-                            std::uint32_t firstBad=0xffffffffu; nm_float4 witness{};
+-                            std::vector<std::uint32_t> tileWitnesses;
+-                            float minimumJ=INFINITY;
+-                            for (std::uint32_t tile=0u;tile<tiles;++tile) {
+-                                const auto record=records[trial*maximumTiles+tile];
+-                                if (record.w != 0.0f) {
+-                                    std::uint32_t index;std::memcpy(&index,&record.x,sizeof(index));
+-                                    if (index<firstBad) {firstBad=index;witness=record;}
+-                                    tileWitnesses.push_back(index);
+-                                } else minimumJ=std::min(minimumJ,record.x);
+-                            }
+-                            if (!first) line<<",";first=false;
+-                            line<<"{\"alpha\":"<<alpha<<",\"valid_tile_min_J\":";
+-                            if (std::isfinite(minimumJ)) line<<minimumJ;else line<<"null";
+-                            line<<",\"first_bad_tet\":"<<firstBad<<",\"trial_J\":"<<witness.y
+-                                <<",\"current_J\":"<<witness.z<<",\"reason\":"<<witness.w
+-                                <<",\"invalid_tiles\":"<<tileWitnesses.size()<<",\"tile_witness_tets\":[";
+-                            for (std::size_t w=0;w<tileWitnesses.size();++w) {
+-                                if(w)line<<",";line<<tileWitnesses[w];
+-                            }
+-                            line<<"],\"tile_witnesses_complete\":true}";
+-                        }
+-                        line<<"]}\n";const auto text=line.str();
+-                        std::fwrite(text.data(),1u,text.size(),stderr);
+-                    }];
+-                    encoder=[commandBuffer computeCommandEncoder];
+-                    if (encoder==nil) {diagnostics.message="failed to resume after FEM backtracking diagnostic";
+-                        ownership->preDynamicsOpen=false;return diagnostics;}
+                 }
+             }
+             if (!encodeVascularTrace("after_fem_backtracking")) {
