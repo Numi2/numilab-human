@@ -1,0 +1,88 @@
+{
+  "shape": "native Float32 flat-plane source footprint, normal-load geometry only",
+  "outer_registration_sha256": "94842e8782744ec4898fd32e1c8cbdc4dc02b22de9921df63d21fd286422fc02",
+  "outer_node_count": 76153,
+  "nearest_source_o_row": 26199,
+  "nearest_source_donor_body": 128,
+  "nearest_position_m": [
+    0.01760457642376423,
+    -0.8474215865135193,
+    4.043023693611758e-08
+  ],
+  "initial_articulated_com_xy_m": [
+    -0.0250632893294,
+    -0.756703138351
+  ],
+  "articulated_mass_kg": 82.7162246704,
+  "initial_com_min_source_gap_for_xy_support_mm": 0.9821229614317417,
+  "source_o_nodes_at_that_cutoff": 18,
+  "diagnostic": [
+    {
+      "maximum_source_gap_mm": 0.0001,
+      "source_outer_nodes": 1,
+      "normal_reaction_xy_hull_area_mm2": 0.0,
+      "articulated_com_to_hull_mm": 100.25160150813424
+    },
+    {
+      "maximum_source_gap_mm": 0.001,
+      "source_outer_nodes": 1,
+      "normal_reaction_xy_hull_area_mm2": 0.0,
+      "articulated_com_to_hull_mm": 100.25160150813424
+    },
+    {
+      "maximum_source_gap_mm": 0.01,
+      "source_outer_nodes": 1,
+      "normal_reaction_xy_hull_area_mm2": 0.0,
+      "articulated_com_to_hull_mm": 100.25160150813424
+    },
+    {
+      "maximum_source_gap_mm": 0.05,
+      "source_outer_nodes": 2,
+      "normal_reaction_xy_hull_area_mm2": 0.0,
+      "articulated_com_to_hull_mm": 100.25160150813424
+    },
+    {
+      "maximum_source_gap_mm": 0.1,
+      "source_outer_nodes": 3,
+      "normal_reaction_xy_hull_area_mm2": 22.987657741224883,
+      "articulated_com_to_hull_mm": 100.25160150813424
+    },
+    {
+      "maximum_source_gap_mm": 0.25,
+      "source_outer_nodes": 8,
+      "normal_reaction_xy_hull_area_mm2": 846.861466440142,
+      "articulated_com_to_hull_mm": 90.21289494498167
+    },
+    {
+      "maximum_source_gap_mm": 0.5,
+      "source_outer_nodes": 11,
+      "normal_reaction_xy_hull_area_mm2": 940.3348584213767,
+      "articulated_com_to_hull_mm": 89.68575220554179
+    },
+    {
+      "maximum_source_gap_mm": 1.0,
+      "source_outer_nodes": 19,
+      "normal_reaction_xy_hull_area_mm2": 24707.296710428534,
+      "articulated_com_to_hull_mm": 0.0
+    },
+    {
+      "maximum_source_gap_mm": 2.0,
+      "source_outer_nodes": 33,
+      "normal_reaction_xy_hull_area_mm2": 26636.047981508145,
+      "articulated_com_to_hull_mm": 0.0
+    },
+    {
+      "maximum_source_gap_mm": 5.0,
+      "source_outer_nodes": 70,
+      "normal_reaction_xy_hull_area_mm2": 66844.80813574896,
+      "articulated_com_to_hull_mm": 0.0
+    },
+    {
+      "maximum_source_gap_mm": 10.0,
+      "source_outer_nodes": 143,
+      "normal_reaction_xy_hull_area_mm2": 99543.57139843494,
+      "articulated_com_to_hull_mm": 0.0
+    }
+  ],
+  "limitation": "The COM here is the source articulated projection, exclusive of separately integrated FEM masses. A feasible geometric hull alone gives no pressure or equilibrium result."
+}
