@@ -67,3 +67,24 @@ local geometry and measurement routines. The native captures stayed on Numi
 and were transparently compressed after their byte-identical readback was
 verified. Cumulative allocated storage savings were 753,012,736 bytes,
 including older preparation flows. No generated bulk geometry is committed.
+
+## Bed force and moment preflight
+
+The paired skin and fat role packets match every registered TetGen cell and
+the exact Float32 node coordinates. Their cell masses link back to the
+verified native paired-flow receipts. Skin contributes 3.452570445 kg and
+fat contributes 10.487108518 kg. The source pose accounts for 99.51% of mass
+in its articulated and skin/fat first moment. The full compiled body mass is
+97.13194745 kg, with weight 952.8644 N at 9.81 m/s².
+
+The one skin node within 10 µm of the plane is 87.465 mm horizontally from
+the combined mass projection. For that node alone to hold the body in static
+balance, the other 0.476 kg of continuum tissue would have to be centered
+17.76 m horizontally from the support point. This rules out point-supported
+static balance at this footprint and identifies why using the existing
+release pose as a restart cannot establish resting equilibrium. The computation
+uses a geometric contact cutoff. It does not assign bed reaction, recompute
+tissue deformation, or certify that the supported state has been reached.
+
+Run `check_bed_mass_moment.py` after `check_bed_footprint.py` on the pinned
+Numi reference. The report retains both geometry and mass identities.

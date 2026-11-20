@@ -1,0 +1,55 @@
+{
+  "mapped_layer_inputs": {
+    "skin": {
+      "child_mass_sha256": "1700e30ab22fcbacc39799b56953b77cf0f6b14be902b5d7a3a8bc660ad61757",
+      "p1_sha256": "eeef228211e7aac55dab055595330af995ad5e88f7c23ff136b56867dfbc9bf1",
+      "geometry_sha256": "066514f17cf5fb8d7495b6ea2ac24d6c8157e3da86554e7053591144c115c329",
+      "mapped_mass_receipt_sha256": "eca3e59b606e7ade0eaa3dca27e2609ca4aa369dd1d760f115485cd85a0f0d0c"
+    },
+    "fat": {
+      "child_mass_sha256": "2ebc0cd9e5cddbe6f946d2a041c8ff2e3e6afbaa610f4ee897be6cd33a9c4534",
+      "p1_sha256": "c33555222320c149f2491424516389846439a1af4315a857aa704821f48aa337",
+      "geometry_sha256": "72b73ae1af3c19e2eeff0bd6916a7c594b4e5b093ad1976acb89c1c0848ec0ef",
+      "mapped_mass_receipt_sha256": "8d6032447dfeb353a424df604727502647191964c5c341611e0b6fc1b576539f"
+    }
+  },
+  "mapped_layers": {
+    "skin": {
+      "cell_count": 705091,
+      "mapped_mass_kg": 3.452570445473973,
+      "mapped_density_centre_m": [
+        -0.02636485744574552,
+        -0.87842572899666,
+        0.1250874270171098
+      ]
+    },
+    "fat": {
+      "cell_count": 743713,
+      "mapped_mass_kg": 10.487108517986504,
+      "mapped_density_centre_m": [
+        -0.026540737901736937,
+        -0.8501081249569286,
+        0.1251998546506592
+      ]
+    }
+  },
+  "native_total_body_mass_kg": 97.13194745175196,
+  "total_body_weight_at_9_81_N_kg_N": 952.8644045016867,
+  "unresolved_other_FEM_moment_mass_kg": 0.47604381789148853,
+  "moment_accounted_mass_fraction": 0.9950989985233442,
+  "centre_of_accounted_mass_xy_m": [
+    -0.02527008393136061,
+    -0.7711854823883568
+  ],
+  "closest_registered_skin_point_xy_m": [
+    0.01760457642376423,
+    -0.8474215865135193
+  ],
+  "closest_point_to_accounted_centre_m": 0.0874653078240163,
+  "required_remainder_centre_xy_for_point_support_m": [
+    8.722872629214791,
+    -16.326394859142574
+  ],
+  "required_remainder_centre_distance_from_contact_m": 17.75895000966298,
+  "test_scope": "A static balance using the only skin point within 10 micrometers. The mass moment uses the mapped skin and fat cell masses and native Float32 vertices plus the articulated COM. It is an initialization feasibility check."
+}
