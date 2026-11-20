@@ -1,0 +1,91 @@
+{
+  "reference": {
+    "accepted_steps": 10,
+    "simulated_seconds": 0.0200000009499,
+    "end_to_end_real_time_factor": 7.438753849459523e-05,
+    "gpu_ms_per_step": [
+      22858.3447917,
+      22628.4731249,
+      22664.4011249,
+      22681.6389998,
+      22718.823625,
+      22717.976375,
+      24328.4179582,
+      23763.100375,
+      23222.373625,
+      23279.7134584
+    ],
+    "gpu_total_ms": 230863.2634579,
+    "execution": {
+      "exit": 0,
+      "wall_seconds": 268.86224970803596
+    },
+    "pleural_range_pa": [
+      -501.719207764,
+      -490.642364502
+    ],
+    "peak_bed_impulse_ns": 0.28353625536,
+    "peak_bed_penetration_m": 0.00077588413842,
+    "maximum_root_force_n": 0.0,
+    "maximum_root_torque_nm": 0.0,
+    "peak_mass_residual_kg": 0.0
+  },
+  "candidate": {
+    "accepted_steps": 10,
+    "simulated_seconds": 0.0200000009499,
+    "end_to_end_real_time_factor": 0.00028437729435638084,
+    "gpu_ms_per_step": [
+      5438.55266669,
+      5525.05487506,
+      5559.53849992,
+      5574.30433319,
+      5625.15879166,
+      5636.31162513,
+      5853.26108336,
+      5869.83054155,
+      5876.79575011,
+      5866.02149997
+    ],
+    "gpu_total_ms": 56824.82966664,
+    "execution": {
+      "exit": 0,
+      "stop": "native_exit",
+      "wall_seconds": 70.32910625007935
+    },
+    "pleural_range_pa": [
+      -501.719207764,
+      -490.642364502
+    ],
+    "peak_bed_impulse_ns": 0.28353625536,
+    "peak_bed_penetration_m": 0.00077588413842,
+    "maximum_root_force_n": 0.0,
+    "maximum_root_torque_nm": 0.0,
+    "peak_mass_residual_kg": 0.0
+  },
+  "shared_profiled_accepted_steps": 10,
+  "shared_trace_comparisons": {
+    "resting-coupled.csv": {
+      "both_row_counts": [
+        11,
+        11
+      ],
+      "shared_lines_identical": true
+    },
+    "resting-com-support-impulses.csv": {
+      "both_row_counts": [
+        321,
+        321
+      ],
+      "shared_lines_identical": true
+    },
+    "resting-com-momentum-diagnostic.csv": {
+      "both_row_counts": [
+        11,
+        11
+      ],
+      "shared_lines_identical": true
+    }
+  },
+  "differing_trace_field_max_abs": {},
+  "paired_GPU_speed_ratio": 4.062718090177264
+}

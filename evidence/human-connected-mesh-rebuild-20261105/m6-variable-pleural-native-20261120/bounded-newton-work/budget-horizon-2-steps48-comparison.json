@@ -1,0 +1,111 @@
+{
+  "reference": {
+    "accepted_steps": 10,
+    "simulated_seconds": 0.0200000009499,
+    "end_to_end_real_time_factor": 7.438753849459523e-05,
+    "gpu_ms_per_step": [
+      22858.3447917,
+      22628.4731249,
+      22664.4011249,
+      22681.6389998,
+      22718.823625,
+      22717.976375,
+      24328.4179582,
+      23763.100375,
+      23222.373625,
+      23279.7134584
+    ],
+    "gpu_total_ms": 230863.2634579,
+    "execution": {
+      "exit": 0,
+      "wall_seconds": 268.86224970803596
+    },
+    "pleural_range_pa": [
+      -501.719207764,
+      -490.642364502
+    ],
+    "peak_bed_impulse_ns": 0.28353625536,
+    "peak_bed_penetration_m": 0.00077588413842,
+    "maximum_root_force_n": 0.0,
+    "maximum_root_torque_nm": 0.0,
+    "peak_mass_residual_kg": 0.0
+  },
+  "candidate": {
+    "accepted_steps": 15,
+    "simulated_seconds": 0.0300000014249,
+    "end_to_end_real_time_factor": 0.0002816624919045357,
+    "gpu_ms_per_step": [
+      5432.52608343,
+      5521.50200005,
+      5553.22950007,
+      5563.41774995,
+      5618.79066657,
+      5631.53204182,
+      5849.85499992,
+      5863.44629154,
+      5868.18800005,
+      5860.62229169,
+      6230.19612511,
+      5965.46387509,
+      6000.35199989,
+      6036.00633331,
+      7951.59150008
+    ],
+    "gpu_total_ms": 88946.71945857,
+    "execution": {
+      "exit": 1,
+      "stop": "native_exit",
+      "wall_seconds": 106.51045945822261
+    },
+    "pleural_range_pa": [
+      -510.826080322,
+      -490.642364502
+    ],
+    "peak_bed_impulse_ns": 0.684947371483,
+    "peak_bed_penetration_m": 0.00208697607741,
+    "maximum_root_force_n": 0.0,
+    "maximum_root_torque_nm": 0.0,
+    "peak_mass_residual_kg": 0.0,
+    "failure": {
+      "matter_code": 10,
+      "matter_environment": 0,
+      "matter_object_index": 0,
+      "matter_failing_index": 4294967295,
+      "matter_microsteps": 53,
+      "matter_diagnostics": [
+        0.0005012459005229175,
+        0.6540007591247559,
+        0.0005012459005229175,
+        -1049753
+      ]
+    },
+    "Brain_accepted_time_us": 30000,
+    "Brain_rejected_time_us": 32000
+  },
+  "shared_profiled_accepted_steps": 10,
+  "shared_trace_comparisons": {
+    "resting-coupled.csv": {
+      "both_row_counts": [
+        11,
+        16
+      ],
+      "shared_lines_identical": true
+    },
+    "resting-com-support-impulses.csv": {
+      "both_row_counts": [
+        321,
+        481
+      ],
+      "shared_lines_identical": true
+    },
+    "resting-com-momentum-diagnostic.csv": {
+      "both_row_counts": [
+        11,
+        16
+      ],
+      "shared_lines_identical": true
+    }
+  },
+  "differing_trace_field_max_abs": {},
+  "paired_GPU_speed_ratio": 4.067135591807951
+}

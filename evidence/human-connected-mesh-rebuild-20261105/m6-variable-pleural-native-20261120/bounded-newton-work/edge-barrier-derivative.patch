@@ -1,0 +1,163 @@
+--- a/matter/src/metal/common.metalinc
++++ b/matter/src/metal/common.metalinc
+@@ -246,8 +246,10 @@
+     MRCompensatedScalar separation,
+     float thickness,
+     const float stiffness,
+-    const float clearanceOffset = 0.0f
+-) {
++    const float clearanceOffset = 0.0f,
++    thread MRCompensatedScalar* radialDerivative = nullptr
++) {
++    if (radialDerivative != nullptr) *radialDerivative = {0.0f, 0.0f};
+     // FEM numerical clearance must be the same boundary in the potential,
+     // gradient, CCD and final certificate. Offset zero is the legacy law.
+     if (clearanceOffset != 0.0f) {
+@@ -292,23 +294,27 @@
+     const auto energyAtDistance = mrCompensatedNegate(
+         mrCompensatedMultiply(scaledOffset,
+             mrCompensatedMultiply(offset, logarithm)));
++    MRCompensatedScalar energyDerivative = {0.0f, 0.0f};
++    if (belowFloor || radialDerivative != nullptr) {
++        const auto firstSquared = mrCompensatedNegate(
++            mrCompensatedAdd(
++                mrCompensatedMultiply({2.0f, 0.0f},
++                    mrCompensatedMultiply(scaledOffset, logarithm)),
++                mrCompensatedMultiply(scaledOffset,
++                    mrCompensatedDivide(offset, squaredDistance))));
++        energyDerivative = mrCompensatedMultiply(
++            mrCompensatedMultiply({2.0f, 0.0f}, distance), firstSquared);
++        if (radialDerivative != nullptr) *radialDerivative = energyDerivative;
++    }
+     if (!belowFloor)
+         return energyAtDistance.high < 0.0f ||
+             (energyAtDistance.high == 0.0f && energyAtDistance.low < 0.0f)
+                 ? MRCompensatedScalar{0.0f, 0.0f}
+                 : energyAtDistance;
+ 
+-    const auto firstSquared = mrCompensatedNegate(
+-        mrCompensatedAdd(
+-            mrCompensatedMultiply({2.0f, 0.0f},
+-                mrCompensatedMultiply(scaledOffset, logarithm)),
+-            mrCompensatedMultiply(scaledOffset,
+-                mrCompensatedDivide(offset, squaredDistance))));
+-    const auto energyDerivativeAtFloor = mrCompensatedMultiply(
+-        mrCompensatedMultiply({2.0f, 0.0f}, distance), firstSquared);
+     const auto continuation = mrCompensatedAdd(
+         energyAtDistance,
+-        mrCompensatedMultiply(energyDerivativeAtFloor, floorDelta));
++        mrCompensatedMultiply(energyDerivative, floorDelta));
+     return continuation.high < 0.0f ||
+         (continuation.high == 0.0f && continuation.low < 0.0f)
+             ? MRCompensatedScalar{0.0f, 0.0f}
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -1253,12 +1253,17 @@
+     thread const MRCompensatedPositionGPU* position,
+     thread float& energy,
+     thread float& separation,
+-    thread MRCompensatedScalar* energyWords = nullptr
++    thread MRCompensatedScalar* energyWords = nullptr,
++    thread const float3* edgeDirection = nullptr,
++    thread float* edgeDerivative = nullptr
+ ) {
+     if (energyWords != nullptr) *energyWords = {NAN, 0.0f};
+     float featureMollifier = 1.0f;
+     MRCompensatedScalar featureMollifierWords = {1.0f, 0.0f};
+     MRCompensatedPositionGPU relative;
++    float3 relativeDirection = float3(0.0f);
++    float mollifierDerivative = 0.0f;
++    if (edgeDerivative != nullptr) *edgeDerivative = NAN;
+     if (contact.identity.z == NM_DEFORMABLE_CONTACT_POINT_POINT) {
+         relative = mrCompensatedVectorAdd(position[0],
+             mrCompensatedVectorNegate(position[1]));
+@@ -1297,6 +1302,15 @@
+         featureMollifier = ipcFeatureMollifierDifferential(
+             firstEdge, secondEdge, firstGradient, secondGradient,
+             energyWords != nullptr ? &featureMollifierWords : nullptr);
++
++        if (edgeDirection != nullptr) {
++            const float3 firstVelocity = edgeDirection[1] - edgeDirection[0];
++            const float3 secondVelocity = edgeDirection[3] - edgeDirection[2];
++            relativeDirection = (edgeDirection[0] - edgeDirection[2]) +
++                firstParameter * firstVelocity - secondParameter * secondVelocity;
++            mollifierDerivative = dot(firstGradient, firstVelocity) +
++                dot(secondGradient, secondVelocity);
++        }
+     } else {
+         energy = INFINITY;
+         separation = -INFINITY;
+@@ -1317,10 +1331,23 @@
+         squared.high==0.0f&&squared.low==0.0f
+             ? MRCompensatedScalar{0.0f,0.0f}:mrCompensatedSqrt(squared);
+     separation = distance.high + distance.low;
++    MRCompensatedScalar radialDerivative = {0.0f, 0.0f};
+     const MRCompensatedScalar barrierEnergy =
+         ipcFEMBarrierEnergyCompensated(
+             distance, contact.barrier.z, contact.mollifier.w,
+-            nmFEMClearanceAlignedBarrierActive ? contact.barrierHessianRow2.w : 0.0f);
++            nmFEMClearanceAlignedBarrierActive ? contact.barrierHessianRow2.w : 0.0f,
++            edgeDerivative != nullptr ? &radialDerivative : nullptr);
++    if (edgeDerivative != nullptr && separation > 0.0f) {
++        const auto speed = mrCompensatedVectorDot(relative,
++            mrCompensatedVector(float4(relativeDirection, 0.0f)));
++        const auto distanceDerivative = mrCompensatedDivide(speed, distance);
++        const auto radialTerm = mrCompensatedMultiply(featureMollifierWords,
++            mrCompensatedMultiply(radialDerivative, distanceDerivative));
++        const auto angularTerm = mrCompensatedMultiply(
++            barrierEnergy, {mollifierDerivative, 0.0f});
++        const auto derivative = mrCompensatedAdd(radialTerm, angularTerm);
++        *edgeDerivative = derivative.high + derivative.low;
++    }
+     const MRCompensatedScalar mollifiedEnergy = mrCompensatedMultiply(
+         barrierEnergy, energyWords != nullptr
+             ? featureMollifierWords : MRCompensatedScalar{featureMollifier, 0.0f});
+@@ -14848,12 +14875,36 @@
+             if (captureMinimumWitness != 0u && bound < beforeGapBound) contactBoundReason = 3u;
+         }
+ 
++        // Match the edge-edge Armijo slope to the same compensated geometry
++        // and potential as the trial energy. Stored force rows are assembled
++        // separately and may use a differently rounded point or mollifier.
++        const bool matchedEdgeSlope = referenceModeContact &&
++            contact.identity.z == NM_DEFORMABLE_CONTACT_EDGE_EDGE &&
++            (!nmFEMClearanceAlignedBarrierActive || contact.barrierHessianRow2.w == 0.0f);
++        float3 edgeDirection[4];
++        if (matchedEdgeSlope) {
++            const bool mapped = (contact.identity.w & NM_CONTACT_MAPPED_FEATURE) != 0u;
++            for (uint feature = 0u; feature < 4u; ++feature) {
++                if (mapped) {
++                    const uint base = contact.featureSideByVertex[feature] == 0u ? 0u : 3u;
++                    edgeDirection[feature] =
++                        contact.featureBarycentricX[feature] * analyticDisplacement[base] +
++                        contact.featureBarycentricY[feature] * analyticDisplacement[base + 1u] +
++                        contact.featureBarycentricZ[feature] * analyticDisplacement[base + 2u];
++                } else {
++                    edgeDirection[feature] = analyticDisplacement[feature];
++                }
++            }
++        }
++        float matchedDerivative = NAN;
+         float currentEnergy;
+         float currentSeparation;
+         MRCompensatedScalar currentEnergyWords = {NAN, 0.0f};
+         const bool currentEnergyValid = referenceModeContact
+             ? deformableBarrierEnergyAt(contact, featurePotentialPosition,
+-                currentEnergy, currentSeparation, &currentEnergyWords)
++                currentEnergy, currentSeparation, &currentEnergyWords,
++                matchedEdgeSlope ? edgeDirection : nullptr,
++                matchedEdgeSlope ? &matchedDerivative : nullptr)
+             : deformableBarrierEnergyAt(contact, featurePosition,
+                 currentEnergy, currentSeparation);
+         if (!currentEnergyValid) {
+@@ -14899,8 +14950,8 @@
+                 dispatch,
+                 schedulers[environment * dispatch.objectCount +
+                            contact.identity.x]);
+-            const float directionalDerivative =
+-                contactBarrierDirectionalDerivative(
++            const float directionalDerivative = matchedEdgeSlope
++                ? matchedDerivative : contactBarrierDirectionalDerivative(
+                     contact, analyticDisplacement, dt);
+             if (!isfinite(directionalDerivative)) {
+                 recordFailure(
