@@ -1,0 +1,10 @@
+tetrahedralizing partition-11/gluteal-29.npz pYq1.5nQ 3849 7702
+^tetrahedralize: TETGEN CRASHED... KABOOOM!!!
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/sacral-interface-046/test_volume.py", line 78, in <module>
+    main()
+    ~~~~^^
+  File "/Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/sacral-interface-046/test_volume.py", line 38, in main
+    nodes, cells, *_ = tetgen.tetrahedralize(points.astype(float), faces, flags=flags)
+                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Tetrahedralization failed with status 1
