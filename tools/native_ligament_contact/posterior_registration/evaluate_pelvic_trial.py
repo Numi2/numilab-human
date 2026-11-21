@@ -18,7 +18,15 @@ def report(run,ctrl):
     stat=json.loads((run/'solid-overlap.json').read_text());assert stat['accepted_step']==accepted and stat['snapshot_sha256']==sha(run/'accepted-pelvic-state.csv')
     parts=[p for z in stat['muscles'].values() for p in z['cortex'].values()]
     before=sum(p['source_bound_ml'] for p in parts);after=sum(p['accepted_material_ml'] for p in parts)
-    execution=json.loads((run/'execution.json').read_text());result=dict(accepted_steps=accepted,accepted_seconds=accepted*.002,wall_seconds=execution['wall_seconds'],rtf_including_initialization=accepted*.002/execution['wall_seconds'],completed_requested_duration=execution['native_exit_code']==0,variable_pleural_pressure=json.loads((run/'launch.json').read_text())['environment']['NM_VASCULAR_STEP_EXTERNAL_PRESSURE'],max_internal_force_imbalance_N=max(net),minimum_accepted_J=min(float(r['min_J']) for r in trace),maximum_accepted_J=max(float(r['max_J']) for r in trace),maximum_accepted_sampled_penetration_m=max(float(r[k]) for r in trace for k in ('gap_r_m','gap_l_m')),endpoint_wrench_source='before dynamics',endpoint_material_stats='after dynamics',cortical_volume_before_elasticity_ml=before,cortical_volume_with_elasticity_ml=after,probe_fractional_reduction=1-after/before,solid_overlap_gate=after==0.)
+    execution=json.loads((run/'execution.json').read_text());result=dict(accepted_steps=accepted,accepted_seconds=accepted*.002,wall_seconds=execution['wall_seconds'],rtf_including_initialization=accepted*.002/execution['wall_seconds'],completed_requested_duration=execution['native_exit_code']==0,variable_pleural_pressure=json.loads((run/'launch.json').read_text())['environment']['NM_VASCULAR_STEP_EXTERNAL_PRESSURE'],max_internal_force_imbalance_N=max(net),minimum_accepted_J=min(float(r['min_J']) for r in trace),maximum_accepted_J=max(float(r['max_J']) for r in trace),maximum_accepted_sampled_penetration_m=max(float(r[k]) for r in trace for k in ('gap_r_m','gap_l_m')),endpoint_wrench_source='before dynamics',endpoint_material_stats='after dynamics',cortical_volume_before_elasticity_ml=before,cortical_volume_with_elasticity_ml=after,probe_fractional_reduction=(1-after/before) if before>0 else None,solid_overlap_gate=after==0.)
+    crossing=run/'native-crossings.json'
+    if crossing.exists():
+        c=json.loads(crossing.read_text())
+        if c['accepted_step']!=accepted or c['native_surface_sha256']!=sha(run/'accepted-pelvic-surfaces.csv'):
+            raise ValueError('Crossing witness belongs to another accepted surface')
+        result['native_transverse_pairs']=c['total_transverse']
+        result['native_boundary_pairs']=c['total_boundary_only']
+        result['regional_endpoint_clearance_passed']=after==0 and c['total_transverse']==0
     if fail.exists():result['rejecting_candidate']=rows[accepted]
     if end.exists() and ctrl:
         a=json.loads(end.read_text());b=json.loads((ctrl/'terminal.receipt.json').read_text());assert a['accepted_step']==b['accepted_step']

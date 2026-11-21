@@ -18,14 +18,21 @@ def measure(v,f,b,g,exe):
         else:boundary+=1
     a=solid(v,f,'source material')[0];c=solid(b,g,'source cortex')[0]
     return dict(transverse=proper,boundary=boundary,closed_overlap_ml=(a^c).volume()*1.e6)
-def run(part,assets,cfg,receipt,cap,base,exe,out):
+def run(part,assets,cfg,receipt,cap,base,exe,out,raw=None):
     source,lineage=read_inputs(cfg,receipt,cap,base)
     d=json.loads((assets/'manifest.json').read_text());banks=d['matched_cortical_banks'];frames={r['body_index']:frame(r) for r in json.loads(receipt.read_text())['initial_anatomical_registration']['body_poses']}
     samples=np.fromfile(assets/'cortical-samples.bin','f4').reshape(2,256,5,4);tris=np.fromfile(assets/'cortical-triangles.bin','f4').reshape(-1,10,4)
     report={}
     for side,sid in enumerate((29,30)):
-        mesh=np.load(part/'conforming-boundary'/f'{sid}.npz');v=mesh['vertices'].astype(float);f=mesh['face'];ports=np.load(part/'ports'/f'{sid}.npz')
-        bank={str(ports['target_bank'][i]):tuple(samples[side,j,4,:2].copy().view('u4').astype(int)) for j,i in enumerate(d['sides'][side]['quadrature_indices'])}
+        mesh=np.load((raw/f'muscle_{sid}.npz') if raw else (part/'conforming-boundary'/f'{sid}.npz'))
+        v=mesh['vertices'].astype(float);f=mesh['triangles' if raw else 'face'];ports=np.load(part/'ports'/f'{sid}.npz')
+        owners={banks[name.split('_')[-1]]['owner']:name for name in np.unique(ports['target_bank']) if name.startswith('bone_')}
+        bank={}
+        for row in samples[side,:int(d['sides'][side]['rows'])]:
+            owner=int(row[3,2].copy().view('u4'));key=owners[owner];span=tuple(row[4,:2].copy().view('u4').astype(int))
+            if key in bank and bank[key]!=span:raise ValueError(('conflicting source span',key))
+            bank[key]=span
+        if len(bank)!=len(owners):raise ValueError('missing cortical source')
         for name,(first,n) in bank.items():
             b,g=source[name];owner=banks[name.split('_')[-1]]['owner']
             local=Rotation.from_quat(frames[owner][3:]).inv().apply(v-frames[owner][:3]);native,idx=np.unique(tris[first:first+n,:3,:3].reshape(-1,3),axis=0,return_inverse=True);native=native.astype(float)
