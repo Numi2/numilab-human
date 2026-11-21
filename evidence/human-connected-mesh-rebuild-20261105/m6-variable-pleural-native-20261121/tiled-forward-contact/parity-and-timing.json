@@ -1,0 +1,60 @@
+{
+  "loaded_415_trace_sha256": {
+    "accepted-pelvic-state.csv": "74b9f5cf8213fb2930aecf91952294c9c85220dcf8677ed6e50857572a400e7a",
+    "accepted-pelvic-surfaces.csv": "cfbf84657a593d5b1dfa2985871a4311d86f80b2ea35510fe09efc400f2babfc",
+    "accepted-cortical-registry.csv": "a9967fdc908892286375c19bf79686ffd42b83f40a48cbc6d0ed89fe2b5699e6",
+    "candidate-contact.csv": "bc97f4276a7458d9c74fb3539f3f9a4363c3122a5a602c84f1cae07e4f81c416",
+    "fresh-force-certificate.csv": "edd7cca4e0bd0d2baf0c2d3137bad33f9ef6ebb809c0f599961f95b1820f1ef3",
+    "pelvic-endpoint-crossings.csv": "7f4811b14a5e33aeaac1cbb2bfec0b8ae4a25f3542ac1e61b188194a89b401cb",
+    "resting-coupled.csv": "aeab745cb8a6e7fe5d78443a70c4ee0413a0a5ae917f1965dd6d9e14b1bad77b"
+  },
+  "endpoint": {
+    "accepted_step": 415,
+    "accepted_body_state_sha256": "43f10feb8bc803c0337fb690acb0aaf580f38a5d5fd060ced86c7530bb0a013a",
+    "accepted_respiration_state_sha256": "7b5b6ab379fc7dd68796b86d13f2cb34d410090d318ccc0685b0b2a425b05d3e",
+    "accepted_cardiac_geometry_buffers": {
+      "cardiac_q": {
+        "bytes": 16,
+        "path": "/Volumes/NumiPelvicResponse048/native/accepted-geometry/step-415.cardiac-q.bin",
+        "record_type": "mr_float4",
+        "sha256": "ef99cfd192ee2fe43a68cef2af40c85c2c215759f491c1b3fa09ed0f794f9201"
+      },
+      "cardiac_wall_q": {
+        "bytes": 16,
+        "path": "/Volumes/NumiPelvicResponse048/native/accepted-geometry/step-415.cardiac-wall-q.bin",
+        "record_type": "mr_float4",
+        "sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
+      },
+      "common_coordinates": {
+        "bytes": 64,
+        "path": "/Volumes/NumiPelvicResponse048/native/accepted-geometry/step-415.common-coordinates.bin",
+        "record_type": "MRHumanRestingCommonCoordinatesGPU",
+        "sha256": "010636950e1c473c434458fcd8de852ec1fe929ffc73f000340050b6dcaca40c"
+      },
+      "common_position_low": {
+        "bytes": 46716960,
+        "path": "/Volumes/NumiPelvicResponse048/native/accepted-geometry/step-415.common-position-low.bin",
+        "record_type": "mr_float4",
+        "sha256": "8311d823ab6e31291c6761ca533eed85eb54258cfc24b060dea43bef5d21f9d6"
+      }
+    },
+    "captured_vertex_buffer_sha256": "3c924614eafa205cde6dff5cfa568e5a781472310c75a7fadaa5135f0b6821da",
+    "base_pack_file_sha256": "1605e84c2dfdcb31daa984f7156710fe4f1342a8d2f7845304c40ed276594e22"
+  },
+  "first_rejected_candidate": {
+    "attempted_step": 416,
+    "last_accepted_step": 415,
+    "source": "tiled-transaction-416",
+    "regional_trace_sha256": "cdb31c42489ca63479c1de42406c04256b00133d24fbf8fa6d9bbf850511bd30"
+  },
+  "isolated_query_median_ms": {
+    "serial": 1.73397,
+    "tiled": 0.323229
+  },
+  "isolated_query_speed_ratio": 5.364524841521027,
+  "cold_wall_seconds": {
+    "original": 234.0107221659273,
+    "distributed": 220.61858724988997
+  },
+  "cold_measured_throughput_ratio": 1.0607026592046314
+}

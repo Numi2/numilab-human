@@ -68,3 +68,65 @@ kernel void nm_pelvic_forward_query(constant uint4& d [[buffer(0)]],device const
     }
     float gap=isfinite(hit.gap)?hit.gap:-INFINITY;gaps[i]=gap;result[i]=float4(hit.gradient,gap);
 }
+
+kernel void nm_pelvic_forward_neighborhood(constant uint4& d [[buffer(0)]],device const PelvicPoolSample* pool [[buffer(1)]],
+    device const float4* surface [[buffer(2)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(3)]],device const float4* low [[buffer(4)]],
+    device const PelvicTriangle* triangles [[buffer(5)]],device const uint* neighbors [[buffer(6)]],
+    device const uint* needed [[buffer(7)]],device float* gaps [[buffer(8)]],device const PelvicForwardSite* sites [[buffer(9)]],
+    device const MRCompensatedPositionGPU* frames [[buffer(10)]],device float4* result [[buffer(11)]],device uint2* queue [[buffer(12)]],device atomic_uint* args [[buffer(13)]],uint i [[thread_position_in_grid]]){
+    if(i>=pelvicReverseStart)return;
+    const auto s=pool[i].contact;if(d.z&&!needed[uint(s.domain.y==145)])return;
+    auto site=sites[i];float3 a=surface[site.face.x].xyz;
+    float3 tail=site.weight.y*(surface[site.face.y].xyz-a)+site.weight.z*(surface[site.face.z].xyz-a);
+    PelvicClosest hit{INFINITY,INFINITY,float3(0)};uint4 bank=s.bank;
+    for(uint j=0;j<bank.w;++j)pelvicTriangleAt<true>(a,tail,triangles[neighbors[bank.z+j]],hit);
+    uint b=s.domain.z,at=b==128?0u:b==1?4u:b==131?8u:12u;
+    float3 v=s.reference.xyz,center=b==128?v:frames[at+3].high.xyz+frames[at].high.xyz*v.x+frames[at+1].high.xyz*v.y+frames[at+2].high.xyz*v.z;
+    // A conservative error allowance can only enlarge the exact-search fallback.
+    float rounding=32.f*1.1920928955078125e-7f*(length(v)+length(center)+length(a)+length(tail));
+    if(length((a-center)+tail)+sqrt(hit.sq)+rounding>=s.reference.w){
+        uint slot=atomic_fetch_add_explicit(args,1u,memory_order_relaxed);
+        queue[slot]=uint2(i,as_type<uint>(hit.sq));
+    }
+    float gap=isfinite(hit.gap)?hit.gap:-INFINITY;gaps[i]=gap;result[i]=float4(hit.gradient,gap);
+}
+
+kernel void nm_pelvic_clear_forward_dispatch(device uint* args [[buffer(0)]],uint i [[thread_position_in_grid]]){
+    if(!i){args[0]=0;args[1]=1;args[2]=1;}
+}
+// Each lane visits original triangle indices in increasing order. The earliest
+// original index wins an exact tie. The cached neighborhood wins ties with the bank.
+kernel void nm_pelvic_forward_bank(device const uint2* queue [[buffer(0)]],
+    device const PelvicPoolSample* pool [[buffer(1)]],device const float4* surface [[buffer(2)]],
+    device const PelvicForwardSite* sites [[buffer(3)]],device const PelvicTriangle* triangles [[buffer(4)]],
+    device float* gaps [[buffer(5)]],device float4* result [[buffer(6)]],
+    uint row [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    uint2 entry=queue[row];uint i=entry.x;float initial=as_type<float>(entry.y);
+    auto site=sites[i];float3 a=surface[site.face.x].xyz;
+    float3 tail=site.weight.y*(surface[site.face.y].xyz-a)+site.weight.z*(surface[site.face.z].xyz-a);
+    uint4 bank=pool[i].contact.bank;float4 seed=result[i];
+    PelvicClosest best{initial,seed.w,seed.xyz};
+    uint rank=UINT_MAX;bool invalid=false;
+    for(uint j=lane;j<bank.y;j+=32){
+        auto tri=bank.x+j;float before=best.sq;
+        float3 v=triangles[tri].data[0].xyz;
+        float3 area=cross(triangles[tri].data[1].xyz-v,triangles[tri].data[2].xyz-v);
+        float area2=dot(area,area);
+        invalid|=!(area2>0.f) || !isfinite(area2);
+        pelvicTriangleAt<true>(a,tail,triangles[tri],best);
+        invalid|=!isfinite(best.sq);
+        if(best.sq<before)rank=j;
+    }
+    if(simd_any(invalid)){
+        if(lane)return;
+        best={initial,seed.w,seed.xyz};
+        for(uint j=0;j<bank.y;++j)pelvicTriangleAt<true>(a,tail,triangles[bank.x+j],best);
+    }else{
+        float nearest=simd_min(best.sq);
+        if(!(nearest<initial))return;
+        uint first=simd_min(best.sq==nearest?rank:UINT_MAX);
+        if(rank!=first || best.sq!=nearest)return;
+    }
+    float gap=isfinite(best.gap)?best.gap:-INFINITY;
+    gaps[i]=gap;result[i]=float4(best.gradient,gap);
+}
