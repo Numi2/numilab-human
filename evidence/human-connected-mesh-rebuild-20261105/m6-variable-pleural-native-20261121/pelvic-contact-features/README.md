@@ -1,0 +1,11 @@
+# Sacrum against left gluteal muscle
+
+At the first attempted 2 ms step, native cortical site 35,427 supplies 0.988 mN of compressive load. Its material interpolation stays in the same tetrahedron and its weight at the worst node changes by only 0.00000173. Its traction rotates 23.59 degrees while the measured intrusion is 0.0386 µm. The before and after directions match source sacral facets 8437 and 8438 to within 0.0012 degrees. This one site changes nodal force by 0.2691 mN. Site 35,431 contributes another 0.0240 mN. The independent sum of the measured vector changes reproduces the GPU nodal residual difference.
+
+The reference muscle vertex at site 35,427 is 2.63 nm from the registered sacral vertex. Eight sacral parent faces meet there. The source vertex neighborhood has supporting-plane offsets of both signs, so enforcing all eight infinite half-spaces would constrain some permitted motion. The two alternating parent triangles share only their vertex. At site 35,431, four source facets meet and the two alternating parents share an edge. These are registered anatomical interfaces with distinct finite facet geometry.
+
+A second native trial fit nonnegative pressures to the actual free-node forces with the tissue positions held fixed. A recovered pressure could be used only when the original fresh force, sign, clearance and release tests all passed. It shortened a right post-dynamics solve. Every left pre-dynamics fit failed on the first step. Pressure magnitudes alone could not resolve that vertex's changing traction direction. The experiment remains separate from the retained constitutive candidate.
+
+Further contact work needs the finite source facets that actually bear against one another through motion and the forces they can jointly transmit. A globally softened material, single averaged normal or rigid gluteal attachment would change different physics. The complete run remains unqualified. The exact-predicate capture at 8 ms was from the earlier incremental-tangent control.
+
+The compressed patches reproduce each experiment from the constitutive sources in the preceding commit. Each was applied to a clean copy of its corresponding source and compared byte for byte before publication. The measured native commands, model hashes, first-failure latch, force traces and source witnesses are adjacent.
