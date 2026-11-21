@@ -7,6 +7,11 @@ def sha(p):
  with p.open('rb') as f:return hashlib.file_digest(f,'sha256').hexdigest()
 for f in src.iterdir():
  if f.is_file() and f.suffix in ['.hpp','.metalinc'] and not (out/f.name).exists():(out/f.name).hardlink_to(f)
+# An experimental constitutive owner can accompany the Human overlay.
+# Atomic replacement preserves the hard-linked control source.
+for name in ('NumiHumanPelvicContact.hpp','pelvic_contact.metalinc'):
+ if (spec/name).is_file():
+  tmp=out/(name+'.replacement');shutil.copyfile(spec/name,tmp);tmp.replace(out/name)
 lib=out/'metalrobo/MetalRobo.metallib'
 if not lib.exists():lib.hardlink_to(src/'metalrobo/MetalRobo.metallib')
 for n in ['NumiHumanDigitCorticalContact.hpp','registered_digit_contact.metalinc']:shutil.copyfile(spec/n,out/n)

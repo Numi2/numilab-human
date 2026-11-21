@@ -1,0 +1,107 @@
+// Finite cortical triangle pairs in the second body's local coordinates.
+struct NMDigitTri { float4 x[3]; };
+struct NMDigitPair { float3 a,b; float d2; };
+struct NMDigitHit { float4 a,b,n; };
+inline void nmDigitTake(thread NMDigitPair& hit,float3 a,float3 b){
+    float3 r=a-b;float q=dot(r,r);
+    if(q<hit.d2){hit.a=a;hit.b=b;hit.d2=q;}
+}
+inline void nmDigitVF(thread NMDigitPair& h,float3 p,float3 a,float3 b,float3 c,bool rev){
+    float3 e=b-a,f=c-a,n=cross(e,f);float den=dot(n,n);
+    if(!(den>0))return;
+    float3 w=p-a;float u=dot(cross(w,f),n)/den,v=dot(cross(e,w),n)/den;
+    if(u>=0 && v>=0 && u+v<=1){
+        float3 q=a+u*e+v*f;
+        if(rev)nmDigitTake(h,q,p);else nmDigitTake(h,p,q);
+    }
+}
+inline void nmDigitEE(thread NMDigitPair& h,float3 a,float3 b,float3 c,float3 d){
+    float3 e=b-a,f=d-c,w=a-c;float aa=dot(e,e),bb=dot(e,f),cc=dot(f,f),dd=dot(e,w),ee=dot(f,w);
+    float3 axis=cross(e,f);float den=dot(axis,axis);
+    float s=den>1.e-12f*aa*cc?clamp(dot(cross(f,w),axis)/den,0.f,1.f):0.f;
+    float t=(bb*s+ee)/cc;
+    if(t<0){t=0;s=clamp(-dd/aa,0.f,1.f);}
+    if(t>1){t=1;s=clamp((bb-dd)/aa,0.f,1.f);}
+    nmDigitTake(h,a+s*e,c+t*f);
+}
+inline NMDigitPair nmDigitNearest(thread const float3 *a,thread const float3 *b){
+    NMDigitPair hit={a[0],b[0],INFINITY};
+    for(uint k=0;k<3;++k){
+        nmDigitVF(hit,a[k],b[0],b[1],b[2],false);
+        nmDigitVF(hit,b[k],a[0],a[1],a[2],true);
+        for(uint j=0;j<3;++j)nmDigitEE(hit,a[k],a[(k+1)%3],b[j],b[(j+1)%3]);
+    }
+    return hit;
+}
+inline void nmDigitSAT(thread const float3 *a,thread const float3 *b,float3 n,thread float& gap,thread float3& direction){
+    float d=dot(n,n);if(!(d>1.e-26f))return;
+    n*=rsqrt(d);float3 x=float3(dot(n,a[0]),dot(n,a[1]),dot(n,a[2]));
+    float3 y=float3(dot(n,b[0]),dot(n,b[1]),dot(n,b[2]));
+    float gx=min(x.x,min(x.y,x.z))-max(y.x,max(y.y,y.z)),gy=min(y.x,min(y.y,y.z))-max(x.x,max(x.y,x.z));
+    if(gx>gap){gap=gx;direction=n;}
+    if(gy>gap){gap=gy;direction=-n;}
+}
+inline bool nmDigitTriangles(thread const float3* a,thread const float3* b,float best,
+                             thread float& gap,thread float3& p,thread float3& q,thread float3& n){
+    float3 l=max(min(a[0],min(a[1],a[2]))-max(b[0],max(b[1],b[2])),
+                 min(b[0],min(b[1],b[2]))-max(a[0],max(a[1],a[2])));
+    float3 dist=max(l,0.f);
+    if(any(l>0.f) && (best<=0 || dot(dist,dist)>best*best))return false;
+    float sat=-INFINITY;float3 direction=0;
+    if(all(l<=0)){
+        float3 an=cross(a[1]-a[0],a[2]-a[0]),bn=cross(b[1]-b[0],b[2]-b[0]);
+        nmDigitSAT(a,b,an,sat,direction);nmDigitSAT(a,b,bn,sat,direction);
+        for(uint i=0;i<3 && sat<=0;++i){
+            float3 e=a[(i+1)%3]-a[i];
+            for(uint j=0;j<3;++j)nmDigitSAT(a,b,cross(e,b[(j+1)%3]-b[j]),sat,direction);
+        }
+        if(sat<=0){
+            // In-plane separating axes handle coplanar disjoint triangles.
+            for(uint i=0;i<3;++i){
+                nmDigitSAT(a,b,cross(an,a[(i+1)%3]-a[i]),sat,direction);
+                nmDigitSAT(a,b,cross(bn,b[(i+1)%3]-b[i]),sat,direction);
+            }
+        }
+        if(sat<=0){
+            if(sat>=best)return false;
+            float3 moved[3];for(uint k=0;k<3;++k)moved[k]=a[k]-sat*direction;
+            auto h=nmDigitNearest(moved,b);
+            p=h.a+sat*direction;q=h.b;n=direction;gap=sat;return true;
+        }
+    }
+    if(best<=0)return false;
+    auto h=nmDigitNearest(a,b);
+    float g=sqrt(h.d2);if(g>=best)return false;
+    p=h.a;q=h.b;gap=g;
+    if(g>1.e-10f)n=(p-q)/g;
+    else {
+        float3 t=cross(b[1]-b[0],b[2]-b[0]);n=any(direction!=0.f)?direction:normalize(t);
+        if(dot(n,p-q)<0)n=-n;
+    }
+    return true;
+}
+
+kernel void nm_digit_surface_faces(constant uint4& size [[buffer(0)]],constant uint4* ranges [[buffer(1)]],
+    device const NMDigitTri* tris [[buffer(2)]],device const NMDigitFeature* features [[buffer(3)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
+    device NMDigitHit* result [[buffer(6)]],uint gid [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    uint row=gid/size.y,face=gid%size.y;uint4 run=ranges[row];
+    if(face>=run.y){if(!lane)result[gid].a.w=INFINITY;return;}
+    auto ids=features[row].bodies;uint a=ids.x-size.x,b=ids.y-size.x;
+    float4 qa=poses[a].orientation,qb=poses[b].orientation;
+    float4 iqb=float4(-qb.xyz,qb.w),iqa=float4(-qa.xyz,qa.w);
+    float3 delta=(poses[a].position.xyz-poses[b].position.xyz)+(low[a].xyz-low[b].xyz);
+    float3 av[3];for(uint i=0;i<3;++i)av[i]=restingRotate(iqb,delta+restingRotate(qa,tris[run.x+face].x[i].xyz));
+    float gap=INFINITY;float3 p=0,q=0,n=0;uint winner=UINT_MAX;
+    for(uint k=lane;k<run.w;k+=32){
+        float3 bv[3];for(uint j=0;j<3;++j)bv[j]=tris[run.z+k].x[j].xyz;
+        float d;float3 x,y,t;
+        if(nmDigitTriangles(av,bv,gap,d,x,y,t)){gap=d;p=x;q=y;n=t;winner=k;}
+    }
+    float minGap=simd_min(gap);uint best=simd_min(gap==minGap?winner:UINT_MAX);
+    if(winner==best && gap==minGap && (best!=UINT_MAX || !lane)){
+        result[gid].a=float4(restingRotate(iqa,restingRotate(qb,p)-delta),gap);
+        result[gid].b=float4(q,as_type<float>(winner));
+        result[gid].n=float4(restingRotate(qb,n),as_type<float>(face));
+    }
+}

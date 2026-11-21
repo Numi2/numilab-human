@@ -7,8 +7,11 @@ class NumiHumanDigitCorticalContact {
     using Pass = metalrobo::MetalNumiHumanSupportGeometryPass;
     Program external{};
     id<MTLDevice> device=nil;
-    id<MTLComputePipelineState> pipeline=nil;
-    id<MTLBuffer> features=nil,trace=nil;
+    id<MTLComputePipelineState> pipeline=nil,facePipeline=nil;
+    id<MTLBuffer> surface=nil,faceResults=nil;
+    std::array<mr_uint4,4> surfaceRanges{};
+    unsigned faceStride=0;
+    id<MTLBuffer> features=nil,trace=nil,poseTrace=nil;
     unsigned externalRows=0,firstPoint=0,traceSteps=0;
     std::string evidenceDir;
     struct Feature { mr_uint4 bodies; mr_float4 x[4]; };
@@ -23,7 +26,19 @@ class NumiHumanDigitCorticalContact {
         auto cb=(__bridge id<MTLCommandBuffer>)p.commandBuffer;
         if(!cb || cb.device!=device)return false;
         auto e=[cb computeCommandEncoder];if(!e)return false;
+        [e setComputePipelineState:facePipeline];
+        mr_uint4 faceSize{p.articulationFirstBody,faceStride,0,0};
+        [e setBytes:&faceSize length:sizeof(faceSize) atIndex:0];
+        [e setBytes:surfaceRanges.data() length:sizeof(surfaceRanges) atIndex:1];
+        [e setBuffer:surface offset:0 atIndex:2];[e setBuffer:features offset:0 atIndex:3];
+        [e setBuffer:(__bridge id<MTLBuffer>)p.bodyPoses offset:0 atIndex:4];
+        [e setBuffer:(__bridge id<MTLBuffer>)p.bodyPositionLow offset:0 atIndex:5];
+        [e setBuffer:faceResults offset:0 atIndex:6];
+        [e dispatchThreadgroups:MTLSizeMake(4*faceStride,1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];
+        id<MTLResource> dependency=faceResults;[e memoryBarrierWithResources:&dependency count:1];
         [e setComputePipelineState:pipeline];
+        [e setBuffer:faceResults offset:0 atIndex:13];
+        [e setBytes:&faceStride length:sizeof(faceStride) atIndex:14];
         mr_uint4 d{p.articulationFirstBody,p.dofCount,p.bodyJacobianPointOffset,p.stepIndex};
         mr_uint4 rows{externalRows,firstPoint,unsigned(p.phase==metalrobo::MetalNumiHumanSupportGeometryPhase::predictedFreeEndpoint),traceSteps};
         [e setBytes:&d length:sizeof(d) atIndex:0];[e setBytes:&rows length:sizeof(rows) atIndex:1];[e setBuffer:features offset:0 atIndex:2];
@@ -31,7 +46,7 @@ class NumiHumanDigitCorticalContact {
         for(unsigned i=0;i<6;++i)[e setBuffer:(__bridge id<MTLBuffer>)leased[i] offset:0 atIndex:i+3];
         mr_float4 ground=p.groundNormal;ground.w=external.usePerContactSupportPlanes?1.f:0.f;
         [e setBytes:&ground length:sizeof(ground) atIndex:10];[e setBytes:&p.groundPoint length:sizeof(p.groundPoint) atIndex:11];
-        [e setBuffer:trace offset:0 atIndex:9];[e dispatchThreadgroups:MTLSizeMake(source.size(),1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];
+        [e setBuffer:poseTrace offset:0 atIndex:12];[e setBuffer:trace offset:0 atIndex:9];[e dispatchThreadgroups:MTLSizeMake(source.size(),1,1) threadsPerThreadgroup:MTLSizeMake(32,1,1)];
         [e endEncoding];return true;
     }
 public:
@@ -61,10 +76,34 @@ public:
         auto lib=[device newLibraryWithURL:[NSURL fileURLWithPath:@(NUMI_HUMAN_RESPIRATION_METALLIB)] error:&error];
         auto fn=[lib newFunctionWithName:@"nm_human_digit_cortical_rows"];require(fn!=nil,"missing native digit cortical kernel");
         pipeline=[device newComputePipelineStateWithFunction:fn error:&error];require(pipeline!=nil&&pipeline.threadExecutionWidth==32,"digit cortex pipeline failed");
+        auto query=[lib newFunctionWithName:@"nm_digit_surface_faces"];
+        facePipeline=[device newComputePipelineStateWithFunction:query error:&error];
+        require(facePipeline && facePipeline.threadExecutionWidth==32,"cortical surface query unavailable");
+        const auto root=std::filesystem::path(std::getenv("NUMI_HUMAN_DIGIT_CORTICAL_FEATURES")).parent_path();
+        std::ifstream geometry(root/"proximal-surface.bin",std::ios::binary|std::ios::ate);
+        const auto length=geometry.tellg();
+        require(length>std::streamoff(sizeof(surfaceRanges)) && length<4*1024*1024,"invalid cortical surface size");
+        geometry.seekg(0);geometry.read(reinterpret_cast<char*>(surfaceRanges.data()),sizeof(surfaceRanges));
+        std::vector<unsigned char> payload(std::size_t(length)-sizeof(surfaceRanges));
+        require(bool(geometry.read(reinterpret_cast<char*>(payload.data()),payload.size())) && payload.size()%48==0,"invalid native cortical triangle data");
+        for(auto bytes:std::as_bytes(std::span(surfaceRanges))){featureFingerprint^=std::to_integer<unsigned char>(bytes);featureFingerprint*=1099511628211ull;}
+        for(auto bytes:payload){featureFingerprint^=bytes;featureFingerprint*=1099511628211ull;}
+        for(auto range:surfaceRanges){
+            require(range.y && range.w && std::uint64_t(range.x)+range.y<=payload.size()/48 &&
+                    std::uint64_t(range.z)+range.w<=payload.size()/48,"cortical surface range exceeds its source");
+            faceStride=std::max(faceStride,range.y);
+        }
+        surface=[device newBufferWithBytes:payload.data() length:payload.size() options:MTLResourceStorageModeShared];
+        faceResults=[device newBufferWithLength:4*faceStride*48 options:MTLResourceStorageModePrivate];
+        require(surface && faceResults,"could not allocate registered cortical surfaces");
         features=[device newBufferWithBytes:source.data() length:sizeof(source) options:MTLResourceStorageModeShared];
         const char* evid=std::getenv("NUMI_HUMAN_DIGIT_CONTACT_TRACE");if(evid&&*evid){evidenceDir=evid;traceSteps=steps;}
         auto bytes=std::max<std::size_t>(16,std::size_t(traceSteps)*8*sizeof(mr_float4));
-        trace=[device newBufferWithLength:bytes options:MTLResourceStorageModeShared];require(features&&trace,"could not allocate cortical scatter");
+        trace=[device newBufferWithLength:bytes options:MTLResourceStorageModeShared];poseTrace=[device newBufferWithLength:std::max<std::size_t>(16,std::size_t(traceSteps)*12*sizeof(mr_float4)) options:MTLResourceStorageModeShared];
+        require(features&&trace&&poseTrace,"could not allocate cortical scatter");
+        for(unsigned r=0;r<source.size();r+=2)
+            require(source[r].bodies.x==source[r+1].bodies.x && source[r].bodies.y==source[r+1].bodies.y,
+                    "digit pose trace requires adjacent registered rows to share a cortical pair");
     }
     void observe(const metalrobo::MetalArticulatedOperatorResult& result,unsigned committed){
         if(evidenceDir.empty() || result.standContactImpulses.empty())return;
@@ -93,6 +132,20 @@ public:
     }
     ~NumiHumanDigitCorticalContact(){
         if(evidenceDir.empty()||!trace)return;
+        if(poseTrace){
+            std::ofstream poses(evidenceDir+"/digit-material-frames.csv");
+            poses<<"input_step,body,x,y,z,low_x,low_y,low_z,qx,qy,qz,qw\n";
+            poses.precision(10);
+            auto v=static_cast<const mr_float4*>(poseTrace.contents);
+            for(unsigned step=0;step<traceSteps;++step)for(unsigned j=0;j<4;++j){
+                auto t=v+3*(4*step+j);
+                if(t[0].w!=1.f)continue;
+                auto pair=source[j&~1u].bodies;
+                poses<<step<<','<<((j&1u)?pair.y:pair.x);
+                for(unsigned ix=0;ix<3;++ix)poses<<','<<t[ix].x<<','<<t[ix].y<<','<<t[ix].z;
+                poses<<','<<t[2].w<<'\n';
+            }
+        }
         std::ofstream f(evidenceDir+"/digit-contact-geometry.csv");f<<"candidate_step,phase,row,gap_m,s,t,u\n";f.precision(11);
         auto p=static_cast<const mr_float4*>(trace.contents);
         for(unsigned k=0;k<traceSteps;++k)for(unsigned phase=0;phase<2;++phase)for(unsigned i=0;i<source.size();++i){
