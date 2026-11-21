@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/factor_contact_columns.py", line 55, in <module>
+    if __name__=='__main__':prepare(*map(Path,sys.argv[1:]))
+                            ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/factor_contact_columns.py", line 43, in prepare
+    if not np.isfinite(expr).all() or largest>1e-6:raise ValueError(('local factor accuracy',sid,largest))
+                                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: ('local factor accuracy', 29, 40.561615417054256)

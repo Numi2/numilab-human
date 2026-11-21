@@ -47,7 +47,7 @@ kernel void nm_pelvic_material_publish(constant uint4& d [[buffer(0)]],
     device const MRNumiHumanStandStatusGPU* stand [[buffer(1)]],device const NMMatterStatusGPU* matter [[buffer(2)]],
     device const NMHumanRespirationState* resp [[buffer(3)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],
     device const float4* low [[buffer(5)]],device const float4* nodes [[buffer(6)]],device const float* modal [[buffer(7)]],
-    device float4* snapshot [[buffer(8)]],device const uint* slots [[buffer(9)]],device const float* loads [[buffer(10)]],device const float4* normals [[buffer(11)]],device uint* cache [[buffer(12)]],uint i [[thread_position_in_grid]]){
+    device float4* snapshot [[buffer(8)]],device const uint* slots [[buffer(9)]],device const float* loads [[buffer(10)]],device const float4* normals [[buffer(11)]],device uint* cache [[buffer(12)]],device const PelvicPoolSample* pool [[buffer(13)]],device const uint* feature [[buffer(14)]],uint i [[thread_position_in_grid]]){
     if(i>=d.y||stand[0].code!=MR_NUMI_HUMAN_STAND_SUCCESS||stand[0].completedSteps!=d.x+1||
         resp[0].status.x!=d.x||matter[0].code!=NM_STATUS_SUCCESS)return;
     if(i==0)snapshot[0]=float4(float(d.x+1),float(d.y),0,0);
@@ -59,9 +59,10 @@ kernel void nm_pelvic_material_publish(constant uint4& d [[buffer(0)]],
     snapshot[9+d.y+i]=float4(modal[4*i],modal[4*i+1],modal[4*i+2],0);
     if(i==0)cache[0]=d.x+1;
     if(i<512){
-        uint index=slots[i];cache[1+i]=index;uint base=9+2*d.y;
+        uint index=slots[i];cache[1+i]=loads[i]>0?index:UINT_MAX;uint base=9+2*d.y;
         snapshot[base+2*i]=float4(normals[i].xyz,loads[i]);
         snapshot[base+2*i+1]=float4(index==UINT_MAX?-1.f:float(index),0,0,0);
+        if(index!=UINT_MAX&&index>=pelvicReverseStart){snapshot[base+1024+2*i]=pool[index].weights;snapshot[base+1025+2*i]=float4(pool[index].nodes);}
     }
     snapshot[9+i]=nodes[i];
 }

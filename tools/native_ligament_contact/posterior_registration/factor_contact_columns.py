@@ -26,6 +26,10 @@ def prepare(part,response,assets,receipt,law,out):
             free=np.setdiff1d(np.unique(t[used]),reg['fixed']);idx=(3*free[:,None]+np.arange(3)).ravel();K=A[idx][:,idx].tocsc()
             units=1/np.sqrt(K.diagonal());D=sparse.diags(units);factor=splu((D@K@D).tocsc())
             src=np.unique(rec[:,5].copy().view('u4').astype(int))-start
+            if 'closed_reverse' in manifest:
+                meta=manifest['closed_reverse']['sides'][side];closed=np.fromfile(assets/'closed-material-triangles.bin','u4').reshape(-1,3,4)
+                domain=closed[meta['first_face']:meta['first_face']+meta['faces'],2].astype(int)-start
+                src=np.union1d(src,domain.ravel())
             map_=np.full(len(x),np.iinfo('u4').max,'u4');map_[src]=np.arange(len(src));lookup.append(map_)
             expr=np.zeros((len(x),len(src),3,4),'f4');freeidx=np.full(3*len(x),-1,int);freeidx[idx]=np.arange(len(idx))
             srcd=(3*src[:,None]+np.arange(3)).ravel()
