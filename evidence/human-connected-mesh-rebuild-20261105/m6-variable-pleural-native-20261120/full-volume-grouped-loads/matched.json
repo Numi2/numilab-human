@@ -1,0 +1,90 @@
+{
+  "controlled_variable": "Grouped-force host and Metal dispatch overlay",
+  "control_execution": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 238.2877280828543
+  },
+  "candidate_execution": {
+    "exit": 0,
+    "stop": "native_exit",
+    "wall_seconds": 239.70650883298367
+  },
+  "accepted_roots": 8,
+  "accepted_simulated_s": 0.000125000005937,
+  "full_range_pass": true,
+  "identical_trace_columns": true,
+  "differing_trace_columns": [],
+  "identical_installed_mass_sha256": "429edd2c38f782bc7e0cc8300e217323a5d97e7c0257157ae14c24c46d101b56",
+  "by_root": [
+    {
+      "root": 1,
+      "control_gpu_ms": 12777.0351667,
+      "grouped_gpu_ms": 12866.5896251,
+      "control_fgmres_columns": 208,
+      "grouped_fgmres_columns": 208
+    },
+    {
+      "root": 2,
+      "control_gpu_ms": 17174.9797501,
+      "grouped_gpu_ms": 17261.6882918,
+      "control_fgmres_columns": 336,
+      "grouped_fgmres_columns": 336
+    },
+    {
+      "root": 3,
+      "control_gpu_ms": 9534.36354152,
+      "grouped_gpu_ms": 9581.14758343,
+      "control_fgmres_columns": 128,
+      "grouped_fgmres_columns": 128
+    },
+    {
+      "root": 4,
+      "control_gpu_ms": 9530.5005,
+      "grouped_gpu_ms": 9563.16145835,
+      "control_fgmres_columns": 128,
+      "grouped_fgmres_columns": 128
+    },
+    {
+      "root": 5,
+      "control_gpu_ms": 11223.5750416,
+      "grouped_gpu_ms": 11232.4150833,
+      "control_fgmres_columns": 176,
+      "grouped_fgmres_columns": 176
+    },
+    {
+      "root": 6,
+      "control_gpu_ms": 9549.85504178,
+      "grouped_gpu_ms": 9580.80062503,
+      "control_fgmres_columns": 128,
+      "grouped_fgmres_columns": 128
+    },
+    {
+      "root": 7,
+      "control_gpu_ms": 9617.56666657,
+      "grouped_gpu_ms": 9641.63874998,
+      "control_fgmres_columns": 128,
+      "grouped_fgmres_columns": 128
+    },
+    {
+      "root": 8,
+      "control_gpu_ms": 16496.7508751,
+      "grouped_gpu_ms": 16555.8250835,
+      "control_fgmres_columns": 320,
+      "grouped_fgmres_columns": 320
+    }
+  ],
+  "matched_gpu_speedup": 0.9960674379787678,
+  "candidate_inclusive_realtime_factor": 5.214710545223208e-07,
+  "terminal_audits": {
+    "resting_fem_skin_bed_accepted_root_reaction": {
+      "control": "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=-0 mean_normal_force_N=-0 valid_contact_sample_count=1 impulse_on_plane_xyz_Ns=[0,0,0] angular_impulse_on_plane_xyz_Nms=[0,0,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0",
+      "grouped": "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=-0 mean_normal_force_N=-0 valid_contact_sample_count=1 impulse_on_plane_xyz_Ns=[0,0,0] angular_impulse_on_plane_xyz_Nms=[0,0,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0"
+    },
+    "resting_fascia_fem_terminal_audit=passed": {
+      "control": "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0206092763692 passive_ligament_min_effective_stretch=0.999992311001 passive_ligament_max_effective_stretch=1.00001478195 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=2.00720145342e-09 body_contact_samples=15449893 body_contact_audited_steps=8 body_contact_closed_samples=1468 body_contact_normal_force_N=0.0162921696901 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=1.16817101366e-10 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=8 capture=terminal_only",
+      "grouped": "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0206092763692 passive_ligament_min_effective_stretch=0.999992311001 passive_ligament_max_effective_stretch=1.00001478195 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=2.00720145342e-09 body_contact_samples=15449893 body_contact_audited_steps=8 body_contact_closed_samples=1468 body_contact_normal_force_N=0.0162921696901 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=1.16817101366e-10 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=8 capture=terminal_only"
+    }
+  },
+  "scope": "Single unpresented matched release trial. No sustained performance or geometry qualification."
+}
