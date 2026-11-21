@@ -1,0 +1,21 @@
+--- a/lateral.py
++++ b/lateral.py
+@@ -6,13 +6,17 @@
+ 
+ 
+ class LateralSeedEnergy(SeedEnergy):
+-    def __init__(self, *args, width_m, **kwargs):
++    def __init__(self, *args, width_m, tangential_deep=(), **kwargs):
+         super().__init__(*args, **kwargs)
+         world = args[0]
+         edges = world[self.cells[:, 1:]] - world[self.cells[:, :1]]
+         self.base_f = np.einsum("tai,taj->tij", edges, self.g[:, 1:])
+         np.testing.assert_allclose(self.base_f[:, 2], self.z0, atol=2.e-12, rtol=0.)
+         lateral = np.flatnonzero(world[:self.nfree, 2] <= width_m)
++        extra = np.asarray(tangential_deep, dtype=int)
++        assert np.all((extra >= self.nfree) & (extra < self.anatomy_count))
++        assert len(extra) == len(np.unique(extra))
++        lateral = np.r_[lateral, extra]
+         self.lateral = lateral
+         count = self.nfree + 2 * len(lateral)
+         self.id = np.full((self.anatomy_count, 3), count + 3, dtype=np.intp)

@@ -1,0 +1,709 @@
+{
+  "scope": "Bed-normal geometric segments from the emitted deep-fat surface to the first registered dorsal sacral face. Segment crossing and orientation tests only. No elastic runtime rows installed.",
+  "inputs_sha256": {
+    "shell-mass.csv.nodes.csv": "8f91bc7b878607efe411909c16bf280218698e4671ab0d647206d3104ccb63b6",
+    "shell-mass.csv.tets.csv": "bfaaa1f847be0e1fc37626f56cbc18bc23525dc2c98a1d4039818142fc417bc0",
+    "physical-bone-initial.bin": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+    "posterior-interface-fit.npz": "88bed343d42c194e8d36eca56bf687e7cbc7b2f7292dd26fddc05ed20f5a0e4d",
+    "stdout.log": "1bac26b0668c2148214ebbefedf952902010b051f02ebdaff0e860e1186a3835"
+  },
+  "muscle_payload_sha256": "8874b3fede93825d2e4ddb248231dc9d2c598e0155f8473c624fcb935d6b1042",
+  "pose_comparison": {
+    "accepted_step": 1,
+    "common_initial_body_count": 86,
+    "maximum_common_position_delta_m": 3.755303582896678e-07,
+    "maximum_common_quaternion_delta": 2.482806795216308e-07,
+    "accepted_pose_csv_sha256": "e66789b90094e2ce62ae3159e174bb604cfcf929a62a2621625c6b362ed4e47f"
+  },
+  "tested": 162,
+  "rejected": {
+    "first_bone_not_sacrum": 114,
+    "muscle_crosses_segment": 19,
+    "not_dorsal_sacral_entry": 3
+  },
+  "gaps": [
+    {
+      "distance_limit_m": 0.001,
+      "route_count": 0,
+      "area_m2": 0
+    },
+    {
+      "distance_limit_m": 0.002,
+      "route_count": 0,
+      "area_m2": 0
+    },
+    {
+      "distance_limit_m": 0.004,
+      "route_count": 0,
+      "area_m2": 0
+    },
+    {
+      "distance_limit_m": 0.006,
+      "route_count": 0,
+      "area_m2": 0
+    },
+    {
+      "distance_limit_m": 0.008,
+      "route_count": 2,
+      "area_m2": 0.000717045455238402
+    },
+    {
+      "distance_limit_m": 0.012,
+      "route_count": 7,
+      "area_m2": 0.0017331385661428968
+    },
+    {
+      "distance_limit_m": 0.02,
+      "route_count": 12,
+      "area_m2": 0.003118116775682062
+    },
+    {
+      "distance_limit_m": 0.03,
+      "route_count": 25,
+      "area_m2": 0.0036057141239370723
+    }
+  ],
+  "direct_routes": [
+    {
+      "deep_shell_row": 6075,
+      "source_sacral_face": 4220,
+      "deep_point_m": [
+        -0.030580097809433937,
+        -0.8048347234725952,
+        0.03202638030052185
+      ],
+      "endpoint_m": [
+        -0.030580097809433937,
+        -0.8048347234725952,
+        0.03960662787832113
+      ],
+      "interface_gap_m": 0.007580247577799279,
+      "tributary_area_m2": 0.0006985463133615928,
+      "outer_relative_height_m": 0.02163344827411784,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6077,
+      "source_sacral_face": 4473,
+      "deep_point_m": [
+        -0.0306206326931715,
+        -0.8371457457542419,
+        0.023913046345114708
+      ],
+      "endpoint_m": [
+        -0.0306206326931715,
+        -0.8371457457542419,
+        0.041663161613126644
+      ],
+      "interface_gap_m": 0.017750115268011936,
+      "tributary_area_m2": 0.0007274007037351003,
+      "outer_relative_height_m": 0.012208494552654159,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6097,
+      "source_sacral_face": 5405,
+      "deep_point_m": [
+        -0.023965394124388695,
+        -0.8232690691947937,
+        0.03096373751759529
+      ],
+      "endpoint_m": [
+        -0.023965394124388695,
+        -0.8232690691947937,
+        0.03974530970414276
+      ],
+      "interface_gap_m": 0.008781572186547466,
+      "tributary_area_m2": 1.3874064894988478e-05,
+      "outer_relative_height_m": 0.02018621024606837,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6100,
+      "source_sacral_face": 5398,
+      "deep_point_m": [
+        -0.022892555221915245,
+        -0.8294206261634827,
+        0.02971022017300129
+      ],
+      "endpoint_m": [
+        -0.022892555221915245,
+        -0.8294206261634827,
+        0.03932563785401402
+      ],
+      "interface_gap_m": 0.009615417681012733,
+      "tributary_area_m2": 0.00010974576165656562,
+      "outer_relative_height_m": 0.01910000127671374,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6113,
+      "source_sacral_face": 5136,
+      "deep_point_m": [
+        -0.021127063781023026,
+        -0.8254340887069702,
+        0.030158910900354385
+      ],
+      "endpoint_m": [
+        -0.021127063781023026,
+        -0.8254340887069702,
+        0.039328165704082645
+      ],
+      "interface_gap_m": 0.00916925480372826,
+      "tributary_area_m2": 7.197111229051276e-05,
+      "outer_relative_height_m": 0.020173168004733455,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6114,
+      "source_sacral_face": 6096,
+      "deep_point_m": [
+        -0.01639063097536564,
+        -0.825427770614624,
+        0.028660155832767487
+      ],
+      "endpoint_m": [
+        -0.01639063097536564,
+        -0.825427770614624,
+        0.03514341373201491
+      ],
+      "interface_gap_m": 0.006483257899247426,
+      "tributary_area_m2": 1.849914187680918e-05,
+      "outer_relative_height_m": 0.019880660073143375,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6115,
+      "source_sacral_face": 5100,
+      "deep_point_m": [
+        -0.025489825755357742,
+        -0.8636475205421448,
+        0.027342738583683968
+      ],
+      "endpoint_m": [
+        -0.025489825755357742,
+        -0.8636475205421448,
+        0.04446366628808103
+      ],
+      "interface_gap_m": 0.017120927704397063,
+      "tributary_area_m2": 0.00028832940033454994,
+      "outer_relative_height_m": 0.015273010553103816,
+      "source_body_owner": 128
+    },
+    {
+      "deep_shell_row": 6116,
+      "source_sacral_face": 5650,
+      "deep_point_m": [
+        -0.021020010113716125,
+        -0.8630841374397278,
+        0.03226492181420326
+      ],
+      "endpoint_m": [
+        -0.021020010113716125,
+        -0.8630841374397278,
+        0.04448109421768341
+      ],
+      "interface_gap_m": 0.01221617240348015,
+      "tributary_area_m2": 0.00019767296352675093,
+      "outer_relative_height_m": 0.015564258405250442,
+      "source_body_owner": 128
+    },
+    {
+      "deep_shell_row": 6117,
+      "source_sacral_face": 6083,
+      "deep_point_m": [
+        -0.01652294583618641,
+        -0.8297366499900818,
+        0.027685970067977905
+      ],
+      "endpoint_m": [
+        -0.01652294583618641,
+        -0.8297366499900818,
+        0.03706478993397016
+      ],
+      "interface_gap_m": 0.009378819865992254,
+      "tributary_area_m2": 0.0001278573932746792,
+      "outer_relative_height_m": 0.019032679693085086,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6119,
+      "source_sacral_face": 5378,
+      "deep_point_m": [
+        -0.023092301562428474,
+        -0.8487168550491333,
+        0.02521207183599472
+      ],
+      "endpoint_m": [
+        -0.023092301562428474,
+        -0.8487168550491333,
+        0.04403257854946401
+      ],
+      "interface_gap_m": 0.01882050671346929,
+      "tributary_area_m2": 0.00011163358526333777,
+      "outer_relative_height_m": 0.014093446740192306,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6136,
+      "source_sacral_face": 6093,
+      "deep_point_m": [
+        -0.016780955716967583,
+        -0.8091164231300354,
+        0.030887367203831673
+      ],
+      "endpoint_m": [
+        -0.016780955716967583,
+        -0.8091164231300354,
+        0.039524303563868865
+      ],
+      "interface_gap_m": 0.008636936360037192,
+      "tributary_area_m2": 0.0006926447787877487,
+      "outer_relative_height_m": 0.02219550517318858,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6140,
+      "source_sacral_face": 5954,
+      "deep_point_m": [
+        -0.017875276505947113,
+        -0.8491135239601135,
+        0.02523171342909336
+      ],
+      "endpoint_m": [
+        -0.017875276505947113,
+        -0.8491135239601135,
+        0.047481534283881015
+      ],
+      "interface_gap_m": 0.022249820854787654,
+      "tributary_area_m2": 5.012094023805529e-05,
+      "outer_relative_height_m": 0.013519287304264438,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6141,
+      "source_sacral_face": 6385,
+      "deep_point_m": [
+        -0.015578199177980423,
+        -0.8461677432060242,
+        0.02451067976653576
+      ],
+      "endpoint_m": [
+        -0.015578199177980423,
+        -0.8461677432060242,
+        0.048246309607804065
+      ],
+      "interface_gap_m": 0.023735629841268306,
+      "tributary_area_m2": 1.745387825010697e-05,
+      "outer_relative_height_m": 0.01306069475529803,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6142,
+      "source_sacral_face": 6063,
+      "deep_point_m": [
+        -0.015379329212009907,
+        -0.8428680300712585,
+        0.024646664038300514
+      ],
+      "endpoint_m": [
+        -0.015379329212009907,
+        -0.8428680300712585,
+        0.03813559969868969
+      ],
+      "interface_gap_m": 0.013488935660389174,
+      "tributary_area_m2": 5.9941556679426664e-05,
+      "outer_relative_height_m": 0.0138174092483343,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6164,
+      "source_sacral_face": 7646,
+      "deep_point_m": [
+        -0.0074359518475830555,
+        -0.8238743543624878,
+        0.02371656894683838
+      ],
+      "endpoint_m": [
+        -0.0074359518475830555,
+        -0.8238743543624878,
+        0.04848616979340237
+      ],
+      "interface_gap_m": 0.02476960084656399,
+      "tributary_area_m2": 8.069904244593359e-05,
+      "outer_relative_height_m": 0.013823235602361095,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6193,
+      "source_sacral_face": 7634,
+      "deep_point_m": [
+        -0.006685743574053049,
+        -0.8358641862869263,
+        0.027568252757191658
+      ],
+      "endpoint_m": [
+        -0.006685743574053049,
+        -0.8358641862869263,
+        0.050303356675875585
+      ],
+      "interface_gap_m": 0.022735103918683927,
+      "tributary_area_m2": 8.44775217702155e-05,
+      "outer_relative_height_m": 0.009681300455016029,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6194,
+      "source_sacral_face": 7308,
+      "deep_point_m": [
+        -0.005402751266956329,
+        -0.8190305233001709,
+        0.02366701327264309
+      ],
+      "endpoint_m": [
+        -0.005402751266956329,
+        -0.8190305233001709,
+        0.04891789172888288
+      ],
+      "interface_gap_m": 0.025250878456239793,
+      "tributary_area_m2": 4.32251555451343e-05,
+      "outer_relative_height_m": 0.013707372554820907,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6195,
+      "source_sacral_face": 7645,
+      "deep_point_m": [
+        -0.004196895286440849,
+        -0.8231827020645142,
+        0.02205282263457775
+      ],
+      "endpoint_m": [
+        -0.004196895286440849,
+        -0.8231827020645142,
+        0.049707087779593595
+      ],
+      "interface_gap_m": 0.027654265145015844,
+      "tributary_area_m2": 3.323736704032422e-05,
+      "outer_relative_height_m": 0.011340273739081752,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6196,
+      "source_sacral_face": 7900,
+      "deep_point_m": [
+        -0.0015174942091107368,
+        -0.8179455399513245,
+        0.022088438272476196
+      ],
+      "endpoint_m": [
+        -0.0015174942091107368,
+        -0.8179455399513245,
+        0.04960151750016076
+      ],
+      "interface_gap_m": 0.02751307922768456,
+      "tributary_area_m2": 2.3809129361482513e-05,
+      "outer_relative_height_m": 0.011445307367724311,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6197,
+      "source_sacral_face": 7649,
+      "deep_point_m": [
+        -0.00276537099853158,
+        -0.8124523758888245,
+        0.02450539730489254
+      ],
+      "endpoint_m": [
+        -0.00276537099853158,
+        -0.8124523758888245,
+        0.050045854319459404
+      ],
+      "interface_gap_m": 0.025540457014566864,
+      "tributary_area_m2": 3.204121570280893e-05,
+      "outer_relative_height_m": 0.014596556508225333,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6208,
+      "source_sacral_face": 8181,
+      "deep_point_m": [
+        -0.0025376388803124428,
+        -0.827900767326355,
+        0.02336735837161541
+      ],
+      "endpoint_m": [
+        -0.0025376388803124428,
+        -0.827900767326355,
+        0.050522117209139926
+      ],
+      "interface_gap_m": 0.027154758837524516,
+      "tributary_area_m2": 1.917316975742204e-05,
+      "outer_relative_height_m": 0.008781838425678146,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6231,
+      "source_sacral_face": 7900,
+      "deep_point_m": [
+        -0.0005528464098460972,
+        -0.8220900297164917,
+        0.020276835188269615
+      ],
+      "endpoint_m": [
+        -0.0005528464098460972,
+        -0.8220900297164917,
+        0.050358665891893174
+      ],
+      "interface_gap_m": 0.03008183070362356,
+      "tributary_area_m2": 1.872976888374464e-05,
+      "outer_relative_height_m": 0.009319519819003474,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6232,
+      "source_sacral_face": 8574,
+      "deep_point_m": [
+        0.0019909250549972057,
+        -0.8153274655342102,
+        0.021230150014162064
+      ],
+      "endpoint_m": [
+        0.0019909250549972057,
+        -0.8153274655342102,
+        0.04895993289255417
+      ],
+      "interface_gap_m": 0.027729782878392104,
+      "tributary_area_m2": 1.850051643171844e-05,
+      "outer_relative_height_m": 0.010408267573696506,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6233,
+      "source_sacral_face": 7902,
+      "deep_point_m": [
+        0.0005561876459978521,
+        -0.811245858669281,
+        0.023155435919761658
+      ],
+      "endpoint_m": [
+        0.0005561876459978521,
+        -0.811245858669281,
+        0.04969470938540523
+      ],
+      "interface_gap_m": 0.026539273465643574,
+      "tributary_area_m2": 1.8143913453239815e-05,
+      "outer_relative_height_m": 0.01310580336419953,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6242,
+      "source_sacral_face": 8440,
+      "deep_point_m": [
+        0.0020682131871581078,
+        -0.8203862309455872,
+        0.022241070866584778
+      ],
+      "endpoint_m": [
+        0.0020682131871581078,
+        -0.8203862309455872,
+        0.05010899146543426
+      ],
+      "interface_gap_m": 0.02786792059884948,
+      "tributary_area_m2": 2.0965047631296466e-05,
+      "outer_relative_height_m": 0.008457029433232677,
+      "source_body_owner": 1
+    },
+    {
+      "deep_shell_row": 6264,
+      "source_sacral_face": 8570,
+      "deep_point_m": [
+        0.006678380537778139,
+        -0.8026684522628784,
+        0.02783830836415291
+      ],
+      "endpoint_m": [
+        0.006678380537778139,
+        -0.8026684522628784,
+        0.05316297262591634
+      ],
+      "interface_gap_m": 0.025324664261763434,
+      "tributary_area_m2": 4.575045062727192e-05,
+      "outer_relative_height_m": 0.014307437659484279,
+      "source_body_owner": 1
+    }
+  ],
+  "sample_obstructions": [
+    {
+      "node": 5840,
+      "gap_m": 0.03667042613673657,
+      "obstacle": {
+        "stable_id": 29,
+        "label": "right gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 5936,
+      "gap_m": 0.030691808096483066,
+      "obstacle": {
+        "stable_id": 29,
+        "label": "right gluteus maximus",
+        "source_bank_face": 1786
+      }
+    },
+    {
+      "node": 6096,
+      "gap_m": 0.016673494137813674,
+      "obstacle": {
+        "stable_id": 29,
+        "label": "right gluteus maximus",
+        "source_bank_face": 2134
+      }
+    },
+    {
+      "node": 6156,
+      "gap_m": 0.01207362303530169,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1993
+      }
+    },
+    {
+      "node": 6262,
+      "gap_m": 0.027333709195210852,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1786
+      }
+    },
+    {
+      "node": 6269,
+      "gap_m": 0.015367741055186707,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1787
+      }
+    },
+    {
+      "node": 6307,
+      "gap_m": 0.027038481169783163,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1729
+      }
+    },
+    {
+      "node": 6311,
+      "gap_m": 0.02262367537948013,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1729
+      }
+    },
+    {
+      "node": 6314,
+      "gap_m": 0.014900812213261637,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1787
+      }
+    },
+    {
+      "node": 6349,
+      "gap_m": 0.029153052347821957,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6350,
+      "gap_m": 0.016453080225998756,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6352,
+      "gap_m": 0.024914835875633902,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6353,
+      "gap_m": 0.033109574198878194,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6360,
+      "gap_m": 0.014292617725897287,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6362,
+      "gap_m": 0.021750786523433582,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6394,
+      "gap_m": 0.058498768284667435,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    },
+    {
+      "node": 6395,
+      "gap_m": 0.0609394860010455,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1434
+      }
+    },
+    {
+      "node": 6397,
+      "gap_m": 0.03310500240116167,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1434
+      }
+    },
+    {
+      "node": 6398,
+      "gap_m": 0.03157962227583147,
+      "obstacle": {
+        "stable_id": 30,
+        "label": "left gluteus maximus",
+        "source_bank_face": 1629
+      }
+    }
+  ]
+}
