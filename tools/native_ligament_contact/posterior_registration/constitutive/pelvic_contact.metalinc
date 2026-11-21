@@ -309,14 +309,25 @@ kernel void nm_pelvic_schur_solve(constant uint4& d [[buffer(0)]],device const u
     }
     float4 result=float4(simd_max(gmax),simd_sum(total),simd_sum(energy),simd_sum(error));if(!lane)stats[side]=result;
 }
-kernel void nm_pelvic_schur_displacement(constant uint4& d [[buffer(0)]],device const float* loads [[buffer(1)]],device const float4* response [[buffer(2)]],
-    device float4* displacement [[buffer(3)]],device const uint* needed [[buffer(4)]],device const float4* base [[buffer(5)]],device const uint* lostSupport [[buffer(6)]],uint i [[thread_position_in_grid]]){
-    if(i>=d.z)return;uint side=i>=pelvicFlex[1].x?1u:0u;if(d.y&&!needed[side])return;
+inline float4 pelvicSchurDisplacementTarget(uint4 d, uint i, uint side, device const float* loads,
+    device const float4* response, device const float4* displacement, device const float4* base,
+    device const uint* lostSupport) {
     uint4 m=pelvicFlex[side];uint off=m.x*256+i-m.x;float3 total=0;
     for(uint j=0;j<256;++j){float l=loads[256*side+j];if(l>0)total+=l*response[off+j*m.y].xyz;}
     float3 target=base[i].xyz+total;
     if(pelvicSharedForward&&!d.w&&lostSupport[side])target=mix(displacement[i].xyz,target,.5f);
-    displacement[i]=float4(target,0);
+    return float4(target,0);
+}
+kernel void nm_pelvic_schur_displacement(constant uint4& d [[buffer(0)]],device const float* loads [[buffer(1)]],device const float4* response [[buffer(2)]],
+    device float4* displacement [[buffer(3)]],device const uint* needed [[buffer(4)]],device const float4* base [[buffer(5)]],device const uint* lostSupport [[buffer(6)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.z)return;uint side=i>=pelvicFlex[1].x?1u:0u;if(d.y&&!needed[side])return;
+    displacement[i]=pelvicSchurDisplacementTarget(d,i,side,loads,response,displacement,base,lostSupport);
+}
+kernel void nm_pelvic_propose_material_update(constant uint4& d [[buffer(0)]],device const float* loads [[buffer(1)]],device const float4* response [[buffer(2)]],
+    device float4* displacement [[buffer(3)]],device const uint* needed [[buffer(4)]],device const float4* base [[buffer(5)]],device const uint* lostSupport [[buffer(6)]],device float4* proposal [[buffer(7)]],device atomic_uint* levels [[buffer(8)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.z)return;uint side=i>=pelvicFlex[1].x?1u:0u;if(d.y&&!needed[side])return;
+    proposal[i]=pelvicSchurDisplacementTarget(d,i,side,loads,response,displacement,base,lostSupport);
+    if(i==pelvicFlex[side].x)atomic_store_explicit(levels+side,0u,memory_order_relaxed);
 }
 struct PelvicSurfaceVertex {float4 weights;uint4 nodes;};
 struct PelvicSurfaceFace {uint4 vertices,adjacent,nodes;};
@@ -896,5 +907,74 @@ kernel void nm_pelvic_nodal_equilibrium(device const uint* needed [[buffer(0)]],
             if(!lane)coordinates[node].xyz+=s*h;
             return;
         }
+    }
+}
+// Certify the determinant over the entire material update, including its interior.
+// These Bernstein coefficients bound det(F0 + t*(F1-F0)) on [0,1].
+inline uint pelvicMaterialBacktracks(float3x3 a,float3x3 b) {
+    float4 v = float4(determinant(a),
+        (dot(b[0],cross(a[1],a[2]))+dot(a[0],cross(b[1],a[2]))+dot(a[0],cross(a[1],b[2])))/3.f,
+        (dot(a[0],cross(b[1],b[2]))+dot(b[0],cross(a[1],b[2]))+dot(b[0],cross(b[1],a[2])))/3.f,
+        determinant(b));
+    if(!all(isfinite(v)) || v.x<=.2f || v.x>=5.f)return 24u;
+    for(uint k=0;k<24;++k){
+        if(all(v>.2f) && all(v<5.f))return k;
+        float3 h=.5f*(v.xyz+v.yzw);
+        float2 q=.5f*(h.xy+h.yz);
+        v=float4(v.x,h.x,q.x,.5f*(q.x+q.y));
+    }
+    return 24u;
+}
+
+kernel void nm_pelvic_material_step_bound(constant uint& n [[buffer(0)]],device const uint4* cells [[buffer(1)]],
+    device const float4* inv [[buffer(2)]],device const float4* current [[buffer(3)]],
+    device const float4* coords [[buffer(4)]],device const float4* trial [[buffer(5)]],
+    device const uint* needed [[buffer(6)]],device atomic_uint* levels [[buffer(7)]],uint i [[thread_position_in_grid]]){
+    if(i>=n)return;
+    uint4 t=cells[i];uint side=t.x>=pelvicFlex[1].x;
+    if(!needed[side])return;
+    float3 origin=current[t.x].xyz;
+    float3 change=trial[t.x].xyz-coords[t.x].xyz;
+    float3x3 rest=float3x3(inv[3*i].xyz,inv[3*i+1].xyz,inv[3*i+2].xyz);
+    float3x3 f0=float3x3(1.f)+float3x3(current[t.y].xyz-origin,current[t.z].xyz-origin,current[t.w].xyz-origin)*rest;
+    float3x3 increment=float3x3((trial[t.y].xyz-coords[t.y].xyz)-change,
+        (trial[t.z].xyz-coords[t.z].xyz)-change,(trial[t.w].xyz-coords[t.w].xyz)-change)*rest;
+    uint backtracks=pelvicMaterialBacktracks(f0,f0+increment);
+    if(backtracks)atomic_fetch_max_explicit(levels+side,backtracks,memory_order_relaxed);
+}
+
+kernel void nm_pelvic_material_step_apply(constant uint& n [[buffer(0)]],device float4* u [[buffer(1)]],
+    device const float4* trial [[buffer(2)]],device float* pressure [[buffer(3)]],device const float* old [[buffer(4)]],
+    device const uint* levels [[buffer(5)]],device const uint* needed [[buffer(6)]],uint i [[thread_position_in_grid]]){
+    if(i<n){
+        uint side=i>=pelvicFlex[1].x;uint k=levels[side];
+        if(needed[side]&&k<24u)u[i]=k?mix(u[i],trial[i],1.f/float(1u<<k)):trial[i];
+    }
+    if(i<512u && needed[i/256]){
+        uint k=levels[i/256];
+        if(k>=24u)pressure[i]=old[i];
+        else if(k)pressure[i]=mix(old[i],pressure[i],1.f/float(1u<<k));
+    }
+}
+
+// The coordinates and pressure multipliers at entry to the physical endpoint
+// are one consistent seed. New face identities remain in the anatomical atlas.
+kernel void nm_pelvic_retry_snapshot(constant uint4& d [[buffer(0)]],device const uint* needed [[buffer(1)]],
+    device float4* coordinates [[buffer(2)]],device uint* slots [[buffer(3)]],device float* pressures [[buffer(4)]],
+    device uint* included [[buffer(5)]],device float4* saved [[buffer(6)]],device uint2* records [[buffer(7)]],
+    uint i [[thread_position_in_grid]]){
+    if(!d.y){
+        if(i<d.x)saved[i]=coordinates[i];
+        if(i<512)records[i]=uint2(slots[i],as_type<uint>(pressures[i]));
+        return;
+    }
+    if(d.y==1){
+        if(i<512 && needed[i/256] && slots[i]!=UINT_MAX)included[slots[i]]=0;
+        return;
+    }
+    if(i<d.x && needed[i>=pelvicFlex[1].x])coordinates[i]=saved[i];
+    if(i<512 && needed[i/256]){
+        uint2 s=records[i];slots[i]=s.x;pressures[i]=as_type<float>(s.y);
+        if(s.x!=UINT_MAX)included[s.x]=1;
     }
 }

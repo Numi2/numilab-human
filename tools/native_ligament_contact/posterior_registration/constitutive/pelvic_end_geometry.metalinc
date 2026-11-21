@@ -168,7 +168,7 @@ kernel void nm_pelvic_request_surface_check(constant uint4& d [[buffer(0)]],devi
     device uint* control [[buffer(2)]],uint i [[thread_position_in_grid]]){
     if(i)return;
     if(d.y){control[0]=0;control[5]=0;control[6]=0;}
-    bool test=!control[0]&&!needed[0]&&!needed[1];
+    bool test=!control[0] && (d.z || (!needed[0] && !needed[1]));
     control[1]=test;control[2]=test?d.x:0;control[3]=1;control[4]=1;
     if(test)++control[5];
 }
@@ -185,7 +185,7 @@ kernel void nm_pelvic_resume_surface_solve(constant uint4& d [[buffer(0)]],devic
     threadgroup uint r[128];r[lane]=flags;threadgroup_barrier(mem_flags::mem_threadgroup);
     for(uint n=64;n;n>>=1){if(lane<n)r[lane]|=r[lane+n];threadgroup_barrier(mem_flags::mem_threadgroup);}
     if(!lane){
-        if(r[0]==0)control[0]=1;
+        if(r[0]==0)control[0]=(!needed[0] && !needed[1]);
         else{++control[6];for(uint side=0;side<2;++side)if(r[0]&(1u<<side))needed[side]=1;}
     }
 }
