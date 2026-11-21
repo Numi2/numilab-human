@@ -1,0 +1,11 @@
+# Initial registration and bed-contact witnesses
+
+The full-volume trial 026 retained one exact accepted geometry capture at 0.25 ms. This comparison verifies both native pack SHA-256 digests against its receipt. It applies the existing exact Float32 intersection predicates. The original source pack uses the recorded initial articulated owner frames. The accepted comparison uses the existing endpoint audit. These are surface triangle pairs, with no containment or between-frame claim.
+
+Initial owner transforms cover 160 of 162 muscle banks. Those banks have 11,432 source pairs and 11,430 endpoint pairs. Exactly 11,425 triangle pairs match, with seven source-only and five endpoint-only. Both external oblique banks require a missing initial body 7 transform and retain 1,607 endpoint witnesses. Of the 14,179 nonocular endpoint skin-to-tissue pairs, at least 11,425 were present in the authored registration before motion. The first registration targets are the extensor digitorum, brachioradialis, and neighboring banks with retained exact witnesses.
+
+The outer-skin primitive directly represents the 76,153 registered physical outer nodes. Against the compiled world plane at z=0, its closest point starts at +0.0404 µm, matching the independent compiled initialization witness. At step 16, its minimum gap is +17.71 µm, all nodes are above the plane, and the initial closest vertex has moved to +21.88 µm. Nineteen nodes are within 1 mm at both endpoints. The native accepted terminal root has zero bed reaction. An earlier released prelude with the same force owner produced 0.000994 N by its eighth accepted root against a 952.86 N equilibrium target. It failed the settlement gate with no settled tail. Those two trials used different launch configurations.
+
+The verified local cell repair and mass import do not establish supported equilibrium. The retained variable-pleural interval is too short to show pleural-pressure change. Full-motion tissue clearance, shoulder loading, and 0.1× end-to-end performance remain unqualified.
+
+To reproduce, run `python3 audit_initial_muscle_banks.py /absolute/path/to/floor-native-live-parent-026` on Numi in the existing anatomy preparation environment. The script uses the retained `resting-surface-clearance-001` and `resting-clearance-and-atrium-005` audit helpers in their original sibling directories.
