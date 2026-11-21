@@ -47,4 +47,22 @@ def prepare(base,out):
     doc['finite_facets']['number']+=total;doc['contact_pool']['count']+=16*total
     doc['motion_contact_registry']={'source_manifest':sha(base/'manifest.json'),'original_pairs':old,'slots_per_side':reserve,'observed_hit_capacity_per_side':256,'faces':len(triangles),'sorted_pairs':len(known)}
     (out/'manifest.json').write_text(json.dumps(doc,indent=2)+'\n')
-if __name__=='__main__':prepare(*map(Path,sys.argv[1:]))
+if __name__ == "__main__":
+    import argparse
+    from tempfile import TemporaryDirectory
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("base",type=Path)
+    parser.add_argument("out",type=Path)
+    parser.add_argument("--material-partition",type=Path)
+    parser.add_argument("--registration-receipt",type=Path)
+    args = parser.parse_args()
+    if (args.material_partition is None) != (args.registration_receipt is None):
+        parser.error("--material-partition and --registration-receipt must be specified together")
+    if args.material_partition is None:
+        prepare(args.base,args.out)
+    else:
+        from complete_surface_force_map import build
+        with TemporaryDirectory(dir=args.out.parent) as scratch:
+            registry = Path(scratch)/"registry"
+            prepare(args.base,registry)
+            build(args.material_partition,registry,args.registration_receipt,args.out)
