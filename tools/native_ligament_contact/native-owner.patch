@@ -1,0 +1,269 @@
+--- a/include/numi/matter/numi_human_shared.h
++++ b/include/numi/matter/numi_human_shared.h
+@@ -305,0 +306,22 @@
++
++// Length, contact coordinates and normals refer to the registered rigid surface.
++// Coordinates are offsets from the first enthesis and survive COM rebasing.
++enum : nm_u32 { NM_LIGAMENT_MATERIAL_STRIP = 2u };
++enum : nm_u32 { NM_LIGAMENT_STRIP_EDGES = 8, NM_LIGAMENT_VERTEX_NORMALS = 12 };
++typedef struct NM_ALIGN16 NMNumiHumanLigamentContactEdgeGPU {
++    nm_float4 startAndSeed;
++    nm_float4 end;
++    nm_float4 normal0;
++    nm_float4 normal1;
++} NMNumiHumanLigamentContactEdgeGPU;
++typedef struct NM_ALIGN16 NMNumiHumanLigamentContactStripGPU {
++    nm_u32 edgeCount;
++    nm_u32 pivotNormalCount;
++    nm_u32 firstBodyIndex;
++    nm_u32 secondBodyIndex;
++    nm_float4 pivotAndPrefixLength;
++    nm_float4 incomingUnit;
++    nm_float4 insertionLocalNormal;
++    nm_float4 pivotNormal[NM_LIGAMENT_VERTEX_NORMALS];
++    NMNumiHumanLigamentContactEdgeGPU edge[NM_LIGAMENT_STRIP_EDGES];
++} NMNumiHumanLigamentContactStripGPU;
+--- a/include/numi/matter/numi_human.hpp
++++ b/include/numi/matter/numi_human.hpp
+@@ -142,0 +143 @@
++    std::span<const NMNumiHumanLigamentContactStripGPU> ligamentContactStrips{};
+--- a/numi_human.mm
++++ b/numi_human.mm
+@@ -348,2 +348,2 @@
+-    if (ligament.flags != NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE ||
+-        ligament.reserved0 != 0u || !finiteScale(material) ||
++    if (ligament.flags != (NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE | (ligament.reserved0 ? NM_LIGAMENT_MATERIAL_STRIP : 0u)) ||
++        !finiteScale(material) ||
+@@ -659,0 +660 @@
++    std::vector<NMNumiHumanLigamentContactStripGPU> ligamentContactStrips;
+@@ -1161,0 +1163,2 @@
++    if (source.ligamentContactStrips.size() > source.passiveLigaments.size()) return false;
++    std::size_t usedStrips = 0;
+@@ -1162,0 +1166,18 @@
++        if (ligament.reserved0 != 0u) {
++            if (ligament.reserved0 != ++usedStrips || usedStrips > source.ligamentContactStrips.size()) return false;
++            const auto& strip=source.ligamentContactStrips[usedStrips-1];
++            if (strip.firstBodyIndex!=ligament.firstBodyIndex || strip.secondBodyIndex!=ligament.secondBodyIndex ||
++                strip.edgeCount==0 || strip.edgeCount>NM_LIGAMENT_STRIP_EDGES ||
++                strip.pivotNormalCount<2 || strip.pivotNormalCount>NM_LIGAMENT_VERTEX_NORMALS ||
++                !finiteScale(strip.pivotAndPrefixLength) || strip.pivotAndPrefixLength.w<=0 ||
++                !finiteScale(strip.incomingUnit) || !finiteScale(strip.insertionLocalNormal)) return false;
++            const auto isUnit=[](nm_float4 v) { return std::abs(v.x*v.x+v.y*v.y+v.z*v.z-1.f)<2.e-5f && v.w==0.f; };
++            if (!isUnit(strip.incomingUnit)||!isUnit(strip.insertionLocalNormal)) return false;
++            for (unsigned k=0;k<strip.pivotNormalCount;++k) if (!isUnit(strip.pivotNormal[k])) return false;
++            for (unsigned k=0;k<strip.edgeCount;++k) {
++                const auto& edge=strip.edge[k];
++                if (!finiteScale(edge.startAndSeed)||!finiteScale(edge.end)||edge.end.w!=0.f||
++                    !(edge.startAndSeed.w>0 && edge.startAndSeed.w<1)||
++                    !isUnit(edge.normal0)||!isUnit(edge.normal1)) return false;
++            }
++        }
+@@ -1167,2 +1188 @@
+-            ligament.flags != NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE ||
+-            ligament.reserved0 != 0u ||
++            ligament.flags != (NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE | (ligament.reserved0 ? NM_LIGAMENT_MATERIAL_STRIP : 0u)) ||
+@@ -1177,0 +1198 @@
++    if (usedStrips!=source.ligamentContactStrips.size()) return false;
+@@ -1406,0 +1428 @@
++    candidate->ligamentContactStrips.assign(source.ligamentContactStrips.begin(),source.ligamentContactStrips.end());
+@@ -1576,0 +1599 @@
++    if (!candidate->ligamentContactStrips.empty()) fingerprint=appendFingerprint(fingerprint,candidate->ligamentContactStrips.data(),candidate->ligamentContactStrips.size()*sizeof(NMNumiHumanLigamentContactStripGPU));
+@@ -1713,0 +1737,6 @@
++                return false;
++            }
++            if (!state_->ligamentContactStrips.empty() &&
++                [state_->library newFunctionWithName:@"numi_matter_metal::nm_numi_human_ligament_strip_v1"]==nil) {
++                state_->message="Human material ligament route requires matching Metal library";
++                state_->library=nil;
+@@ -2442,5 +2471,8 @@
+-                state_->passiveLigamentBuffer = [device
+-                    newBufferWithBytes:state_->passiveLigaments.data()
+-                    length:state_->passiveLigaments.size() *
+-                        sizeof(NMNumiHumanPassiveLigamentGPU)
+-                    options:MTLResourceStorageModeShared];
++                const size_t rowBytes=state_->passiveLigaments.size()*sizeof(NMNumiHumanPassiveLigamentGPU);
++                const size_t stripBytes=state_->ligamentContactStrips.size()*sizeof(NMNumiHumanLigamentContactStripGPU);
++                state_->passiveLigamentBuffer=[device newBufferWithLength:rowBytes+stripBytes options:MTLResourceStorageModeShared];
++                if (state_->passiveLigamentBuffer != nil) {
++                    auto* bytes=static_cast<std::byte*>(state_->passiveLigamentBuffer.contents);
++                    std::memcpy(bytes,state_->passiveLigaments.data(),rowBytes);
++                    if (stripBytes) std::memcpy(bytes+rowBytes,state_->ligamentContactStrips.data(),stripBytes);
++                }
+--- a/src/metal/numi_human.metalinc
++++ b/src/metal/numi_human.metalinc
+@@ -1263,0 +1264,83 @@
++// The fixed prefix ends at a material vertex on body 0. Its path and prefix
++// length are invariant under rigid motion while its vertex reaction remains
++// inside the normal cone. Minimize the remaining length on the certified edges.
++inline bool ligamentConePair(float3 g, float3 a, float3 b, float tol) {
++    float c=dot(a,b), det=dot(cross(a,b),cross(a,b));
++    if (length(g-a*max(0.0f,dot(a,g)))<=tol ||
++        length(g-b*max(0.0f,dot(b,g)))<=tol) return true;
++    if (det<=1.e-10f) return false;
++    float x=(dot(g,a)-c*dot(g,b))/det;
++    float y=(dot(g,b)-c*dot(g,a))/det;
++    return x>=0 && y>=0 && length(g-x*a-y*b)<=tol;
++}
++inline bool ligamentVertexSupports(device const NMNumiHumanLigamentContactStripGPU& route,float3 g,float tol) {
++    if (length(g)<=tol) return true;
++    for (uint i=0;i<route.pivotNormalCount;i++) {
++        float3 a=route.pivotNormal[i].xyz;
++        for (uint j=i+1;j<route.pivotNormalCount;j++) {
++            float3 b=route.pivotNormal[j].xyz;
++            if (ligamentConePair(g,a,b,tol)) return true;
++            for (uint k=j+1;k<route.pivotNormalCount;k++) {
++                float3 c=route.pivotNormal[k].xyz;
++                float det=dot(a,cross(b,c));
++                if (abs(det)<1.e-6f) continue;
++                float3 coeff=float3(dot(g,cross(b,c)),dot(g,cross(c,a)),dot(g,cross(a,b)))/det;
++                if (all(coeff>=0.0f) && length(g-coeff.x*a-coeff.y*b-coeff.z*c)<=tol) return true;
++            }
++        }
++    }
++    return false;
++}
++inline bool ligamentContactStrip(device const NMNumiHumanLigamentContactStripGPU& r,
++    float3 insertion,float3 insertionNormal,thread float3& last,thread float& materialLength) {
++    const uint n=r.edgeCount;
++    if (!n||n>NM_LIGAMENT_STRIP_EDGES||r.pivotNormalCount<2||r.pivotNormalCount>NM_LIGAMENT_VERTEX_NORMALS) return false;
++    float3 p[NM_LIGAMENT_STRIP_EDGES+2], tangent[NM_LIGAMENT_STRIP_EDGES];
++    float extent[NM_LIGAMENT_STRIP_EDGES];
++    p[0]=r.pivotAndPrefixLength.xyz;p[n+1]=insertion;
++    for(uint i=0;i<n;i++) {
++        float3 edge=r.edge[i].end.xyz-r.edge[i].startAndSeed.xyz;
++        extent[i]=length(edge);
++        if (!(extent[i]>1.e-8f)) return false;
++        tangent[i]=edge/extent[i];
++        p[i+1]=r.edge[i].startAndSeed.xyz+edge*r.edge[i].startAndSeed.w;
++    }
++    // For one edge the minimizer is exact by equal tangent projections of
++    // its two adjacent unit spans. Alternating sweeps converge on the convex
++    // fixed-feature problem. Stationarity and outward reactions decide success.
++    constexpr float coneTolerance=3.e-5f;
++    for(uint sweep=0;sweep<96;sweep++) {
++        for(uint j=0;j<n;j++) {
++            uint i=(sweep&1)?n-1-j:j;
++            float3 origin=r.edge[i].startAndSeed.xyz;
++            float3 l=p[i]-origin, h=p[i+2]-origin, axis=tangent[i];
++            float a=dot(l,axis),b=dot(h,axis);
++            float r0=length(l-a*axis),r1=length(h-b*axis);
++            if (!(r0+r1>1.e-9f)) return false;
++            p[i+1]=origin+clamp((a*r1+b*r0)/(r0+r1),0.0f,extent[i])*axis;
++        }
++        float3 u=normalize(p[1]-p[0]); bool stationary=true;
++        for(uint i=0;i<n;i++) {
++            float3 next=normalize(p[i+2]-p[i+1]);
++            if (!(abs(dot(u-next,tangent[i]))<1.e-5f)) {stationary=false;break;}
++            u=next;
++        }
++        if (!stationary) continue;
++        u=normalize(p[1]-p[0]);
++        if (!ligamentVertexSupports(r,r.incomingUnit.xyz-u,coneTolerance)) return false;
++        materialLength=r.pivotAndPrefixLength.w+distance(p[1],p[0]);
++        for(uint i=0;i<n;i++) {
++            float t=dot(p[i+1]-r.edge[i].startAndSeed.xyz,tangent[i])/extent[i];
++            if (!(t>0.0f && t<1.0f)) return false;
++            float3 d=p[i+2]-p[i+1];float len=length(d);
++            if (!(len>1.e-8f)) return false;
++            float3 next=d/len;
++            if (!ligamentConePair(u-next,r.edge[i].normal0.xyz,r.edge[i].normal1.xyz,coneTolerance)) return false;
++            materialLength+=len;u=next;
++        }
++        if (dot(-u,insertionNormal)<-coneTolerance) return false;
++        last=p[n];return isfinite(materialLength);
++    }
++    return false;
++}
++
+@@ -1267,0 +1351 @@
++    device const NMNumiHumanPassiveLigamentGPU* rows,
+@@ -1275,2 +1359 @@
+-    if (ligament.flags != NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE ||
+-        ligament.reserved0 != 0u ||
++    if (ligament.flags != (NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE | (ligament.reserved0 ? NM_LIGAMENT_MATERIAL_STRIP : 0u)) ||
+@@ -1303,2 +1386,14 @@
+-    const float3 delta = secondPoint - firstPoint;
+-    const float currentLength = length(delta);
++    float3 delta = secondPoint - firstPoint;
++    float currentLength = length(delta);
++    if (ligament.reserved0) {
++        device const auto* strips=reinterpret_cast<device const NMNumiHumanLigamentContactStripGPU*>(rows+dispatch.passiveLigamentCount);
++        device const auto& strip=strips[ligament.reserved0-1];
++        if (strip.firstBodyIndex!=ligament.firstBodyIndex || strip.secondBodyIndex!=ligament.secondBodyIndex) return false;
++        const float4 inv=humanQuaternionConjugate(firstPose.orientation);
++        float3 last;
++        if (!ligamentContactStrip(strip,humanQuaternionRotate(inv,delta),
++            humanQuaternionRotate(inv,humanQuaternionRotate(secondPose.orientation,strip.insertionLocalNormal.xyz)),
++            last,currentLength)) return false;
++        firstPoint+=humanQuaternionRotate(firstPose.orientation,last);
++        delta=secondPoint-firstPoint;
++    }
+@@ -1322 +1417 @@
+-    firstForce = tension * delta / currentLength;
++    firstForce = tension * delta / (ligament.reserved0 ? length(delta) : currentLength);
+@@ -2302 +2397 @@
+-            environment, dispatch, bodyPoses, passiveLigaments[index],
++            environment, dispatch, bodyPoses, passiveLigaments, passiveLigaments[index],
+@@ -3888,0 +3984,2 @@
++kernel void nm_numi_human_ligament_strip_v1() {}
++
+@@ -3911 +4008 @@
+-                environment, dispatch, bodyPoses, passiveLigaments[index],
++                environment, dispatch, bodyPoses, passiveLigaments, passiveLigaments[index],
+@@ -4189 +4286 @@
+-                environment, dispatch, bodyPoses, ligament, firstPoint,
++                environment, dispatch, bodyPoses, passiveLigaments, ligament, firstPoint,
+--- a/NumiHumanRegisteredLigaments.hpp
++++ b/NumiHumanRegisteredLigaments.hpp
+@@ -53 +53 @@
+-struct Built {NMNumiHumanPassiveLigamentGPU row{};Provenance provenance;};
++struct Built {NMNumiHumanLigamentContactStripGPU strip{}; NMNumiHumanPassiveLigamentGPU row{};Provenance provenance;};
+@@ -220,0 +221 @@
++#include "RegisteredMaterialBranches.hpp"
+@@ -333,0 +335,5 @@
++ NMNumiHumanLigamentContactStripGPU strip{};
++ const bool wrapped=s.name=="superior_glenohumeral_capsuloligament";
++ if(wrapped) {
++  materialBranch(s.side,b0,b1,poses,p0.p,p1.p,strip,L);
++ } else {
+@@ -362,0 +369 @@
++ }
+@@ -364 +371 @@
+- Built out;auto& r=out.row;r.firstBodyIndex=b0;r.secondBodyIndex=b1;r.flags=NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE;r.reserved0=0;
++ Built out;out.strip=strip;auto& r=out.row;r.firstBodyIndex=b0;r.secondBodyIndex=b1;r.flags=NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE;r.reserved0=0;
+@@ -379,3 +386,6 @@
+- q.c3Pa=c3;q.c4=kC4;q.c5Pa=c5;q.lambdaMax=kLambdaMax;q.referenceLengthM=L;q.stiffnessSource=std::string(s.stiffnessSource);q.geometrySource=std::string(s.geometrySource);q.limitations=std::string(s.limitations);return out;
+-}
+-}
++ q.c3Pa=c3;q.c4=kC4;q.c5Pa=c5;q.lambdaMax=kLambdaMax;q.referenceLengthM=L;q.stiffnessSource=std::string(s.stiffnessSource);q.geometrySource=std::string(s.geometrySource);q.limitations=std::string(s.limitations);
++ if(wrapped) {q.geometrySource="Source-face entheses and frictionless material edges on the registered scapula";
++ q.limitations="Mixed-source reference, inferred attachments, zero initial prestrain, fixed contact topology. The entrance is certified against the registered bones. Motion requires independent collision qualification.";}
++ return out;
++}
++}
+--- a/numilab_human_myosim_visual_probe.mm
++++ b/numilab_human_myosim_visual_probe.mm
+@@ -21006,0 +21007 @@
++    std::vector<NMNumiHumanLigamentContactStripGPU> ligamentContactStrips;
+@@ -22306 +22307,3 @@
+-                  << " rows=" << registeredLigaments.size()
++                  << " sliding_material_routes=" << std::count_if(registeredLigaments.begin(),registeredLigaments.end(),
++                         [](const auto& built){return built.strip.edgeCount!=0u;})
++                      << " rows=" << registeredLigaments.size()
+@@ -30363,0 +30367,5 @@
++        if (built.strip.edgeCount) {
++            owner->ligamentContactStrips.push_back(built.strip);
++            built.row.flags|=NM_LIGAMENT_MATERIAL_STRIP;
++            built.row.reserved0=static_cast<uint32_t>(owner->ligamentContactStrips.size());
++        }
+@@ -30400 +30408 @@
+-            .environmentCount=1u,.productionForceOwnerFraction=0.0},
++            .environmentCount=1u,.productionForceOwnerFraction=0.0,.ligamentContactStrips=owner->ligamentContactStrips},
+@@ -39630,0 +39639,4 @@
++                    if(!ligamentOwner.ligamentContactStrips.empty()) {
++                        appendSource("resting_registered_ligament_contact_strips_v1",
++                            std::as_bytes(std::span(ligamentOwner.ligamentContactStrips)));
++                    }
+@@ -39860 +39872 @@
+-                        .environmentCount=1u,.productionForceOwnerFraction=0.0};
++                        .environmentCount=1u,.productionForceOwnerFraction=0.0,.ligamentContactStrips=owner.ligamentContactStrips};
