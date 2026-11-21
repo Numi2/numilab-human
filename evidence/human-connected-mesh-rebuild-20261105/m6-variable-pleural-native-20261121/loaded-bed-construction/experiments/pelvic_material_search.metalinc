@@ -1,0 +1,56 @@
+// Minimize the finite-strain potential along the current material correction,
+// holding the just-fitted tractions and their directions fixed for this search.
+kernel void nm_pelvic_trial_potential(constant uint4& dims [[buffer(0)]],
+    device const uint* needed [[buffer(1)]], device const uint4* cells [[buffer(2)]],
+    device const float4* inv [[buffer(3)]], device const float* volume [[buffer(4)]],
+    device const float4* u [[buffer(5)]], device const float4* step [[buffer(6)]],
+    device const float4* residual [[buffer(7)]], device float* partial [[buffer(8)]],
+    uint g [[threadgroup_position_in_grid]], uint tid [[thread_index_in_threadgroup]],
+    uint lane [[thread_index_in_simdgroup]], uint sg [[simdgroup_index_in_threadgroup]]) {
+    uint side=g/dims.z, tile=g%dims.z, i=128*tile+tid;
+    if(!needed[side]) return;
+    float tr=0, minor=0, cubic=0, norm2=0, logJ=0, v=0;
+    if(i<dims.x && uint(cells[i].x>=pelvicFlex[1].x)==side) {
+        uint4 t=cells[i];float3 x=u[t.x].xyz, s=step[t.x].xyz;
+        float3x3 I=float3x3(inv[3*i].xyz,inv[3*i+1].xyz,inv[3*i+2].xyz);
+        float3x3 F=float3x3(1.f)+float3x3(u[t.y].xyz-x,u[t.z].xyz-x,u[t.w].xyz-x)*I;
+        float3x3 D=float3x3(step[t.y].xyz-s,step[t.z].xyz-s,step[t.w].xyz-s)*I;
+        float J=determinant(F);
+        float3x3 it=(1.f/J)*float3x3(cross(F[1],F[2]),cross(F[2],F[0]),cross(F[0],F[1]));
+        float3x3 B=transpose(it)*D;
+        tr=B[0].x+B[1].y+B[2].z;
+        minor=B[0].x*B[1].y-B[0].y*B[1].x+B[0].x*B[2].z-B[0].z*B[2].x+B[1].y*B[2].z-B[1].z*B[2].y;
+        cubic=determinant(B); norm2=dot(D[0],D[0])+dot(D[1],D[1])+dot(D[2],D[2]);
+        logJ=log(J);v=volume[i];
+    }
+    float slope=(i<dims.y && uint(i>=pelvicFlex[1].x)==side)?dot(step[i].xyz,residual[i].xyz):0.f;
+    threadgroup float components[8][4];
+    for(uint k=0;k<8;++k) {
+        float a=1.f/float(1u<<k), high=a*a*(minor-a*cubic), q=high-a*tr;
+        float one=1.f+q;
+        float l=log(one)+(q-(one-1.f))/one;
+        // log1p(q)-q without losing the quadratic term at very small strain.
+        float rem=abs(q)<.015625f ? q*q*(-.5f+q*(1.f/3.f+q*(-.25f+q*(.2f-q/6.f)))) : l-q;
+        float dE=v*(6000.f*a*a*norm2+(120000.f*logJ-12000.f)*(high+rem)+60000.f*l*l)-a*slope;
+        float sum=simd_sum(isfinite(dE)&&q> -1.f?dE:INFINITY);
+        if(!lane) components[k][sg]=sum;
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    if(tid<8) partial[(side*dims.z+tile)*8+tid]=(components[tid][0]+components[tid][1])+(components[tid][2]+components[tid][3]);
+}
+kernel void nm_pelvic_choose_material_step(constant uint& tiles [[buffer(0)]],
+    device const uint* needed [[buffer(1)]],device const float* partial [[buffer(2)]],
+    device float* scale [[buffer(3)]],uint side [[threadgroup_position_in_grid]],
+    uint lane [[thread_index_in_simdgroup]]) {
+    if(!needed[side])return;
+    float e=0;
+    if(lane<8) for(uint tile=0;tile<tiles;++tile) e+=partial[(side*tiles+tile)*8+lane];
+    float v=lane<8&&isfinite(e)&&e<0?e:INFINITY;
+    float best=simd_min(v);uint index=simd_min(v==best?lane:UINT_MAX);
+    if(!lane) scale[side]=isfinite(best)?1.f/float(1u<<index):0.f;
+}
+kernel void nm_pelvic_apply_material_step(constant uint& n [[buffer(0)]],
+    device const uint* needed [[buffer(1)]],device const float4* step [[buffer(2)]],
+    device float4* u [[buffer(3)]],device const float* scale [[buffer(4)]],uint i [[thread_position_in_grid]]) {
+    if(i<n){uint side=uint(i>=pelvicFlex[1].x);if(needed[side])u[i].xyz-=scale[side]*step[i].xyz;}
+}

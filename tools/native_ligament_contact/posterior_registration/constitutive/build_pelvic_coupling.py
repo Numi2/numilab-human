@@ -7,6 +7,7 @@ out.mkdir(parents=True,exist_ok=True);(out/'metalrobo').mkdir(exist_ok=True)
 for f in src.iterdir():
     if f.suffix=='.hpp' and f.name!='NumiHumanRestingCoupling.hpp' or f.suffix=='.metalinc' or f.name=='numilab_human_myosim_visual_probe.mm':
         if not (out/f.name).exists():(out/f.name).hardlink_to(f)
+subprocess.run([sys.executable,Path(__file__).with_name('prepare_compiled_bed_preload.py'),src/'numilab_human_myosim_visual_probe.mm',out/'numilab_human_myosim_visual_probe.mm'],check=True)
 dest=out/'metalrobo/MetalRobo.metallib'
 if not dest.exists():dest.hardlink_to(src/'metalrobo/MetalRobo.metallib')
 for name in ('pelvic_contact.metalinc','pelvic_material_validate.metalinc','NumiHumanPelvicContact.hpp','pelvic_crossing_predicates.metalinc','pelvic_end_geometry.metalinc','pelvic_cortical_frame.metalinc','pelvic_motion_registry.metalinc'):

@@ -51,6 +51,8 @@ class NumiHumanPelvicContact {
     id<MTLComputePipelineState> captureSurfaces=nil;
     id<MTLBuffer> dispatchSizes=nil,dispatchArgs=nil;
     id<MTLComputePipelineState> restoreMaterial=nil,makeSpans=nil,unloaded=nil;
+    id<MTLBuffer> constructionMaterialGuess=nil,constructionRows=nil,constructionKeys=nil;
+    id<MTLComputePipelineState> seedPressures=nil;
     std::map<unsigned,unsigned> spanIndex;
     unsigned poolCount=0,numRegions=0;
     unsigned countNodes=0,countCells=0,countGroups=0,countTrace=0,encodedSteps=0;
@@ -81,6 +83,39 @@ public:
         fLevels=load(27);fOrder=load(28);fPerm=load(29);fScale=load(30);projRows=load(31);projCols=load(32);projVals=load(33);refNodes=load(34);refInverse=load(35);refPoses=load(36);facetPairs=load(37);facetPoses=load(38);finiteCount=unsigned(facetPairs.length/(17*16));
         if constexpr(pelvicMaterialReferenceSurface)surfaceReference=load(39);
         finiteStart=poolCount-pelvicMaterialFacetRows*finiteCount;reverseStart=finiteStart-pelvicUniqueVertices;
+        if(const char* path=std::getenv("NUMI_HUMAN_PELVIC_INITIAL_ELASTIC_CSV")){
+            const char* digest=std::getenv("NUMI_HUMAN_PELVIC_INITIAL_ELASTIC_SHA256");
+            const char* rawStep=std::getenv("NUMI_HUMAN_PELVIC_INITIAL_ELASTIC_DONOR_STEP");
+            NSData* bytes=[NSData dataWithContentsOfFile:@(path)];
+            if(!bytes || bytes.length>32u*1024u*1024u || !digest || !rawStep)
+                throw std::runtime_error("missing bounded accepted material field");
+            unsigned char raw[CC_SHA256_DIGEST_LENGTH];CC_SHA256(bytes.bytes,static_cast<CC_LONG>(bytes.length),raw);
+            std::ostringstream hex;for(unsigned char c:raw)hex<<std::hex<<std::setfill('0')<<std::setw(2)<<unsigned(c);
+            if(hex.str()!=digest)throw std::runtime_error("accepted material CSV digest");
+            std::string stepText=rawStep;size_t used=0;auto donorStep=std::stoul(stepText,&used);
+            if(!donorStep||used!=stepText.size())throw std::runtime_error("invalid construction donor time");
+            std::istringstream input(std::string(static_cast<const char*>(bytes.bytes),bytes.length));
+            std::string line;std::getline(input,line);
+            if(line!="accepted_step,field,index,x,y,z,w")throw std::runtime_error("accepted material schema");
+            std::vector<std::array<float,4>> data(countNodes);std::vector<bool> seen(countNodes,false);
+            unsigned complete=0;
+            while(std::getline(input,line)){
+                std::istringstream row(line);std::string part;
+                std::getline(row,part,',');if(part!=stepText)throw std::runtime_error("mixed construction donor step");
+                std::getline(row,part,',');if(part!="node_displacement")continue;
+                std::getline(row,part,',');auto i=std::stoul(part,&used);
+                if(used!=part.size()||i>=countNodes||seen[i])throw std::runtime_error("invalid material node identity");
+                seen[i]=true;++complete;
+                for(float& value:data[i]){
+                    if(!std::getline(row,part,','))throw std::runtime_error("truncated material displacement");
+                    value=std::stof(part,&used);if(used!=part.size()||!std::isfinite(value))throw std::runtime_error("nonfinite material displacement");
+                }
+                if(!row.eof()||data[i][3]!=0)throw std::runtime_error("unexpected material displacement payload");
+            }
+            if(complete!=countNodes)throw std::runtime_error("incomplete construction material field");
+            constructionMaterialGuess=[dev newBufferWithBytes:data.data() length:data.size()*16 options:MTLResourceStorageModeShared];
+            if(!constructionMaterialGuess)throw std::runtime_error("material guess allocation");
+        }
         totalDelta=alloc(countNodes*16);materialState=alloc(countCells*16);
         cellLoad=alloc(countCells*64);bulkGrad=alloc(countNodes*16);bulkRhs=alloc(countNodes*16);baseShift=alloc(countNodes*16);attachment=alloc(countNodes*16);
         iterationTrace=alloc(64*std::max(1u,std::min(4u,countTrace))*16,true);
@@ -95,6 +130,47 @@ public:
         if constexpr(pelvicHasSharedFacets)sharedFaces=load(41);
         if constexpr(pelvicExtraPairs){liveExtras=alloc(4*pelvicExtraPairs);initializeExtras=pipeline(@"nm_pelvic_live_features");}
         if constexpr(pelvicMotionRegistry){
+            if(std::getenv("NUMI_HUMAN_PELVIC_INITIAL_TRACTIONS")){
+                if(!constructionMaterialGuess)throw std::runtime_error("pressure seed requires matched elastic state");
+                auto seedBuffer=[&](const char* name){
+                    std::string prefix=std::string("NUMI_HUMAN_PELVIC_INITIAL_")+name;
+                    const char* filename=std::getenv(prefix.c_str());
+                    const char* expected=std::getenv((prefix+"_SHA256").c_str());
+                    if(!filename||!expected)throw std::runtime_error("unbound native construction buffer");
+                    NSData* data=[NSData dataWithContentsOfFile:@(filename)];
+                    if(data.length!=512*8)throw std::runtime_error("construction buffer size");
+                    unsigned char raw[CC_SHA256_DIGEST_LENGTH];CC_SHA256(data.bytes,static_cast<CC_LONG>(data.length),raw);
+                    std::ostringstream hex;for(unsigned char c:raw)hex<<std::hex<<std::setfill('0')<<std::setw(2)<<unsigned(c);
+                    if(hex.str()!=expected)throw std::runtime_error("construction buffer identity");
+                    auto b=[dev newBufferWithBytes:data.bytes length:data.length options:MTLResourceStorageModeShared];
+                    if(!b)throw std::runtime_error("construction buffer allocation");return b;
+                };
+                constructionRows=seedBuffer("TRACTIONS");constructionKeys=seedBuffer("FEATURES");
+                const auto* seeded=static_cast<const uint32_t*>(constructionRows.contents);
+                const auto* keys=static_cast<const uint32_t*>(constructionKeys.contents);
+                const auto* regions=static_cast<const uint32_t*>(poolRegions.contents);
+                const auto faceCapacity=pelvicMaterialFiles[40].bytes/16;
+                std::vector<bool> used(poolCount,false);
+                for(unsigned i=0;i<512;++i){
+                    const uint32_t query=seeded[2*i];
+                    float load=0;std::memcpy(&load,seeded+2*i+1,sizeof(float));
+                    if(query!=UINT32_MAX){
+                        if(query>=poolCount || used[query] || !std::isfinite(load) || load<=0)
+                            throw std::runtime_error("invalid initial pressure port");
+                        used[query]=true;
+                        bool owned=false;
+                        for(unsigned j=0;j<numRegions;++j){
+                            const auto* region=regions+4*j;
+                            if(query>=region[0] && query-region[0]<region[1] && region[2]/256==i/256){owned=true;break;}
+                        }
+                        if(!owned)throw std::runtime_error("initial pressure port has the wrong regional owner");
+                    }else if(load!=0)throw std::runtime_error("unused initial pressure port carries a load");
+                    const uint32_t bone=keys[2*i],material=keys[2*i+1];
+                    if((bone==0)!=(material==0)||bone>faceCapacity||material>numFaces)
+                        throw std::runtime_error("initial feature outside anatomical surface");
+                }
+                seedPressures=pipeline(@"nm_pelvic_initial_tractions");
+            }
             motionOwners=load(45);registeredFaces=load(46);motionMetrics=alloc(12,true);motionQueue=alloc(512*8);
             motionKeys=alloc(512*8);savedKeys=alloc(512*8,true);std::memset(savedKeys.contents,0,savedKeys.length);
             motionPhase=pipeline(@"nm_pelvic_motion_phase");motionRegister=pipeline(@"nm_pelvic_motion_register");motionBind=pipeline(@"nm_pelvic_motion_bind");
@@ -201,9 +277,14 @@ public:
             }
         };
         if(!post){
-            [e setComputePipelineState:restoreMaterial];words(0,{p.stepIndex,countNodes,0,0});bind(1,accepted);bind(2,coordinates);run((countNodes+127)/128,128);
+            const bool seed=p.stepIndex==0 && constructionMaterialGuess!=nil;
+            [e setComputePipelineState:restoreMaterial];words(0,{p.stepIndex,countNodes,unsigned(seed),0});bind(1,seed?constructionMaterialGuess:accepted);bind(2,coordinates);run((countNodes+127)/128,128);
             [e setComputePipelineState:clearPool];words(0,{p.stepIndex,poolCount,0,0});bind(1,poolSlots);bind(2,included);bind(3,contactCache);bind(4,pressures);bind(5,accepted);run((poolCount+127)/128,128);
             words(0,{p.stepIndex,poolCount,1,countNodes});run(4,128);
+            if(!p.stepIndex && constructionRows){
+                [e setComputePipelineState:seedPressures];[e setBytes:&poolCount length:4 atIndex:0];
+                bind(1,constructionRows);bind(2,poolSlots);bind(3,pressures);bind(4,included);run(4,128);
+            }
         }
         if constexpr(pelvicExtraPairs){
             [e setComputePipelineState:initializeExtras];bind(1,poolSlots);bind(2,pressures);bind(3,liveExtras);bind(4,pool);bind(5,poolGaps);
@@ -211,7 +292,8 @@ public:
             words(0,{1,0,0,0});run(4,128);
         }
         if constexpr(pelvicMotionRegistry){if(!post){
-            [e setComputePipelineState:motionPhase];words(0,{0,p.stepIndex,0,0});bind(1,motionMetrics);bind(2,savedKeys);bind(3,motionKeys);bind(4,liveExtras);run(4,128);bindMotion();
+            const bool fromConstruction=!p.stepIndex && constructionKeys!=nil;
+            [e setComputePipelineState:motionPhase];words(0,{0,unsigned(p.stepIndex!=0||fromConstruction),0,0});bind(1,motionMetrics);bind(2,fromConstruction?constructionKeys:savedKeys);bind(3,motionKeys);bind(4,liveExtras);run(4,128);bindMotion();
         }}
         observe(0,1);select(0,true);
         [e setComputePipelineState:requireBulk];bind(0,needed);run(1,32);
@@ -255,7 +337,7 @@ public:
         bulkForces();
         // A pressure is only an initial guess. Recompute the moving rows, full
         // residual, contact extrema, complementarity and compliance before using it.
-        if(p.stepIndex || post){
+        if(p.stepIndex || post || constructionRows){
             nearest(0,0);
             compliance();
             [e setComputePipelineState:candidatePressure];words(0,{0,0,0,0});bind(1,poolSlots);bind(2,rows);

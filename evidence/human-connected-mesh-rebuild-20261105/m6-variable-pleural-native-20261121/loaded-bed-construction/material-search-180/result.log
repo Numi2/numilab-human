@@ -1,0 +1,10 @@
+human_execution_stage=static_equilibrium_begin wall_elapsed_ms=0 stage_step=0
+static_support_witness_source=registered_skin_callback capture_mode=current_q_point_jacobian_only contact_rows=32 initial_gap_min_m=1.02648436894e-05 initial_gap_max_m=0.11203324828 closed_rows=0 closed_world_xy_rank=0 closed_world_xy_extent_m=0 capture_physical_steps=0 capture_physical_publication=0 capture_host_result_published=1 reference_q=float32_frozen
+human_execution_stage=static_equilibrium_end wall_elapsed_ms=2892.183167 stage_step=0
+resting_bed_contact_owner=condensed_skin_fat sections=32 skeleton_transfer=weighted_point_jacobian mass=existing_articulated_reference
+human_execution_stage=authoritative_segment_end wall_elapsed_ms=16678.191875 stage_step=32
+resting_native_profile step=32 command_ms=13690.653959 gpu_ms=13690.1502917 host_copy_ms=0.055166 full_state_readback=1
+human_execution_stage=authoritative_segment_end wall_elapsed_ms=30528.26725 stage_step=64
+resting_native_profile step=64 command_ms=13769.486 gpu_ms=13768.9215417 host_copy_ms=0.123333 full_state_readback=1
+human_execution_stage=authoritative_segment_end wall_elapsed_ms=55264.287209 stage_step=88
+myosim_articulated_visual=failed error="persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 64 accepted steps: GPU rejected the Numi Human stand horizon: code=9 completed_steps=88 failing_index=4294967295"

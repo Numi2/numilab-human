@@ -487,7 +487,7 @@ kernel void nm_pelvic_force_gate(constant uint4& d [[buffer(0)]],device const fl
 
 kernel void nm_pelvic_restore_material(constant uint4& d [[buffer(0)]],device const float4* accepted [[buffer(1)]],
     device float4* trial [[buffer(2)]],uint i [[thread_position_in_grid]]){
-    if(i<d.y)trial[i]=(d.x&&uint(accepted[0].x)==d.x)?accepted[9+d.y+i]:float4(0);
+    if(i<d.y)trial[i]=d.z?accepted[i]:((d.x&&uint(accepted[0].x)==d.x)?accepted[9+d.y+i]:float4(0));
 }
 kernel void nm_pelvic_optional_spans(constant uint& count [[buffer(0)]],device const uint* needed [[buffer(1)]],
     device const uint* grids [[buffer(2)]],device uint* args [[buffer(3)]],uint i [[thread_position_in_grid]]){
@@ -815,4 +815,14 @@ kernel void nm_pelvic_choose_direction(device const uint* needed [[buffer(0)]],
     bool imbalance=forceRatio>max(1.f,contactRatio);
     material[side]=needed[side] && imbalance;
     contact[side]=needed[side] && !imbalance;
+}
+
+kernel void nm_pelvic_initial_tractions(constant uint& count [[buffer(0)]], device const uint2* seed [[buffer(1)]],
+    device uint* slots [[buffer(2)]], device float* pressures [[buffer(3)]], device uint* included [[buffer(4)]],
+    uint i [[thread_position_in_grid]]){
+    if(i>=512)return;
+    uint2 v=seed[i];float force=as_type<float>(v.y);
+    if(v.x<count && isfinite(force) && force>0){
+        slots[i]=v.x;pressures[i]=force;included[v.x]=1;
+    }
 }
