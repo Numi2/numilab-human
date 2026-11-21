@@ -1,0 +1,78 @@
+// Exact sign of det(a-d,b-d,c-d) for finite IEEE binary32 points.
+// The filter uses the absolute determinant permanent. Ambiguous signs are
+// resolved by an integer expansion of all 24 homogeneous determinant products.
+struct PelvicDyadic {uint mantissa;int exponent,sign;};
+inline PelvicDyadic pelvicDyadic(float x){
+    uint bits=as_type<uint>(x),biased=(bits>>23)&255u;
+    return {(bits&0x7fffffu)|(biased?0x800000u:0u),biased?int(biased)-150:-149,(bits>>31)?-1:1};
+}
+inline void pelvicExactTerm(PelvicDyadic a,PelvicDyadic b,PelvicDyadic c,int parity,
+                            int origin,thread int* sum,thread int& last){
+    if(a.mantissa==0||b.mantissa==0||c.mantissa==0)return;
+    ulong ab=ulong(a.mantissa)*ulong(b.mantissa);
+    ulong lo=ulong(uint(ab))*ulong(c.mantissa);
+    ulong hi=(ab>>32)*ulong(c.mantissa)+(lo>>32);
+    uint words[3]={uint(lo),uint(hi),uint(hi>>32)};
+    int shift=a.exponent+b.exponent+c.exponent-origin;
+    int i=shift/16,offset=shift%16,sgn=parity*a.sign*b.sign*c.sign;
+    for(uint j=0;j<5;++j){
+        uint v=((words[j/2]>>(16*(j%2)))&65535u)<<offset;
+        sum[i+j]+=sgn*int(v&65535u);sum[i+j+1]+=sgn*int(v>>16);
+    }
+    last=max(last,i+5);
+}
+inline int pelvicExactOrient(float3 a,float3 b,float3 c,float3 d){
+    float3 p[4]={a,b,c,d};PelvicDyadic q[4][3];int origin=0;
+    for(uint k=0;k<3;++k){
+        int e=105;
+        for(uint j=0;j<4;++j){q[j][k]=pelvicDyadic(p[j][k]);if(q[j][k].mantissa)e=min(e,q[j][k].exponent);}
+        if(e==105)return 0;
+        origin+=e;
+    }
+    // Full binary32 exponent spread is 253. Three factors need at most
+    // floor(3*253/16)+5 = 52 as a digit index. At most 48 summands per digit.
+    int sum[53]={0},last=0;
+    for(uint k=0;k<4;++k){
+        uint A=k==1?3:0,B=k==2?3:1,C=k==3?3:2;int sign=k?-1:1;
+        for(uint j=0;j<3;++j){
+            uint h=(j+1)%3,i=(j+2)%3;
+            pelvicExactTerm(q[A][j],q[B][h],q[C][i],sign,origin,sum,last);
+            pelvicExactTerm(q[A][j],q[B][i],q[C][h],-sign,origin,sum,last);
+        }
+    }
+    int carry=0;bool nonzero=false;
+    for(int j=0;j<=last;++j){
+        int v=sum[j]+carry;
+        carry=v/65536-int(v%65536<0);nonzero|=v-65536*carry!=0;
+    }
+    return carry<0?-1:int(carry>0||nonzero);
+}
+inline int pelvicOrient(float3 a,float3 b,float3 c,float3 d){
+    float3 x=a-d,y=b-d,z=c-d;
+    float3 ab=y.yzx*z.zxy,ba=y.zxy*z.yzx;
+    float v=dot(x,ab-ba),perm=dot(abs(x),abs(ab)+abs(ba));
+    if(perm>1.e-24f&&perm<1.e24f&&all(max(max(abs(a),abs(b)),max(abs(c),abs(d)))<float3(1.e4f))&&abs(v)>1.e-6f*perm)return v>0?1:-1;
+    return pelvicExactOrient(a,b,c,d);
+}
+inline bool pelvicStraddles(int3 v){return min(v.x,min(v.y,v.z))<0&&max(v.x,max(v.y,v.z))>0;}
+inline bool pelvicEdgeInTriangle(float3 p,float3 q,thread const float3* t){
+    int a=pelvicOrient(p,q,t[0],t[1]),b=pelvicOrient(p,q,t[1],t[2]);
+    if(a*b<0)return false;
+    int c=pelvicOrient(p,q,t[2],t[0]);
+    return a*c>=0&&b*c>=0;
+}
+inline bool pelvicCrosses(thread const float3* a,thread const float3* b){
+    int3 pa,pb;
+    for(uint i=0;i<3;++i)pa[i]=pelvicOrient(b[0],b[1],b[2],a[i]);
+    if(!pelvicStraddles(pa))return false;
+    for(uint i=0;i<3;++i)pb[i]=pelvicOrient(a[0],a[1],a[2],b[i]);
+    if(!pelvicStraddles(pb))return false;
+    // A segment lying on the other plane has zero tests against every edge.
+    // Test only edges crossing the plane or meeting it at exactly one endpoint.
+    for(uint i=0;i<3;++i){
+        uint j=(i+1)%3;
+        if(pa[i]!=pa[j]&&pa[i]*pa[j]<=0&&pelvicEdgeInTriangle(a[i],a[j],b))return true;
+        if(pb[i]!=pb[j]&&pb[i]*pb[j]<=0&&pelvicEdgeInTriangle(b[i],b[j],a))return true;
+    }
+    return false;
+}

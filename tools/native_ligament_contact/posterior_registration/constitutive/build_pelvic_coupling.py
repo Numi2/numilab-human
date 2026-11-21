@@ -9,16 +9,28 @@ for f in src.iterdir():
         if not (out/f.name).exists():(out/f.name).hardlink_to(f)
 dest=out/'metalrobo/MetalRobo.metallib'
 if not dest.exists():dest.hardlink_to(src/'metalrobo/MetalRobo.metallib')
-for name in ('pelvic_contact.metalinc','pelvic_material_validate.metalinc','NumiHumanPelvicContact.hpp'):
+for name in ('pelvic_contact.metalinc','pelvic_material_validate.metalinc','NumiHumanPelvicContact.hpp','pelvic_crossing_predicates.metalinc','pelvic_end_geometry.metalinc','pelvic_cortical_frame.metalinc'):
     shutil.copyfile(Path(__file__).parent/name,out/name)
 manifest=json.loads((assets/'manifest.json').read_text());files=['cortical-samples','cortical-modes','cortical-triangles','cortical-neighborhood','material-nodes','material-modes','material-cells','material-inverse','pool-material-points','pool-cortical-neighborhood','pool-material-regions','cortical-free-index','cortical-flexibility','closed-material-vertices','closed-material-triangles','closed-material-shapes','closed-material-ranges','closed-material-incidence','free-node-rows','free-node-columns','free-node-stiffness']+['pelvic-cell-volume', 'pelvic-cell-incidence', 'pelvic-cell-corners', 'pelvic-factor-rows', 'pelvic-factor-columns', 'pelvic-factor-values', 'pelvic-factor-levels', 'pelvic-factor-order', 'pelvic-factor-perm', 'pelvic-factor-scale','pelvic-projector-rows','pelvic-projector-cols','pelvic-projector-vals','pelvic-reference-nodes','pelvic-reference-inverse','pelvic-reference-poses','pelvic-finite-pairs','pelvic-finite-poses']
+reference_surface='surface_material_reference' in manifest
+if reference_surface:
+    files.append('closed-material-reference')
+    count=sum(s['vertices'] for s in manifest['closed_reverse']['sides'])
+    if (assets/'closed-material-reference.bin').stat().st_size!=32*count:
+        raise ValueError('Skinning reference size disagrees with registered boundary')
+certified='cortical_certificate' in manifest
+if certified:
+    if not reference_surface:raise ValueError('Cortical certificate requires the registered surface')
+    files.append('cortical-certificate-faces')
+    size=16*sum(r['count'] for r in manifest['cortical_certificate']['banks'])
+    if size==0 or (assets/'cortical-certificate-faces.bin').stat().st_size!=size:raise ValueError('Cortical face count')
 facet_rows=manifest['finite_facets'].get('rows_per_pair',2)
 assert facet_rows in (2,16)
 face_spec=manifest['finite_facets']
 assert face_spec['start']+facet_rows*face_spec['number']==manifest['contact_pool']['count']
 assert (assets/'pelvic-finite-pairs.bin').stat().st_size==17*16*face_spec['number']
 assert manifest['specimen']['mu']==12000 and manifest['specimen']['lam']==120000 and manifest['specimen']['jmin']==.20 and manifest['specimen']['jmax']==5
-decl='struct PelvicMaterialFile { const char* name; unsigned long bytes; const char* hash; };\ninline constexpr PelvicMaterialFile pelvicMaterialFiles[]={\n'
+decl='inline constexpr bool pelvicHasCrossingCertificate='+('true' if certified else 'false')+';\ninline constexpr bool pelvicMaterialReferenceSurface='+('true' if reference_surface else 'false')+';\nstruct PelvicMaterialFile { const char* name; unsigned long bytes; const char* hash; };\ninline constexpr PelvicMaterialFile pelvicMaterialFiles[]={\n'
 for name in files:
     p=assets/(name+'.bin');digest=sha(p);assert digest==manifest['files'][p.name]
     decl+='{"%s",%d,"%s"},\n'%(p.name,p.stat().st_size,digest)
@@ -53,8 +65,9 @@ dimensions+=constvec('pelvicFactorDims','uint4',[[r['coordinate_start'],r['coord
 dimensions+=constvec('pelvicFactorUpper','uint2',[r['upper'] for r in fact])
 dimensions+='constant uint pelvicFacetRows='+str(facet_rows)+'u;\n'
 dimensions+='constant uint pelvicFiniteStart=%du;\n'%manifest['finite_facets']['start']
+dimensions+='constant bool pelvicCachedCortex='+('true' if certified else 'false')+';\n'
 dims=dimensions+'constant uint pelvicReverseStart='+str(surface['first'])+'u;\nconstant uint4 pelvicFlex[2]={'+','.join('uint4(%d,%d,%d,%d)'%tuple(r[k] for k in ('first_node','nodes','input_nodes','first_vector')) for r in spec)+'};\n'
-(out/'human_respiration.metal').write_text((src/'human_respiration.metal').read_text()+dims+'\n#include "pelvic_contact.metalinc"\n#include "pelvic_material_validate.metalinc"\n')
+(out/'human_respiration.metal').write_text((src/'human_respiration.metal').read_text()+dims+'\n#include "pelvic_contact.metalinc"\n#include "pelvic_material_validate.metalinc"\n#include "pelvic_end_geometry.metalinc"\n#include "pelvic_cortical_frame.metalinc"\n')
 cmd=[[str(k).replace(str(src)+'/',str(out)+'/') for k in row] for row in json.loads((src/'build-commands.json').read_text())]
 (out/'build-commands.json').write_text(json.dumps(cmd,indent=2)+'\n')
 for row in cmd:subprocess.run(row,cwd=app/'build-native',check=True)

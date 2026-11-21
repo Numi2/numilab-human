@@ -1,0 +1,59 @@
+#include "pelvic_crossing_predicates.metalinc"
+
+inline uint4 pelvicJoinWitness(uint4 a,uint4 b){
+    bool useB=b.y<a.y||(b.y==a.y&&b.z<a.z);
+    return uint4(a.x+b.x,useB?b.y:a.y,useB?b.z:a.z,a.w|b.w);
+}
+kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device const uint4* cortexFaces [[buffer(1)]],
+    device const float4* cortex [[buffer(2)]],device const PelvicSurfaceFace* skinFaces [[buffer(3)]],
+    device const float4* skin [[buffer(4)]],device const PelvicBounds* boxes [[buffer(5)]],
+    device uint4* partial [[buffer(6)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
+    uint g [[threadgroup_position_in_grid]]){
+    uint4 hit=uint4(0,UINT_MAX,UINT_MAX,0);
+    if(i<count){
+        uint4 f=cortexFaces[i];
+        float3 b[3]={cortex[f.x].xyz,cortex[f.y].xyz,cortex[f.z].xyz};
+        if(!all(isfinite(b[0]))||!all(isfinite(b[1]))||!all(isfinite(b[2])))hit.w=1;
+        float3 lo=min(b[0],min(b[1],b[2])),hi=max(b[0],max(b[1],b[2]));
+        uint4 region=pelvicSurf[f.w];
+        uint tree=2*pelvicLeaves*f.w,node=1;
+        while(node){
+            auto box=boxes[tree+node];
+            if(all(box.hi.xyz>=lo)&&all(box.lo.xyz<=hi)){
+                if(node<pelvicLeaves){node*=2;continue;}
+                uint first=8*(node-pelvicLeaves);
+                for(uint j=first;j<min(region.w,first+8);++j){
+                    uint face=region.z+j;uint4 m=skinFaces[face].vertices;
+                    float3 a[3]={skin[m.x].xyz,skin[m.y].xyz,skin[m.z].xyz};
+                    if(any(max(a[0],max(a[1],a[2]))<lo)||any(min(a[0],min(a[1],a[2]))>hi))continue;
+                    if(pelvicCrosses(a,b)){++hit.x;hit.y=i;hit.z=min(hit.z,face);}
+                }
+            }
+            while(node&1u)node>>=1;
+            if(node)++node;
+        }
+    }
+    threadgroup uint4 tile[128];tile[lane]=hit;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){
+        if(lane<n)tile[lane]=pelvicJoinWitness(tile[lane],tile[lane+n]);
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    if(!lane)partial[g]=tile[0];
+}
+kernel void nm_pelvic_crossing_admit(constant uint4& d [[buffer(0)]],device const uint4* partial [[buffer(1)]],
+    device const float4* skin [[buffer(2)]],device MRNumiHumanStandStatusGPU* status [[buffer(3)]],
+    device uint4* trace [[buffer(4)]],uint lane [[thread_index_in_threadgroup]]){
+    uint4 h=uint4(0,UINT_MAX,UINT_MAX,0);
+    for(uint i=lane;i<d.y;i+=128)h=pelvicJoinWitness(h,partial[i]);
+    for(uint i=lane;i<d.w;i+=128)if(!all(isfinite(skin[i].xyz)))h.w=1;
+    threadgroup uint4 group[128];group[lane]=h;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){
+        if(lane<n)group[lane]=pelvicJoinWitness(group[lane],group[lane+n]);
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    if(!lane){
+        uint4 result=group[0];if(d.x<d.z)trace[d.x]=result;
+        if((result.x||result.w)&&status[0].code==MR_NUMI_HUMAN_STAND_SUCCESS)
+            status[0].code=MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED;
+    }
+}

@@ -27,6 +27,21 @@ def report(run,ctrl):
         result['native_transverse_pairs']=c['total_transverse']
         result['native_boundary_pairs']=c['total_boundary_only']
         result['regional_endpoint_clearance_passed']=after==0 and c['total_transverse']==0
+    endpoint_trace=run/'pelvic-endpoint-crossings.csv'
+    if endpoint_trace.exists():
+        with endpoint_trace.open() as f: checks=list(csv.DictReader(f))
+        if len(checks)<accepted or any(int(r['candidate_step'])!=i for i,r in enumerate(checks)):
+            raise ValueError('Missing or out-of-order cortical certificate')
+        verified=checks[:accepted]
+        if any(int(r['transverse_pairs']) or int(r['nonfinite']) for r in verified):
+            raise ValueError('A crossing or nonfinite mesh advanced the accepted clock')
+        if not crossing.exists() or int(verified[-1]['transverse_pairs'])!=c['total_transverse']:
+            raise ValueError('Native and independent endpoint predicates disagree')
+        result['certified_regional_endpoints']=len(verified)
+        result['maximum_accepted_interval_constraint_violation_m']=result.pop('maximum_accepted_sampled_penetration_m')
+        result['cortical_endpoint_trace_sha256']=sha(endpoint_trace)
+        if fail.exists() and len(checks)>accepted:
+            result['first_rejected_geometry']={k:int(v) for k,v in checks[accepted].items()}
     if fail.exists():result['rejecting_candidate']=rows[accepted]
     if end.exists() and ctrl:
         a=json.loads(end.read_text());b=json.loads((ctrl/'terminal.receipt.json').read_text());assert a['accepted_step']==b['accepted_step']

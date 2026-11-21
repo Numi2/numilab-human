@@ -70,12 +70,12 @@ kernel void nm_pelvic_material_publish(constant uint4& d [[buffer(0)]],
 kernel void nm_pelvic_capture_surfaces(constant uint4& d [[buffer(0)]],device const MRNumiHumanStandStatusGPU* stand [[buffer(1)]],
     device const NMMatterStatusGPU* matter [[buffer(2)]],device const NMHumanRespirationState* resp [[buffer(3)]],
     device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
-    device const PelvicPoolSample* pool [[buffer(6)]],device const float4* verts [[buffer(7)]],device float4* snapshot [[buffer(8)]],uint i [[thread_position_in_grid]]){
+    device const PelvicPoolSample* pool [[buffer(6)]],device const float4* verts [[buffer(7)]],device float4* snapshot [[buffer(8)]],device const float4* cortex [[buffer(9)]],uint i [[thread_position_in_grid]]){
     if(stand[0].code!=MR_NUMI_HUMAN_STAND_SUCCESS || stand[0].completedSteps!=d.x+1 ||
        resp[0].status.x!=d.x || matter[0].code!=NM_STATUS_SUCCESS)return;
     if(i<d.y)snapshot[i]=verts[i];
     if(i<d.z){auto s=pool[pelvicReverseStart+i].contact;
-        snapshot[d.y+i]=float4(pelvicCortexPoint(s,s.domain.x-d.w,s.domain.z-d.w,poses,low),0);}
+        snapshot[d.y+i]=pelvicCachedCortex?cortex[i]:float4(pelvicCortexPoint(s,s.domain.x-d.w,s.domain.z-d.w,poses,low),0);}
 }
 
 // Integrate over the actual projected finite overlap. A P1 gap and each P1
@@ -96,6 +96,12 @@ inline uint pelvicClipTriangle(thread const float3* bary,thread float3* polygon,
     }
     return n;
 }
+// Project a single nearest-Float32 coordinate rounding interval onto the contact
+// normal. These lengths are in metres in the frame of the supplied point.
+inline float pelvicRoundingSupport(float3 x,float3 n){
+    float3 a=abs(x);
+    return .5f*dot(abs(n),nextafter(a,float3(INFINITY))-a);
+}
 kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device const PelvicFacetPair* pairs [[buffer(1)]],
     device const PelvicTriangle* triangles [[buffer(2)]],device const float4* delta [[buffer(3)]],
     device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
@@ -107,19 +113,31 @@ kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device cons
     const auto t=triangles[pair.id.x];float3 normal=t.data[3].xyz,e=t.data[1].xyz-t.data[0].xyz,f=t.data[2].xyz-t.data[0].xyz;
     float3 k=cross(e,f);float k2=dot(k,k);uint rb=pair.id.y==128?0:(pair.id.y==131?2:(pair.id.y==145?4:6));
     float3 trans=((B.position.xyz-reference[rb].xyz)-(P.position.xyz-reference[0].xyz))+(low[bi].xyz-low[pi].xyz);
-    float3 bary[3],z;float3 clip[8];
+    float3 bary[3],z,coordinateRadius;float3 clip[8];
+    const float3 nP=pi==bi?normal:restingRotate(ip,restingRotate(B.orientation,normal));
+    float cortexRadius=0;
+    for(uint k=0;k<3;++k){
+        float3 b=t.data[k].xyz;
+        float radius=pelvicRoundingSupport(b,normal);
+        if(pi!=bi){
+            float3 y=restingRotate(ip,(B.position.xyz-P.position.xyz)+(low[bi].xyz-low[pi].xyz)+restingRotate(B.orientation,b));
+            radius+=pelvicRoundingSupport(y,nP);
+        }
+        cortexRadius=max(cortexRadius,radius);
+    }
     for(uint j=0;j<3;++j){float3 movement=0;
         for(uint a=0;a<4;++a)movement+=pair.shape[j][a]*delta[pair.nodes[a]].xyz;
         float3 relativeMotion=pi==bi?float3(0):restingRotate(ip,trans+
             pelvicRotationIncrement(B.orientation,reference[rb+1],pair.bonePoint[j].xyz)-
             pelvicRotationIncrement(P.orientation,reference[1],pair.pelvisPoint[j].xyz));
         float3 displacement=pair.offset[j].xyz+movement-relativeMotion;
+        coordinateRadius[j]=cortexRadius+pelvicRoundingSupport(pair.pelvisPoint[j].xyz+(pair.offset[j].xyz+movement),nP);
         float3 step=pi==bi?displacement:restingRotate(ib,restingRotate(P.orientation,displacement));
         float2 uv=pair.uv[j].xy+float2(dot(cross(step,f),k),dot(cross(e,step),k))/k2;
         bary[j]=float3(1.f-uv.x-uv.y,uv);z[j]=dot(step,normal);
     }
     uint edges[8];uint n=pelvicClipTriangle(bary,clip,edges);
-    for(uint j=0;j<pelvicFacetRows;++j){gaps[at+j]=INFINITY;pool[at+j].weights=float4(0);}
+    for(uint j=0;j<pelvicFacetRows;++j){gaps[at+j]=INFINITY;pool[at+j].weights=float4(0);pool[at+j].contact.reference.w=0;}
     if(!all(isfinite(bary[0]))||!all(isfinite(bary[1]))||!all(isfinite(bary[2]))){gaps[at]=-INFINITY;return;}
     if(n>8||!all(isfinite(z))){gaps[at]=-INFINITY;gaps[at+1]=-INFINITY;return;}
     if(pelvicCross2(bary[1].yz-bary[0].yz,bary[2].yz-bary[0].yz)>=0)return;
@@ -144,6 +162,7 @@ kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device cons
         float gap=dot(w,z);
         if(gap<gaps[at+slot]){
             gaps[at+slot]=gap;
+            pool[at+slot].contact.reference.w=dot(w,coordinateRadius);
             pool[at+slot].weights=w.x*pair.shape[0]+w.y*pair.shape[1]+w.z*pair.shape[2];
         }
     }

@@ -1,0 +1,33 @@
+#include "metalrobo/compensated_geometry_gpu.h"
+// The stored quaternion defines a rigid rotation. Divide the cross terms by
+// q.q so small norm errors do not scale the registered bone.
+inline MRCompensatedPositionGPU pelvicRigidRotate(float4 q,MRCompensatedPositionGPU v){
+    MRCompensatedScalar norm={0,0};
+    for(uint j=0;j<4;++j)norm=mrCompensatedAdd(norm,mrCompensatedProduct(q[j],q[j]));
+    auto rotated=mrCompensatedQuaternionRotatePair(q,v);
+    auto term=mrCompensatedVectorAdd(rotated,mrCompensatedVectorNegate(v));
+    return mrCompensatedVectorAdd(v,mrCompensatedVectorScale(term,mrCompensatedDivide({1,0},norm)));
+}
+kernel void nm_pelvic_cortical_frames(constant uint& first [[buffer(0)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(1)]],
+    device const float4* low [[buffer(2)]],device MRCompensatedPositionGPU* columns [[buffer(3)]],uint i [[thread_position_in_grid]]){
+    if(i>=16)return;
+    const uint ids[4]={128,1,131,145};uint k=i%4,p=128-first,b=ids[i/4]-first;
+    float4 q=poses[p].orientation;float4 inverseP=float4(-q.xyz,q.w);
+    MRCompensatedPositionGPU v;
+    if(k==3){
+        v=mrCompensatedVectorAdd({poses[b].position,low[b]},mrCompensatedVectorNegate({poses[p].position,low[p]}));
+    }else{
+        float4 axis=0;axis[k]=1;
+        v=pelvicRigidRotate(poses[b].orientation,mrCompensatedVector(axis));
+    }
+    columns[i]=pelvicRigidRotate(inverseP,v);
+}
+kernel void nm_pelvic_shared_cortex(constant uint& count [[buffer(0)]],device const PelvicPoolSample* pool [[buffer(1)]],
+    device const MRCompensatedPositionGPU* columns [[buffer(2)]],device float4* output [[buffer(3)]],uint i [[thread_position_in_grid]]){
+    if(i>=count)return;
+    auto s=pool[pelvicReverseStart+i].contact;uint b=s.domain.z;
+    if(b==128){output[i]=float4(s.reference.xyz,0);return;}
+    uint at=b==1?4u:(b==131?8u:12u);auto p=columns[at+3];
+    for(uint j=0;j<3;++j)p=mrCompensatedVectorAdd(p,mrCompensatedVectorScale(columns[at+j],{s.reference[j],0}));
+    output[i]=float4(p.high.xyz+p.low.xyz,0);
+}
