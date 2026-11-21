@@ -1,0 +1,5 @@
+# Native scalp reference trial
+
+Install the independently verified eight-patch bonded shell through the existing paired collector and mass owner. Recook the affected geometric parent prisms as a derived reference, with exact parent coverage inside that new reference and separate original-to-derived geometric and mass provenance. No changed cell may use a refined parent or a different typed donor. Keep vertices, source vertex bindings, bed, loads, materials, tolerances, and subsystem ownership. The retained run is the matched native control.
+
+First require preparation and a strictly positive new reference, exact emitted topology, density and mass closure, unchanged anatomical ownership outside the edited cavities and all ordinary acceptance gates. Compare both complete accepted endpoints, including body and shell crossings, and preserve existing ligament and variable-pleural traces. A prefix provides short-scope evidence only. A setup failure keeps the original scene as the accepted checkpoint.
