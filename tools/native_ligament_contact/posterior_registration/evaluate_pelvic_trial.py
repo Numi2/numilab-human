@@ -102,6 +102,19 @@ def report(run,ctrl):
         if 'emitted_closed_solids_exterior' in result:
             result['regional_terminal_all_representations_clear']=bool(
                 result['emitted_closed_solids_exterior'] and measured==0 and after==0)
+    physical_boundary=run/'constitutive-boundary.json'
+    if physical_boundary.exists():
+        evidence=json.loads(physical_boundary.read_text())
+        if (evidence['accepted_step']!=accepted or evidence['material_capture']!=sha(run/'accepted-pelvic-state.csv')
+            or evidence['cortex_capture']!=sha(run/'accepted-pelvic-surfaces.csv')):
+            raise ValueError('Constitutive boundary audit belongs to another state')
+        result['constitutive_boundary_transverse_pairs']=evidence['total_transverse']
+        result['constitutive_boundary_touch_pairs']=sum(b['touch_pairs'] for b in evidence['banks'].values())
+        if 'regional_terminal_all_representations_clear' in result:
+            result['regional_terminal_all_representations_clear'] &= (evidence['total_transverse']==0)
+        if 'constitutive_overlap_ml' in result and 'emitted_closed_solids_exterior' in result:
+            result['emitted_and_constitutive_terminal_clear']=bool(result['emitted_closed_solids_exterior']
+                and evidence['total_transverse']==0 and result['constitutive_overlap_ml']==0)
     if fail.exists():result['rejecting_candidate']=rows[accepted]
     if end.exists() and ctrl:
         a=json.loads(end.read_text());b=json.loads((ctrl/'terminal.receipt.json').read_text());assert a['accepted_step']==b['accepted_step']

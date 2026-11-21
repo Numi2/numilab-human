@@ -48,6 +48,13 @@ int main(int argc,char** argv){
             }
             [e setBuffer:map offset:0 atIndex:10];[e setBuffer:faces offset:0 atIndex:11];
             [e setBuffer:bone offset:0 atIndex:12];[e setBuffer:skin offset:0 atIndex:13];
+            if(std::getenv("NUMI_VERIFY_PHYSICAL_P1")){
+                auto split=alloc(n*3*32);auto data=static_cast<float*>(split.contents);
+                std::memset(data,0,n*3*32);
+                for(unsigned i=0;i<3*n;++i)std::memcpy(data+8*i,mv+4*i,16);
+                [e setBuffer:split offset:0 atIndex:14];
+                auto live=alloc(4);std::memset(live.contents,0,4);[e setBuffer:live offset:0 atIndex:15];
+            }
         }
         [e dispatchThreads:MTLSizeMake(n,1,1) threadsPerThreadgroup:MTLSizeMake(n,1,1)];[e endEncoding];[cb commit];[cb waitUntilCompleted];
         if(cb.status!=MTLCommandBufferStatusCompleted){NSLog(@"%@",cb.error);return 2;}

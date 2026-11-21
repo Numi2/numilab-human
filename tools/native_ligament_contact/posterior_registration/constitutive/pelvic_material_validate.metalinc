@@ -180,7 +180,7 @@ kernel void nm_pelvic_finite_native(constant uint4& d [[buffer(0)]],device const
     device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* unusedLow [[buffer(5)]],
     device const float4* ref [[buffer(6)]],device PelvicPoolSample* pool [[buffer(7)]],device float* gaps [[buffer(8)]],
     device const uint* needed [[buffer(9)]],device const uint4* mapping [[buffer(10)]],device const uint4* cortexFace [[buffer(11)]],
-    device const float4* cortex [[buffer(12)]],device const float4* material [[buffer(13)]],uint i [[thread_position_in_grid]]){
+    device const float4* cortex [[buffer(12)]],device const float4* material [[buffer(13)]],device const MRCompensatedPositionGPU* physical [[buffer(14)]],uint i [[thread_position_in_grid]]){
     if(i>=d.y)return;
     const auto pair=pairs[i];if(d.z&&!needed[pair.id.z])return;
     uint4 m=mapping[i],t=cortexFace[m.w];float3 b=cortex[t.x].xyz,e=cortex[t.y].xyz-b,f=cortex[t.z].xyz-b;
@@ -189,6 +189,10 @@ kernel void nm_pelvic_finite_native(constant uint4& d [[buffer(0)]],device const
     float3 bary[3],z,guard;
     for(uint j=0;j<3;++j){
         float3 a=material[m[j]].xyz,r=a-b;
+        if(pelvicPhysicalBoundary){
+            auto rel=mrCompensatedVectorAdd(physical[m[j]],mrCompensatedVector(float4(-b,0)));
+            r=rel.high.xyz+rel.low.xyz;
+        }
         float2 uv=float2(dot(cross(r,f),k),dot(cross(e,r),k))/k2;
         bary[j]=float3(1.f-uv.x-uv.y,uv);z[j]=dot(r,n);guard[j]=radius+pelvicRoundingSupport(a,n);
     }

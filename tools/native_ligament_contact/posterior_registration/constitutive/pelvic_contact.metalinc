@@ -1,4 +1,5 @@
 // Energy-normalized cut-muscle response embedded in the articulated transaction.
+#include "metalrobo/compensated_geometry_gpu.h"
 struct PelvicSample {float4 pelvis,femur,reference;uint4 domain,bank;};
 struct PelvicParent {float4 p,f;uint4 role;};
 struct PelvicPoolSample {PelvicSample contact;uint4 nodes;float4 weights;};
@@ -329,7 +330,7 @@ kernel void nm_pelvic_surface_vertices(constant uint4& d [[buffer(0)]],device co
 kernel void nm_pelvic_surface_from_reference(constant uint4& d [[buffer(0)]],
     device const PelvicSurfaceVertex* bind [[buffer(1)]],device const float4* delta [[buffer(2)]],
     device float4* surface [[buffer(3)]],device const uint* needed [[buffer(4)]],
-    device const float4* reference [[buffer(5)]],uint i [[thread_position_in_grid]]){
+    device const float4* reference [[buffer(5)]],device const float4* original [[buffer(6)]],device MRCompensatedPositionGPU* physical [[buffer(7)]],uint i [[thread_position_in_grid]]){
     if(i>=d.y)return;
     uint side=i>=pelvicSurf[1].x;
     if(d.z&&!needed[side])return;
@@ -337,6 +338,12 @@ kernel void nm_pelvic_surface_from_reference(constant uint4& d [[buffer(0)]],
     float3 u=0;
     for(uint k=0;k<4;++k)u=fma(b.weights[k],delta[b.nodes[k]].xyz,u);
     surface[i]=float4(reference[2*i].xyz+(reference[2*i+1].xyz+u),0);
+    if(pelvicPhysicalBoundary){
+        MRCompensatedPositionGPU v={original[3*i],original[3*i+1]};
+        for(uint k=0;k<4;++k)v=mrCompensatedVectorAdd(v,mrCompensatedVectorScale(
+            mrCompensatedVector(delta[b.nodes[k]]),{b.weights[k],original[3*i+2][k]}));
+        physical[i]=v;
+    }
 }
 kernel void nm_pelvic_surface_normals(constant uint4& d [[buffer(0)]],device const PelvicSurfaceFace* faces [[buffer(1)]],
     device const float4* surface [[buffer(2)]],device float4* normals [[buffer(3)]],device const uint* needed [[buffer(4)]],uint i [[thread_position_in_grid]]){
@@ -355,13 +362,19 @@ kernel void nm_pelvic_surface_vertex_normals(constant uint4& d [[buffer(0)]],dev
 }
 struct PelvicBounds {float4 lo,hi;};
 kernel void nm_pelvic_surface_bounds(constant uint4& d [[buffer(0)]],device const PelvicSurfaceFace* faces [[buffer(1)]],
-    device const float4* x [[buffer(2)]],device PelvicBounds* bounds [[buffer(3)]],device const uint* needed [[buffer(4)]],uint i [[thread_position_in_grid]]){
+    device const float4* x [[buffer(2)]],device PelvicBounds* bounds [[buffer(3)]],device const uint* needed [[buffer(4)]],device const MRCompensatedPositionGPU* physical [[buffer(5)]],uint i [[thread_position_in_grid]]){
     if(i>=2*d.y)return;uint side=i/d.y,k=i%d.y;if(d.z&&!needed[side])return;
     uint tree=2*pelvicLeaves*side,index=d.y+k;
     float3 lo=INFINITY,hi=-INFINITY;
     if(d.y==pelvicLeaves){
         uint4 m=pelvicSurf[side];for(uint j=k*8;j<min(m.w,k*8+8);++j){
-            uint4 v=faces[m.z+j].vertices;for(uint c=0;c<3;++c){float3 p=x[v[c]].xyz;lo=min(lo,p);hi=max(hi,p);}}
+            uint4 v=faces[m.z+j].vertices;for(uint c=0;c<3;++c){float3 p=x[v[c]].xyz;lo=min(lo,p);hi=max(hi,p);
+                if(pelvicPhysicalBoundary){
+                    const auto q=physical[v[c]];
+                    lo=min(lo,nextafter(q.high.xyz,float3(-INFINITY)));
+                    hi=max(hi,nextafter(q.high.xyz,float3(INFINITY)));
+                }
+            }}
     }else{
         auto a=bounds[tree+2*index],b=bounds[tree+2*index+1];lo=min(a.lo.xyz,b.lo.xyz);hi=max(a.hi.xyz,b.hi.xyz);
     }
@@ -794,7 +807,12 @@ kernel void nm_pelvic_choose_direction(device const uint* needed [[buffer(0)]],
     device const float4* quality [[buffer(1)]],device uint* material [[buffer(2)]],
     device uint* contact [[buffer(3)]],uint side [[thread_position_in_grid]]){
     if(side>=2)return;
-    bool imbalance=quality[side].x>.01f*max(quality[side].y,1e-6f);
+    float4 q=quality[side];
+    float forceRatio=q.x/(.01f*max(q.y,1e-6f));
+    float contactRatio=max(q.z/5e-7f,q.w/2e-9f);
+    // Competing errors use the existing physical limits. A marginal nodal
+    // residual must not mask a much larger unilateral gap defect.
+    bool imbalance=forceRatio>max(1.f,contactRatio);
     material[side]=needed[side] && imbalance;
     contact[side]=needed[side] && !imbalance;
 }

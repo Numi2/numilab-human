@@ -1,5 +1,60 @@
 #include "pelvic_crossing_predicates.metalinc"
 
+struct PelvicSplitPoint {float3 h,l;};
+inline int pelvicSplitExact(thread const PelvicSplitPoint* p){
+    PelvicDyadic q[4][3][2];int origin=0;
+    for(uint c=0;c<3;++c){
+        int e=105;
+        for(uint i=0;i<4;++i)for(uint t=0;t<2;++t){
+            q[i][c][t]=pelvicDyadic(t?p[i].l[c]:p[i].h[c]);
+            if(q[i][c][t].mantissa)e=min(e,q[i][c][t].exponent);
+        }
+        if(e==105)return 0;
+        origin+=e;
+    }
+    int sum[53]={0},last=0;
+    for(uint k=0;k<4;++k){
+        uint a=k==1?3:0,b=k==2?3:1,c=k==3?3:2;int sign=k?-1:1;
+        for(uint i=0;i<3;++i){
+            uint j=(i+1)%3,h=(i+2)%3;
+            for(uint bits=0;bits<8;++bits){
+                uint s=bits&1,u=(bits>>1)&1,v=bits>>2;
+                pelvicExactTerm(q[a][i][s],q[b][j][u],q[c][h][v],sign,origin,sum,last);
+                pelvicExactTerm(q[a][i][s],q[b][h][u],q[c][j][v],-sign,origin,sum,last);
+            }
+        }
+    }
+    int carry=0;bool nonzero=false;
+    for(int i=0;i<=last;++i){
+        int v=sum[i]+carry;carry=v/65536-int(v%65536<0);nonzero|=v-65536*carry!=0;
+    }
+    return carry<0?-1:int(nonzero||carry>0);
+}
+inline int pelvicSplitOrient(PelvicSplitPoint a,PelvicSplitPoint b,PelvicSplitPoint c,PelvicSplitPoint d){
+    float3 xh=a.h-d.h,yh=b.h-d.h,zh=c.h-d.h;
+    float3 x=xh+(a.l-d.l),y=yh+(b.l-d.l),z=zh+(c.l-d.l);
+    float v=dot(x,cross(y,z));
+    float3 ax=abs(xh)+abs(a.l)+abs(d.l),ay=abs(yh)+abs(b.l)+abs(d.l),az=abs(zh)+abs(c.l)+abs(d.l);
+    float bound=dot(ax,ay.yzx*az.zxy+ay.zxy*az.yzx);
+    if(bound>1e-24f&&bound<1e24f&&abs(v)>1e-5f*bound)return v>0?1:-1;
+    PelvicSplitPoint p[4]={a,b,c,d};return pelvicSplitExact(p);
+}
+inline bool pelvicSplitEdge(PelvicSplitPoint p,PelvicSplitPoint q,thread const PelvicSplitPoint* t){
+    int a=pelvicSplitOrient(p,q,t[0],t[1]),b=pelvicSplitOrient(p,q,t[1],t[2]);
+    if(a*b<0)return false;int c=pelvicSplitOrient(p,q,t[2],t[0]);return a*c>=0&&b*c>=0;
+}
+inline bool pelvicSplitCross(thread const PelvicSplitPoint* a,thread const PelvicSplitPoint* b){
+    int3 pa,pb;
+    for(uint i=0;i<3;++i)pa[i]=pelvicSplitOrient(b[0],b[1],b[2],a[i]);
+    if(!pelvicStraddles(pa))return false;
+    for(uint i=0;i<3;++i)pb[i]=pelvicSplitOrient(a[0],a[1],a[2],b[i]);
+    if(!pelvicStraddles(pb))return false;
+    for(uint i=0;i<3;++i){uint j=(i+1)%3;
+        if(pa[i]!=pa[j]&&pa[i]*pa[j]<=0&&pelvicSplitEdge(a[i],a[j],b))return true;
+        if(pb[i]!=pb[j]&&pb[i]*pb[j]<=0&&pelvicSplitEdge(b[i],b[j],a))return true;}
+    return false;
+}
+
 inline uint4 pelvicJoinWitness(uint4 a,uint4 b){
     bool useB=b.y<a.y||(b.y==a.y&&b.z<a.z);
     return uint4(a.x+b.x,useB?b.y:a.y,useB?b.z:a.z,a.w|b.w);
@@ -7,7 +62,7 @@ inline uint4 pelvicJoinWitness(uint4 a,uint4 b){
 kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device const uint4* cortexFaces [[buffer(1)]],
     device const float4* cortex [[buffer(2)]],device const PelvicSurfaceFace* skinFaces [[buffer(3)]],
     device const float4* skin [[buffer(4)]],device const PelvicBounds* boxes [[buffer(5)]],
-    device uint4* partial [[buffer(6)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
+    device uint4* partial [[buffer(6)]],device const MRCompensatedPositionGPU* physical [[buffer(7)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
     uint g [[threadgroup_position_in_grid]]){
     uint4 hit=uint4(0,UINT_MAX,UINT_MAX,0);
     if(i<count){
@@ -25,8 +80,19 @@ kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device 
                 for(uint j=first;j<min(region.w,first+8);++j){
                     uint face=region.z+j;uint4 m=skinFaces[face].vertices;
                     float3 a[3]={skin[m.x].xyz,skin[m.y].xyz,skin[m.z].xyz};
-                    if(any(max(a[0],max(a[1],a[2]))<lo)||any(min(a[0],min(a[1],a[2]))>hi))continue;
-                    if(pelvicCrosses(a,b)){++hit.x;hit.y=i;hit.z=min(hit.z,face);}
+                    bool emittedBounds=all(max(a[0],max(a[1],a[2]))>=lo)&&all(min(a[0],min(a[1],a[2]))<=hi);
+                    bool crosses=emittedBounds&&pelvicCrosses(a,b);
+                    if(pelvicPhysicalBoundary&&!crosses){
+                        PelvicSplitPoint p[3],q[3];float3 lower=INFINITY,upper=-INFINITY;
+                        for(uint k=0;k<3;++k){
+                            auto v=physical[m[k]];
+                            p[k]={v.high.xyz,v.low.xyz};q[k]={b[k],float3(0)};
+                            lower=min(lower,nextafter(v.high.xyz,float3(-INFINITY)));
+                            upper=max(upper,nextafter(v.high.xyz,float3(INFINITY)));
+                        }
+                        if(all(upper>=lo)&&all(lower<=hi))crosses=pelvicSplitCross(p,q);
+                    }
+                    if(crosses){++hit.x;hit.y=i;hit.z=min(hit.z,face);}
                 }
             }
             while(node&1u)node>>=1;
@@ -42,10 +108,13 @@ kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device 
 }
 kernel void nm_pelvic_crossing_admit(constant uint4& d [[buffer(0)]],device const uint4* partial [[buffer(1)]],
     device const float4* skin [[buffer(2)]],device MRNumiHumanStandStatusGPU* status [[buffer(3)]],
-    device uint4* trace [[buffer(4)]],uint lane [[thread_index_in_threadgroup]]){
+    device uint4* trace [[buffer(4)]],device const MRCompensatedPositionGPU* physical [[buffer(5)]],uint lane [[thread_index_in_threadgroup]]){
     uint4 h=uint4(0,UINT_MAX,UINT_MAX,0);
     for(uint i=lane;i<d.y;i+=128)h=pelvicJoinWitness(h,partial[i]);
-    for(uint i=lane;i<d.w;i+=128)if(!all(isfinite(skin[i].xyz)))h.w=1;
+    for(uint i=lane;i<d.w;i+=128){
+        if(!all(isfinite(skin[i].xyz)))h.w=1;
+        if(pelvicPhysicalBoundary&&(!all(isfinite(physical[i].high.xyz))||!all(isfinite(physical[i].low.xyz))))h.w=1;
+    }
     threadgroup uint4 group[128];group[lane]=h;threadgroup_barrier(mem_flags::mem_threadgroup);
     for(uint n=64;n;n>>=1){
         if(lane<n)group[lane]=pelvicJoinWitness(group[lane],group[lane+n]);
