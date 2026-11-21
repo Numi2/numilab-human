@@ -64,6 +64,29 @@ does not reveal these local failures. The trial indicates that changing
 startup pose requires resolving world-coordinate sensitivity as well as
 rebinding the donor data.
 
+## Verify the existing compensated reference path on Apple M6
+
+The original Float32 positions remain the material reference. The
+rigid change is stored as two Float32 words per displacement component,
+using the existing Matter compiler convention. Reconstructing their
+sum retains zero inverted, zero volume-floor and zero quality-floor
+cells. The GPU test calls Matter's shared
+`nmFEMReferenceDeformationWords` routine over all 1,448,804 cells.
+It matches the CPU implementation exactly for all 13,039,236
+components. Constitutive determinants span 0.9999901546–1.0000055539
+and the maximum deformation component error against the rigid rotation
+is 9.835e-6. The authored reference and mass inputs are byte-identical.
+
+`verify_pose_deformation.sh` compiles this arithmetic test on Apple
+silicon and uses streamed input. The test uses no runtime contact,
+ligament, or circulation state. It qualifies the representation for
+constitutive geometry only. The failed native launch identifies the
+remaining integration work: the importer must verify original donor
+registration, preserve its material reference and ancestry, and bind
+current attachments and collision geometry to the proven startup
+displacement. A matched native test must still prove current contact
+gap and support forces.
+
 ## Reproduction and storage
 
 Run the Python screens from this directory using the retained Numi
