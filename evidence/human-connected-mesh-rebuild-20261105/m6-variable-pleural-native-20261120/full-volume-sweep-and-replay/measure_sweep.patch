@@ -1,0 +1,81 @@
+--- a/check_native_contact_witness.mm
++++ b/check_native_contact_witness.mm
+@@ -1,6 +1,7 @@
+ #import <Foundation/Foundation.h>
+ #import <Metal/Metal.h>
+ 
++#include <algorithm>
+ #include <array>
+ #include <cstdint>
+ #include <iostream>
+@@ -15,8 +16,9 @@
+ int main(int argc, char** argv) {
+     @autoreleasepool {
+         try {
++            const bool profile = argc == 3 && std::string_view(argv[2]) == "--profile";
+             const bool prefix = argc == 3 && std::string_view(argv[2]) == "--prefix";
+-            if (argc != 2 && !prefix)
++            if (argc != 2 && !prefix && !profile)
+                 throw std::runtime_error("Specify the pinned Matter metallib and optional --prefix");
+             id<MTLDevice> device = MTLCreateSystemDefaultDevice();
+             NSError* error = nil;
+@@ -47,6 +49,20 @@
+                         throw std::runtime_error("Incomplete compensated endpoint");
+                 }
+             }
++            const auto fixtureRows = count;
++            if (profile) {
++                const auto fixture = points;
++                const auto parameters = settings;
++                const auto original = count;
++                count = 131072;
++                points.resize(8u*count);
++                settings.resize(count);
++                for (std::uint32_t i = 0; i < count; ++i) {
++                    const auto row = i % original;
++                    settings[i] = parameters[row];
++                    std::copy_n(fixture.begin() + 8u*row, 8, points.begin() + 8u*i);
++                }
++            }
+             if (prefix) {
+                 std::vector<Position> expanded;
+                 std::vector<Vec4> parameters;
+@@ -79,6 +95,7 @@
+                 throw std::runtime_error("Could not allocate probe buffers");
+ 
+             id<MTLCommandQueue> queue = [device newCommandQueue];
++            for (unsigned repeat = 0; repeat < (profile ? 5u : 1u); ++repeat) {
+             id<MTLCommandBuffer> command = [queue commandBuffer];
+             id<MTLComputeCommandEncoder> encoder = [command computeCommandEncoder];
+             if (!encoder) throw std::runtime_error("Could not encode the Metal probe");
+@@ -87,7 +104,7 @@
+             [encoder setBuffer:configuration offset:0 atIndex:1];
+             [encoder setBuffer:output offset:0 atIndex:2];
+             [encoder setBytes:&count length:sizeof(count) atIndex:3];
+-            [encoder dispatchThreadgroups:MTLSizeMake(1,1,1)
++            [encoder dispatchThreadgroups:MTLSizeMake((count+31u)/32u,1,1)
+                     threadsPerThreadgroup:MTLSizeMake(32,1,1)];
+             [encoder endEncoding];
+             [command commit];
+@@ -98,6 +115,13 @@
+             for (std::uint32_t i = outputWords; i < outputWords+4u; ++i)
+                 if (results[i] != canary)
+                     throw std::runtime_error("Sweep probe wrote beyond the record span");
++            if(profile) {
++                if(repeat>0) std::cout << (command.GPUEndTime-command.GPUStartTime) << '\n';
++                for (std::uint32_t i = 0; i < outputWords; ++i)
++                    if (results[i] != results[i % fixtureRows] || results[i] > 1u)
++                        throw std::runtime_error("Replicated fixture output diverged");
++                continue;
++            }
+             if (prefix) {
+                 const auto* values = static_cast<const float*>(output.contents);
+                 std::cout.precision(9);
+@@ -108,6 +132,7 @@
+                     std::cout << "witness=" << i << " clearance_m=" << settings[i].x
+                               << " full_sweep_separated=" << results[i] << '\n';
+             }
++            }
+         } catch (const std::exception& error) {
+             std::cerr << error.what() << '\n';
+             return 1;
