@@ -1,0 +1,26 @@
+kernel void nm_pelvic_wave_factor(device const uint4* rows [[buffer(0)]],device const uint* ids [[buffer(1)]],
+    device const float* coef [[buffer(2)]],device const uint2* levels [[buffer(3)]],device const uint* order [[buffer(4)]],
+    device const uint2* perm [[buffer(5)]],device const float2* scale [[buffer(6)]],device const float* rhs [[buffer(7)]],
+    device float* dest [[buffer(8)]],device const uint* needed [[buffer(9)]],device const uint2* proj [[buffer(10)]],device const uint* cols [[buffer(11)]],device const float* val [[buffer(12)]],uint side [[threadgroup_position_in_grid]],
+    uint tid [[thread_index_in_threadgroup]],uint lane [[thread_index_in_simdgroup]]){
+    if(!needed[side])return;
+    threadgroup float v[pelvicFactorCapacity];uint4 d=pelvicFactorDims[side];uint2 upper=pelvicFactorUpper[side];
+    for(uint i=tid;i<d.y;i+=32){uint j=d.x+i,k=perm[j].x;uint2 span=proj[k];float f=rhs[4*(k/3)+k%3];
+        if(span.y){f=0;for(uint z=span.x;z<span.x+span.y;++z){uint m=cols[z];f+=val[z]*rhs[4*(m/3)+m%3];}}
+        v[i]=f*scale[j].x;}
+    simdgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint pass=0;pass<2;++pass){
+        uint2 stages=pass?upper:d.zw;
+        for(uint l=0;l<stages.y;++l){
+            auto s=levels[stages.x+l];
+            for(uint k=0;k<s.y;++k){
+                auto r=rows[order[s.x+k]];float sum=0;
+                for(uint j=lane;j<r.y;j+=32)sum+=coef[r.x+j]*v[ids[r.x+j]-d.x];
+                sum=simd_sum(sum);
+                if(!lane)v[r.z-d.x]=(v[r.z-d.x]-sum)*as_type<float>(r.w);
+            }
+            simdgroup_barrier(mem_flags::mem_threadgroup);
+        }
+    }
+    for(uint i=tid;i<d.y;i+=32){uint j=d.x+i,k=perm[j].y;dest[4*(k/3)+k%3]=scale[j].y*v[i];}
+}

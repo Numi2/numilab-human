@@ -1,0 +1,35 @@
+// Each block represents the same triangular equations as the source factor.
+// Previous blocks contribute through the original sparse coefficients. Only the
+// diagonal panel's response is stored. Four SIMD groups process its 32 rows.
+kernel void nm_pelvic_panel_factor(device const uint2* spans [[buffer(0)]],device const uint* ids [[buffer(1)]],
+    device const float* coeff [[buffer(2)]],device const float* panel [[buffer(3)]],constant uint4& offsets [[buffer(4)]],
+    device const uint2* perm [[buffer(5)]],device const float2* scale [[buffer(6)]],device const float* rhs [[buffer(7)]],
+    device float* dest [[buffer(8)]],device const uint* needed [[buffer(9)]],device const uint2* proj [[buffer(10)]],
+    device const uint* cols [[buffer(11)]],device const float* val [[buffer(12)]],uint side [[threadgroup_position_in_grid]],
+    uint tid [[thread_index_in_threadgroup]],uint lane [[thread_index_in_simdgroup]],uint simd [[simdgroup_index_in_threadgroup]]){
+    if(!needed[side])return;uint4 d=pelvicFactorDims[side];uint blocks=(d.y+31)/32;
+    threadgroup float x[pelvicFactorCapacity],z[32];
+    for(uint i=tid;i<d.y;i+=128){
+        uint j=d.x+i,k=perm[j].x;uint2 range=proj[k];float f=rhs[4*(k/3)+k%3];
+        if(range.y){f=0;for(uint a=range.x;a<range.x+range.y;++a){uint m=cols[a];f+=val[a]*rhs[4*(m/3)+m%3];}}
+        x[i]=f*scale[j].x;
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint pass=0;pass<2;++pass){
+        for(uint k=0;k<blocks;++k){
+            uint block=pass?blocks-1-k:k;uint grid=offsets[side*2+pass]+block;
+            for(uint r=simd;r<32;r+=4){
+                uint i=32*block+r;uint2 s=spans[32*grid+r];float sum=0;
+                for(uint j=lane;j<s.y;j+=32){uint at=s.x+j;sum+=coeff[at]*x[ids[at]];}
+                sum=simd_sum(sum);if(!lane)z[r]=(i<d.y?x[i]:0)-sum;
+            }
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+            for(uint r=simd;r<32;r+=4){
+                float y=simd_sum(panel[1024*grid+32*r+lane]*z[lane]);uint i=32*block+r;
+                if(!lane && i<d.y)x[i]=y;
+            }
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+        }
+    }
+    for(uint i=tid;i<d.y;i+=128){uint j=d.x+i,k=perm[j].y;dest[4*(k/3)+k%3]=scale[j].y*x[i];}
+}
