@@ -19,4 +19,4 @@ assert info["IOKitSize"] == 3355443200
 PY
 /usr/sbin/diskutil eraseDisk APFS "$volume" "$device" > "$output/ram-disk-format.log"
 cd "$trial"
-"$HOME/numi-human-prep-venv-20261005/bin/python3" run_supported.py "$1" "$trial/native-build/numi-human-native" "/Volumes/$volume" "$output" "${3:-8000}"
+"$HOME/numi-human-prep-venv-20261005/bin/python3" run_supported.py "$1" "${4:-$trial/native-build/numi-human-native}" "/Volumes/$volume" "$output" "${3:-8000}"
