@@ -1,6 +1,6 @@
 # Whole skin in the mechanically loaded native human
 
-The initial native pose already has 8,868 nonocular skin-to-tissue triangle pairs and 21 nonadjacent skin self-intersections. All 8,889 witnesses cross transversely at both 0 and 2 ms. Native step 415 has 10,127 nonocular pairs and 302 self-intersections. That endpoint passes the separate six-bank pelvic tests while failing whole-skin clearance.
+The initial native pose already has 8,868 nonocular skin-to-tissue triangle pairs and 21 skin triangle pairs intersecting beyond any shared indexed feature. All 8,889 witnesses cross transversely at both 0 and 2 ms. Native step 415 has 10,127 nonocular pairs and 302 self-intersections. That endpoint passes the separate six-bank pelvic tests while failing whole-skin clearance.
 
 | Actual native pose | Bone | Muscle | Vessel | Total nonocular | Skin self |
 | --- | ---: | ---: | ---: | ---: | ---: |

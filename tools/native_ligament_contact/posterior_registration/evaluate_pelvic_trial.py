@@ -50,12 +50,22 @@ def report(run,ctrl):
                 solid_overlap_gate=after==0.)
     result['motion_scope']={
         'local_bed_layers_requested': switch('NUMI_HUMAN_LOCAL_BED_LAYERS'),
-        'whole_body_skin_fat_fem_requested': switch('NUMI_HUMAN_RESTING_WHOLE_BODY_SKIN_FAT_FEM'),
         'supported_prelude_steps_requested':env.get('NUMI_HUMAN_SUPPORTED_PRELUDE_STEPS'),
         'whole_body_crossing_audit':'outside this regional audit',
         'continuous_between_step_clearance':'unmeasured',
         'qualification_target_seconds':16.,
+        'whole_body_skin_fat_fem_requested':switch('NUMI_HUMAN_RESTING_WHOLE_BODY_SKIN_FAT_FEM'),
+        'passive_fascia_requested':switch('NUMI_HUMAN_RESTING_PASSIVE_FASCIA'),
+        'pressure_loaded_aortic_wall_requested':switch('NUMI_HUMAN_RESTING_AORTIC_WALL'),
     }
+    log=run/'stdout.log'
+    if log.exists():
+        with log.open() as lines:
+            owners={line.strip() for line in lines if line.startswith('resting_bed_contact_owner=')}
+        if len(owners)>1:raise ValueError('Inconsistent bed contact owner')
+        if owners:
+            roles=dict(word.split('=',1) for word in owners.pop().split())
+            result['motion_scope']['observed_bed_contact']=roles
     skin=run/'exact-skin-surface.json'
     if skin.is_file():
         receipt=json.loads(end.read_text())
@@ -77,7 +87,7 @@ def report(run,ctrl):
         nonocular=sum(row['count'] for row in targets if not row['ocular_source_id'])
         result['whole_skin_endpoint']=dict(step=accepted,time_s=audit['accepted_time_s'],pack_sha256=audit['accepted_pack_sha256'],
             audit_sha256=sha(skin),targets=len(keys),self_pairs=self_pairs,nonocular_pairs=nonocular,
-            erroneous_surface_witnesses_present=bool(self_pairs or nonocular),limits=audit['limit'])
+            surface_clearance_witnesses_present=bool(self_pairs or nonocular),limits=audit['limit'])
         result['motion_scope']['whole_body_crossing_audit']='outer skin versus registered surface targets at this endpoint'
     crossing=run/'native-crossings.json'
     if crossing.exists():
@@ -144,4 +154,23 @@ def report(run,ctrl):
         A={r['body_index']:r for r in a['accepted_body_poses']};B={r['body_index']:r for r in b['accepted_body_poses']};assert set(A)==set(B)
         result['contact_off_comparison']=dict(bodies=len(A),maximum_body_origin_change_m=max(np.linalg.norm(np.array(A[i]['position_m'])-B[i]['position_m']) for i in A),changed_body_sha256=a['accepted_body_state_sha256']!=b['accepted_body_state_sha256'],control_state=b['accepted_body_state_sha256'],candidate_state=a['accepted_body_state_sha256'])
     (run/'qualification.json').write_text(json.dumps(result,indent=2)+'\n');return result
-if __name__=='__main__':print(report(Path(sys.argv[1]),Path(sys.argv[2]) if len(sys.argv)==3 else None))
+def require_clear_skin_endpoint(result):
+    skin=result.get('whole_skin_endpoint')
+    if skin is None:
+        raise ValueError('Required whole-skin endpoint audit is missing')
+    if skin['self_pairs'] or skin['nonocular_pairs']:
+        raise ValueError(f"Registered outer skin at step {skin['step']} has {skin['self_pairs']} self pairs and {skin['nonocular_pairs']} nonocular pairs")
+
+if __name__=='__main__':
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('run',type=Path)
+    parser.add_argument('control',type=Path,nargs='?')
+    parser.add_argument('--require-clear-skin-endpoint',action='store_true',
+        help='Require an authenticated outer-skin endpoint with zero self and nonocular intersections.')
+    args=parser.parse_args()
+    result=report(args.run,args.control)
+    if args.require_clear_skin_endpoint:
+        try:require_clear_skin_endpoint(result)
+        except ValueError as exc:parser.exit(1,str(exc)+'\n')
+    print(result)

@@ -1,0 +1,143 @@
+{
+  "accepted_step": 415,
+  "pack_sha256": "b12938c23c59ef08b92bf19b1fed8bf13162ff231d3863d0ae411ff846b2af0a",
+  "payload_sha256": "4155fe1302c4a0e29e9f781c891c8e4696f7a9bd51207e2f4e3b348c3f0c06cd",
+  "frame_comparisons": {
+    "accepted_body_poses": {
+      "referenced_LBS_native_error_mm": {
+        "min": 1.0265979684179596e-06,
+        "median": 9.885881505805303e-05,
+        "p95": 3.0416693784991486,
+        "max": 6.142359098406001,
+        "count": 54551
+      },
+      "self_witness_LBS_native_error_mm": {
+        "min": 7.435153937230002e-06,
+        "median": 9.418242207071958e-05,
+        "p95": 0.5271392887215134,
+        "max": 3.1096411902916623,
+        "count": 313
+      },
+      "vertices_within_2um": 45271
+    },
+    "accepted_registered_body_poses": {
+      "referenced_LBS_native_error_mm": {
+        "min": 1.0265979684179596e-06,
+        "median": 9.885881505805303e-05,
+        "p95": 3.0416693784991486,
+        "max": 6.142359098406001,
+        "count": 54551
+      },
+      "self_witness_LBS_native_error_mm": {
+        "min": 7.435153937230002e-06,
+        "median": 9.418242207071958e-05,
+        "p95": 0.5271392887215134,
+        "max": 3.1096411902916623,
+        "count": 313
+      },
+      "vertices_within_2um": 45271
+    }
+  },
+  "chosen_frame": "accepted_body_poses",
+  "referenced": 54551,
+  "eligible": 45271,
+  "witness_vertices": 313,
+  "eligible_witness_vertices": 277,
+  "sign_alignment": {
+    "minimum_blend_norm": 0.9966053117424906,
+    "max_weight_with_abs_quaternion_dot_under_0_01": 0.0
+  },
+  "source_weight_sum_error": 7.078502806123765e-08,
+  "delta_mm": {
+    "min": 6.008604384840858e-05,
+    "median": 0.04865899371442872,
+    "p95": 0.36585058833957385,
+    "max": 2.1642227670424505,
+    "count": 45271
+  },
+  "native_self_pairs": 302,
+  "counterfactual_self_pairs": 302,
+  "self_pairs_removed": 3,
+  "self_pairs_introduced": 3,
+  "first_new_pairs": [
+    [
+      9474,
+      10157
+    ],
+    [
+      81965,
+      85672
+    ],
+    [
+      82068,
+      84631
+    ]
+  ],
+  "first_retained_pairs": [
+    [
+      7996,
+      11010
+    ],
+    [
+      7996,
+      11011
+    ],
+    [
+      7996,
+      11024
+    ],
+    [
+      7997,
+      11011
+    ],
+    [
+      7997,
+      12082
+    ],
+    [
+      7997,
+      12104
+    ],
+    [
+      7998,
+      11024
+    ],
+    [
+      8001,
+      11024
+    ],
+    [
+      8001,
+      11031
+    ],
+    [
+      8001,
+      11032
+    ],
+    [
+      8001,
+      11038
+    ],
+    [
+      8687,
+      12112
+    ],
+    [
+      8687,
+      12118
+    ],
+    [
+      8731,
+      12118
+    ],
+    [
+      8731,
+      12125
+    ],
+    [
+      8734,
+      12108
+    ]
+  ],
+  "scope": "Offline rigid skin interpolation only, with observed positions kept where the rigid decode misses 2 micrometres. Requires physical mass/volume ownership before promotion."
+}
