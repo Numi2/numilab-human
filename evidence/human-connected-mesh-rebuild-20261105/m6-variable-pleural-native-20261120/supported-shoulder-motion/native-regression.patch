@@ -1,0 +1,28 @@
+--- a/tests/numi_human_registered_ligaments_test.cpp
++++ b/tests/numi_human_registered_ligaments_test.cpp
+@@ -28,4 +28,25 @@
+ 
+ int main(){
++ {
++  const std::vector<V3> v{{0,0,0},{0,1,0},{1,0,0}, {0,0,0},{1,0,0},{0,0,1},
++                          {0,0,0},{0,0,1},{0,1,0}, {1,0,0},{0,1,0},{0,0,1}};
++  std::vector<std::uint32_t> f{0,1,2,3,4,5,6,7,8,9,10,11};
++  BoneSurface tetra{0,10,1,{},v,{},f};
++  const V3 a{.1,.1,.1}, b{.2,.1,.1};
++  check(!detail::segmentHitsSurface(a,b,tetra) && detail::closedBoneContainsSpan(a,b,tetra),
++        "enclosed ligament span with zero boundary crossings fails clearance");
++  check(!detail::closedBoneContainsSpan({.8,.8,.8},{.9,.8,.8},tetra),
++        "exterior span inside the bounding box clears closed bone");
++  check(!detail::closedBoneContainsSpan({0,0,0},{-.1,0,0},tetra),
++        "valid endpoint attachment leaving the surface is preserved");
++  for(std::size_t i=0;i<f.size();i+=3)std::swap(f[i],f[i+1]);
++  check(detail::closedBoneContainsSpan(a,b,tetra),"reversed closed orientation");
++  std::swap(f[0],f[1]);
++  check(!detail::orientedClosed(tetra),"inconsistent directed seam fails closure");
++  tetra.triangleIndices=tetra.triangleIndices.first(9);
++  check(!detail::orientedClosed(tetra)&&!detail::closedBoneContainsSpan(a,b,tetra),
++        "open bone retains its existing crossing-only semantics");
++ }
++
+  const auto catalog=referenceCatalog();
+  check(catalog.size()==34u,"catalog row count");
