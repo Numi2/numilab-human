@@ -1,0 +1,15 @@
+# Contact discovery and force fidelity during loaded motion
+
+The selected native reference remains fb533da9afdacf3c30cb1b970d57854fb9b17c3c. It completes 30 fresh 2 ms steps from a physically preloaded bed, with the six posed gluteal cortical interfaces clear at every endpoint and the strict terminal overlap tests passing. Initialization-inclusive throughput is 0.00285×. This scope uses mechanically loaded local skin and fat bed sections, bilateral deformable gluteal tissue, articulated muscles and joints and the coupled physiological owners. Variable pleural pressure is enabled. High-resolution whole-body skin/fat is a separate unqualified configuration.
+
+| Native experiment on SSH Numi | Accepted fresh steps | Result |
+| --- | ---: | --- |
+| Early discovery of newly crossed cortical faces | 44 | An independent 44-step run passed the regional terminal geometry gates at 0.088 s. Native body time was 15.744 s. End-to-end time was 25.209 s, or 0.00349×. The original source-release control reached only 142 steps compared with 143 on the selected owner. |
+| Early discovery with simultaneous unloading, material displacement and contact correction | 94 | Six anatomical triangle audits stayed clear at accepted endpoints. The final emitted and constitutive boundaries were exterior and the constitutive cut-cell overlap was zero. The independent absolute-node overlap was 8.9754e-15 mL and failed strict zero. The next proposed state returned a nonfinite right-side contact result and was rejected. |
+| Additional recovery only after the reference solver exhausted its normal work | 30 | Six reference traces matched byte for byte, including nodal state, detailed surfaces, cortical registry, contact, fresh force certificate and physiology. The next proposal contained 21 transverse triangle pairs. |
+
+At the same 30th accepted endpoint, the two early-discovery paths changed the reconstructed left pelvic cortical reaction by 14.98% in force and 13.86% in moment. Across both sides the relative nodal traction-vector difference was 16.35%. These compare signed sums in the same registered frame. The conditional path reproduced all measured forces and moments exactly. The early alternatives exceed the established 1% integrated-force comparison and remain experiments.
+
+On the selected owner's next proposed step, the independent GPU force capture gives 0.01126576 N residual at node 2081. None of the 219 eligible left pressure columns acts on that node at this geometry. The solver must change the material configuration as well as the contact set. Registration of a new triangle alone does not solve this imbalance.
+
+To reproduce the runs, use the selected reference commit, the archived compiler commands and source replacements in experiment, and the launch manifest of the corresponding run. Each native invocation uses identical registered input, a 2 ms root, real bed support and the normal rollback path. SHA256SUMS covers the evidence and experiment sources. No run in this comparison verifies 16 seconds or continuous whole-body clearance.
