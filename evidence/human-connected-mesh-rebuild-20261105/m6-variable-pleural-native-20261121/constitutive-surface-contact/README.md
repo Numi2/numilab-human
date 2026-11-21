@@ -1,12 +1,20 @@
 # Native contact on the constitutive and displayed surfaces
 
+## Native motion with crossing-driven pressure activation
+
+The dedicated 94-step replay on SSH Numi completed **188 ms** with real bed contact and variable pleural pressure. Both emitted and original P1 tissue geometry remained clear of the six registered cortical banks at each accepted GPU endpoint. Independent terminal triangle and cut-cell tests found zero intersections and 0 mL overlap. Material and surface captures match the last accepted state of the longer run byte for byte. The body timer measured 54.316 s (0.00346×). End to end including initialization it took 62.890 s (0.00299×). This launch enables local bed layers and excludes the complete volumetric skin/fat configuration. Whole-body clearance and swept clearance between sample times remain unmeasured.
+
+The cortical certificate now activates a supplemental pressure pair only on observed intersection or retained compressive load. Both triangles keep the original bone owner and the P1 force transpose. Eager activation of all authored pairs rejected at 14 ms. The active version passed the previous failure at 128 ms. Its finite pool covers 16,423 original and 8,264 supplemental pairs. At 190 ms four pairs crossed. Cortical row 4,960 and material face 1,132 fall outside this pool. Detection correctly rejected the candidate. The right and left fresh free-force residuals of that trial were 0.000136 N and 0.001775 N. Both pressure-pair discovery and material equilibrium require continued qualification.
+
+At the accepted endpoint the bed reaction was 944.07 N and vertical center-of-mass velocity was 5.70 mm/s. The selected build and the preceding 126 ms test below are separate trials. Run the reproduction script against the shared forward assets with the saved authoring/candidate-swept-faces.npy, 94 and 256. The timed-out observed-set-96 trial records a watchdog exit after 64 accepted steps. It supplies no rejection outcome.
+
 On SSH Numi, the registered bilateral gluteal muscles now have one pressure solve with two geometric checks. The displayed mesh uses Float32 coordinates. Tissue deformation uses the source P1 interpolation and can cross a cortical surface before the displayed coordinates cross. The native certificate checks both representations before the state advances.
 
 On the previous solver's 126 ms endpoint the displayed triangle count was zero. Reconstructing the original material weights and accepted nodal displacements exposed 12 transverse pairs against the sacrum. A separate cut-cell integration gave 4.178e−16 mL. The maximum displacement between representations was 8.30 nm. Neither a positive minimum tetrahedral determinant nor a screenshot distinguished the two.
 
 The new build carries the original interpolation-weight residuals, registered rest positions and material increments in split precision on the GPU. It refits the spatial index to include both surfaces. A filtered determinant falls back to an integer sign of the split coordinates. Finite-area pressures use the higher-precision material location. GPU comparisons against arbitrary-precision rationals passed 1,280 orientation cases and 1,280 triangle cases, including coplanar, subnormal and wide-exponent inputs.
 
-## Native measurement
+## Preceding 126 ms checkpoint
 
 The dedicated 63-step run completed 126 ms with variable pleural pressure. Across the six registered bilateral muscle–bone banks all 63 native endpoint certificates passed. Independent terminal checks found zero transverse and boundary pairs on the emitted meshes, all closed components exterior, zero transverse and boundary pairs on the original P1 interpolation, and 0 mL of overlap in the constitutive cut-cell calculation. The older, separately retained reconstruction from absolute Float32 node positions returned 2.323e−21 mL. That discrepancy remains visible in the qualification. Intermediate signed volume and continuous clearance between step endpoints are separate measurements.
 

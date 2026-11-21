@@ -62,7 +62,7 @@ inline uint4 pelvicJoinWitness(uint4 a,uint4 b){
 kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device const uint4* cortexFaces [[buffer(1)]],
     device const float4* cortex [[buffer(2)]],device const PelvicSurfaceFace* skinFaces [[buffer(3)]],
     device const float4* skin [[buffer(4)]],device const PelvicBounds* boxes [[buffer(5)]],
-    device uint4* partial [[buffer(6)]],device const MRCompensatedPositionGPU* physical [[buffer(7)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
+    device uint4* partial [[buffer(6)]],device const MRCompensatedPositionGPU* physical [[buffer(7)]],device const uint4* atlas [[buffer(8)]],device const PelvicFacetPair* ports [[buffer(9)]],device atomic_uint* live [[buffer(10)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
     uint g [[threadgroup_position_in_grid]]){
     uint4 hit=uint4(0,UINT_MAX,UINT_MAX,0);
     if(i<count){
@@ -92,7 +92,18 @@ kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device 
                         }
                         if(all(upper>=lo)&&all(lower<=hi))crosses=pelvicSplitCross(p,q);
                     }
-                    if(crosses){++hit.x;hit.y=i;hit.z=min(hit.z,face);}
+                    if(crosses){
+                        ++hit.x;hit.y=i;hit.z=min(hit.z,face);
+                        if(pelvicExtraPairs){
+                            uint l=pelvicFixedPairs,end=l+pelvicExtraPairs,u=end;
+                            while(l<u){
+                                uint k=l+(u-l)/2,ci=atlas[k].w,mi=ports[k].id.w;
+                                if(ci<i||(ci==i&&mi<face))l=k+1;else u=k;
+                            }
+                            if(l<end&&atlas[l].w==i&&ports[l].id.w==face)
+                                atomic_store_explicit(live+l-pelvicFixedPairs,1u,memory_order_relaxed);
+                        }
+                    }
                 }
             }
             while(node&1u)node>>=1;
@@ -176,4 +187,20 @@ kernel void nm_pelvic_resume_surface_solve(constant uint4& d [[buffer(0)]],devic
         if(r[0]==0)control[0]=1;
         else{++control[6];for(uint side=0;side<2;++side)if(r[0]&(1u<<side))needed[side]=1;}
     }
+}
+
+kernel void nm_pelvic_live_features(constant uint& seed [[buffer(0)]],device const uint* slots [[buffer(1)]],
+    device const float* pressure [[buffer(2)]],device atomic_uint* live [[buffer(3)]],device PelvicPoolSample* pool [[buffer(4)]],device float* gaps [[buffer(5)]],uint i [[thread_position_in_grid]]){
+    if(!seed){
+        if(i<pelvicExtraPairs)atomic_store_explicit(live+i,0u,memory_order_relaxed);
+        if(i<pelvicExtraPairs*pelvicFacetRows){
+            uint k=pelvicFiniteStart+pelvicFixedPairs*pelvicFacetRows+i;
+            gaps[k]=INFINITY;pool[k].weights=0;pool[k].contact.reference=0;
+        }
+        return;
+    }
+    if(i>=512 || !pelvicExtraPairs || pressure[i]<=0)return;
+    uint first=pelvicFiniteStart+pelvicFixedPairs*pelvicFacetRows,k=slots[i];
+    if(k>=first && k<first+pelvicExtraPairs*pelvicFacetRows)
+        atomic_store_explicit(live+(k-first)/pelvicFacetRows,1u,memory_order_relaxed);
 }
