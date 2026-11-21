@@ -1,0 +1,61 @@
+struct PelvicNode {float4 p,f;uint4 role;};
+kernel void nm_pelvic_material_pose(constant uint4& dims [[buffer(0)]],device const PelvicNode* nodes [[buffer(1)]],
+    device const float4* modes [[buffer(2)]],device const float* coord [[buffer(3)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],
+    device const float4* low [[buffer(5)]],device float4* positions [[buffer(6)]],uint i [[thread_position_in_grid]]){
+    if(i>=dims.y)return;const auto r=nodes[i];const uint pi=r.role.y-dims.x,fi=r.role.z-dims.x;
+    const auto P=poses[pi],F=poses[fi];const float4 invP=float4(-P.orientation.xyz,P.orientation.w);
+    float3 d=restingRotate(invP,(F.position.xyz-P.position.xyz)+(low[fi].xyz-low[pi].xyz)+restingRotate(F.orientation,r.f.xyz));
+    float3 x=r.p.w*r.p.xyz+r.f.w*d;
+    for(uint k=0;k<r.role.w;++k)x+=coord[r.role.x*96+k]*modes[96*i+k].xyz;
+    positions[i]=float4(x,0);
+}
+kernel void nm_pelvic_material_validate(constant uint4& dims [[buffer(0)]],constant float4& law [[buffer(1)]],device const uint4* cells [[buffer(2)]],
+    device const float4* inverse [[buffer(3)]],device const float4* x [[buffer(4)]],device float4* groups [[buffer(5)]],
+    uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],uint group [[threadgroup_position_in_grid]]){
+    threadgroup float4 result[128];float4 r=float4(INFINITY,-INFINITY,0,0);
+    if(i<dims.z){
+        const uint4 t=cells[i];const float3 a=x[t.x].xyz;
+        const float3x3 D=float3x3(x[t.y].xyz-a,x[t.z].xyz-a,x[t.w].xyz-a);
+        const float3x3 F=D*float3x3(inverse[3*i].xyz,inverse[3*i+1].xyz,inverse[3*i+2].xyz);
+        float j=determinant(F);float3x3 cof=float3x3(cross(F[1],F[2]),cross(F[2],F[0]),cross(F[0],F[1]));
+        float lg=log(j),s=0,I=0;
+        for(uint k=0;k<3;++k){float3 P=law.x*F[k]+((law.y*lg-law.x)/j)*cof[k];s+=dot(P,P);I+=dot(F[k],F[k]);}
+        float e=.5f*law.x*(I-3-2*lg)+.5f*law.y*lg*lg;
+        r=all(isfinite(float4(j,s,e,lg)))?float4(j,j,sqrt(s),e):float4(-INFINITY,INFINITY,INFINITY,INFINITY);
+    }
+    result[lane]=r;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){if(lane<n){result[lane].x=min(result[lane].x,result[lane+n].x);result[lane].yzw=max(result[lane].yzw,result[lane+n].yzw);}threadgroup_barrier(mem_flags::mem_threadgroup);}
+    if(!lane)groups[group]=result[0];
+}
+kernel void nm_pelvic_material_admit(constant uint4& d [[buffer(0)]],device const float4* stats [[buffer(1)]],
+   device const float4* groups [[buffer(2)]],device MRNumiHumanStandStatusGPU* status [[buffer(3)]],device float4* trace [[buffer(4)]],
+   uint lane [[thread_index_in_threadgroup]]){
+    threadgroup float4 summary[128];
+    float4 r=float4(INFINITY,-INFINITY,0,0);
+    for(uint i=lane;i<d.y;i+=128){r.x=min(r.x,groups[i].x);r.yzw=max(r.yzw,groups[i].yzw);}
+    summary[lane]=r;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){if(lane<n){summary[lane].x=min(summary[lane].x,summary[lane+n].x);summary[lane].yzw=max(summary[lane].yzw,summary[lane+n].yzw);}threadgroup_barrier(mem_flags::mem_threadgroup);}
+    if(!lane){
+        r=summary[0];if(d.x<d.z)trace[d.x]=r;
+        bool valid=all(isfinite(r))&&r.x>.2f&&r.y<5.f&&r.z<5e6f&&r.w<5e6f;
+        for(uint s=0;s<2;++s)valid=valid&&all(isfinite(stats[s]))&&stats[s].x<5e-7f;
+        if(!valid&&status[0].code==MR_NUMI_HUMAN_STAND_SUCCESS)status[0].code=MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED;
+    }
+}
+
+kernel void nm_pelvic_material_publish(constant uint4& d [[buffer(0)]],
+    device const MRNumiHumanStandStatusGPU* stand [[buffer(1)]],device const NMMatterStatusGPU* matter [[buffer(2)]],
+    device const NMHumanRespirationState* resp [[buffer(3)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],
+    device const float4* low [[buffer(5)]],device const float4* nodes [[buffer(6)]],device const float* modal [[buffer(7)]],
+    device float4* snapshot [[buffer(8)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.y||stand[0].code!=MR_NUMI_HUMAN_STAND_SUCCESS||stand[0].completedSteps!=d.x+1||
+        resp[0].status.x!=d.x||matter[0].code!=NM_STATUS_SUCCESS)return;
+    if(i==0)snapshot[0]=float4(float(d.x+1),float(d.y),0,0);
+    if(i<4){
+        const uint bodies[4]={1,128,131,145};uint b=bodies[i]-d.z,p=128-d.z;
+        snapshot[1+2*i]=float4((poses[b].position.xyz-poses[p].position.xyz)+(low[b].xyz-low[p].xyz),0);
+        snapshot[2+2*i]=poses[b].orientation;
+    }
+    if(i<48)snapshot[9+i]=float4(modal[4*i],modal[4*i+1],modal[4*i+2],modal[4*i+3]);
+    snapshot[57+i]=nodes[i];
+}

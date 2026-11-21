@@ -1,0 +1,215 @@
+// Energy-normalized cut-muscle response embedded in the articulated transaction.
+struct PelvicSample {float4 pelvis,femur,reference;uint4 domain,bank;};
+struct PelvicTriangle {float4 data[10];};
+struct PelvicClosest {float sq,gap;float3 gradient;};
+struct PelvicRow {float4 normal,leverP,leverF,leverB;};
+inline void pelvicFeature(thread PelvicClosest& hit,float3 delta,float3 pseudo){
+    float sq=dot(delta,delta);
+    if(sq>=hit.sq)return;
+    float length=sqrt(sq);float sign=dot(delta,pseudo)<0?-1.f:1.f;
+    hit.sq=sq;hit.gap=sign*length;hit.gradient=length>1.e-8f?(sign/length)*delta:pseudo;
+}
+inline void pelvicTriangle(float3 p,device const PelvicTriangle& t,thread PelvicClosest& hit){
+    float3 a=t.data[0].xyz,e=t.data[1].xyz-a,f=t.data[2].xyz-a;
+    float3 v=p-a,k=cross(e,f);float k2=dot(k,k);
+    float u=dot(cross(v,f),k)/k2,w=dot(cross(e,v),k)/k2;
+    if(u>0&&w>0&&u+w<1){
+        float3 n=t.data[3].xyz;float gap=dot(v,n),sq=gap*gap;
+        if(sq<hit.sq){hit.sq=sq;hit.gap=gap;hit.gradient=n;}
+        return;
+    }
+    for(uint j=0;j<3;++j){
+        uint b=(j+1)%3;float3 x=t.data[j].xyz,y=t.data[b].xyz,d=y-x,local=p-x;
+        float ratio=dot(local,d)/dot(d,d);
+        if(ratio<=0)pelvicFeature(hit,local,t.data[4+j].xyz);
+        else if(ratio>=1)pelvicFeature(hit,p-y,t.data[4+b].xyz);
+        else pelvicFeature(hit,local-ratio*d,t.data[7+j].xyz);
+    }
+}
+kernel void nm_pelvic_contact_rows(constant uint4& control [[buffer(0)]],device const PelvicSample* samples [[buffer(1)]],
+    device const float4* modes [[buffer(2)]],device const PelvicTriangle* triangles [[buffer(3)]],device const uint* neighbors [[buffer(4)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(5)]],device const float4* low [[buffer(6)]],device const float* coord [[buffer(7)]],
+    device PelvicRow* rows [[buffer(8)]],device float* J [[buffer(9)]],device const uint* needed [[buffer(10)]],uint id [[thread_position_in_grid]]){
+    if(id>=512)return;
+    const uint side=id/256;if(control.z&&!needed[side])return;const auto s=samples[id];
+    if(s.domain.w==0){rows[id].normal=float4(0);return;}
+    const uint pi=s.domain.x-control.x,fi=s.domain.y-control.x,bi=s.domain.z-control.x;
+    const auto P=poses[pi],F=poses[fi],B=poses[bi];
+    const float3 rp=restingRotate(P.orientation,s.pelvis.xyz),rf=restingRotate(F.orientation,s.femur.xyz);
+    const float3 dp=(P.position.xyz-B.position.xyz)+(low[pi].xyz-low[bi].xyz);
+    const float3 df=(F.position.xyz-B.position.xyz)+(low[fi].xyz-low[bi].xyz);
+    float3 base=s.pelvis.w*(dp+rp)+s.femur.w*(df+rf);float3 displacement=0;
+    if(control.y)for(uint m=0;m<s.domain.w;++m)displacement+=coord[side*96+m]*modes[id*96+m].xyz;
+    displacement=restingRotate(P.orientation,displacement);
+    const float3 worldFromBone=base+displacement;
+    const float4 inverseBone=float4(-B.orientation.xyz,B.orientation.w);
+    const float3 p=restingRotate(inverseBone,worldFromBone);PelvicClosest hit{INFINITY,INFINITY,float3(0)};
+    for(uint j=0;j<s.bank.w;++j)pelvicTriangle(p,triangles[neighbors[s.bank.z+j]],hit);
+    const float nearDist=sqrt(hit.sq);
+    if(length(p-s.reference.xyz)+nearDist>=s.reference.w){
+        for(uint j=0;j<s.bank.y;++j)pelvicTriangle(p,triangles[s.bank.x+j],hit);
+    }
+    const float3 n=restingRotate(B.orientation,hit.gradient);
+    const float3 localN=restingRotate(float4(-P.orientation.xyz,P.orientation.w),n);
+    for(uint m=0;m<s.domain.w;++m)J[id*96+m]=dot(localN,modes[id*96+m].xyz);
+    for(uint m=s.domain.w;m<96;++m)J[id*96+m]=0.f;
+    rows[id].normal=float4(n,hit.gap-dot(n,displacement));
+    rows[id].leverP=float4(rp,s.pelvis.w);rows[id].leverF=float4(rf,s.femur.w);
+    rows[id].leverB=float4(base,hit.gap);
+}
+// Project the rest-energy origin onto the signed cortical halfspaces.
+// One SIMD group owns a side. The three values in each lane cover 96 modes.
+inline float3 pelvicVector(device const float* a,uint lane){
+    return float3(a[lane],a[32+lane],a[64+lane]);
+}
+inline void pelvicStore(device float* a,uint lane,float3 v){
+    a[lane]=v.x;a[32+lane]=v.y;a[64+lane]=v.z;
+}
+kernel void nm_pelvic_contact_solve(constant uint4& control [[buffer(0)]],device const PelvicSample* samples [[buffer(1)]],
+    device const PelvicRow* rows [[buffer(2)]],device const float* J [[buffer(3)]],device float* coord [[buffer(4)]],
+    device float* loads [[buffer(5)]],device float4* stats [[buffer(6)]],device float* workspace [[buffer(7)]],device const uint* needed [[buffer(8)]],
+    uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    if(control.y&&!needed[side])return;
+    const uint base=side*256, count=side?pelvicCountLeft:pelvicCountRight;
+    device float* Q=workspace+side*2*96*96;device float* R=Q+96*96;
+    threadgroup uint active[96],which[256];threadgroup float scale[256],lambda[256],sharedY[96],direction[96];
+    float3 y=0;
+    for(uint j=lane;j<256;j+=32){
+        float length2=0;
+        if(j<count)for(uint k=0;k<samples[base+j].domain.w;++k){float v=J[(base+j)*96+k];length2+=v*v;}
+        scale[j]=length2>0?rsqrt(length2):0;lambda[j]=0;which[j]=0;
+    }
+    uint n=0,prepared=0,enter=256;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint pass=0;pass<control.z;++pass){
+        if(enter==256){
+            sharedY[lane]=y.x;sharedY[32+lane]=y.y;sharedY[64+lane]=y.z;
+            threadgroup_barrier(mem_flags::mem_threadgroup);
+            float score=0;uint selected=256;
+            for(uint j=lane;j<count;j+=32){
+                if(which[j])continue;
+                float g=rows[base+j].normal.w;
+                for(uint k=0;k<samples[base+j].domain.w;++k)g+=J[(base+j)*96+k]*sharedY[k];
+                float violation=-g*scale[j];
+                if(g< -2.e-9f&&violation>score){score=violation;selected=j;}
+            }
+            float worst=simd_max(score);
+            enter=simd_min(score==worst?selected:256u);
+            if(enter==256)break;
+        }
+        // Restore the thin QR after a deletion. Appending an independent
+        // constraint normally costs only a single QR column.
+        for(uint k=prepared;k<n;++k){
+            uint index=active[k];float3 v=pelvicVector(J+(base+index)*96,lane)*scale[index];
+            for(uint sweep=0;sweep<2;++sweep){
+                for(uint i=0;i<k;++i){
+                    float3 q=pelvicVector(Q+96*i,lane);float a=simd_sum(dot(q,v));v-=a*q;
+                    if(!lane){if(!sweep)R[96*k+i]=a;else R[96*k+i]+=a;}
+                }
+            }
+            float len=sqrt(simd_sum(dot(v,v)));
+            if(!lane)R[96*k+k]=len;
+            pelvicStore(Q+96*k,lane,v/max(len,1e-15f));
+            threadgroup_barrier(mem_flags::mem_device);
+        }
+        prepared=n;
+        const float3 a=pelvicVector(J+96*(base+enter),lane)*scale[enter];
+        float3 v=a;
+        for(uint sweep=0;sweep<2;++sweep)for(uint i=0;i<n;++i){
+            float3 q=pelvicVector(Q+96*i,lane);float t=simd_sum(dot(q,v));v-=t*q;
+            if(!lane){if(!sweep)direction[i]=t;else direction[i]+=t;}
+        }
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        if(!lane)for(uint k=n;k>0;--k){uint i=k-1;float d=direction[i]/R[i*96+i];direction[i]=d;for(uint j=0;j<i;++j)direction[j]-=R[i*96+j]*d;}
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        float dual=INFINITY;uint drop=96;
+        for(uint i=lane;i<n;i+=32){float r=direction[i];if(r>1e-8f){float bound=max(0.f,lambda[active[i]])/r;if(bound<dual){dual=bound;drop=i;}}}
+        float boundary=simd_min(dual);drop=simd_min(dual==boundary?drop:96u);
+        float vv=simd_sum(dot(v,v)),gap=rows[base+enter].normal.w*scale[enter]+simd_sum(dot(a,y));
+        float step=vv>1.e-12f?max(0.f,-gap/vv):INFINITY;
+        bool add=step<=boundary&&isfinite(step);
+        if(!add&&drop==96)break;
+        step=add?step:boundary;
+        y+=step*v;
+        for(uint i=lane;i<n;i+=32)lambda[active[i]]=max(0.f,lambda[active[i]]-step*direction[i]);
+        if(!lane)lambda[enter]+=step;
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        if(add){
+            if(n==96)break;
+            if(!lane){active[n]=enter;which[enter]=1;}
+            ++n;enter=256;
+        }else{
+            if(!lane){uint j=active[drop];which[j]=0;lambda[j]=0;for(uint i=drop;i+1<n;++i)active[i]=active[i+1];}
+            --n;prepared=drop;
+        }
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    coord[96*side+lane]=y.x;coord[96*side+32+lane]=y.y;coord[96*side+64+lane]=y.z;
+    sharedY[lane]=y.x;sharedY[lane+32]=y.y;sharedY[lane+64]=y.z;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    float worst=0,total=0,compError=0;
+    for(uint j=lane;j<256;j+=32){
+        float l=lambda[j]*scale[j];loads[base+j]=l;
+        if(j>=count)continue;
+        float g=rows[base+j].normal.w;for(uint k=0;k<samples[base+j].domain.w;++k)g+=J[(base+j)*96+k]*sharedY[k];
+        worst=max(worst,-g);total+=l;compError+=abs(g*l);
+    }
+    float4 s=float4(simd_max(worst),simd_sum(total),.5f*simd_sum(dot(y,y)),simd_sum(compError));
+    if(!lane)stats[side]=s;
+}
+kernel void nm_pelvic_contact_confirm(device const PelvicSample* samples [[buffer(0)]],device const PelvicRow* rows [[buffer(1)]],
+    device const float* J [[buffer(2)]],device const float* coords [[buffer(3)]],device const float* loads [[buffer(4)]],
+    device float4* stats [[buffer(5)]],constant uint4& ctrl [[buffer(6)]],device float4* trace [[buffer(7)]],
+    device uint* needed [[buffer(8)]],device float4* history [[buffer(9)]],
+    uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    if(ctrl.z&&!needed[side])return;
+    float worst=0,sum=0,invalid=0;
+    const uint base=256*side,count=side?pelvicCountLeft:pelvicCountRight;
+    for(uint j=lane;j<count;j+=32){uint id=base+j;float g=rows[id].leverB.w;
+        if(!isfinite(g)||!isfinite(loads[id])||loads[id]<0)invalid=INFINITY;
+        worst=max(-g,worst);sum+=abs(g*loads[id]);
+    }
+    float gap=simd_max(max(worst,invalid)),comp=simd_sum(sum);
+    if(!lane){
+        float4 s=stats[side];float linearGap=s.x;s.x=gap;s.w=comp;stats[side]=s;
+        if(ctrl.x<ctrl.y){trace[ctrl.x*10+side]=s;
+            history[ctrl.x*4+2*ctrl.w+side]=float4(float(ctrl.z+1),linearGap,gap,comp);}
+        needed[side]=gap>5e-8f;
+    }
+}
+kernel void nm_pelvic_contact_wrench(constant uint4& control [[buffer(0)]],device const PelvicSample* samples [[buffer(1)]],
+    device const PelvicRow* rows [[buffer(2)]],device const float* loads [[buffer(3)]],device const float4* modes [[buffer(4)]],
+    device const float* coord [[buffer(5)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(6)]],device float4* totals [[buffer(7)]],
+    uint group [[threadgroup_position_in_grid]],uint lane [[thread_index_in_threadgroup]]){
+    const uint bodies[4]={1,128,131,145};const uint body=bodies[group];threadgroup float3 force[128],torque[128];
+    float3 sum=0,moment=0;
+    for(uint id=lane;id<512;id+=128){
+        const float l=loads[id];if(l<=0)continue;
+        const auto s=samples[id];const auto r=rows[id];float3 f=r.normal.xyz*l;
+        float3 extra=0;for(uint m=0;m<s.domain.w;++m)extra+=coord[(id/256)*96+m]*modes[id*96+m].xyz;
+            extra=restingRotate(poses[s.domain.x-control.x].orientation,extra);
+        if(body==s.domain.x){
+            sum+=s.pelvis.w*f;moment+=cross(s.pelvis.w*r.leverP.xyz+extra,f);
+        }
+        if(body==s.domain.y){sum+=s.femur.w*f;moment+=cross(r.leverF.xyz,s.femur.w*f);}
+        if(body==s.domain.z){sum-=f;moment-=cross(r.leverB.xyz+extra,f);}
+    }
+    force[lane]=sum;torque[lane]=moment;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){if(lane<n){force[lane]+=force[lane+n];torque[lane]+=torque[lane+n];}threadgroup_barrier(mem_flags::mem_threadgroup);}
+    if(lane==0){totals[2*group]=float4(force[0],0);totals[2*group+1]=float4(torque[0],0);}
+}
+kernel void nm_pelvic_contact_apply(constant uint4& dims [[buffer(0)]],constant uint4& view [[buffer(1)]],device const float4* totals [[buffer(2)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(3)]],device const float* jac [[buffer(4)]],device float* generalized [[buffer(5)]],
+    device const float4* stats [[buffer(6)]],device float4* evidence [[buffer(7)]],uint i [[thread_position_in_grid]]){
+    if(i>=dims.y)return;const uint bodies[4]={1,128,131,145};float result=0;
+    for(uint b=0;b<4;++b){uint body=bodies[b]-view.x,base=(view.y+4u*body)*3u*dims.y;
+        float3 c=float3(jac[base+i],jac[base+dims.y+i],jac[base+2*dims.y+i]),a=0;
+        for(uint k=0;k<3;++k){uint j=base+(k+1)*3*dims.y;float3 e=0;e[k]=1;
+            float3 axis=restingRotate(poses[body].orientation,e);
+            float3 v=float3(jac[j+i],jac[j+dims.y+i],jac[j+2*dims.y+i]);a+=.5f*cross(axis,v-c);}
+        result+=dot(c,totals[2*b].xyz)+dot(a,totals[2*b+1].xyz);
+    }
+    generalized[dims.z+i]+=result;
+    if(dims.x<view.z&&i<2)evidence[(dims.x*10)+i]=stats[i];
+    if(dims.x<view.z&&i<8)evidence[(dims.x*10)+2+i]=totals[i];
+}
