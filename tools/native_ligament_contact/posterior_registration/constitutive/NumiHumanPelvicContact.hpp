@@ -29,7 +29,7 @@ class NumiHumanPelvicContact {
     id<MTLBuffer> refNodes=nil,refInverse=nil,refPoses=nil,totalDelta=nil,materialState=nil;
     id<MTLBuffer> iterationTrace=nil;
     id<MTLBuffer> facetPairs=nil,facetPoses=nil;
-    id<MTLComputePipelineState> finiteSurface=nil;
+    id<MTLComputePipelineState> finiteSurface=nil,candidatePressure=nil;
     unsigned finiteCount=0,reverseStart=0,finiteStart=0;
     unsigned residualGroups=0;
     id<MTLBuffer> volumes=nil,cellRows=nil,cellCorners=nil,fRows=nil,fCols=nil,fVals=nil,fLevels=nil,fOrder=nil,fPerm=nil,fScale=nil;
@@ -79,7 +79,7 @@ public:
         nodePositions=alloc(countNodes*16);groups=alloc(countGroups*16);
         auto pipeline=[&](NSString* name){NSError* err=nil;auto p=[dev newComputePipelineStateWithFunction:[lib newFunctionWithName:name] error:&err];
             if(!p)throw std::runtime_error("missing pelvic material kernel");return p;};
-        finiteSurface=pipeline(@"nm_pelvic_finite_surface");cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
+        candidatePressure=pipeline(@"nm_pelvic_candidate_pressure");finiteSurface=pipeline(@"nm_pelvic_finite_surface");cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
         factorApply=pipeline(@"nm_pelvic_bulk_factor");requireBulk=pipeline(@"nm_pelvic_require_bulk");geometry=pipeline(@"nm_pelvic_contact_rows");solve=pipeline(@"nm_pelvic_schur_solve");makeColumns=pipeline(@"nm_pelvic_schur_columns");makeGram=pipeline(@"nm_pelvic_schur_gram");moveNodes=pipeline(@"nm_pelvic_schur_displacement");wrench=pipeline(@"nm_pelvic_contact_wrench");apply=pipeline(@"nm_pelvic_contact_apply");
         std::set<unsigned> gridSizes{1,2,4,16,1024,numRegions,countGroups,(finiteCount+127)/128,(countNodes+127)/128,(reverseStart+127)/128,
             (numSurface+127)/128,(numFaces+127)/128,(numReverse+127)/128,(countNodes/2*256+127)/128,(countNodes*8+127)/128,2*residualGroups};
@@ -139,8 +139,8 @@ public:
         };
         if(!post){
             [e setComputePipelineState:restoreMaterial];words(0,{p.stepIndex,countNodes,0,0});bind(1,accepted);bind(2,coordinates);run((countNodes+127)/128,128);
-            [e setComputePipelineState:clearPool];words(0,{p.stepIndex,poolCount,0,0});bind(1,poolSlots);bind(2,included);bind(3,contactCache);bind(4,pressures);run((poolCount+127)/128,128);
-            words(0,{p.stepIndex,poolCount,1,0});run(4,128);
+            [e setComputePipelineState:clearPool];words(0,{p.stepIndex,poolCount,0,0});bind(1,poolSlots);bind(2,included);bind(3,contactCache);bind(4,pressures);bind(5,accepted);run((poolCount+127)/128,128);
+            words(0,{p.stepIndex,poolCount,1,countNodes});run(4,128);
         }
         observe(0,1);select(0,true);
         [e setComputePipelineState:requireBulk];bind(0,needed);run(1,32);
@@ -148,7 +148,32 @@ public:
             [e setComputePipelineState:cellForce];[e setBytes:&countCells length:4 atIndex:0];bind(1,cells);bind(2,refInverse);bind(3,totalDelta);bind(4,volumes);bind(5,cellLoad);bind(6,materialState);run(countGroups,128);
             [e setComputePipelineState:gatherBulk];[e setBytes:&countNodes length:4 atIndex:0];bind(1,cellRows);bind(2,cellCorners);bind(3,cellLoad);bind(4,bulkGrad);run((countNodes+127)/128,128);
         };
+        auto compliance=[&](){
+            for(unsigned side=0;side<2;++side){
+                [e setComputePipelineState:makeColumns];words(0,{side,1,0,0});bind(1,poolSlots);bind(2,pool);bind(3,localN);
+                bind(4,freeIndex);bind(5,flexibility);bind(6,columns);bind(7,needed);run((countNodes/2*256+127)/128,128);
+            }
+            [e setComputePipelineState:makeGram];words(0,{0,1,0,0});bind(1,poolSlots);bind(2,pool);bind(3,localN);
+            bind(4,columns);bind(5,gram);bind(6,needed);run(1024,128);
+        };
+        auto certify=[&](unsigned outer){
+            [e setComputePipelineState:clearInc];[e setBytes:&countNodes length:4 atIndex:0];bind(1,inc);run((countNodes*8+127)/128,128);
+            [e setComputePipelineState:buildInc];bind(0,poolSlots);bind(1,pressures);bind(2,pool);bind(3,inc);run(16,128);
+            [e setComputePipelineState:measureForce];words(0,{0,residualGroups,1,0});bind(1,kr);bind(2,kc);bind(3,kv);bind(4,coordinates);bind(5,inc);bind(6,poolSlots);bind(7,pressures);bind(8,localN);bind(9,pool);bind(10,partial);bind(11,needed);bind(12,bulkGrad);bind(13,attachment);run(2*residualGroups,128);
+            [e setComputePipelineState:confirm];bind(0,samples);bind(1,rows);bind(2,gram);bind(3,coordinates);
+            bind(4,pressures);bind(5,stats);words(6,{p.stepIndex,countTrace,outer,unsigned(post)});
+            bind(7,trace);bind(8,needed);bind(9,history);bind(10,poolMin);bind(11,poolRegions);[e setBytes:&numRegions length:4 atIndex:12];bind(13,partial);[e setBytes:&residualGroups length:4 atIndex:14];bind(15,quality);bind(16,qualityTrace);bind(17,iterationTrace);run(2,32);
+        };
         bulkForces();
+        // A pressure is only an initial guess. Recompute the moving rows, full
+        // residual, contact extrema, complementarity and compliance before using it.
+        if(p.stepIndex || post){
+            nearest(0,0);
+            compliance();
+            [e setComputePipelineState:candidatePressure];words(0,{0,0,0,0});bind(1,poolSlots);bind(2,rows);
+            bind(3,gram);bind(4,pressures);bind(5,stats);run(2,32);
+            certify(UINT_MAX);
+        }
         for(unsigned outer=0;outer<16;++outer){
             optional=false;
             {unsigned count=unsigned(spanIndex.size());[e setComputePipelineState:makeSpans];[e setBytes:&count length:4 atIndex:0];
@@ -158,23 +183,13 @@ public:
             [e setComputePipelineState:factorApply];bind(0,fRows);bind(1,fCols);bind(2,fVals);bind(3,fLevels);bind(4,fOrder);bind(5,fPerm);bind(6,fScale);bind(7,bulkRhs);bind(8,baseShift);bind(9,needed);bind(10,projRows);bind(11,projCols);bind(12,projVals);run(2,128);
             select(1,false);
             nearest(1,1);
-            for(unsigned side=0;side<2;++side){
-                [e setComputePipelineState:makeColumns];words(0,{side,1,0,0});bind(1,poolSlots);bind(2,pool);bind(3,localN);
-                bind(4,freeIndex);bind(5,flexibility);bind(6,columns);bind(7,needed);run((countNodes/2*256+127)/128,128);
-            }
-            [e setComputePipelineState:makeGram];words(0,{0,1,0,0});bind(1,poolSlots);bind(2,pool);bind(3,localN);
-            bind(4,columns);bind(5,gram);bind(6,needed);run(1024,128);
+            compliance();
             [e setComputePipelineState:solve];words(0,{0,1,0,0});bind(1,poolSlots);bind(2,rows);bind(3,gram);
             bind(4,pressures);bind(5,stats);bind(6,workspace);bind(7,needed);run(2,32);
             [e setComputePipelineState:moveNodes];words(0,{0,1,countNodes,0});bind(1,pressures);bind(2,columns);
             bind(3,coordinates);bind(4,needed);bind(5,baseShift);run((countNodes+127)/128,128);
             observe(1,1);bulkForces();select(1,true);nearest(1,1);
-            [e setComputePipelineState:clearInc];[e setBytes:&countNodes length:4 atIndex:0];bind(1,inc);run((countNodes*8+127)/128,128);
-            [e setComputePipelineState:buildInc];bind(0,poolSlots);bind(1,pressures);bind(2,pool);bind(3,inc);run(16,128);
-            [e setComputePipelineState:measureForce];words(0,{0,residualGroups,1,0});bind(1,kr);bind(2,kc);bind(3,kv);bind(4,coordinates);bind(5,inc);bind(6,poolSlots);bind(7,pressures);bind(8,localN);bind(9,pool);bind(10,partial);bind(11,needed);bind(12,bulkGrad);bind(13,attachment);run(2*residualGroups,128);
-            [e setComputePipelineState:confirm];bind(0,samples);bind(1,rows);bind(2,gram);bind(3,coordinates);
-            bind(4,pressures);bind(5,stats);words(6,{p.stepIndex,countTrace,outer,unsigned(post)});
-            bind(7,trace);bind(8,needed);bind(9,history);bind(10,poolMin);bind(11,poolRegions);[e setBytes:&numRegions length:4 atIndex:12];bind(13,partial);[e setBytes:&residualGroups length:4 atIndex:14];bind(15,quality);bind(16,qualityTrace);bind(17,iterationTrace);run(2,32);
+            certify(outer);
         }
         optional=false;[e setComputePipelineState:gate];words(0,{p.stepIndex,0,0,unsigned(post)});bind(1,stats);bind(2,quality);bind(3,failedPre);bind(4,ptr(p.standStatuses));run(1,1);
         if(!post){

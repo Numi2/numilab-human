@@ -73,7 +73,8 @@ kernel void nm_pelvic_contact_confirm(device const PelvicSample* samples [[buffe
     float worst=0,sum=0,invalid=0,release=0;float2 maxForce=0;
     const uint base=256*side,count=256;
     for(uint j=lane;j<count;j+=32){uint id=base+j;if(!samples[id].domain.w)continue;float g=rows[id].leverB.w;
-        if(!isfinite(g)||!isfinite(loads[id])||loads[id]<0)invalid=INFINITY;
+        if(!isfinite(g)||!isfinite(loads[id])||loads[id]<0||
+           (loads[id]>0&&dot(rows[id].normal.xyz,rows[id].normal.xyz)<.5f))invalid=INFINITY;
         worst=max(-g,worst);sum+=abs(g*loads[id]);release=max(release,min(max(J[65536*side+257*j],0.f)*loads[id],abs(g)));
     }
     for(uint j=lane;j<numRegions;j+=32)if(regions[j].z/256==side)worst=max(worst,-minima[j]);
@@ -83,10 +84,10 @@ kernel void nm_pelvic_contact_confirm(device const PelvicSample* samples [[buffe
     if(!lane){
         float4 s=stats[side];float linearGap=s.x;s.x=gap;s.w=comp;stats[side]=s;
         if(ctrl.x<ctrl.y){trace[ctrl.x*10+side]=s;
-            history[ctrl.x*4+2*ctrl.w+side]=float4(float(ctrl.z+1),linearGap,gap,comp);}
+            history[ctrl.x*4+2*ctrl.w+side]=float4(float(ctrl.z==UINT_MAX?0u:ctrl.z+1),linearGap,gap,comp);}
         float4 quality=float4(fm,fa,inactive,gap);qual[side]=quality;
         if(ctrl.x<ctrl.y)qualTrace[ctrl.x*4+2*ctrl.w+side]=quality;
-        if(ctrl.x<min(ctrl.y,4u))iterationTrace[((ctrl.x*2+ctrl.w)*16+ctrl.z)*2+side]=quality;
+        if(ctrl.z<16u&&ctrl.x<min(ctrl.y,4u))iterationTrace[((ctrl.x*2+ctrl.w)*16+ctrl.z)*2+side]=quality;
         needed[side]=!pelvicEquilibrated(s,quality);
     }
 }
@@ -171,11 +172,13 @@ kernel void nm_pelvic_pool_exchange(constant uint4& d [[buffer(0)]],device const
     }
 }
 kernel void nm_pelvic_pool_clear(constant uint4& d [[buffer(0)]],device uint* slots [[buffer(1)]],device uint* included [[buffer(2)]],
-    device const uint* accepted [[buffer(3)]],device float* loads [[buffer(4)]],uint i [[thread_position_in_grid]]){
+    device const uint* accepted [[buffer(3)]],device float* loads [[buffer(4)]],device const float4* snapshot [[buffer(5)]],uint i [[thread_position_in_grid]]){
     if(i>=d.y)return;
     if(!d.z){included[i]=0;return;}
     if(i<512){uint val=(d.x&&accepted[0]==d.x)?accepted[1+i]:UINT_MAX;
-        slots[i]=val;loads[i]=0;if(val!=UINT_MAX)included[val]=1;}
+        slots[i]=val;
+        loads[i]=val!=UINT_MAX?snapshot[9+2*d.w+2*i].w:0.f;
+        if(val!=UINT_MAX)included[val]=1;}
 }
 // Flexibility columns come from the full free-node tangent with anatomical Dirichlet sites.
 kernel void nm_pelvic_schur_columns(constant uint4& d [[buffer(0)]],device const uint* slots [[buffer(1)]],
@@ -529,3 +532,23 @@ kernel void nm_pelvic_bulk_factor(device const uint4* rows [[buffer(0)]],device 
     for(uint i=tid;i<d.y;i+=128){uint j=d.x+i,k=perm[j].y;dest[4*(k/3)+k%3]=scale[j].y*v[i];}
 }
 kernel void nm_pelvic_require_bulk(device uint* needed [[buffer(0)]],uint i [[thread_position_in_grid]]){if(i<2)needed[i]=1;}
+
+// Measure the compliance energy and total pressure using the current geometry.
+// No solver state is advanced by this measurement.
+kernel void nm_pelvic_candidate_pressure(constant uint& unused [[buffer(0)]],
+    device const uint* slots [[buffer(1)]],device const PelvicRow* rows [[buffer(2)]],
+    device const float* gram [[buffer(3)]],device const float* load [[buffer(4)]],
+    device float4* stats [[buffer(5)]],uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    uint first=256*side;
+    float force=0,work=0,worst=0;
+    for(uint j=lane;j<256;j+=32){
+        uint i=first+j;if(slots[i]==UINT_MAX)continue;
+        float pressure=load[i],gap=rows[i].leverB.w;
+        worst=max(worst,-gap);if(pressure==0)continue;
+        float displacement=0;
+        for(uint k=0;k<256;++k)displacement+=gram[65536*side+256*j+k]*load[first+k];
+        force+=pressure;work+=.5f*pressure*displacement;
+    }
+    float4 value=float4(simd_max(worst),simd_sum(force),simd_sum(work),0);
+    if(!lane)stats[side]=value;
+}
