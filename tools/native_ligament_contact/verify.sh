@@ -13,6 +13,7 @@ mkdir -p "$work"
 work=$(cd "$work" && pwd)
 export PATH="/opt/homebrew/bin:$PATH" PYTHONPATH="$repo/src" OPENBLAS_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1
 "$py" "$tools/test_rebind.py"
+"$py" "$tools/test_loaded_sections.py"
 "$py" "$tools/prepare_sources.py" "$p" "$e" "$c" "$app" "$ev" "$work"
 cd "$work"
 "$py" build_native.py "$p" "$e" "$c" "$app"

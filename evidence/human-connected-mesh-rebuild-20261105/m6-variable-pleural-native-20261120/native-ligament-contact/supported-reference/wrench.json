@@ -1,0 +1,898 @@
+{
+  "scope": "Late sampled ground wrench of the 32-section native model. Each sample uses the physical substep impulse and its pre-step material point. The loaded section positions are transfer references, not applied forces on the full volume.",
+  "sha256": {
+    "resting-com-support-impulses.csv": "868b6d24d9852b238ca64eb22bfe8b19ca05ced5956a8bbf487f0cf6bdce4f85",
+    "resting-support-point-motion.csv": "35817ffab7359d48cf4a2f04e6b219551645bb40e8fad7e35534e41691b5c5ec",
+    "resting-com-momentum-diagnostic.csv": "41e920658f045b979d1404165b4e51c5be72c7136bebcfaced20fa63ce7c3595",
+    "resting-local-bed-sections.csv": "e2e81a1eb1248415443fa18bdb558b39722409dde23fd50baf52c10775edfdd2",
+    "resting-coupled.csv": "9631e4145db81560ca4a3a1ce703c48da5ba0041ed78d48cb3073fa5b96023af"
+  },
+  "source_launch_sha256": "d2a7daa4ddc5dcb15aac0a311870422f16a7e618df97e08d505efb93647c192a",
+  "dt_s": 0.002,
+  "accepted_s": 16.00000076,
+  "terminal_pleural_pa": -706.572814941,
+  "samples": 32,
+  "mean_ground_force_N": [
+    0.12613552483742296,
+    -0.006822001573425496,
+    952.9069833999984
+  ],
+  "max_CoP_to_endpoint_COM_xy_m": 0.0010116419101347624,
+  "source_controls_identical": true,
+  "sections": [
+    {
+      "region": 2,
+      "source_geometry_index": 37608,
+      "mean_normal_N": 164.16690545156598,
+      "force_weighted_world_position_m": [
+        0.04818019571147761,
+        -0.41065235691996355,
+        -0.0012390243192981218
+      ],
+      "mean_reference_elastic_compression_m": 0.0012389627075277687
+    },
+    {
+      "region": 5,
+      "source_geometry_index": 21162,
+      "mean_normal_N": 153.8865934126079,
+      "force_weighted_world_position_m": [
+        -0.06821107341179954,
+        -0.8476076752022657,
+        -0.004504314176651082
+      ],
+      "mean_reference_elastic_compression_m": 0.004504351689226372
+    },
+    {
+      "region": 4,
+      "source_geometry_index": 34319,
+      "mean_normal_N": 148.7581511028111,
+      "force_weighted_world_position_m": [
+        0.01693652325004449,
+        -0.8478658733173626,
+        -0.004610253518404911
+      ],
+      "mean_reference_elastic_compression_m": 0.004610143890455378
+    },
+    {
+      "region": 1,
+      "source_geometry_index": 17765,
+      "mean_normal_N": 145.45525144785643,
+      "force_weighted_world_position_m": [
+        -0.09808413340503545,
+        -0.4117675167881607,
+        -0.0014603454136004922
+      ],
+      "mean_reference_elastic_compression_m": 0.0014603279955574607
+    },
+    {
+      "region": 6,
+      "source_geometry_index": 33529,
+      "mean_normal_N": 95.9887474309653,
+      "force_weighted_world_position_m": [
+        0.01798265427558849,
+        -0.8362056788800779,
+        -0.0038384806291766444
+      ],
+      "mean_reference_elastic_compression_m": 0.0038384846157787887
+    },
+    {
+      "region": 7,
+      "source_geometry_index": 20347,
+      "mean_normal_N": 65.95540116541088,
+      "force_weighted_world_position_m": [
+        -0.06435521643671836,
+        -0.8316978107279265,
+        -0.002940699880312867
+      ],
+      "mean_reference_elastic_compression_m": 0.0029407534599060134
+    },
+    {
+      "region": 30,
+      "source_geometry_index": 34831,
+      "mean_normal_N": 47.67361294943839,
+      "force_weighted_world_position_m": [
+        0.05674063661657053,
+        -1.720618676404967,
+        -0.0016532856221124401
+      ],
+      "mean_reference_elastic_compression_m": 0.0016531991452447003
+    },
+    {
+      "region": 3,
+      "source_geometry_index": 15824,
+      "mean_normal_N": 42.36283979844302,
+      "force_weighted_world_position_m": [
+        -0.11530315479472864,
+        -0.4237134439242634,
+        -0.00042973958109502453
+      ],
+      "mean_reference_elastic_compression_m": 0.0004297453943289225
+    },
+    {
+      "region": 20,
+      "source_geometry_index": 20234,
+      "mean_normal_N": 39.89472717512399,
+      "force_weighted_world_position_m": [
+        -0.10994438751397305,
+        -1.7194891758081317,
+        -0.0015046440713264637
+      ],
+      "mean_reference_elastic_compression_m": 0.0015045330276369341
+    },
+    {
+      "region": 12,
+      "source_geometry_index": 6890,
+      "mean_normal_N": 21.69544604839757,
+      "force_weighted_world_position_m": [
+        -0.28394270750133904,
+        -0.6148927580233351,
+        -0.0005543233961157113
+      ],
+      "mean_reference_elastic_compression_m": 0.0005539945928174625
+    },
+    {
+      "region": 9,
+      "source_geometry_index": 47753,
+      "mean_normal_N": 13.284688640851527,
+      "force_weighted_world_position_m": [
+        0.21879640597233982,
+        -0.6082415995138283,
+        -0.00033546373226632455
+      ],
+      "mean_reference_elastic_compression_m": 0.0003353469069245133
+    },
+    {
+      "region": 22,
+      "source_geometry_index": 47596,
+      "mean_normal_N": 11.377518181689084,
+      "force_weighted_world_position_m": [
+        0.27726665300161424,
+        -0.6600495748223169,
+        -0.00023641961469885012
+      ],
+      "mean_reference_elastic_compression_m": 0.00023582977929902308
+    },
+    {
+      "region": 28,
+      "source_geometry_index": 50655,
+      "mean_normal_N": 1.252086001841235,
+      "force_weighted_world_position_m": [
+        0.4187039758087632,
+        -0.9114533662801348,
+        -5.9042941455635586e-05
+      ],
+      "mean_reference_elastic_compression_m": 3.7064340693819927e-05
+    },
+    {
+      "region": 17,
+      "source_geometry_index": 2759,
+      "mean_normal_N": 0.2952937438749359,
+      "force_weighted_world_position_m": [
+        -0.5124929804646197,
+        -0.9407196556134173,
+        -4.2846706472180604e-05
+      ],
+      "mean_reference_elastic_compression_m": 1.715266474202559e-05
+    },
+    {
+      "region": 29,
+      "source_geometry_index": 47936,
+      "mean_normal_N": 0.25540289243508596,
+      "force_weighted_world_position_m": [
+        0.38093503092457,
+        -0.9463308726424755,
+        -5.036693310837254e-06
+      ],
+      "mean_reference_elastic_compression_m": 4.2958264001741225e-06
+    },
+    {
+      "region": 19,
+      "source_geometry_index": 6105,
+      "mean_normal_N": 0.24906942462621373,
+      "force_weighted_world_position_m": [
+        -0.44460304353500746,
+        -0.9322409008156072,
+        -5.400207831600158e-06
+      ],
+      "mean_reference_elastic_compression_m": 5.158664854604072e-06
+    },
+    {
+      "region": 18,
+      "source_geometry_index": 4379,
+      "mean_normal_N": 0.17976392814489373,
+      "force_weighted_world_position_m": [
+        -0.47592397717801455,
+        -0.9331617167198102,
+        -3.998526652728797e-06
+      ],
+      "mean_reference_elastic_compression_m": 3.4400098386640675e-06
+    },
+    {
+      "region": 27,
+      "source_geometry_index": 51774,
+      "mean_normal_N": 0.17548460391481058,
+      "force_weighted_world_position_m": [
+        0.4624674085361103,
+        -0.947619171873528,
+        -3.4355073325706454e-05
+      ],
+      "mean_reference_elastic_compression_m": 1.9435452671821373e-05
+    },
+    {
+      "region": 0,
+      "source_geometry_index": 25848,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 8,
+      "source_geometry_index": 7241,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 10,
+      "source_geometry_index": 18300,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 11,
+      "source_geometry_index": 36234,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 13,
+      "source_geometry_index": 3413,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 14,
+      "source_geometry_index": 5299,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 15,
+      "source_geometry_index": 520,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 16,
+      "source_geometry_index": 754,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 21,
+      "source_geometry_index": 18301,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 23,
+      "source_geometry_index": 51583,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 24,
+      "source_geometry_index": 49892,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 25,
+      "source_geometry_index": 54177,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 26,
+      "source_geometry_index": 52655,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    },
+    {
+      "region": 31,
+      "source_geometry_index": 36891,
+      "mean_normal_N": 0.0,
+      "force_weighted_world_position_m": null,
+      "mean_reference_elastic_compression_m": 0.0
+    }
+  ],
+  "sampled_wrenches": [
+    {
+      "step": 7008,
+      "total_force_N": [
+        -0.30501724540954456,
+        -0.3556781666702591,
+        953.3853186876513
+      ],
+      "world_moment_Nm": [
+        -719.2346748414774,
+        23.07217284042471,
+        -0.44105747796493944
+      ],
+      "normal_CoP_xy_m": [
+        -0.02425579355484511,
+        -0.7546319223009964
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0006138484706285583
+    },
+    {
+      "step": 7040,
+      "total_force_N": [
+        -0.8132370676321443,
+        0.13191229845688213,
+        952.487804723205
+      ],
+      "world_moment_Nm": [
+        -718.2397082966161,
+        23.074275961604396,
+        -0.6236546326707213
+      ],
+      "normal_CoP_xy_m": [
+        -0.024285266897562444,
+        -0.754310204297004
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0002966853922654707
+    },
+    {
+      "step": 7072,
+      "total_force_N": [
+        -0.5735397426178679,
+        -0.3335348928885651,
+        953.4476119297324
+      ],
+      "world_moment_Nm": [
+        -718.9799699767411,
+        22.594652391212783,
+        -0.49718806050140696
+      ],
+      "normal_CoP_xy_m": [
+        -0.023764992030228162,
+        -0.7543168319233032
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0005564293225268064
+    },
+    {
+      "step": 7104,
+      "total_force_N": [
+        0.8303159920615144,
+        0.13159812078811228,
+        952.9011623817496
+      ],
+      "world_moment_Nm": [
+        -718.6398363452186,
+        23.36665004675253,
+        0.685276898984374
+      ],
+      "normal_CoP_xy_m": [
+        -0.02456894476125132,
+        -0.754410319193458
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0005152168255951813
+    },
+    {
+      "step": 7136,
+      "total_force_N": [
+        0.16292003965645563,
+        0.4600923857651651,
+        952.3790288512828
+      ],
+      "world_moment_Nm": [
+        -718.0283490656172,
+        23.33611928122638,
+        0.2669964565965559
+      ],
+      "normal_CoP_xy_m": [
+        -0.024554391741195794,
+        -0.7541932211117078
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0003631529200007853
+    },
+    {
+      "step": 7168,
+      "total_force_N": [
+        -0.37707733281422406,
+        0.24295262483065017,
+        952.9419294703985
+      ],
+      "world_moment_Nm": [
+        -718.4093090953688,
+        23.030334264512025,
+        -0.43058956379992885
+      ],
+      "normal_CoP_xy_m": [
+        -0.024222193805937937,
+        -0.7541381719489736
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00012216743435449878
+    },
+    {
+      "step": 7200,
+      "total_force_N": [
+        -0.4138930089538917,
+        -0.4460369746084325,
+        953.176933740906
+      ],
+      "world_moment_Nm": [
+        -719.070104569486,
+        23.121796457765193,
+        -0.6156493431651588
+      ],
+      "normal_CoP_xy_m": [
+        -0.024311503259217437,
+        -0.7546228705641833
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.000610377624571209
+    },
+    {
+      "step": 7232,
+      "total_force_N": [
+        0.23692257673246786,
+        -0.24956691777333617,
+        953.1220501376083
+      ],
+      "world_moment_Nm": [
+        -718.4714482867894,
+        22.92151698960769,
+        0.17126755425090856
+      ],
+      "normal_CoP_xy_m": [
+        -0.02409915209358563,
+        -0.7540661741315507
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00014925234006240044
+    },
+    {
+      "step": 7264,
+      "total_force_N": [
+        0.5258521759969881,
+        0.46274647320387885,
+        952.2390122001525
+      ],
+      "world_moment_Nm": [
+        -717.833108536641,
+        23.293491860152614,
+        0.6293830861796739
+      ],
+      "normal_CoP_xy_m": [
+        -0.024516977085186017,
+        -0.7540969925285602
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0002874360902773075
+    },
+    {
+      "step": 7296,
+      "total_force_N": [
+        0.27157022850587964,
+        -0.04481593714444898,
+        953.2316680415533
+      ],
+      "world_moment_Nm": [
+        -718.5434331708026,
+        22.957445746496315,
+        0.3538670015074974
+      ],
+      "normal_CoP_xy_m": [
+        -0.02413509182132171,
+        -0.7540518894834521
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.000113126969740354
+    },
+    {
+      "step": 7328,
+      "total_force_N": [
+        -0.4903774897684343,
+        -0.00010574512998573482,
+        953.049140778603
+      ],
+      "world_moment_Nm": [
+        -718.5197160359348,
+        23.01913133703481,
+        -0.658593456882735
+      ],
+      "normal_CoP_xy_m": [
+        -0.02420767906182235,
+        -0.7541690142917289
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00015752135461037778
+    },
+    {
+      "step": 7360,
+      "total_force_N": [
+        0.7847156884963624,
+        0.20450497686397284,
+        952.3055375175318
+      ],
+      "world_moment_Nm": [
+        -717.8295017935798,
+        23.14558693880382,
+        0.9819313246656955
+      ],
+      "normal_CoP_xy_m": [
+        -0.024354558921243108,
+        -0.7540391017836597
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.000112629609721915
+    },
+    {
+      "step": 7392,
+      "total_force_N": [
+        0.40788706246530637,
+        -0.07051112334011123,
+        953.0913858325221
+      ],
+      "world_moment_Nm": [
+        -718.4160654263583,
+        22.94809068620774,
+        0.4569464283284628
+      ],
+      "normal_CoP_xy_m": [
+        -0.024127187482365805,
+        -0.7540282887574552
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00011911640563078148
+    },
+    {
+      "step": 7424,
+      "total_force_N": [
+        -2.352078132389579,
+        -0.19387704469409073,
+        953.0457003274933
+      ],
+      "world_moment_Nm": [
+        -718.2596881379666,
+        22.12051460768654,
+        -2.040382637682746
+      ],
+      "normal_CoP_xy_m": [
+        -0.023241498931047554,
+        -0.753900149438216
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0010116419101347624
+    },
+    {
+      "step": 7456,
+      "total_force_N": [
+        0.8010519377421588,
+        0.1539867153041996,
+        952.4920419353293
+      ],
+      "world_moment_Nm": [
+        -717.9130124799269,
+        23.174700913214053,
+        0.9550515998125064
+      ],
+      "normal_CoP_xy_m": [
+        -0.024378490915492847,
+        -0.7539806787606443
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00013500694013276056
+    },
+    {
+      "step": 7488,
+      "total_force_N": [
+        1.259018052223837,
+        0.4742602541227825,
+        951.9743236160139
+      ],
+      "world_moment_Nm": [
+        -717.9068781448318,
+        23.67714480701662,
+        1.2677969750831126
+      ],
+      "normal_CoP_xy_m": [
+        -0.024915866489277492,
+        -0.7543767130314895
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0007590432113647406
+    },
+    {
+      "step": 7520,
+      "total_force_N": [
+        0.7913527006166987,
+        0.09115705324802548,
+        953.0117076865281
+      ],
+      "world_moment_Nm": [
+        -718.7111038019325,
+        23.439375446892726,
+        0.6858916170993874
+      ],
+      "normal_CoP_xy_m": [
+        -0.024641976121900916,
+        -0.7543922121503076
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0005446090699371768
+    },
+    {
+      "step": 7552,
+      "total_force_N": [
+        1.2941858731210232,
+        0.39216832374222577,
+        952.3552151149488
+      ],
+      "world_moment_Nm": [
+        -718.1352256315105,
+        23.575688031542885,
+        1.311189282708555
+      ],
+      "normal_CoP_xy_m": [
+        -0.02480321933143514,
+        -0.7543095824543408
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0006266261522342798
+    },
+    {
+      "step": 7584,
+      "total_force_N": [
+        -0.22499103215523064,
+        -0.2598158644104842,
+        953.1961065513315
+      ],
+      "world_moment_Nm": [
+        -718.9920597055641,
+        23.074951351084973,
+        -0.19027803021250644
+      ],
+      "normal_CoP_xy_m": [
+        -0.024261909770387627,
+        -0.7545142113526838
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0005007751896748286
+    },
+    {
+      "step": 7616,
+      "total_force_N": [
+        -0.9250968832930084,
+        0.24900260177673772,
+        952.5348084280267
+      ],
+      "world_moment_Nm": [
+        -718.2113885879083,
+        22.960203654362353,
+        -0.7823467773836832
+      ],
+      "normal_CoP_xy_m": [
+        -0.02416307711585861,
+        -0.754229919010637
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00023452346864994293
+    },
+    {
+      "step": 7648,
+      "total_force_N": [
+        0.10931715223705396,
+        -0.37419938848870515,
+        953.4767375589581
+      ],
+      "world_moment_Nm": [
+        -719.1297047951113,
+        23.077922306445974,
+        0.11656160793983439
+      ],
+      "normal_CoP_xy_m": [
+        -0.024261981607951115,
+        -0.7544375024481852
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0004244877127203634
+    },
+    {
+      "step": 7680,
+      "total_force_N": [
+        -0.12126375077059492,
+        -0.32721093884902075,
+        953.1942114263074
+      ],
+      "world_moment_Nm": [
+        -718.934136613488,
+        23.051536763073642,
+        -0.09746684477535972
+      ],
+      "normal_CoP_xy_m": [
+        -0.02424039042139391,
+        -0.7544538343288826
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0004412741776969773
+    },
+    {
+      "step": 7712,
+      "total_force_N": [
+        -0.16899550973903388,
+        -0.10605769784888253,
+        953.2569940201938
+      ],
+      "world_moment_Nm": [
+        -718.6071761456407,
+        22.91192920284639,
+        -0.3095665375093146
+      ],
+      "normal_CoP_xy_m": [
+        -0.024089513982362344,
+        -0.7540874347010441
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0001823913444164496
+    },
+    {
+      "step": 7744,
+      "total_force_N": [
+        -0.2325030873180367,
+        -0.09685188706498593,
+        953.2765452022431
+      ],
+      "world_moment_Nm": [
+        -719.0485043667222,
+        23.138765070020828,
+        -0.16347510161806156
+      ],
+      "normal_CoP_xy_m": [
+        -0.02432735042423632,
+        -0.7545064676947183
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0004991381455382379
+    },
+    {
+      "step": 7776,
+      "total_force_N": [
+        0.7679077025386505,
+        -0.0877669153851457,
+        953.1670480937464
+      ],
+      "world_moment_Nm": [
+        -718.761171741274,
+        23.33903205298911,
+        0.5948762559269554
+      ],
+      "normal_CoP_xy_m": [
+        -0.02453428085667046,
+        -0.7543153173337471
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0004104338662995932
+    },
+    {
+      "step": 7808,
+      "total_force_N": [
+        -0.6848406810604502,
+        -0.4823358922294574,
+        953.3722037886037
+      ],
+      "world_moment_Nm": [
+        -718.8080134819376,
+        22.67372624545674,
+        -0.5952126185192954
+      ],
+      "normal_CoP_xy_m": [
+        -0.02384265241101213,
+        -0.7541868151067233
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0004512306604920123
+    },
+    {
+      "step": 7840,
+      "total_force_N": [
+        0.24441399000352249,
+        0.4227246026857756,
+        952.0768593501998
+      ],
+      "world_moment_Nm": [
+        -717.7207481126893,
+        23.372870993057887,
+        0.43153859751310275
+      ],
+      "normal_CoP_xy_m": [
+        -0.024599722097616725,
+        -0.7540985833906794
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0003512535417707489
+    },
+    {
+      "step": 7872,
+      "total_force_N": [
+        1.1614655013545416,
+        -0.023097189114196226,
+        953.1371866469271
+      ],
+      "world_moment_Nm": [
+        -718.6932271424153,
+        23.3579097934493,
+        1.1517249251947579
+      ],
+      "normal_CoP_xy_m": [
+        -0.024558035040830258,
+        -0.754264746205342
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00039101400936465144
+    },
+    {
+      "step": 7904,
+      "total_force_N": [
+        1.4460446141129069,
+        0.4167681181570515,
+        952.2007053383277
+      ],
+      "world_moment_Nm": [
+        -718.0050256111017,
+        23.7600427404453,
+        1.4921112083027452
+      ],
+      "normal_CoP_xy_m": [
+        -0.024999521978374413,
+        -0.754293268458971
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0007903246662132151
+    },
+    {
+      "step": 7936,
+      "total_force_N": [
+        -0.11899015225935727,
+        -0.4083677094968152,
+        953.2785976407467
+      ],
+      "world_moment_Nm": [
+        -719.0293801691512,
+        23.04090933299081,
+        -0.1816266557848163
+      ],
+      "normal_CoP_xy_m": [
+        -0.02422739954050468,
+        -0.754483698457755
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.0004742504523817171
+    },
+    {
+      "step": 7968,
+      "total_force_N": [
+        0.3082630064454861,
+        -0.11413264292059466,
+        953.0285514338175
+      ],
+      "world_moment_Nm": [
+        -718.3837281894712,
+        22.967508729575755,
+        0.3686448319781528
+      ],
+      "normal_CoP_xy_m": [
+        -0.02415143350487138,
+        -0.7540325472679303
+      ],
+      "CoP_to_endpoint_COM_xy_m": 0.00011398771783884104
+    },
+    {
+      "step": 8000,
+      "total_force_N": [
+        0.43503361666807905,
+        -0.07821567123755813,
+        953.1893403473077
+      ],
+      "world_moment_Nm": [
+        -718.4219711963922,
+        23.019923371305534,
+        0.5455537740930119
+      ],
+      "normal_CoP_xy_m": [
+        -0.024198049246465164,
+        -0.7539463854459453
+      ],
+      "CoP_to_endpoint_COM_xy_m": 9.200259472594775e-05
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import tempfile
 from pathlib import Path
@@ -86,7 +87,10 @@ def write_bundle(doc, proof, parent_receipt, output, verification):
         if not dest.exists():
             with tempfile.TemporaryDirectory(dir=dest.parent) as scratch:
                 staged=Path(scratch)/'sidecar'
-                subprocess.run(['/bin/cp','-c','-p',source,staged],check=True)
+                if source.stat().st_dev == dest.parent.stat().st_dev:
+                    subprocess.run(['/bin/cp','-c','-p',source,staged],check=True)
+                else:
+                    shutil.copyfile(source,staged)
                 if file_hash(staged)!=data['sha256']:raise ValueError('Cardiac sidecar copy mismatch')
                 os.link(staged,dest)
         if file_hash(dest)!=data['sha256']:raise ValueError(f'Conflicting cardiac sidecar for {field}')

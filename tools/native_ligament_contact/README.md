@@ -11,3 +11,24 @@ On an Apple M6 running macOS 27.0 (26A425), both production Metal kernels matche
 The native entrance accepted all 34 ligament rows and included all 26 fascia regions, 318,226 deformable nodes, the verified skin/fat mass transfer and the variable-pleural-pressure owner. The first accepted step advanced 15.625 µs in 24.13 s of body runtime, or 6.48 × 10⁻⁷ real time. Process launch to exit took 167.40 s. The bed carried 1.57 N on the FEM skin. The 97.13 kg assembly was still in release. Supported rest requires sustained reaction close to its weight of 953 N. The entrance test cannot establish respiratory cycling, motion clearance or sustained throughput.
 
 The exact build commands, source and binary hashes, route, GPU comparison, respiratory proof, native launch, native mass receipt, compact trace and support impulses are under `evidence/human-connected-mesh-rebuild-20261105/m6-variable-pleural-native-20261120/native-ligament-contact`. This uses the executable live-parent skin/fat volume. The separate experimental girdle volume requires further geometry and density work before integration.
+
+## Motion and support measurements
+
+The full-volume scene accepted eight consecutive roots on Numi. Both material paths remained exterior to their owning bones and the other registered bone solids at each of the eight sampled poses. The independent audit uses all 185 registered bone banks, verifies face identity and fits the captured rigid meshes to within 0.45 µm. The first seven positions use the accepted articulated trace. The eighth uses the frozen native capture. Minimum and maximum FEM Jacobians at the terminal state were 0.92767 and 1.16449. The two ligaments remained nearly at reference length over this short interval.
+
+| Measurement | Full-volume native scene | Supported 32-section native reference |
+| --- | ---: | ---: |
+| Accepted time | 0.000125 s | 16.000001 s |
+| Native motion time | 102.41 s | 155.10 s |
+| Process launch to exit | 249.72 s | 163.28 s |
+| Native motion real-time factor | 0.00000122× | 0.10316× |
+| Launch-to-exit real-time factor | 0.000000501× | 0.09799× |
+| Ground reaction | 0 N at the final step | 952.91 N averaged from final-substep samples over the last two seconds |
+
+The full-volume run used 1,600 active Krylov columns over 100 cycles. Its coupled state and clock advanced, with zero root assistance. The registered skin at the terminal sample had zero self-intersections and zero bone intersections. Its nonocular intersections comprised 13,044 muscle, 76 tendon and 792 vessel triangle pairs. Of the 13,912 total, 13,910 have the same stable bank and triangle identities as witnesses in the earlier native entrance. Two pairs differ in each direction. The exact witnesses and ocular classifications are retained. Whole-body tissue clearance fails.
+
+The independent 16-second reference replay had identical physiological, ground-impulse and momentum traces to the prior 97.13 kg control. It completed three breaths and nineteen filling/ejection cycles. Its pleural pressure ranged from −770.01 to −470.34 Pa. The new point observations locate each of the 32 physical reactions during its actual substep. The maximum late horizontal distance between the normal centre of pressure and endpoint centre of mass was 1.02 mm. This model transmits local series skin/fat compression through the articulated point Jacobian. It does not qualify volumetric contact.
+
+Use the measured contact positions to initialize a resolved skin/fat volume only after anatomical registration and a physical equilibrium solve. In the condensed model the rigid material marker can sit below the plane while the two material layers compress. Copying that coordinate directly to the physical exterior would introduce as much as 4.61 mm of bed penetration. The reconstruction in `recover_loaded_sections.py` places each loaded exterior on the bed, apportions the displacement through the two existing material compliances and preserves the attached deep endpoint. All 32 final sections retain positive thickness. The computed layer positions and the independent impulse forces are recorded separately. No reference pressure or force was injected into the full scene.
+
+After a clean build, run `bash tools/native_ligament_contact/verify_motion.sh BUILD BUILD/current-package.json OUTPUT` with absolute paths on SSH Numi. The motion audit returns failure while the captured whole-body crossings remain. The exact compressed accepted geometry and sidecars remain on SSH Numi, with independently decompressed hashes in `eight-steps/capture-manifest.json`. A separate clean rebuild reproduced the one-step coupled CSV and all numerical GPU comparison results byte for byte.
