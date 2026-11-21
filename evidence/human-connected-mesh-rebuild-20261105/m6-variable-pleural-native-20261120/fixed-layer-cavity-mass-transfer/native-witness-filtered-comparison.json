@@ -1,0 +1,406 @@
+{
+  "control": {
+    "execution": {
+      "exit": 0,
+      "stop": "native_exit",
+      "wall_seconds": 182.83291045785882
+    },
+    "accepted_roots": 3,
+    "total_simulated_seconds": 4.68750022264e-05,
+    "gpu_root_ms": [
+      12844.70575,
+      17273.0475001,
+      9579.92295828
+    ],
+    "gpu_stages": [
+      {
+        "root": 1,
+        "name": "brain_advance",
+        "milliseconds": 0.015417
+      },
+      {
+        "root": 1,
+        "name": "brain_resolve",
+        "milliseconds": 0.001542
+      },
+      {
+        "root": 1,
+        "name": "matter_after_candidate_ready",
+        "milliseconds": 13.173458
+      },
+      {
+        "root": 1,
+        "name": "matter_after_frame_begin",
+        "milliseconds": 40.301666
+      },
+      {
+        "root": 1,
+        "name": "matter_after_microstep",
+        "milliseconds": 2.323083
+      },
+      {
+        "root": 1,
+        "name": "matter_final_certificate",
+        "milliseconds": 284.313584
+      },
+      {
+        "root": 1,
+        "name": "matter_newton_assembly",
+        "milliseconds": 1950.975579
+      },
+      {
+        "root": 1,
+        "name": "matter_newton_globalization",
+        "milliseconds": 608.989335
+      },
+      {
+        "root": 1,
+        "name": "matter_newton_linear",
+        "milliseconds": 13172.753627
+      },
+      {
+        "root": 1,
+        "name": "matter_post",
+        "milliseconds": 15.244292
+      },
+      {
+        "root": 1,
+        "name": "matter_pre",
+        "milliseconds": 7.789667
+      },
+      {
+        "root": 1,
+        "name": "respiratory_gas_exchange",
+        "milliseconds": 1.819542
+      },
+      {
+        "root": 1,
+        "name": "respiratory_mechanics",
+        "milliseconds": 5.759625
+      },
+      {
+        "root": 1,
+        "name": "respiratory_resolve",
+        "milliseconds": 0.703459
+      }
+    ],
+    "preparation": [
+      "whole_body_skin_fat_registered_volume_install=PASS replacement_route=registered_bundle O_rows=76153 I_rows=118196 D_rows=103505 volume_nodes=311020 child_tets=1448804 source_donors=74 maximum_source_mass_delta_kg=6.1095573045122364e-13 maximum_cooked_parent_node_mass_error_kg=5.3567854501126999e-08 maximum_cooked_parent_node_mass_relative_error=0.00018559389099858658 attachment_rows=14 direct_O_render=exact_topology_volume_node_map reduction_labels=typed_O_I_D support_witness_mapping=bounded_source_four_influence_surface source_world_mutated=1 physical_steps=0 motion_qualification=pending",
+      "resting_tissue_mass_partition=conserved initial_kg=97.131950691109523 executed_rigid_plus_FEM_kg=97.131949877168012 FEM_kg=14.415722789451912",
+      "resting_vascular_external_pressure=accepted_absolute_pleural_gauge continuation_s=5 compartment_mask=2080819",
+      "resting_initialization=dynamic_release recruitment_activation_cap=0 recruited_muscles=416 active_muscles=0 maximum_activation=0 normalized_residual_rms=95.4936900436 maximum_acceleration_residual=575.586591638 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+      "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=-0 mean_normal_force_N=-0 valid_contact_sample_count=0 impulse_on_plane_xyz_Ns=[0,0,0] angular_impulse_on_plane_xyz_Nms=[0,0,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0",
+      "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0138230966404 passive_ligament_min_effective_stretch=0.999995291233 passive_ligament_max_effective_stretch=1.00000941753 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=7.98775404339e-10 body_contact_samples=15449893 body_contact_audited_steps=3 body_contact_closed_samples=1597 body_contact_normal_force_N=0.0259151645005 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=1.67803076618e-11 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=3 capture=terminal_only"
+    ],
+    "failures": [],
+    "source_mass_receipts": {
+      "registered-volume-fractional-mass-7e5db8195b3116c4.json": "429edd2c38f782bc7e0cc8300e217323a5d97e7c0257157ae14c24c46d101b56"
+    },
+    "active_work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 208,
+        "cycles_with_work": 13,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 4,
+        "active_restart_begins": 9,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": true,
+        "last_newton_norm": 5.7276352e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 5.7276352e-06,
+        "last_fgmres_residual_norm": 5.7276352e-06,
+        "last_fgmres_initial_norm": 5.7276352e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 5.7276352e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 5.7276352e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "used_columns_sum": 336,
+        "cycles_with_work": 21,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 5,
+        "active_restart_begins": 16,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": true,
+        "last_newton_norm": 3.37538222e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 3.37538222e-06,
+        "last_fgmres_residual_norm": 3.37538222e-06,
+        "last_fgmres_initial_norm": 3.37538222e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 3.37538222e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 3.3752226e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "used_columns_sum": 128,
+        "cycles_with_work": 8,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 2,
+        "active_restart_begins": 6,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": true,
+        "last_newton_norm": 4.85227838e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 4.85227838e-06,
+        "last_fgmres_residual_norm": 4.85227838e-06,
+        "last_fgmres_initial_norm": 4.85227838e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 4.85227838e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 4.85214196e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      }
+    ]
+  },
+  "trial": {
+    "execution": {
+      "exit": 0,
+      "stop": "native_exit",
+      "wall_seconds": 179.238969292026
+    },
+    "accepted_roots": 3,
+    "total_simulated_seconds": 4.68750022264e-05,
+    "gpu_root_ms": [
+      13375.4575001,
+      13587.689125,
+      9573.58308323
+    ],
+    "gpu_stages": [
+      {
+        "root": 1,
+        "name": "brain_advance",
+        "milliseconds": 0.015667
+      },
+      {
+        "root": 1,
+        "name": "brain_resolve",
+        "milliseconds": 0.0015
+      },
+      {
+        "root": 1,
+        "name": "matter_after_candidate_ready",
+        "milliseconds": 13.162542
+      },
+      {
+        "root": 1,
+        "name": "matter_after_frame_begin",
+        "milliseconds": 40.30325
+      },
+      {
+        "root": 1,
+        "name": "matter_after_microstep",
+        "milliseconds": 2.312
+      },
+      {
+        "root": 1,
+        "name": "matter_final_certificate",
+        "milliseconds": 278.566
+      },
+      {
+        "root": 1,
+        "name": "matter_newton_assembly",
+        "milliseconds": 1494.356002
+      },
+      {
+        "root": 1,
+        "name": "matter_newton_globalization",
+        "milliseconds": 577.428747
+      },
+      {
+        "root": 1,
+        "name": "matter_newton_linear",
+        "milliseconds": 9924.990417
+      },
+      {
+        "root": 1,
+        "name": "matter_post",
+        "milliseconds": 15.227375
+      },
+      {
+        "root": 1,
+        "name": "matter_pre",
+        "milliseconds": 7.838708
+      },
+      {
+        "root": 1,
+        "name": "respiratory_gas_exchange",
+        "milliseconds": 1.820416
+      },
+      {
+        "root": 1,
+        "name": "respiratory_mechanics",
+        "milliseconds": 5.651041
+      },
+      {
+        "root": 1,
+        "name": "respiratory_resolve",
+        "milliseconds": 0.703833
+      }
+    ],
+    "preparation": [
+      "registered_volume_fixed_cavities=PASS cavities=5252 input_cells=1448804 output_cells=1447009 affected_nodes=29473 restricted_transport_cavities=4 maximum_transport_distance_used_m=0.18743306137078738 minimum_patch_quality_before=1.0000559540995158e-05 minimum_patch_quality_after=1.0715616187726408e-05 maximum_nodal_mass_change_kg=0.00085657939404615649 nodal_mass_l1_change_kg=0.039339797621336055 maximum_source_mass_change_kg=4.3298697960381105e-15 maximum_source_first_moment_change_kg_m=4.0332320816460765e-17 lumped_first_moment_change_kg_m=1.8328532691581981e-06,-5.2961926668942445e-07,-1.8971684106117972e-07 proposal_sha256=a20d43c3b845f9775926d406faefb958ceea091b2bf53de87a3385527579d802 composition_sha256=f26291b95b33c87822fa8bd1f503c81e6dc80a018fbed1d39f6985bcd2584d9e points_fixed=1 boundary_exact=1 volume_exact=1 mass_conservative=1 source_bundle=immutable_provenance physical_steps=0 motion_qualification=pending",
+      "whole_body_skin_fat_registered_volume_install=PASS replacement_route=registered_bundle O_rows=76153 I_rows=118196 D_rows=103505 volume_nodes=311020 child_tets=1447009 source_donors=74 maximum_source_mass_delta_kg=6.1095573045122364e-13 maximum_cooked_parent_node_mass_error_kg=5.3567854501126999e-08 maximum_cooked_parent_node_mass_relative_error=0.00018559389099858658 attachment_rows=14 direct_O_render=exact_topology_volume_node_map reduction_labels=typed_O_I_D support_witness_mapping=bounded_source_four_influence_surface source_world_mutated=1 physical_steps=0 motion_qualification=pending",
+      "resting_tissue_mass_partition=conserved initial_kg=97.131950691109523 executed_rigid_plus_FEM_kg=97.131949877168054 FEM_kg=14.415722789451944",
+      "resting_vascular_external_pressure=accepted_absolute_pleural_gauge continuation_s=5 compartment_mask=2080819",
+      "resting_initialization=dynamic_release recruitment_activation_cap=0 recruited_muscles=416 active_muscles=0 maximum_activation=0 normalized_residual_rms=95.4936900436 maximum_acceleration_residual=575.586591638 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+      "resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=-0 mean_normal_force_N=-0 valid_contact_sample_count=0 impulse_on_plane_xyz_Ns=[0,0,0] angular_impulse_on_plane_xyz_Nms=[0,0,0] root_dt_s=1.5625e-05 scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0",
+      "resting_fascia_fem_terminal_audit=passed anatomical_regions=26 objects=12 nodes=1202 tetrahedra=2127 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 passive_ligament_latest_transaction_accepted=1 passive_ligament_max_tension_N=0.0138230966404 passive_ligament_min_effective_stretch=0.999995291233 passive_ligament_max_effective_stretch=1.00000941753 passive_ligament_force_residual_N=0 passive_ligament_moment_residual_Nm=7.98775404339e-10 body_contact_samples=15449893 body_contact_audited_steps=3 body_contact_closed_samples=1597 body_contact_normal_force_N=0.0259133018553 body_contact_force_residual_N=0 body_contact_moment_residual_Nm=1.26918669154e-11 total_passive_ligament_force_rows=34 legacy_passive_force_rows=0 accepted_steps=3 capture=terminal_only"
+    ],
+    "failures": [],
+    "source_mass_receipts": {
+      "registered-volume-fractional-mass-7e5db8195b3116c4.json": "429edd2c38f782bc7e0cc8300e217323a5d97e7c0257157ae14c24c46d101b56"
+    },
+    "active_work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 224,
+        "cycles_with_work": 14,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 4,
+        "active_restart_begins": 10,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": true,
+        "last_newton_norm": 8.7194021e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 8.7194021e-06,
+        "last_fgmres_residual_norm": 8.7194021e-06,
+        "last_fgmres_initial_norm": 8.7194021e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 8.7194021e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 8.71939756e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "used_columns_sum": 240,
+        "cycles_with_work": 15,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 3,
+        "active_restart_begins": 12,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": true,
+        "last_newton_norm": 4.61034324e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 4.61034324e-06,
+        "last_fgmres_residual_norm": 4.61034324e-06,
+        "last_fgmres_initial_norm": 4.61034324e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 4.61034324e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 4.61032914e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "used_columns_sum": 128,
+        "cycles_with_work": 8,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 2,
+        "active_restart_begins": 6,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": true,
+        "last_newton_norm": 5.49746801e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 5.49746801e-06,
+        "last_fgmres_residual_norm": 5.49746801e-06,
+        "last_fgmres_initial_norm": 5.49746801e-06,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 5.49746801e-06,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 5.49691595e-06,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 0,
+        "status_object": 4294967295,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": 0
+      }
+    ]
+  },
+  "nonidentical_trace_columns_max_absolute_delta": {
+    "blood_continuity_residual_accum_ml": 6.66133814775e-10,
+    "blood_physical_delta_accum_ml": 6.66133814775e-10,
+    "blood_endpoint_minus_physical_ml": 6.661340000110351e-10,
+    "pre_projection_equality_residual_generalized_s": 2.2807200572500002e-11,
+    "post_projection_equality_residual_generalized_s": 7.2586103794000024e-12,
+    "equality_position_projection_max_generalized": 1.7208456881687e-15,
+    "equality_velocity_projection_max_generalized_s": 5.82076609135e-11
+  },
+  "measured_launch_realtime_factor": 2.615223821669531e-07,
+  "integrated_motion_qualification": false
+}
