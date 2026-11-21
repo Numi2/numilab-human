@@ -16,7 +16,13 @@ if 'NUMI_HUMAN_PELVIC_OBSERVE_LINEAR_ROOT' in os.environ:
     observed=int(os.environ['NUMI_HUMAN_PELVIC_OBSERVE_LINEAR_ROOT'])
     if not 0<=observed<steps:raise ValueError('Observed root must be inside trial')
     env['NUMI_HUMAN_PELVIC_OBSERVE_LINEAR_ROOT']=str(observed)
-env['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']=str(steps)
+captures={steps}
+if len(sys.argv)>8 and sys.argv[8]:
+    for token in sys.argv[8].split(','):
+        if not token.isdecimal() or not 0<=int(token)<=steps:
+            raise ValueError('Capture must identify a root within this run')
+        captures.add(int(token))
+env['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']=','.join(str(n) for n in sorted(captures))
 # The retained reduced-body timeout assumed 40 ms per root. Recent physical
 # P1 contact replays have taken about 0.5 s per root, before export.
 wall_rate=2.0 if enabled and 'constitutive_boundary' in manifest else .040

@@ -56,6 +56,29 @@ def report(run,ctrl):
         'continuous_between_step_clearance':'unmeasured',
         'qualification_target_seconds':16.,
     }
+    skin=run/'exact-skin-surface.json'
+    if skin.is_file():
+        receipt=json.loads(end.read_text())
+        audit=json.loads(skin.read_text())
+        if (audit['accepted_step']!=accepted or audit['accepted_pack_sha256']!=receipt['pack_file_sha256']
+                or audit['accepted_root_fingerprint_hex']!=receipt['accepted_root_fingerprint_hex']
+                or audit['accepted_time_s']!=receipt['accepted_time_s']):
+            raise ValueError('Whole-skin audit belongs to another accepted pose')
+        targets=audit['surfaces']
+        keys={(row['semantic'],row['stable_id'],row['primitive']) for row in targets}
+        if len(keys)!=len(targets) or not targets:raise ValueError('Missing or duplicate anatomical target identities')
+        counts={k:0 for k in audit['crossing_pairs_by_semantic']}
+        for row in targets:
+            if row['count']!=len(row['triangle_pairs']):raise ValueError('Incomplete skin crossing witnesses')
+            counts[str(row['semantic'])]+=row['count']
+        if counts!=audit['crossing_pairs_by_semantic']:raise ValueError('Skin audit totals disagree')
+        self_pairs=audit['self_intersections']['count']
+        if self_pairs!=len(audit['self_intersections']['triangle_pairs']):raise ValueError('Incomplete skin self witnesses')
+        nonocular=sum(row['count'] for row in targets if not row['ocular_source_id'])
+        result['whole_skin_endpoint']=dict(step=accepted,time_s=audit['accepted_time_s'],pack_sha256=audit['accepted_pack_sha256'],
+            audit_sha256=sha(skin),targets=len(keys),self_pairs=self_pairs,nonocular_pairs=nonocular,
+            erroneous_surface_witnesses_present=bool(self_pairs or nonocular),limits=audit['limit'])
+        result['motion_scope']['whole_body_crossing_audit']='outer skin versus registered surface targets at this endpoint'
     crossing=run/'native-crossings.json'
     if crossing.exists():
         c=json.loads(crossing.read_text())
