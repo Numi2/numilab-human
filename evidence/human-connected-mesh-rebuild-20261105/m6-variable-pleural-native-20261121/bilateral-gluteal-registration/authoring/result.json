@@ -1,0 +1,134 @@
+{
+  "source": {
+    "pack": "dc2f047506e459fef145b2c512cfd70bd78047e2612e5351584dc5026bda853f",
+    "receipt": "88a41bceb4cf02823b21fd1c6e9c70df13f570c0138a1dac97143ee618e8965b",
+    "soft_payload": "8874b3fede93825d2e4ddb248231dc9d2c598e0155f8473c624fcb935d6b1042",
+    "bone_payload": "bbcb10b3f4aa832959d7dd00afae4f980002cf64a2c9db9baad1706d95624548"
+  },
+  "mesher_sha256": "775e0b4e5b017255b8cee6b677319d004b9c68b73887858558db393c5d46152c",
+  "predicate_sha256": "d84eee9dd14483b2b09e7642f0d95baeaefeab8d29fc1dcbca417525b1d86ac9",
+  "scope": "Signed source surface and facet-preserving volume in registered entrance coordinates. Exact triangle-pair predicates. Contact class, interior containment, material reference, attachments and donor debit require separate qualification.",
+  "muscles": {
+    "29": {
+      "label": "right gluteus maximus",
+      "source_member": "isa_BP3D_4.0_obj_99/FJ1418.obj",
+      "member_sha256": "e576dd907b8bb9b373beda7ba9cb14cce4c958def4b782ad6563b6e2fbe71d46",
+      "donors": [
+        {
+          "core_body_index": 128,
+          "myosim_body": "pelvis"
+        },
+        {
+          "core_body_index": 131,
+          "myosim_body": "femur_r"
+        }
+      ],
+      "myosim_actuators": [
+        "glmax1_r",
+        "glmax2_r",
+        "glmax3_r"
+      ],
+      "nodes": 1190,
+      "triangles": 2372,
+      "topology": {
+        "nonmanifold_or_open": 0,
+        "inconsistent_winding": 0,
+        "zero_area": 0
+      },
+      "signed_volume_m3": 0.00036989041920716323,
+      "crossing_counts": {
+        "51007/4294966546": 115,
+        "51005/63": 95,
+        "51004/2": 81,
+        "51005/13": 206,
+        "51005/17": 184,
+        "51005/53": 97,
+        "51004/18": 140,
+        "51004/1": 363,
+        "51005/43": 79,
+        "51010/459": 224,
+        "51005/30": 199
+      },
+      "intersection_witness_sha256": "457c22f4e17895851517f0e20986da6c2288587191662b72b50785481b7b0222",
+      "mesher_arguments": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-052/tetgen",
+        "-pzYQf",
+        "posterior/29/source.poly"
+      ],
+      "mesher_exit_code": 0,
+      "volume_nodes": 1190,
+      "tetrahedra": 3587,
+      "positive_volume_m3": 0.00036989041920716323,
+      "min_float32_cell_m3": 1.8116262369443653e-17,
+      "boundary_facets_exact": 2372,
+      "mesh_sha256": {
+        "source.poly": "db1a5dbf99849b5fcea103c68bfbfdbb7d808f171d073e0ab2950e51ab85f834",
+        "source.1.edge": "c87a640b5991b30ee412a27393dae1bed5147d4062aa908242713049b0502a50",
+        "source.1.ele": "2c9158fb7ad325172a7a4c2ff4cffdb7f55d763e796aa31b7833f96688f51a0f",
+        "source.1.face": "a4e787be58fe4e9ea6812a27adc0041e44eef6e1c71861408d7658a95b72f6b3",
+        "source.1.node": "690b40c3d69f29aa9972adad1b3be5e525f35d33457627166abba41459b47511"
+      }
+    },
+    "30": {
+      "label": "left gluteus maximus",
+      "source_member": "isa_BP3D_4.0_obj_99/FJ1418M.obj",
+      "member_sha256": "abde060eaa4c4e1b3da0a865a804a2c8b7790d2994cc1fe8c133dd541c92d90e",
+      "donors": [
+        {
+          "core_body_index": 128,
+          "myosim_body": "pelvis"
+        },
+        {
+          "core_body_index": 145,
+          "myosim_body": "femur_l"
+        }
+      ],
+      "myosim_actuators": [
+        "glmax1_l",
+        "glmax2_l",
+        "glmax3_l"
+      ],
+      "nodes": 1190,
+      "triangles": 2372,
+      "topology": {
+        "nonmanifold_or_open": 0,
+        "inconsistent_winding": 0,
+        "zero_area": 0
+      },
+      "signed_volume_m3": 0.00037084178471535667,
+      "crossing_counts": {
+        "51007/4294966545": 6,
+        "51007/4294966546": 129,
+        "51005/64": 93,
+        "51004/3": 83,
+        "51005/14": 232,
+        "51005/18": 172,
+        "51005/54": 86,
+        "51004/19": 118,
+        "51004/1": 392,
+        "51005/44": 77,
+        "51010/459": 258,
+        "51005/29": 199
+      },
+      "intersection_witness_sha256": "0eb9ad34701d0566a6cbdbd6cd73fa6dd1696766bc6a22572615c6af6feeca14",
+      "mesher_arguments": [
+        "/Users/numi/Work/numi-human-connected-surface-069/D/connected-obstacle-207/physical-transfer-209/fine-physical-volume-706/tetgen-explicit-no-improvement-052/tetgen",
+        "-pzYQf",
+        "posterior/30/source.poly"
+      ],
+      "mesher_exit_code": 0,
+      "volume_nodes": 1190,
+      "tetrahedra": 3574,
+      "positive_volume_m3": 0.00037084178471535667,
+      "min_float32_cell_m3": 1.7889370036142808e-17,
+      "boundary_facets_exact": 2372,
+      "mesh_sha256": {
+        "source.poly": "01a25695b2b5d373a551c0d8df1b892d7745fa6e21780c059ec62e5e626e70b9",
+        "source.1.edge": "fb473722131802b6fef1a08613878007b9ed6198119945ddd0fe55e73a8b295a",
+        "source.1.ele": "d5d11c9eed6d573c774334c8b23a5cee0b890441292098d7ed559dcce24a7a8e",
+        "source.1.face": "ac332cd3000831fef78c557e86fd23161112c16e6d7aa8b5c74fabb63ed4ed21",
+        "source.1.node": "0efeb508124e95ed4e91334e69db43c60e92ef5bae70ba338d0807b8a7faff53"
+      }
+    }
+  }
+}
