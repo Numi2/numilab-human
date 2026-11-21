@@ -64,7 +64,9 @@ def run(a):
     rows = json.loads(pair_file.read_text())
     counts = {str(l): sum(len(p) for _, layer, p in rows if l == layer) for l in layers}
     capfile = a.output / "carrier-capacity.json"
-    capacity(data, positions, a.allocation, a.flow, capfile, True)
+    capacity(
+        data, positions, a.allocation, a.flow, capfile, True, native_volumes=native
+    )
     stat = json.loads(capfile.read_text())
     mats = {}
     for tag in (15, 16):

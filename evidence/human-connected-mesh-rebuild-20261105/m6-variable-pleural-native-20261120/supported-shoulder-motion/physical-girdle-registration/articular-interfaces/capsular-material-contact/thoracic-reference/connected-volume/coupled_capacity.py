@@ -6,7 +6,7 @@ import numpy as np
 from transfer_connected_volume import geometry
 
 
-def run(data, nodes, owner, executable, out, all_edges):
+def run(data, nodes, owner, executable, out, all_edges, *, native_volumes=None):
     source = owner / "refit-density-closed-flow.npz"
     ref = json.loads((owner / "refit-density-closure.json").read_text())
     with source.open("rb") as stream:
@@ -16,6 +16,17 @@ def run(data, nodes, owner, executable, out, all_edges):
     z = np.load(data)
     allocation = np.load(source)
     volume, q = geometry(np.load(nodes), z["tets"])
+    if native_volumes is not None:
+        native = np.fromfile(native_volumes, dtype=np.float64)
+        if (
+            native.shape != volume.shape
+            or not np.all(np.isfinite(native))
+            or not np.allclose(native, volume, rtol=2e-7, atol=1e-24)
+        ):
+            raise ValueError(
+                "Native reference volumes differ from the emitted physical mesh"
+            )
+        volume = native
     if min(volume) <= 1e-18 or min(q) <= 1e-5:
         raise ValueError("Invalid emitted volume")
     c = allocation["carrier_row"]
@@ -110,6 +121,11 @@ def run(data, nodes, owner, executable, out, all_edges):
         solver=(result.stdout + second.stdout).strip().splitlines(),
         geometry_sha256=hashlib.sha256(np.load(nodes).tobytes()).hexdigest(),
     )
+    if native_volumes is not None:
+        with native_volumes.open("rb") as stream:
+            stat["native_reference_volume_sha256"] = hashlib.file_digest(
+                stream, "sha256"
+            ).hexdigest()
     np.savez_compressed(
         out.with_suffix(".npz"), group_mass=assigned, lower=low, upper=up
     )
