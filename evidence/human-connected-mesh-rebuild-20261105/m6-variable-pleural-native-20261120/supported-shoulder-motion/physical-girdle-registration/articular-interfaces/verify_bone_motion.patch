@@ -1,0 +1,11 @@
+--- a/verify_bone_motion.py
++++ b/verify_bone_motion.py
+@@ -27,7 +27,7 @@
+     d=json.loads(bones.with_suffix('.manifest.json').read_text());assert digest(bones)==d['payload']['sha256']
+     changed={row['stable_id'] for row in d['source']['connected_girdle_parent']['changed_anchors']}
+     new=old.load_local_meshes(raw,newcat,vo,io)
+-    assert len(new)==185 and changed=={8,9,10,11}
++    assert len(new)==185 and changed in ({8,9},{8,9,10,11})
+     for sid in ms:
+         assert np.array_equal(ms[sid][1],new[sid][1])
+         if sid not in changed:assert np.array_equal(ms[sid][0],new[sid][0])

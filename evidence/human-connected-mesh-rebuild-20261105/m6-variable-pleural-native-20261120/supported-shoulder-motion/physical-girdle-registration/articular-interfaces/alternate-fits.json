@@ -1,0 +1,204 @@
+{
+  "pose_pinned_native": "f001ef458d62daaa4fdaf748e8b5cd9401f62b9c3d340280c056dabd0c5e3723",
+  "fits": [
+    {
+      "trial": "connected_bone_only",
+      "girdle": [
+        [
+          0,
+          719,
+          0
+        ],
+        [
+          -3,
+          732,
+          0
+        ],
+        [
+          32,
+          734,
+          0
+        ],
+        [
+          256,
+          731,
+          0
+        ],
+        [
+          8000,
+          760,
+          0
+        ]
+      ],
+      "frozen_layers": {
+        "1": 1098,
+        "4294966545": 1178,
+        "4294966546": 1299
+      }
+    },
+    {
+      "trial": "bone_and_tissue_trust_region",
+      "girdle": [
+        [
+          0,
+          719,
+          158
+        ],
+        [
+          -3,
+          732,
+          0
+        ],
+        [
+          32,
+          734,
+          0
+        ],
+        [
+          256,
+          731,
+          0
+        ],
+        [
+          8000,
+          760,
+          106
+        ]
+      ],
+      "landmarks": [
+        {
+          "side": "l",
+          "joint_site_errors_m": [
+            0.0052989136223413925,
+            0.018529729135901334,
+            0.06189271442971256
+          ],
+          "minimum_sampled_grid_distance_m": -0.00019169993174728006
+        },
+        {
+          "side": "r",
+          "joint_site_errors_m": [
+            0.007511973094036405,
+            0.017444803104803678,
+            0.06184811775966604
+          ],
+          "minimum_sampled_grid_distance_m": -0.0014707118971273303
+        }
+      ]
+    },
+    {
+      "trial": "rigid_three_joint_correspondences",
+      "girdle": [
+        [
+          0,
+          719,
+          1761
+        ],
+        [
+          -3,
+          732,
+          1601
+        ],
+        [
+          32,
+          734,
+          1443
+        ],
+        [
+          256,
+          731,
+          1247
+        ],
+        [
+          8000,
+          760,
+          1264
+        ]
+      ],
+      "frozen_layers": {
+        "1": 496,
+        "4294966545": 621,
+        "4294966546": 810
+      },
+      "landmarks": [
+        {
+          "side": "l",
+          "joint_site_errors_m": [
+            0.004754808920819043,
+            0.0004236795916115066,
+            0.0006386855552545826
+          ],
+          "minimum_sampled_grid_distance_m": -0.013251773081719875
+        },
+        {
+          "side": "r",
+          "joint_site_errors_m": [
+            0.0041424692552963485,
+            0.0011431199387665083,
+            0.0008668908516265986
+          ],
+          "minimum_sampled_grid_distance_m": -0.01576080545783043
+        }
+      ]
+    },
+    {
+      "trial": "volume_preserving_medial_axis_map",
+      "frozen_layers": {
+        "1": 0,
+        "4294966545": 0,
+        "4294966546": 256
+      },
+      "over_254_poses": 0
+    },
+    {
+      "trial": "free_vertex_inertia_fit",
+      "geometric_admission": "rejected for a reversed face",
+      "rows": [
+        {
+          "stable_id": 8,
+          "original_volume_m3": 2.7874515070368475e-05,
+          "pre_balance_volume_m3": 2.7006370465905866e-05,
+          "final_volume_m3": 2.7874515016915034e-05,
+          "relative_volume_error": -1.9176455978708873e-09,
+          "max_balancing_shift_m": 0.002500000000000002,
+          "normalized_moment_residual": [
+            0.0005204867931682955,
+            0.005127286280179634,
+            0.025722441104919707,
+            -0.017461160867038403,
+            -0.05151678460615938,
+            -0.05750781818589593,
+            0.03254712655877025,
+            -0.050609236473909136,
+            0.06245276870836243,
+            -0.03600134288152379
+          ],
+          "balanced_vertices": 95,
+          "candidate_nodes_with_positive_clearance": 96
+        },
+        {
+          "stable_id": 9,
+          "original_volume_m3": 2.7780859148799113e-05,
+          "pre_balance_volume_m3": 2.6658836396907135e-05,
+          "final_volume_m3": 2.7780859302915104e-05,
+          "relative_volume_error": 5.547560411045538e-09,
+          "max_balancing_shift_m": 0.002500000000000002,
+          "normalized_moment_residual": [
+            -0.003015099323678605,
+            0.006351954468122177,
+            -0.04727322166714005,
+            -0.0388238207668424,
+            -0.060967115491550095,
+            0.06695013382398138,
+            0.04073112340296234,
+            -0.07454087931716347,
+            -0.0850856815479605,
+            -0.06153894852039632
+          ],
+          "balanced_vertices": 114,
+          "candidate_nodes_with_positive_clearance": 111
+        }
+      ]
+    }
+  ]
+}

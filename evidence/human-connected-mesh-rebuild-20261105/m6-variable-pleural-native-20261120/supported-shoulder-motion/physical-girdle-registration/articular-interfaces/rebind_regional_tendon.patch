@@ -1,0 +1,24 @@
+--- a/rebind_regional_tendon.py
++++ b/rebind_regional_tendon.py
+@@ -27,19 +27,8 @@
+     cfg=json.loads(launch.read_text());old=Path(cfg['argv'][3]);new=bones/BNAME
+     td=Path(cfg['argv'][cfg['argv'].index('--tendon-payload')+1]);assert cfg['pins'][str(td)]==sha(td)
+     p,q,r=[unpack(v) for v in (td,regional0/TNAME,regional1/TNAME)]
+-    # Verify the entire rest of the native model byte-for-byte. The header
+-    # discriminator and exactly four seven-component rigid poses may differ.
+-    a,b=old.read_bytes(),new.read_bytes()
+-    assert len(a)==len(b) and a[:24]==b[:24] and a[28:60]==b[28:60]
+-    change={8,9,10,11}; owners={};controls=[]
+-    for i in range(p[1][7]):
+-        start=60+60*i; aa,bb=a[start:start+60],b[start:start+60]
+-        body,*_,s=struct.unpack_from('<6I',aa)
+-        assert s==i+1
+-        if s in change:
+-            assert aa[:24]==bb[:24] and aa[52:]==bb[52:];owners[body]=s
+-        else: assert aa==bb
+-    end=60+p[1][7]*60;assert a[end:]==b[end:] and len(owners)==4
++    from rebind_articular_tendon_patch import validate
++    change,owners=validate(old,new);controls=[]
+     assert p[1][-1]==q[1][-1]==bytes.fromhex(sha(old)) and r[1][-1]==bytes.fromhex(sha(new))
+     assert p[1][1:6]==q[1][1:6]==r[1][1:6] and p[1][-3:-1]==q[1][-3:-1]==r[1][-3:-1]
+     fields=('muscle','endpoint','body_index','source_site_index','route_node_index','source_local_point_m','resolved_local_point_m','endpoint_migration_m')
