@@ -1,0 +1,20 @@
+--- /Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/sacral-retinacula-049/predict_distributed_preload.py	2026-11-20 16:38:40
++++ predict_distributed_preload.py	2026-11-20 16:47:38
+@@ -8,7 +8,7 @@
+ from scipy.optimize import brentq
+ 
+ from audit import digest, rows
+-from lateral import LateralSeedEnergy
++from exact_preload_segments import ExactSegmentSeedEnergy as LateralSeedEnergy
+ from predict import TISSUE_MATERIAL, SeedEnergy, ip_contact, match_ipc_seed, material_parameters, solve
+ 
+ FLOOR_LOADS = (.01, .025, .05, .075, .10, .20, .35, .60, 1.)
+@@ -121,7 +121,7 @@
+     np.savez_compressed(a.output / "seed.npz", deformation_m=shape, rigid_seed=v[model.q],
+                         contact_force_n=normal, determinant=jac, load_fraction=rate)
+     report = {
+-        "scope": "Offline three-layer elastic preload under one fixed flat bed. The deep boundary is prescribed relative to the three floating coordinates. No state is installed. Lateral and normal modes use the same constitutive and bed contact energies.",
++        "segment_guard": "exact-cubic", "scope": "Offline three-layer elastic preload under one fixed flat bed. The deep boundary is prescribed relative to the three floating coordinates. No state is installed. Lateral and normal modes use the same constitutive and bed contact energies.",
+         "hashes": {f.name: digest(f) for f in (nodes_path, cells_path, fit_path, mass_path, a.balance, commands)},
+         "constitutive_hashes": materials, "dt_s": dt, "width_m": width, "initializer_penalty_n_m": a.warm, "descent_fallback": a.descent_fallback, "deep_tangential": a.deep_tangential,
+         "lo_j": model.min_j, "hi_j": model.max_j, "lateral_coordinates": model.n - 3 - 2 * outer,
