@@ -57,3 +57,54 @@ kernel void nm_pelvic_crossing_admit(constant uint4& d [[buffer(0)]],device cons
             status[0].code=MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED;
     }
 }
+
+// Retain the worst signed query in each direction at a rejected endpoint.
+// This observer receives the already measured field and never changes forces or status.
+kernel void nm_pelvic_rejected_queries(constant uint4& d [[buffer(0)]],device const MRNumiHumanStandStatusGPU* status [[buffer(1)]],
+    device const float* gaps [[buffer(2)]],device const PelvicPoolSample* pool [[buffer(3)]],device uint4* trace [[buffer(4)]],
+    uint group [[threadgroup_position_in_grid]],uint lane [[thread_index_in_threadgroup]]){
+    if(status[0].code==MR_NUMI_HUMAN_STAND_SUCCESS||d.x>=d.y||trace[group].w)return;
+    uint kind=group%3,side=group/3;uint ends[4]={0,pelvicReverseStart,pelvicFiniteStart,d.z};
+    float worst=INFINITY;uint id=UINT_MAX;
+    for(uint i=ends[kind]+lane;i<ends[kind+1];i+=128){
+        if((pool[i].contact.domain.y==145)!=bool(side))continue;
+        float v=gaps[i];if(v<worst){id=i;worst=v;}
+    }
+    threadgroup uint index[128];threadgroup float value[128];
+    index[lane]=id;value[lane]=worst;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){
+        if(lane<n&&(value[lane+n]<value[lane]||(value[lane+n]==value[lane]&&index[lane+n]<index[lane]))){
+            index[lane]=index[lane+n];value[lane]=value[lane+n];
+        }
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    if(!lane){uint i=index[0];trace[group]=uint4(i,as_type<uint>(value[0]),i<UINT_MAX?pool[i].contact.domain.z:0,d.x+1);}
+}
+
+// Permit nonlinear iteration to reopen a provisionally converged contact solve.
+// The exact pass is encoded indirectly only when both bulk/pressure solves are ready.
+kernel void nm_pelvic_request_surface_check(constant uint4& d [[buffer(0)]],device const uint* needed [[buffer(1)]],
+    device uint* control [[buffer(2)]],uint i [[thread_position_in_grid]]){
+    if(i)return;
+    if(d.y){control[0]=0;control[5]=0;control[6]=0;}
+    bool test=!control[0]&&!needed[0]&&!needed[1];
+    control[1]=test;control[2]=test?d.x:0;control[3]=1;control[4]=1;
+    if(test)++control[5];
+}
+kernel void nm_pelvic_resume_surface_solve(constant uint4& d [[buffer(0)]],device uint* needed [[buffer(1)]],
+    device uint* control [[buffer(2)]],device const uint4* partial [[buffer(3)]],
+    device const uint4* cortexFaces [[buffer(4)]],uint lane [[thread_index_in_threadgroup]]){
+    if(!control[1])return;
+    uint flags=0;
+    for(uint i=lane;i<d.x;i+=128){
+        uint4 p=partial[i];
+        if(p.w)flags|=3;
+        else if(p.x)flags|=1u<<cortexFaces[p.y].w;
+    }
+    threadgroup uint r[128];r[lane]=flags;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){if(lane<n)r[lane]|=r[lane+n];threadgroup_barrier(mem_flags::mem_threadgroup);}
+    if(!lane){
+        if(r[0]==0)control[0]=1;
+        else{++control[6];for(uint side=0;side<2;++side)if(r[0]&(1u<<side))needed[side]=1;}
+    }
+}

@@ -24,13 +24,24 @@ if certified:
     files.append('cortical-certificate-faces')
     size=16*sum(r['count'] for r in manifest['cortical_certificate']['banks'])
     if size==0 or (assets/'cortical-certificate-faces.bin').stat().st_size!=size:raise ValueError('Cortical face count')
+shared_facets='shared_finite_faces' in manifest
+if shared_facets:
+    if not certified:raise ValueError('Physical facet assembly requires its observed surface')
+    files.append('shared-finite-faces')
+    if (assets/'shared-finite-faces.bin').stat().st_size!=16*manifest['finite_facets']['number']:raise ValueError('Finite face map size')
+forward='shared_forward_surface' in manifest
+if forward:
+    if not shared_facets:raise ValueError('Forward queries need the shared material/cortical registration')
+    files.extend(['forward-surface-samples','forward-cortical-faces'])
+    if (assets/'forward-surface-samples.bin').stat().st_size!=32*manifest['closed_reverse']['first']:raise ValueError('Forward sites')
+    if (assets/'forward-cortical-faces.bin').stat().st_size*10!=(assets/'cortical-triangles.bin').stat().st_size:raise ValueError('Forward faces')
 facet_rows=manifest['finite_facets'].get('rows_per_pair',2)
 assert facet_rows in (2,16)
 face_spec=manifest['finite_facets']
 assert face_spec['start']+facet_rows*face_spec['number']==manifest['contact_pool']['count']
 assert (assets/'pelvic-finite-pairs.bin').stat().st_size==17*16*face_spec['number']
 assert manifest['specimen']['mu']==12000 and manifest['specimen']['lam']==120000 and manifest['specimen']['jmin']==.20 and manifest['specimen']['jmax']==5
-decl='inline constexpr bool pelvicHasCrossingCertificate='+('true' if certified else 'false')+';\ninline constexpr bool pelvicMaterialReferenceSurface='+('true' if reference_surface else 'false')+';\nstruct PelvicMaterialFile { const char* name; unsigned long bytes; const char* hash; };\ninline constexpr PelvicMaterialFile pelvicMaterialFiles[]={\n'
+decl='inline constexpr bool pelvicHasSharedForward='+('true' if forward else 'false')+';\ninline constexpr bool pelvicHasSharedFacets='+('true' if shared_facets else 'false')+';\ninline constexpr bool pelvicHasCrossingCertificate='+('true' if certified else 'false')+';\ninline constexpr bool pelvicMaterialReferenceSurface='+('true' if reference_surface else 'false')+';\nstruct PelvicMaterialFile { const char* name; unsigned long bytes; const char* hash; };\ninline constexpr PelvicMaterialFile pelvicMaterialFiles[]={\n'
 for name in files:
     p=assets/(name+'.bin');digest=sha(p);assert digest==manifest['files'][p.name]
     decl+='{"%s",%d,"%s"},\n'%(p.name,p.stat().st_size,digest)
@@ -65,6 +76,8 @@ dimensions+=constvec('pelvicFactorDims','uint4',[[r['coordinate_start'],r['coord
 dimensions+=constvec('pelvicFactorUpper','uint2',[r['upper'] for r in fact])
 dimensions+='constant uint pelvicFacetRows='+str(facet_rows)+'u;\n'
 dimensions+='constant uint pelvicFiniteStart=%du;\n'%manifest['finite_facets']['start']
+dimensions+='constant bool pelvicSharedForward='+('true' if forward else 'false')+';\n'
+dimensions+='constant bool pelvicSharedFacets='+('true' if shared_facets else 'false')+';\n'
 dimensions+='constant bool pelvicCachedCortex='+('true' if certified else 'false')+';\n'
 dims=dimensions+'constant uint pelvicReverseStart='+str(surface['first'])+'u;\nconstant uint4 pelvicFlex[2]={'+','.join('uint4(%d,%d,%d,%d)'%tuple(r[k] for k in ('first_node','nodes','input_nodes','first_vector')) for r in spec)+'};\n'
 (out/'human_respiration.metal').write_text((src/'human_respiration.metal').read_text()+dims+'\n#include "pelvic_contact.metalinc"\n#include "pelvic_material_validate.metalinc"\n#include "pelvic_end_geometry.metalinc"\n#include "pelvic_cortical_frame.metalinc"\n')

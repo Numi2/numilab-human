@@ -38,7 +38,7 @@ def report(run,ctrl):
         if not crossing.exists() or int(verified[-1]['transverse_pairs'])!=c['total_transverse']:
             raise ValueError('Native and independent endpoint predicates disagree')
         result['certified_regional_endpoints']=len(verified)
-        result['maximum_accepted_interval_constraint_violation_m']=result.pop('maximum_accepted_sampled_penetration_m')
+        result['maximum_accepted_reported_contact_violation_m']=result.pop('maximum_accepted_sampled_penetration_m')
         result['cortical_endpoint_trace_sha256']=sha(endpoint_trace)
         if fail.exists() and len(checks)>accepted:
             result['first_rejected_geometry']={k:int(v) for k,v in checks[accepted].items()}

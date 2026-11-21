@@ -29,15 +29,17 @@ class NumiHumanPelvicContact {
     id<MTLBuffer> projRows=nil,projCols=nil,projVals=nil;
     id<MTLBuffer> refNodes=nil,refInverse=nil,refPoses=nil,totalDelta=nil,materialState=nil;
     id<MTLBuffer> iterationTrace=nil;
-    id<MTLBuffer> facetPairs=nil,facetPoses=nil;
+    id<MTLBuffer> lostSupport=nil,priorPressure=nil,forwardMapping=nil,forwardFaces=nil,forwardTriangles=nil,forwardHit=nil;
+    id<MTLComputePipelineState> relaxPressure=nil,transformForward=nil;
+    id<MTLBuffer> sharedFaces=nil,facetPairs=nil,facetPoses=nil;
     id<MTLComputePipelineState> finiteSurface=nil,candidatePressure=nil;
     unsigned finiteCount=0,reverseStart=0,finiteStart=0;
     unsigned residualGroups=0;
     id<MTLBuffer> volumes=nil,cellRows=nil,cellCorners=nil,fRows=nil,fCols=nil,fVals=nil,fLevels=nil,fOrder=nil,fPerm=nil,fScale=nil;
     id<MTLBuffer> cellLoad=nil,bulkGrad=nil,bulkRhs=nil,baseShift=nil,attachment=nil;
     id<MTLComputePipelineState> cellForce=nil,gatherBulk=nil,prepareRhs=nil,factorApply=nil,requireBulk=nil;
-    id<MTLBuffer> cortexFaces=nil,cortexPositions=nil,corticalFrames=nil,crossingGroups=nil,crossingTrace=nil;
-    id<MTLComputePipelineState> poseCortex=nil,makeCorticalFrames=nil,testFaces=nil,admitFaces=nil;
+    id<MTLBuffer> cortexFaces=nil,cortexPositions=nil,corticalFrames=nil,correctionControl=nil,rejectedQueries=nil,crossingGroups=nil,crossingTrace=nil;
+    id<MTLComputePipelineState> poseCortex=nil,makeCorticalFrames=nil,requestCheck=nil,resumeSolve=nil,measureRejected=nil,testFaces=nil,admitFaces=nil;
     unsigned cortexFaceCount=0,nCrossingGroups=0;
     id<MTLBuffer> capturedSurfaces=nil;
     id<MTLComputePipelineState> captureSurfaces=nil;
@@ -84,15 +86,23 @@ public:
         nodePositions=alloc(countNodes*16);groups=alloc(countGroups*16);
         auto pipeline=[&](NSString* name){NSError* err=nil;auto p=[dev newComputePipelineStateWithFunction:[lib newFunctionWithName:name] error:&err];
             if(!p)throw std::runtime_error("missing pelvic material kernel");return p;};
+        if constexpr(pelvicHasSharedFacets)sharedFaces=load(41);
+        if constexpr(pelvicHasSharedForward){lostSupport=alloc(8*4);priorPressure=alloc(512*4);forwardMapping=load(42);forwardFaces=load(43);forwardTriangles=alloc(triangles.length);forwardHit=alloc(forwardMapping.length/2);}
         if constexpr(pelvicHasCrossingCertificate){
             cortexFaces=load(40);cortexFaceCount=unsigned(cortexFaces.length/16);
             nCrossingGroups=(cortexFaceCount+127)/128;
             cortexPositions=alloc(numReverse*16);crossingGroups=alloc(nCrossingGroups*16);
             crossingTrace=alloc(std::max(1u,countTrace)*16,true);
+            if(countTrace){rejectedQueries=alloc(6*16,true);std::memset(rejectedQueries.contents,0,rejectedQueries.length);measureRejected=pipeline(@"nm_pelvic_rejected_queries");}
+            if constexpr(pelvicHasSharedForward){
+                correctionControl=alloc(8*4);
+                requestCheck=pipeline(@"nm_pelvic_request_surface_check");resumeSolve=pipeline(@"nm_pelvic_resume_surface_solve");
+            }
             corticalFrames=alloc(16*32);makeCorticalFrames=pipeline(@"nm_pelvic_cortical_frames");poseCortex=pipeline(@"nm_pelvic_shared_cortex");
             testFaces=pipeline(@"nm_pelvic_crossing_groups");admitFaces=pipeline(@"nm_pelvic_crossing_admit");
         }
-        candidatePressure=pipeline(@"nm_pelvic_candidate_pressure");finiteSurface=pipeline(@"nm_pelvic_finite_surface");cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
+        if constexpr(pelvicHasSharedForward){transformForward=pipeline(@"nm_pelvic_forward_triangles");relaxPressure=pipeline(@"nm_pelvic_pressure_relax");}
+        candidatePressure=pipeline(@"nm_pelvic_candidate_pressure");finiteSurface=pipeline(pelvicHasSharedFacets?@"nm_pelvic_finite_native":@"nm_pelvic_finite_surface");cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
         factorApply=pipeline(@"nm_pelvic_bulk_factor");requireBulk=pipeline(@"nm_pelvic_require_bulk");geometry=pipeline(@"nm_pelvic_contact_rows");solve=pipeline(@"nm_pelvic_schur_solve");makeColumns=pipeline(@"nm_pelvic_schur_columns");makeGram=pipeline(@"nm_pelvic_schur_gram");moveNodes=pipeline(@"nm_pelvic_schur_displacement");wrench=pipeline(@"nm_pelvic_contact_wrench");apply=pipeline(@"nm_pelvic_contact_apply");
         std::set<unsigned> gridSizes{1,2,4,16,1024,numRegions,countGroups,(finiteCount+127)/128,(countNodes+127)/128,(reverseStart+127)/128,
             (numSurface+127)/128,(numFaces+127)/128,(numReverse+127)/128,(countNodes/2*256+127)/128,(countNodes*8+127)/128,2*residualGroups};
@@ -105,7 +115,7 @@ public:
         }
         unloaded=pipeline(@"nm_pelvic_unloaded");restoreMaterial=pipeline(@"nm_pelvic_restore_material");makeSpans=pipeline(@"nm_pelvic_optional_spans");
         clearInc=pipeline(@"nm_pelvic_residual_clear");buildInc=pipeline(@"nm_pelvic_residual_incidence");measureForce=pipeline(@"nm_pelvic_free_residual");gate=pipeline(@"nm_pelvic_force_gate");surfaceVertices=pipeline(pelvicMaterialReferenceSurface?@"nm_pelvic_surface_from_reference":@"nm_pelvic_surface_vertices");surfaceNormals=pipeline(@"nm_pelvic_surface_normals");
-        vertexNormals=pipeline(@"nm_pelvic_surface_vertex_normals");buildBounds=pipeline(@"nm_pelvic_surface_bounds");findReverse=pipeline(@"nm_pelvic_reverse_query");exchange=pipeline(@"nm_pelvic_pool_exchange");queryPool=pipeline(@"nm_pelvic_pool_query");selectPool=pipeline(@"nm_pelvic_pool_select");clearPool=pipeline(@"nm_pelvic_pool_clear");
+        vertexNormals=pipeline(@"nm_pelvic_surface_vertex_normals");buildBounds=pipeline(@"nm_pelvic_surface_bounds");findReverse=pipeline(@"nm_pelvic_reverse_query");exchange=pipeline(@"nm_pelvic_pool_exchange");queryPool=pipeline(pelvicHasSharedForward?@"nm_pelvic_forward_query":@"nm_pelvic_pool_query");selectPool=pipeline(@"nm_pelvic_pool_select");clearPool=pipeline(@"nm_pelvic_pool_clear");
         publisher=pipeline(@"nm_pelvic_material_publish");confirm=pipeline(@"nm_pelvic_contact_confirm");pose=pipeline(@"nm_pelvic_material_pose");validate=pipeline(@"nm_pelvic_material_validate");admit=pipeline(@"nm_pelvic_material_admit");
     }
     void encode(const metalrobo::MetalNumanXTransactionPass& p,bool post){
@@ -130,24 +140,36 @@ public:
             [e setComputePipelineState:poseCortex];[e setBytes:&numReverse length:4 atIndex:0];
             bind(1,pool);bind(2,corticalFrames);bind(3,cortexPositions);run((numReverse+127)/128,128);
         }
+        if constexpr(pelvicHasSharedForward){
+            unsigned n=unsigned(triangles.length/160);
+            [e setComputePipelineState:transformForward];[e setBytes:&n length:4 atIndex:0];
+            bind(1,forwardFaces);bind(2,cortexPositions);bind(3,triangles);bind(4,corticalFrames);bind(5,forwardTriangles);run((n+127)/128,128);
+        }
+        if constexpr(pelvicHasSharedForward){
+            [e setComputePipelineState:clearInc];unsigned count=1;[e setBytes:&count length:4 atIndex:0];bind(1,lostSupport);run(1,32);
+        }
         auto nearest=[&](unsigned displaced,unsigned conditional){
             [e setComputePipelineState:geometry];words(0,{first,displaced,conditional,0});bind(1,samples);bind(2,pool);bind(3,triangles);bind(4,poolNeighbors);
-            bind(5,positions);bind(6,low);bind(7,coordinates);bind(8,rows);bind(9,localN);bind(10,needed);bind(11,poolSlots);bind(12,nodePositions);bind(13,lever);bind(14,reverse);bind(15,freeIndex);bind(16,baseShift);bind(17,poolGaps);run(4,128);
+            bind(5,positions);bind(6,low);bind(7,coordinates);bind(8,rows);bind(9,localN);bind(10,needed);bind(11,poolSlots);bind(12,nodePositions);bind(13,lever);bind(14,reverse);bind(15,freeIndex);bind(16,baseShift);bind(17,poolGaps);bind(18,pelvicHasSharedForward?forwardHit:reverse);bind(19,pressures);bind(20,pelvicHasSharedForward?lostSupport:needed);run(4,128);
         };
         auto observe=[&](unsigned conditional,unsigned displaced){
             [e setComputePipelineState:pose];words(0,{first,countNodes,countCells,displaced});bind(1,nodes);bind(2,coordinates);bind(3,coordinates);
             bind(4,positions);bind(5,low);bind(6,nodePositions);bind(7,refNodes);bind(8,refPoses);bind(9,totalDelta);run((countNodes+127)/128,128);
-            [e setComputePipelineState:queryPool];words(0,{first,poolCount,conditional,0});bind(1,pool);bind(2,nodePositions);
-            bind(3,positions);bind(4,low);bind(5,triangles);bind(6,poolNeighbors);bind(7,needed);bind(8,poolGaps);run((reverseStart+127)/128,128);
             [e setComputePipelineState:surfaceVertices];words(0,{first,numSurface,conditional,0});bind(1,sv);bind(2,pelvicMaterialReferenceSurface?totalDelta:nodePositions);bind(3,sx);bind(4,needed);
             if constexpr(pelvicMaterialReferenceSurface)bind(5,surfaceReference);run((numSurface+127)/128,128);
+            [e setComputePipelineState:queryPool];words(0,{first,poolCount,conditional,0});bind(1,pool);bind(2,pelvicHasSharedForward?sx:nodePositions);
+            bind(3,positions);bind(4,low);bind(5,pelvicHasSharedForward?forwardTriangles:triangles);bind(6,poolNeighbors);bind(7,needed);bind(8,poolGaps);
+            if constexpr(pelvicHasSharedForward){bind(9,forwardMapping);bind(10,corticalFrames);bind(11,forwardHit);}
+            run((reverseStart+127)/128,128);
             [e setComputePipelineState:surfaceNormals];words(0,{first,numFaces,conditional,0});bind(1,sf);bind(2,sx);bind(3,sn);bind(4,needed);run((numFaces+127)/128,128);
             [e setComputePipelineState:vertexNormals];words(0,{first,numSurface,conditional,0});bind(1,sr);bind(2,si);bind(3,sf);bind(4,sx);bind(5,sn);bind(6,vn);bind(7,needed);run((numSurface+127)/128,128);
             [e setComputePipelineState:buildBounds];bind(1,sf);bind(2,sx);bind(3,boxes);bind(4,needed);
             for(unsigned n=numLeaves;n;n>>=1){words(0,{first,n,conditional,0});run((2*n+63)/64,64);}
             [e setComputePipelineState:findReverse];words(0,{first,finiteStart,conditional,0});bind(1,pool);bind(2,positions);bind(3,low);bind(4,nodes);bind(5,sf);bind(6,sx);bind(7,sn);bind(8,vn);bind(9,boxes);bind(10,sw);bind(11,poolGaps);bind(12,reverse);bind(13,needed);bind(14,witness);bind(15,pelvicHasCrossingCertificate?cortexPositions:sx);run((numReverse+127)/128,128);
             [e setComputePipelineState:finiteSurface];words(0,{first,finiteCount,conditional,0});bind(1,facetPairs);bind(2,triangles);bind(3,totalDelta);
-            bind(4,positions);bind(5,low);bind(6,facetPoses);bind(7,pool);bind(8,poolGaps);bind(9,needed);run((finiteCount+127)/128,128);
+            bind(4,positions);bind(5,low);bind(6,facetPoses);bind(7,pool);bind(8,poolGaps);bind(9,needed);
+            if constexpr(pelvicHasSharedFacets){bind(10,sharedFaces);bind(11,cortexFaces);bind(12,cortexPositions);bind(13,sx);}
+            run((finiteCount+127)/128,128);
         };
         auto select=[&](unsigned conditional,bool readOnly){
             [e setComputePipelineState:selectPool];words(0,{0,conditional,unsigned(readOnly),0});bind(1,poolRegions);bind(2,poolGaps);
@@ -183,6 +205,18 @@ public:
             [e setComputePipelineState:confirm];bind(0,samples);bind(1,rows);bind(2,gram);bind(3,coordinates);
             bind(4,pressures);bind(5,stats);words(6,{p.stepIndex,countTrace,outer,unsigned(post)});
             bind(7,trace);bind(8,needed);bind(9,history);bind(10,poolMin);bind(11,poolRegions);[e setBytes:&numRegions length:4 atIndex:12];bind(13,partial);[e setBytes:&residualGroups length:4 atIndex:14];bind(15,quality);bind(16,qualityTrace);bind(17,iterationTrace);run(2,32);
+            if(post&&pelvicHasSharedForward){
+                bool priorOptional=optional;optional=false;
+                [e setComputePipelineState:requestCheck];words(0,{nCrossingGroups,unsigned(outer==UINT_MAX),0,0});
+                bind(1,needed);bind(2,correctionControl);run(1,1);
+                [e setComputePipelineState:testFaces];[e setBytes:&cortexFaceCount length:4 atIndex:0];
+                bind(1,cortexFaces);bind(2,cortexPositions);bind(3,sf);bind(4,sx);bind(5,boxes);bind(6,crossingGroups);
+                [e dispatchThreadgroupsWithIndirectBuffer:correctionControl indirectBufferOffset:8 threadsPerThreadgroup:MTLSizeMake(128,1,1)];
+                [e memoryBarrierWithScope:MTLBarrierScopeBuffers];
+                [e setComputePipelineState:resumeSolve];words(0,{nCrossingGroups,0,0,0});bind(1,needed);bind(2,correctionControl);
+                bind(3,crossingGroups);bind(4,cortexFaces);run(1,128);
+                optional=priorOptional;
+            }
         };
         bulkForces();
         // A pressure is only an initial guess. Recompute the moving rows, full
@@ -205,9 +239,12 @@ public:
             nearest(1,1);
             compliance();
             [e setComputePipelineState:solve];words(0,{0,1,0,0});bind(1,poolSlots);bind(2,rows);bind(3,gram);
-            bind(4,pressures);bind(5,stats);bind(6,workspace);bind(7,needed);run(2,32);
+            bind(4,pressures);bind(5,stats);bind(6,workspace);bind(7,needed);bind(8,pelvicHasSharedForward?priorPressure:pressures);run(2,32);
             [e setComputePipelineState:moveNodes];words(0,{0,1,countNodes,0});bind(1,pressures);bind(2,columns);
-            bind(3,coordinates);bind(4,needed);bind(5,baseShift);run((countNodes+127)/128,128);
+            bind(3,coordinates);bind(4,needed);bind(5,baseShift);bind(6,pelvicHasSharedForward?lostSupport:needed);run((countNodes+127)/128,128);
+            if constexpr(pelvicHasSharedForward){
+                [e setComputePipelineState:relaxPressure];bind(0,pressures);bind(1,priorPressure);bind(2,lostSupport);bind(3,needed);run(4,128);
+            }
             observe(1,1);bulkForces();select(1,true);nearest(1,1);
             certify(outer);
         }
@@ -231,6 +268,7 @@ public:
                 bind(1,cortexFaces);bind(2,cortexPositions);bind(3,sf);bind(4,sx);bind(5,boxes);bind(6,crossingGroups);run(nCrossingGroups,128);
                 [e setComputePipelineState:admitFaces];words(0,{p.stepIndex,nCrossingGroups,countTrace,numSurface});
                 bind(1,crossingGroups);bind(2,sx);bind(3,ptr(p.standStatuses));bind(4,crossingTrace);run(1,128);
+                if(countTrace){[e setComputePipelineState:measureRejected];words(0,{p.stepIndex,countTrace,poolCount,0});bind(1,ptr(p.standStatuses));bind(2,poolGaps);bind(3,pool);bind(4,rejectedQueries);run(6,128);}
             }
             encodedSteps=std::max(encodedSteps,p.stepIndex+1);
         }
@@ -269,6 +307,12 @@ public:
                 g<<i<<','<<q[4*i]<<','<<q[4*i+1]<<','<<q[4*i+2]<<','<<q[4*i+3]<<'\n';
         }
         const float* saved=(const float*)accepted.contents;
+        if(rejectedQueries&&encodedSteps>unsigned(saved[0])&&unsigned(saved[0])<countTrace){
+            unsigned step=unsigned(saved[0]);auto w=static_cast<const unsigned*>(rejectedQueries.contents);
+            std::ofstream g(std::filesystem::path(file).parent_path()/"rejected-cortical-queries.csv");
+            g<<"candidate_step,side,direction,row,raw_m,cortical_body\n"<<std::setprecision(9);
+            for(unsigned j=0;j<6;++j){float gap=0;std::memcpy(&gap,w+4*j+1,4);if(w[4*j+3]==step+1)g<<step<<','<<j/3<<','<<j%3<<','<<w[4*j]<<','<<gap<<','<<w[4*j+2]<<'\n';}
+        }
         if(saved[0]>0&&unsigned(saved[1])==countNodes){
             auto path=std::filesystem::path(file).parent_path()/"accepted-pelvic-state.csv";std::ofstream snap(path);
             snap<<std::setprecision(9)<<"accepted_step,field,index,x,y,z,w\n";

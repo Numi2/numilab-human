@@ -102,42 +102,11 @@ inline float pelvicRoundingSupport(float3 x,float3 n){
     float3 a=abs(x);
     return .5f*dot(abs(n),nextafter(a,float3(INFINITY))-a);
 }
-kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device const PelvicFacetPair* pairs [[buffer(1)]],
-    device const PelvicTriangle* triangles [[buffer(2)]],device const float4* delta [[buffer(3)]],
-    device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
-    device const float4* reference [[buffer(6)]],device PelvicPoolSample* pool [[buffer(7)]],device float* gaps [[buffer(8)]],
-    device const uint* needed [[buffer(9)]],uint i [[thread_position_in_grid]]){
-    if(i>=d.y)return;const auto pair=pairs[i];if(d.z&&!needed[pair.id.z])return;
-    const uint at=pelvicFiniteStart+pelvicFacetRows*i,pi=128-d.x,bi=pair.id.y-d.x;
-    const auto P=poses[pi],B=poses[bi];float4 ip=float4(-P.orientation.xyz,P.orientation.w),ib=float4(-B.orientation.xyz,B.orientation.w);
-    const auto t=triangles[pair.id.x];float3 normal=t.data[3].xyz,e=t.data[1].xyz-t.data[0].xyz,f=t.data[2].xyz-t.data[0].xyz;
-    float3 k=cross(e,f);float k2=dot(k,k);uint rb=pair.id.y==128?0:(pair.id.y==131?2:(pair.id.y==145?4:6));
-    float3 trans=((B.position.xyz-reference[rb].xyz)-(P.position.xyz-reference[0].xyz))+(low[bi].xyz-low[pi].xyz);
-    float3 bary[3],z,coordinateRadius;float3 clip[8];
-    const float3 nP=pi==bi?normal:restingRotate(ip,restingRotate(B.orientation,normal));
-    float cortexRadius=0;
-    for(uint k=0;k<3;++k){
-        float3 b=t.data[k].xyz;
-        float radius=pelvicRoundingSupport(b,normal);
-        if(pi!=bi){
-            float3 y=restingRotate(ip,(B.position.xyz-P.position.xyz)+(low[bi].xyz-low[pi].xyz)+restingRotate(B.orientation,b));
-            radius+=pelvicRoundingSupport(y,nP);
-        }
-        cortexRadius=max(cortexRadius,radius);
-    }
-    for(uint j=0;j<3;++j){float3 movement=0;
-        for(uint a=0;a<4;++a)movement+=pair.shape[j][a]*delta[pair.nodes[a]].xyz;
-        float3 relativeMotion=pi==bi?float3(0):restingRotate(ip,trans+
-            pelvicRotationIncrement(B.orientation,reference[rb+1],pair.bonePoint[j].xyz)-
-            pelvicRotationIncrement(P.orientation,reference[1],pair.pelvisPoint[j].xyz));
-        float3 displacement=pair.offset[j].xyz+movement-relativeMotion;
-        coordinateRadius[j]=cortexRadius+pelvicRoundingSupport(pair.pelvisPoint[j].xyz+(pair.offset[j].xyz+movement),nP);
-        float3 step=pi==bi?displacement:restingRotate(ib,restingRotate(P.orientation,displacement));
-        float2 uv=pair.uv[j].xy+float2(dot(cross(step,f),k),dot(cross(e,step),k))/k2;
-        bary[j]=float3(1.f-uv.x-uv.y,uv);z[j]=dot(step,normal);
-    }
+inline void pelvicWriteFiniteFeatures(uint at,thread const PelvicFacetPair& pair,thread const float3* bary,
+    float3 z,float3 coordinateRadius,float3 materialNormal,device PelvicPoolSample* pool,device float* gaps){
+    float3 clip[8];
     uint edges[8];uint n=pelvicClipTriangle(bary,clip,edges);
-    for(uint j=0;j<pelvicFacetRows;++j){gaps[at+j]=INFINITY;pool[at+j].weights=float4(0);pool[at+j].contact.reference.w=0;}
+    for(uint j=0;j<pelvicFacetRows;++j){gaps[at+j]=INFINITY;pool[at+j].weights=float4(0);pool[at+j].contact.reference=float4(0);}
     if(!all(isfinite(bary[0]))||!all(isfinite(bary[1]))||!all(isfinite(bary[2]))){gaps[at]=-INFINITY;return;}
     if(n>8||!all(isfinite(z))){gaps[at]=-INFINITY;gaps[at+1]=-INFINITY;return;}
     if(pelvicCross2(bary[1].yz-bary[0].yz,bary[2].yz-bary[0].yz)>=0)return;
@@ -162,8 +131,66 @@ kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device cons
         float gap=dot(w,z);
         if(gap<gaps[at+slot]){
             gaps[at+slot]=gap;
-            pool[at+slot].contact.reference.w=dot(w,coordinateRadius);
+            pool[at+slot].contact.reference=float4(materialNormal,pelvicCachedCortex?dot(w,coordinateRadius):0.f);
             pool[at+slot].weights=w.x*pair.shape[0]+w.y*pair.shape[1]+w.z*pair.shape[2];
         }
     }
+}
+kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device const PelvicFacetPair* pairs [[buffer(1)]],
+    device const PelvicTriangle* triangles [[buffer(2)]],device const float4* delta [[buffer(3)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
+    device const float4* reference [[buffer(6)]],device PelvicPoolSample* pool [[buffer(7)]],device float* gaps [[buffer(8)]],
+    device const uint* needed [[buffer(9)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.y)return;const auto pair=pairs[i];if(d.z&&!needed[pair.id.z])return;
+    const uint at=pelvicFiniteStart+pelvicFacetRows*i,pi=128-d.x,bi=pair.id.y-d.x;
+    const auto P=poses[pi],B=poses[bi];float4 ip=float4(-P.orientation.xyz,P.orientation.w),ib=float4(-B.orientation.xyz,B.orientation.w);
+    const auto t=triangles[pair.id.x];float3 normal=t.data[3].xyz,e=t.data[1].xyz-t.data[0].xyz,f=t.data[2].xyz-t.data[0].xyz;
+    float3 k=cross(e,f);float k2=dot(k,k);uint rb=pair.id.y==128?0:(pair.id.y==131?2:(pair.id.y==145?4:6));
+    float3 trans=((B.position.xyz-reference[rb].xyz)-(P.position.xyz-reference[0].xyz))+(low[bi].xyz-low[pi].xyz);
+    float3 bary[3],z,coordinateRadius;
+    const float3 nP=pi==bi?normal:restingRotate(ip,restingRotate(B.orientation,normal));
+    float cortexRadius=0;
+    for(uint k=0;k<3;++k){
+        float3 b=t.data[k].xyz;
+        float radius=pelvicRoundingSupport(b,normal);
+        if(pi!=bi){
+            float3 y=restingRotate(ip,(B.position.xyz-P.position.xyz)+(low[bi].xyz-low[pi].xyz)+restingRotate(B.orientation,b));
+            radius+=pelvicRoundingSupport(y,nP);
+        }
+        cortexRadius=max(cortexRadius,radius);
+    }
+    for(uint j=0;j<3;++j){float3 movement=0;
+        for(uint a=0;a<4;++a)movement+=pair.shape[j][a]*delta[pair.nodes[a]].xyz;
+        float3 relativeMotion=pi==bi?float3(0):restingRotate(ip,trans+
+            pelvicRotationIncrement(B.orientation,reference[rb+1],pair.bonePoint[j].xyz)-
+            pelvicRotationIncrement(P.orientation,reference[1],pair.pelvisPoint[j].xyz));
+        float3 displacement=pair.offset[j].xyz+movement-relativeMotion;
+        coordinateRadius[j]=cortexRadius+pelvicRoundingSupport(pair.pelvisPoint[j].xyz+(pair.offset[j].xyz+movement),nP);
+        float3 step=pi==bi?displacement:restingRotate(ib,restingRotate(P.orientation,displacement));
+        float2 uv=pair.uv[j].xy+float2(dot(cross(step,f),k),dot(cross(e,step),k))/k2;
+        bary[j]=float3(1.f-uv.x-uv.y,uv);z[j]=dot(step,normal);
+    }
+    pelvicWriteFiniteFeatures(at,pair,bary,z,coordinateRadius,nP,pool,gaps);
+}
+
+// Source-port weights give the force transpose. Signed distances and projected
+// feature locations use the same rounded points as the final physical certificate.
+kernel void nm_pelvic_finite_native(constant uint4& d [[buffer(0)]],device const PelvicFacetPair* pairs [[buffer(1)]],
+    device const PelvicTriangle* unusedTriangle [[buffer(2)]],device const float4* unusedDelta [[buffer(3)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* unusedLow [[buffer(5)]],
+    device const float4* ref [[buffer(6)]],device PelvicPoolSample* pool [[buffer(7)]],device float* gaps [[buffer(8)]],
+    device const uint* needed [[buffer(9)]],device const uint4* mapping [[buffer(10)]],device const uint4* cortexFace [[buffer(11)]],
+    device const float4* cortex [[buffer(12)]],device const float4* material [[buffer(13)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.y)return;
+    const auto pair=pairs[i];if(d.z&&!needed[pair.id.z])return;
+    uint4 m=mapping[i],t=cortexFace[m.w];float3 b=cortex[t.x].xyz,e=cortex[t.y].xyz-b,f=cortex[t.z].xyz-b;
+    float3 k=cross(e,f);float k2=dot(k,k);float3 n=k*rsqrt(k2);
+    float radius=max(pelvicRoundingSupport(b,n),max(pelvicRoundingSupport(cortex[t.y].xyz,n),pelvicRoundingSupport(cortex[t.z].xyz,n)));
+    float3 bary[3],z,guard;
+    for(uint j=0;j<3;++j){
+        float3 a=material[m[j]].xyz,r=a-b;
+        float2 uv=float2(dot(cross(r,f),k),dot(cross(e,r),k))/k2;
+        bary[j]=float3(1.f-uv.x-uv.y,uv);z[j]=dot(r,n);guard[j]=radius+pelvicRoundingSupport(a,n);
+    }
+    pelvicWriteFiniteFeatures(pelvicFiniteStart+pelvicFacetRows*i,pair,bary,z,guard,n,pool,gaps);
 }

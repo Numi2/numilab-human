@@ -1,5 +1,5 @@
 """Compare the actual clipped-contact kernel to independent convex-intersection witnesses."""
-import json,sys,subprocess,tempfile
+import json,sys,subprocess,tempfile,os
 from io import StringIO
 from pathlib import Path
 import numpy as np
@@ -28,6 +28,9 @@ def run(engine,lib,assets,out):
         'common_edge':[[0,0],[-.4,.5],[0,.9]],'moving_cortex':[[.1,.1],[.1,.35],[.4,.1]],
         'encloses_cortex':[[-.5,-.5],[-.5,3.],[3.,-.5]],
         'reversed_slope':[[.1,.1],[.1,.35],[.4,.1]]}
+    physical=os.environ.get('NUMI_VERIFY_ACTUAL_FACETS')=='1'
+    if physical:
+        cases['resolvable_sliver']=[[.58,.41998],[.69,.45],[.69,.36]]
     n=len(cases);p=np.zeros((n,17,4),'f4');t=np.zeros((n,10,4),'f4');delta=np.zeros((4*n,4),'f4');poses=np.zeros((146,2,4),'f4');poses[:,1,3]=1;low=np.zeros((146,4),'f4');ref=np.zeros((8,4),'f4');ref[1::2,3]=1
     poses[1,0,:3]=[.0005,-.001,.0002];L=.02;heights=np.array([-.0002,.00035,-.00014],dtype='f4')
     expect=[]
@@ -38,7 +41,16 @@ def run(engine,lib,assets,out):
         p[i,16].view('u4')[:]=np.arange(i*4,i*4+4);delta[4*i:4*i+3,2]=heights
         if name=='reversed_slope':delta[4*i:4*i+3,2]=-heights
         shift=poses[bone,0,:3].astype(float);uv=uv.astype(float)-shift[:2]/L
-        expect.append((intersect(uv),delta[4*i:4*i+3,2].astype(float)-shift[2],uv))
+        heights_relative=delta[4*i:4*i+3,2].astype(float)-shift[2]
+        if physical:
+            # The native kernel receives separately rounded metre coordinates
+            # at both triangles. Derive the oracle from those actual points.
+            moving=(t[i,:3,:3]+poses[bone,0,:3]).astype(float)
+            material=(p[i,10:13,:3]+delta[4*i:4*i+3,:3]).astype(float)
+            e=(moving[1:,:2]-moving[0,:2]).T
+            uv=np.linalg.solve(e,(material[:,:2]-moving[0,:2]).T).T
+            heights_relative=material[:,2]-moving[0,2]
+        expect.append((intersect(uv),heights_relative,uv))
     with tempfile.TemporaryDirectory() as folder:
         fixture=Path(folder)/'fixture'
         with fixture.open('wb') as f:
@@ -68,6 +80,6 @@ def run(engine,lib,assets,out):
             w=reference[idx];err=abs(w@z-actual[idx,0]);maxerr=max(maxerr,err)
             if err>2e-9 or max(abs(actual[idx,1:]-np.r_[w,0]))>2e-5:raise ValueError((name,idx,actual[idx],w,err))
         stats[name]={'slots':sorted(map(int,live)),'max_gap_error_m':float(maxerr)}
-    if not np.array_equal(got[0,:,1:],got[-1,:,1:]):raise ValueError('vertex identity changed when only normal separation changed')
-    out.write_text(json.dumps(dict(kernel='nm_pelvic_finite_surface',metallib=sha(lib),cases=stats),indent=2)+'\n')
+    if not np.array_equal(got[0,:,1:],got[list(cases).index('reversed_slope'),:,1:]):raise ValueError('vertex identity changed when only normal separation changed')
+    out.write_text(json.dumps(dict(kernel=('nm_pelvic_finite_native' if physical else 'nm_pelvic_finite_surface'),metallib=sha(lib),cases=stats),indent=2)+'\n')
 if __name__=='__main__':run(*map(Path,sys.argv[1:]))

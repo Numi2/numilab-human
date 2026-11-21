@@ -11,9 +11,9 @@ inline void pelvicFeature(thread PelvicClosest& hit,float3 delta,float3 pseudo){
     float length=sqrt(sq);float sign=dot(delta,pseudo)<0?-1.f:1.f;
     hit.sq=sq;hit.gap=sign*length;hit.gradient=length>1.e-8f?(sign/length)*delta:pseudo;
 }
-inline void pelvicTriangle(float3 p,device const PelvicTriangle& t,thread PelvicClosest& hit){
+template <bool shifted> inline void pelvicTriangleAt(float3 p,float3 tail,device const PelvicTriangle& t,thread PelvicClosest& hit){
     float3 a=t.data[0].xyz,e=t.data[1].xyz-a,f=t.data[2].xyz-a;
-    float3 v=p-a,k=cross(e,f);float k2=dot(k,k);
+    float3 v=shifted?(p-a)+tail:p-a,k=cross(e,f);float k2=dot(k,k);
     float u=dot(cross(v,f),k)/k2,w=dot(cross(e,v),k)/k2;
     if(u>0&&w>0&&u+w<1){
         float3 n=t.data[3].xyz;float gap=dot(v,n),sq=gap*gap;
@@ -21,18 +21,21 @@ inline void pelvicTriangle(float3 p,device const PelvicTriangle& t,thread Pelvic
         return;
     }
     for(uint j=0;j<3;++j){
-        uint b=(j+1)%3;float3 x=t.data[j].xyz,y=t.data[b].xyz,d=y-x,local=p-x;
+        uint b=(j+1)%3;float3 x=t.data[j].xyz,y=t.data[b].xyz,d=y-x,local=shifted?(p-x)+tail:p-x;
         float ratio=dot(local,d)/dot(d,d);
         if(ratio<=0)pelvicFeature(hit,local,t.data[4+j].xyz);
-        else if(ratio>=1)pelvicFeature(hit,p-y,t.data[4+b].xyz);
+        else if(ratio>=1)pelvicFeature(hit,shifted?(p-y)+tail:p-y,t.data[4+b].xyz);
         else pelvicFeature(hit,local-ratio*d,t.data[7+j].xyz);
     }
+}
+inline void pelvicTriangle(float3 p,device const PelvicTriangle& t,thread PelvicClosest& hit){
+    pelvicTriangleAt<false>(p,float3(0),t,hit);
 }
 kernel void nm_pelvic_contact_rows(constant uint4& c [[buffer(0)]],device PelvicSample* samples [[buffer(1)]],
     device const PelvicPoolSample* pool [[buffer(2)]],device const PelvicTriangle* triangles [[buffer(3)]],device const uint* neighbors [[buffer(4)]],
     device const MRArticulatedBodyPoseGPU* poses [[buffer(5)]],device const float4* low [[buffer(6)]],device const float4* delta [[buffer(7)]],
     device PelvicRow* rows [[buffer(8)]],device float4* normals [[buffer(9)]],device const uint* needed [[buffer(10)]],
-    device const uint* slots [[buffer(11)]],device const float4* nodes [[buffer(12)]],device float4* lever [[buffer(13)]],device const float4* reverse [[buffer(14)]],device const uint* inputMap [[buffer(15)]],device const float4* base [[buffer(16)]],device const float* allGaps [[buffer(17)]],uint id [[thread_position_in_grid]]){
+    device const uint* slots [[buffer(11)]],device const float4* nodes [[buffer(12)]],device float4* lever [[buffer(13)]],device const float4* reverse [[buffer(14)]],device const uint* inputMap [[buffer(15)]],device const float4* base [[buffer(16)]],device const float* allGaps [[buffer(17)]],device const float4* forwardHit [[buffer(18)]],device float* pressure [[buffer(19)]],device atomic_uint* lostSupport [[buffer(20)]],uint id [[thread_position_in_grid]]){
     if(id>=512||(c.z&&!needed[id/256]))return;
     uint index=slots[id];if(index==UINT_MAX){samples[id].domain=uint4(0);rows[id].normal=float4(0);return;}
     auto r=pool[index];auto s=r.contact;samples[id]=s;
@@ -43,10 +46,21 @@ kernel void nm_pelvic_contact_rows(constant uint4& c [[buffer(0)]],device Pelvic
     float3 local,n;float signedGap;
     if(index>=pelvicFiniteStart){
         n=restingRotate(B.orientation,triangles[s.bank.x].data[3].xyz);
-        local=pi==bi?triangles[s.bank.x].data[3].xyz:restingRotate(float4(-P.orientation.xyz,P.orientation.w),n);signedGap=allGaps[index]-s.reference.w;
-        if(signedGap==INFINITY){signedGap=1.f;local=float3(0);n=float3(0);}
+        local=pi==bi?triangles[s.bank.x].data[3].xyz:restingRotate(float4(-P.orientation.xyz,P.orientation.w),n);
+        if(pelvicSharedFacets){local=s.reference.xyz;n=restingRotate(P.orientation,local);}
+        signedGap=allGaps[index]-(pelvicCachedCortex?s.reference.w:0.f);
+        if(signedGap==INFINITY){
+            if(pelvicSharedForward&&pressure[id]>0){
+                // A clipped facet with zero area cannot carry a multiplier.
+                pressure[id]=0;
+                atomic_store_explicit(lostSupport+id/256,1u,memory_order_relaxed);
+            }
+            signedGap=1.f;local=float3(0);n=float3(0);
+        }
     }else if(index>=pelvicReverseStart){
         float4 g=reverse[index-pelvicReverseStart];local=g.xyz;n=restingRotate(P.orientation,local);signedGap=g.w;
+    }else if(pelvicSharedForward){
+        float4 hit=forwardHit[index];local=hit.xyz;n=restingRotate(P.orientation,local);signedGap=hit.w;
     }else{
         PelvicClosest hit{INFINITY,INFINITY,float3(0)};
         for(uint j=0;j<s.bank.w;++j)pelvicTriangle(p,triangles[neighbors[s.bank.z+j]],hit);
@@ -56,11 +70,14 @@ kernel void nm_pelvic_contact_rows(constant uint4& c [[buffer(0)]],device Pelvic
     }
     if(signedGap<0){for(uint k=0;k<4;++k)if(r.weights[k]!=0&&inputMap[r.nodes[k]]==UINT_MAX)signedGap=-INFINITY;}
     normals[id]=float4(local,0);float3 realU=0;for(uint j=0;j<4;++j)realU+=r.weights[j]*delta[r.nodes[j]].xyz;float3 extra=restingRotate(P.orientation,realU);lever[id]=float4(extra,0);
-    rows[id].normal=float4(n,signedGap-dot(local,u));rows[id].leverB=float4(world-extra,signedGap);
+    rows[id].normal=float4(n,signedGap-dot(local,u));float reportedGap=signedGap;
+    if(pelvicSharedFacets&&index>=pelvicFiniteStart&&isfinite(allGaps[index])&&isfinite(signedGap))
+        reportedGap=allGaps[index];
+    rows[id].leverB=float4(world-extra,reportedGap);
     rows[id].leverP=float4(restingRotate(P.orientation,s.pelvis.xyz),s.pelvis.w);rows[id].leverF=float4(restingRotate(F.orientation,s.femur.xyz),s.femur.w);
 }
 inline bool pelvicEquilibrated(float4 stats,float4 quality){
-    return all(isfinite(stats))&&all(isfinite(quality))&&stats.x<=2.e-9f&&
+    return all(isfinite(stats))&&all(isfinite(quality))&&(pelvicCachedCortex?stats.x<=2.e-9f:stats.x<5.e-7f)&&
         quality.x<=.01f*max(quality.y,1.e-6f)&&quality.z<5.e-7f;
 }
 kernel void nm_pelvic_contact_confirm(device const PelvicSample* samples [[buffer(0)]],device const PelvicRow* rows [[buffer(1)]],
@@ -152,8 +169,11 @@ kernel void nm_pelvic_pool_select(constant uint4& d [[buffer(0)]],device const u
     device const uint* needed [[buffer(6)]],device const PelvicPoolSample* pool [[buffer(7)]],uint g [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
     uint4 region=regions[g];if(d.y&&!needed[region.z/256])return;
     float m=0,worst=0;uint index=UINT_MAX;
-    for(uint j=lane;j<region.y;j+=32){uint i=region.x+j;float gap=gaps[i]-(i>=pelvicFiniteStart?pool[i].contact.reference.w:0.f);m=min(m,gap);
-        if(!included[i]&&gap<0.f&&gap<worst){worst=gap;index=i;}}
+    for(uint j=lane;j<region.y;j+=32){uint i=region.x+j;float raw=gaps[i],gap=raw-(i>=pelvicFiniteStart?pool[i].contact.reference.w:0.f);
+        // Tighten the trial direction for coordinate rounding. Certify the actual gap.
+        m=min(m,pelvicSharedFacets?raw:gap);
+        float threshold=pelvicCachedCortex?0.f:(i<pelvicFiniteStart||((i-pelvicFiniteStart)%pelvicFacetRows)?5.e-7f:5.e-8f);
+        if(!included[i]&&gap< -threshold&&gap<worst){worst=gap;index=i;}}
     float deep=simd_min(m);worst=simd_min(worst);
     float candidate=index==UINT_MAX?INFINITY:gaps[index]-(index>=pelvicFiniteStart?pool[index].contact.reference.w:0.f);
     uint selected=simd_min(candidate==worst?index:UINT_MAX);
@@ -165,7 +185,7 @@ kernel void nm_pelvic_pool_exchange(constant uint4& d [[buffer(0)]],device const
     if((d.y&&!needed[side])||lane)return;
     uint free[256],n=0,k=0,base=256*side;
     for(uint j=0;j<256;++j)if(slots[base+j]==UINT_MAX)free[n++]=j;
-    for(uint j=0;j<256;++j)if(slots[base+j]!=UINT_MAX&&loads[base+j]==0&&gaps[slots[base+j]]>=0.f)free[n++]=j;
+    for(uint j=0;j<256;++j)if(slots[base+j]!=UINT_MAX&&loads[base+j]==0&&gaps[slots[base+j]]>=(pelvicCachedCortex?0.f:-1.e-8f))free[n++]=j;
     for(uint g=0;g<d.x&&k<n;++g){
         if(groups[g].z/256!=side||next[g]==UINT_MAX)continue;
         uint at=base+free[k++],old=slots[at];if(old!=UINT_MAX)included[old]=0;
@@ -209,7 +229,7 @@ inline float pelvicGram(device const float* W,threadgroup const float* s,uint i,
 }
 kernel void nm_pelvic_schur_solve(constant uint4& d [[buffer(0)]],device const uint* slots [[buffer(1)]],device const PelvicRow* rows [[buffer(2)]],
     device const float* matrix [[buffer(3)]],device float* loads [[buffer(4)]],device float4* stats [[buffer(5)]],device float* storage [[buffer(6)]],
-    device const uint* needed [[buffer(7)]],uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    device const uint* needed [[buffer(7)]],device float* priorPressure [[buffer(8)]],uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
     if(d.y&&!needed[side])return;
     device const float* W=matrix+side*65536;device float* factor=storage+side*65536;
     uint base=256*side,n=0,ready=0,enter=256;
@@ -220,7 +240,7 @@ kernel void nm_pelvic_schur_solve(constant uint4& d [[buffer(0)]],device const u
     for(uint it=0;it<384;++it){
         if(enter==256){
             float best=0;uint id=256;
-            for(uint j=lane;j<256;j+=32)if(!used[j]&&scale[j]>0&&gap[j]<0.f&&-gap[j]>best){best=-gap[j];id=j;}
+            for(uint j=lane;j<256;j+=32)if(!used[j]&&scale[j]>0&&gap[j]<(pelvicCachedCortex?0.f:-2.e-9f*scale[j])&&-gap[j]>best){best=-gap[j];id=j;}
             float peak=simd_max(best);enter=simd_min(best==peak?id:256u);if(enter==256)break;
         }
         // Incremental Cholesky on independent active constraints. A removal invalidates
@@ -275,7 +295,10 @@ kernel void nm_pelvic_schur_solve(constant uint4& d [[buffer(0)]],device const u
         }
         threadgroup_barrier(mem_flags::mem_threadgroup|mem_flags::mem_device);
     }
-    for(uint j=lane;j<256;j+=32)loads[base+j]=mu[j]*scale[j];
+    for(uint j=lane;j<256;j+=32){
+        if(pelvicSharedForward)priorPressure[base+j]=loads[base+j];
+        loads[base+j]=mu[j]*scale[j];
+    }
     threadgroup_barrier(mem_flags::mem_device);
     float gmax=0,total=0,energy=0,error=0;
     for(uint j=lane;j<256;j+=32)if(slots[base+j]!=UINT_MAX){
@@ -286,11 +309,13 @@ kernel void nm_pelvic_schur_solve(constant uint4& d [[buffer(0)]],device const u
     float4 result=float4(simd_max(gmax),simd_sum(total),simd_sum(energy),simd_sum(error));if(!lane)stats[side]=result;
 }
 kernel void nm_pelvic_schur_displacement(constant uint4& d [[buffer(0)]],device const float* loads [[buffer(1)]],device const float4* response [[buffer(2)]],
-    device float4* displacement [[buffer(3)]],device const uint* needed [[buffer(4)]],device const float4* base [[buffer(5)]],uint i [[thread_position_in_grid]]){
+    device float4* displacement [[buffer(3)]],device const uint* needed [[buffer(4)]],device const float4* base [[buffer(5)]],device const uint* lostSupport [[buffer(6)]],uint i [[thread_position_in_grid]]){
     if(i>=d.z)return;uint side=i>=pelvicFlex[1].x?1u:0u;if(d.y&&!needed[side])return;
     uint4 m=pelvicFlex[side];uint off=m.x*256+i-m.x;float3 total=0;
     for(uint j=0;j<256;++j){float l=loads[256*side+j];if(l>0)total+=l*response[off+j*m.y].xyz;}
-    displacement[i]=float4(base[i].xyz+total,0);
+    float3 target=base[i].xyz+total;
+    if(pelvicSharedForward&&lostSupport[side])target=mix(displacement[i].xyz,target,.5f);
+    displacement[i]=float4(target,0);
 }
 struct PelvicSurfaceVertex {float4 weights;uint4 nodes;};
 struct PelvicSurfaceFace {uint4 vertices,adjacent,nodes;};
@@ -566,4 +591,9 @@ kernel void nm_pelvic_candidate_pressure(constant uint& unused [[buffer(0)]],
     }
     float4 value=float4(simd_max(worst),simd_sum(force),simd_sum(work),0);
     if(!lane)stats[side]=value;
+}
+
+kernel void nm_pelvic_pressure_relax(device float* pressure [[buffer(0)]],device const float* last [[buffer(1)]],
+    device const uint* lostSupport [[buffer(2)]],device const uint* needed [[buffer(3)]],uint i [[thread_position_in_grid]]){
+    if(i<512&&needed[i/256]&&lostSupport[i/256])pressure[i]=mix(last[i],pressure[i],.5f);
 }

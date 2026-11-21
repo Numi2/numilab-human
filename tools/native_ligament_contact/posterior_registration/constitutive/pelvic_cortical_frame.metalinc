@@ -31,3 +31,40 @@ kernel void nm_pelvic_shared_cortex(constant uint& count [[buffer(0)]],device co
     for(uint j=0;j<3;++j)p=mrCompensatedVectorAdd(p,mrCompensatedVectorScale(columns[at+j],{s.reference[j],0}));
     output[i]=float4(p.high.xyz+p.low.xyz,0);
 }
+// Each cortical triangle is transformed once per accepted/candidate body pose.
+// Coordinates are the same shared vertices used for terminal certification.
+kernel void nm_pelvic_forward_triangles(constant uint& count [[buffer(0)]],device const uint4* map [[buffer(1)]],
+    device const float4* cortex [[buffer(2)]],device const PelvicTriangle* src [[buffer(3)]],
+    device const MRCompensatedPositionGPU* frames [[buffer(4)]],device PelvicTriangle* dest [[buffer(5)]],uint i [[thread_position_in_grid]]){
+    if(i>=count)return;
+    uint4 m=map[i];for(uint j=0;j<3;++j)dest[i].data[j]=cortex[m[j]];
+    float3 a=cortex[m.x].xyz,b=cortex[m.y].xyz,c=cortex[m.z].xyz;
+    dest[i].data[3]=float4(normalize(cross(b-a,c-a)),0);
+    const uint at=4*m.w;
+    for(uint j=4;j<10;++j){
+        float3 n=src[i].data[j].xyz;
+        float3 posed=frames[at].high.xyz*n.x+frames[at+1].high.xyz*n.y+frames[at+2].high.xyz*n.z;
+        dest[i].data[j]=float4(normalize(posed),0);
+    }
+}
+struct PelvicForwardSite {uint4 face;float4 weight;};
+kernel void nm_pelvic_forward_query(constant uint4& d [[buffer(0)]],device const PelvicPoolSample* pool [[buffer(1)]],
+    device const float4* surface [[buffer(2)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(3)]],device const float4* low [[buffer(4)]],
+    device const PelvicTriangle* triangles [[buffer(5)]],device const uint* neighbors [[buffer(6)]],
+    device const uint* needed [[buffer(7)]],device float* gaps [[buffer(8)]],device const PelvicForwardSite* sites [[buffer(9)]],
+    device const MRCompensatedPositionGPU* frames [[buffer(10)]],device float4* result [[buffer(11)]],uint i [[thread_position_in_grid]]){
+    if(i>=pelvicReverseStart)return;
+    const auto s=pool[i].contact;if(d.z&&!needed[uint(s.domain.y==145)])return;
+    auto site=sites[i];float3 a=surface[site.face.x].xyz;
+    float3 tail=site.weight.y*(surface[site.face.y].xyz-a)+site.weight.z*(surface[site.face.z].xyz-a);
+    PelvicClosest hit{INFINITY,INFINITY,float3(0)};uint4 bank=s.bank;
+    for(uint j=0;j<bank.w;++j)pelvicTriangleAt<true>(a,tail,triangles[neighbors[bank.z+j]],hit);
+    uint b=s.domain.z,at=b==128?0u:b==1?4u:b==131?8u:12u;
+    float3 v=s.reference.xyz,center=b==128?v:frames[at+3].high.xyz+frames[at].high.xyz*v.x+frames[at+1].high.xyz*v.y+frames[at+2].high.xyz*v.z;
+    // A conservative error allowance can only enlarge the exact-search fallback.
+    float rounding=32.f*1.1920928955078125e-7f*(length(v)+length(center)+length(a)+length(tail));
+    if(length((a-center)+tail)+sqrt(hit.sq)+rounding>=s.reference.w){
+        for(uint j=0;j<bank.y;++j)pelvicTriangleAt<true>(a,tail,triangles[bank.x+j],hit);
+    }
+    float gap=isfinite(hit.gap)?hit.gap:-INFINITY;gaps[i]=gap;result[i]=float4(hit.gradient,gap);
+}
