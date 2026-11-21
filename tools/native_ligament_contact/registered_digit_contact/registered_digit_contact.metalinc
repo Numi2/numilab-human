@@ -1,0 +1,98 @@
+// Paired cortical material features, in each phalanx's own body frame.
+struct NMDigitFeature { uint4 bodies; float4 x[4]; };
+struct NMDigitClosest { float3 wa,wb,normal; float gap,s,t,u; };
+inline float nmDigitProject(float3 p,float3 x,float3 e){
+    return clamp(dot(p-x,e)/dot(e,e),0.f,1.f);
+}
+inline void nmDigitChoose(thread NMDigitClosest& c,float3 a,float3 b,float s,float t,float u){
+    float3 d=a-b;float sq=dot(d,d);
+    if(sq<c.gap){c.wa=a;c.wb=b;c.gap=sq;c.s=s;c.t=t;c.u=u;}
+}
+inline NMDigitClosest nmDigitFeatures(const NMDigitFeature rec,float3 delta,float4 qa,float4 qb){
+    bool face=rec.bodies.z!=0;
+    float3 a=restingRotate(qa,rec.x[0].xyz);
+    uint firstB=face?1u:2u;
+    float3 b=delta+restingRotate(qb,rec.x[firstB].xyz);
+    float3 v=restingRotate(qb,rec.x[firstB+1].xyz-rec.x[firstB].xyz);
+    float3 w=a-b;float cc=dot(v,v);
+    NMDigitClosest c={a,b,float3(0),INFINITY,0,0,0};
+    float3 n;bool inside=false;
+    if(face){
+        float3 z=restingRotate(qb,rec.x[3].xyz-rec.x[1].xyz);
+        n=cross(v,z);float den=dot(n,n);
+        float t=dot(cross(w,z),n)/den,h=dot(cross(v,w),n)/den;
+        inside=t>=0 && h>=0 && t+h<=1;
+        if(inside)nmDigitChoose(c,a,b+t*v+h*z,0,t,h);
+        else{
+            float f=nmDigitProject(a,b,v);nmDigitChoose(c,a,b+f*v,0,f,0);
+            f=nmDigitProject(a,b,z);nmDigitChoose(c,a,b+f*z,0,0,f);
+            f=nmDigitProject(a,b+v,z-v);nmDigitChoose(c,a,b+v+f*(z-v),0,1-f,f);
+        }
+    }else{
+        float3 u=restingRotate(qa,rec.x[1].xyz-rec.x[0].xyz);
+        n=cross(u,v);float den=dot(n,n),aa=dot(u,u);
+        if(den>1e-12f*aa*cc){
+            float s=dot(cross(v,w),n)/den,t=dot(cross(u,w),n)/den;
+            inside=s>=0 && s<=1 && t>=0 && t<=1;
+            if(inside)nmDigitChoose(c,a+s*u,b+t*v,s,t,0);
+        }
+        if(!inside){
+            float t=nmDigitProject(a,b,v);nmDigitChoose(c,a,b+t*v,0,t,0);
+            t=nmDigitProject(a+u,b,v);nmDigitChoose(c,a+u,b+t*v,1,t,0);
+            float s=nmDigitProject(b,a,u);nmDigitChoose(c,a+s*u,b,s,0,0);
+            s=nmDigitProject(b+v,a,u);nmDigitChoose(c,a+s*u,b+v,s,1,0);
+        }
+    }
+    float3 diff=c.wa-c.wb;
+    if(inside){c.normal=normalize(n)*(rec.bodies.w?-1.f:1.f);c.gap=dot(diff,c.normal);}
+    else {c.gap=sqrt(c.gap);c.normal=c.gap>0?diff/c.gap:normalize(n)*(rec.bodies.w?-1.f:1.f);}
+    return c;
+}
+inline float3 nmDigitPointJ(device const float* j,uint base,uint dof,uint n,float3 local){
+    float3 center=float3(j[base+dof],j[base+n+dof],j[base+2*n+dof]);float3 v=center;
+    for(uint ax=0;ax<3;++ax){
+        uint k=base+(ax+1)*3*n+dof;
+        v+=local[ax]*(float3(j[k],j[k+n],j[k+2*n])-center);
+    }
+    return v;
+}
+kernel void nm_human_digit_cortical_rows(constant uint4& dim [[buffer(0)]],constant uint4& rows [[buffer(1)]],
+    device const NMDigitFeature* features [[buffer(2)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(3)]],
+    device const float4* low [[buffer(4)]],device MRArticulatedPointWorldGPU* points [[buffer(5)]],
+    device float4* pointLow [[buffer(6)]],device float* j [[buffer(7)]],
+    device MRNumiHumanStandContactGPU* contacts [[buffer(8)]],device float4* trace [[buffer(9)]],
+    constant float4& representation [[buffer(10)]],constant float4& origin [[buffer(11)]],
+    uint row [[threadgroup_position_in_grid]],uint lane [[thread_index_in_threadgroup]]){
+    threadgroup float4 tmp[3];
+    NMDigitFeature rec=features[row];uint a=rec.bodies.x-dim.x,b=rec.bodies.y-dim.x;
+    uint cid=rows.x+row,pid=rows.y+row,n=dim.y;
+    if(lane==0){
+        float3 delta=(poses[b].position.xyz-poses[a].position.xyz)+(low[b].xyz-low[a].xyz);
+        auto c=nmDigitFeatures(rec,delta,poses[a].orientation,poses[b].orientation);
+        float3 localA=rec.x[0].xyz,localB;
+        if(rec.bodies.z){localB=rec.x[1].xyz+c.t*(rec.x[2].xyz-rec.x[1].xyz)+c.u*(rec.x[3].xyz-rec.x[1].xyz);}
+        else {localA+=c.s*(rec.x[1].xyz-rec.x[0].xyz);localB=rec.x[2].xyz+c.t*(rec.x[3].xyz-rec.x[2].xyz);}
+        tmp[0]=float4(localA,c.gap);tmp[1]=float4(localB,0);tmp[2]=float4(c.normal,0);
+        float3 solverNormal=representation.w==1.f?c.normal:representation.xyz;
+        float3 base=representation.w==1.f?float3(0):origin.xyz;
+        float3 offset=solverNormal*c.gap,high=base+offset;
+        points[pid].position=float4(high,0);pointLow[pid]=float4(offset-(high-base),0);
+        contacts[cid].planePoint=0;contacts[cid].planeNormal=representation.w==1.f?float4(c.normal,0):float4(0);
+        if(dim.w<rows.w)trace[(dim.w*2+rows.z)*4+row]=float4(c.gap,c.s,c.t,c.u);
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint dof=lane;dof<n;dof+=32){
+        float3 ja=nmDigitPointJ(j,(dim.z+4*a)*3*n,dof,n,tmp[0].xyz);
+        float3 jb=nmDigitPointJ(j,(dim.z+4*b)*3*n,dof,n,tmp[1].xyz);
+        float3 rel=ja-jb;
+        if(representation.w==0.f){
+            // Express the relative three-dimensional row in the existing flat
+            // solver basis. Dotting its normal gives exactly n.(J_A-J_B).
+            float3 n=tmp[2].xyz,g=representation.xyz;
+            float3 t=normalize(cross(abs(n.x)<.8f?float3(1,0,0):float3(0,1,0),n));
+            float3 h=normalize(cross(abs(g.x)<.8f?float3(1,0,0):float3(0,1,0),g));
+            rel=g*dot(n,rel)+h*dot(t,rel)+cross(g,h)*dot(cross(n,t),rel);
+        }
+        uint k=pid*3*n+dof;j[k]=rel.x;j[k+n]=rel.y;j[k+2*n]=rel.z;
+    }
+}
