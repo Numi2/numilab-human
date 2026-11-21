@@ -23,6 +23,8 @@ def intersect(uv):
 
 def run(engine,lib,assets,out):
     d=json.loads((assets/'manifest.json').read_text());first=d['finite_facets']['start']
+    if int(d['finite_facets'].get('rows_per_pair',2))!=16:
+        raise ValueError('This feature fixture requires a 16-row finite facet payload')
     cases={'contained':[[.1,.1],[.1,.35],[.4,.1]],'three_edge_clip':[[-.5,.3],[.3,1.6],[1.4,-.5]],
         'sliding_off':[[.58,.42],[.69,.45],[.69,.36]],'disjoint':[[.8,.9],[.8,1.2],[1.3,.9]],
         'common_edge':[[0,0],[-.4,.5],[0,.9]],'moving_cortex':[[.1,.1],[.1,.35],[.4,.1]],

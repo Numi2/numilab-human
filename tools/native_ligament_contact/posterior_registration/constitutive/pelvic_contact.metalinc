@@ -314,7 +314,7 @@ kernel void nm_pelvic_schur_displacement(constant uint4& d [[buffer(0)]],device 
     uint4 m=pelvicFlex[side];uint off=m.x*256+i-m.x;float3 total=0;
     for(uint j=0;j<256;++j){float l=loads[256*side+j];if(l>0)total+=l*response[off+j*m.y].xyz;}
     float3 target=base[i].xyz+total;
-    if(pelvicSharedForward&&lostSupport[side])target=mix(displacement[i].xyz,target,.5f);
+    if(pelvicSharedForward&&!d.w&&lostSupport[side])target=mix(displacement[i].xyz,target,.5f);
     displacement[i]=float4(target,0);
 }
 struct PelvicSurfaceVertex {float4 weights;uint4 nodes;};
@@ -578,7 +578,8 @@ kernel void nm_pelvic_require_bulk(device uint* needed [[buffer(0)]],uint i [[th
 kernel void nm_pelvic_candidate_pressure(constant uint& unused [[buffer(0)]],
     device const uint* slots [[buffer(1)]],device const PelvicRow* rows [[buffer(2)]],
     device const float* gram [[buffer(3)]],device const float* load [[buffer(4)]],
-    device float4* stats [[buffer(5)]],uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    device float4* stats [[buffer(5)]],device const uint* needed [[buffer(6)]],uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
+    if(unused&&!needed[side])return;
     uint first=256*side;
     float force=0,work=0,worst=0;
     for(uint j=lane;j<256;j+=32){
@@ -596,4 +597,204 @@ kernel void nm_pelvic_candidate_pressure(constant uint& unused [[buffer(0)]],
 kernel void nm_pelvic_pressure_relax(device float* pressure [[buffer(0)]],device const float* last [[buffer(1)]],
     device const uint* lostSupport [[buffer(2)]],device const uint* needed [[buffer(3)]],uint i [[thread_position_in_grid]]){
     if(i<512&&needed[i/256]&&lostSupport[i/256])pressure[i]=mix(last[i],pressure[i],.5f);
+}
+
+// Fixed-geometry equilibrium of compressive contact tractions. Only previously
+// loaded sites and touching sites can receive force. All participation tests
+// below use the fresh rows and their physical interpolation transpose.
+kernel void nm_pelvic_fit_tractions(device const uint* needed [[buffer(0)]],
+    device const uint* slots [[buffer(1)]], device const PelvicPoolSample* sites [[buffer(2)]],
+    device const float4* normals [[buffer(3)]], device const PelvicRow* rows [[buffer(4)]],
+    device const uint4* freeRows [[buffer(5)]], device const float4* internalForce [[buffer(6)]],
+    device float* pressure [[buffer(7)]], device const atomic_uint* incidence [[buffer(8)]],
+    device float4* residual [[buffer(9)]], uint side [[threadgroup_position_in_grid]],
+    uint lane [[thread_index_in_simdgroup]]) {
+    if (!needed[side]) return;
+    uint4 part = pelvicFlex[side];
+    uint begin = side * 256;
+    threadgroup uint eligible[256];
+    threadgroup float diagonal[256];
+    for (uint j = lane; j < 256; j += 32) {
+        uint i = begin + j, id = slots[i];
+        float n2 = dot(normals[i].xyz, normals[i].xyz);
+        float d = 0;
+        if (id != UINT_MAX && isfinite(n2) && n2 > .5f &&
+            (pressure[i] > 0 || rows[i].leverB.w <= 0)) {
+            auto site = sites[id];
+            for (uint k = 0; k < 4; ++k) {
+                if (site.weights[k] != 0 && freeRows[site.nodes[k]].z)
+                    d += site.weights[k] * site.weights[k] * n2;
+            }
+        }
+        eligible[j] = d > 0;
+        diagonal[j] = d;
+    }
+    for (uint j = lane; j < part.y; j += 32) {
+        uint node = part.x + j;
+        float3 force = internalForce[node].xyz;
+        if (freeRows[node].z) {
+            for (uint k = 0; k < 8; ++k) {
+                uint bits = atomic_load_explicit(incidence + 8 * node + k, memory_order_relaxed);
+                while (bits) {
+                    uint i = begin + 32 * k + ctz(bits);
+                    bits &= bits - 1;
+                    auto site = sites[slots[i]];
+                    for (uint c = 0; c < 4; ++c)
+                        if (site.nodes[c] == node) force -= site.weights[c] * pressure[i] * normals[i].xyz;
+                }
+            }
+        }
+        residual[node] = float4(freeRows[node].z ? force : float3(0), 0);
+    }
+    threadgroup_barrier(mem_flags::mem_device | mem_flags::mem_threadgroup);
+    for (uint iter = 0; iter < 384; ++iter) {
+        float best = 0, bestDelta = 0;
+        uint bestSlot = UINT_MAX;
+        for (uint j = lane; j < 256; j += 32) {
+            if (!eligible[j]) continue;
+            uint i = begin + j;
+            auto site = sites[slots[i]];
+            float gradient = 0;
+            for (uint c = 0; c < 4; ++c) {
+                if (site.weights[c] != 0 && freeRows[site.nodes[c]].z)
+                    gradient += site.weights[c] * dot(normals[i].xyz, residual[site.nodes[c]].xyz);
+            }
+            float next = max(0.f, pressure[i] + gradient / diagonal[j]);
+            float delta = next - pressure[i];
+            float gain = delta * (2 * gradient - diagonal[j] * delta);
+            if (gain > best) { best = gain; bestSlot = i; bestDelta = delta; }
+        }
+        float gain = simd_max(best);
+        if (!(gain > 0)) break;
+        uint winner = simd_min(best == gain ? bestSlot : UINT_MAX);
+        float delta = simd_broadcast(bestDelta, winner % 32);
+        if (lane == 0) {
+            auto site = sites[slots[winner]];
+            pressure[winner] = max(0.f, pressure[winner] + delta);
+            for (uint c = 0; c < 4; ++c) {
+                uint node = site.nodes[c];
+                if (site.weights[c] != 0 && freeRows[node].z)
+                    residual[node].xyz -= site.weights[c] * delta * normals[winner].xyz;
+            }
+        }
+        threadgroup_barrier(mem_flags::mem_device);
+    }
+}
+
+kernel void nm_pelvic_residual_displacement(constant uint4& d [[buffer(0)]],
+    device const uint* needed [[buffer(1)]], device float4* correction [[buffer(2)]],
+    device float4* u [[buffer(3)]], uint i [[thread_position_in_grid]]) {
+    if (i >= d.x || !needed[i >= pelvicFlex[1].x]) return;
+    if (!d.y) correction[i] = 0;
+    else if(d.y==1u) u[i].xyz -= .5f * correction[i].xyz;
+    else correction[i]=u[i];
+}
+
+
+kernel void nm_pelvic_add_projection_pressure(device float* pressure [[buffer(0)]],
+    device const float* prior [[buffer(1)]], device const uint* needed [[buffer(2)]],
+    uint i [[thread_position_in_grid]]) {
+    if(i<512 && needed[i/256]) pressure[i]+=prior[i];
+}
+
+// Choose a trial basis from all regional witnesses. Every pool row still
+// participates in the fresh geometry audit, including rows released here.
+kernel void nm_pelvic_ranked_exchange(constant uint4& d [[buffer(0)]],
+    device const uint4* groups [[buffer(1)]], device const uint* proposal [[buffer(2)]],
+    device uint* slots [[buffer(3)]], device uint* included [[buffer(4)]],
+    device float* pressure [[buffer(5)]], device const float* gap [[buffer(6)]],
+    device const uint* needed [[buffer(7)]], device const float* compliance [[buffer(8)]],
+    device const PelvicPoolSample* sites [[buffer(9)]],
+    uint side [[threadgroup_position_in_grid]], uint lane [[thread_index_in_simdgroup]]) {
+    if (d.y && !needed[side]) return;
+    uint begin=side*256;
+    uint occupiedHere=0;
+    for(uint j=lane;j<256;j+=32) occupiedHere+=slots[begin+j]!=UINT_MAX && pressure[begin+j]>0;
+    if(simd_sum(occupiedHere)<128u) return;
+    threadgroup uint touched[256];
+    for(uint j=lane;j<256;j+=32)touched[j]=0;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for (uint changed=0;changed<256;++changed) {
+        float worstRaw=-1, worstTrial=-1;
+        uint candidate=UINT_MAX;
+        for (uint g=lane;g<d.x;g+=32) {
+            uint k=proposal[g];
+            if (groups[g].z/256!=side || k==UINT_MAX || included[k]) continue;
+            float raw=max(0.f,-gap[k]);
+            float depth=(k>=pelvicFiniteStart?sites[k].contact.reference.w:0.f)-gap[k];
+            if (depth<=0) continue;
+            if (raw>worstRaw || (raw==worstRaw && (depth>worstTrial || (depth==worstTrial && k<candidate)))) {
+                candidate=k;worstRaw=raw;worstTrial=depth;
+            }
+        }
+        float raw=simd_max(worstRaw);
+        float depth=simd_max(worstRaw==raw?worstTrial:-1.f);
+        uint incoming=simd_min(worstRaw==raw && worstTrial==depth?candidate:UINT_MAX);
+        if(incoming==UINT_MAX) break;
+        float cost=INFINITY;uint release=UINT_MAX;
+        for (uint j=lane;j<256;j+=32) {
+            if(touched[j])continue;
+            uint i=begin+j,old=slots[i];
+            // Diagonal compliance times traction is the predicted normal
+            // displacement lost on release, in metres. It ranks a trial
+            // substitution; the final force and geometry tests use fresh data.
+            float lost=-1;
+            if(old!=UINT_MAX){
+                float load=pressure[i];
+                float displacement=load>0?max(0.f,compliance[65536*side+257*j])*load:0.f;
+                float buffer=old>=pelvicFiniteStart?sites[old].contact.reference.w:0.f;
+                lost=max(0.f,displacement+buffer-gap[old]);
+            }
+            if(lost<cost || (lost==cost && i<release)){cost=lost;release=i;}
+        }
+        float best=simd_min(cost);
+        uint slot=simd_min(cost==best?release:UINT_MAX);
+        if(slot==UINT_MAX || !(best<depth)) break;
+        if(!lane){
+            uint old=slots[slot];if(old!=UINT_MAX)included[old]=0;
+            slots[slot]=incoming;included[incoming]=1;touched[slot-begin]=1;
+            pressure[slot]=0; // A multiplier belongs to its original site.
+        }
+        threadgroup_barrier(mem_flags::mem_device | mem_flags::mem_threadgroup);
+    }
+}
+
+
+// Linearized Signorini correction at the current physical state:
+// gap_new = gap_observed + W (p_new - p_old), with p_new >= 0.
+kernel void nm_pelvic_shift_dual_gap(device const uint* needed [[buffer(0)]],
+    device const uint* slots [[buffer(1)]],device const float* pressure [[buffer(2)]],
+    device const float* gram [[buffer(3)]],device PelvicRow* rows [[buffer(4)]],
+    uint i [[thread_position_in_grid]]) {
+    if(i>=512 || !needed[i/256] || slots[i]==UINT_MAX)return;
+    uint begin=(i/256)*256;float elastic=0;
+    for(uint j=0;j<256;++j)elastic+=gram[i*256+j]*pressure[begin+j];
+    rows[i].normal.w-=elastic;
+}
+kernel void nm_pelvic_dual_move(constant uint& nodes [[buffer(0)]],device const uint* needed [[buffer(1)]],
+    device const float* old [[buffer(2)]],device const float* trial [[buffer(3)]],
+    device const float4* columns [[buffer(4)]],device float4* coords [[buffer(5)]],
+    device const uint* material [[buffer(6)]],uint i [[thread_position_in_grid]]) {
+    if(i>=nodes)return;
+    uint side=i>=pelvicFlex[1].x;
+    if(!needed[side])return;
+    uint4 d=pelvicFlex[side];float3 motion=0;
+    for(uint j=0;j<256;++j){
+        uint k=side*256+j;float dp=material[side]?trial[k]:.5f*(trial[k]-old[k]);
+        if(dp!=0)motion+=columns[d.x*256+j*d.y+i-d.x].xyz*dp;
+    }
+    coords[i].xyz+=motion;
+}
+kernel void nm_pelvic_dual_load(device const uint* needed [[buffer(0)]], device const float* old [[buffer(1)]],
+    device float* trial [[buffer(2)]],device const uint* material [[buffer(3)]],uint i [[thread_position_in_grid]]){
+    if(i<512 && needed[i/256])trial[i]=material[i/256]?old[i]+trial[i]:mix(old[i],trial[i],.5f);
+}
+
+kernel void nm_pelvic_choose_direction(device const uint* needed [[buffer(0)]],
+    device const float4* quality [[buffer(1)]],device uint* material [[buffer(2)]],
+    device uint* contact [[buffer(3)]],uint side [[thread_position_in_grid]]){
+    if(side>=2)return;
+    bool imbalance=quality[side].x>.01f*max(quality[side].y,1e-6f);
+    material[side]=needed[side] && imbalance;
+    contact[side]=needed[side] && !imbalance;
 }

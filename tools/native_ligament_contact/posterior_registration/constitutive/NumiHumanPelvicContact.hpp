@@ -29,6 +29,8 @@ class NumiHumanPelvicContact {
     id<MTLBuffer> projRows=nil,projCols=nil,projVals=nil;
     id<MTLBuffer> refNodes=nil,refInverse=nil,refPoses=nil,totalDelta=nil,materialState=nil;
     id<MTLBuffer> iterationTrace=nil;
+    id<MTLBuffer> tractionResidual=nil,materialNeeded=nil,contactNeeded=nil;
+    id<MTLComputePipelineState> fitTractions=nil,residualDisplacement=nil,addProjectionPressure=nil,rankedExchange=nil,shiftDual=nil,dualMove=nil,dualLoad=nil,chooseDirection=nil;
     id<MTLBuffer> lostSupport=nil,priorPressure=nil,forwardMapping=nil,forwardFaces=nil,forwardTriangles=nil,forwardHit=nil;
     id<MTLComputePipelineState> relaxPressure=nil,transformForward=nil;
     id<MTLBuffer> sharedFaces=nil,facetPairs=nil,facetPoses=nil;
@@ -87,7 +89,7 @@ public:
         auto pipeline=[&](NSString* name){NSError* err=nil;auto p=[dev newComputePipelineStateWithFunction:[lib newFunctionWithName:name] error:&err];
             if(!p)throw std::runtime_error("missing pelvic material kernel");return p;};
         if constexpr(pelvicHasSharedFacets)sharedFaces=load(41);
-        if constexpr(pelvicHasSharedForward){lostSupport=alloc(8*4);priorPressure=alloc(512*4);forwardMapping=load(42);forwardFaces=load(43);forwardTriangles=alloc(triangles.length);forwardHit=alloc(forwardMapping.length/2);}
+        if constexpr(pelvicHasSharedForward){tractionResidual=alloc(countNodes*16);materialNeeded=alloc(8);contactNeeded=alloc(8);lostSupport=alloc(8*4);priorPressure=alloc(512*4);forwardMapping=load(42);forwardFaces=load(43);forwardTriangles=alloc(triangles.length);forwardHit=alloc(forwardMapping.length/2);}
         if constexpr(pelvicHasCrossingCertificate){
             cortexFaces=load(40);cortexFaceCount=unsigned(cortexFaces.length/16);
             nCrossingGroups=(cortexFaceCount+127)/128;
@@ -101,7 +103,7 @@ public:
             corticalFrames=alloc(16*32);makeCorticalFrames=pipeline(@"nm_pelvic_cortical_frames");poseCortex=pipeline(@"nm_pelvic_shared_cortex");
             testFaces=pipeline(@"nm_pelvic_crossing_groups");admitFaces=pipeline(@"nm_pelvic_crossing_admit");
         }
-        if constexpr(pelvicHasSharedForward){transformForward=pipeline(@"nm_pelvic_forward_triangles");relaxPressure=pipeline(@"nm_pelvic_pressure_relax");}
+        if constexpr(pelvicHasSharedForward){transformForward=pipeline(@"nm_pelvic_forward_triangles");relaxPressure=pipeline(@"nm_pelvic_pressure_relax");fitTractions=pipeline(@"nm_pelvic_fit_tractions");residualDisplacement=pipeline(@"nm_pelvic_residual_displacement");addProjectionPressure=pipeline(@"nm_pelvic_add_projection_pressure");rankedExchange=pipeline(@"nm_pelvic_ranked_exchange");shiftDual=pipeline(@"nm_pelvic_shift_dual_gap");dualMove=pipeline(@"nm_pelvic_dual_move");dualLoad=pipeline(@"nm_pelvic_dual_load");chooseDirection=pipeline(@"nm_pelvic_choose_direction");}
         candidatePressure=pipeline(@"nm_pelvic_candidate_pressure");finiteSurface=pipeline(pelvicHasSharedFacets?@"nm_pelvic_finite_native":@"nm_pelvic_finite_surface");cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
         factorApply=pipeline(@"nm_pelvic_bulk_factor");requireBulk=pipeline(@"nm_pelvic_require_bulk");geometry=pipeline(@"nm_pelvic_contact_rows");solve=pipeline(@"nm_pelvic_schur_solve");makeColumns=pipeline(@"nm_pelvic_schur_columns");makeGram=pipeline(@"nm_pelvic_schur_gram");moveNodes=pipeline(@"nm_pelvic_schur_displacement");wrench=pipeline(@"nm_pelvic_contact_wrench");apply=pipeline(@"nm_pelvic_contact_apply");
         std::set<unsigned> gridSizes{1,2,4,16,1024,numRegions,countGroups,(finiteCount+127)/128,(countNodes+127)/128,(reverseStart+127)/128,
@@ -225,7 +227,7 @@ public:
             nearest(0,0);
             compliance();
             [e setComputePipelineState:candidatePressure];words(0,{0,0,0,0});bind(1,poolSlots);bind(2,rows);
-            bind(3,gram);bind(4,pressures);bind(5,stats);run(2,32);
+            bind(3,gram);bind(4,pressures);bind(5,stats);bind(6,needed);run(2,32);
             certify(UINT_MAX);
         }
         for(unsigned outer=0;outer<16;++outer){
@@ -248,7 +250,57 @@ public:
             observe(1,1);bulkForces();select(1,true);nearest(1,1);
             certify(outer);
         }
-        optional=false;[e setComputePipelineState:gate];words(0,{p.stepIndex,0,0,unsigned(post)});bind(1,stats);bind(2,quality);bind(3,failedPre);bind(4,ptr(p.standStatuses));run(1,1);
+        optional=false;
+        if constexpr(pelvicHasSharedForward){
+            // Fresh nodal forces and unilateral gaps choose a mechanical
+            // correction per side. Both directions share one compliance solve.
+            auto choose=[&](){
+                [e setComputePipelineState:chooseDirection];bind(0,needed);bind(1,quality);
+                bind(2,materialNeeded);bind(3,contactNeeded);run(1,32);
+            };
+            for(unsigned sweep=0;sweep<16;++sweep){
+                unsigned count=unsigned(spanIndex.size());
+                [e setComputePipelineState:makeSpans];[e setBytes:&count length:4 atIndex:0];
+                bind(1,needed);bind(2,dispatchSizes);bind(3,dispatchArgs);run((count+31)/32,32);optional=true;
+                choose();
+                [e setComputePipelineState:fitTractions];bind(0,materialNeeded);bind(1,poolSlots);bind(2,pool);
+                bind(3,localN);bind(4,rows);bind(5,kr);bind(6,bulkGrad);bind(7,pressures);bind(8,inc);
+                bind(9,tractionResidual);run(2,32);
+                [e setComputePipelineState:candidatePressure];words(0,{1,0,0,0});bind(1,poolSlots);
+                bind(2,rows);bind(3,gram);bind(4,pressures);bind(5,stats);bind(6,needed);run(2,32);
+                certify(16u+2*sweep);choose();
+                auto correction=[&](unsigned apply){
+                    [e setComputePipelineState:residualDisplacement];words(0,{countNodes,apply,0,0});
+                    bind(1,materialNeeded);bind(2,baseShift);bind(3,coordinates);run((countNodes+127)/128,128);
+                };
+                correction(0);
+                [e setComputePipelineState:factorApply];bind(0,fRows);bind(1,fCols);bind(2,fVals);bind(3,fLevels);
+                bind(4,fOrder);bind(5,fPerm);bind(6,fScale);bind(7,tractionResidual);bind(8,baseShift);
+                bind(9,materialNeeded);bind(10,projRows);bind(11,projCols);bind(12,projVals);run(2,128);
+                correction(1);
+                observe(1,1);select(1,false);
+                if(sweep>=6){
+                    [e setComputePipelineState:rankedExchange];words(0,{numRegions,1,0,0});
+                    bind(1,poolRegions);bind(2,proposals);bind(3,poolSlots);bind(4,included);
+                    bind(5,pressures);bind(6,poolGaps);bind(7,needed);bind(8,gram);bind(9,pool);run(2,32);
+                }
+                nearest(0,1);compliance();
+                [e setComputePipelineState:shiftDual];bind(0,contactNeeded);bind(1,poolSlots);bind(2,pressures);
+                bind(3,gram);bind(4,rows);run(4,128);
+                [e setComputePipelineState:solve];words(0,{0,1,0,0});bind(1,poolSlots);bind(2,rows);
+                bind(3,gram);bind(4,pressures);bind(5,stats);bind(6,workspace);bind(7,needed);bind(8,priorPressure);run(2,32);
+                [e setComputePipelineState:dualMove];[e setBytes:&countNodes length:4 atIndex:0];bind(1,needed);
+                bind(2,priorPressure);bind(3,pressures);bind(4,columns);bind(5,coordinates);bind(6,materialNeeded);
+                run((countNodes+127)/128,128);
+                [e setComputePipelineState:dualLoad];bind(0,needed);bind(1,priorPressure);bind(2,pressures);
+                bind(3,materialNeeded);run(4,128);
+                observe(1,1);bulkForces();select(1,true);nearest(0,1);compliance();
+                [e setComputePipelineState:candidatePressure];words(0,{1,0,0,0});bind(1,poolSlots);
+                bind(2,rows);bind(3,gram);bind(4,pressures);bind(5,stats);bind(6,needed);run(2,32);
+                certify(17u+2*sweep);optional=false;
+            }
+        }
+        [e setComputePipelineState:gate];words(0,{p.stepIndex,0,0,unsigned(post)});bind(1,stats);bind(2,quality);bind(3,failedPre);bind(4,ptr(p.standStatuses));run(1,1);
         if(!post){
             [e setComputePipelineState:wrench];words(0,{first,countNodes,0,0});bind(1,samples);bind(2,rows);bind(3,pressures);bind(4,lever);
             bind(5,coordinates);bind(6,positions);bind(7,wrenches);bind(8,nodes);bind(9,attachment);run(4,128);
