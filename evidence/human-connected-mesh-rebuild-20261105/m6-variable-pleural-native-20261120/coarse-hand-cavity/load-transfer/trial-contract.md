@@ -1,0 +1,7 @@
+# Native posterior thickness comparison
+
+The parent paired-native-128 replay and the new fitted skin/fat share the same 97.13 kg reference, fixed bed, 128 roots, variable pleural pressure, Brain and circulation owners. The candidate changes the deep fat reference coordinates and the typed distribution of the same conserved mass. It keeps the outer skin, bonded interface, both shoulders and all fourteen existing elastic attachment sites fixed in the authored reference. The repaired gluteal surfaces are independent authoring inputs and do not participate in the native replay.
+
+Check 128 accepted roots through 2 ms. Verify the compiled node and element masses, unrelated frame identities, whole-shell endpoints, skin/fat quality floor, exact skin/bone crossing witnesses, the two superior glenohumeral paths and the existing terminal ligament and coupling certificates. Compare the final physical bed reaction with 0.431489112088 N and log the whole-run process and body-stage times separately. No settled support is expected over this prefix. No claim of sustained throughput follows from this short comparison.
+
+Stop on a native rejection, invalid cell, new startup crossing or missing acceptance owner. Record any additional terminal crossings against the matched reference. Keep the incumbent configuration if the candidate fails. The original combined 16-second and throughput qualification gates remain in force.

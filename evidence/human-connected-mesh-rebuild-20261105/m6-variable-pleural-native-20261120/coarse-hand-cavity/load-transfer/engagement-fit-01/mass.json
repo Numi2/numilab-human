@@ -1,0 +1,88 @@
+{
+  "scope": "Same material, anatomical region and rigid donor, dosed by original native source quotas and existing density bounds. Source masses are unchanged.",
+  "launch_sha256": "0d5632e3ec2af9b449250625c762832baf95250ca77fcfcd924450f1028d1f8e",
+  "candidate_sha256": "3f8fd95db33d06b09fbd0d4236e8e82089584b64c4aa52c6b9dec26a2a0dc42c",
+  "affected_typed_pools": 3,
+  "all_pools": 628,
+  "minimum_mass_deficit_kg": 0.0,
+  "minimum_mass_surplus_kg": 0.0,
+  "witnesses": [],
+  "transport": {
+    "success": true,
+    "pools": [
+      {
+        "pool": 314,
+        "cell_count": 272,
+        "seed": {
+          "full_radius_edges": 73886,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 543
+        },
+        "attempts": [
+          {
+            "neighbors": 8,
+            "route_count": 2804,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 315,
+        "cell_count": 24,
+        "seed": {
+          "full_radius_edges": 568,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 47
+        },
+        "attempts": [
+          {
+            "neighbors": 8,
+            "route_count": 221,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      },
+      {
+        "pool": 592,
+        "cell_count": 2094,
+        "seed": {
+          "full_radius_edges": 1301799,
+          "routed_seed_fraction": 1.0,
+          "seed_used_edges": 4172
+        },
+        "attempts": [
+          {
+            "neighbors": 8,
+            "route_count": 22756,
+            "status": 0,
+            "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+          }
+        ]
+      }
+    ],
+    "positive_routes": 29297,
+    "maximum_source_mass_error_kg": 2.6020852139652106e-18,
+    "maximum_source_target_distance_m": 0.04153055694915376,
+    "rerouted_mass_kg": 0.011504511467493374,
+    "total_mass_distance_kg_m": 0.0001151315838065875,
+    "density_bounds_by_material_kg_m3": {
+      "15": [
+        993.1178336895082,
+        1003.7749710890065
+      ],
+      "16": [
+        850.0000005019335,
+        949.9999994193724
+      ]
+    },
+    "reference_mass_centroid_shift_m": [
+      -1.552458365380495e-06,
+      1.482194176343058e-06,
+      -7.531848969447017e-07
+    ]
+  },
+  "mapped_mass_sha256": "3da10264e0f69d8f5735ca078a136a5dee95f290952b405c75eb029e59bfac2f",
+  "total_mapped_mass_kg": 13.939679838742222
+}

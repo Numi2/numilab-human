@@ -1,0 +1,5774 @@
+{
+  "scope": "Centroid rays at distinct deep-fat faces. Pure bed-normal relative motion with fixed skeletal donors, before tissue or joints redistribute loads. Areas can overlap in projection. Stiffness is a low-strain sensitivity using the existing uncalibrated passive muscle material, ignoring other compliances and adjacent muscle obstructions. No runtime rows are installed.",
+  "input_sha256": {
+    "shell-mass.csv.nodes.csv": "8f91bc7b878607efe411909c16bf280218698e4671ab0d647206d3104ccb63b6",
+    "shell-mass.csv.tets.csv": "bfaaa1f847be0e1fc37626f56cbc18bc23525dc2c98a1d4039818142fc417bc0",
+    "physical-bone-initial.bin": "01e003ed9cb22bcd9e469471c77419605be0ea759ab7de193aba281d7352b8ef",
+    "bone-endpoints.json": "e207ff1544b9c59d050265e5862c063c37f92d1c7caffd43983fcb13ac477dda",
+    "passive_skeletal_muscle_unqualified.nmatter": "04d5f0139cb22b9c874976d96f193113092ecd861a7d64aed8945ff6eb54d817"
+  },
+  "gluteal_mesh_sha256": {
+    "29": "f8a29748cab0c46507fdce2a70a76f3ee058d3a115716c19570b89a230b4d948",
+    "30": "81253df96c61d8335947105fb6f2d123498f23a915e11d6afb21038e9e48cb31"
+  },
+  "shell_fit_sha256": "88bed343d42c194e8d36eca56bf687e7cbc7b2f7292dd26fddc05ed20f5a0e4d",
+  "reference_material": {
+    "shear_pa": 12000.0,
+    "lame_lambda_pa": 120000.0,
+    "unconfined_axial_initial_tangent_pa": 34909.09090909091,
+    "confined_axial_initial_tangent_pa": 144000.0
+  },
+  "tested_faces": 500,
+  "eligible_5_cm_outer_band_faces": 733,
+  "excluded": {
+    "no_distinct_bone_beyond_chord": 200,
+    "no_valid_gluteal_chord": 63
+  },
+  "sacral_routes": 86,
+  "routes": [
+    {
+      "side": 29,
+      "fat_face": 11317,
+      "fat_nodes": [
+        5632,
+        5644,
+        5646
+      ],
+      "entry_face": 2282,
+      "exit_face": 2616,
+      "bone_body": 131,
+      "bone_bank": 2,
+      "bone_face": 1688,
+      "point_m": [
+        -0.11848802119493484,
+        -0.921528697013855,
+        0.041208840906620026
+      ],
+      "fat_muscle_gap_m": 0.02730383968577453,
+      "muscle_bone_gap_m": 0.023555823569724077,
+      "clearance_m": 0.05085966325549861,
+      "muscle_path_length_m": 0.019137844320626374,
+      "projected_area_m2": 7.346268550811885e-06
+    },
+    {
+      "side": 29,
+      "fat_face": 11318,
+      "fat_nodes": [
+        5632,
+        5646,
+        5761
+      ],
+      "entry_face": 2888,
+      "exit_face": 2618,
+      "bone_body": 131,
+      "bone_bank": 2,
+      "bone_face": 2641,
+      "point_m": [
+        -0.1063409224152565,
+        -0.8927364548047384,
+        0.036721174915631614
+      ],
+      "fat_muscle_gap_m": 0.014455358491992518,
+      "muscle_bone_gap_m": 0.04341570161207342,
+      "clearance_m": 0.05787106010406594,
+      "muscle_path_length_m": 0.020770086895474306,
+      "projected_area_m2": 0.0012425312376236342
+    },
+    {
+      "side": 29,
+      "fat_face": 11319,
+      "fat_nodes": [
+        5632,
+        5651,
+        5666
+      ],
+      "entry_face": 2940,
+      "exit_face": 3190,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 976,
+      "point_m": [
+        -0.11170761535565059,
+        -0.8445743719736735,
+        0.03187858685851097
+      ],
+      "fat_muscle_gap_m": 0.007770022265426349,
+      "muscle_bone_gap_m": 0.033778617189580674,
+      "clearance_m": 0.04154863945500702,
+      "muscle_path_length_m": 0.01611708647921805,
+      "projected_area_m2": 0.0005419165372320123
+    },
+    {
+      "side": 29,
+      "fat_face": 11320,
+      "fat_nodes": [
+        5632,
+        5666,
+        5761
+      ],
+      "entry_face": 2940,
+      "exit_face": 3375,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 524,
+      "point_m": [
+        -0.10091335078080495,
+        -0.8728586236635844,
+        0.033159248530864716
+      ],
+      "fat_muscle_gap_m": 0.00924367692294411,
+      "muscle_bone_gap_m": 0.017098187196088903,
+      "clearance_m": 0.026341864119033012,
+      "muscle_path_length_m": 0.020010163373791523,
+      "projected_area_m2": 0.00021486315303342884
+    },
+    {
+      "side": 29,
+      "fat_face": 11349,
+      "fat_nodes": [
+        5645,
+        5651,
+        5840
+      ],
+      "entry_face": 3481,
+      "exit_face": 3459,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1720,
+      "point_m": [
+        -0.09717031319936116,
+        -0.7888045907020569,
+        0.03642312747736772
+      ],
+      "fat_muscle_gap_m": 0.004410864748348391,
+      "muscle_bone_gap_m": 0.031177569166113285,
+      "clearance_m": 0.035588433914461676,
+      "muscle_path_length_m": 0.013105285744817556,
+      "projected_area_m2": 0.00074664909292399
+    },
+    {
+      "side": 29,
+      "fat_face": 11350,
+      "fat_nodes": [
+        5645,
+        5838,
+        5840
+      ],
+      "entry_face": 3810,
+      "exit_face": 4224,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1978,
+      "point_m": [
+        -0.08201517413059871,
+        -0.7674241860707601,
+        0.04108333153029283
+      ],
+      "fat_muscle_gap_m": 0.007322180027278462,
+      "muscle_bone_gap_m": 0.00023658431413674935,
+      "clearance_m": 0.007558764341415211,
+      "muscle_path_length_m": 0.0024767628773806616,
+      "projected_area_m2": 0.0010564027253865405
+    },
+    {
+      "side": 29,
+      "fat_face": 11361,
+      "fat_nodes": [
+        5651,
+        5666,
+        5694
+      ],
+      "entry_face": 3416,
+      "exit_face": 3359,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1387,
+      "point_m": [
+        -0.1014635240038236,
+        -0.8323686122894287,
+        0.030185567835966747
+      ],
+      "fat_muscle_gap_m": 0.0029777562912754497,
+      "muscle_bone_gap_m": 0.035065710485625214,
+      "clearance_m": 0.03804346677690067,
+      "muscle_path_length_m": 0.019357058364849515,
+      "projected_area_m2": 0.0005476473975942753
+    },
+    {
+      "side": 29,
+      "fat_face": 11362,
+      "fat_nodes": [
+        5651,
+        5694,
+        5840
+      ],
+      "entry_face": 3759,
+      "exit_face": 3679,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1565,
+      "point_m": [
+        -0.0892877330382665,
+        -0.8059840202331543,
+        0.029485464716951054
+      ],
+      "fat_muscle_gap_m": 0.004133105966086351,
+      "muscle_bone_gap_m": 0.0420707579966733,
+      "clearance_m": 0.04620386396275965,
+      "muscle_path_length_m": 0.01636246162764214,
+      "projected_area_m2": 0.0006871793601725962
+    },
+    {
+      "side": 29,
+      "fat_face": 11396,
+      "fat_nodes": [
+        5666,
+        5694,
+        5796
+      ],
+      "entry_face": 3760,
+      "exit_face": 3853,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1340,
+      "point_m": [
+        -0.08880760769049327,
+        -0.8307591676712036,
+        0.02838408077756564
+      ],
+      "fat_muscle_gap_m": 0.0006064406478813837,
+      "muscle_bone_gap_m": 0.034758369628173025,
+      "clearance_m": 0.03536481027605441,
+      "muscle_path_length_m": 0.02217800139000068,
+      "projected_area_m2": 0.00016309422560034648
+    },
+    {
+      "side": 29,
+      "fat_face": 11397,
+      "fat_nodes": [
+        5666,
+        5761,
+        5797
+      ],
+      "entry_face": 3963,
+      "exit_face": 3876,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 767,
+      "point_m": [
+        -0.08508723229169846,
+        -0.870536228020986,
+        0.03169412724673748
+      ],
+      "fat_muscle_gap_m": 0.001719342195658731,
+      "muscle_bone_gap_m": 0.016574571818207255,
+      "clearance_m": 0.018293914013865986,
+      "muscle_path_length_m": 0.026415911003501713,
+      "projected_area_m2": 0.00047482614636384923
+    },
+    {
+      "side": 29,
+      "fat_face": 11398,
+      "fat_nodes": [
+        5666,
+        5796,
+        5842
+      ],
+      "entry_face": 3760,
+      "exit_face": 3854,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1340,
+      "point_m": [
+        -0.08281996349493663,
+        -0.8400330543518066,
+        0.028061815227071445
+      ],
+      "fat_muscle_gap_m": 0.00028651100492307555,
+      "muscle_bone_gap_m": 0.02980415702423779,
+      "clearance_m": 0.030090668029160866,
+      "muscle_path_length_m": 0.02439784464752321,
+      "projected_area_m2": 0.0008013416397250062
+    },
+    {
+      "side": 29,
+      "fat_face": 11399,
+      "fat_nodes": [
+        5666,
+        5797,
+        5842
+      ],
+      "entry_face": 4317,
+      "exit_face": 3682,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 870,
+      "point_m": [
+        -0.08259047816197078,
+        -0.8582366704940796,
+        0.02867184206843376
+      ],
+      "fat_muscle_gap_m": 0.0011147446506736408,
+      "muscle_bone_gap_m": 0.022966056132718335,
+      "clearance_m": 0.024080800783391976,
+      "muscle_path_length_m": 0.025889192708037995,
+      "projected_area_m2": 2.0611520685775986e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 11465,
+      "fat_nodes": [
+        5694,
+        5796,
+        5840
+      ],
+      "entry_face": 3816,
+      "exit_face": 4412,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 1643,
+      "point_m": [
+        -0.07663181672493617,
+        -0.8043745756149292,
+        0.027683977658549946
+      ],
+      "fat_muscle_gap_m": 0.008808483376365733,
+      "muscle_bone_gap_m": 0.021435665564368656,
+      "clearance_m": 0.030244148940734388,
+      "muscle_path_length_m": 0.015447821698730123,
+      "projected_area_m2": 1.6541191658170362e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 11623,
+      "fat_nodes": [
+        5761,
+        5795,
+        6007
+      ],
+      "entry_face": 3963,
+      "exit_face": 4591,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 142,
+      "point_m": [
+        -0.06914316614468892,
+        -0.8981563250223795,
+        0.03761660804351171
+      ],
+      "fat_muscle_gap_m": 0.0022496934858598563,
+      "muscle_bone_gap_m": 0.0193371981195172,
+      "clearance_m": 0.021586891605377058,
+      "muscle_path_length_m": 0.030998136725579162,
+      "projected_area_m2": 0.0005401554040733725
+    },
+    {
+      "side": 29,
+      "fat_face": 11624,
+      "fat_nodes": [
+        5761,
+        5797,
+        5937
+      ],
+      "entry_face": 4598,
+      "exit_face": 4543,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 447,
+      "point_m": [
+        -0.07023694117863973,
+        -0.8701980113983154,
+        0.030163509771227837
+      ],
+      "fat_muscle_gap_m": 0.0027747627859907587,
+      "muscle_bone_gap_m": 0.08756058886344137,
+      "clearance_m": 0.09033535164943213,
+      "muscle_path_length_m": 0.02858023234506104,
+      "projected_area_m2": 0.0003031961168971087
+    },
+    {
+      "side": 29,
+      "fat_face": 11697,
+      "fat_nodes": [
+        5795,
+        6007,
+        6033
+      ],
+      "entry_face": 5096,
+      "exit_face": 4866,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 153,
+      "point_m": [
+        -0.060143654545148216,
+        -0.9071699579556783,
+        0.043793427447477974
+      ],
+      "fat_muscle_gap_m": 0.0007904965704421396,
+      "muscle_bone_gap_m": 0.022466164227936847,
+      "clearance_m": 0.023256660798378986,
+      "muscle_path_length_m": 0.02880594894640908,
+      "projected_area_m2": 0.0004828300046790801
+    },
+    {
+      "side": 29,
+      "fat_face": 11698,
+      "fat_nodes": [
+        5796,
+        5840,
+        5936
+      ],
+      "entry_face": 4902,
+      "exit_face": 5068,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 810,
+      "point_m": [
+        -0.06593677401542664,
+        -0.7988833785057068,
+        0.02465610516568025
+      ],
+      "fat_muscle_gap_m": 0.016610756325905803,
+      "muscle_bone_gap_m": 0.0004825066057630098,
+      "clearance_m": 0.017093262931668813,
+      "muscle_path_length_m": 0.020559793462832744,
+      "projected_area_m2": 0.00015797996430233496
+    },
+    {
+      "side": 29,
+      "fat_face": 11700,
+      "fat_nodes": [
+        5797,
+        5842,
+        5937
+      ],
+      "entry_face": 4915,
+      "exit_face": 4429,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 828,
+      "point_m": [
+        -0.06774018704891205,
+        -0.8578984538714091,
+        0.027141224592924118
+      ],
+      "fat_muscle_gap_m": 0.003886593025314012,
+      "muscle_bone_gap_m": 0.0852400140352384,
+      "clearance_m": 0.0891266070605524,
+      "muscle_path_length_m": 0.027690634877449372,
+      "projected_area_m2": 1.9500263444660604e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 11791,
+      "fat_nodes": [
+        5838,
+        5840,
+        5936
+      ],
+      "entry_face": 5115,
+      "exit_face": 5239,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 1041,
+      "point_m": [
+        -0.0634375512599945,
+        -0.7791124184926351,
+        0.031117796277006466
+      ],
+      "fat_muscle_gap_m": 0.01959746775449916,
+      "muscle_bone_gap_m": 0.0003386647299722517,
+      "clearance_m": 0.019936132484471413,
+      "muscle_path_length_m": 0.01726546497680878,
+      "projected_area_m2": 0.0001550238686756078
+    },
+    {
+      "side": 29,
+      "fat_face": 11976,
+      "fat_nodes": [
+        5936,
+        5937,
+        6077
+      ],
+      "entry_face": 5696,
+      "exit_face": 6077,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 1964,
+      "point_m": [
+        -0.048768174524108567,
+        -0.8369349042574564,
+        0.02288393738369147
+      ],
+      "fat_muscle_gap_m": 0.01884681290675146,
+      "muscle_bone_gap_m": 0.00022091079493529592,
+      "clearance_m": 0.019067723701686756,
+      "muscle_path_length_m": 0.012467914793232095,
+      "projected_area_m2": 0.0007406731668326838
+    },
+    {
+      "side": 29,
+      "fat_face": 12085,
+      "fat_nodes": [
+        6007,
+        6033,
+        6096
+      ],
+      "entry_face": 6063,
+      "exit_face": 5446,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 305,
+      "point_m": [
+        -0.04455331775049368,
+        -0.892345130443573,
+        0.04005521163344383
+      ],
+      "fat_muscle_gap_m": 0.003605128691684209,
+      "muscle_bone_gap_m": 0.06648476028971985,
+      "clearance_m": 0.07008988898140406,
+      "muscle_path_length_m": 0.021653466256468995,
+      "projected_area_m2": 0.00046672055580687655
+    },
+    {
+      "side": 29,
+      "fat_face": 12086,
+      "fat_nodes": [
+        6007,
+        6058,
+        6059
+      ],
+      "entry_face": 5101,
+      "exit_face": 6379,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 474,
+      "point_m": [
+        -0.044258241852124534,
+        -0.876230796178182,
+        0.03289283563693365
+      ],
+      "fat_muscle_gap_m": 0.0066495987486140384,
+      "muscle_bone_gap_m": 0.08997168974328465,
+      "clearance_m": 0.09662128849189869,
+      "muscle_path_length_m": 0.018814189652490383,
+      "projected_area_m2": 1.3265108690152516e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 12087,
+      "fat_nodes": [
+        6007,
+        6058,
+        6096
+      ],
+      "entry_face": 5101,
+      "exit_face": 6455,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 474,
+      "point_m": [
+        -0.04044742944339911,
+        -0.8788742423057556,
+        0.033117311696211495
+      ],
+      "fat_muscle_gap_m": 0.008178070570175965,
+      "muscle_bone_gap_m": 0.08893241187276726,
+      "clearance_m": 0.09711048244294324,
+      "muscle_path_length_m": 0.017820969049138075,
+      "projected_area_m2": 2.4319099332981153e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 12088,
+      "fat_nodes": [
+        6007,
+        6059,
+        6115
+      ],
+      "entry_face": 6245,
+      "exit_face": 6381,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 691,
+      "point_m": [
+        -0.039297621697187424,
+        -0.8716334303220113,
+        0.030773344760139782
+      ],
+      "fat_muscle_gap_m": 0.009089490006155571,
+      "muscle_bone_gap_m": 0.09884347560491251,
+      "clearance_m": 0.10793296561106808,
+      "muscle_path_length_m": 0.016336299501575648,
+      "projected_area_m2": 5.247048167666968e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 12190,
+      "fat_nodes": [
+        6058,
+        6059,
+        6115
+      ],
+      "entry_face": 6246,
+      "exit_face": 6766,
+      "bone_body": 128,
+      "bone_bank": 18,
+      "bone_face": 481,
+      "point_m": [
+        -0.035552073270082474,
+        -0.8720399339993795,
+        0.03200070497890314
+      ],
+      "fat_muscle_gap_m": 0.010074041089789841,
+      "muscle_bone_gap_m": 0.09637153846958399,
+      "clearance_m": 0.10644557955937384,
+      "muscle_path_length_m": 0.016537098182999914,
+      "projected_area_m2": 2.0827160172043335e-05
+    },
+    {
+      "side": 29,
+      "fat_face": 12191,
+      "fat_nodes": [
+        6058,
+        6096,
+        6115
+      ],
+      "entry_face": 7012,
+      "exit_face": 7072,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 4441,
+      "point_m": [
+        -0.031741260861357055,
+        -0.8746833801269531,
+        0.032225181038180985
+      ],
+      "fat_muscle_gap_m": 0.012171441968514767,
+      "muscle_bone_gap_m": 0.0002530260892639469,
+      "clearance_m": 0.012424468057778713,
+      "muscle_path_length_m": 0.0035618226166660646,
+      "projected_area_m2": 0.00011702057928780762
+    },
+    {
+      "side": 30,
+      "fat_face": 12261,
+      "fat_nodes": [
+        6096,
+        6116,
+        6154
+      ],
+      "entry_face": 608,
+      "exit_face": 811,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 5525,
+      "point_m": [
+        -0.020637675498922665,
+        -0.8814286986986796,
+        0.036835254480441414
+      ],
+      "fat_muscle_gap_m": 0.01000534697729414,
+      "muscle_bone_gap_m": 0.00018149648709796934,
+      "clearance_m": 0.010186843464392109,
+      "muscle_path_length_m": 0.005785696513659011,
+      "projected_area_m2": 0.00024095322990858037
+    },
+    {
+      "side": 30,
+      "fat_face": 12303,
+      "fat_nodes": [
+        6116,
+        6154,
+        6156
+      ],
+      "entry_face": 1235,
+      "exit_face": 953,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 401,
+      "point_m": [
+        -0.014922026234368483,
+        -0.8761015931765238,
+        0.03732382133603096
+      ],
+      "fat_muscle_gap_m": 0.004274912909192977,
+      "muscle_bone_gap_m": 0.09355189435190736,
+      "clearance_m": 0.09782680726110034,
+      "muscle_path_length_m": 0.01692737146959781,
+      "projected_area_m2": 0.00013627116601799827
+    },
+    {
+      "side": 30,
+      "fat_face": 12385,
+      "fat_nodes": [
+        6154,
+        6156,
+        6305
+      ],
+      "entry_face": 1367,
+      "exit_face": 1648,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 219,
+      "point_m": [
+        -0.005334295332431793,
+        -0.8916094700495402,
+        0.03978254273533821
+      ],
+      "fat_muscle_gap_m": 0.0026033441951371084,
+      "muscle_bone_gap_m": 0.06923278100018555,
+      "clearance_m": 0.07183612519532266,
+      "muscle_path_length_m": 0.021447147832209842,
+      "projected_area_m2": 0.00029733379494487067
+    },
+    {
+      "side": 30,
+      "fat_face": 12388,
+      "fat_nodes": [
+        6156,
+        6157,
+        6158
+      ],
+      "entry_face": 1252,
+      "exit_face": 1359,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 6887,
+      "point_m": [
+        -0.01249113492667675,
+        -0.8623801072438558,
+        0.03850149984161059
+      ],
+      "fat_muscle_gap_m": 0.003927108407379677,
+      "muscle_bone_gap_m": 0.0002444761296509154,
+      "clearance_m": 0.004171584537030593,
+      "muscle_path_length_m": 0.005075622990960198,
+      "projected_area_m2": 1.0961613224919065e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12389,
+      "fat_nodes": [
+        6156,
+        6158,
+        6198
+      ],
+      "entry_face": 1252,
+      "exit_face": 1544,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7225,
+      "point_m": [
+        -0.010312221478670835,
+        -0.8621664643287659,
+        0.03866859897971153
+      ],
+      "fat_muscle_gap_m": 0.002192726209213687,
+      "muscle_bone_gap_m": 0.0003770534039123155,
+      "clearance_m": 0.0025697796131260026,
+      "muscle_path_length_m": 0.009882817882144693,
+      "projected_area_m2": 1.0071177431347778e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12390,
+      "fat_nodes": [
+        6156,
+        6198,
+        6364
+      ],
+      "entry_face": 1364,
+      "exit_face": 1784,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 586,
+      "point_m": [
+        -0.0009180296522875627,
+        -0.8651631871859232,
+        0.032377139975627266
+      ],
+      "fat_muscle_gap_m": 0.002251114346853829,
+      "muscle_bone_gap_m": 0.10559510258560062,
+      "clearance_m": 0.10784621693245444,
+      "muscle_path_length_m": 0.02424750343539256,
+      "projected_area_m2": 0.00012144484597101379
+    },
+    {
+      "side": 30,
+      "fat_face": 12391,
+      "fat_nodes": [
+        6156,
+        6305,
+        6364
+      ],
+      "entry_face": 1364,
+      "exit_face": 1645,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 303,
+      "point_m": [
+        0.004230154057343801,
+        -0.8820029497146606,
+        0.032855755339066185
+      ],
+      "fat_muscle_gap_m": 0.00474608806439239,
+      "muscle_bone_gap_m": 0.08475249287709274,
+      "clearance_m": 0.08949858094148513,
+      "muscle_path_length_m": 0.024106573052804052,
+      "projected_area_m2": 0.0006018064059557793
+    },
+    {
+      "side": 30,
+      "fat_face": 12403,
+      "fat_nodes": [
+        6163,
+        6193,
+        6204
+      ],
+      "entry_face": 1408,
+      "exit_face": 1678,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7600,
+      "point_m": [
+        -0.006741446753342946,
+        -0.8393678466478983,
+        0.02915472909808159
+      ],
+      "fat_muscle_gap_m": 0.020238006547245627,
+      "muscle_bone_gap_m": 0.00027817274554611804,
+      "clearance_m": 0.020516179292791745,
+      "muscle_path_length_m": 0.0030073405628293914,
+      "projected_area_m2": 1.0999109211415337e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12404,
+      "fat_nodes": [
+        6163,
+        6203,
+        6204
+      ],
+      "entry_face": 1408,
+      "exit_face": 1642,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7188,
+      "point_m": [
+        -0.006123018295814593,
+        -0.8415189584096273,
+        0.03258100959161917
+      ],
+      "fat_muscle_gap_m": 0.01413596964525457,
+      "muscle_bone_gap_m": 0.0003751314006206971,
+      "clearance_m": 0.014511101045875267,
+      "muscle_path_length_m": 0.008049358137277376,
+      "projected_area_m2": 5.175325637582495e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12459,
+      "fat_nodes": [
+        6193,
+        6204,
+        6206
+      ],
+      "entry_face": 1408,
+      "exit_face": 1765,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7589,
+      "point_m": [
+        -0.004689135666315754,
+        -0.8369990587234497,
+        0.030664489914973576
+      ],
+      "fat_muscle_gap_m": 0.016916299851055704,
+      "muscle_bone_gap_m": 0.00022830049140127456,
+      "clearance_m": 0.01714460034245698,
+      "muscle_path_length_m": 0.005195654337988173,
+      "projected_area_m2": 8.200618760577372e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12460,
+      "fat_nodes": [
+        6193,
+        6206,
+        6207
+      ],
+      "entry_face": 1408,
+      "exit_face": 1765,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7589,
+      "point_m": [
+        -0.004599344062929352,
+        -0.8345731894175211,
+        0.027606287350257237
+      ],
+      "fat_muscle_gap_m": 0.021621563768840866,
+      "muscle_bone_gap_m": 0.00022830050525322193,
+      "clearance_m": 0.021849864274094088,
+      "muscle_path_length_m": 0.0019066391487936804,
+      "projected_area_m2": 6.139065388065246e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12479,
+      "fat_nodes": [
+        6203,
+        6204,
+        6205
+      ],
+      "entry_face": 1408,
+      "exit_face": 1722,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7863,
+      "point_m": [
+        -0.003886803984642029,
+        -0.8407740394274393,
+        0.03677470547457536
+      ],
+      "fat_muscle_gap_m": 0.006602991549891447,
+      "muscle_bone_gap_m": 0.00032728335653687407,
+      "clearance_m": 0.0069302749064283214,
+      "muscle_path_length_m": 0.013157331783446115,
+      "projected_area_m2": 3.21787011423047e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12481,
+      "fat_nodes": [
+        6204,
+        6205,
+        6206
+      ],
+      "entry_face": 1408,
+      "exit_face": 1765,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7589,
+      "point_m": [
+        -0.0031856221612542868,
+        -0.8384602665901184,
+        0.035250832016269364
+      ],
+      "fat_muscle_gap_m": 0.008626217934081415,
+      "muscle_bone_gap_m": 0.00022830054240906977,
+      "clearance_m": 0.008854518476490485,
+      "muscle_path_length_m": 0.010798661365427578,
+      "projected_area_m2": 5.904239505513664e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12482,
+      "fat_nodes": [
+        6205,
+        6206,
+        6238
+      ],
+      "entry_face": 1415,
+      "exit_face": 1765,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7877,
+      "point_m": [
+        -0.0013952111088049908,
+        -0.837165375550588,
+        0.038358779003222786
+      ],
+      "fat_muscle_gap_m": 0.003424095412439432,
+      "muscle_bone_gap_m": 0.00024659519693541465,
+      "clearance_m": 0.0036706906093748465,
+      "muscle_path_length_m": 0.013034677542270105,
+      "projected_area_m2": 8.25063442016355e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12484,
+      "fat_nodes": [
+        6205,
+        6237,
+        6238
+      ],
+      "entry_face": 1415,
+      "exit_face": 1944,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8158,
+      "point_m": [
+        -0.0004204204548538352,
+        -0.8391570250193278,
+        0.04032734657327334
+      ],
+      "fat_muscle_gap_m": 0.0001000066310143169,
+      "muscle_bone_gap_m": 0.0006282181556903979,
+      "clearance_m": 0.0007282247867047148,
+      "muscle_path_length_m": 0.017771811806337946,
+      "projected_area_m2": 6.786283096672785e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12485,
+      "fat_nodes": [
+        6206,
+        6207,
+        6240
+      ],
+      "entry_face": 1408,
+      "exit_face": 1776,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7888,
+      "point_m": [
+        -0.002844767877832055,
+        -0.8330550988515218,
+        0.02697804942727089
+      ],
+      "fat_muscle_gap_m": 0.020323781307547237,
+      "muscle_bone_gap_m": 0.000196280483675558,
+      "clearance_m": 0.020520061791222795,
+      "muscle_path_length_m": 0.004378962124091695,
+      "projected_area_m2": 5.2620548940188194e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12486,
+      "fat_nodes": [
+        6206,
+        6238,
+        6240
+      ],
+      "entry_face": 1408,
+      "exit_face": 1954,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8176,
+      "point_m": [
+        -0.0011441484287691612,
+        -0.8341860771179199,
+        0.033144198978940644
+      ],
+      "fat_muscle_gap_m": 0.010356239128122377,
+      "muscle_bone_gap_m": 0.00020812924810878486,
+      "clearance_m": 0.010564368376231162,
+      "muscle_path_length_m": 0.00966020450934589,
+      "projected_area_m2": 7.324475424610663e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12487,
+      "fat_nodes": [
+        6207,
+        6208,
+        6240
+      ],
+      "entry_face": 1755,
+      "exit_face": 1810,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 7897,
+      "point_m": [
+        -0.0027816765941679478,
+        -0.8305632869402567,
+        0.023675344263513882
+      ],
+      "fat_muscle_gap_m": 0.025789473061379926,
+      "muscle_bone_gap_m": 0.0001320977875080495,
+      "clearance_m": 0.025921570848887975,
+      "muscle_path_length_m": 0.0011819475999025608,
+      "projected_area_m2": 5.70349637590839e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12488,
+      "fat_nodes": [
+        6208,
+        6231,
+        6241
+      ],
+      "entry_face": 1755,
+      "exit_face": 1869,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8181,
+      "point_m": [
+        -0.00033091763422514003,
+        -0.825515349706014,
+        0.02282050500313441
+      ],
+      "fat_muscle_gap_m": 0.02695836960116141,
+      "muscle_bone_gap_m": 0.00012146449160017198,
+      "clearance_m": 0.027079834092761584,
+      "muscle_path_length_m": 0.0008170777947885191,
+      "projected_area_m2": 1.2132178811029987e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12489,
+      "fat_nodes": [
+        6208,
+        6240,
+        6241
+      ],
+      "entry_face": 1408,
+      "exit_face": 1869,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8181,
+      "point_m": [
+        -0.0006206405038634936,
+        -0.8285886446634928,
+        0.024622739603122074
+      ],
+      "fat_muscle_gap_m": 0.02212742416893482,
+      "muscle_bone_gap_m": 0.00012146711471631294,
+      "clearance_m": 0.022248891283651134,
+      "muscle_path_length_m": 0.003987474818977002,
+      "projected_area_m2": 8.651876094445399e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12536,
+      "fat_nodes": [
+        6231,
+        6241,
+        6242
+      ],
+      "entry_face": 1755,
+      "exit_face": 2069,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8569,
+      "point_m": [
+        0.0012043663882650435,
+        -0.8230105042457581,
+        0.022445075834790867
+      ],
+      "fat_muscle_gap_m": 0.026630621504307856,
+      "muscle_bone_gap_m": 0.00014093225250400715,
+      "clearance_m": 0.026771553756811863,
+      "muscle_path_length_m": 0.0014808726868502514,
+      "projected_area_m2": 8.109833406556508e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12549,
+      "fat_nodes": [
+        6238,
+        6239,
+        6268
+      ],
+      "entry_face": 1415,
+      "exit_face": 2044,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8427,
+      "point_m": [
+        0.0023935359398213527,
+        -0.8356747229894003,
+        0.03913362448414167
+      ],
+      "fat_muscle_gap_m": 0.00022404381762881898,
+      "muscle_bone_gap_m": 0.00028262400338903426,
+      "clearance_m": 0.0005066678210178532,
+      "muscle_path_length_m": 0.016526879156397327,
+      "projected_area_m2": 5.848774232821222e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12550,
+      "fat_nodes": [
+        6238,
+        6240,
+        6268
+      ],
+      "entry_face": 1415,
+      "exit_face": 2037,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8179,
+      "point_m": [
+        0.0007991553090202311,
+        -0.8334827423095703,
+        0.03511462671061357
+      ],
+      "fat_muscle_gap_m": 0.006131950557037129,
+      "muscle_bone_gap_m": 0.00018886948194331982,
+      "clearance_m": 0.006320820038980449,
+      "muscle_path_length_m": 0.012145237777741867,
+      "projected_area_m2": 8.230252042199307e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12551,
+      "fat_nodes": [
+        6239,
+        6268,
+        6284
+      ],
+      "entry_face": 1415,
+      "exit_face": 2182,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8524,
+      "point_m": [
+        0.004331638182823856,
+        -0.8351918260256449,
+        0.03788719947139422
+      ],
+      "fat_muscle_gap_m": 0.0001437477674506374,
+      "muscle_bone_gap_m": 0.0007310120322133531,
+      "clearance_m": 0.0008747597996639905,
+      "muscle_path_length_m": 0.019625780287427008,
+      "projected_area_m2": 7.768254170134603e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12554,
+      "fat_nodes": [
+        6240,
+        6241,
+        6267
+      ],
+      "entry_face": 1408,
+      "exit_face": 2079,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8565,
+      "point_m": [
+        0.0012865672664095957,
+        -0.8290507793426514,
+        0.02742263985176881
+      ],
+      "fat_muscle_gap_m": 0.01566369465239462,
+      "muscle_bone_gap_m": 0.0001145890980464373,
+      "clearance_m": 0.015778283750441057,
+      "muscle_path_length_m": 0.007938316474985295,
+      "projected_area_m2": 7.390213849836624e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12555,
+      "fat_nodes": [
+        6240,
+        6267,
+        6268
+      ],
+      "entry_face": 1415,
+      "exit_face": 2035,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8437,
+      "point_m": [
+        0.0016216559646030266,
+        -0.8312877615292867,
+        0.03221245172123114
+      ],
+      "fat_muscle_gap_m": 0.009084017420421676,
+      "muscle_bone_gap_m": 0.00014775466902088724,
+      "clearance_m": 0.009231772089442564,
+      "muscle_path_length_m": 0.01065060597621121,
+      "projected_area_m2": 9.081791820776675e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12556,
+      "fat_nodes": [
+        6241,
+        6242,
+        6271
+      ],
+      "entry_face": 1746,
+      "exit_face": 2069,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8569,
+      "point_m": [
+        0.0028508237252632775,
+        -0.8224922219912211,
+        0.024254283557335537
+      ],
+      "fat_muscle_gap_m": 0.021099827418870305,
+      "muscle_bone_gap_m": 0.00014093471177199085,
+      "clearance_m": 0.021240762130642295,
+      "muscle_path_length_m": 0.005182014586898709,
+      "projected_area_m2": 7.1486606613990755e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12557,
+      "fat_nodes": [
+        6241,
+        6267,
+        6270
+      ],
+      "entry_face": 1415,
+      "exit_face": 2031,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8438,
+      "point_m": [
+        0.0035911114731182656,
+        -0.8274640242258707,
+        0.03086225688457489
+      ],
+      "fat_muscle_gap_m": 0.010112596802895599,
+      "muscle_bone_gap_m": 0.00012193416340344071,
+      "clearance_m": 0.01023453096629904,
+      "muscle_path_length_m": 0.010362079798724465,
+      "projected_area_m2": 4.638953285965308e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12558,
+      "fat_nodes": [
+        6241,
+        6270,
+        6271
+      ],
+      "entry_face": 1408,
+      "exit_face": 2070,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8439,
+      "point_m": [
+        0.0039919585299988585,
+        -0.8245466947555542,
+        0.028841389964024227
+      ],
+      "fat_muscle_gap_m": 0.012883413901860156,
+      "muscle_bone_gap_m": 0.00012729943649419928,
+      "clearance_m": 0.013010713338354355,
+      "muscle_path_length_m": 0.009466224812863487,
+      "projected_area_m2": 1.0209299923180648e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12559,
+      "fat_nodes": [
+        6242,
+        6271,
+        6272
+      ],
+      "entry_face": 1755,
+      "exit_face": 2192,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8573,
+      "point_m": [
+        0.0038421891319255033,
+        -0.8189806342124939,
+        0.024193404863278072
+      ],
+      "fat_muscle_gap_m": 0.023299376095576207,
+      "muscle_bone_gap_m": 0.00014180494483838346,
+      "clearance_m": 0.02344118104041459,
+      "muscle_path_length_m": 0.001945604784385352,
+      "projected_area_m2": 5.28427444988766e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12599,
+      "fat_nodes": [
+        6262,
+        6264,
+        6311
+      ],
+      "entry_face": 2483,
+      "exit_face": 2425,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8750,
+      "point_m": [
+        0.008018797108282646,
+        -0.801038126150767,
+        0.02811591016749541
+      ],
+      "fat_muscle_gap_m": 0.02248703395722988,
+      "muscle_bone_gap_m": 0.00014946628393124745,
+      "clearance_m": 0.022636500241161126,
+      "muscle_path_length_m": 0.002552906949563463,
+      "projected_area_m2": 6.853998762892943e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12600,
+      "fat_nodes": [
+        6262,
+        6307,
+        6311
+      ],
+      "entry_face": 2575,
+      "exit_face": 2679,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8753,
+      "point_m": [
+        0.009521721551815668,
+        -0.7982762853304545,
+        0.027992759520808857
+      ],
+      "fat_muscle_gap_m": 0.021463438220557702,
+      "muscle_bone_gap_m": 0.00014584689165666326,
+      "clearance_m": 0.021609285112214365,
+      "muscle_path_length_m": 0.003591458588622025,
+      "projected_area_m2": 1.3248149214689642e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12603,
+      "fat_nodes": [
+        6263,
+        6308,
+        6317
+      ],
+      "entry_face": 2434,
+      "exit_face": 2398,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8767,
+      "point_m": [
+        0.0075029282209773855,
+        -0.8112554550170898,
+        0.03079386365910371
+      ],
+      "fat_muscle_gap_m": 0.016372935328793425,
+      "muscle_bone_gap_m": 0.00011583668240378736,
+      "clearance_m": 0.016488772011197212,
+      "muscle_path_length_m": 0.001821572547743143,
+      "projected_area_m2": 4.918518930946414e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12604,
+      "fat_nodes": [
+        6264,
+        6265,
+        6266
+      ],
+      "entry_face": 2411,
+      "exit_face": 2410,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8570,
+      "point_m": [
+        0.007080940840144952,
+        -0.8052264054616293,
+        0.030180177961786587
+      ],
+      "fat_muscle_gap_m": 0.020765573368981865,
+      "muscle_bone_gap_m": 0.00015580650491753278,
+      "clearance_m": 0.020921379873899398,
+      "muscle_path_length_m": 0.0010311283789610423,
+      "projected_area_m2": 3.3335763914288385e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12605,
+      "fat_nodes": [
+        6264,
+        6266,
+        6311
+      ],
+      "entry_face": 2483,
+      "exit_face": 2426,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8751,
+      "point_m": [
+        0.008350941507766644,
+        -0.8032560149828593,
+        0.029837256918350857
+      ],
+      "fat_muscle_gap_m": 0.01883325563085812,
+      "muscle_bone_gap_m": 0.00015646221456838694,
+      "clearance_m": 0.018989717845426506,
+      "muscle_path_length_m": 0.003793167894878338,
+      "projected_area_m2": 5.9980636207407345e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12606,
+      "fat_nodes": [
+        6265,
+        6266,
+        6308
+      ],
+      "entry_face": 2411,
+      "exit_face": 2441,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8580,
+      "point_m": [
+        0.00768726800257961,
+        -0.8075003425280253,
+        0.032468672220905624
+      ],
+      "fat_muscle_gap_m": 0.015776152012922227,
+      "muscle_bone_gap_m": 0.00016625700601117371,
+      "clearance_m": 0.0159424090189334,
+      "muscle_path_length_m": 0.002408411223517315,
+      "projected_area_m2": 3.326159213098978e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12607,
+      "fat_nodes": [
+        6266,
+        6308,
+        6309
+      ],
+      "entry_face": 2575,
+      "exit_face": 2528,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8774,
+      "point_m": [
+        0.009044253888229528,
+        -0.8071610331535339,
+        0.0351940281689167
+      ],
+      "fat_muscle_gap_m": 0.009872900721184678,
+      "muscle_bone_gap_m": 0.00015480326101457303,
+      "clearance_m": 0.010027703982199251,
+      "muscle_path_length_m": 0.005772911554908673,
+      "projected_area_m2": 5.005762540477576e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12608,
+      "fat_nodes": [
+        6266,
+        6309,
+        6311
+      ],
+      "entry_face": 2575,
+      "exit_face": 2426,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8751,
+      "point_m": [
+        0.009671179267267386,
+        -0.8045234084129333,
+        0.03358058134714762
+      ],
+      "fat_muscle_gap_m": 0.01188990419410648,
+      "muscle_bone_gap_m": 0.00015646171733431358,
+      "clearance_m": 0.012046365911440794,
+      "muscle_path_length_m": 0.006267218471603574,
+      "projected_area_m2": 6.342153367810965e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12609,
+      "fat_nodes": [
+        6267,
+        6268,
+        6269
+      ],
+      "entry_face": 1415,
+      "exit_face": 2081,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8560,
+      "point_m": [
+        0.00483056732142965,
+        -0.8303325573603312,
+        0.036103988687197365
+      ],
+      "fat_muscle_gap_m": 0.0030437785062855174,
+      "muscle_bone_gap_m": 0.00014193650622136567,
+      "clearance_m": 0.003185715012506883,
+      "muscle_path_length_m": 0.01246863703805521,
+      "projected_area_m2": 9.95468970570873e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12610,
+      "fat_nodes": [
+        6267,
+        6269,
+        6270
+      ],
+      "entry_face": 1415,
+      "exit_face": 2088,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8568,
+      "point_m": [
+        0.005626773694530129,
+        -0.8280937075614929,
+        0.03504253303011259
+      ],
+      "fat_muscle_gap_m": 0.004188655141974938,
+      "muscle_bone_gap_m": 0.00011959112632397434,
+      "clearance_m": 0.0043082462682989126,
+      "muscle_path_length_m": 0.01224713459414025,
+      "projected_area_m2": 5.899669498619919e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12611,
+      "fat_nodes": [
+        6268,
+        6269,
+        6284
+      ],
+      "entry_face": 2125,
+      "exit_face": 2331,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8563,
+      "point_m": [
+        0.0059461689088493586,
+        -0.8320446411768595,
+        0.037759738663832344
+      ],
+      "fat_muscle_gap_m": 0.00010000120948228108,
+      "muscle_bone_gap_m": 0.0003698618124217956,
+      "clearance_m": 0.0004698630219040767,
+      "muscle_path_length_m": 0.015257087877950985,
+      "projected_area_m2": 1.1216143303342807e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12612,
+      "fat_nodes": [
+        6269,
+        6270,
+        6312
+      ],
+      "entry_face": 2125,
+      "exit_face": 2480,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8736,
+      "point_m": [
+        0.0076422068911294145,
+        -0.8263653119405111,
+        0.03709663823246956
+      ],
+      "fat_muscle_gap_m": 0.0012897623564764801,
+      "muscle_bone_gap_m": 0.0001489672215233967,
+      "clearance_m": 0.0014387295779998768,
+      "muscle_path_length_m": 0.01360350425684713,
+      "projected_area_m2": 6.862118855643917e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12616,
+      "fat_nodes": [
+        6270,
+        6271,
+        6312
+      ],
+      "entry_face": 1415,
+      "exit_face": 2069,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8569,
+      "point_m": [
+        0.006369475740939379,
+        -0.8237289388974508,
+        0.03321207438906034
+      ],
+      "fat_muscle_gap_m": 0.006798047156512707,
+      "muscle_bone_gap_m": 0.0001409372410226123,
+      "clearance_m": 0.006938984397535319,
+      "muscle_path_length_m": 0.011234265125293415,
+      "projected_area_m2": 1.2595488925529197e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12617,
+      "fat_nodes": [
+        6271,
+        6272,
+        6313
+      ],
+      "entry_face": 1408,
+      "exit_face": 2194,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8573,
+      "point_m": [
+        0.005724322671691577,
+        -0.8190349737803141,
+        0.028781576702992123
+      ],
+      "fat_muscle_gap_m": 0.01402472332587634,
+      "muscle_bone_gap_m": 0.00014180873322846427,
+      "clearance_m": 0.014166532059104803,
+      "muscle_path_length_m": 0.00654787885444983,
+      "projected_area_m2": 7.517470256457326e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12618,
+      "fat_nodes": [
+        6271,
+        6312,
+        6313
+      ],
+      "entry_face": 1415,
+      "exit_face": 2240,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8572,
+      "point_m": [
+        0.007110474475969871,
+        -0.8217288057009379,
+        0.0332131398220857
+      ],
+      "fat_muscle_gap_m": 0.006848907176743288,
+      "muscle_bone_gap_m": 0.00014870896315625354,
+      "clearance_m": 0.0069976161398995415,
+      "muscle_path_length_m": 0.010449363156859959,
+      "projected_area_m2": 5.9012472422986795e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12619,
+      "fat_nodes": [
+        6272,
+        6313,
+        6316
+      ],
+      "entry_face": 1408,
+      "exit_face": 2407,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8757,
+      "point_m": [
+        0.00729750810811917,
+        -0.8174075881640116,
+        0.03243987634778023
+      ],
+      "fat_muscle_gap_m": 0.008837438039649259,
+      "muscle_bone_gap_m": 0.00013447709860851809,
+      "clearance_m": 0.008971915138257777,
+      "muscle_path_length_m": 0.0076371111958875235,
+      "projected_area_m2": 9.620646736346883e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12620,
+      "fat_nodes": [
+        6272,
+        6316,
+        6317
+      ],
+      "entry_face": 1755,
+      "exit_face": 2408,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8762,
+      "point_m": [
+        0.0076480416270593805,
+        -0.8146613041559855,
+        0.03161546836296717
+      ],
+      "fat_muscle_gap_m": 0.011547153734965503,
+      "muscle_bone_gap_m": 0.00012147762458684236,
+      "clearance_m": 0.011668631359552345,
+      "muscle_path_length_m": 0.0056705073732192315,
+      "projected_area_m2": 6.8049493032185104e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12688,
+      "fat_nodes": [
+        6307,
+        6311,
+        6352
+      ],
+      "entry_face": 2575,
+      "exit_face": 2882,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8888,
+      "point_m": [
+        0.011475049890577793,
+        -0.7981757322947184,
+        0.0292095181842645
+      ],
+      "fat_muscle_gap_m": 0.016685029586926244,
+      "muscle_bone_gap_m": 0.0002087236009424287,
+      "clearance_m": 0.016893753187868673,
+      "muscle_path_length_m": 0.0073643526449486685,
+      "projected_area_m2": 7.709539561917556e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12689,
+      "fat_nodes": [
+        6307,
+        6349,
+        6352
+      ],
+      "entry_face": 2575,
+      "exit_face": 2904,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8997,
+      "point_m": [
+        0.012678695221741995,
+        -0.7959473729133606,
+        0.029072101538379986
+      ],
+      "fat_muscle_gap_m": 0.015913839749644682,
+      "muscle_bone_gap_m": 0.0002936779327479197,
+      "clearance_m": 0.016207517682392602,
+      "muscle_path_length_m": 0.010848720977142852,
+      "projected_area_m2": 5.435522440838669e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12690,
+      "fat_nodes": [
+        6308,
+        6309,
+        6318
+      ],
+      "entry_face": 2575,
+      "exit_face": 2652,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8770,
+      "point_m": [
+        0.010027769953012466,
+        -0.8087851405143738,
+        0.038196553786595665
+      ],
+      "fat_muscle_gap_m": 0.004082843075783625,
+      "muscle_bone_gap_m": 0.00018501437683624694,
+      "clearance_m": 0.004267857452619872,
+      "muscle_path_length_m": 0.008088562105421498,
+      "projected_area_m2": 4.666624273091946e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12691,
+      "fat_nodes": [
+        6308,
+        6317,
+        6318
+      ],
+      "entry_face": 2575,
+      "exit_face": 2651,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8771,
+      "point_m": [
+        0.009403476802011332,
+        -0.8107317288716634,
+        0.03635124738017718
+      ],
+      "fat_muscle_gap_m": 0.0059299491117477746,
+      "muscle_bone_gap_m": 0.0001821003365380866,
+      "clearance_m": 0.006112049448285861,
+      "muscle_path_length_m": 0.007448435405296994,
+      "projected_area_m2": 3.3323915396565873e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12692,
+      "fat_nodes": [
+        6309,
+        6310,
+        6311
+      ],
+      "entry_face": 2575,
+      "exit_face": 2813,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8881,
+      "point_m": [
+        0.01103655310968558,
+        -0.8041587273279825,
+        0.03422671929001808
+      ],
+      "fat_muscle_gap_m": 0.008928946237840317,
+      "muscle_bone_gap_m": 0.00016057260940215146,
+      "clearance_m": 0.009089518847242468,
+      "muscle_path_length_m": 0.008674737096980488,
+      "projected_area_m2": 3.822254654672896e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12693,
+      "fat_nodes": [
+        6309,
+        6310,
+        6350
+      ],
+      "entry_face": 2740,
+      "exit_face": 2652,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8770,
+      "point_m": [
+        0.012252429189781347,
+        -0.8056294123331705,
+        0.037115820993979774
+      ],
+      "fat_muscle_gap_m": 0.004514641142605705,
+      "muscle_bone_gap_m": 0.00018501460822342025,
+      "clearance_m": 0.004699655750829125,
+      "muscle_path_length_m": 0.010694225902117285,
+      "projected_area_m2": 3.1089290347396936e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12694,
+      "fat_nodes": [
+        6309,
+        6318,
+        6360
+      ],
+      "entry_face": 2740,
+      "exit_face": 2766,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8772,
+      "point_m": [
+        0.01157437606404225,
+        -0.8088754415512085,
+        0.03988132501641909
+      ],
+      "fat_muscle_gap_m": 0.0011425845542690355,
+      "muscle_bone_gap_m": 0.0002014924020324882,
+      "clearance_m": 0.0013440769563015237,
+      "muscle_path_length_m": 0.010503937038062502,
+      "projected_area_m2": 4.394764409887397e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12695,
+      "fat_nodes": [
+        6309,
+        6350,
+        6360
+      ],
+      "entry_face": 2740,
+      "exit_face": 2834,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8879,
+      "point_m": [
+        0.012600680192311605,
+        -0.8074070811271667,
+        0.03911904742320379
+      ],
+      "fat_muscle_gap_m": 0.0017674145767875293,
+      "muscle_bone_gap_m": 0.00026784578649846624,
+      "clearance_m": 0.0020352603632859956,
+      "muscle_path_length_m": 0.011770998207684756,
+      "projected_area_m2": 6.173005683618449e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12696,
+      "fat_nodes": [
+        6310,
+        6311,
+        6352
+      ],
+      "entry_face": 2575,
+      "exit_face": 2826,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8882,
+      "point_m": [
+        0.011776807717978954,
+        -0.8015241424242655,
+        0.0313027078906695
+      ],
+      "fat_muscle_gap_m": 0.012044604660942496,
+      "muscle_bone_gap_m": 0.00015952898243719316,
+      "clearance_m": 0.012204133643379689,
+      "muscle_path_length_m": 0.00929332155117027,
+      "projected_area_m2": 6.117850469555819e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12697,
+      "fat_nodes": [
+        6310,
+        6350,
+        6351
+      ],
+      "entry_face": 2740,
+      "exit_face": 3018,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9006,
+      "point_m": [
+        0.013620430914064249,
+        -0.8045225938161215,
+        0.03507073720296224
+      ],
+      "fat_muscle_gap_m": 0.006115940658132028,
+      "muscle_bone_gap_m": 0.0003159725580296757,
+      "clearance_m": 0.006431913216161704,
+      "muscle_path_length_m": 0.012769286958524431,
+      "projected_area_m2": 3.3046130988589884e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12698,
+      "fat_nodes": [
+        6310,
+        6351,
+        6352
+      ],
+      "entry_face": 2740,
+      "exit_face": 2971,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9005,
+      "point_m": [
+        0.013231794660290083,
+        -0.802048405011495,
+        0.032325901091098785
+      ],
+      "fat_muscle_gap_m": 0.00984130925260178,
+      "muscle_bone_gap_m": 0.0003167168092127956,
+      "clearance_m": 0.010158026061814575,
+      "muscle_path_length_m": 0.011889812025765556,
+      "projected_area_m2": 7.2777859386197186e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12699,
+      "fat_nodes": [
+        6312,
+        6313,
+        6314
+      ],
+      "entry_face": 2125,
+      "exit_face": 2589,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8755,
+      "point_m": [
+        0.009144042463352283,
+        -0.8216092785199484,
+        0.037391903499762215
+      ],
+      "fat_muscle_gap_m": 0.0013848706858404919,
+      "muscle_bone_gap_m": 0.00020791687632668032,
+      "clearance_m": 0.0015927875621671722,
+      "muscle_path_length_m": 0.012247165108423524,
+      "projected_area_m2": 5.207590233188841e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12703,
+      "fat_nodes": [
+        6313,
+        6314,
+        6316
+      ],
+      "entry_face": 2125,
+      "exit_face": 2672,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8756,
+      "point_m": [
+        0.009102641760061184,
+        -0.8187929590543112,
+        0.036975231021642685
+      ],
+      "fat_muscle_gap_m": 0.002611146234541055,
+      "muscle_bone_gap_m": 0.000234882012529386,
+      "clearance_m": 0.002846028247070441,
+      "muscle_path_length_m": 0.010299762774908697,
+      "projected_area_m2": 6.528409205661112e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12705,
+      "fat_nodes": [
+        6314,
+        6316,
+        6357
+      ],
+      "entry_face": 2125,
+      "exit_face": 2799,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8876,
+      "point_m": [
+        0.010643367655575275,
+        -0.8175241549809774,
+        0.03765569627285004
+      ],
+      "fat_muscle_gap_m": 0.001326275799223224,
+      "muscle_bone_gap_m": 0.00041764437482974537,
+      "clearance_m": 0.0017439201740529695,
+      "muscle_path_length_m": 0.012724012279351368,
+      "projected_area_m2": 6.554583867335317e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12709,
+      "fat_nodes": [
+        6316,
+        6317,
+        6361
+      ],
+      "entry_face": 2746,
+      "exit_face": 2766,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8772,
+      "point_m": [
+        0.010298881058891615,
+        -0.8136578400929769,
+        0.03634630019466082
+      ],
+      "fat_muscle_gap_m": 0.003942222927015342,
+      "muscle_bone_gap_m": 0.00020146684608791238,
+      "clearance_m": 0.004143689773103254,
+      "muscle_path_length_m": 0.009943442074465264,
+      "projected_area_m2": 6.997775068573464e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12710,
+      "fat_nodes": [
+        6316,
+        6357,
+        6361
+      ],
+      "entry_face": 2746,
+      "exit_face": 2798,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8878,
+      "point_m": [
+        0.011489073435465494,
+        -0.8151353200276693,
+        0.03785117343068123
+      ],
+      "fat_muscle_gap_m": 0.0013034769732977528,
+      "muscle_bone_gap_m": 0.0003303808398270186,
+      "clearance_m": 0.0016338578131247714,
+      "muscle_path_length_m": 0.013167652682071311,
+      "projected_area_m2": 6.404353699807075e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12711,
+      "fat_nodes": [
+        6317,
+        6318,
+        6361
+      ],
+      "entry_face": 2740,
+      "exit_face": 2766,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8772,
+      "point_m": [
+        0.010912471761306127,
+        -0.8119050065676371,
+        0.037725710620482765
+      ],
+      "fat_muscle_gap_m": 0.0027487306337936612,
+      "muscle_bone_gap_m": 0.00020146886419852156,
+      "clearance_m": 0.002950199497992183,
+      "muscle_path_length_m": 0.010380731310379858,
+      "projected_area_m2": 4.841914270109493e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12712,
+      "fat_nodes": [
+        6318,
+        6360,
+        6361
+      ],
+      "entry_face": 2740,
+      "exit_face": 2834,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8879,
+      "point_m": [
+        0.012369460426270962,
+        -0.8110552628835043,
+        0.03980095808704694
+      ],
+      "fat_muscle_gap_m": 0.00010000085334128939,
+      "muscle_bone_gap_m": 0.0002678457924426836,
+      "clearance_m": 0.00036784664578397297,
+      "muscle_path_length_m": 0.012848529183507922,
+      "projected_area_m2": 3.5223764143221814e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12771,
+      "fat_nodes": [
+        6349,
+        6352,
+        6353
+      ],
+      "entry_face": 2740,
+      "exit_face": 2903,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8988,
+      "point_m": [
+        0.014054634918769201,
+        -0.7971168955167135,
+        0.030052702873945236
+      ],
+      "fat_muscle_gap_m": 0.013154641682480803,
+      "muscle_bone_gap_m": 0.00045447966812656865,
+      "clearance_m": 0.013609121350607371,
+      "muscle_path_length_m": 0.01466509471463013,
+      "projected_area_m2": 4.12941729818761e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12772,
+      "fat_nodes": [
+        6349,
+        6353,
+        6394
+      ],
+      "entry_face": 2740,
+      "exit_face": 3163,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9191,
+      "point_m": [
+        0.015535483447213968,
+        -0.7953729232152303,
+        0.02972078447540601
+      ],
+      "fat_muscle_gap_m": 0.013173421455731662,
+      "muscle_bone_gap_m": 0.0013917391044085126,
+      "clearance_m": 0.014565160560140174,
+      "muscle_path_length_m": 0.0217368495980432,
+      "projected_area_m2": 6.001090292029332e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12773,
+      "fat_nodes": [
+        6349,
+        6394,
+        6430
+      ],
+      "entry_face": 3254,
+      "exit_face": 3318,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9324,
+      "point_m": [
+        0.019076642269889515,
+        -0.7817858258883158,
+        0.03335047451158365
+      ],
+      "fat_muscle_gap_m": 0.01249998081496699,
+      "muscle_bone_gap_m": 0.023200603480749003,
+      "clearance_m": 0.035700584295715994,
+      "muscle_path_length_m": 0.012411540932801432,
+      "projected_area_m2": 5.325446016801738e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12774,
+      "fat_nodes": [
+        6350,
+        6351,
+        6396
+      ],
+      "entry_face": 2740,
+      "exit_face": 3073,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9213,
+      "point_m": [
+        0.015605159103870392,
+        -0.8048276305198669,
+        0.03621371338764826
+      ],
+      "fat_muscle_gap_m": 0.0037436168527464064,
+      "muscle_bone_gap_m": 0.0005640112523821184,
+      "clearance_m": 0.004307628105128525,
+      "muscle_path_length_m": 0.01992470716870634,
+      "projected_area_m2": 5.476366688461631e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12775,
+      "fat_nodes": [
+        6350,
+        6360,
+        6362
+      ],
+      "entry_face": 2740,
+      "exit_face": 3016,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9002,
+      "point_m": [
+        0.014336081221699715,
+        -0.8080770572026571,
+        0.03896315520008405
+      ],
+      "fat_muscle_gap_m": 0.0007248314650500631,
+      "muscle_bone_gap_m": 0.0002700403640895563,
+      "clearance_m": 0.0009948718291396194,
+      "muscle_path_length_m": 0.01576079286671584,
+      "projected_area_m2": 4.538167588996611e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12776,
+      "fat_nodes": [
+        6350,
+        6362,
+        6396
+      ],
+      "entry_face": 2740,
+      "exit_face": 3193,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9219,
+      "point_m": [
+        0.0159725584089756,
+        -0.8066044251124064,
+        0.03810290495554606
+      ],
+      "fat_muscle_gap_m": 0.0010997342254826237,
+      "muscle_bone_gap_m": 0.00031967763940647653,
+      "clearance_m": 0.0014194118648891002,
+      "muscle_path_length_m": 0.020842093972222094,
+      "projected_area_m2": 5.596063963497766e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12777,
+      "fat_nodes": [
+        6351,
+        6352,
+        6353
+      ],
+      "entry_face": 2740,
+      "exit_face": 3071,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8986,
+      "point_m": [
+        0.014305976529916128,
+        -0.7998695174853007,
+        0.03121331272025903
+      ],
+      "fat_muscle_gap_m": 0.01100676039963806,
+      "muscle_bone_gap_m": 0.0006047785254827479,
+      "clearance_m": 0.011611538925120807,
+      "muscle_path_length_m": 0.014986488217183631,
+      "projected_area_m2": 6.2622159753555895e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12778,
+      "fat_nodes": [
+        6351,
+        6353,
+        6398
+      ],
+      "entry_face": 2740,
+      "exit_face": 3153,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9213,
+      "point_m": [
+        0.015865514986217022,
+        -0.8012015024820963,
+        0.031797463074326515
+      ],
+      "fat_muscle_gap_m": 0.00912193786472519,
+      "muscle_bone_gap_m": 0.0003353999317368406,
+      "clearance_m": 0.009457337796462031,
+      "muscle_path_length_m": 0.021394394775066855,
+      "projected_area_m2": 7.1820444544346e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12779,
+      "fat_nodes": [
+        6351,
+        6396,
+        6398
+      ],
+      "entry_face": 2740,
+      "exit_face": 3229,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9211,
+      "point_m": [
+        0.01677606130639712,
+        -0.8036854267120361,
+        0.034053027629852295
+      ],
+      "fat_muscle_gap_m": 0.005584162912303285,
+      "muscle_bone_gap_m": 0.0001969310582397299,
+      "clearance_m": 0.005781093970543015,
+      "muscle_path_length_m": 0.022921040904141134,
+      "projected_area_m2": 4.035407547564596e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12780,
+      "fat_nodes": [
+        6353,
+        6394,
+        6437
+      ],
+      "entry_face": 3249,
+      "exit_face": 3263,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9035,
+      "point_m": [
+        0.018167163866261642,
+        -0.7961588501930237,
+        0.029796482374270756
+      ],
+      "fat_muscle_gap_m": 0.011488854046004731,
+      "muscle_bone_gap_m": 0.027670283471597876,
+      "clearance_m": 0.03915913751760261,
+      "muscle_path_length_m": 0.01971408994000111,
+      "projected_area_m2": 1.4328894820420102e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12781,
+      "fat_nodes": [
+        6353,
+        6398,
+        6437
+      ],
+      "entry_face": 3249,
+      "exit_face": 3261,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9261,
+      "point_m": [
+        0.018245853794117767,
+        -0.7992348074913025,
+        0.030712551126877468
+      ],
+      "fat_muscle_gap_m": 0.009534196656759985,
+      "muscle_bone_gap_m": 0.026448202026242817,
+      "clearance_m": 0.035982398683002806,
+      "muscle_path_length_m": 0.021306460681699092,
+      "projected_area_m2": 1.605641592741791e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12795,
+      "fat_nodes": [
+        6360,
+        6361,
+        6363
+      ],
+      "entry_face": 2740,
+      "exit_face": 2985,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9001,
+      "point_m": [
+        0.014164314915736517,
+        -0.8114859461784363,
+        0.03864177688956261
+      ],
+      "fat_muscle_gap_m": 0.00010000210599443726,
+      "muscle_bone_gap_m": 0.0004749575171365747,
+      "clearance_m": 0.000574959623131012,
+      "muscle_path_length_m": 0.018146530202588627,
+      "projected_area_m2": 5.297551645966347e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12796,
+      "fat_nodes": [
+        6360,
+        6362,
+        6363
+      ],
+      "entry_face": 2740,
+      "exit_face": 3090,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 8994,
+      "point_m": [
+        0.015104631582895914,
+        -0.8099761009216309,
+        0.038566251595815025
+      ],
+      "fat_muscle_gap_m": 0.00010000269518471022,
+      "muscle_bone_gap_m": 0.0005295225268826184,
+      "clearance_m": 0.0006295252220673286,
+      "muscle_path_length_m": 0.01979670992478006,
+      "projected_area_m2": 4.652395054316472e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12798,
+      "fat_nodes": [
+        6362,
+        6396,
+        6403
+      ],
+      "entry_face": 2740,
+      "exit_face": 3278,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9209,
+      "point_m": [
+        0.017521213740110397,
+        -0.8072181344032288,
+        0.03656873727838198
+      ],
+      "fat_muscle_gap_m": 0.001559543797677039,
+      "muscle_bone_gap_m": 0.0015127356507370765,
+      "clearance_m": 0.0030722794484141155,
+      "muscle_path_length_m": 0.0235540605444802,
+      "projected_area_m2": 3.7182596876461638e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12801,
+      "fat_nodes": [
+        6364,
+        6365,
+        6366
+      ],
+      "entry_face": 2007,
+      "exit_face": 3023,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 699,
+      "point_m": [
+        0.015218570828437805,
+        -0.8595526814460754,
+        0.02733587349454562
+      ],
+      "fat_muscle_gap_m": 0.0038723178435376288,
+      "muscle_bone_gap_m": 0.08805934429904108,
+      "clearance_m": 0.09193166214257871,
+      "muscle_path_length_m": 0.028244251450927956,
+      "projected_area_m2": 7.422564354486738e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12802,
+      "fat_nodes": [
+        6364,
+        6365,
+        6445
+      ],
+      "entry_face": 2007,
+      "exit_face": 3160,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 705,
+      "point_m": [
+        0.01900021576633056,
+        -0.8604567249615988,
+        0.02645116423567136
+      ],
+      "fat_muscle_gap_m": 0.004425062113923104,
+      "muscle_bone_gap_m": 0.08534953164722803,
+      "clearance_m": 0.08977459376115113,
+      "muscle_path_length_m": 0.027584416592617268,
+      "projected_area_m2": 6.081544920666371e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12803,
+      "fat_nodes": [
+        6364,
+        6444,
+        6445
+      ],
+      "entry_face": 3268,
+      "exit_face": 3159,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 701,
+      "point_m": [
+        0.021986827875177067,
+        -0.8654085596402487,
+        0.02595241367816925
+      ],
+      "fat_muscle_gap_m": 0.005301290492586312,
+      "muscle_bone_gap_m": 0.08592342324041344,
+      "clearance_m": 0.09122471373299976,
+      "muscle_path_length_m": 0.02801128991320366,
+      "projected_area_m2": 5.916258580862532e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12804,
+      "fat_nodes": [
+        6364,
+        6444,
+        6555
+      ],
+      "entry_face": 3270,
+      "exit_face": 3550,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 514,
+      "point_m": [
+        0.02792891611655553,
+        -0.8753138780593872,
+        0.02563109000523885
+      ],
+      "fat_muscle_gap_m": 0.007494768108916149,
+      "muscle_bone_gap_m": 0.0261399118762541,
+      "clearance_m": 0.03363467998517025,
+      "muscle_path_length_m": 0.029307523205530442,
+      "projected_area_m2": 2.3816951017274768e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12806,
+      "fat_nodes": [
+        6365,
+        6367,
+        6445
+      ],
+      "entry_face": 2007,
+      "exit_face": 3158,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 834,
+      "point_m": [
+        0.0184465575342377,
+        -0.8542037804921468,
+        0.028894899412989616
+      ],
+      "fat_muscle_gap_m": 0.0008527454612822886,
+      "muscle_bone_gap_m": 0.09209307482423645,
+      "clearance_m": 0.09294582028551875,
+      "muscle_path_length_m": 0.027587270318849107,
+      "projected_area_m2": 2.924920936867026e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12851,
+      "fat_nodes": [
+        6394,
+        6395,
+        6430
+      ],
+      "entry_face": 3254,
+      "exit_face": 3313,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1774,
+      "point_m": [
+        0.021180305629968643,
+        -0.7795940836270651,
+        0.03368257420758406
+      ],
+      "fat_muscle_gap_m": 0.012464541724598523,
+      "muscle_bone_gap_m": 0.00020094843601080326,
+      "clearance_m": 0.012665490160609326,
+      "muscle_path_length_m": 0.007080875157900526,
+      "projected_area_m2": 3.2597484486307504e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12852,
+      "fat_nodes": [
+        6394,
+        6395,
+        6437
+      ],
+      "entry_face": 3253,
+      "exit_face": 3263,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9247,
+      "point_m": [
+        0.019828860958417256,
+        -0.7929673790931702,
+        0.02980876217285792
+      ],
+      "fat_muscle_gap_m": 0.012151911953228355,
+      "muscle_bone_gap_m": 0.0337335844783538,
+      "clearance_m": 0.04588549643158216,
+      "muscle_path_length_m": 0.015853378642718165,
+      "projected_area_m2": 1.736335115204435e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12853,
+      "fat_nodes": [
+        6395,
+        6430,
+        6431
+      ],
+      "entry_face": 3254,
+      "exit_face": 3363,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1859,
+      "point_m": [
+        0.023198193560043972,
+        -0.7758856813112894,
+        0.034972588842113815
+      ],
+      "fat_muscle_gap_m": 0.012016613420814976,
+      "muscle_bone_gap_m": 0.00020135241967149387,
+      "clearance_m": 0.01221796584048647,
+      "muscle_path_length_m": 0.004431241912364388,
+      "projected_area_m2": 3.0435853562493786e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12854,
+      "fat_nodes": [
+        6395,
+        6431,
+        6432
+      ],
+      "entry_face": 3253,
+      "exit_face": 3440,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1696,
+      "point_m": [
+        0.022968315208951633,
+        -0.7855614423751831,
+        0.031853264197707176
+      ],
+      "fat_muscle_gap_m": 0.011839901768246328,
+      "muscle_bone_gap_m": 0.0027685520588581272,
+      "clearance_m": 0.014608453827104455,
+      "muscle_path_length_m": 0.010982342496339684,
+      "projected_area_m2": 1.1811960977770042e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12855,
+      "fat_nodes": [
+        6395,
+        6432,
+        6433
+      ],
+      "entry_face": 3253,
+      "exit_face": 3342,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1605,
+      "point_m": [
+        0.023527024934689205,
+        -0.790075441201528,
+        0.030502924695611
+      ],
+      "fat_muscle_gap_m": 0.01156382716833907,
+      "muscle_bone_gap_m": 0.006470917027209387,
+      "clearance_m": 0.018034744195548458,
+      "muscle_path_length_m": 0.011899972650099351,
+      "projected_area_m2": 2.3505898001818792e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12856,
+      "fat_nodes": [
+        6395,
+        6433,
+        6437
+      ],
+      "entry_face": 3253,
+      "exit_face": 3371,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1601,
+      "point_m": [
+        0.022405458614230156,
+        -0.7937729756037394,
+        0.029748437305291493
+      ],
+      "fat_muscle_gap_m": 0.011350463322750883,
+      "muscle_bone_gap_m": 0.008673190141513257,
+      "clearance_m": 0.02002365346426414,
+      "muscle_path_length_m": 0.01346965926752057,
+      "projected_area_m2": 1.5247639811921676e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12857,
+      "fat_nodes": [
+        6396,
+        6397,
+        6398
+      ],
+      "entry_face": 3249,
+      "exit_face": 3261,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9526,
+      "point_m": [
+        0.018817835797866184,
+        -0.8044107556343079,
+        0.03398991748690605
+      ],
+      "fat_muscle_gap_m": 0.004407754640653336,
+      "muscle_bone_gap_m": 0.0036088582606988995,
+      "clearance_m": 0.008016612901352235,
+      "muscle_path_length_m": 0.021855244702495114,
+      "projected_area_m2": 3.927280131044153e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12858,
+      "fat_nodes": [
+        6396,
+        6397,
+        6403
+      ],
+      "entry_face": 3249,
+      "exit_face": 3261,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9394,
+      "point_m": [
+        0.019195588926474254,
+        -0.8061666687329611,
+        0.03461643556753794
+      ],
+      "fat_muscle_gap_m": 0.0031115559742562263,
+      "muscle_bone_gap_m": 0.004611499402480783,
+      "clearance_m": 0.007723055376737009,
+      "muscle_path_length_m": 0.02182485749214206,
+      "projected_area_m2": 3.5146940814967387e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12859,
+      "fat_nodes": [
+        6397,
+        6398,
+        6436
+      ],
+      "entry_face": 3251,
+      "exit_face": 3315,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9393,
+      "point_m": [
+        0.02012941117088,
+        -0.803520401318868,
+        0.03209218134482702
+      ],
+      "fat_muscle_gap_m": 0.006298230420339661,
+      "muscle_bone_gap_m": 0.006464537406151431,
+      "clearance_m": 0.012762767826491092,
+      "muscle_path_length_m": 0.020380654878787326,
+      "projected_area_m2": 5.956447373667295e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12860,
+      "fat_nodes": [
+        6397,
+        6403,
+        6443
+      ],
+      "entry_face": 3251,
+      "exit_face": 3315,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9523,
+      "point_m": [
+        0.02070172317326069,
+        -0.8070349295934042,
+        0.03330301493406296
+      ],
+      "fat_muscle_gap_m": 0.003789414308443602,
+      "muscle_bone_gap_m": 0.009001418852124098,
+      "clearance_m": 0.0127908331605677,
+      "muscle_path_length_m": 0.021171797248644625,
+      "projected_area_m2": 5.004218728232868e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12861,
+      "fat_nodes": [
+        6397,
+        6434,
+        6436
+      ],
+      "entry_face": 3253,
+      "exit_face": 3315,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9539,
+      "point_m": [
+        0.022025492042303085,
+        -0.8044323921203613,
+        0.032167612264553704
+      ],
+      "fat_muscle_gap_m": 0.005482749297875893,
+      "muscle_bone_gap_m": 0.010101390103597091,
+      "clearance_m": 0.015584139401472984,
+      "muscle_path_length_m": 0.019563647392725717,
+      "projected_area_m2": 3.1141797610656496e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12862,
+      "fat_nodes": [
+        6397,
+        6434,
+        6443
+      ],
+      "entry_face": 3253,
+      "exit_face": 3316,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1422,
+      "point_m": [
+        0.022220050916075706,
+        -0.8061910072962443,
+        0.03275192777315775
+      ],
+      "fat_muscle_gap_m": 0.004270129108794381,
+      "muscle_bone_gap_m": 0.016105126642791456,
+      "clearance_m": 0.020375255751585837,
+      "muscle_path_length_m": 0.019892896828260356,
+      "projected_area_m2": 3.114799719317052e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12863,
+      "fat_nodes": [
+        6398,
+        6436,
+        6437
+      ],
+      "entry_face": 3253,
+      "exit_face": 3315,
+      "bone_body": 1,
+      "bone_bank": 1,
+      "bone_face": 9431,
+      "point_m": [
+        0.02046797548731168,
+        -0.8008283774058024,
+        0.03107037954032421
+      ],
+      "fat_muscle_gap_m": 0.008134976422471539,
+      "muscle_bone_gap_m": 0.0335172751215317,
+      "clearance_m": 0.04165225154400324,
+      "muscle_path_length_m": 0.01932016726343639,
+      "projected_area_m2": 1.203954644313221e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12874,
+      "fat_nodes": [
+        6404,
+        6407,
+        6445
+      ],
+      "entry_face": 3368,
+      "exit_face": 3160,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 956,
+      "point_m": [
+        0.021281799922386806,
+        -0.8485303123792013,
+        0.027854832510153454
+      ],
+      "fat_muscle_gap_m": 0.0003488404359974287,
+      "muscle_bone_gap_m": 0.02230725961054561,
+      "clearance_m": 0.02265610004654304,
+      "muscle_path_length_m": 0.02729603121817453,
+      "projected_area_m2": 2.4961758151031965e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12878,
+      "fat_nodes": [
+        6407,
+        6445,
+        6447
+      ],
+      "entry_face": 3367,
+      "exit_face": 3160,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 964,
+      "point_m": [
+        0.023200754697124164,
+        -0.847186267375946,
+        0.027570084979136784
+      ],
+      "fat_muscle_gap_m": 0.00025000004217086425,
+      "muscle_bone_gap_m": 0.022238086837933775,
+      "clearance_m": 0.02248808688010464,
+      "muscle_path_length_m": 0.02694345313553329,
+      "projected_area_m2": 1.7523821986609178e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12916,
+      "fat_nodes": [
+        6430,
+        6431,
+        6462
+      ],
+      "entry_face": 3254,
+      "exit_face": 3364,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1859,
+      "point_m": [
+        0.025453293696045876,
+        -0.7736153602600098,
+        0.036399681121110916
+      ],
+      "fat_muscle_gap_m": 0.01088004424427741,
+      "muscle_bone_gap_m": 0.00021968013598702707,
+      "clearance_m": 0.011099724380264436,
+      "muscle_path_length_m": 0.004032455356624054,
+      "projected_area_m2": 4.560523008567685e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12917,
+      "fat_nodes": [
+        6430,
+        6462,
+        6493
+      ],
+      "entry_face": 3568,
+      "exit_face": 3366,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1859,
+      "point_m": [
+        0.028815296789010365,
+        -0.7748666803042094,
+        0.036349362383286156
+      ],
+      "fat_muscle_gap_m": 0.009754124712954865,
+      "muscle_bone_gap_m": 0.00020135527107452422,
+      "clearance_m": 0.009955479984029389,
+      "muscle_path_length_m": 0.007526405232391252,
+      "projected_area_m2": 7.520742761180088e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12918,
+      "fat_nodes": [
+        6430,
+        6493,
+        6525
+      ],
+      "entry_face": 3662,
+      "exit_face": 3782,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1862,
+      "point_m": [
+        0.03241142568488916,
+        -0.7758875290552775,
+        0.03639190768202146
+      ],
+      "fat_muscle_gap_m": 0.008658692440073099,
+      "muscle_bone_gap_m": 0.0011513832362140958,
+      "clearance_m": 0.009810075676287194,
+      "muscle_path_length_m": 0.010506730576506605,
+      "projected_area_m2": 6.883598979684491e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12920,
+      "fat_nodes": [
+        6431,
+        6432,
+        6462
+      ],
+      "entry_face": 3254,
+      "exit_face": 3561,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1707,
+      "point_m": [
+        0.025223415344953537,
+        -0.7832911213239034,
+        0.03328035647670428
+      ],
+      "fat_muscle_gap_m": 0.010691215177913861,
+      "muscle_bone_gap_m": 0.003687269498589059,
+      "clearance_m": 0.01437848467650292,
+      "muscle_path_length_m": 0.008520899955383666,
+      "projected_area_m2": 7.98756131531464e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12921,
+      "fat_nodes": [
+        6432,
+        6433,
+        6463
+      ],
+      "entry_face": 3253,
+      "exit_face": 3581,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1705,
+      "point_m": [
+        0.02676497772336006,
+        -0.790950874487559,
+        0.030338667333126068
+      ],
+      "fat_muscle_gap_m": 0.01069054283503116,
+      "muscle_bone_gap_m": 0.008748767887266098,
+      "clearance_m": 0.019439310722297258,
+      "muscle_path_length_m": 0.01060361913268739,
+      "projected_area_m2": 2.337720352540984e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12922,
+      "fat_nodes": [
+        6432,
+        6462,
+        6493
+      ],
+      "entry_face": 3254,
+      "exit_face": 3564,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1708,
+      "point_m": [
+        0.028585418437918026,
+        -0.784542441368103,
+        0.033230037738879524
+      ],
+      "fat_muscle_gap_m": 0.00956529586173499,
+      "muscle_bone_gap_m": 0.0068948007837104225,
+      "clearance_m": 0.016460096645445413,
+      "muscle_path_length_m": 0.009055934018876416,
+      "projected_area_m2": 1.8878936041411e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12923,
+      "fat_nodes": [
+        6432,
+        6463,
+        6493
+      ],
+      "entry_face": 3254,
+      "exit_face": 3607,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1708,
+      "point_m": [
+        0.02956827109058698,
+        -0.7876881957054138,
+        0.031638688097397484
+      ],
+      "fat_muscle_gap_m": 0.009847743609657594,
+      "muscle_bone_gap_m": 0.009199673183451648,
+      "clearance_m": 0.019047416793109243,
+      "muscle_path_length_m": 0.009554363703971863,
+      "projected_area_m2": 2.0067725764683075e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12924,
+      "fat_nodes": [
+        6433,
+        6435,
+        6437
+      ],
+      "entry_face": 3253,
+      "exit_face": 3495,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1595,
+      "point_m": [
+        0.02416871984799703,
+        -0.7984805305798849,
+        0.029824345683058102
+      ],
+      "fat_muscle_gap_m": 0.009305992933796494,
+      "muscle_bone_gap_m": 0.01258703878260932,
+      "clearance_m": 0.021893031716405813,
+      "muscle_path_length_m": 0.01400663438626533,
+      "projected_area_m2": 1.0944956590153154e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12925,
+      "fat_nodes": [
+        6433,
+        6435,
+        6500
+      ],
+      "entry_face": 3253,
+      "exit_face": 3606,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1597,
+      "point_m": [
+        0.02718474219242732,
+        -0.7993825475374857,
+        0.029583266004920006
+      ],
+      "fat_muscle_gap_m": 0.008551919830895698,
+      "muscle_bone_gap_m": 0.015030366848230746,
+      "clearance_m": 0.023582286679126443,
+      "muscle_path_length_m": 0.013252059142479164,
+      "projected_area_m2": 1.855725701882527e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12926,
+      "fat_nodes": [
+        6433,
+        6463,
+        6500
+      ],
+      "entry_face": 3253,
+      "exit_face": 3582,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1606,
+      "point_m": [
+        0.028659433747331303,
+        -0.7955504258473715,
+        0.029343100264668465
+      ],
+      "fat_muscle_gap_m": 0.0097231058865421,
+      "muscle_bone_gap_m": 0.013210409514169574,
+      "clearance_m": 0.022933515400711674,
+      "muscle_path_length_m": 0.011772693120434136,
+      "projected_area_m2": 2.4657213935797007e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12927,
+      "fat_nodes": [
+        6434,
+        6435,
+        6436
+      ],
+      "entry_face": 3253,
+      "exit_face": 3397,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1432,
+      "point_m": [
+        0.023599300533533096,
+        -0.803470253944397,
+        0.03147812063495318
+      ],
+      "fat_muscle_gap_m": 0.006128287407812821,
+      "muscle_bone_gap_m": 0.013355086041979845,
+      "clearance_m": 0.019483373449792667,
+      "muscle_path_length_m": 0.018435796636122298,
+      "projected_area_m2": 4.883801289379264e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12928,
+      "fat_nodes": [
+        6434,
+        6435,
+        6464
+      ],
+      "entry_face": 3253,
+      "exit_face": 3493,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1431,
+      "point_m": [
+        0.025328497712810833,
+        -0.8045969009399414,
+        0.0314470740656058
+      ],
+      "fat_muscle_gap_m": 0.005386581485769572,
+      "muscle_bone_gap_m": 0.017514692426089495,
+      "clearance_m": 0.022901273911859067,
+      "muscle_path_length_m": 0.016490438561869714,
+      "projected_area_m2": 6.5256299365823445e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12931,
+      "fat_nodes": [
+        6435,
+        6436,
+        6437
+      ],
+      "entry_face": 3253,
+      "exit_face": 3369,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1435,
+      "point_m": [
+        0.02315176712969939,
+        -0.800787349541982,
+        0.030612555022041004
+      ],
+      "fat_muscle_gap_m": 0.007987157362624984,
+      "muscle_bone_gap_m": 0.01253918862919362,
+      "clearance_m": 0.020526345991818604,
+      "muscle_path_length_m": 0.016730376052276494,
+      "projected_area_m2": 9.794178505551088e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12932,
+      "fat_nodes": [
+        6435,
+        6464,
+        6465
+      ],
+      "entry_face": 3253,
+      "exit_face": 3606,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1433,
+      "point_m": [
+        0.027055662746230762,
+        -0.8039682904879252,
+        0.030787217741211254
+      ],
+      "fat_muscle_gap_m": 0.005856452736794627,
+      "muscle_bone_gap_m": 0.019092601821038127,
+      "clearance_m": 0.024949054557832754,
+      "muscle_path_length_m": 0.015222073562435122,
+      "projected_area_m2": 4.322125019995404e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12933,
+      "fat_nodes": [
+        6435,
+        6465,
+        6500
+      ],
+      "entry_face": 3253,
+      "exit_face": 3606,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1432,
+      "point_m": [
+        0.028310080369313557,
+        -0.8019362886746725,
+        0.02997523422042529
+      ],
+      "fat_muscle_gap_m": 0.007053100849685332,
+      "muscle_bone_gap_m": 0.017374248967729822,
+      "clearance_m": 0.024427349817415154,
+      "muscle_path_length_m": 0.014181389455109703,
+      "projected_area_m2": 6.099497630751571e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12945,
+      "fat_nodes": [
+        6444,
+        6445,
+        6472
+      ],
+      "entry_face": 3268,
+      "exit_face": 3160,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 875,
+      "point_m": [
+        0.02607502353688081,
+        -0.8567357261975607,
+        0.027613581468661625
+      ],
+      "fat_muscle_gap_m": 0.001313887167961554,
+      "muscle_bone_gap_m": 0.022532694187255807,
+      "clearance_m": 0.02384658135521736,
+      "muscle_path_length_m": 0.02706830923929712,
+      "projected_area_m2": 3.7351310138489247e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12946,
+      "fat_nodes": [
+        6444,
+        6472,
+        6556
+      ],
+      "entry_face": 3638,
+      "exit_face": 3161,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 880,
+      "point_m": [
+        0.031902036319176354,
+        -0.8572411139806112,
+        0.02877872871855895
+      ],
+      "fat_muscle_gap_m": 0.00014624063172588575,
+      "muscle_bone_gap_m": 0.02380279459824281,
+      "clearance_m": 0.023949035229968697,
+      "muscle_path_length_m": 0.02610929821566203,
+      "projected_area_m2": 0.00021465725290015225
+    },
+    {
+      "side": 30,
+      "fat_face": 12947,
+      "fat_nodes": [
+        6444,
+        6555,
+        6556
+      ],
+      "entry_face": 3271,
+      "exit_face": 3742,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 763,
+      "point_m": [
+        0.0362472248574098,
+        -0.8710227608680725,
+        0.02856004734834035
+      ],
+      "fat_muscle_gap_m": 0.004498079117642887,
+      "muscle_bone_gap_m": 0.016871164942829128,
+      "clearance_m": 0.021369244060472015,
+      "muscle_path_length_m": 0.026427391567025817,
+      "projected_area_m2": 0.00025580863330143533
+    },
+    {
+      "side": 30,
+      "fat_face": 12948,
+      "fat_nodes": [
+        6445,
+        6447,
+        6471
+      ],
+      "entry_face": 3367,
+      "exit_face": 3160,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 966,
+      "point_m": [
+        0.025021947920322418,
+        -0.8466594219207764,
+        0.027388127520680428
+      ],
+      "fat_muscle_gap_m": 0.0001999997378214699,
+      "muscle_bone_gap_m": 0.023607477978654937,
+      "clearance_m": 0.023807477716476406,
+      "muscle_path_length_m": 0.026627942918320345,
+      "projected_area_m2": 1.4012367971605322e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12949,
+      "fat_nodes": [
+        6445,
+        6471,
+        6472
+      ],
+      "entry_face": 3367,
+      "exit_face": 3160,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1059,
+      "point_m": [
+        0.02681628180046876,
+        -0.8465740283330282,
+        0.027139388645688694
+      ],
+      "fat_muscle_gap_m": 0.0002009354817510932,
+      "muscle_bone_gap_m": 0.02504779659484256,
+      "clearance_m": 0.025248732076593654,
+      "muscle_path_length_m": 0.026423927629390824,
+      "projected_area_m2": 2.274102293359226e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12981,
+      "fat_nodes": [
+        6463,
+        6493,
+        6494
+      ],
+      "entry_face": 3254,
+      "exit_face": 3688,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1715,
+      "point_m": [
+        0.03279996787508329,
+        -0.788642962773641,
+        0.03158473347624143
+      ],
+      "fat_muscle_gap_m": 0.008857159661699608,
+      "muscle_bone_gap_m": 0.011720456443700351,
+      "clearance_m": 0.02057761610539996,
+      "muscle_path_length_m": 0.010962575859492195,
+      "projected_area_m2": 8.981082134429386e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12982,
+      "fat_nodes": [
+        6463,
+        6494,
+        6495
+      ],
+      "entry_face": 3253,
+      "exit_face": 3688,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1715,
+      "point_m": [
+        0.033045352747042976,
+        -0.7923099398612976,
+        0.030094632258017857
+      ],
+      "fat_muscle_gap_m": 0.00903458920055088,
+      "muscle_bone_gap_m": 0.014871223086201611,
+      "clearance_m": 0.023905812286752492,
+      "muscle_path_length_m": 0.011660892187478317,
+      "projected_area_m2": 1.8843410311220055e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12983,
+      "fat_nodes": [
+        6463,
+        6495,
+        6500
+      ],
+      "entry_face": 3253,
+      "exit_face": 3609,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1613,
+      "point_m": [
+        0.031708111986517906,
+        -0.7959547241528829,
+        0.029153019810716312
+      ],
+      "fat_muscle_gap_m": 0.009075614439495495,
+      "muscle_bone_gap_m": 0.016018997762425935,
+      "clearance_m": 0.02509461220192143,
+      "muscle_path_length_m": 0.0120901215156691,
+      "projected_area_m2": 1.6001411846877645e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 12984,
+      "fat_nodes": [
+        6464,
+        6465,
+        6466
+      ],
+      "entry_face": 3253,
+      "exit_face": 3606,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1433,
+      "point_m": [
+        0.02854429620007674,
+        -0.8050030469894409,
+        0.030692803983887035
+      ],
+      "fat_muscle_gap_m": 0.005264105590452182,
+      "muscle_bone_gap_m": 0.022483026912278818,
+      "clearance_m": 0.027747132502731,
+      "muscle_path_length_m": 0.015453943516860608,
+      "projected_area_m2": 3.494551407801083e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12986,
+      "fat_nodes": [
+        6465,
+        6466,
+        6497
+      ],
+      "entry_face": 3253,
+      "exit_face": 3606,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1433,
+      "point_m": [
+        0.030454205349087715,
+        -0.803769568602244,
+        0.029875472808877628
+      ],
+      "fat_muscle_gap_m": 0.006049947701155901,
+      "muscle_bone_gap_m": 0.022548109441622062,
+      "clearance_m": 0.028598057142777963,
+      "muscle_path_length_m": 0.014661309779308844,
+      "projected_area_m2": 5.658904702887657e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 12987,
+      "fat_nodes": [
+        6465,
+        6497,
+        6500
+      ],
+      "entry_face": 3253,
+      "exit_face": 3609,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1445,
+      "point_m": [
+        0.030746350064873695,
+        -0.801906943321228,
+        0.02939649671316147
+      ],
+      "fat_muscle_gap_m": 0.007079432032748557,
+      "muscle_bone_gap_m": 0.02030854907764252,
+      "clearance_m": 0.027387981110391077,
+      "muscle_path_length_m": 0.01389370800569821,
+      "projected_area_m2": 6.422060938870988e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13000,
+      "fat_nodes": [
+        6471,
+        6472,
+        6474
+      ],
+      "entry_face": 3400,
+      "exit_face": 3457,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1126,
+      "point_m": [
+        0.028843364367882412,
+        -0.8394816915194193,
+        0.026818400248885155
+      ],
+      "fat_muscle_gap_m": 0.001110095570531714,
+      "muscle_bone_gap_m": 0.03023156240148398,
+      "clearance_m": 0.0313416579720157,
+      "muscle_path_length_m": 0.024935235737367407,
+      "projected_area_m2": 1.6036022457255328e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13002,
+      "fat_nodes": [
+        6472,
+        6474,
+        6533
+      ],
+      "entry_face": 3400,
+      "exit_face": 3457,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1068,
+      "point_m": [
+        0.03287729745109876,
+        -0.838898777961731,
+        0.02636478655040264
+      ],
+      "fat_muscle_gap_m": 0.001513439538017712,
+      "muscle_bone_gap_m": 0.030782460127214084,
+      "clearance_m": 0.032295899665231796,
+      "muscle_path_length_m": 0.02453420401914961,
+      "projected_area_m2": 4.1214791205113066e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13003,
+      "fat_nodes": [
+        6472,
+        6533,
+        6611
+      ],
+      "entry_face": 4039,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1135,
+      "point_m": [
+        0.044095467776060104,
+        -0.8384014169375101,
+        0.02746289906402429
+      ],
+      "fat_muscle_gap_m": 0.003348395814790933,
+      "muscle_bone_gap_m": 0.03324337551778415,
+      "clearance_m": 0.03659177133257508,
+      "muscle_path_length_m": 0.021165900276655523,
+      "projected_area_m2": 1.6951308620782868e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13004,
+      "fat_nodes": [
+        6472,
+        6556,
+        6611
+      ],
+      "entry_face": 4039,
+      "exit_face": 3915,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1135,
+      "point_m": [
+        0.04530565564831098,
+        -0.844069242477417,
+        0.028959945465127628
+      ],
+      "fat_muscle_gap_m": 0.0027934638300800736,
+      "muscle_bone_gap_m": 0.03205824299122934,
+      "clearance_m": 0.03485170682130942,
+      "muscle_path_length_m": 0.021601158362052682,
+      "projected_area_m2": 0.0003003648786389368
+    },
+    {
+      "side": 30,
+      "fat_face": 13043,
+      "fat_nodes": [
+        6493,
+        6494,
+        6525
+      ],
+      "entry_face": 3568,
+      "exit_face": 3748,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1619,
+      "point_m": [
+        0.03541324411829313,
+        -0.7865180571873983,
+        0.03321862841645876
+      ],
+      "fat_muscle_gap_m": 0.007384273552878989,
+      "muscle_bone_gap_m": 0.013771270666047442,
+      "clearance_m": 0.02115554421892643,
+      "muscle_path_length_m": 0.011543291743515365,
+      "projected_area_m2": 7.793178971038373e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13044,
+      "fat_nodes": [
+        6494,
+        6495,
+        6524
+      ],
+      "entry_face": 3254,
+      "exit_face": 3833,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1614,
+      "point_m": [
+        0.03608127559224764,
+        -0.7921458681424459,
+        0.030743703246116638
+      ],
+      "fat_muscle_gap_m": 0.007758134537069528,
+      "muscle_bone_gap_m": 0.01820760494182464,
+      "clearance_m": 0.02596573947889417,
+      "muscle_path_length_m": 0.012649821505249813,
+      "projected_area_m2": 1.713899561694987e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13045,
+      "fat_nodes": [
+        6494,
+        6524,
+        6525
+      ],
+      "entry_face": 3625,
+      "exit_face": 3747,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1619,
+      "point_m": [
+        0.0373064490656058,
+        -0.7880138754844666,
+        0.032846082001924515
+      ],
+      "fat_muscle_gap_m": 0.00681980486290161,
+      "muscle_bone_gap_m": 0.01717994937963032,
+      "clearance_m": 0.02399975424253193,
+      "muscle_path_length_m": 0.012399750161870317,
+      "projected_area_m2": 1.1381734367432728e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13046,
+      "fat_nodes": [
+        6495,
+        6497,
+        6500
+      ],
+      "entry_face": 3253,
+      "exit_face": 3609,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1613,
+      "point_m": [
+        0.03266969012717406,
+        -0.7997575004895529,
+        0.028814448043704033
+      ],
+      "fat_muscle_gap_m": 0.007930759566912284,
+      "muscle_bone_gap_m": 0.020374479866489534,
+      "clearance_m": 0.028305239433401817,
+      "muscle_path_length_m": 0.013341174155922737,
+      "projected_area_m2": 6.829420520548801e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13047,
+      "fat_nodes": [
+        6495,
+        6497,
+        6527
+      ],
+      "entry_face": 3253,
+      "exit_face": 3836,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1613,
+      "point_m": [
+        0.03506592040260633,
+        -0.7999339898427328,
+        0.028524174044529598
+      ],
+      "fat_muscle_gap_m": 0.007609581172478185,
+      "muscle_bone_gap_m": 0.022799800281601473,
+      "clearance_m": 0.03040938145407966,
+      "muscle_path_length_m": 0.01389365333235635,
+      "projected_area_m2": 1.2872308649658493e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13048,
+      "fat_nodes": [
+        6495,
+        6524,
+        6528
+      ],
+      "entry_face": 3254,
+      "exit_face": 3833,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1614,
+      "point_m": [
+        0.037791572511196136,
+        -0.7942082285881042,
+        0.03002901002764702
+      ],
+      "fat_muscle_gap_m": 0.007379503207947294,
+      "muscle_bone_gap_m": 0.021756690911311674,
+      "clearance_m": 0.029136194119258968,
+      "muscle_path_length_m": 0.013600861213879906,
+      "projected_area_m2": 1.4863767490824742e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13049,
+      "fat_nodes": [
+        6495,
+        6527,
+        6528
+      ],
+      "entry_face": 3253,
+      "exit_face": 3833,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1614,
+      "point_m": [
+        0.03745796655615171,
+        -0.7975530425707499,
+        0.028756440927584965
+      ],
+      "fat_muscle_gap_m": 0.007615245082286847,
+      "muscle_bone_gap_m": 0.023909953179470075,
+      "clearance_m": 0.031525198261756926,
+      "muscle_path_length_m": 0.014063588068421978,
+      "projected_area_m2": 1.384199495568783e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13055,
+      "fat_nodes": [
+        6497,
+        6498,
+        6499
+      ],
+      "entry_face": 3253,
+      "exit_face": 3609,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1477,
+      "point_m": [
+        0.03335555518666903,
+        -0.8051965832710266,
+        0.029239054148395855
+      ],
+      "fat_muscle_gap_m": 0.005543507399078208,
+      "muscle_bone_gap_m": 0.046976587455826724,
+      "clearance_m": 0.05252009485490493,
+      "muscle_path_length_m": 0.015087335960168168,
+      "projected_area_m2": 5.630742048401416e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13056,
+      "fat_nodes": [
+        6497,
+        6499,
+        6531
+      ],
+      "entry_face": 3253,
+      "exit_face": 3834,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1466,
+      "point_m": [
+        0.03437389681736628,
+        -0.803881307442983,
+        0.028766638909777004
+      ],
+      "fat_muscle_gap_m": 0.006217288554737983,
+      "muscle_bone_gap_m": 0.041771824478032224,
+      "clearance_m": 0.0479891130327702,
+      "muscle_path_length_m": 0.014793435226372116,
+      "projected_area_m2": 3.6754814679573755e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13057,
+      "fat_nodes": [
+        6497,
+        6527,
+        6531
+      ],
+      "entry_face": 3253,
+      "exit_face": 3835,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1523,
+      "point_m": [
+        0.03548023973902067,
+        -0.802047848701477,
+        0.028492409115036327
+      ],
+      "fat_muscle_gap_m": 0.006844483750047186,
+      "muscle_bone_gap_m": 0.027174380717150934,
+      "clearance_m": 0.03401886446719812,
+      "muscle_path_length_m": 0.014498350644416985,
+      "projected_area_m2": 4.845976818490527e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13058,
+      "fat_nodes": [
+        6499,
+        6530,
+        6532
+      ],
+      "entry_face": 3532,
+      "exit_face": 3835,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1475,
+      "point_m": [
+        0.03715432062745094,
+        -0.8064337372779846,
+        0.0284678153693676
+      ],
+      "fat_muscle_gap_m": 0.005273660159484876,
+      "muscle_bone_gap_m": 0.04610572539663969,
+      "clearance_m": 0.05137938555612456,
+      "muscle_path_length_m": 0.01580560081261506,
+      "projected_area_m2": 7.98083585618059e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13059,
+      "fat_nodes": [
+        6499,
+        6531,
+        6532
+      ],
+      "entry_face": 3253,
+      "exit_face": 3835,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1466,
+      "point_m": [
+        0.03639902174472809,
+        -0.8046035369237264,
+        0.02843753124276797
+      ],
+      "fat_muscle_gap_m": 0.005839525406199402,
+      "muscle_bone_gap_m": 0.04296694519732339,
+      "clearance_m": 0.04880647060352279,
+      "muscle_path_length_m": 0.01538353411827248,
+      "projected_area_m2": 5.135770756337088e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13064,
+      "fat_nodes": [
+        6503,
+        6504,
+        6533
+      ],
+      "entry_face": 3400,
+      "exit_face": 3457,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1259,
+      "point_m": [
+        0.03544276083509127,
+        -0.8274710973103842,
+        0.02859379289050897
+      ],
+      "fat_muscle_gap_m": 0.0003323433619483347,
+      "muscle_bone_gap_m": 0.0367332122855863,
+      "clearance_m": 0.03706555564753464,
+      "muscle_path_length_m": 0.02215339162802854,
+      "projected_area_m2": 2.8963187017505554e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13067,
+      "fat_nodes": [
+        6504,
+        6529,
+        6534
+      ],
+      "entry_face": 3532,
+      "exit_face": 3457,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1257,
+      "point_m": [
+        0.03736416374643644,
+        -0.8187284270922343,
+        0.02929733196894328
+      ],
+      "fat_muscle_gap_m": 0.0015097956658679176,
+      "muscle_bone_gap_m": 0.04382501001845611,
+      "clearance_m": 0.04533480568432403,
+      "muscle_path_length_m": 0.01925672712052288,
+      "projected_area_m2": 7.345593383778493e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13068,
+      "fat_nodes": [
+        6504,
+        6533,
+        6534
+      ],
+      "entry_face": 3400,
+      "exit_face": 3457,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1259,
+      "point_m": [
+        0.03727531557281812,
+        -0.8266405264536539,
+        0.028368835027019184
+      ],
+      "fat_muscle_gap_m": 0.0005897196896621978,
+      "muscle_bone_gap_m": 0.03719071793262997,
+      "clearance_m": 0.03778043762229217,
+      "muscle_path_length_m": 0.021862437832230987,
+      "projected_area_m2": 2.9216675436427586e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13102,
+      "fat_nodes": [
+        6524,
+        6525,
+        6549
+      ],
+      "entry_face": 3713,
+      "exit_face": 3748,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1619,
+      "point_m": [
+        0.03990947951873144,
+        -0.7885454297065735,
+        0.03313794111212095
+      ],
+      "fat_muscle_gap_m": 0.006165155269533887,
+      "muscle_bone_gap_m": 0.020930843257662493,
+      "clearance_m": 0.02709599852719638,
+      "muscle_path_length_m": 0.013102758263249796,
+      "projected_area_m2": 1.0575793713218928e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13103,
+      "fat_nodes": [
+        6524,
+        6528,
+        6549
+      ],
+      "entry_face": 3713,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1619,
+      "point_m": [
+        0.04064982756972313,
+        -0.7920921643575033,
+        0.0313977412879467
+      ],
+      "fat_muscle_gap_m": 0.006362468863526219,
+      "muscle_bone_gap_m": 0.023795988002674517,
+      "clearance_m": 0.030158456866200736,
+      "muscle_path_length_m": 0.014023543817196879,
+      "projected_area_m2": 8.55956775014377e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13105,
+      "fat_nodes": [
+        6525,
+        6549,
+        6550
+      ],
+      "entry_face": 4444,
+      "exit_face": 3749,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1621,
+      "point_m": [
+        0.04181579872965813,
+        -0.7867690722147623,
+        0.03463312114278475
+      ],
+      "fat_muscle_gap_m": 0.005527158397683814,
+      "muscle_bone_gap_m": 0.02220517699236431,
+      "clearance_m": 0.027732335390048123,
+      "muscle_path_length_m": 0.01336811878293423,
+      "projected_area_m2": 1.977193537561206e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13106,
+      "fat_nodes": [
+        6525,
+        6550,
+        6570
+      ],
+      "entry_face": 4444,
+      "exit_face": 3746,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1787,
+      "point_m": [
+        0.043638876328865685,
+        -0.7818639079729716,
+        0.037989298502604164
+      ],
+      "fat_muscle_gap_m": 0.0047588897248680845,
+      "muscle_bone_gap_m": 0.021838683118035697,
+      "clearance_m": 0.02659757284290378,
+      "muscle_path_length_m": 0.01313727529784317,
+      "projected_area_m2": 3.314930020648088e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13110,
+      "fat_nodes": [
+        6527,
+        6528,
+        6552
+      ],
+      "entry_face": 3253,
+      "exit_face": 3833,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1527,
+      "point_m": [
+        0.040266004701455436,
+        -0.7972114284833273,
+        0.02921636278430621
+      ],
+      "fat_muscle_gap_m": 0.006620729267339736,
+      "muscle_bone_gap_m": 0.02804712222813864,
+      "clearance_m": 0.03466785149547838,
+      "muscle_path_length_m": 0.014963309605564946,
+      "projected_area_m2": 7.382703122393863e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13111,
+      "fat_nodes": [
+        6527,
+        6531,
+        6532
+      ],
+      "entry_face": 3253,
+      "exit_face": 3836,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1533,
+      "point_m": [
+        0.03750536466638247,
+        -0.8027700781822205,
+        0.028163301448027294
+      ],
+      "fat_muscle_gap_m": 0.0064667206015086125,
+      "muscle_bone_gap_m": 0.03600224677660358,
+      "clearance_m": 0.04246896737811219,
+      "muscle_path_length_m": 0.015397013986862607,
+      "projected_area_m2": 6.6468450926615574e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13112,
+      "fat_nodes": [
+        6527,
+        6532,
+        6551
+      ],
+      "entry_face": 3532,
+      "exit_face": 3839,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1533,
+      "point_m": [
+        0.03998470803101858,
+        -0.8015074729919434,
+        0.028202310825387638
+      ],
+      "fat_muscle_gap_m": 0.006504619529723792,
+      "muscle_bone_gap_m": 0.035660379660377224,
+      "clearance_m": 0.04216499919010101,
+      "muscle_path_length_m": 0.015339423804460725,
+      "projected_area_m2": 9.966967645214098e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13113,
+      "fat_nodes": [
+        6527,
+        6551,
+        6552
+      ],
+      "entry_face": 3532,
+      "exit_face": 3833,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1535,
+      "point_m": [
+        0.04119414587815603,
+        -0.798647940158844,
+        0.028861428300539654
+      ],
+      "fat_muscle_gap_m": 0.006437195244790115,
+      "muscle_bone_gap_m": 0.03164445654132061,
+      "clearance_m": 0.038081651786110726,
+      "muscle_path_length_m": 0.015373596685996797,
+      "projected_area_m2": 8.602554470771295e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13114,
+      "fat_nodes": [
+        6528,
+        6549,
+        6552
+      ],
+      "entry_face": 4444,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1621,
+      "point_m": [
+        0.041810045639673867,
+        -0.793921709060669,
+        0.030740108340978622
+      ],
+      "fat_muscle_gap_m": 0.0063484270139900975,
+      "muscle_bone_gap_m": 0.026251419334198167,
+      "clearance_m": 0.032599846348188265,
+      "muscle_path_length_m": 0.014589220731026538,
+      "projected_area_m2": 6.782574529129448e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13115,
+      "fat_nodes": [
+        6529,
+        6530,
+        6553
+      ],
+      "entry_face": 3532,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1379,
+      "point_m": [
+        0.0397759402791659,
+        -0.8143653869628906,
+        0.02842685269812743
+      ],
+      "fat_muscle_gap_m": 0.0032422036868574346,
+      "muscle_bone_gap_m": 0.045170401691214966,
+      "clearance_m": 0.048412605378072404,
+      "muscle_path_length_m": 0.017810157279865298,
+      "projected_area_m2": 1.3054898438058515e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13116,
+      "fat_nodes": [
+        6529,
+        6534,
+        6553
+      ],
+      "entry_face": 3532,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1313,
+      "point_m": [
+        0.03994910046458244,
+        -0.8182602326075236,
+        0.028621452550093334
+      ],
+      "fat_muscle_gap_m": 0.00211033166301762,
+      "muscle_bone_gap_m": 0.04208973540018295,
+      "clearance_m": 0.04420006706320057,
+      "muscle_path_length_m": 0.019086274768134747,
+      "projected_area_m2": 1.0397511709725471e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13117,
+      "fat_nodes": [
+        6530,
+        6532,
+        6554
+      ],
+      "entry_face": 3532,
+      "exit_face": 3836,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1476,
+      "point_m": [
+        0.039294460167487465,
+        -0.8064096967379252,
+        0.02804817756017049
+      ],
+      "fat_muscle_gap_m": 0.005544589485689217,
+      "muscle_bone_gap_m": 0.044671500273122826,
+      "clearance_m": 0.050216089758812046,
+      "muscle_path_length_m": 0.01623726281698941,
+      "projected_area_m2": 5.707384036934826e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13118,
+      "fat_nodes": [
+        6530,
+        6553,
+        6554
+      ],
+      "entry_face": 3532,
+      "exit_face": 4322,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1382,
+      "point_m": [
+        0.04059885814785957,
+        -0.8110679189364115,
+        0.02800615256031354
+      ],
+      "fat_muscle_gap_m": 0.004386467193227311,
+      "muscle_bone_gap_m": 0.04605970443617263,
+      "clearance_m": 0.05044617162939995,
+      "muscle_path_length_m": 0.017189887107478916,
+      "projected_area_m2": 2.463486566162132e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13119,
+      "fat_nodes": [
+        6532,
+        6551,
+        6554
+      ],
+      "entry_face": 3532,
+      "exit_face": 3838,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1468,
+      "point_m": [
+        0.04101850464940071,
+        -0.8033168911933899,
+        0.028056902810931206
+      ],
+      "fat_muscle_gap_m": 0.006145814668538564,
+      "muscle_bone_gap_m": 0.03975669956454602,
+      "clearance_m": 0.045902514233084585,
+      "muscle_path_length_m": 0.015814507117674945,
+      "projected_area_m2": 8.331392275406913e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13120,
+      "fat_nodes": [
+        6533,
+        6534,
+        6557
+      ],
+      "entry_face": 3400,
+      "exit_face": 3457,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1134,
+      "point_m": [
+        0.038892814268668495,
+        -0.8287526766459147,
+        0.027842524151007336
+      ],
+      "fat_muscle_gap_m": 0.0008667627274610151,
+      "muscle_bone_gap_m": 0.036190357590032536,
+      "clearance_m": 0.03705712031749355,
+      "muscle_path_length_m": 0.02215264498308619,
+      "projected_area_m2": 1.614217582257549e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13121,
+      "fat_nodes": [
+        6533,
+        6557,
+        6558
+      ],
+      "entry_face": 3639,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1260,
+      "point_m": [
+        0.04055333882570267,
+        -0.8298514485359192,
+        0.027421412989497185
+      ],
+      "fat_muscle_gap_m": 0.001483112066735806,
+      "muscle_bone_gap_m": 0.03597940798887466,
+      "clearance_m": 0.03746252005561047,
+      "muscle_path_length_m": 0.021933078693451506,
+      "projected_area_m2": 1.947522735479268e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13122,
+      "fat_nodes": [
+        6533,
+        6558,
+        6611
+      ],
+      "entry_face": 4039,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1260,
+      "point_m": [
+        0.048682451248168945,
+        -0.831860343615214,
+        0.027813869218031567
+      ],
+      "fat_muscle_gap_m": 0.003962353186821161,
+      "muscle_bone_gap_m": 0.03530119977721038,
+      "clearance_m": 0.03926355296403154,
+      "muscle_path_length_m": 0.020242415865376596,
+      "projected_area_m2": 0.00018692289334509837
+    },
+    {
+      "side": 30,
+      "fat_face": 13123,
+      "fat_nodes": [
+        6534,
+        6553,
+        6558
+      ],
+      "entry_face": 3532,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1313,
+      "point_m": [
+        0.041427310556173325,
+        -0.8209173679351807,
+        0.028273182610670727
+      ],
+      "fat_muscle_gap_m": 0.001721044227255223,
+      "muscle_bone_gap_m": 0.0401405296955653,
+      "clearance_m": 0.04186157392282053,
+      "muscle_path_length_m": 0.020225226328546793,
+      "projected_area_m2": 1.2666876721190157e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13124,
+      "fat_nodes": [
+        6534,
+        6557,
+        6558
+      ],
+      "entry_face": 3532,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1259,
+      "point_m": [
+        0.04045987253387769,
+        -0.8234977126121521,
+        0.028422751153508823
+      ],
+      "fat_muscle_gap_m": 0.0010286110203710438,
+      "muscle_bone_gap_m": 0.038862896066971526,
+      "clearance_m": 0.03989150708734257,
+      "muscle_path_length_m": 0.02085713370911488,
+      "projected_area_m2": 1.1397860605555366e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13145,
+      "fat_nodes": [
+        6548,
+        6549,
+        6552
+      ],
+      "entry_face": 4444,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1626,
+      "point_m": [
+        0.04343116655945778,
+        -0.7933637499809265,
+        0.03147609531879425
+      ],
+      "fat_muscle_gap_m": 0.006280900574091905,
+      "muscle_bone_gap_m": 0.02838129505542082,
+      "clearance_m": 0.034662195629512726,
+      "muscle_path_length_m": 0.014167334217444844,
+      "projected_area_m2": 6.036032165757099e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13146,
+      "fat_nodes": [
+        6548,
+        6549,
+        6572
+      ],
+      "entry_face": 4444,
+      "exit_face": 3748,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1621,
+      "point_m": [
+        0.04506997639934222,
+        -0.7913141449292501,
+        0.033060974131027855
+      ],
+      "fat_muscle_gap_m": 0.006009442045532609,
+      "muscle_bone_gap_m": 0.029662905559560332,
+      "clearance_m": 0.03567234760509294,
+      "muscle_path_length_m": 0.013451760950373474,
+      "projected_area_m2": 7.85644855116896e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13147,
+      "fat_nodes": [
+        6548,
+        6552,
+        6576
+      ],
+      "entry_face": 4456,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1535,
+      "point_m": [
+        0.044502021123965584,
+        -0.7958725094795227,
+        0.030581263204415638
+      ],
+      "fat_muscle_gap_m": 0.006612770878886915,
+      "muscle_bone_gap_m": 0.03165537683164281,
+      "clearance_m": 0.03826814771052972,
+      "muscle_path_length_m": 0.014528525829365889,
+      "projected_area_m2": 6.616758059352357e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13148,
+      "fat_nodes": [
+        6548,
+        6571,
+        6572
+      ],
+      "entry_face": 4456,
+      "exit_face": 3748,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1626,
+      "point_m": [
+        0.0472105989853541,
+        -0.791902502377828,
+        0.03352093820770582
+      ],
+      "fat_muscle_gap_m": 0.006093512078230695,
+      "muscle_bone_gap_m": 0.03308045048113499,
+      "clearance_m": 0.039173962559365685,
+      "muscle_path_length_m": 0.013186332407174893,
+      "projected_area_m2": 6.4427951795842375e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13149,
+      "fat_nodes": [
+        6548,
+        6571,
+        6576
+      ],
+      "entry_face": 4456,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1629,
+      "point_m": [
+        0.04669286062320074,
+        -0.7946864167849222,
+        0.031950036684672035
+      ],
+      "fat_muscle_gap_m": 0.006458354929410805,
+      "muscle_bone_gap_m": 0.034221475376593175,
+      "clearance_m": 0.04067983030600398,
+      "muscle_path_length_m": 0.013702151084745845,
+      "projected_area_m2": 1.0353350670344597e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13150,
+      "fat_nodes": [
+        6549,
+        6550,
+        6572
+      ],
+      "entry_face": 4444,
+      "exit_face": 3749,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1621,
+      "point_m": [
+        0.045037473241488137,
+        -0.7885098457336426,
+        0.034575543055931725
+      ],
+      "fat_muscle_gap_m": 0.005689999360864652,
+      "muscle_bone_gap_m": 0.027662855997681854,
+      "clearance_m": 0.033352855358546506,
+      "muscle_path_length_m": 0.013341918660439045,
+      "projected_area_m2": 1.2230801162971261e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13151,
+      "fat_nodes": [
+        6550,
+        6570,
+        6584
+      ],
+      "entry_face": 4444,
+      "exit_face": 3784,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1790,
+      "point_m": [
+        0.048298982282479606,
+        -0.7804888486862183,
+        0.04012842228015264
+      ],
+      "fat_muscle_gap_m": 0.004443098719699168,
+      "muscle_bone_gap_m": 0.028925616891001475,
+      "clearance_m": 0.03336871561070064,
+      "muscle_path_length_m": 0.01277818162506543,
+      "projected_area_m2": 2.4333100226536786e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13152,
+      "fat_nodes": [
+        6550,
+        6572,
+        6584
+      ],
+      "entry_face": 4444,
+      "exit_face": 3749,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1787,
+      "point_m": [
+        0.04806449760993322,
+        -0.7851188580195109,
+        0.037448314328988395
+      ],
+      "fat_muscle_gap_m": 0.005073759566957395,
+      "muscle_bone_gap_m": 0.030260688667381,
+      "clearance_m": 0.03533444823433839,
+      "muscle_path_length_m": 0.013063754336927177,
+      "projected_area_m2": 2.259071007126856e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13153,
+      "fat_nodes": [
+        6551,
+        6552,
+        6576
+      ],
+      "entry_face": 4460,
+      "exit_face": 3923,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1536,
+      "point_m": [
+        0.04380904138088226,
+        -0.7978669802347819,
+        0.029490341742833454
+      ],
+      "fat_muscle_gap_m": 0.006845039625007977,
+      "muscle_bone_gap_m": 0.03356175612853311,
+      "clearance_m": 0.040406795753541086,
+      "muscle_path_length_m": 0.014953487099834968,
+      "projected_area_m2": 5.734867974727109e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13154,
+      "fat_nodes": [
+        6551,
+        6554,
+        6576
+      ],
+      "entry_face": 4453,
+      "exit_face": 3839,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1536,
+      "point_m": [
+        0.043349013974269233,
+        -0.8011916677157084,
+        0.02872999757528305
+      ],
+      "fat_muscle_gap_m": 0.006168319209694718,
+      "muscle_bone_gap_m": 0.03758840118361081,
+      "clearance_m": 0.043756720393305526,
+      "muscle_path_length_m": 0.015599926147758278,
+      "projected_area_m2": 8.80727796648273e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13155,
+      "fat_nodes": [
+        6553,
+        6554,
+        6574
+      ],
+      "entry_face": 4453,
+      "exit_face": 4513,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1479,
+      "point_m": [
+        0.04314569259683291,
+        -0.8103101849555969,
+        0.02772376189629237
+      ],
+      "fat_muscle_gap_m": 0.004908221422943133,
+      "muscle_bone_gap_m": 0.045055357503988404,
+      "clearance_m": 0.04996357892693154,
+      "muscle_path_length_m": 0.017301194377481545,
+      "projected_area_m2": 2.5313252450809287e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13156,
+      "fat_nodes": [
+        6553,
+        6558,
+        6578
+      ],
+      "entry_face": 4500,
+      "exit_face": 4323,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1318,
+      "point_m": [
+        0.04465509578585625,
+        -0.8211275935173035,
+        0.027885351330041885
+      ],
+      "fat_muscle_gap_m": 0.0024751999333558865,
+      "muscle_bone_gap_m": 0.03983491214115036,
+      "clearance_m": 0.042310112074506245,
+      "muscle_path_length_m": 0.020280012033965202,
+      "projected_area_m2": 1.2824600148175769e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13157,
+      "fat_nodes": [
+        6553,
+        6574,
+        6579
+      ],
+      "entry_face": 4453,
+      "exit_face": 4521,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1318,
+      "point_m": [
+        0.0454681950310866,
+        -0.8135101795196533,
+        0.027637774745623272
+      ],
+      "fat_muscle_gap_m": 0.004496293837319056,
+      "muscle_bone_gap_m": 0.043821318402606814,
+      "clearance_m": 0.04831761223992587,
+      "muscle_path_length_m": 0.018096951512956275,
+      "projected_area_m2": 2.8099076025300818e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13158,
+      "fat_nodes": [
+        6553,
+        6578,
+        6579
+      ],
+      "entry_face": 4500,
+      "exit_face": 4325,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1318,
+      "point_m": [
+        0.04632230599721273,
+        -0.8183729847272238,
+        0.02772693398098151
+      ],
+      "fat_muscle_gap_m": 0.0036819131605978737,
+      "muscle_bone_gap_m": 0.0412597883211102,
+      "clearance_m": 0.04494170148170808,
+      "muscle_path_length_m": 0.019292206647773293,
+      "projected_area_m2": 1.4395662199184756e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13159,
+      "fat_nodes": [
+        6554,
+        6574,
+        6575
+      ],
+      "entry_face": 4453,
+      "exit_face": 3839,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1486,
+      "point_m": [
+        0.04499773060282072,
+        -0.8049517075220743,
+        0.028191295141975086
+      ],
+      "fat_muscle_gap_m": 0.005987751027332972,
+      "muscle_bone_gap_m": 0.04278611557866242,
+      "clearance_m": 0.04877386660599539,
+      "muscle_path_length_m": 0.015852890585244694,
+      "projected_area_m2": 9.378126524794972e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13160,
+      "fat_nodes": [
+        6554,
+        6575,
+        6577
+      ],
+      "entry_face": 4454,
+      "exit_face": 3923,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1486,
+      "point_m": [
+        0.046198274940252304,
+        -0.8021821777025858,
+        0.029353618621826172
+      ],
+      "fat_muscle_gap_m": 0.006456590077879049,
+      "muscle_bone_gap_m": 0.04021377736274511,
+      "clearance_m": 0.04667036744062416,
+      "muscle_path_length_m": 0.014916742338646823,
+      "projected_area_m2": 1.4324286029321343e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13161,
+      "fat_nodes": [
+        6554,
+        6576,
+        6577
+      ],
+      "entry_face": 4455,
+      "exit_face": 3923,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1542,
+      "point_m": [
+        0.04537234827876091,
+        -0.8007572094599406,
+        0.02960120514035225
+      ],
+      "fat_muscle_gap_m": 0.006362924134343501,
+      "muscle_bone_gap_m": 0.038245769499182306,
+      "clearance_m": 0.044608693633525806,
+      "muscle_path_length_m": 0.014940387507525257,
+      "projected_area_m2": 1.1686979601077674e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13162,
+      "fat_nodes": [
+        6555,
+        6556,
+        6650
+      ],
+      "entry_face": 4383,
+      "exit_face": 4611,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 628,
+      "point_m": [
+        0.05481524889667829,
+        -0.8766597708066305,
+        0.033033483351270355
+      ],
+      "fat_muscle_gap_m": 0.010647077867416872,
+      "muscle_bone_gap_m": 0.02381005382005766,
+      "clearance_m": 0.03445713168747453,
+      "muscle_path_length_m": 0.020948402070421188,
+      "projected_area_m2": 0.0005266939210016863
+    },
+    {
+      "side": 30,
+      "fat_face": 13163,
+      "fat_nodes": [
+        6556,
+        6611,
+        6650
+      ],
+      "entry_face": 4383,
+      "exit_face": 4843,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 914,
+      "point_m": [
+        0.06211841354767481,
+        -0.8591647545496622,
+        0.03413193114101887
+      ],
+      "fat_muscle_gap_m": 0.007976886577075286,
+      "muscle_bone_gap_m": 0.03149185621407058,
+      "clearance_m": 0.039468742791145865,
+      "muscle_path_length_m": 0.017746113632734824,
+      "projected_area_m2": 0.0008160079367085515
+    },
+    {
+      "side": 30,
+      "fat_face": 13164,
+      "fat_nodes": [
+        6558,
+        6578,
+        6611
+      ],
+      "entry_face": 4501,
+      "exit_face": 4325,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1262,
+      "point_m": [
+        0.05181677018602689,
+        -0.8257168332735697,
+        0.028427376101414364
+      ],
+      "fat_muscle_gap_m": 0.0049054423391338385,
+      "muscle_bone_gap_m": 0.03816567533603667,
+      "clearance_m": 0.04307111767517051,
+      "muscle_path_length_m": 0.018648795921724783,
+      "projected_area_m2": 4.817746435425985e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13186,
+      "fat_nodes": [
+        6570,
+        6583,
+        6584
+      ],
+      "entry_face": 4445,
+      "exit_face": 4362,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1790,
+      "point_m": [
+        0.051027897745370865,
+        -0.7778550982475281,
+        0.04247185091177622
+      ],
+      "fat_muscle_gap_m": 0.003995899416605109,
+      "muscle_bone_gap_m": 0.030966951138419713,
+      "clearance_m": 0.03496285055502482,
+      "muscle_path_length_m": 0.012302417313018822,
+      "projected_area_m2": 8.530197595280065e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13187,
+      "fat_nodes": [
+        6571,
+        6572,
+        6584
+      ],
+      "entry_face": 4456,
+      "exit_face": 3749,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1787,
+      "point_m": [
+        0.04950923596819242,
+        -0.7875386675198873,
+        0.03666427483161291
+      ],
+      "fat_muscle_gap_m": 0.0053694142664685585,
+      "muscle_bone_gap_m": 0.033356908103869064,
+      "clearance_m": 0.03872632237033762,
+      "muscle_path_length_m": 0.012966672734916598,
+      "projected_area_m2": 1.332960951183626e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13188,
+      "fat_nodes": [
+        6571,
+        6576,
+        6577
+      ],
+      "entry_face": 4456,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1629,
+      "point_m": [
+        0.04802321518460909,
+        -0.7962464292844137,
+        0.03173032278815905
+      ],
+      "fat_muscle_gap_m": 0.006578385853928927,
+      "muscle_bone_gap_m": 0.036293880252345034,
+      "clearance_m": 0.04287226610627396,
+      "muscle_path_length_m": 0.013748451216916938,
+      "projected_area_m2": 8.653151334025999e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13189,
+      "fat_nodes": [
+        6571,
+        6577,
+        6585
+      ],
+      "entry_face": 4456,
+      "exit_face": 4623,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1549,
+      "point_m": [
+        0.050237407286961876,
+        -0.7948271433512369,
+        0.03338951369126638
+      ],
+      "fat_muscle_gap_m": 0.006227461000119568,
+      "muscle_bone_gap_m": 0.0380093755823993,
+      "clearance_m": 0.04423683658251887,
+      "muscle_path_length_m": 0.013057238943362366,
+      "projected_area_m2": 1.0198650801429565e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13190,
+      "fat_nodes": [
+        6571,
+        6584,
+        6602
+      ],
+      "entry_face": 4456,
+      "exit_face": 3749,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1790,
+      "point_m": [
+        0.0525828388830026,
+        -0.7849453290303549,
+        0.03928906098008156
+      ],
+      "fat_muscle_gap_m": 0.004789449609688051,
+      "muscle_bone_gap_m": 0.0356322130020399,
+      "clearance_m": 0.04042166261172795,
+      "muscle_path_length_m": 0.012608743900682402,
+      "projected_area_m2": 3.1365232130209364e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13191,
+      "fat_nodes": [
+        6571,
+        6585,
+        6602
+      ],
+      "entry_face": 4456,
+      "exit_face": 3749,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1640,
+      "point_m": [
+        0.0528408611814181,
+        -0.789425790309906,
+        0.03718064849575361
+      ],
+      "fat_muscle_gap_m": 0.0053448156471213315,
+      "muscle_bone_gap_m": 0.03787200092066556,
+      "clearance_m": 0.04321681656778689,
+      "muscle_path_length_m": 0.012523725902543255,
+      "projected_area_m2": 2.3488669578908272e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13196,
+      "fat_nodes": [
+        6574,
+        6575,
+        6586
+      ],
+      "entry_face": 4454,
+      "exit_face": 4545,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1541,
+      "point_m": [
+        0.04780468965570132,
+        -0.805210292339325,
+        0.02845979544023673
+      ],
+      "fat_muscle_gap_m": 0.006609730018646249,
+      "muscle_bone_gap_m": 0.042809041580099946,
+      "clearance_m": 0.04941877159874619,
+      "muscle_path_length_m": 0.015672455200853933,
+      "projected_area_m2": 9.118400614460676e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13197,
+      "fat_nodes": [
+        6574,
+        6579,
+        6586
+      ],
+      "entry_face": 4453,
+      "exit_face": 4544,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1386,
+      "point_m": [
+        0.047720166544119515,
+        -0.8095756967862447,
+        0.02784707335134347
+      ],
+      "fat_muscle_gap_m": 0.005533769305803394,
+      "muscle_bone_gap_m": 0.04456654831348384,
+      "clearance_m": 0.05010031761928724,
+      "muscle_path_length_m": 0.017037248181126716,
+      "projected_area_m2": 1.916133622015259e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13198,
+      "fat_nodes": [
+        6575,
+        6577,
+        6585
+      ],
+      "entry_face": 4456,
+      "exit_face": 3924,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1547,
+      "point_m": [
+        0.04999356592694918,
+        -0.7981725136439005,
+        0.03178713098168373
+      ],
+      "fat_muscle_gap_m": 0.006515056210144712,
+      "muscle_bone_gap_m": 0.03936044813041305,
+      "clearance_m": 0.04587550434055776,
+      "muscle_path_length_m": 0.013724625254742537,
+      "projected_area_m2": 6.678536897286591e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13199,
+      "fat_nodes": [
+        6575,
+        6585,
+        6604
+      ],
+      "entry_face": 4456,
+      "exit_face": 4623,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1549,
+      "point_m": [
+        0.05224128191669782,
+        -0.7963736255963644,
+        0.03371835003296534
+      ],
+      "fat_muscle_gap_m": 0.006043375014716773,
+      "muscle_bone_gap_m": 0.04021702679901074,
+      "clearance_m": 0.046260401813727516,
+      "muscle_path_length_m": 0.013307858348710011,
+      "projected_area_m2": 1.0852299769603668e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13200,
+      "fat_nodes": [
+        6575,
+        6586,
+        6605
+      ],
+      "entry_face": 4455,
+      "exit_face": 4549,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1489,
+      "point_m": [
+        0.050819349785645805,
+        -0.8062182863553365,
+        0.029057844852407772
+      ],
+      "fat_muscle_gap_m": 0.007193460445899153,
+      "muscle_bone_gap_m": 0.04404161083018536,
+      "clearance_m": 0.05123507127608451,
+      "muscle_path_length_m": 0.014874452071770329,
+      "projected_area_m2": 8.385381981557138e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13201,
+      "fat_nodes": [
+        6575,
+        6604,
+        6605
+      ],
+      "entry_face": 4460,
+      "exit_face": 4624,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1548,
+      "point_m": [
+        0.05282909298936526,
+        -0.8015945355097452,
+        0.031899437929193176
+      ],
+      "fat_muscle_gap_m": 0.006681678940129658,
+      "muscle_bone_gap_m": 0.0434205503941095,
+      "clearance_m": 0.050102229334239155,
+      "muscle_path_length_m": 0.013671469209927054,
+      "projected_area_m2": 5.4224707267791494e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13202,
+      "fat_nodes": [
+        6578,
+        6579,
+        6605
+      ],
+      "entry_face": 4500,
+      "exit_face": 4603,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1320,
+      "point_m": [
+        0.050150420516729355,
+        -0.8153911630312601,
+        0.028282332544525463
+      ],
+      "fat_muscle_gap_m": 0.005041133003864991,
+      "muscle_bone_gap_m": 0.04257668619171714,
+      "clearance_m": 0.047617819195582126,
+      "muscle_path_length_m": 0.018073269349429176,
+      "projected_area_m2": 1.6408949108148718e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13203,
+      "fat_nodes": [
+        6578,
+        6605,
+        6611
+      ],
+      "entry_face": 4646,
+      "exit_face": 4603,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1324,
+      "point_m": [
+        0.055544580022493996,
+        -0.8209734757741293,
+        0.02896954615910848
+      ],
+      "fat_muscle_gap_m": 0.006148556164940134,
+      "muscle_bone_gap_m": 0.040740873428372945,
+      "clearance_m": 0.046889429593313076,
+      "muscle_path_length_m": 0.0173313620774116,
+      "projected_area_m2": 0.00013143552491479138
+    },
+    {
+      "side": 30,
+      "fat_face": 13204,
+      "fat_nodes": [
+        6579,
+        6586,
+        6605
+      ],
+      "entry_face": 4614,
+      "exit_face": 4542,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1393,
+      "point_m": [
+        0.050734826674064,
+        -0.8105836908022562,
+        0.02844512276351452
+      ],
+      "fat_muscle_gap_m": 0.005924022994081318,
+      "muscle_bone_gap_m": 0.044911686563838524,
+      "clearance_m": 0.05083570955791984,
+      "muscle_path_length_m": 0.01640054342849788,
+      "projected_area_m2": 2.2939224059381758e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13210,
+      "fat_nodes": [
+        6583,
+        6584,
+        6602
+      ],
+      "entry_face": 4663,
+      "exit_face": 4362,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1790,
+      "point_m": [
+        0.05386701598763466,
+        -0.7798917690912882,
+        0.042416529109080635
+      ],
+      "fat_muscle_gap_m": 0.003852539854314968,
+      "muscle_bone_gap_m": 0.035120285327353715,
+      "clearance_m": 0.03897282518166868,
+      "muscle_path_length_m": 0.012288431888736732,
+      "projected_area_m2": 8.83962316411413e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13211,
+      "fat_nodes": [
+        6583,
+        6602,
+        6603
+      ],
+      "entry_face": 4676,
+      "exit_face": 4362,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1790,
+      "point_m": [
+        0.055535697688659034,
+        -0.7784391244252523,
+        0.04386332010229429
+      ],
+      "fat_muscle_gap_m": 0.0036047502238081078,
+      "muscle_bone_gap_m": 0.0367343165145588,
+      "clearance_m": 0.04033906673836691,
+      "muscle_path_length_m": 0.011603430326248915,
+      "projected_area_m2": 1.1238909568112021e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13212,
+      "fat_nodes": [
+        6583,
+        6603,
+        6608
+      ],
+      "entry_face": 4677,
+      "exit_face": 4684,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1942,
+      "point_m": [
+        0.058287885040044785,
+        -0.7744114796320597,
+        0.04777426148454348
+      ],
+      "fat_muscle_gap_m": 0.003018461824578142,
+      "muscle_bone_gap_m": 0.037361552674176436,
+      "clearance_m": 0.04038001449875458,
+      "muscle_path_length_m": 0.01058636154914977,
+      "projected_area_m2": 7.108713197867544e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13213,
+      "fat_nodes": [
+        6585,
+        6602,
+        6604
+      ],
+      "entry_face": 4665,
+      "exit_face": 4643,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1640,
+      "point_m": [
+        0.055006696532169976,
+        -0.7895714044570923,
+        0.03816162422299385
+      ],
+      "fat_muscle_gap_m": 0.005161720171064761,
+      "muscle_bone_gap_m": 0.040055862691545915,
+      "clearance_m": 0.04521758286261068,
+      "muscle_path_length_m": 0.01240303152357649,
+      "projected_area_m2": 1.5989097682300724e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13245,
+      "fat_nodes": [
+        6602,
+        6603,
+        6637
+      ],
+      "entry_face": 4746,
+      "exit_face": 4684,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1728,
+      "point_m": [
+        0.06280465920766194,
+        -0.7806653579076132,
+        0.04758365576465925
+      ],
+      "fat_muscle_gap_m": 0.0026033907313321933,
+      "muscle_bone_gap_m": 0.04211871706492975,
+      "clearance_m": 0.04472210779626194,
+      "muscle_path_length_m": 0.011278448730715838,
+      "projected_area_m2": 5.3704239245222496e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13246,
+      "fat_nodes": [
+        6602,
+        6604,
+        6610
+      ],
+      "entry_face": 4665,
+      "exit_face": 4643,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1640,
+      "point_m": [
+        0.058129288256168365,
+        -0.7858900229136149,
+        0.04151809091369311
+      ],
+      "fat_muscle_gap_m": 0.004587068974752702,
+      "muscle_bone_gap_m": 0.041716556399797856,
+      "clearance_m": 0.04630362537455056,
+      "muscle_path_length_m": 0.011886857190232865,
+      "projected_area_m2": 2.8738294202801384e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13247,
+      "fat_nodes": [
+        6602,
+        6610,
+        6637
+      ],
+      "entry_face": 4888,
+      "exit_face": 4688,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1728,
+      "point_m": [
+        0.06451659152905147,
+        -0.7829170823097229,
+        0.0473849189778169
+      ],
+      "fat_muscle_gap_m": 0.0034108310825334207,
+      "muscle_bone_gap_m": 0.04376107063025467,
+      "clearance_m": 0.04717190171278809,
+      "muscle_path_length_m": 0.010769689871792873,
+      "projected_area_m2": 2.5624997299633634e-06
+    },
+    {
+      "side": 30,
+      "fat_face": 13248,
+      "fat_nodes": [
+        6603,
+        6608,
+        6637
+      ],
+      "entry_face": 4944,
+      "exit_face": 4688,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1945,
+      "point_m": [
+        0.0655568465590477,
+        -0.7766377131144205,
+        0.05149459714690844
+      ],
+      "fat_muscle_gap_m": 0.0020009208648450183,
+      "muscle_bone_gap_m": 0.040207605317836626,
+      "clearance_m": 0.042208526182681644,
+      "muscle_path_length_m": 0.01097668774119765,
+      "projected_area_m2": 8.726526789271105e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13249,
+      "fat_nodes": [
+        6604,
+        6605,
+        6610
+      ],
+      "entry_face": 4665,
+      "exit_face": 4645,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1640,
+      "point_m": [
+        0.05733995015422503,
+        -0.7950688997904459,
+        0.03716268204152584
+      ],
+      "fat_muscle_gap_m": 0.005086361275198806,
+      "muscle_bone_gap_m": 0.04385296110174004,
+      "clearance_m": 0.04893932237693885,
+      "muscle_path_length_m": 0.013034978230133179,
+      "projected_area_m2": 4.6237255260428434e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13250,
+      "fat_nodes": [
+        6605,
+        6610,
+        6623
+      ],
+      "entry_face": 4853,
+      "exit_face": 4645,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1646,
+      "point_m": [
+        0.06158390020330747,
+        -0.7948851982752482,
+        0.03822300893565019
+      ],
+      "fat_muscle_gap_m": 0.006125535581120417,
+      "muscle_bone_gap_m": 0.046493009117106826,
+      "clearance_m": 0.05261854469822724,
+      "muscle_path_length_m": 0.012736603191803093,
+      "projected_area_m2": 0.00012168131222478618
+    },
+    {
+      "side": 30,
+      "fat_face": 13251,
+      "fat_nodes": [
+        6605,
+        6611,
+        6623
+      ],
+      "entry_face": 4855,
+      "exit_face": 4864,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1493,
+      "point_m": [
+        0.06238267943263054,
+        -0.8113585511843363,
+        0.033034256349007286
+      ],
+      "fat_muscle_gap_m": 0.007045993608856924,
+      "muscle_bone_gap_m": 0.04883658169880235,
+      "clearance_m": 0.05588257530765928,
+      "muscle_path_length_m": 0.01446928338508411,
+      "projected_area_m2": 0.0002457706648191227
+    },
+    {
+      "side": 30,
+      "fat_face": 13262,
+      "fat_nodes": [
+        6610,
+        6623,
+        6637
+      ],
+      "entry_face": 4888,
+      "exit_face": 4688,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1728,
+      "point_m": [
+        0.06840480367342631,
+        -0.7863358457883199,
+        0.046585330118735634
+      ],
+      "fat_muscle_gap_m": 0.006316281082987478,
+      "muscle_bone_gap_m": 0.0464528624196542,
+      "clearance_m": 0.052769143502641676,
+      "muscle_path_length_m": 0.009608544712978215,
+      "projected_area_m2": 5.720172382850386e-05
+    },
+    {
+      "side": 30,
+      "fat_face": 13263,
+      "fat_nodes": [
+        6611,
+        6623,
+        6650
+      ],
+      "entry_face": 4971,
+      "exit_face": 4945,
+      "bone_body": 128,
+      "bone_bank": 19,
+      "bone_face": 1266,
+      "point_m": [
+        0.07088064402341843,
+        -0.8377384940783182,
+        0.037313101813197136
+      ],
+      "fat_muscle_gap_m": 0.006348773390440404,
+      "muscle_bone_gap_m": 0.03937264236116974,
+      "clearance_m": 0.045721415751610144,
+      "muscle_path_length_m": 0.013824036704180566,
+      "projected_area_m2": 0.0004235694193619466
+    }
+  ],
+  "survey": [
+    {
+      "closure_m": 0.0005,
+      "engaged_routes": 2,
+      "projected_area_sum_m2": 1.4738519717664988e-05,
+      "routes_within_15_percent_strain": 2,
+      "routes_excluded_above_15_percent_strain": 0,
+      "low_strain_unconfined_load_n": 0.0020381443067486564,
+      "low_strain_confined_load_n": 0.008407345265338206
+    },
+    {
+      "closure_m": 0.001,
+      "engaged_routes": 8,
+      "projected_area_sum_m2": 4.962994550657303e-05,
+      "routes_within_15_percent_strain": 8,
+      "routes_excluded_above_15_percent_strain": 0,
+      "low_strain_unconfined_load_n": 0.03852540874785901,
+      "low_strain_confined_load_n": 0.1589173110849184
+    },
+    {
+      "closure_m": 0.002,
+      "engaged_routes": 14,
+      "projected_area_sum_m2": 8.464942053593334e-05,
+      "routes_within_15_percent_strain": 14,
+      "routes_excluded_above_15_percent_strain": 0,
+      "low_strain_unconfined_load_n": 0.18347955251432446,
+      "low_strain_confined_load_n": 0.7568531541215884
+    },
+    {
+      "closure_m": 0.005,
+      "engaged_routes": 27,
+      "projected_area_sum_m2": 0.00017129848872859434,
+      "routes_within_15_percent_strain": 8,
+      "routes_excluded_above_15_percent_strain": 19,
+      "low_strain_unconfined_load_n": 0.1476689524608605,
+      "low_strain_confined_load_n": 0.6091344289010496
+    },
+    {
+      "closure_m": 0.01,
+      "engaged_routes": 44,
+      "projected_area_sum_m2": 0.001455414853418404,
+      "routes_within_15_percent_strain": 9,
+      "routes_excluded_above_15_percent_strain": 35,
+      "low_strain_unconfined_load_n": 0.1945161877144071,
+      "low_strain_confined_load_n": 0.8023792743219292
+    },
+    {
+      "closure_m": 0.02,
+      "engaged_routes": 83,
+      "projected_area_sum_m2": 0.0037009036957935063,
+      "routes_within_15_percent_strain": 7,
+      "routes_excluded_above_15_percent_strain": 76,
+      "low_strain_unconfined_load_n": 3.921421918353459,
+      "low_strain_confined_load_n": 16.175865413208015
+    }
+  ]
+}
