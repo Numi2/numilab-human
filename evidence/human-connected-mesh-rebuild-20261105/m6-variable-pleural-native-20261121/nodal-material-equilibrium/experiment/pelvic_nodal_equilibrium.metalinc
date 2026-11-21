@@ -1,0 +1,71 @@
+// Resolve unloaded, independent material coordinates with their current
+// finite-strain diagonal block. All interface and material gates run afterward.
+kernel void nm_pelvic_nodal_equilibrium(device const uint* needed [[buffer(0)]],
+    device const float4* quality [[buffer(1)]],device const uint4* freeRows [[buffer(2)]],
+    device const atomic_uint* contactMask [[buffer(3)]],device const uint2* projected [[buffer(4)]],
+    device const float4* force [[buffer(5)]],device const float4* delta [[buffer(6)]],
+    device const uint2* incidence [[buffer(7)]],device const uint* corners [[buffer(8)]],
+    device const uint4* cells [[buffer(9)]],device const float4* inv [[buffer(10)]],
+    device const float* volume [[buffer(11)]],device float4* coordinates [[buffer(12)]],
+    uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]) {
+    float4 q=quality[side];float tolerance=.01f*max(q.y,1.e-6f);
+    if(!needed[side] || !all(isfinite(q)) || q.x<=tolerance || q.z>=5.e-7f || q.w>2.e-9f)return;
+    uint4 part=pelvicFlex[side];float largest=0;uint selected=UINT_MAX;
+    for(uint i=part.x+lane;i<part.x+part.y;i+=32){
+        if(!freeRows[i].z || projected[3*i].y || projected[3*i+1].y || projected[3*i+2].y)continue;
+        float error=length(force[i].xyz);
+        if(error<=tolerance || error<=largest)continue;
+        uint bits=0;for(uint k=0;k<8;++k)bits|=atomic_load_explicit(contactMask+8*i+k,memory_order_relaxed);
+        if(!bits){largest=error;selected=i;}
+    }
+    float high=simd_max(largest);uint node=simd_min(largest==high?selected:UINT_MAX);
+    if(node==UINT_MAX)return;
+    uint2 inc=incidence[node];
+    // Build K_ii and retain the scalar invariants required for a rank-one
+    // determinant update. Re-read incidence on exceptionally high-degree nodes.
+    float3x3 K=float3x3(0.f);
+    for(uint j=lane;j<inc.y;j+=32){
+        uint corner=corners[inc.x+j],cell=corner/4,local=corner%4;uint4 t=cells[cell];
+        float3x3 I=float3x3(inv[3*cell].xyz,inv[3*cell+1].xyz,inv[3*cell+2].xyz);
+        float3 a=delta[t.x].xyz;
+        float3x3 F=float3x3(1.f)+float3x3(delta[t.y].xyz-a,delta[t.z].xyz-a,delta[t.w].xyz-a)*I;
+        float J=determinant(F);
+        float3x3 it=(1.f/J)*float3x3(cross(F[1],F[2]),cross(F[2],F[0]),cross(F[0],F[1]));
+        float3 g=local?float3(I[0][local-1],I[1][local-1],I[2][local-1]):transpose(I)*float3(-1.f);
+        float3 v=it*g;
+        K+=volume[cell]*(float3x3(12000.f*dot(g,g))+
+            (132000.f-120000.f*log(J))*float3x3(v*v.x,v*v.y,v*v.z));
+    }
+    for(uint c=0;c<3;++c) K[c]=simd_sum(K[c]);
+    float3 f=force[node].xyz;float det=determinant(K);
+    if(!(K[0].x>0 && K[0].x*K[1].y>K[0].y*K[1].x && det>0))return;
+    float3 h=-float3(dot(f,cross(K[1],K[2])),dot(f,cross(K[2],K[0])),dot(f,cross(K[0],K[1])))/det;
+    float slope=dot(f,h);
+    if(!(slope<0) || !all(isfinite(h)))return;
+    float terms[8]={0};
+    for(uint j=lane;j<inc.y;j+=32){
+        uint corner=corners[inc.x+j],cell=corner/4,local=corner%4;uint4 t=cells[cell];
+        float3x3 I=float3x3(inv[3*cell].xyz,inv[3*cell+1].xyz,inv[3*cell+2].xyz);
+        float3 a=delta[t.x].xyz;
+        float3x3 F=float3x3(1.f)+float3x3(delta[t.y].xyz-a,delta[t.z].xyz-a,delta[t.w].xyz-a)*I;
+        float J=determinant(F);
+        float3x3 it=(1.f/J)*float3x3(cross(F[1],F[2]),cross(F[2],F[0]),cross(F[0],F[1]));
+        float3 g=local?float3(I[0][local-1],I[1][local-1],I[2][local-1]):transpose(I)*float3(-1.f);
+        float x=dot(h,it*g), quadratic=6000.f*dot(g,g)*dot(h,h), stress=120000.f*log(J)-12000.f;
+        for(uint k=0;k<8;++k){
+            float s=1.f/float(1u<<k),y=s*x,nextJ=J*(1.f+y);
+            if(!(nextJ>.2f && nextJ<5.f)){terms[k]=INFINITY;continue;}
+            float l=log(1.f+y)+(y-((1.f+y)-1.f))/(1.f+y);
+            float rem=abs(y)<.015625f ? y*y*(-.5f+y*(1.f/3.f+y*(-.25f+y*(.2f-y/6.f)))) : l-y;
+            terms[k]+=volume[cell]*(s*s*quadratic+stress*rem+60000.f*l*l);
+        }
+    }
+    for(uint k=0;k<8;++k){
+        float s=1.f/float(1u<<k);
+        float change=s*slope+simd_sum(terms[k]);
+        if(isfinite(change) && change<.0001f*s*slope){
+            if(!lane)coordinates[node].xyz+=s*h;
+            return;
+        }
+    }
+}
