@@ -1,0 +1,18 @@
+--- /Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/exact-preload-segments-050/predict_distributed_preload.py	2026-11-20 16:47:38
++++ run_cavity_load.py	2026-11-20 16:54:18
+@@ -40,7 +40,14 @@
+     parameters = np.array([prms[i] for i in ids])
+     fit_path = a.fit / "posterior-interface-fit.npz"
+     with np.load(fit_path) as fit:
+-        assert np.array_equal(cells, fit["cells"])
++        if "original_cells" in fit:
++            assert np.array_equal(cells, fit["original_cells"])
++            changed = np.flatnonzero(np.any(cells != fit["cells"], axis=1))
++            assert np.array_equal(changed, fit["changed_rows"])
++            assert np.unique(ids[changed]).size == 1
++            cells = fit["cells"].copy()
++        else:
++            assert np.array_equal(cells, fit["cells"])
+         world, rest = (fit[key].astype(float) for key in ("nodes_current", "nodes_reference"))
+     mass_path = a.fit / "balanced-mass.npz"
+     with np.load(mass_path) as m:

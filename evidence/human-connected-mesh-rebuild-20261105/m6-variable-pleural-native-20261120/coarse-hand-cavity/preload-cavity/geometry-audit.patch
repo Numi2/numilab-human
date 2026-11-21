@@ -1,0 +1,26 @@
+--- /Users/numi/Work/human-integrated-gaps-20261104/coarse-hand-cavity-024/sacral-retinacula-049/audit_equilibrated_skin.py	2026-11-20 16:41:04
++++ audit_remesh.py	2026-11-20 16:55:07
+@@ -9,6 +9,7 @@
+ from audit import BONE, digest, rows
+ from audit_bed_layer_surfaces import audit, install_for_float32, owner, role_surfaces
+ from extension import determinant, quality
++from cavity import oriented_boundary
+ 
+ 
+ 
+@@ -56,10 +57,14 @@
+         nodes = source["nodes_current"].astype(float)
+         rest = source["nodes_reference"].astype(float)
+         cells = source["cells"]
++        original = source["original_cells"]
++        changed = source["changed_rows"]
++    assert np.array_equal(changed, np.flatnonzero(np.any(cells != original, axis=1)))
++    assert oriented_boundary(cells[changed]) == oriented_boundary(original[changed])
+     assert digest(a.fit) == support["hashes"][a.fit.name]
+     assert digest(cells_path) == support["hashes"][cells_path.name]
+     rows_of_cells = rows(cells_path)
+-    assert np.array_equal(cells, [[int(r[f"parent_node{i}"]) for i in range(4)] for r in rows_of_cells])
++    assert np.array_equal(original, [[int(r[f"parent_node{i}"]) for i in range(4)] for r in rows_of_cells])
+     n = len(nodes) // 3
+     assert n * 3 == len(nodes)
+     with np.load(evidence) as state:

@@ -1,0 +1,59 @@
+{
+  "scope": "Initial shell and articulated COM at accepted root 1. Necessary static support condition on the present plane: nonnegative normals have a center of pressure in the convex hull of active projections. Friction on that plane cannot cancel a pitch or roll moment about a point on the plane. Geometry and native forces are untouched. The height-band analysis permits arbitrary pressure distribution in that band and is only a lower bound on required engagement.",
+  "sha256": {
+    "stdout.log": "1bac26b0668c2148214ebbefedf952902010b051f02ebdaff0e860e1186a3835",
+    "resting-body-motion-partition.csv": "e66789b90094e2ce62ae3159e174bb604cfcf929a62a2621625c6b362ed4e47f",
+    "shell-mass.csv.nodes.csv": "8f91bc7b878607efe411909c16bf280218698e4671ab0d647206d3104ccb63b6"
+  },
+  "mass_kg": 97.13195178580219,
+  "fem_mass_kg": 14.415723663095664,
+  "weight_n": 952.8644470187195,
+  "com_m": [
+    -0.025266630771673546,
+    -0.7696856598976403,
+    0.11463392081298383
+  ],
+  "bed_offset_m": -9.97598090179963e-06,
+  "contact_width_m": 9.999999747378752e-06,
+  "near_rows": [
+    940,
+    1020,
+    1582
+  ],
+  "com_projection_distance_to_support_hull_m": 0.0,
+  "minimum_unbalanced_pitch_roll_torque_nm_at_full_weight": 0.0,
+  "minimum_clearance_band_with_moment_closure_m": 1.0000055040038092e-05,
+  "minimum_additional_engagement_m": 5.5292659340011596e-11,
+  "possible_normal_distribution_at_threshold": [
+    {
+      "outer_shell_row": 940,
+      "point_m": [
+        -0.0871681272983551,
+        -0.4029516279697418,
+        2.4074138238461273e-08
+      ],
+      "fraction": 0.17769698850532178,
+      "normal_force_n": 169.32114268908708
+    },
+    {
+      "outer_shell_row": 1020,
+      "point_m": [
+        -0.07720622420310974,
+        -0.852288544178009,
+        2.4019497502081322e-08
+      ],
+      "fraction": 0.25580923826254925,
+      "normal_force_n": 243.75152835924726
+    },
+    {
+      "outer_shell_row": 1582,
+      "point_m": [
+        0.01760469190776348,
+        -0.8474216461181641,
+        2.4025094802482272e-08
+      ],
+      "fraction": 0.5664937732321289,
+      "normal_force_n": 539.7917759703852
+    }
+  ]
+}
