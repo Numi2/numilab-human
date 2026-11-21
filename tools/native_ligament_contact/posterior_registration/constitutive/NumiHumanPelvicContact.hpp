@@ -29,7 +29,8 @@ class NumiHumanPelvicContact {
     id<MTLBuffer> projRows=nil,projCols=nil,projVals=nil;
     id<MTLBuffer> refNodes=nil,refInverse=nil,refPoses=nil,totalDelta=nil,materialState=nil;
     id<MTLBuffer> iterationTrace=nil;
-    id<MTLBuffer> liveExtras=nil;
+    id<MTLBuffer> liveExtras=nil,registeredFaces=nil,motionOwners=nil,motionMetrics=nil,motionQueue=nil,motionKeys=nil,savedKeys=nil;
+    id<MTLComputePipelineState> motionPhase=nil,motionRegister=nil,motionBind=nil;
     id<MTLComputePipelineState> initializeExtras=nil;
     id<MTLBuffer> physicalBoundary=nil,physicalReference=nil;
     id<MTLBuffer> tractionResidual=nil,materialNeeded=nil,contactNeeded=nil;
@@ -93,6 +94,12 @@ public:
             if(!p)throw std::runtime_error("missing pelvic material kernel");return p;};
         if constexpr(pelvicHasSharedFacets)sharedFaces=load(41);
         if constexpr(pelvicExtraPairs){liveExtras=alloc(4*pelvicExtraPairs);initializeExtras=pipeline(@"nm_pelvic_live_features");}
+        if constexpr(pelvicMotionRegistry){
+            motionOwners=load(45);registeredFaces=load(46);motionMetrics=alloc(12,true);motionQueue=alloc(512*8);
+            motionKeys=alloc(512*8);savedKeys=alloc(512*8,true);std::memset(savedKeys.contents,0,savedKeys.length);
+            motionPhase=pipeline(@"nm_pelvic_motion_phase");motionRegister=pipeline(@"nm_pelvic_motion_register");motionBind=pipeline(@"nm_pelvic_motion_bind");
+            if(countNodes<512 || motionOwners.length!=pelvicMaterialFiles[40].bytes)throw std::runtime_error("Pelvic registry owner size");
+        }
         if constexpr(pelvicPhysicalBoundary){physicalReference=load(44);physicalBoundary=alloc(numSurface*32);}
         if constexpr(pelvicHasSharedForward){tractionResidual=alloc(countNodes*16);materialNeeded=alloc(8);contactNeeded=alloc(8);lostSupport=alloc(8*4);priorPressure=alloc(512*4);forwardMapping=load(42);forwardFaces=load(43);forwardTriangles=alloc(triangles.length);forwardHit=alloc(forwardMapping.length/2);}
         if constexpr(pelvicHasCrossingCertificate){
@@ -179,6 +186,12 @@ public:
             if constexpr(pelvicHasSharedFacets){bind(10,sharedFaces);bind(11,cortexFaces);bind(12,cortexPositions);bind(13,sx);if constexpr(pelvicPhysicalBoundary)bind(14,physicalBoundary);if constexpr(pelvicExtraPairs)bind(15,liveExtras);}
             run((finiteCount+127)/128,128);
         };
+        auto bindMotion=[&](){
+            [e setComputePipelineState:motionBind];bind(0,motionKeys);bind(1,motionOwners);bind(2,sf);bind(3,sw);bind(4,sharedFaces);bind(5,facetPairs);bind(6,pool);run(4,128);
+        };
+        auto resetObservations=[&](){
+            [e setComputePipelineState:motionPhase];words(0,{1,0,0,0});bind(1,motionMetrics);bind(2,savedKeys);bind(3,motionKeys);bind(4,liveExtras);run(1,32);
+        };
         auto select=[&](unsigned conditional,bool readOnly){
             [e setComputePipelineState:selectPool];words(0,{0,conditional,unsigned(readOnly),0});bind(1,poolRegions);bind(2,poolGaps);
             bind(3,included);bind(4,proposals);bind(5,poolMin);bind(6,needed);bind(7,pool);run(numRegions,32);
@@ -197,6 +210,9 @@ public:
             words(0,{0,0,0,0});run((pelvicExtraPairs*16+127)/128,128);
             words(0,{1,0,0,0});run(4,128);
         }
+        if constexpr(pelvicMotionRegistry){if(!post){
+            [e setComputePipelineState:motionPhase];words(0,{0,p.stepIndex,0,0});bind(1,motionMetrics);bind(2,savedKeys);bind(3,motionKeys);bind(4,liveExtras);run(4,128);bindMotion();
+        }}
         observe(0,1);select(0,true);
         [e setComputePipelineState:requireBulk];bind(0,needed);run(1,32);
         auto bulkForces=[&](){
@@ -222,11 +238,15 @@ public:
                 bool priorOptional=optional;optional=false;
                 [e setComputePipelineState:requestCheck];words(0,{nCrossingGroups,unsigned(outer==UINT_MAX),0,0});
                 bind(1,needed);bind(2,correctionControl);run(1,1);
+                if constexpr(pelvicMotionRegistry)resetObservations();
                 [e setComputePipelineState:testFaces];[e setBytes:&cortexFaceCount length:4 atIndex:0];
                 bind(1,cortexFaces);bind(2,cortexPositions);bind(3,sf);bind(4,sx);bind(5,boxes);bind(6,crossingGroups);if constexpr(pelvicPhysicalBoundary)bind(7,physicalBoundary);
-                if constexpr(pelvicExtraPairs){bind(8,sharedFaces);bind(9,facetPairs);bind(10,liveExtras);}
+                if constexpr(pelvicExtraPairs){bind(8,sharedFaces);bind(9,facetPairs);bind(10,liveExtras);}if constexpr(pelvicMotionRegistry){bind(11,registeredFaces);bind(12,motionMetrics);bind(13,motionQueue);}
                 [e dispatchThreadgroupsWithIndirectBuffer:correctionControl indirectBufferOffset:8 threadsPerThreadgroup:MTLSizeMake(128,1,1)];
                 [e memoryBarrierWithScope:MTLBarrierScopeBuffers];
+                if constexpr(pelvicMotionRegistry){
+                    [e setComputePipelineState:motionRegister];bind(0,motionMetrics);bind(1,motionQueue);bind(2,motionKeys);bind(3,liveExtras);run(2,256);bindMotion();
+                }
                 [e setComputePipelineState:resumeSolve];words(0,{nCrossingGroups,0,0,0});bind(1,needed);bind(2,correctionControl);
                 bind(3,crossingGroups);bind(4,cortexFaces);run(1,128);
                 optional=priorOptional;
@@ -328,11 +348,12 @@ public:
             bind(3,ptr(p.standStatuses));bind(4,materialTrace);run(1,128);
             if constexpr(pelvicHasCrossingCertificate){
 
+                if constexpr(pelvicMotionRegistry)resetObservations();
                 [e setComputePipelineState:testFaces];[e setBytes:&cortexFaceCount length:4 atIndex:0];
                 bind(1,cortexFaces);bind(2,cortexPositions);bind(3,sf);bind(4,sx);bind(5,boxes);bind(6,crossingGroups);if constexpr(pelvicPhysicalBoundary)bind(7,physicalBoundary);
-                if constexpr(pelvicExtraPairs){bind(8,sharedFaces);bind(9,facetPairs);bind(10,liveExtras);}run(nCrossingGroups,128);
+                if constexpr(pelvicExtraPairs){bind(8,sharedFaces);bind(9,facetPairs);bind(10,liveExtras);}if constexpr(pelvicMotionRegistry){bind(11,registeredFaces);bind(12,motionMetrics);bind(13,motionQueue);}run(nCrossingGroups,128);
                 [e setComputePipelineState:admitFaces];words(0,{p.stepIndex,nCrossingGroups,countTrace,numSurface});
-                bind(1,crossingGroups);bind(2,sx);bind(3,ptr(p.standStatuses));bind(4,crossingTrace);if constexpr(pelvicPhysicalBoundary)bind(5,physicalBoundary);run(1,128);
+                bind(1,crossingGroups);bind(2,sx);bind(3,ptr(p.standStatuses));bind(4,crossingTrace);if constexpr(pelvicPhysicalBoundary)bind(5,physicalBoundary);if constexpr(pelvicMotionRegistry)bind(6,motionMetrics);run(1,128);
                 if(countTrace){[e setComputePipelineState:measureRejected];words(0,{p.stepIndex,countTrace,poolCount,0});bind(1,ptr(p.standStatuses));bind(2,poolGaps);bind(3,pool);bind(4,rejectedQueries);run(6,128);}
             }
             encodedSteps=std::max(encodedSteps,p.stepIndex+1);
@@ -351,7 +372,7 @@ public:
         [e setBuffer:(__bridge id<MTLBuffer>)p.bodyPositionLow offset:0 atIndex:5];
         [e setBuffer:nodePositions offset:0 atIndex:6];[e setBuffer:coordinates offset:0 atIndex:7];
         [e setBuffer:accepted offset:0 atIndex:8];[e setBuffer:poolSlots offset:0 atIndex:9];
-        [e setBuffer:pressures offset:0 atIndex:10];[e setBuffer:localN offset:0 atIndex:11];[e setBuffer:contactCache offset:0 atIndex:12];[e setBuffer:pool offset:0 atIndex:13];[e setBuffer:witness offset:0 atIndex:14];[e setBuffer:totalDelta offset:0 atIndex:15];
+        [e setBuffer:pressures offset:0 atIndex:10];[e setBuffer:localN offset:0 atIndex:11];[e setBuffer:contactCache offset:0 atIndex:12];[e setBuffer:pool offset:0 atIndex:13];[e setBuffer:witness offset:0 atIndex:14];[e setBuffer:totalDelta offset:0 atIndex:15];if constexpr(pelvicMotionRegistry){[e setBuffer:motionKeys offset:0 atIndex:16];[e setBuffer:savedKeys offset:0 atIndex:17];}
         [e dispatchThreads:MTLSizeMake(countNodes,1,1) threadsPerThreadgroup:MTLSizeMake(128,1,1)];
         if(captureSurfaces){
             d={p.stepIndex,numSurface,numReverse,unsigned(p.articulationFirstBody)};
@@ -370,6 +391,11 @@ public:
             unsigned acceptedCount=unsigned(static_cast<const float*>(accepted.contents)[0]);
             for(unsigned i=0;i<std::min(acceptedCount+1,std::min(encodedSteps,countTrace));++i)
                 g<<i<<','<<q[4*i]<<','<<q[4*i+1]<<','<<q[4*i+2]<<','<<q[4*i+3]<<'\n';
+        }
+        if constexpr(pelvicMotionRegistry){
+            auto keys=static_cast<const unsigned*>(savedKeys.contents);std::ofstream f(std::filesystem::path(file).parent_path()/"accepted-cortical-registry.csv");
+            f<<"slot,cortical_row,material_face\n";
+            for(unsigned i=0;i<512;++i)if(keys[2*i])f<<i<<','<<keys[2*i]-1<<','<<keys[2*i+1]-1<<'\n';
         }
         const float* saved=(const float*)accepted.contents;
         if(rejectedQueries&&encodedSteps>unsigned(saved[0])&&unsigned(saved[0])<countTrace){

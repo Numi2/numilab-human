@@ -62,7 +62,7 @@ inline uint4 pelvicJoinWitness(uint4 a,uint4 b){
 kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device const uint4* cortexFaces [[buffer(1)]],
     device const float4* cortex [[buffer(2)]],device const PelvicSurfaceFace* skinFaces [[buffer(3)]],
     device const float4* skin [[buffer(4)]],device const PelvicBounds* boxes [[buffer(5)]],
-    device uint4* partial [[buffer(6)]],device const MRCompensatedPositionGPU* physical [[buffer(7)]],device const uint4* atlas [[buffer(8)]],device const PelvicFacetPair* ports [[buffer(9)]],device atomic_uint* live [[buffer(10)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
+    device uint4* partial [[buffer(6)]],device const MRCompensatedPositionGPU* physical [[buffer(7)]],device const uint4* atlas [[buffer(8)]],device const PelvicFacetPair* ports [[buffer(9)]],device atomic_uint* live [[buffer(10)]],device const uint2* registered [[buffer(11)]],device atomic_uint* registryMetrics [[buffer(12)]],device uint2* queue [[buffer(13)]],uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],
     uint g [[threadgroup_position_in_grid]]){
     uint4 hit=uint4(0,UINT_MAX,UINT_MAX,0);
     if(i<count){
@@ -94,7 +94,8 @@ kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device 
                     }
                     if(crosses){
                         ++hit.x;hit.y=i;hit.z=min(hit.z,face);
-                        if(pelvicExtraPairs){
+                        if(pelvicMotionRegistry){pelvicEnqueueMissing(uint2(i,face),f.w,registered,registryMetrics,queue);}
+                        else if(pelvicExtraPairs){
                             uint l=pelvicFixedPairs,end=l+pelvicExtraPairs,u=end;
                             while(l<u){
                                 uint k=l+(u-l)/2,ci=atlas[k].w,mi=ports[k].id.w;
@@ -119,7 +120,7 @@ kernel void nm_pelvic_crossing_groups(constant uint& count [[buffer(0)]],device 
 }
 kernel void nm_pelvic_crossing_admit(constant uint4& d [[buffer(0)]],device const uint4* partial [[buffer(1)]],
     device const float4* skin [[buffer(2)]],device MRNumiHumanStandStatusGPU* status [[buffer(3)]],
-    device uint4* trace [[buffer(4)]],device const MRCompensatedPositionGPU* physical [[buffer(5)]],uint lane [[thread_index_in_threadgroup]]){
+    device uint4* trace [[buffer(4)]],device const MRCompensatedPositionGPU* physical [[buffer(5)]],device const atomic_uint* registryMetrics [[buffer(6)]],uint lane [[thread_index_in_threadgroup]]){
     uint4 h=uint4(0,UINT_MAX,UINT_MAX,0);
     for(uint i=lane;i<d.y;i+=128)h=pelvicJoinWitness(h,partial[i]);
     for(uint i=lane;i<d.w;i+=128){
@@ -132,7 +133,7 @@ kernel void nm_pelvic_crossing_admit(constant uint4& d [[buffer(0)]],device cons
         threadgroup_barrier(mem_flags::mem_threadgroup);
     }
     if(!lane){
-        uint4 result=group[0];if(d.x<d.z)trace[d.x]=result;
+        uint4 result=group[0];if(pelvicMotionRegistry && atomic_load_explicit(registryMetrics+2,memory_order_relaxed))result.w|=2u;if(d.x<d.z)trace[d.x]=result;
         if((result.x||result.w)&&status[0].code==MR_NUMI_HUMAN_STAND_SUCCESS)
             status[0].code=MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED;
     }

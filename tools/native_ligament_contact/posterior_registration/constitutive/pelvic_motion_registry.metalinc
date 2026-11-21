@@ -1,0 +1,66 @@
+// Registration is derived from an exact crossing. Slot identity survives only while
+// needed by the accepted pressure state. The triangle identities and their P1
+// parents are immutable. No future pose or CPU simulation enters this path.
+inline bool pelvicKeyBefore(uint2 a,uint2 b){return a.x<b.x || (a.x==b.x && a.y<b.y);}
+inline void pelvicEnqueueMissing(uint2 key,uint side,device const uint2* registered,
+    device atomic_uint* metrics,device uint2* queue){
+    uint lo=0,hi=pelvicFixedPairs;
+    while(lo<hi){uint m=lo+(hi-lo)/2;if(pelvicKeyBefore(registered[m],key))lo=m+1;else hi=m;}
+    if(lo<pelvicFixedPairs && all(registered[lo]==key))return;
+    uint i=atomic_fetch_add_explicit(metrics+side,1u,memory_order_relaxed);
+    if(i<256)queue[256*side+i]=key;
+    else atomic_store_explicit(metrics+2,1u,memory_order_relaxed);
+}
+kernel void nm_pelvic_motion_phase(constant uint4& d [[buffer(0)]],device atomic_uint* metrics [[buffer(1)]],
+    device const uint2* acceptedKeys [[buffer(2)]],device uint2* trialKeys [[buffer(3)]],
+    device const atomic_uint* live [[buffer(4)]],uint i [[thread_position_in_grid]]){
+    if(d.x==0){
+        if(i<3)atomic_store_explicit(metrics+i,0u,memory_order_relaxed);
+        if(i<512)trialKeys[i]=(d.y && atomic_load_explicit(live+i,memory_order_relaxed))?acceptedKeys[i]:uint2(0);
+    }else if(i<2)atomic_store_explicit(metrics+i,0u,memory_order_relaxed);
+}
+kernel void nm_pelvic_motion_register(device atomic_uint* metrics [[buffer(0)]],device const uint2* queue [[buffer(1)]],
+    device uint2* keys [[buffer(2)]],device atomic_uint* live [[buffer(3)]],
+    uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_threadgroup]]){
+    uint count=min(256u,atomic_load_explicit(metrics+side,memory_order_relaxed));
+    if(!count)return;
+    threadgroup uint2 sorted[256],mapped[256];threadgroup uint active[256];
+    uint k=256*side+lane;
+    sorted[lane]=lane<count?queue[k]:uint2(UINT_MAX);
+    mapped[lane]=keys[k];active[lane]=0;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    // Deterministic mapping regardless of the order in which cortical lanes finished.
+    for(uint width=2;width<=256;width*=2)for(uint offset=width/2;offset;offset/=2){
+        uint other=lane^offset;
+        if(other>lane){uint2 a=sorted[lane],b=sorted[other];
+            if((lane&width)?pelvicKeyBefore(a,b):pelvicKeyBefore(b,a)){sorted[lane]=b;sorted[other]=a;}}
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    if(!lane){
+        for(uint i=0;i<count;++i){
+            uint2 key=sorted[i]+1u;uint slot=256,empty=256;
+            for(uint j=0;j<256;++j){
+                if(all(mapped[j]==key)){slot=j;break;}
+                if(empty==256 && !mapped[j].x)empty=j;
+            }
+            if(slot==256)slot=empty;
+            if(slot==256){atomic_store_explicit(metrics+2,1u,memory_order_relaxed);break;}
+            mapped[slot]=key;active[slot]=1;
+        }
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    if(active[lane]){keys[k]=mapped[lane];atomic_store_explicit(live+k,1u,memory_order_relaxed);}
+}
+kernel void nm_pelvic_motion_bind(device const uint2* keys [[buffer(0)]],device const uint4* owners [[buffer(1)]],
+    device const PelvicSurfaceFace* materialFaces [[buffer(2)]],device const float4* shapes [[buffer(3)]],
+    device uint4* atlas [[buffer(4)]],device PelvicFacetPair* pairs [[buffer(5)]],device PelvicPoolSample* pool [[buffer(6)]],
+    uint k [[thread_position_in_grid]]){
+    if(k>=512)return;uint2 key=keys[k];if(!key.x)return;
+    uint b=key.x-1,m=key.y-1,target=pelvicFixedPairs+k;
+    uint4 bone=owners[b];auto f=materialFaces[m];atlas[target]=uint4(f.vertices.xyz,b);
+    device auto& p=pairs[target];p.id=uint4(bone.xyz,m);p.nodes=f.nodes;
+    for(uint j=0;j<3;++j)p.shape[j]=shapes[3*m+j];
+    uint start=pelvicFiniteStart+pelvicFacetRows*target;
+    for(uint j=0;j<pelvicFacetRows;++j){device auto& s=pool[start+j];
+        s.contact.domain=uint4(128,bone.w,bone.y,1);s.contact.bank=uint4(bone.x,0,0,0);s.nodes=f.nodes;}
+}
