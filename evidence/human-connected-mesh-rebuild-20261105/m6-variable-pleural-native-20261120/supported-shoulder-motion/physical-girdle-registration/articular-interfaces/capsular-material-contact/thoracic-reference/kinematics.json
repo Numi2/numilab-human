@@ -1,0 +1,77 @@
+{
+  "atlas_sha256": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+  "features_sha256": "41cbb395522b63e61340abb053f88bd8a7bf09d6475a9e4cefe9b6768c1e0558",
+  "torso_sha256": "d1f7546e7ffbdc6a2c9cd5e320915a5a6b241e710d7eb9b9ab55f0b0e3016116",
+  "spacing_sha256": "f9fba5431929ab47ffafc46468f6b1f9c82bc9b520db0ac90a45b9a01758c23d",
+  "centers_sha256": "24b09cdddb80697dcd621a14da46398a264c4c12116ed6389f070f1280135356",
+  "neighbor_banks": [
+    8,
+    9,
+    27,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59
+  ],
+  "rows": [
+    {
+      "side": "l",
+      "prescribed": 61,
+      "attempted": 61,
+      "accepted": 61,
+      "neutral_length_m": 0.03335086226146517,
+      "max_neutral_return_error_m": 2.5712105544001274e-07,
+      "max_trapezoidal_work_error_m_per_unit_tension": 2.976764299172257e-06,
+      "max_accepted_cone_residual": 1.761710211291067e-11,
+      "max_accepted_force_residual": 5.721958498152797e-17,
+      "max_accepted_moment_residual_m": 7.152448122690996e-18,
+      "failures": []
+    },
+    {
+      "side": "r",
+      "prescribed": 61,
+      "attempted": 35,
+      "accepted": 34,
+      "neutral_length_m": 0.033427079899352063,
+      "max_neutral_return_error_m": 0.0,
+      "max_trapezoidal_work_error_m_per_unit_tension": 1.3567208719339149e-08,
+      "max_accepted_cone_residual": 2.816202882065391e-13,
+      "max_accepted_force_residual": 5.551115123125783e-17,
+      "max_accepted_moment_residual_m": 3.9747508192403134e-18,
+      "failures": [
+        {
+          "axis": 1,
+          "angle_deg": -4.0,
+          "accepted": false,
+          "length_m": 0.03397228049180118,
+          "cone_residual": 0.009782602945079615,
+          "force_residual": 0.0,
+          "moment_residual_m": 1.734723475976807e-18,
+          "owner_pair_hits": [],
+          "owner_inside": [],
+          "adjacent_hits": []
+        }
+      ]
+    }
+  ]
+}
