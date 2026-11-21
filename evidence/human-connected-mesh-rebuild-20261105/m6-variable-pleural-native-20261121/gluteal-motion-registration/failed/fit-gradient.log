@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/material-bed-equilibrium-046/bound_pose_strain.py", line 61, in <module>
+    if __name__=='__main__':run(*map(Path,sys.argv[1:]))
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/material-bed-equilibrium-046/bound_pose_strain.py", line 53, in run
+    if not opt.success:raise ValueError((sid,log[-1],opt.message))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: (30, [8, 236, 8.686988335794593], 'The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)')

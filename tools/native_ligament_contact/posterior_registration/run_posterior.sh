@@ -2,7 +2,8 @@
 set -euo pipefail
 trial=$(cd "$(dirname "$0")" && pwd)
 volume=NumiGluteal046
-output="$trial/native-posterior-motion"
+input="$trial/${5:-native-posterior}"
+output="$trial/${6:-native-posterior-motion}"
 mkdir -p "$output"
 [[ ! -e "/Volumes/$volume" ]]
 trap 'if [[ -n "${device:-}" ]]; then /usr/bin/hdiutil detach "$device" > "$output/ram-disk-released.log"; fi' EXIT
@@ -20,4 +21,4 @@ assert info["IOKitSize"] == 3355443200
 PY
 /usr/sbin/diskutil eraseDisk APFS "$volume" "$device" > "$output/ram-disk-format.log"
 cd "$trial"
-"$HOME/numi-human-prep-venv-20261005/bin/python3" run_posterior_replay.py "$trial/moment-owner" "$trial/native-posterior/config.json" "$1" "$2" "$3" "$4" "$trial/posterior" "$trial/full-motion" "/Volumes/$volume" "$output"
+"$HOME/numi-human-prep-venv-20261005/bin/python3" run_posterior_replay.py "$trial/moment-owner" "$input/config.json" "$1" "$2" "$3" "$4" "$trial/posterior" "$trial/full-motion" "/Volumes/$volume" "$output"

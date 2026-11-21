@@ -4,6 +4,7 @@ from pathlib import Path
 import numpy as np
 from material_context import sha
 from stage_bound_assets import stage
+from guard_material_rebind import validate
 def run(folder):
     config=folder/'config.json';cfg=json.loads(config.read_text());args=cfg['argv']
     old=Path(json.loads((folder/'source.json').read_text())['parent']);new=Path(args[args.index('--soft-tissue-payload')+1])
@@ -12,13 +13,10 @@ def run(folder):
     if b['child_payload_sha256']!=sha(old):raise ValueError('Wrong parent carrier SHA')
     before=old.read_bytes();after=new.read_bytes()
     _,abi,nr,nb,nv,ni,_,_=struct.unpack_from('<8s6I32s',before);at=64+32*nr+36*nb
-    if len(before)!=len(after) or before[:at]!=after[:at] or before[at+nv*56:]!=after[at+nv*56:]:raise ValueError('Changed indices, records, or transformations')
-    allowed=set((29,30));bound={r['stable_id'] for r in b['surfaces']}
-    if bound & allowed:raise ValueError('A corrected vertex has separate refined ancestry')
-    rr=np.ndarray((nr,8),'<u4',before,64);u=np.ndarray((nv,14),'<u4',before,at);v=np.ndarray((nv,14),'<u4',after,at)
-    if not np.array_equal(u[:,6:],v[:,6:]):raise ValueError('Changed material binding/weights')
-    for _,_,start,n,_,_,sid,_ in rr.astype(int):
-        if sid not in allowed and not np.array_equal(u[start:start+n],v[start:start+n]):raise ValueError(('Unrelated anatomy changed',sid))
+    allowed={29,30};bound={r['stable_id'] for r in b['surfaces']}
+    if bound & allowed:raise ValueError('Changed separate refined ancestry')
+    rows=np.ndarray((nr,8),'<u4',before,64)
+    validate(before,after,nr,nb,nv,rows,json.loads((folder/'source.json').read_text()))
     b['child_payload_sha256']=sha(new)
     active=receipt['provenance']['native_muscle_surfaces']
     if active['sha256']!=sha(old):raise ValueError('Source provenance mismatch')

@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/material-bed-equilibrium-046/condition_motion_weights.py", line 88, in <module>
+    if __name__=='__main__':run(*map(Path,sys.argv[1:]))
+                            ~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/material-bed-equilibrium-046/condition_motion_weights.py", line 73, in run
+    if not opt.success:raise ValueError(('No feasible anatomical weight correction',sid,log[-1],opt.message))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: ('No feasible anatomical weight correction', 30, {'iteration': 0, 'bad_cells': 14, 'min_ratio': np.float64(-46.20444156385714), 'min_shape': np.float64(-0.012788384444008248)}, 'The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)')
