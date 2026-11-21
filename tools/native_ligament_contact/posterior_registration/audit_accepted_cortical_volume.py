@@ -16,7 +16,9 @@ def run(partition,assets,snapshot,out):
     nodes=values('material_node');node=np.stack([nodes[i][:3] for i in range(len(nodes))]).astype(float)
     table=np.fromfile(assets/'material-nodes.bin',dtype='f4').reshape(-1,3,4)
     modes=np.fromfile(assets/'material-modes.bin',dtype='f4').reshape(len(table),96,4)
-    modal=values('coordinate_block');modal=np.stack([modal[i] for i in range(48)]).reshape(2,96)
+    modal=values('coordinate_block');nodal=values('node_displacement')
+    if modal:modal=np.stack([modal[i] for i in range(48)]).reshape(2,96)
+    if bool(nodal)==(len(modal)>0):raise ValueError('Expected exactly one captured displacement representation')
     bank=np.fromfile(assets/'cortical-samples.bin',dtype='f4').reshape(2,256,5,4)
     triangles=np.fromfile(assets/'cortical-triangles.bin',dtype='f4').reshape(-1,10,4)
     manifest=json.loads((assets/'manifest.json').read_text());models={}
@@ -28,7 +30,8 @@ def run(partition,assets,snapshot,out):
         stop=num+len(v);records=table[num:stop];current=node[num:stop]
         shift=rot[128].inv().apply(pos[fem][:3])
         x=records[:,0,:3]*records[:,0,3:]+(shift+rot[128].inv().apply(rot[fem].apply(records[:,1,:3])))*records[:,1,3:]
-        reconstructed=x+np.einsum('nkj,k->nj',modes[num:stop,:,:3],modal[side])
+        u=np.stack([nodal[i][:3] for i in range(num,stop)]) if nodal else np.einsum('nkj,k->nj',modes[num:stop,:,:3],modal[side])
+        reconstructed=x+u
         err=np.linalg.norm(reconstructed-current,axis=1).max()
         if err>3.e-7:raise ValueError(('GPU node/modal or pose mismatch',sid,err))
         ports=np.load(partition/'ports'/f'{sid}.npz')

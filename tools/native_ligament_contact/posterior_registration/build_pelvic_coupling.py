@@ -11,7 +11,7 @@ dest=out/'metalrobo/MetalRobo.metallib'
 if not dest.exists():dest.hardlink_to(src/'metalrobo/MetalRobo.metallib')
 for name in ('pelvic_contact.metalinc','pelvic_material_validate.metalinc','NumiHumanPelvicContact.hpp'):
     shutil.copyfile(Path(__file__).parent/name,out/name)
-manifest=json.loads((assets/'manifest.json').read_text());files=['cortical-samples','cortical-modes','cortical-triangles','cortical-neighborhood','material-nodes','material-modes','material-cells','material-inverse']
+manifest=json.loads((assets/'manifest.json').read_text());files=['cortical-samples','cortical-modes','cortical-triangles','cortical-neighborhood','material-nodes','material-modes','material-cells','material-inverse','pool-material-points','pool-cortical-neighborhood','pool-material-regions','cortical-free-index','cortical-flexibility']
 assert manifest['specimen']['mu']==12000 and manifest['specimen']['lam']==120000 and manifest['specimen']['jmin']==.20 and manifest['specimen']['jmax']==5
 decl='struct PelvicMaterialFile { const char* name; unsigned long bytes; const char* hash; };\ninline constexpr PelvicMaterialFile pelvicMaterialFiles[]={\n'
 for name in files:
@@ -35,7 +35,9 @@ replace('            bridge(validateBody);r.phase=EncodePhase::postCommit;', '  
 replace('            auto e=[cb computeCommandEncoder];need(e!=nil,"resting accepted frame commit encoder");',
         '            pelvicContact.publish(p,numi::human::buffer(physiology.runtime.statusBuffer()),presentationCandidateRespiration);\n            auto e=[cb computeCommandEncoder];need(e!=nil,"resting accepted frame commit encoder");')
 (out/'NumiHumanRestingCoupling.hpp').write_text(text)
-dims='\nconstant uint pelvicCountRight=%d,pelvicCountLeft=%d,pelvicRankRight=%d,pelvicRankLeft=%d;\n'%tuple(a[k] for k in ('rows','modes') for a in manifest['sides'])
+spec=manifest['contact_flexibility']
+assert sum(row['nodes'] for row in spec)*48==(assets/'material-nodes.bin').stat().st_size
+dims='\nconstant uint4 pelvicFlex[2]={'+','.join('uint4(%d,%d,%d,%d)'%tuple(r[k] for k in ('first_node','nodes','input_nodes','first_vector')) for r in spec)+'};\n'
 (out/'human_respiration.metal').write_text((src/'human_respiration.metal').read_text()+dims+'\n#include "pelvic_contact.metalinc"\n#include "pelvic_material_validate.metalinc"\n')
 cmd=[[str(k).replace(str(src)+'/',str(out)+'/') for k in row] for row in json.loads((src/'build-commands.json').read_text())]
 (out/'build-commands.json').write_text(json.dumps(cmd,indent=2)+'\n')
