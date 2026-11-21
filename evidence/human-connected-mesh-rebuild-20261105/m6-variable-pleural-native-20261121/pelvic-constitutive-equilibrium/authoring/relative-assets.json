@@ -1,0 +1,987 @@
+{
+  "sides": [
+    {
+      "muscle": 29,
+      "rows": 97,
+      "modes": 96,
+      "quadrature_indices": [
+        4522,
+        7819,
+        4926,
+        5019,
+        4860,
+        5089,
+        4927,
+        6350,
+        4657,
+        5681,
+        1297,
+        7828,
+        5050,
+        5607,
+        6928,
+        7717,
+        5755,
+        6652,
+        5934,
+        6251,
+        5948,
+        6841,
+        5945,
+        8145,
+        5912,
+        6002,
+        5939,
+        5852,
+        5949,
+        5957,
+        6048,
+        4822,
+        6109,
+        5951,
+        6075,
+        1089,
+        4050,
+        53,
+        3026,
+        8614,
+        8918,
+        988,
+        4499,
+        4149,
+        8877,
+        4319,
+        4873,
+        4871,
+        4881,
+        4324,
+        6403,
+        5261,
+        8436,
+        4114,
+        4879,
+        737,
+        5155,
+        4944,
+        5200,
+        4855,
+        4878,
+        5142,
+        5152,
+        4905,
+        5226,
+        9443,
+        9573,
+        9342,
+        9583,
+        8133,
+        9677,
+        6984,
+        8224,
+        7412,
+        9988,
+        7298,
+        7590,
+        2018,
+        10167,
+        8185,
+        10297,
+        6615,
+        8164,
+        8110,
+        8229,
+        5990,
+        7264,
+        6564,
+        8091,
+        6560,
+        6563,
+        2530,
+        10237,
+        3065,
+        3493,
+        2734,
+        3657
+      ]
+    },
+    {
+      "muscle": 30,
+      "rows": 78,
+      "modes": 96,
+      "quadrature_indices": [
+        5217,
+        9242,
+        1481,
+        4384,
+        120,
+        5337,
+        4066,
+        9789,
+        5170,
+        9241,
+        4763,
+        5043,
+        4113,
+        4756,
+        4585,
+        5047,
+        1167,
+        9900,
+        4588,
+        4983,
+        4798,
+        5011,
+        4646,
+        4651,
+        4767,
+        4995,
+        4690,
+        4776,
+        4248,
+        5008,
+        332,
+        2329,
+        1019,
+        4782,
+        1029,
+        4777,
+        5003,
+        9739,
+        1070,
+        2560,
+        3967,
+        9714,
+        3595,
+        6595,
+        1224,
+        9166,
+        569,
+        3471,
+        7,
+        2210,
+        2750,
+        3380,
+        3472,
+        3492,
+        6064,
+        6067,
+        3052,
+        3109,
+        239,
+        3026,
+        2639,
+        9082,
+        2177,
+        8552,
+        2131,
+        2285,
+        8752,
+        9083,
+        2465,
+        8790,
+        414,
+        8079,
+        3423,
+        6399,
+        6372,
+        6747,
+        6390,
+        6845
+      ]
+    }
+  ],
+  "files": {
+    "cortical-triangles.bin": "bd00083edaeb022637311d7112a95cde989199087f7f698e0721cb63e0ecb175",
+    "cortical-neighborhood.bin": "7c540abacb3883df2a619ae3d2ce477733d72562f9010f38ade97e90bb253681",
+    "cortical-samples.bin": "420222f508e3b8ac30c14c871286df41b7a334d88bd5f7a63d6a585773e5961b",
+    "cortical-modes.bin": "df74aa8f87ae6a6bd88b39cc4cb1b5181bbb8abc9f1623538d9d3f39b7bd3373",
+    "material-nodes.bin": "23b874debde53e9a862d17d63fa625966e59864423b5d496d831f2d6684b3994",
+    "material-modes.bin": "af5074b3fed25022f921078b06d984185f9299d7689bebdcb9663ea2efc2f7a6",
+    "material-cells.bin": "dc7812b908ebf255ac8ec21687c997e603264e971522a12c74b1a870c0979174",
+    "material-inverse.bin": "57449a151c5d0a270ed175f03a6969273f5c9ac4956cf0f21587831b4ddecde4",
+    "pool-material-points.bin": "f3fdb5d136e68c5f47ce1eba969f8014f44568c7f6f8ec843fdf466e2ce3b73b",
+    "pool-cortical-neighborhood.bin": "20e903c8c33bad83a4f414d05ceb60c785ee88655275bd90a29a71e9e8133886",
+    "pool-material-regions.bin": "04a471b467d7b4762b5e89180d1e832317823d49133d08ae89ec51b2623ca042",
+    "closed-material-vertices.bin": "a218576d21314456d9963a3f96de4190ff681aace4a2b9a0248db0cf75feb089",
+    "closed-material-triangles.bin": "395c15cb3994e695332e9aaadeb196aefe0315d0ee16bc16ef5e2e312e6a5feb",
+    "closed-material-shapes.bin": "54e1afbf7654a2e2661e333a8698c4b770b44d1e2cdbe81d63351d388c74c67e",
+    "closed-material-ranges.bin": "f74a910f8bcfc6aee37fc23aaa800d3bb30a0c00a8941c14830dc61dbb16dcc7",
+    "closed-material-incidence.bin": "156295385f4981b957514cb4e1496c9ce047e7fc2f64e69c24b95b83cffeefb0",
+    "cortical-free-index.bin": "9768505ed933ae7fad583be285145c441c1a2d256bed5fbead97a6cb8c86b9bf",
+    "cortical-flexibility.bin": "d57a05e0c6cdb6b7dee3b805debef818e8fdd63ad48feb1f264b2be8591beee2",
+    "free-node-rows.bin": "c6dc6451d38d97ebf67881179b61aa60fc9ce0c7e36bb8ae49664553846f5fe6",
+    "free-node-columns.bin": "555b77f31b58cf1e95c81af2a0062c1d0b35ac3ae41393de47a7c7adea4d666d",
+    "free-node-stiffness.bin": "b9ee9994bcbb788942125083563c0c1bc6912090312df195f72068f27bbda100",
+    "pelvic-projector-rows.bin": "7d196a35cf6cd6183f2cc8406763373d3981974011b346446e552fcb2ce3266a",
+    "pelvic-projector-cols.bin": "8a93db959c753d64add056b51859ce8b275ea11ccaccc957c30bc41aa8e872a6",
+    "pelvic-projector-vals.bin": "bb727d5f655061a4d48490b95c9a94664010836cf5cec2576583ed25acc711b8",
+    "pelvic-cell-volume.bin": "1db6c3e877ea460409aff7e1c32348dc435fe95242bfc6d41dd240f5e36385e3",
+    "pelvic-cell-incidence.bin": "75d4940445add3871987c6258e6820d9d9c01ad7e49647623d138c85a3d33b1f",
+    "pelvic-cell-corners.bin": "1788572334ca7c207a71037f13da146ea77c3897f99668e771bb8292bb87fb4a",
+    "pelvic-factor-rows.bin": "05bd0183812bc0a46564d46676ed3cbc9cf66117774932ad83b429a761e2d07c",
+    "pelvic-factor-columns.bin": "118d66f1ff13417b61023324218dd16acd3ee45dd82760ed9ebc92022932d348",
+    "pelvic-factor-values.bin": "b850aea82fe38c296a697593dce7da2079a10c85e2c7ab82b0ef18454960331d",
+    "pelvic-factor-levels.bin": "d84bcf71f3b3836cc3d5707a36f4367e34e62d28abbc202d834ef4fe731d7f7e",
+    "pelvic-factor-order.bin": "fa11555f7bd9d9951fcbb1121d79ddc8f8a7c38c51d662a5b24d3a87671247b7",
+    "pelvic-factor-perm.bin": "cf456defcbbd9d12c6a3e71301889004233e33ab97b7c60e5f40cc9d1045bafa",
+    "pelvic-factor-scale.bin": "d5ccffb43b6053dfbd144614214f16607a53c4088ac085fd9620633cb8247084",
+    "pelvic-reference-nodes.bin": "8600d2ec2873529ba6d13ba65cbf9bb5485c3eccb3f62a4117536aa1addf7738",
+    "pelvic-reference-inverse.bin": "81e40332b01f8846c353f8813f7bb7a05de2e1c9de785fdce0bf69a74d665bc4",
+    "pelvic-reference-poses.bin": "a495da7f4c7947d1c6dbb41fbd6e8ad9973b47593cef66b9e3a991d1be452442"
+  },
+  "source": "e3e189d0c69412a985aa75663a3959b95ad98a4b8027f5e7d050f86ef2eb454c",
+  "bones": "bbcb10b3f4aa832959d7dd00afae4f980002cf64a2c9db9baad1706d95624548",
+  "qualified_bone_payloads": [
+    "bbcb10b3f4aa832959d7dd00afae4f980002cf64a2c9db9baad1706d95624548",
+    "43a31ef4771e2a383ae2c7caab1b994f0c28076c2a43501860cd1ba3fe7708c0"
+  ],
+  "matched_cortical_banks": {
+    "1": {
+      "owner": 1,
+      "points_sha256": "217c3043f86cbe6ec4f6a83280f6f700855bf097fd7fe906ea34d2cc3ac87285",
+      "faces_sha256": "d73c6e5cca73894d8753356ac5a5d164d151427db38b11c148ddcf7b3f34735e"
+    },
+    "2": {
+      "owner": 131,
+      "points_sha256": "1a0d93dec4b986b01277dd1c36c431d36bd351c480387fe084000ffbe4420a15",
+      "faces_sha256": "e54dbea6027ca58eab03ba2303a7d0de4cf80e60e753c4f64ee85c71b840c01b"
+    },
+    "3": {
+      "owner": 145,
+      "points_sha256": "17ea372ccdb82551b85a392d6f0d5302b967cbb1e0e50ec17e2d513c1801e65b",
+      "faces_sha256": "051ed588ec8e7bac762b0c57e76b902c6aeaaa839a2c3107b79a2f1797861edc"
+    },
+    "18": {
+      "owner": 128,
+      "points_sha256": "84d455e24b591a91c570a75d8fb4fe096949513133d0c7d6f0638e90a4fa2a91",
+      "faces_sha256": "0581a7774c7126dce986a43ffac6ce21d4f6f13087bd65af05760984e62fb677"
+    },
+    "19": {
+      "owner": 128,
+      "points_sha256": "46d7dcc7e36cc5771a33fa6ce261e86dbc73d4fac4c84736a23b0b57b2b852ee",
+      "faces_sha256": "cac1c78dfb5682da9d51a78d750f7b321abd6c227d3f7609baa471485a068584"
+    }
+  },
+  "model": "Quasistatic cut-muscle elasticity condensed exactly onto the selected cortical loads at the reference material tangent. Articulated donors retain inertia.",
+  "specimen": {
+    "density": 1060.0,
+    "mu": 12000.0,
+    "lam": 120000.0,
+    "jmin": 0.2,
+    "jmax": 5.0
+  },
+  "material_sha256": "04d5f0139cb22b9c874976d96f193113092ecd861a7d64aed8945ff6eb54d817",
+  "contact_pool": {
+    "count": 42365,
+    "groups": [
+      {
+        "side": 0,
+        "source_region": 0,
+        "records": 403,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 1,
+        "records": 18,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 2,
+        "records": 134,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 3,
+        "records": 165,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 4,
+        "records": 711,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 5,
+        "records": 667,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 6,
+        "records": 111,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 7,
+        "records": 498,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 8,
+        "records": 148,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 9,
+        "records": 614,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 10,
+        "records": 173,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 11,
+        "records": 252,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 12,
+        "records": 127,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 13,
+        "records": 2,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 14,
+        "records": 5,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 15,
+        "records": 138,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 16,
+        "records": 99,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 17,
+        "records": 24,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 18,
+        "records": 1031,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 19,
+        "records": 591,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 20,
+        "records": 85,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 21,
+        "records": 696,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 22,
+        "records": 1565,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 23,
+        "records": 251,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 24,
+        "records": 129,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 25,
+        "records": 42,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 26,
+        "records": 8,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 27,
+        "records": 484,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 28,
+        "records": 38,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 29,
+        "records": 59,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 30,
+        "records": 6,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 31,
+        "records": 57,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 32,
+        "records": 93,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 33,
+        "records": 67,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 34,
+        "records": 266,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 35,
+        "records": 17,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 36,
+        "records": 135,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 37,
+        "records": 405,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 38,
+        "records": 210,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 39,
+        "records": 828,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 40,
+        "records": 156,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 41,
+        "records": 111,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 42,
+        "records": 31,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 43,
+        "records": 52,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 44,
+        "records": 62,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 45,
+        "records": 8,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 46,
+        "records": 642,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 47,
+        "records": 854,
+        "slots": 5
+      },
+      {
+        "side": 0,
+        "source_region": 48,
+        "records": 762,
+        "slots": 5
+      },
+      {
+        "side": 1,
+        "source_region": 0,
+        "records": 942,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 1,
+        "records": 665,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 2,
+        "records": 9,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 3,
+        "records": 616,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 4,
+        "records": 1504,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 5,
+        "records": 253,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 6,
+        "records": 120,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 7,
+        "records": 53,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 8,
+        "records": 35,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 9,
+        "records": 534,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 10,
+        "records": 81,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 11,
+        "records": 23,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 12,
+        "records": 25,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 13,
+        "records": 58,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 14,
+        "records": 149,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 15,
+        "records": 409,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 16,
+        "records": 117,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 17,
+        "records": 178,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 18,
+        "records": 482,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 19,
+        "records": 513,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 20,
+        "records": 145,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 21,
+        "records": 459,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 22,
+        "records": 143,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 23,
+        "records": 645,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 24,
+        "records": 131,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 25,
+        "records": 226,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 26,
+        "records": 107,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 27,
+        "records": 26,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 28,
+        "records": 216,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 29,
+        "records": 178,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 30,
+        "records": 270,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 31,
+        "records": 92,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 32,
+        "records": 145,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 33,
+        "records": 407,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 34,
+        "records": 19,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 35,
+        "records": 798,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 36,
+        "records": 693,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 37,
+        "records": 489,
+        "slots": 6
+      },
+      {
+        "side": 1,
+        "source_region": 38,
+        "records": 976,
+        "slots": 6
+      }
+    ],
+    "reference_band_m": 0.002,
+    "neighborhood_m": 0.004
+  },
+  "closed_reverse": {
+    "first": 26961,
+    "unique_vertices": 15404,
+    "groups": 920,
+    "sides": [
+      {
+        "vertices": 6621,
+        "first_vertex": 0,
+        "faces": 13234,
+        "first_face": 0
+      },
+      {
+        "vertices": 6409,
+        "first_vertex": 6621,
+        "faces": 12810,
+        "first_face": 13234
+      }
+    ],
+    "leaves": 2048
+  },
+  "contact_flexibility": [
+    {
+      "muscle": 29,
+      "first_node": 0,
+      "nodes": 1190,
+      "input_nodes": 453,
+      "first_vector": 0,
+      "free_dofs": 3093,
+      "largest_factor_residual_N": 1.0173536473770923e-12,
+      "relative_reciprocity_error": 8.424268652509126e-18,
+      "float32_energy_error": 2.477745395073437e-07
+    },
+    {
+      "muscle": 30,
+      "first_node": 1190,
+      "nodes": 1190,
+      "input_nodes": 458,
+      "first_vector": 1617210,
+      "free_dofs": 3168,
+      "largest_factor_residual_N": 7.761294628461196e-13,
+      "relative_reciprocity_error": 3.014850549556178e-16,
+      "float32_energy_error": 7.937319860958531e-08
+    }
+  ],
+  "force_domain_sha256": "e0e7eef595d9af0ce53b831e0f3b41b9b8d8ad31c7f61582f638d59bc7580c3c",
+  "free_residual_float32_parity": {
+    "29": 3.430163813908345e-08,
+    "30": 1.842270753561737e-08
+  },
+  "regional_factor": [
+    {
+      "muscle": 29,
+      "coordinate_start": 0,
+      "coordinates": 3093,
+      "lower": [
+        0,
+        1660
+      ],
+      "upper": [
+        1660,
+        1684
+      ],
+      "nnz": 476385,
+      "floating_material_components": [
+        {
+          "nodes": [
+            205,
+            208,
+            209,
+            210,
+            211,
+            215
+          ],
+          "rigid_modes": 6,
+          "scaled_rigid_residual": 5.7606510868697485e-16,
+          "lowest_elastic_eigenvalue": 0.16845067275271036,
+          "volume_m3": 4.451255079815719e-13
+        },
+        {
+          "nodes": [
+            206,
+            212,
+            213,
+            214,
+            216
+          ],
+          "rigid_modes": 6,
+          "scaled_rigid_residual": 1.4032649655993057e-15,
+          "lowest_elastic_eigenvalue": 0.1742442987052339,
+          "volume_m3": 1.5696886822525738e-12
+        },
+        {
+          "nodes": [
+            852,
+            853,
+            854,
+            858
+          ],
+          "rigid_modes": 6,
+          "scaled_rigid_residual": 1.1256676516314143e-15,
+          "lowest_elastic_eigenvalue": 0.31224280002319943,
+          "volume_m3": 1.619042915159122e-14
+        }
+      ],
+      "permutation_check": 3.3306690738754696e-15
+    },
+    {
+      "muscle": 30,
+      "coordinate_start": 3093,
+      "coordinates": 3168,
+      "lower": [
+        3344,
+        1785
+      ],
+      "upper": [
+        5129,
+        1823
+      ],
+      "nnz": 515907,
+      "floating_material_components": [
+        {
+          "nodes": [
+            331,
+            333,
+            334,
+            335
+          ],
+          "rigid_modes": 6,
+          "scaled_rigid_residual": 1.1961681766146811e-15,
+          "lowest_elastic_eigenvalue": 0.31189235542303817,
+          "volume_m3": 1.6198348833685295e-14
+        },
+        {
+          "nodes": [
+            973,
+            980,
+            981,
+            982,
+            983
+          ],
+          "rigid_modes": 6,
+          "scaled_rigid_residual": 1.0505792829998198e-15,
+          "lowest_elastic_eigenvalue": 0.17387501736723962,
+          "volume_m3": 1.5737166411780319e-12
+        },
+        {
+          "nodes": [
+            974,
+            976,
+            977,
+            978,
+            979,
+            984
+          ],
+          "rigid_modes": 6,
+          "scaled_rigid_residual": 6.796863419311627e-16,
+          "lowest_elastic_eigenvalue": 0.16805401198464026,
+          "volume_m3": 4.461179978888924e-13
+        }
+      ],
+      "permutation_check": 1.5543122344752192e-15
+    }
+  ],
+  "common_material_reference": {
+    "pose": "a65c2c1c6e8bc1f0335423d1f81ef8a884ff3e2ca804287a416503fe617ff550",
+    "regions": [
+      {
+        "muscle": 29,
+        "largest_active_donor_difference_m": 1.8907544819672425e-07,
+        "source": "c091d1f6e72c4c38dc46b8f96db18dec12e44fb28e90c18f2d577a0117a248ef"
+      },
+      {
+        "muscle": 30,
+        "largest_active_donor_difference_m": 1.3323176623339107e-07,
+        "source": "4e1319f66868786a715a775042274a181c72d62e7287f262b113a19887a873e1"
+      }
+    ]
+  }
+}

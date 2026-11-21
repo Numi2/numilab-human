@@ -1,0 +1,21 @@
+# Pelvic tissue equilibrium in the native supported human
+
+An earlier accepted 8 ms pose balances a correction about the moving donor skeleton. Integrating the muscle's own finite-strain energy over that same pose leaves 0.01614 N right and 0.03115 N left unbalanced on free nodes. The corresponding largest nodal cortical loads are 0.000433 N and 0.000162 N. The independent double-precision directional energy test agrees with assembled muscle forces to 1.82e-9 N on this pose.
+
+An optional accepted-state capture now records the actual Float32 coordinates used for both closed muscle surfaces and all cortical queries. Enabling the capture reproduced the prior accepted node, pose and load snapshot byte for byte. An exact triangle predicate on the GPU-emitted vertices finds 2,749 transverse pairs in the six pelvic interfaces at 8 ms. The independently reconstructed coordinates previously gave 2,679. Both numbers establish penetration. The predicate counts triangle pairs rather than separate anatomical wounds or distinct contact sites.
+
+## Mechanics
+
+The experimental constitutive owner uses the existing 12 kPa shear and 120 kPa first Lamé parameter of the uncalibrated registered passive muscle material. It assembles finite-strain Piola forces with the occupied cut-cell volumes and transmits reactions through the registered attachments and the actual contacting cortex. A sparse local reference factor supplies defect corrections alongside the existing cortical compliance. Each fresh residual uses the complete material force at the current geometry. Six disconnected material remnants together account for about 4.07e-12 cubic metres. Each has six rigid null modes. The solver projects those modes out of the local preconditioner. The material integration, mass and physical residual still include the remnants.
+
+A rigid-reference audit found up to 1.10 mN of spurious free-node force from rounding the rest matrix and absolute positions. The constitutive candidate evaluates strain from a common reference and the actual relative motion of each anatomical donor. It retains sub-Float32 displacements before forming gradients. The maximum difference from the prior registered donor coordinates was 0.190 µm. A native Metal test exercises undeformed material, translation, rotation, 2e-8 dilation, shear and stretch. The largest force difference against independent double-precision stress across those tests was 1.01e-7 N.
+
+## Native evidence
+
+All comparisons used SSH Numi and variable pleural pressure. The 8 ms control had four accepted 2 ms steps. The complete constitutive candidate rejected the first step. The right muscle passed the force and clearance gates at both evaluations. On the left, pre-dynamics clearance was 0.0395 µm, while the maximum free-force residual was 0.00029077 N against a 0.00044740 N external-force scale. The post-dynamics check also failed. The first-failure receipt retains the prior Brain timestamp and the attempted 2 ms candidate separately.
+
+At the worst left node, the native force-split probe measured 7.43e-9 N residual using the exact contact directions and weights from the proposing solve. Refreshing contact at the deformed geometry changed the force at that node by 0.00029077 N. Across all free nodes on that side, the frozen residual stayed below 1.80e-8 N on the final pre-dynamics iteration. Repeating the bulk factorization therefore addresses a different error. The probe is retained separately from the constitutive owner. Its scan runs only when explicitly enabled.
+
+The 16-second whole-body target, zero crossings and sustained 0.1× remain open. The previous supported control at 0.1044× omitted the new tissue forces. The six disconnected pieces have no independent inertial evolution in this quasistatic regional reduction. A moving deep-fat contact owner and whole-body settling also remain unqualified. The native admissibility check covers the sampled surfaces. Exact triangle-pair and closed-solid audits remain necessary.
+
+The reference assembly derives from registered mixed sources. BodyParts3D copyright © 2008 The Database Center for Life Science, under [CC Attribution-ShareAlike 2.1 Japan](https://creativecommons.org/licenses/by-sa/2.1/jp/). The parent partition and its source identifiers accompany the prior revision.

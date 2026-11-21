@@ -1,0 +1,79 @@
+struct PelvicNode {float4 p,f;uint4 role;};
+inline float3 pelvicRotationIncrement(float4 q,float4 r,float3 v){
+    if(dot(q,r)<0)q=-q;
+    float4 dq=q-r;
+    return 2.f*(cross(dq.xyz,cross(r.xyz,v)+r.w*v)+cross(q.xyz,cross(dq.xyz,v)+dq.w*v));
+}
+kernel void nm_pelvic_material_pose(constant uint4& dims [[buffer(0)]],device const PelvicNode* nodes [[buffer(1)]],
+    device const float4* modes [[buffer(2)]],device const float* coord [[buffer(3)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],
+    device const float4* low [[buffer(5)]],device float4* positions [[buffer(6)]],device const float4* refs [[buffer(7)]],device const float4* refPose [[buffer(8)]],device float4* delta [[buffer(9)]],uint i [[thread_position_in_grid]]){
+    if(i>=dims.y)return;const auto r=nodes[i];const uint pi=r.role.y-dims.x,fi=r.role.z-dims.x;
+    const auto P=poses[pi],F=poses[fi];const float4 invP=float4(-P.orientation.xyz,P.orientation.w);
+    uint fref=r.role.z==131?2u:4u;float3 a=refs[3*i].xyz,tail=refs[3*i+1].xyz,b=refs[3*i+2].xyz;
+    float3 shift=((F.position.xyz-refPose[fref].xyz)-(P.position.xyz-refPose[0].xyz))+(low[fi].xyz-low[pi].xyz);
+    float3 relative=shift+pelvicRotationIncrement(F.orientation,refPose[fref+1],b)
+        -pelvicRotationIncrement(P.orientation,refPose[1],a);
+    float3 materialDelta=r.f.w*restingRotate(invP,relative);
+    if(dims.w)materialDelta+=modes[i].xyz;
+    delta[i]=float4(materialDelta,0);positions[i]=float4(a+(tail+materialDelta),0);
+}
+kernel void nm_pelvic_material_validate(constant uint4& dims [[buffer(0)]],constant float4& law [[buffer(1)]],device const uint4* cells [[buffer(2)]],
+    device const float4* inverse [[buffer(3)]],device const float4* x [[buffer(4)]],device float4* groups [[buffer(5)]],device const float4* materialStatus [[buffer(6)]],
+    uint i [[thread_position_in_grid]],uint lane [[thread_index_in_threadgroup]],uint group [[threadgroup_position_in_grid]]){
+    threadgroup float4 result[128];float4 r=float4(INFINITY,-INFINITY,0,0);
+    if(i<dims.z)r=materialStatus[i];
+    result[lane]=r;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){if(lane<n){result[lane].x=min(result[lane].x,result[lane+n].x);result[lane].yzw=max(result[lane].yzw,result[lane+n].yzw);}threadgroup_barrier(mem_flags::mem_threadgroup);}
+    if(!lane)groups[group]=result[0];
+}
+kernel void nm_pelvic_material_admit(constant uint4& d [[buffer(0)]],device const float4* stats [[buffer(1)]],
+   device const float4* groups [[buffer(2)]],device MRNumiHumanStandStatusGPU* status [[buffer(3)]],device float4* trace [[buffer(4)]],
+   uint lane [[thread_index_in_threadgroup]]){
+    threadgroup float4 summary[128];
+    float4 r=float4(INFINITY,-INFINITY,0,0);
+    for(uint i=lane;i<d.y;i+=128){r.x=min(r.x,groups[i].x);r.yzw=max(r.yzw,groups[i].yzw);}
+    summary[lane]=r;threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint n=64;n;n>>=1){if(lane<n){summary[lane].x=min(summary[lane].x,summary[lane+n].x);summary[lane].yzw=max(summary[lane].yzw,summary[lane+n].yzw);}threadgroup_barrier(mem_flags::mem_threadgroup);}
+    if(!lane){
+        r=summary[0];if(d.x<d.z)trace[d.x]=r;
+        bool valid=all(isfinite(r))&&r.x>.2f&&r.y<5.f&&r.z<5e6f&&r.w<5e6f;
+        for(uint s=0;s<2;++s)valid=valid&&all(isfinite(stats[s]))&&stats[s].x<5e-7f;
+        if(!valid&&status[0].code==MR_NUMI_HUMAN_STAND_SUCCESS)status[0].code=MR_NUMI_HUMAN_STAND_EXTERNAL_PHYSICS_FAILED;
+    }
+}
+
+kernel void nm_pelvic_material_publish(constant uint4& d [[buffer(0)]],
+    device const MRNumiHumanStandStatusGPU* stand [[buffer(1)]],device const NMMatterStatusGPU* matter [[buffer(2)]],
+    device const NMHumanRespirationState* resp [[buffer(3)]],device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],
+    device const float4* low [[buffer(5)]],device const float4* nodes [[buffer(6)]],device const float* modal [[buffer(7)]],
+    device float4* snapshot [[buffer(8)]],device const uint* slots [[buffer(9)]],device const float* loads [[buffer(10)]],device const float4* normals [[buffer(11)]],device uint* cache [[buffer(12)]],device const PelvicPoolSample* pool [[buffer(13)]],device const uint* feature [[buffer(14)]],device const float4* totalDelta [[buffer(15)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.y||stand[0].code!=MR_NUMI_HUMAN_STAND_SUCCESS||stand[0].completedSteps!=d.x+1||
+        resp[0].status.x!=d.x||matter[0].code!=NM_STATUS_SUCCESS)return;
+    if(i==0)snapshot[0]=float4(float(d.x+1),float(d.y),0,0);
+    if(i<4){
+        const uint bodies[4]={1,128,131,145};uint b=bodies[i]-d.z,p=128-d.z;
+        snapshot[1+2*i]=float4((poses[b].position.xyz-poses[p].position.xyz)+(low[b].xyz-low[p].xyz),0);
+        snapshot[2+2*i]=poses[b].orientation;
+    }
+    snapshot[9+d.y+i]=float4(modal[4*i],modal[4*i+1],modal[4*i+2],0);
+    if(i==0)cache[0]=d.x+1;
+    if(i<512){
+        uint index=slots[i];cache[1+i]=loads[i]>0?index:UINT_MAX;uint base=9+2*d.y;
+        snapshot[base+2*i]=float4(normals[i].xyz,loads[i]);
+        snapshot[base+2*i+1]=float4(index==UINT_MAX?-1.f:float(index),0,0,0);
+        if(index!=UINT_MAX&&index>=pelvicReverseStart){snapshot[base+1024+2*i]=pool[index].weights;snapshot[base+1025+2*i]=float4(pool[index].nodes);}
+    }
+    snapshot[9+i]=nodes[i];snapshot[9+2*d.y+2048+i]=totalDelta[i];
+}
+
+// The same accepted-step gate and the same Float32 coordinates as native contact.
+kernel void nm_pelvic_capture_surfaces(constant uint4& d [[buffer(0)]],device const MRNumiHumanStandStatusGPU* stand [[buffer(1)]],
+    device const NMMatterStatusGPU* matter [[buffer(2)]],device const NMHumanRespirationState* resp [[buffer(3)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
+    device const PelvicPoolSample* pool [[buffer(6)]],device const float4* verts [[buffer(7)]],device float4* snapshot [[buffer(8)]],uint i [[thread_position_in_grid]]){
+    if(stand[0].code!=MR_NUMI_HUMAN_STAND_SUCCESS || stand[0].completedSteps!=d.x+1 ||
+       resp[0].status.x!=d.x || matter[0].code!=NM_STATUS_SUCCESS)return;
+    if(i<d.y)snapshot[i]=verts[i];
+    if(i<d.z){auto s=pool[pelvicReverseStart+i].contact;
+        snapshot[d.y+i]=float4(pelvicCortexPoint(s,s.domain.x-d.w,s.domain.z-d.w,poses,low),0);}
+}
