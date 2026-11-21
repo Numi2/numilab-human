@@ -1,0 +1,45 @@
+// Sparse material residual and Schur complement of the same unilateral increment.
+kernel void nm_pelvic_rescue_residual(constant uint& n [[buffer(0)]],device const uint* needed [[buffer(1)]],
+    device const uint4* freeRows [[buffer(2)]],device const float4* internal [[buffer(3)]],
+    device const atomic_uint* incidence [[buffer(4)]],device const uint* slots [[buffer(5)]],
+    device const PelvicPoolSample* pool [[buffer(6)]],device const float4* normals [[buffer(7)]],
+    device const float* load [[buffer(8)]],device float4* residual [[buffer(9)]],device float4* base [[buffer(10)]],
+    uint i [[thread_position_in_grid]]){
+    if(i>=n)return;
+    uint side=i>=pelvicFlex[1].x;if(!needed[side])return;
+    float3 r=internal[i].xyz;
+    if(freeRows[i].z){
+        for(uint k=0;k<8;++k){
+            uint bits=atomic_load_explicit(incidence+8*i+k,memory_order_relaxed);
+            while(bits){
+                uint slot=side*256+32*k+ctz(bits);bits&=bits-1;
+                auto s=pool[slots[slot]];
+                for(uint c=0;c<4;++c)if(s.nodes[c]==i)r-=s.weights[c]*load[slot]*normals[slot].xyz;
+            }
+        }
+    }else r=0;
+    residual[i]=float4(r,0);base[i]=0;
+}
+kernel void nm_pelvic_rescue_rhs(device const uint* needed [[buffer(0)]],device const uint* slots [[buffer(1)]],
+    device const PelvicPoolSample* pool [[buffer(2)]],device const float4* normals [[buffer(3)]],
+    device const float4* base [[buffer(4)]],device const float* gram [[buffer(5)]],device const float* load [[buffer(6)]],
+    device PelvicRow* rows [[buffer(7)]],uint i [[thread_position_in_grid]]){
+    if(i>=512 || !needed[i/256] || slots[i]==UINT_MAX)return;
+    auto s=pool[slots[i]];float3 h=0;for(uint c=0;c<4;++c)h+=s.weights[c]*base[s.nodes[c]].xyz;
+    float prior=0;for(uint j=0;j<256;++j)prior+=gram[i*256+j]*load[256*(i/256)+j];
+    rows[i].normal.w=rows[i].leverB.w-dot(normals[i].xyz,h)-prior;
+}
+kernel void nm_pelvic_rescue_proposal(constant uint& n [[buffer(0)]],device const uint* needed [[buffer(1)]],
+    device const float4* u [[buffer(2)]],device const float4* base [[buffer(3)]],device const float4* columns [[buffer(4)]],
+    device const float* old [[buffer(5)]],device const float* load [[buffer(6)]],device float4* trial [[buffer(7)]],
+    device atomic_uint* levels [[buffer(8)]],uint i [[thread_position_in_grid]]){
+    if(i>=n)return;
+    uint side=i>=pelvicFlex[1].x;if(!needed[side])return;
+    uint4 span=pelvicFlex[side];float3 du=-base[i].xyz;
+    for(uint j=0;j<256;++j){uint k=256*side+j;float dp=load[k]-old[k];
+        if(dp!=0)du+=columns[span.x*256+j*span.y+i-span.x].xyz*dp;}
+    trial[i]=float4(u[i].xyz+du,0);
+    // Start with a half step for this reference-tangent solve. The actual
+    // determinant path can shorten it further, consistently for u and p.
+    if(i==span.x)atomic_store_explicit(levels+side,1u,memory_order_relaxed);
+}
