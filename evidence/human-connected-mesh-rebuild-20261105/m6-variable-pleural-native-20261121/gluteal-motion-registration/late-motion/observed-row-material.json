@@ -1,0 +1,121 @@
+{
+  "accepted_pose_samples": 938,
+  "rows": 32,
+  "section_mean_nominal_pressure_peak_pa": 32852.011669266816,
+  "reported_row_force_crosscheck_max_n": 0.00031420891525613115,
+  "final_two_seconds_mean_total_force_n": 952.8078921605356,
+  "measured_max_single_section_load_n": 219.7899967432022,
+  "modes": {
+    "confined": {
+      "materials": [
+        {
+          "layer": "skin",
+          "minimum_J": 0.9551401582914391,
+          "maximum_mean_thickness_loss_fraction": 0.044859841708560964,
+          "invalid_section_samples": 0,
+          "invalid_last_two_seconds": 0,
+          "threshold": 0.35,
+          "max_qualification_pressure_pa": 2007897.8403115675
+        },
+        {
+          "layer": "fat",
+          "minimum_J": 0.24447521253779744,
+          "maximum_mean_thickness_loss_fraction": 0.7555247874622026,
+          "invalid_section_samples": 2816,
+          "invalid_last_two_seconds": 96,
+          "threshold": 0.35,
+          "max_qualification_pressure_pa": 17380.54202463625
+        }
+      ],
+      "invalid_witness_rows": [
+        4,
+        5,
+        6,
+        7,
+        14
+      ],
+      "late_mean_force_on_invalid_sections_n": 399.0561480168253,
+      "contact_rows_exceeding_material_threshold": [
+        {
+          "contact_index": 4,
+          "body_index": 128,
+          "body_name": "unnamed",
+          "source_geometry_index": "34319",
+          "registered_projected_area_cm2": 62.04290302740676,
+          "peak_pressure_pa": 32852.011669266816,
+          "minimum_area_for_peak_fat_pressure_cm2": 117.27103627507347
+        },
+        {
+          "contact_index": 5,
+          "body_index": 128,
+          "body_name": "unnamed",
+          "source_geometry_index": "21162",
+          "registered_projected_area_cm2": 65.67004536789254,
+          "peak_pressure_pa": 32263.301636620967,
+          "minimum_area_for_peak_fat_pressure_cm2": 121.90255512121998
+        },
+        {
+          "contact_index": 6,
+          "body_index": 1,
+          "body_name": "unnamed",
+          "source_geometry_index": "33529",
+          "registered_projected_area_cm2": 47.9367108811157,
+          "peak_pressure_pa": 26935.246157484533,
+          "minimum_area_for_peak_fat_pressure_cm2": 74.2892313561229
+        },
+        {
+          "contact_index": 7,
+          "body_index": 128,
+          "body_name": "unnamed",
+          "source_geometry_index": "20347",
+          "registered_projected_area_cm2": 43.06959759415414,
+          "peak_pressure_pa": 21892.913074436005,
+          "minimum_area_for_peak_fat_pressure_cm2": 54.251412582139466
+        },
+        {
+          "contact_index": 14,
+          "body_index": 72,
+          "body_name": "unnamed",
+          "source_geometry_index": "5299",
+          "registered_projected_area_cm2": 6.3566029625524365,
+          "peak_pressure_pa": 18091.22487314187,
+          "minimum_area_for_peak_fat_pressure_cm2": 6.61652170926601
+        }
+      ]
+    },
+    "traction_free": {
+      "materials": [
+        {
+          "layer": "skin",
+          "minimum_J": 0.9853545661645763,
+          "maximum_mean_thickness_loss_fraction": 0.4313410419862202,
+          "invalid_section_samples": 0,
+          "invalid_last_two_seconds": 0,
+          "threshold": 0.35,
+          "max_qualification_pressure_pa": 106948479.57053429
+        },
+        {
+          "layer": "fat",
+          "minimum_J": 0.5979074961070148,
+          "maximum_mean_thickness_loss_fraction": 0.8998773795622622,
+          "invalid_section_samples": 0,
+          "invalid_last_two_seconds": 0,
+          "threshold": 0.35,
+          "max_qualification_pressure_pa": 195898.6032459726
+        }
+      ],
+      "invalid_witness_rows": [],
+      "late_mean_force_on_invalid_sections_n": 0.0,
+      "contact_rows_exceeding_material_threshold": []
+    }
+  },
+  "sources": {
+    "pressure-8.json": "7c5e638cd6d04ce4573471c58d5c4610a6e8f16984ab632a569ed9bda42dce99",
+    "launch.json": "2dbd0023b50e5d2ade94f5e63638e541e1f136c02c7979dd33bc8bc759245aff",
+    "resting-local-bed-sections.csv": "b25cb2299b33533fa581b74a11d1ca308816a3081f7466413990ff3fd9c168ab",
+    "resting-com-support-impulses.csv": "b243c082bd0b3c3c19afaf24e62ebac0fbb1d255514042d1604aaaef691c200e",
+    "resting-com-momentum-diagnostic.csv": "4917f36db4f7e232cb5fb700686e04aece4f623ea5f1d101ead338e92fc1f81c",
+    "resting-body-motion-partition.csv": "fd0b834bdf56f27b349ad587a4a0bb4c698a256fd9acfe83aa534c80ac298f23"
+  },
+  "scope": "Counterfactual uniform nominal pressure over each entire registered row area from observed accepted forces. The fine mesh has different geometry, and row means do not resolve local contact concentrations."
+}
