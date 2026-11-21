@@ -1,0 +1,8 @@
+hdiutil: WARNING: 'hdiutil attach -nomount ...' is deprecated. Please use 'diskutil image attach --noMount ...' instead.
+usage: run_step_zero.py [-h] [--host-library HOST_LIBRARY] [--roots ROOTS]
+                        [--profile-root PROFILE_ROOT]
+                        [--bed-placement BED_PLACEMENT]
+                        [--capture-step CAPTURE_STEP] [--headless]
+                        [--budget-wall-seconds BUDGET_WALL_SECONDS]
+                        source metal run
+run_step_zero.py: error: Native capture reserve requires 2857192440 bytes; 2731327488 available
