@@ -1,0 +1,13 @@
+# Regional contact linearization on SSH Numi
+
+The Apple M6 native release control accepted 143 two-millisecond steps (0.286 s). The subsequent proposal failed. The six audited gluteal muscle/bone pairs were clear at each accepted endpoint. The independently reconstructed terminal material surface had zero transverse intersections and zero cut-cell overlap. The surrounding scene uses 32 bed support layers, active physiology and variable pleural pressure. Whole-body skin/fat FEM and continuous between-step collision qualification remain open.
+
+The left frozen complementarity system on each of the 32 nonlinear sweeps was captured on the GPU. The largest linear penetration independently recomputed in double precision was 0.662 nm. On the last sweep the linear penetration was 0.338 nm, compared with 45.7 nm on the updated geometry. That proposal had 10 exact transverse pairs and a fresh force residual of 0.02993 N against 0.00780 N allowed. The observed accepted displacements and surfaces reproduce the selected owner byte for byte.
+
+An independent directional derivative check at the accepted pose agreed to relative error below 3.3e-9 on both muscles. The extreme ratios of current to reference material tangent were 0.585–2.26 on the right and 0.305–4.07 on the left. This calculation covers the anchored material subspaces. Each side had 15 floating free nodes omitted from that diagnostic.
+
+A trial that allowed both pressure unloading and material correction passed four Metal fixtures, kept every accepted state through 286 ms and produced 97 transverse pairs on the rejected proposal. Its fresh left force error increased to 0.05496 N. The one-millisecond control stopped at 200 ms. Neither experiment advances the selected physics. Fresh initialization directly from the 16-second reduced scene's completed posture was rejected by the existing source joint limit at q106 before dynamics.
+
+A separate unchanged-column cache preserved all six physical traces across three 32-step matched pairs, and through the first failure of a 144-step run. Median inclusive speed improved 1.03%, and the reported GPU segment improved 1.10%. The selected production owner remains 1049deeb. Cache implementation, work counts and binaries' identities are archived for reproducibility.
+
+Each launch is the actual native invocation and contains asset identities. The experiments directory contains source patches against the selected constitutive owner and the Metal fixture. Apply a decompressed patch to a copy of the selected owner with patch -p1. Replay the frozen systems with audit_native_contact_linear.py on the decompressed observed-contact-linear.bin. The launch captures include absolute Numi paths.

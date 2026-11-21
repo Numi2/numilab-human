@@ -1,0 +1,32 @@
+struct PelvicComplianceKey { uint4 nodes,weights,normal; };
+struct PelvicComplianceCount { ulong refreshes,inspected,changed,computedEntries; };
+kernel void nm_pelvic_changed_ports(device const uint* slots [[buffer(0)]],device const PelvicPoolSample* sites [[buffer(1)]],
+    device const float4* normals [[buffer(2)]],device const uint* needed [[buffer(3)]],device PelvicComplianceKey* previous [[buffer(4)]],
+    device uint* dirty [[buffer(5)]],device uint* order [[buffer(6)]],device uint* spans [[buffer(7)]],
+    device uint* counts [[buffer(8)]],device PelvicComplianceCount* totals [[buffer(9)]],
+    uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_threadgroup]]){
+    uint i=256*side+lane,base=6*side;
+    if(!needed[side]){
+        if(lane==0){counts[side]=0;spans[base]=0;spans[base+1]=1;spans[base+2]=1;spans[base+3]=0;spans[base+4]=1;spans[base+5]=1;}
+        return;
+    }
+    uint slot=slots[i];PelvicComplianceKey k={uint4(0),uint4(0),uint4(0,0,0,1)};
+    if(slot!=UINT_MAX){
+        auto s=sites[slot];k.nodes=s.nodes;k.weights=as_type<uint4>(s.weights);
+        k.normal=uint4(as_type<uint3>(normals[i].xyz),2u);
+    }
+    auto old=previous[i];uint change=uint(any(k.nodes!=old.nodes)||any(k.weights!=old.weights)||any(k.normal!=old.normal));
+    previous[i]=k;dirty[i]=change;
+    threadgroup uint groupCounts[8];uint group=lane/32;
+    uint local=simd_prefix_exclusive_sum(change),total=simd_sum(change);
+    if(!(lane&31))groupCounts[group]=total;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    uint offset=0;for(uint j=0;j<group;++j)offset+=groupCounts[j];
+    if(change)order[side*256+offset+local]=lane;
+    if(lane==255){
+        uint n=offset+total;counts[side]=n;
+        spans[base]=(n*pelvicFlex[side].y+127)/128;spans[base+1]=1;spans[base+2]=1;
+        spans[base+3]=4*n;spans[base+4]=1;spans[base+5]=1;
+        totals[side].refreshes++;totals[side].inspected+=256;totals[side].changed+=n;totals[side].computedEntries+=n*(512u-n);
+    }
+}

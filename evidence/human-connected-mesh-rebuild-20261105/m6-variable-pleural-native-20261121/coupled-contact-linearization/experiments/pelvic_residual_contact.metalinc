@@ -1,0 +1,63 @@
+// A frozen contact Jacobian is used for both the free residual and its force
+// transpose throughout a correction. Accumulating pressure increments keeps a
+// newly opening contact free to release its entire previous compression.
+kernel void nm_pelvic_residual_rhs(device const uint4* freeRows [[buffer(0)]],device const float4* bulk [[buffer(1)]],
+    device const atomic_uint* mask [[buffer(2)]],device const uint* slots [[buffer(3)]],
+    device const float* pressure [[buffer(4)]],device const float4* normals [[buffer(5)]],
+    device const PelvicPoolSample* pool [[buffer(6)]],device float4* rhs [[buffer(7)]],
+    device float4* direction [[buffer(8)]],constant uint& count [[buffer(9)]],uint i [[thread_position_in_grid]]){
+    if(i>=count)return;
+    uint side=uint(i>=pelvicFlex[1].x);
+    float3 r=bulk[i].xyz;
+    for(uint word=0;word<8;++word){
+        uint bits=atomic_load_explicit(mask+8*i+word,memory_order_relaxed);
+        while(bits){uint j=side*256+word*32+ctz(bits);bits&=bits-1;
+            auto p=pool[slots[j]];for(uint k=0;k<4;++k)if(p.nodes[k]==i)r-=p.weights[k]*pressure[j]*normals[j].xyz;
+        }
+    }
+    rhs[i]=float4(freeRows[i].z?r:float3(0),0);direction[i]=0;
+}
+kernel void nm_pelvic_incremental_compression(device const uint* slots [[buffer(0)]],device const PelvicRow* rows [[buffer(1)]],
+    device const float* gram [[buffer(2)]],device const uint* needed [[buffer(3)]],
+    device float* pressure [[buffer(4)]],device float* increment [[buffer(5)]],
+    device const float4* freeMotion [[buffer(6)]],device const float4* normal [[buffer(7)]],
+    device const PelvicPoolSample* pool [[buffer(8)]],constant float& relaxation [[buffer(9)]],
+    uint side [[threadgroup_position_in_grid]],uint lane [[thread_index_in_threadgroup]]){
+    if(!needed[side])return;
+    uint i=side*256+lane;const device float* W=gram+side*65536;
+    uint site=slots[i];float diag=W[lane*256+lane],old=pressure[i],delta=0,g=0;
+    bool active=site!=UINT_MAX && diag>0 && isfinite(diag);
+    if(active){
+        auto p=pool[site];float3 move=0;
+        for(uint k=0;k<4;++k)if(p.weights[k]!=0)move+=p.weights[k]*freeMotion[p.nodes[k]].xyz;
+        g=rows[i].normal.w-dot(normal[i].xyz,move);
+    }
+    threadgroup float peaks[8],change;threadgroup uint winners[8],winner;
+    for(uint it=0;it<1024;++it){
+        float dp=active?max(-(old+delta),-g/diag):0;
+        float gain=active?max(0.f,-dp*(2.f*g+diag*dp)):0;
+        float peak=simd_max(gain);uint best=simd_min(gain==peak?lane:UINT_MAX);
+        if((lane&31u)==0){peaks[lane/32]=peak;winners[lane/32]=best;}
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        if(!lane){float bestGain=0;winner=UINT_MAX;
+            for(uint k=0;k<8;++k)if(peaks[k]>bestGain){bestGain=peaks[k];winner=winners[k];}}
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        if(winner==UINT_MAX)break;
+        if(lane==winner){change=dp;delta+=dp;}
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+        if(active)g=fma(W[lane*256+winner],change,g);
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    float value=max(0.f,fma(relaxation,delta,old));
+    increment[i]=value-old;pressure[i]=value;
+}
+kernel void nm_pelvic_residual_step(constant uint& count [[buffer(0)]],device const uint* needed [[buffer(1)]],
+    device float4* coords [[buffer(2)]],device const float4* freeMotion [[buffer(3)]],
+    device const float4* columns [[buffer(4)]],device const float* dp [[buffer(5)]],
+    constant float& relaxation [[buffer(6)]],uint i [[thread_position_in_grid]]){
+    if(i>=count)return;uint side=uint(i>=pelvicFlex[1].x);if(!needed[side])return;
+    uint4 part=pelvicFlex[side];float3 correction=-relaxation*freeMotion[i].xyz;
+    for(uint j=0;j<256;++j){float step=dp[side*256+j];
+        if(step!=0)correction+=step*columns[256*part.x+j*part.y+i-part.x].xyz;}
+    coords[i].xyz+=correction;
+}

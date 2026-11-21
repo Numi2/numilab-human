@@ -11,6 +11,11 @@ if enabled:
     for name,value in manifest['files'].items():cfg['pins'][str(assets/name)]=value
     assert sha(Path(cfg['argv'][cfg['argv'].index('--soft-tissue-payload')+1]))==manifest['source']
     assert sha(Path(cfg['argv'][3])) in manifest['qualified_bone_payloads'] and set(manifest['matched_cortical_banks'])=={'1','2','3','18','19'}
+import os
+if 'NUMI_HUMAN_PELVIC_OBSERVE_LINEAR_ROOT' in os.environ:
+    observed=int(os.environ['NUMI_HUMAN_PELVIC_OBSERVE_LINEAR_ROOT'])
+    if not 0<=observed<steps:raise ValueError('Observed root must be inside trial')
+    env['NUMI_HUMAN_PELVIC_OBSERVE_LINEAR_ROOT']=str(observed)
 env['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']=str(steps)
 # The retained reduced-body timeout assumed 40 ms per root. Recent physical
 # P1 contact replays have taken about 0.5 s per root, before export.
