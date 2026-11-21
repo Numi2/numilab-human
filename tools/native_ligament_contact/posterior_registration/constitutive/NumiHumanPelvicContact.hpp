@@ -67,7 +67,7 @@ public:
             if(!b)throw std::runtime_error("pelvic working buffer allocation");return b;};
         volumes=load(21);cellRows=load(22);cellCorners=load(23);fRows=load(24);fCols=load(25);fVals=load(26);
         fLevels=load(27);fOrder=load(28);fPerm=load(29);fScale=load(30);projRows=load(31);projCols=load(32);projVals=load(33);refNodes=load(34);refInverse=load(35);refPoses=load(36);facetPairs=load(37);facetPoses=load(38);finiteCount=unsigned(facetPairs.length/(17*16));
-        finiteStart=poolCount-2*finiteCount;reverseStart=finiteStart-pelvicUniqueVertices;
+        finiteStart=poolCount-pelvicMaterialFacetRows*finiteCount;reverseStart=finiteStart-pelvicUniqueVertices;
         totalDelta=alloc(countNodes*16);materialState=alloc(countCells*16);
         cellLoad=alloc(countCells*64);bulkGrad=alloc(countNodes*16);bulkRhs=alloc(countNodes*16);baseShift=alloc(countNodes*16);attachment=alloc(countNodes*16);
         iterationTrace=alloc(64*std::max(1u,std::min(4u,countTrace))*16,true);

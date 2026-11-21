@@ -12,12 +12,17 @@ if not dest.exists():dest.hardlink_to(src/'metalrobo/MetalRobo.metallib')
 for name in ('pelvic_contact.metalinc','pelvic_material_validate.metalinc','NumiHumanPelvicContact.hpp'):
     shutil.copyfile(Path(__file__).parent/name,out/name)
 manifest=json.loads((assets/'manifest.json').read_text());files=['cortical-samples','cortical-modes','cortical-triangles','cortical-neighborhood','material-nodes','material-modes','material-cells','material-inverse','pool-material-points','pool-cortical-neighborhood','pool-material-regions','cortical-free-index','cortical-flexibility','closed-material-vertices','closed-material-triangles','closed-material-shapes','closed-material-ranges','closed-material-incidence','free-node-rows','free-node-columns','free-node-stiffness']+['pelvic-cell-volume', 'pelvic-cell-incidence', 'pelvic-cell-corners', 'pelvic-factor-rows', 'pelvic-factor-columns', 'pelvic-factor-values', 'pelvic-factor-levels', 'pelvic-factor-order', 'pelvic-factor-perm', 'pelvic-factor-scale','pelvic-projector-rows','pelvic-projector-cols','pelvic-projector-vals','pelvic-reference-nodes','pelvic-reference-inverse','pelvic-reference-poses','pelvic-finite-pairs','pelvic-finite-poses']
+facet_rows=manifest['finite_facets'].get('rows_per_pair',2)
+assert facet_rows in (2,16)
+face_spec=manifest['finite_facets']
+assert face_spec['start']+facet_rows*face_spec['number']==manifest['contact_pool']['count']
+assert (assets/'pelvic-finite-pairs.bin').stat().st_size==17*16*face_spec['number']
 assert manifest['specimen']['mu']==12000 and manifest['specimen']['lam']==120000 and manifest['specimen']['jmin']==.20 and manifest['specimen']['jmax']==5
 decl='struct PelvicMaterialFile { const char* name; unsigned long bytes; const char* hash; };\ninline constexpr PelvicMaterialFile pelvicMaterialFiles[]={\n'
 for name in files:
     p=assets/(name+'.bin');digest=sha(p);assert digest==manifest['files'][p.name]
     decl+='{"%s",%d,"%s"},\n'%(p.name,p.stat().st_size,digest)
-(out/'pelvic_material_assets.hpp').write_text(decl+'};\ninline constexpr unsigned pelvicUniqueVertices=%du,pelvicLeafCount=%du;\n'%(manifest['closed_reverse']['unique_vertices'],manifest['closed_reverse']['leaves']))
+(out/'pelvic_material_assets.hpp').write_text(decl+'};\ninline constexpr unsigned pelvicMaterialFacetRows='+str(facet_rows)+'u;\ninline constexpr unsigned pelvicUniqueVertices=%du,pelvicLeafCount=%du;\n'%(manifest['closed_reverse']['unique_vertices'],manifest['closed_reverse']['leaves']))
 text=(src/'NumiHumanRestingCoupling.hpp').read_text()
 def replace(what,with_):
     global text
@@ -46,6 +51,7 @@ assert len(fact)==2 and max(r['coordinates'] for r in fact)*4<=16384
 dimensions+='constant uint pelvicFactorCapacity='+str(max(r['coordinates'] for r in fact))+';\n'
 dimensions+=constvec('pelvicFactorDims','uint4',[[r['coordinate_start'],r['coordinates'],*r['lower']] for r in fact])
 dimensions+=constvec('pelvicFactorUpper','uint2',[r['upper'] for r in fact])
+dimensions+='constant uint pelvicFacetRows='+str(facet_rows)+'u;\n'
 dimensions+='constant uint pelvicFiniteStart=%du;\n'%manifest['finite_facets']['start']
 dims=dimensions+'constant uint pelvicReverseStart='+str(surface['first'])+'u;\nconstant uint4 pelvicFlex[2]={'+','.join('uint4(%d,%d,%d,%d)'%tuple(r[k] for k in ('first_node','nodes','input_nodes','first_vector')) for r in spec)+'};\n'
 (out/'human_respiration.metal').write_text((src/'human_respiration.metal').read_text()+dims+'\n#include "pelvic_contact.metalinc"\n#include "pelvic_material_validate.metalinc"\n')

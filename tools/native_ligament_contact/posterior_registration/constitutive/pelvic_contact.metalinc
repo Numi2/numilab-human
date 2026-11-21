@@ -152,7 +152,7 @@ kernel void nm_pelvic_pool_select(constant uint4& d [[buffer(0)]],device const u
     device const uint* needed [[buffer(6)]],uint g [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
     uint4 region=regions[g];if(d.y&&!needed[region.z/256])return;
     float m=0,worst=0;uint index=UINT_MAX;
-    for(uint j=lane;j<region.y;j+=32){uint i=region.x+j;float gap=gaps[i];m=min(m,gap);float threshold=i<pelvicFiniteStart||((i-pelvicFiniteStart)&1u)?5.e-7f:5.e-8f;
+    for(uint j=lane;j<region.y;j+=32){uint i=region.x+j;float gap=gaps[i];m=min(m,gap);float threshold=i<pelvicFiniteStart||((i-pelvicFiniteStart)%pelvicFacetRows)?5.e-7f:5.e-8f;
         if(!included[i]&&gap< -threshold&&gap<worst){worst=gap;index=i;}}
     float deep=simd_min(m);worst=simd_min(worst);
     uint selected=simd_min(index!=UINT_MAX&&gaps[index]==worst?index:UINT_MAX);
