@@ -1,0 +1,18 @@
+main-headers/matter/src/runtime.mm:10791:21: warning: format specifies type 'size_t' (aka 'unsigned long') but the argument has type 'nm_u32' (aka 'unsigned int') [-Wformat]
+ 10787 |                     "matter_graph_due_row_identity={\"schema\":1,\"enabled\":true,\"patches\":%zu,\"active_tets\":%zu,\"objects\":%zu}\n",
+       |                                                                                                                                   ~~~
+       |                                                                                                                                   %u
+ 10788 |                     graphSchwarz.layout.patches.size(),
+ 10789 |                     static_cast<std::size_t>(std::count(
+ 10790 |                         activeTets.begin(), activeTets.end(), 1u)),
+ 10791 |                     world.dispatch.objectCount);
+       |                     ^~~~~~~~~~~~~~~~~~~~~~~~~~
+main-headers/matter/src/runtime.mm:39800:60: warning: values of type 'NSUInteger' should not be used as format arguments; add an explicit cast to 'unsigned long' instead [-Wformat]
+ 39798 |                     "fgmres_terminal_cache_capture_not_due={\"schema\":1,\"physics_substep\":%u,\"physics_substeps\":%u,\"microtick\":%u,\"microtick_count\":%u,\"environment_count\":%u,\"preflight_enabled\":%s,\"preconditioner_enabled\":%s,\"preconditioner_apply_enabled\":%s,\"fresh_rhs_may_skip\":%s,\"selector\":%u}\n",
+       |                                                                                                                                                                                       ~~
+       |                                                                                                                                                                                       %lu
+ 39799 |                     request.physicsSubstep, request.physicsSubsteps,
+ 39800 |                     micro.microtick, micro.microtickCount, environments,
+       |                                                            ^~~~~~~~~~~~
+       |                                                            static_cast<unsigned long>( )
+2 warnings generated.
