@@ -77,3 +77,64 @@ kernel void nm_pelvic_capture_surfaces(constant uint4& d [[buffer(0)]],device co
     if(i<d.z){auto s=pool[pelvicReverseStart+i].contact;
         snapshot[d.y+i]=float4(pelvicCortexPoint(s,s.domain.x-d.w,s.domain.z-d.w,poses,low),0);}
 }
+
+// Integrate over the actual projected finite overlap. A P1 gap and each P1
+// shape average are exactly their values at the polygon's area centroid.
+struct PelvicFacetPair {uint4 id;float4 shape[3],uv[3],bonePoint[3],pelvisPoint[3],offset[3];uint4 nodes;};
+inline float pelvicCross2(float2 a,float2 b){return a.x*b.y-a.y*b.x;}
+inline uint pelvicClipTriangle(thread const float3* bary,thread float3* polygon){
+    polygon[0]=float3(1,0,0);polygon[1]=float3(0,1,0);polygon[2]=float3(0,0,1);
+    uint n=3;float3 next[8];
+    for(uint axis=0;axis<3&&n;++axis){
+        float3 mask=float3(bary[0][axis],bary[1][axis],bary[2][axis]);uint m=0;
+        for(uint i=0;i<n;++i){
+            float3 a=polygon[i],b=polygon[(i+1)%n];float ca=dot(a,mask),cb=dot(b,mask);
+            if(ca>=0){if(m==8)return 9;next[m++]=a;}
+            if((ca<0&&cb>0)||(ca>0&&cb<0)){if(m==8)return 9;next[m++]=mix(a,b,ca/(ca-cb));}
+        }
+        n=m;for(uint i=0;i<n;++i)polygon[i]=next[i];
+    }
+    return n;
+}
+kernel void nm_pelvic_finite_surface(constant uint4& d [[buffer(0)]],device const PelvicFacetPair* pairs [[buffer(1)]],
+    device const PelvicTriangle* triangles [[buffer(2)]],device const float4* delta [[buffer(3)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(4)]],device const float4* low [[buffer(5)]],
+    device const float4* reference [[buffer(6)]],device PelvicPoolSample* pool [[buffer(7)]],device float* gaps [[buffer(8)]],
+    device const uint* needed [[buffer(9)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.y)return;const auto pair=pairs[i];if(d.z&&!needed[pair.id.z])return;
+    const uint at=pelvicFiniteStart+2*i,pi=128-d.x,bi=pair.id.y-d.x;
+    const auto P=poses[pi],B=poses[bi];float4 ip=float4(-P.orientation.xyz,P.orientation.w),ib=float4(-B.orientation.xyz,B.orientation.w);
+    const auto t=triangles[pair.id.x];float3 normal=t.data[3].xyz,e=t.data[1].xyz-t.data[0].xyz,f=t.data[2].xyz-t.data[0].xyz;
+    float3 k=cross(e,f);float k2=dot(k,k);uint rb=pair.id.y==128?0:(pair.id.y==131?2:(pair.id.y==145?4:6));
+    float3 trans=((B.position.xyz-reference[rb].xyz)-(P.position.xyz-reference[0].xyz))+(low[bi].xyz-low[pi].xyz);
+    float3 bary[3],z;float3 clip[8];
+    for(uint j=0;j<3;++j){float3 movement=0;
+        for(uint a=0;a<4;++a)movement+=pair.shape[j][a]*delta[pair.nodes[a]].xyz;
+        float3 relativeMotion=pi==bi?float3(0):restingRotate(ip,trans+
+            pelvicRotationIncrement(B.orientation,reference[rb+1],pair.bonePoint[j].xyz)-
+            pelvicRotationIncrement(P.orientation,reference[1],pair.pelvisPoint[j].xyz));
+        float3 displacement=pair.offset[j].xyz+movement-relativeMotion;
+        float3 step=pi==bi?displacement:restingRotate(ib,restingRotate(P.orientation,displacement));
+        float2 uv=pair.uv[j].xy+float2(dot(cross(step,f),k),dot(cross(e,step),k))/k2;
+        bary[j]=float3(1.f-uv.x-uv.y,uv);z[j]=dot(step,normal);
+    }
+    uint n=pelvicClipTriangle(bary,clip);
+    if(n>8||!all(isfinite(z))){gaps[at]=-INFINITY;gaps[at+1]=-INFINITY;return;}
+    float3 centroid=0,deepest=0;float area=0;float minGap=INFINITY;
+    if(pelvicCross2(bary[1].yz-bary[0].yz,bary[2].yz-bary[0].yz)<0){
+        for(uint j=1;j+1<n;++j){
+            float twice=abs(pelvicCross2(clip[j].yz-clip[0].yz,clip[j+1].yz-clip[0].yz));
+            centroid+=twice*(clip[0]+clip[j]+clip[j+1]);area+=twice;
+        }
+        for(uint j=0;j<n;++j){float g=dot(clip[j],z);if(g<minGap){minGap=g;deepest=clip[j];}}
+    }
+    if(area==0){
+        for(uint j=0;j<2;++j){gaps[at+j]=INFINITY;pool[at+j].weights=float4(0);}return;
+    }
+    centroid/=3.f*area;
+    for(uint j=0;j<2;++j){
+        float3 w=j?deepest:centroid;
+        pool[at+j].weights=w.x*pair.shape[0]+w.y*pair.shape[1]+w.z*pair.shape[2];
+        gaps[at+j]=dot(w,z);
+    }
+}

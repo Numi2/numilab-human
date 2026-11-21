@@ -30,7 +30,7 @@ def tests(assets,capture,predicate,out):
     step,vert=load_vertices(capture,{'material_vertex':sum(r['vertices'] for r in sides),'cortical_vertex':g['unique_vertices']})
     mf=np.fromfile(assets/'closed-material-triangles.bin','u4').reshape(-1,3,4)[:,0,:3]
     t=np.fromfile(assets/'cortical-triangles.bin','f4').reshape(-1,10,4)[:,:3,:3]
-    pool=np.fromfile(assets/'pool-material-points.bin','f4').reshape(-1,7,4)[g['first']:]
+    pool=np.fromfile(assets/'pool-material-points.bin','f4').reshape(-1,7,4)[g['first']:g['first']+g['unique_vertices']]
     domain=pool[:,3].copy().view('u4');bank=pool[:,4].copy().view('u4');result={}
     for side,(surface,donor) in enumerate(zip(sides,(131,145))):
         i=surface['first_vertex'];n=surface['vertices'];f0=surface['first_face']

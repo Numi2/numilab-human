@@ -28,6 +28,9 @@ class NumiHumanPelvicContact {
     id<MTLBuffer> projRows=nil,projCols=nil,projVals=nil;
     id<MTLBuffer> refNodes=nil,refInverse=nil,refPoses=nil,totalDelta=nil,materialState=nil;
     id<MTLBuffer> iterationTrace=nil;
+    id<MTLBuffer> facetPairs=nil,facetPoses=nil;
+    id<MTLComputePipelineState> finiteSurface=nil;
+    unsigned finiteCount=0,reverseStart=0,finiteStart=0;
     unsigned residualGroups=0;
     id<MTLBuffer> volumes=nil,cellRows=nil,cellCorners=nil,fRows=nil,fCols=nil,fVals=nil,fLevels=nil,fOrder=nil,fPerm=nil,fScale=nil;
     id<MTLBuffer> cellLoad=nil,bulkGrad=nil,bulkRhs=nil,baseShift=nil,attachment=nil;
@@ -63,7 +66,8 @@ public:
         auto alloc=[&](size_t size,bool shared=false){auto b=[dev newBufferWithLength:size options:shared?MTLResourceStorageModeShared:MTLResourceStorageModePrivate];
             if(!b)throw std::runtime_error("pelvic working buffer allocation");return b;};
         volumes=load(21);cellRows=load(22);cellCorners=load(23);fRows=load(24);fCols=load(25);fVals=load(26);
-        fLevels=load(27);fOrder=load(28);fPerm=load(29);fScale=load(30);projRows=load(31);projCols=load(32);projVals=load(33);refNodes=load(34);refInverse=load(35);refPoses=load(36);
+        fLevels=load(27);fOrder=load(28);fPerm=load(29);fScale=load(30);projRows=load(31);projCols=load(32);projVals=load(33);refNodes=load(34);refInverse=load(35);refPoses=load(36);facetPairs=load(37);facetPoses=load(38);finiteCount=unsigned(facetPairs.length/(17*16));
+        finiteStart=poolCount-2*finiteCount;reverseStart=finiteStart-pelvicUniqueVertices;
         totalDelta=alloc(countNodes*16);materialState=alloc(countCells*16);
         cellLoad=alloc(countCells*64);bulkGrad=alloc(countNodes*16);bulkRhs=alloc(countNodes*16);baseShift=alloc(countNodes*16);attachment=alloc(countNodes*16);
         iterationTrace=alloc(64*std::max(1u,std::min(4u,countTrace))*16,true);
@@ -75,9 +79,9 @@ public:
         nodePositions=alloc(countNodes*16);groups=alloc(countGroups*16);
         auto pipeline=[&](NSString* name){NSError* err=nil;auto p=[dev newComputePipelineStateWithFunction:[lib newFunctionWithName:name] error:&err];
             if(!p)throw std::runtime_error("missing pelvic material kernel");return p;};
-        cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
+        finiteSurface=pipeline(@"nm_pelvic_finite_surface");cellForce=pipeline(@"nm_pelvic_bulk_corners");gatherBulk=pipeline(@"nm_pelvic_bulk_gather");prepareRhs=pipeline(@"nm_pelvic_bulk_rhs");
         factorApply=pipeline(@"nm_pelvic_bulk_factor");requireBulk=pipeline(@"nm_pelvic_require_bulk");geometry=pipeline(@"nm_pelvic_contact_rows");solve=pipeline(@"nm_pelvic_schur_solve");makeColumns=pipeline(@"nm_pelvic_schur_columns");makeGram=pipeline(@"nm_pelvic_schur_gram");moveNodes=pipeline(@"nm_pelvic_schur_displacement");wrench=pipeline(@"nm_pelvic_contact_wrench");apply=pipeline(@"nm_pelvic_contact_apply");
-        std::set<unsigned> gridSizes{1,2,4,16,1024,numRegions,countGroups,(countNodes+127)/128,(poolCount-numReverse+127)/128,
+        std::set<unsigned> gridSizes{1,2,4,16,1024,numRegions,countGroups,(finiteCount+127)/128,(countNodes+127)/128,(reverseStart+127)/128,
             (numSurface+127)/128,(numFaces+127)/128,(numReverse+127)/128,(countNodes/2*256+127)/128,(countNodes*8+127)/128,2*residualGroups};
         for(unsigned level=numLeaves;level;level>>=1)gridSizes.insert((2*level+63)/64);
         std::vector<unsigned> sizes(gridSizes.begin(),gridSizes.end());for(unsigned i=0;i<sizes.size();++i)spanIndex.emplace(sizes[i],i);
@@ -109,19 +113,21 @@ public:
         unsigned first=unsigned(p.articulationFirstBody);auto positions=ptr(p.bodyPoses);auto low=ptr(p.bodyPositionLow);
         auto nearest=[&](unsigned displaced,unsigned conditional){
             [e setComputePipelineState:geometry];words(0,{first,displaced,conditional,0});bind(1,samples);bind(2,pool);bind(3,triangles);bind(4,poolNeighbors);
-            bind(5,positions);bind(6,low);bind(7,coordinates);bind(8,rows);bind(9,localN);bind(10,needed);bind(11,poolSlots);bind(12,nodePositions);bind(13,lever);bind(14,reverse);bind(15,freeIndex);bind(16,baseShift);run(4,128);
+            bind(5,positions);bind(6,low);bind(7,coordinates);bind(8,rows);bind(9,localN);bind(10,needed);bind(11,poolSlots);bind(12,nodePositions);bind(13,lever);bind(14,reverse);bind(15,freeIndex);bind(16,baseShift);bind(17,poolGaps);run(4,128);
         };
         auto observe=[&](unsigned conditional,unsigned displaced){
             [e setComputePipelineState:pose];words(0,{first,countNodes,countCells,displaced});bind(1,nodes);bind(2,coordinates);bind(3,coordinates);
             bind(4,positions);bind(5,low);bind(6,nodePositions);bind(7,refNodes);bind(8,refPoses);bind(9,totalDelta);run((countNodes+127)/128,128);
             [e setComputePipelineState:queryPool];words(0,{first,poolCount,conditional,0});bind(1,pool);bind(2,nodePositions);
-            bind(3,positions);bind(4,low);bind(5,triangles);bind(6,poolNeighbors);bind(7,needed);bind(8,poolGaps);run((poolCount-numReverse+127)/128,128);
+            bind(3,positions);bind(4,low);bind(5,triangles);bind(6,poolNeighbors);bind(7,needed);bind(8,poolGaps);run((reverseStart+127)/128,128);
             [e setComputePipelineState:surfaceVertices];words(0,{first,numSurface,conditional,0});bind(1,sv);bind(2,nodePositions);bind(3,sx);bind(4,needed);run((numSurface+127)/128,128);
             [e setComputePipelineState:surfaceNormals];words(0,{first,numFaces,conditional,0});bind(1,sf);bind(2,sx);bind(3,sn);bind(4,needed);run((numFaces+127)/128,128);
             [e setComputePipelineState:vertexNormals];words(0,{first,numSurface,conditional,0});bind(1,sr);bind(2,si);bind(3,sf);bind(4,sx);bind(5,sn);bind(6,vn);bind(7,needed);run((numSurface+127)/128,128);
             [e setComputePipelineState:buildBounds];bind(1,sf);bind(2,sx);bind(3,boxes);bind(4,needed);
             for(unsigned n=numLeaves;n;n>>=1){words(0,{first,n,conditional,0});run((2*n+63)/64,64);}
-            [e setComputePipelineState:findReverse];words(0,{first,poolCount,conditional,0});bind(1,pool);bind(2,positions);bind(3,low);bind(4,nodes);bind(5,sf);bind(6,sx);bind(7,sn);bind(8,vn);bind(9,boxes);bind(10,sw);bind(11,poolGaps);bind(12,reverse);bind(13,needed);bind(14,witness);run((numReverse+127)/128,128);
+            [e setComputePipelineState:findReverse];words(0,{first,finiteStart,conditional,0});bind(1,pool);bind(2,positions);bind(3,low);bind(4,nodes);bind(5,sf);bind(6,sx);bind(7,sn);bind(8,vn);bind(9,boxes);bind(10,sw);bind(11,poolGaps);bind(12,reverse);bind(13,needed);bind(14,witness);run((numReverse+127)/128,128);
+            [e setComputePipelineState:finiteSurface];words(0,{first,finiteCount,conditional,0});bind(1,facetPairs);bind(2,triangles);bind(3,totalDelta);
+            bind(4,positions);bind(5,low);bind(6,facetPoses);bind(7,pool);bind(8,poolGaps);bind(9,needed);run((finiteCount+127)/128,128);
         };
         auto select=[&](unsigned conditional,bool readOnly){
             [e setComputePipelineState:selectPool];words(0,{0,conditional,unsigned(readOnly),0});bind(1,poolRegions);bind(2,poolGaps);
@@ -219,7 +225,7 @@ public:
                 snap<<unsigned(saved[0])<<','<<field<<','<<index;for(unsigned k=0;k<4;++k)snap<<','<<saved[4*at+k];snap<<'\n';};
             for(unsigned i=0;i<512;++i){
                 unsigned at=9+2*countNodes+2*i;float point=saved[4*(at+1)];
-                if(point>=0){row("normal_and_force",unsigned(point),at);if(unsigned(point)>=poolCount-numReverse){
+                if(point>=0){row("normal_and_force",unsigned(point),at);if(unsigned(point)>=reverseStart){
                     row("reverse_shape",unsigned(point),9+2*countNodes+1024+2*i);
                     row("reverse_parent_nodes",unsigned(point),9+2*countNodes+1025+2*i);
                 }}

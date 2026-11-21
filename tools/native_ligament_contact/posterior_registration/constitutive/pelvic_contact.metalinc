@@ -32,7 +32,7 @@ kernel void nm_pelvic_contact_rows(constant uint4& c [[buffer(0)]],device Pelvic
     device const PelvicPoolSample* pool [[buffer(2)]],device const PelvicTriangle* triangles [[buffer(3)]],device const uint* neighbors [[buffer(4)]],
     device const MRArticulatedBodyPoseGPU* poses [[buffer(5)]],device const float4* low [[buffer(6)]],device const float4* delta [[buffer(7)]],
     device PelvicRow* rows [[buffer(8)]],device float4* normals [[buffer(9)]],device const uint* needed [[buffer(10)]],
-    device const uint* slots [[buffer(11)]],device const float4* nodes [[buffer(12)]],device float4* lever [[buffer(13)]],device const float4* reverse [[buffer(14)]],device const uint* inputMap [[buffer(15)]],device const float4* base [[buffer(16)]],uint id [[thread_position_in_grid]]){
+    device const uint* slots [[buffer(11)]],device const float4* nodes [[buffer(12)]],device float4* lever [[buffer(13)]],device const float4* reverse [[buffer(14)]],device const uint* inputMap [[buffer(15)]],device const float4* base [[buffer(16)]],device const float* allGaps [[buffer(17)]],uint id [[thread_position_in_grid]]){
     if(id>=512||(c.z&&!needed[id/256]))return;
     uint index=slots[id];if(index==UINT_MAX){samples[id].domain=uint4(0);rows[id].normal=float4(0);return;}
     auto r=pool[index];auto s=r.contact;samples[id]=s;
@@ -41,7 +41,11 @@ kernel void nm_pelvic_contact_rows(constant uint4& c [[buffer(0)]],device Pelvic
     float3 world=(P.position.xyz-B.position.xyz)+(low[pi].xyz-low[bi].xyz)+restingRotate(P.orientation,x);
     float3 p=pi==bi?x:restingRotate(float4(-B.orientation.xyz,B.orientation.w),world);
     float3 local,n;float signedGap;
-    if(index>=pelvicReverseStart){
+    if(index>=pelvicFiniteStart){
+        n=restingRotate(B.orientation,triangles[s.bank.x].data[3].xyz);
+        local=pi==bi?triangles[s.bank.x].data[3].xyz:restingRotate(float4(-P.orientation.xyz,P.orientation.w),n);signedGap=allGaps[index];
+        if(signedGap==INFINITY){signedGap=1.f;local=float3(0);n=float3(0);}
+    }else if(index>=pelvicReverseStart){
         float4 g=reverse[index-pelvicReverseStart];local=g.xyz;n=restingRotate(P.orientation,local);signedGap=g.w;
     }else{
         PelvicClosest hit{INFINITY,INFINITY,float3(0)};
@@ -147,10 +151,11 @@ kernel void nm_pelvic_pool_select(constant uint4& d [[buffer(0)]],device const u
     device const uint* needed [[buffer(6)]],uint g [[threadgroup_position_in_grid]],uint lane [[thread_index_in_simdgroup]]){
     uint4 region=regions[g];if(d.y&&!needed[region.z/256])return;
     float m=0,worst=0;uint index=UINT_MAX;
-    for(uint j=lane;j<region.y;j+=32){uint i=region.x+j;float gap=gaps[i];m=min(m,gap);if(!included[i]&&gap<worst){worst=gap;index=i;}}
+    for(uint j=lane;j<region.y;j+=32){uint i=region.x+j;float gap=gaps[i];m=min(m,gap);float threshold=i<pelvicFiniteStart||((i-pelvicFiniteStart)&1u)?5.e-7f:5.e-8f;
+        if(!included[i]&&gap< -threshold&&gap<worst){worst=gap;index=i;}}
     float deep=simd_min(m);worst=simd_min(worst);
     uint selected=simd_min(index!=UINT_MAX&&gaps[index]==worst?index:UINT_MAX);
-    if(!lane){minima[g]=deep;proposal[g]=worst< -5.e-8f?selected:UINT_MAX;}
+    if(!lane){minima[g]=deep;proposal[g]=selected;}
 }
 kernel void nm_pelvic_pool_exchange(constant uint4& d [[buffer(0)]],device const uint4* groups [[buffer(1)]],device const uint* next [[buffer(2)]],
     device uint* slots [[buffer(3)]],device uint* included [[buffer(4)]],device const float* loads [[buffer(5)]],device const float* gaps [[buffer(6)]],
