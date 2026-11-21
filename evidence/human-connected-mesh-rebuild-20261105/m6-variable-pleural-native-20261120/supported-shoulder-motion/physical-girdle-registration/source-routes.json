@@ -1,0 +1,374 @@
+{
+  "bone_sha256": "b15fd516efa0cd701989b91329957c8f71b9fe786d3b664402717275ff61cad2",
+  "source_surfaces_sha256": "20945d5a2b6edd43c4b0f09c9d8925f74dd104189ba54328c1057e9d29ab77a7",
+  "routes": [
+    {
+      "name": "s_glenohum_ligament_l",
+      "side": "l",
+      "source_tendon_index": 277,
+      "sites": [
+        {
+          "site": "s_glenohum_s_glenohum-P1_l",
+          "body": 91,
+          "stable_id": 13,
+          "point_local_m": [
+            0.021692726551556185,
+            -0.004978425343993703,
+            0.14954022665775818
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.0015823032913088615,
+              "face": 62,
+              "winding": -0.00015119524516651146
+            },
+            "registered_parent": {
+              "surface_distance_m": 3.0094610296162948e-05,
+              "face": 373,
+              "winding": 8.834874115176436e-17
+            },
+            "registered_candidate": {
+              "surface_distance_m": 3.0094610296162948e-05,
+              "face": 373,
+              "winding": 8.834874115176436e-17
+            }
+          }
+        },
+        {
+          "site": "s_glenohum_s_glenohum-P2_l",
+          "body": 84,
+          "stable_id": 11,
+          "point_local_m": [
+            0.04619739170931171,
+            0.0031397447856093626,
+            -0.014582332390178723
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.003076027811029247,
+              "face": 1279,
+              "winding": 0.02869301262557788
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.009070749500521256,
+              "face": 3511,
+              "winding": -5.742668174864683e-17
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.00014184168812847887,
+              "face": 5499,
+              "winding": 1.236882376124701e-16
+            }
+          }
+        }
+      ],
+      "source_stiffness": 0.0,
+      "source_wrap": {
+        "geom": "LIGhh_s_ellipsoid_s_glenohum_l",
+        "core_body": 91,
+        "source_geom_type": "sphere",
+        "radius_m": 0.02,
+        "center_local_m": [
+          0.03964287684235797,
+          0.00715645311194143,
+          0.1395634120660506
+        ],
+        "side_site_local_m": [
+          0.020135780509406377,
+          0.004818327770334673,
+          0.14995368456218272
+        ],
+        "side_site": "LIGhh_s_ellipsoid_s_glenohum_1_sidesite_l"
+      },
+      "source_springlength_m": [
+        0.0448,
+        0.0448
+      ],
+      "default_source_path_m": 0.029779229338584297,
+      "default_source_wrap_points": 2,
+      "retained_chord_range_m": [
+        0.029757076862008753,
+        0.03802176517430785
+      ],
+      "retained_chord_minimum_sphere_clearance_m": -0.0017970145894719465,
+      "retained_chords_enter_sphere": 242,
+      "poses": 254
+    },
+    {
+      "name": "coracohum_ligament_l",
+      "side": "l",
+      "source_tendon_index": 280,
+      "sites": [
+        {
+          "site": "coracohum_coracohum-P1_l",
+          "body": 91,
+          "stable_id": 13,
+          "point_local_m": [
+            0.026195616927776187,
+            -0.009371767394500605,
+            0.14889020828340777
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.0003977338083285584,
+              "face": 86,
+              "winding": -0.0010697165344433655
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.000578800868769367,
+              "face": 526,
+              "winding": -8.834874115176436e-18
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.000578800868769367,
+              "face": 526,
+              "winding": -8.834874115176436e-18
+            }
+          }
+        },
+        {
+          "site": "coracohum_coracohum-P2_l",
+          "body": 84,
+          "stable_id": 11,
+          "point_local_m": [
+            0.04615726542765825,
+            -0.003987192506941652,
+            -0.025636976423776825
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.004313481599995365,
+              "face": 1394,
+              "winding": 0.05573558552953531
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.009398766688163382,
+              "face": 3547,
+              "winding": 1.6344517113076405e-16
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.0015456606630030905,
+              "face": 7488,
+              "winding": 1.0
+            }
+          }
+        }
+      ],
+      "source_stiffness": 0.0,
+      "source_wrap": {
+        "geom": "LIGhh_s_ellipsoid_coracohum_l",
+        "core_body": 91,
+        "source_geom_type": "sphere",
+        "radius_m": 0.02,
+        "center_local_m": [
+          0.03964287684235797,
+          0.00715645311194143,
+          0.1395634120660506
+        ],
+        "side_site_local_m": [
+          0.02386493424213937,
+          -0.006227520244341061,
+          0.14891395860101445
+        ],
+        "side_site": "LIGhh_s_ellipsoid_coracohum_1_sidesite_l"
+      },
+      "source_springlength_m": [
+        0.0501,
+        0.0501
+      ],
+      "default_source_path_m": 0.03522218760951681,
+      "default_source_wrap_points": 2,
+      "retained_chord_range_m": [
+        0.034340829453639386,
+        0.04194573731479486
+      ],
+      "retained_chord_minimum_sphere_clearance_m": -1.168091080837666e-05,
+      "retained_chords_enter_sphere": 37,
+      "poses": 254
+    },
+    {
+      "name": "s_glenohum_ligament",
+      "side": "r",
+      "source_tendon_index": 210,
+      "sites": [
+        {
+          "site": "s_glenohum_s_glenohum-P1_r",
+          "body": 41,
+          "stable_id": 12,
+          "point_local_m": [
+            0.02169272655155619,
+            -0.004978425343993711,
+            -0.1495402266577582
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.0015823032913088143,
+              "face": 62,
+              "winding": -0.00015119524516688432
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.00017820893026909964,
+              "face": 3185,
+              "winding": -1.7559312303913167e-16
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.00017820893026909964,
+              "face": 3185,
+              "winding": -1.7559312303913167e-16
+            }
+          }
+        },
+        {
+          "site": "s_glenohum_s_glenohum-P2_r",
+          "body": 34,
+          "stable_id": 10,
+          "point_local_m": [
+            0.046197391709311725,
+            0.0031397447856093457,
+            0.014582332390178717
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.00307602781102928,
+              "face": 1279,
+              "winding": 0.028693012625577784
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.009010540747006749,
+              "face": 13165,
+              "winding": -2.760898160992636e-17
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.000331512665645398,
+              "face": 18001,
+              "winding": 0.9999999999999999
+            }
+          }
+        }
+      ],
+      "source_stiffness": 0.0,
+      "source_wrap": {
+        "geom": "LIGhh_s_ellipsoid_s_glenohum",
+        "core_body": 41,
+        "source_geom_type": "sphere",
+        "radius_m": 0.02,
+        "center_local_m": [
+          0.03964287684235796,
+          0.007156453111941389,
+          -0.13956341206605047
+        ],
+        "side_site_local_m": [
+          0.020135780509406356,
+          0.004818327770334655,
+          -0.14995368456218272
+        ],
+        "side_site": "LIGhh_s_ellipsoid_s_glenohum_1_sidesite_r"
+      },
+      "source_springlength_m": [
+        0.0448,
+        0.0448
+      ],
+      "default_source_path_m": 0.02977922933858426,
+      "default_source_wrap_points": 2,
+      "retained_chord_range_m": [
+        0.029757103595219003,
+        0.03868872566672754
+      ],
+      "retained_chord_minimum_sphere_clearance_m": -0.0020848778808006847,
+      "retained_chords_enter_sphere": 241,
+      "poses": 254
+    },
+    {
+      "name": "coracohum_ligament",
+      "side": "r",
+      "source_tendon_index": 213,
+      "sites": [
+        {
+          "site": "coracohum_coracohum-P1_r",
+          "body": 41,
+          "stable_id": 12,
+          "point_local_m": [
+            0.02619561692777619,
+            -0.009371767394500635,
+            -0.14889020828340793
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.00039773380832870274,
+              "face": 86,
+              "winding": -0.0010697165344432816
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.0005809700636157093,
+              "face": 2951,
+              "winding": -1.2147951908367599e-17
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.0005809700636157093,
+              "face": 2951,
+              "winding": -1.2147951908367599e-17
+            }
+          }
+        },
+        {
+          "site": "coracohum_coracohum-P2_r",
+          "body": 34,
+          "stable_id": 10,
+          "point_local_m": [
+            0.04615726542765829,
+            -0.00398719250694168,
+            0.02563697642377679
+          ],
+          "geometry": {
+            "source": {
+              "surface_distance_m": 0.004313481599995313,
+              "face": 1394,
+              "winding": 0.055735585529535385
+            },
+            "registered_parent": {
+              "surface_distance_m": 0.009187474940382287,
+              "face": 13879,
+              "winding": -5.742668174864683e-17
+            },
+            "registered_candidate": {
+              "surface_distance_m": 0.000910860979178607,
+              "face": 13763,
+              "winding": 1.0
+            }
+          }
+        }
+      ],
+      "source_stiffness": 0.0,
+      "source_wrap": {
+        "geom": "LIGhh_s_ellipsoid_coracohum",
+        "core_body": 41,
+        "source_geom_type": "sphere",
+        "radius_m": 0.02,
+        "center_local_m": [
+          0.03964287684235796,
+          0.007156453111941389,
+          -0.13956341206605047
+        ],
+        "side_site_local_m": [
+          0.023864934242139403,
+          -0.00622752024434108,
+          -0.14891395860101464
+        ],
+        "side_site": "LIGhh_s_ellipsoid_coracohum_1_sidesite_r"
+      },
+      "source_springlength_m": [
+        0.0501,
+        0.0501
+      ],
+      "default_source_path_m": 0.0352221876095168,
+      "default_source_wrap_points": 2,
+      "retained_chord_range_m": [
+        0.034340840382351065,
+        0.042588430713090056
+      ],
+      "retained_chord_minimum_sphere_clearance_m": -0.000270324491832577,
+      "retained_chords_enter_sphere": 164,
+      "poses": 254
+    }
+  ]
+}
