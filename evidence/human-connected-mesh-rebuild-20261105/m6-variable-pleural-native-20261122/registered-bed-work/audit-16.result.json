@@ -1,0 +1,72 @@
+{
+  "accepted_steps": 8000,
+  "simulated_seconds": 16.0,
+  "stride": 32,
+  "sampled_contact_rows": 8000,
+  "positive_normal_rows": 4276,
+  "loaded_weighted_rows": 654,
+  "max_abs_jacobian_difference_m_per_m3": [
+    4.56867558368268e-09,
+    1.7072772406923065e-07
+  ],
+  "net_pressure_equivalent_pa": {
+    "min": [
+      -0.35854042158187294,
+      0.0
+    ],
+    "max": [
+      0.001710486305650544,
+      14.060709415753173
+    ],
+    "rms": [
+      0.1034880539065112,
+      6.6653084973700585
+    ]
+  },
+  "max_loaded_displacement_um": 94.67326539654441,
+  "max_loaded_normal_displacement_um": 3.4699228338985755,
+  "max_abs_sampled_virtual_work_j": 3.222731166998602e-06,
+  "parent_prefix_value_parity": {
+    "resting-coupled.csv": true,
+    "resting-com-support-impulses.csv": true,
+    "resting-support-selected-skin-witness.csv": true
+  },
+  "pack_sha256": "5a64ac7b1a329cf4c411a2789be5b8f2a66b8a11167231280e57ea6bfb860dee",
+  "device_observation_sha256": "1f6de6bb147f95602de702dfef2646f80ce3a5c790fccc95cd02d209e8d46f0d",
+  "timing": {
+    "exit_code": 0,
+    "cold_wall_s": 164.23871966614388,
+    "requested_steps": 8000
+  },
+  "separated_pressure_equivalent_pa": {
+    "normal": {
+      "min": [
+        -0.028296052282973026,
+        0.0
+      ],
+      "max": [
+        0.0001917485160672153,
+        0.7880953040991295
+      ],
+      "rms": [
+        0.009251186785922592,
+        0.5962275284366019
+      ]
+    },
+    "tangential": {
+      "min": [
+        -0.3318473566590196,
+        0.0
+      ],
+      "max": [
+        0.0015761982846380087,
+        13.487155804426727
+      ],
+      "rms": [
+        0.09496000617183573,
+        6.138031698001232
+      ]
+    }
+  },
+  "scope": "Selected, pre-step flat-bed contact witnesses; observed current candidate impulse confirmed against accepted export. Pressure equivalents are instantaneous sampled impulse/dt. Work is virtual work at pre-step velocity, not measured mechanical energy. No force is fed back by this audit."
+}

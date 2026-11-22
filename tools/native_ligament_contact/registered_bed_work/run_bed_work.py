@@ -1,0 +1,103 @@
+"""Run a cold supported native trajectory with a bounded GPU virtual-work audit."""
+
+import hashlib, json, os, shutil, subprocess, sys, tempfile, time
+from pathlib import Path
+
+
+def digest(p):
+    with Path(p).open("rb") as f:
+        return hashlib.file_digest(f, "sha256").hexdigest()
+
+
+def run(source, owner, out, steps, enabled=True):
+    parent = json.loads((source / "launch.json").read_text())
+    if parent["headless"] or steps <= 0 or steps > 32000 or steps % 32:
+        raise ValueError(
+            "Expected visible supported 2ms scene and complete 32-step samples"
+        )
+    for name, d in parent["pins"].items():
+        if digest(name) != d:
+            raise ValueError("Stale parent pin " + name)
+    identities = json.loads((owner / "identities.json").read_text())
+    for name, d in identities.items():
+        if digest(owner / name) != d:
+            raise ValueError("Stale owner pin " + name)
+    argv = parent["argv"][:]
+    if argv[argv.index("--muscle-step-seconds") + 1] != "0.002":
+        raise ValueError("Different timestep")
+    argv[0] = str(owner / "numi-human-native")
+    argv[argv.index("--muscle-step-count") + 1] = str(steps)
+    out.mkdir(exist_ok=False)
+    with tempfile.TemporaryDirectory(dir=out, prefix="live-") as tmp:
+        live = Path(tmp) / "native"
+        argv[4] = str(live)
+        env = parent["environment"].copy()
+        env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = str(steps)
+        env["NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"] = str(out / "failure.json")
+        if enabled:
+            env["NUMI_HUMAN_THORACIC_BED_AUDIT_END_STEP"] = str(steps)
+        pins = {**parent["pins"], **{str(owner / n): d for n, d in identities.items()}}
+        (out / "launch.json").write_text(
+            json.dumps(
+                dict(
+                    parent,
+                    argv=argv,
+                    environment=env,
+                    pins=pins,
+                    parent_launch=digest(source / "launch.json"),
+                ),
+                indent=2,
+            )
+            + "\n"
+        )
+        clean = {
+            k: v for k, v in os.environ.items() if not k.startswith(("NUMI_", "NM_"))
+        }
+        start = time.monotonic()
+        with (
+            (out / "stdout.log").open("wb") as so,
+            (out / "stderr.log").open("wb") as se,
+        ):
+            p = subprocess.run(
+                argv,
+                cwd=parent["cwd"],
+                env=clean | env,
+                stdout=so,
+                stderr=se,
+                timeout=90 + steps * 0.08,
+            )
+        wall = time.monotonic() - start
+        (out / "execution.json").write_text(
+            json.dumps(
+                dict(exit_code=p.returncode, cold_wall_s=wall, requested_steps=steps),
+                indent=2,
+            )
+            + "\n"
+        )
+        if p.returncode:
+            raise ValueError(
+                "Native process failed; see preserved stderr and failure receipt"
+            )
+        receipt = live / f"accepted-geometry/step-{steps}.receipt.json"
+        r = json.loads(receipt.read_text())
+        if r["physical_endpoint"] != "accepted" or r["accepted_step"] != steps:
+            raise ValueError("No matching accepted physical endpoint")
+        shutil.copy2(receipt, out / "terminal.receipt.json")
+        needed = [
+            "resting-coupled.csv",
+            "resting-support-selected-skin-witness.csv",
+            "resting-com-support-impulses.csv",
+            "resting-surface-audit.csv",
+        ]
+        if enabled:
+            needed.append("resting-thoracic-bed-work.csv")
+        for name in needed:
+            shutil.copy2(live / name, out / name)
+
+
+if __name__ == "__main__":
+    run(
+        *(Path(s).resolve() for s in sys.argv[1:4]),
+        int(sys.argv[4]),
+        "--disabled" not in sys.argv[5:],
+    )

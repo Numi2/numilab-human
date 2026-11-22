@@ -1,0 +1,51 @@
+// Differentiate the registered thoracic skin field at the actual support witness.
+// qD and qR are swept volume coordinates in m^3. J^T times a world
+// impulse has units Pa s. No diagnostic buffer is read by the solver.
+kernel void nm_human_thoracic_bed_work(
+    constant uint4& domain [[buffer(0)]], constant uint4& bounds [[buffer(1)]],
+    constant MRHumanRestingAnatomyGPU& anatomy [[buffer(2)]],
+    device const MRHumanRestingVertexMap* mapping [[buffer(3)]],
+    device const uint* selected [[buffer(4)]],
+    device const MRNumiHumanStandContactGPU* contacts [[buffer(5)]],
+    device const float* impulses [[buffer(6)]],
+    device const MRArticulatedPointWorldGPU* points [[buffer(7)]],
+    device const float4* low [[buffer(8)]], device const MRBodyStateGPU* bodies [[buffer(9)]],
+    device const NMHumanRespirationState* state [[buffer(10)]],
+    device const MRNumiHumanStandStatusGPU* status [[buffer(11)]],
+    device float4* output [[buffer(12)]], constant float4& groundNormal [[buffer(13)]],
+    uint row [[thread_position_in_grid]]) {
+    if (row>=domain.y || status[0].code!=MR_NUMI_HUMAN_STAND_SUCCESS ||
+        status[0].completedSteps!=domain.x+1 || state[0].status.x!=domain.x) return;
+    const uint vertexIndex=selected[row], query=contacts[row].pointQueryIndex;
+    if(vertexIndex>=bounds.x || query>=bounds.y || anatomy.bodyAndFlags.x>=bounds.z) return;
+    const auto map=mapping[vertexIndex];
+    if(map.deformationKind!=3u || !anatomy.bodyAndFlags.y) return;
+    const auto torso=bodies[anatomy.bodyAndFlags.x];
+    const float4 inverse=float4(-torso.orientation.xyz,torso.orientation.w);
+    const float3 local=restingRotate(inverse,(points[query].position.xyz-torso.position.xyz)+low[query].xyz);
+    const float3 axis=anatomy.superiorAxisAndHeight.xyz;
+    const float3 offset=local-anatomy.lungAnchorAndVolume.xyz;
+    const float3 across=offset-dot(offset,axis)*axis;
+    const float4 motion=state[0].motion;
+    const float volume=anatomy.lungAnchorAndVolume.w+motion.x;
+    const float radial=sqrt((volume+motion.y)/volume);
+    const float weight=map.deformationWeight.x;
+    const float3 dR=across*(weight/(2.0f*volume*radial));
+    const float3 dD=-weight*axis*(map.respiratoryBasis.w/anatomy.lungBasalBlend.z)-dR*(motion.y/volume);
+    const float3 delta=weight*((radial-1.0f)*across-axis*(map.respiratoryBasis.w*(motion.x/anatomy.lungBasalBlend.z)));
+    const float3 normal=groundNormal.xyz;
+    const float3 ref=abs(normal.x)<0.8f?float3(1,0,0):float3(0,1,0);
+    const float3 tangent=normalize(ref-dot(ref,normal)*normal);
+    const uint i=domain.z+3u*row;
+    const float3 impulse=normal*impulses[i]+tangent*impulses[i+1]+cross(normal,tangent)*impulses[i+2];
+    const float3 jd=restingRotate(torso.orientation,dD),jr=restingRotate(torso.orientation,dR);
+    device float4* out=output+8u*(row+domain.y*domain.w);
+    out[0]=as_type<float4>(uint4(domain.x+1,row,vertexIndex,contacts[row].sourceGeometryIndex));
+    out[1]=float4(local,weight);
+    out[2]=torso.orientation;
+    out[3]=motion;
+    out[4]=float4(impulse,map.respiratoryBasis.w);
+    out[5]=float4(jd,dot(jd,impulse));
+    out[6]=float4(jr,dot(jr,impulse));
+    out[7]=float4(restingRotate(torso.orientation,delta),dot(impulse,jd*motion.z+jr*motion.w));
+}
