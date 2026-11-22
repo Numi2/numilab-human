@@ -1,0 +1,11 @@
+# Load transfer across the bonded skin and fat
+
+The fourth native step on the paired material reached its lower volume limit in two fat tetrahedra. The compact trace identifies both by installed connectivity, including the replacement with 32 possible source parents. Screening all 1,448,799 installed cells against a secant from the accepted third step independently found the same two. The secant is an offline diagnostic.
+
+The physical registration moved 18 existing nodes by at most 0.761 mm. The fit used both material constitutive laws, gravity, all 296 incident cells and the donor mass-moment constraints. Sixteen nodes belong to the bonded interface and two to deep fat. Local initial force imbalance fell from 81.33 N to 17.24 N. The mass, attachment coordinates and native acceptance limits remained fixed.
+
+A fresh three-step capture has zero inverted or low-quality cells, six deep-fat intersections and 11,790 skin-to-tissue pairs. At 46.875 µs the bed reaction is 2,984.71 N against 952.86 N body weight. End-to-end execution took 227.83 s on the Apple M6. The separate four-step trial rolled back after three. At its last Newton iteration the native nonvascular norm fell from 0.0989302 to 0.000278429. Its threshold is 0.0000125. Active Krylov work rose from 512 to 752 columns. The remaining witnessed upper volume limit belongs to a retained adipose tetrahedron on the skin-fat interface. Convergence improved while the full-body operating point remains unqualified.
+
+The eight digital extensor routes were also evaluated in the previous accepted three-step frame. Sixteen of 48 sampled distal sites are external to the physical skin. All 32 registered cortical support points are internal. One resolved line-of-action endpoint is external by 0.893 mm. Moving the cortical attachment would change an already internal load footprint. Registering the tendon routing and surrounding tissue together is the appropriate anatomical change.
+
+The checkpoint remains experimental. The source files are under tools/native_ligament_contact/registered_digit_material. The two recovery receipts record independent downloads and member hashes for the matched input changes, actual binary, and captured endpoint. The parent material recovery is recorded in the adjacent directory. The physiological control remains the separate supported 60-second run.

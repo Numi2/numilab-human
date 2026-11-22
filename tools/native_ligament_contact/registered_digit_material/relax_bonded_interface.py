@@ -133,40 +133,60 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
     if (pins != j['geometry'] or sha(mapping) != j['map_sha256'] or sha(flow) != j['mass_sha256']
             or sha(proposal) != j['mesh_sha256'] or sha(matched) != j['physical_endpoint_sha256']):
         raise ValueError("Unmatched material registration or motion")
-    rows = np.array(sorted({w['source_row'] for g in j['joined_interface_rejections']
-                            for group in g['failed_components'] for w in group['witnesses']}))
-    pockets = sorted({i for g in j['joined_interface_rejections']
-                      for group in g['failed_components'] for i in group['retained_source_rows']})
-    free = np.unique(t[pockets])
-    peers = {}
-    meta = {}
-    core=set(free.tolist())
+    installed = 'installed_witness_rows' in j
+    if installed:
+        with np.load(proposal) as repair:
+            adjacency = np.vstack((t[repair['retained_input_cell_rows']], repair['replacement_tetrahedra']))
+        rows = np.asarray(j['installed_witness_rows'], dtype=int)
+        if not len(rows) or not np.array_equal(rows, np.unique(rows)) or rows.min()<0 or rows.max()>=len(adjacency):
+            raise ValueError("Invalid installed witness rows")
+        for row in j['witnesses']:
+            if not np.array_equal(adjacency[row['installed_row']], row['node_ids']):
+                raise ValueError("Installed witness connectivity changed")
+        free = np.unique(adjacency[rows])
+    else:
+        adjacency = t
+        rows = np.array(sorted({w['source_row'] for g in j['joined_interface_rejections']
+                                for group in g['failed_components'] for w in group['witnesses']}))
+        pockets = sorted({i for g in j['joined_interface_rejections']
+                          for group in g['failed_components'] for i in group['retained_source_rows']})
+        free = np.unique(t[pockets])
+    core = set(free.tolist())
     if expand:
-        # Both incident sides of each witness edge can share load. Include the
-        # first full edge star, then select only verified bonded I vertices.
-        active_edge=np.isin(t,free).sum(1)>=2
-        free=np.unique(t[active_edge])
+        active_edge = np.isin(adjacency, free).sum(1) >= 2
+        free = np.unique(adjacency[active_edge])
     touched = set(free.tolist())
+    peers, meta, layers = {}, {}, {}
     with mapping.open() as src:
         for r in csv.DictReader(src):
             i = int(r['joint_node_id'])-1
-            if i in touched:
-                if expand and r['registered_surface_layer']!='I' and i not in core:
-                    continue
-                if (r['registered_surface_layer']!='I' or
-                        int(r['registered_I_source_vertex_row'])<0 or not r['merge_peer_partition']):
+            if i not in touched:
+                continue
+            layer = r['registered_surface_layer']
+            if expand and i not in core and layer != 'I':
+                continue
+            partition = r['source_partition']
+            donor = int(r['donor_body'])
+            if layer == 'I':
+                source = int(r['registered_I_source_vertex_row'])
+                if source < 0 or not r['merge_peer_partition']:
                     raise ValueError("Invalid bonded anatomical source")
-                partition = r['source_partition']
-                record = (int(r['source_tetgen_node_id']), r['merge_peer_partition'], int(r['merge_peer_tetgen_node_id']), int(r['registered_I_source_vertex_row']))
-                if partition in peers.setdefault(i,{}) or (i in meta and meta[i] != int(r['donor_body'])):
-                    raise ValueError('Ambiguous shared interface owner')
-                peers[i][partition] = record
-                meta[i] = int(r['donor_body'])
-    if expand:
-        free=np.array(sorted(meta))
+                record = (int(r['source_tetgen_node_id']), r['merge_peer_partition'], int(r['merge_peer_tetgen_node_id']), source)
+            elif installed and i in core and layer == 'D' and partition == 'fat' and not r['merge_peer_partition']:
+                record = None
+            else:
+                raise ValueError("Unidentified material layer")
+            entries = peers.setdefault(i, {})
+            if partition in entries or (i in meta and (donor != meta[i] or layer != layers[i])):
+                raise ValueError("Ambiguous anatomical owner")
+            entries[partition] = record
+            meta[i], layers[i] = donor, layer
+    free = np.array(sorted(meta))
     if not core.issubset(meta) or (not expand and set(meta)!=touched):
-        raise ValueError("Missing interface identity")
-    for entries in peers.values():
+        raise ValueError("Missing anatomical source")
+    for i,entries in peers.items():
+        if layers[i]=='D' and set(entries)=={'fat'}:
+            continue
         skin, fat = entries['skin'], entries['fat']
         if skin != (fat[2], 'fat', fat[0], fat[3]) or fat[1] != 'skin' or len(entries) != 2:
             raise ValueError('Material nodes do not share one registered physical point')
@@ -237,7 +257,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
         # Prior motion came from the unbalanced release. Require the same
         # admissible material envelope on replay while solving for new forces.
         floor0,ceil0=max(.4,.95*J0.min()),min(2.5,1.05*J0.max())
-        floor2,ceil2=J2.min()+.005,J2.max()-.005
+        floor2,ceil2=max(.405, J2.min()+.005),J2.max()-.005
     gram=basis.T@patch.evaluate(start,True)[3]@basis
     val,vec=np.linalg.eigh((gram+gram.T)*.5)
     basis=basis@vec@np.diag(np.sqrt(1e-4/np.maximum(val,val.max()*1e-7)))
@@ -253,17 +273,21 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
     # singular trial. Coordinate differences avoid cancellation at body scale.
     increments=B[T[:,1:]]-B[T[:,:1]]
     all_touched=np.arange(len(T))
-    mapped_rows=np.searchsorted(keep,rows)
-    if not np.array_equal(keep[mapped_rows],rows):
+    mapped_rows=rows if installed else np.searchsorted(keep,rows)
+    if not installed and not np.array_equal(keep[mapped_rows],rows):
         raise ValueError('Expected certified original witness identities')
     witness_index=np.searchsorted(active,mapped_rows)
     if not np.array_equal(active[witness_index],mapped_rows):
         raise ValueError('Failure witness outside the patch')
     phases=[(start,floor0,ceil0,all_touched),(end,floor2,ceil2,all_touched)]
+    prediction_factor=1+1/j["accepted_steps"] if installed else 1.5
     if predict:
         # Secant extrapolation from two equal time steps screens the next step.
         # It neither advances time nor replaces the native third-step certificate.
-        phases.append((start+1.5*delta,.43,2.3,witness_index))
+        phases.append((start+prediction_factor*delta,.43,2.3,witness_index))
+        if 'forecast_limits' in j:
+            low,high=j['forecast_limits']
+            phases.append((start+prediction_factor*delta,low,high,all_touched))
     def limits(v,with_jac=False):
         q=pose(v)
         parts=[]
@@ -328,7 +352,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
     emitted=selected[local]-start[local]
     result=dict(source=pins, proposal_sha256=sha(proposal), map_sha256=sha(mapping), evidence_sha256=sha(evidence),
                 mass_sha256=sha(flow), accepted_pose_sha256=sha(matched), material_sha256=material_pins,
-                cavity_moment_constraints=len(cavity_delta), source_witness_rows=rows.tolist(), node_ids=free.tolist(), donors=donors.tolist(),
+                cavity_moment_constraints=len(cavity_delta), node_roles=[layers[i] for i in free], node_ids=free.tolist(), donors=donors.tolist(),
                 emitted_coordinates=selected[local].tolist(), mesh_mass_change_kg=0.,
                 max_material_donor_moment_change_kg_m=float(np.max(abs(weights[len(cavity_delta):]@emitted))),
                 max_replacement_moment_change_kg_m=float(np.max(abs(np.asarray(cavity_delta)@emitted))) if cavity_delta else 0.,
@@ -336,6 +360,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 skin_cells=int((roles==15).sum()),fat_cells=int((roles==16).sum()),
                 installed_before=patch.stats(start), installed_after=patch.stats(selected),
                 reference_motion_before=patch.stats(end), reference_motion_after=patch.stats(selected+delta))
+    result['installed_witness_rows' if installed else 'source_witness_rows']=rows.tolist()
     full_pose=y.copy()
     full_pose[free]=selected[local]
     result['loaded_mass_first_moment']=loaded_mass_moments(full_pose,*mass_map_data)
@@ -349,7 +374,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
         else:
             result['initial_volume_force_balance']=None
     if predict:
-        future=patch.evaluate(selected+1.5*delta)[2]
+        future=patch.evaluate(selected+prediction_factor*delta)[2]
         result['extrapolated_witness_J']={str(int(k)):float(d) for k,d in zip(rows,future[witness_index])}
         result['extrapolation_scope']='Only the original rejecting cells constrain the secant predictor. Mandatory native checks cover all cells.'
     output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')

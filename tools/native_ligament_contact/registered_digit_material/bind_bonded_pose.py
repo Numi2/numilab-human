@@ -42,7 +42,10 @@ def bind(trial, owner, fit, out, deep_fit=None):
         balance=report['initial_volume_force_balance']
         if not balance or np.max(abs(np.asarray(balance['emitted_dt2_acceleration'])))>.01:
             raise ValueError('Excessive emitted volume acceleration over one native increment')
-    role={int(n):'I' for n in rows}
+    layers=report.get('node_roles', ['I']*len(rows))
+    if len(layers)!=len(rows) or not set(layers)<={'I','D'}:
+        raise ValueError('Unknown anatomical material role')
+    role=dict(zip(map(int,rows),layers))
     if deep_fit is not None:
         deep=json.loads(deep_fit.read_text())
         extra=np.array(deep['node_ids'])
@@ -99,9 +102,13 @@ def bind(trial, owner, fit, out, deep_fit=None):
     for cmd in cmds:
         subprocess.run(cmd,check=True)
     binary=sha(case/'numi-human-native')
+    previous=manifest.get('loaded_pose_override')
+    if previous and (previous['sha256']!=old or previous['key']!=key or sha(Path(previous['path']))!=old):
+        raise ValueError('Previous loaded coordinate owner changed')
+    parent=previous['parent_sha256'] if previous else old
     manifest.update(commands=cmds,binary=binary,binary_sha256=binary,binary_path=str(case/'numi-human-native'),
                     parent_pose_owner_sha256=sha(owner/'numi-human-native'),
-                    loaded_pose_override=dict(key=key,parent_sha256=old,path=str(new),sha256=pin,
+                    loaded_pose_override=dict(key=key,parent_sha256=parent,immediate_parent_sha256=old,path=str(new),sha256=pin,
                                               header_sha256=sha(case/inc),fit_sha256=sha(fit),nodes=rows.tolist()))
     if deep_fit is not None:
         manifest['loaded_pose_override']['deep_fit_sha256']=sha(deep_fit)
