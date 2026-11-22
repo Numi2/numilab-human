@@ -1,0 +1,9 @@
+# Respiratory intervention and cardiac geometry on Apple M6
+
+The 60% respiratory drive intervention first stopped at candidate step 8,358 (16.716 s). The cardiac coordinate solver reported a converged point outside its certified geometry. Rollback retained the body, respiratory state and Brain history at step 8,357. All 77 output columns matched the normal-drive control through the 234 pre-intervention trace samples.
+
+The authoring forecast used the native Metal physiology and coordinate solvers. The first 7,500 coordinate records match the control bit for bit, and the first native failure's seven coordinates match exactly. The existing geometry certificate did not cover 867 of the 30,000 forecast states. Three new containing domains were checked against the unchanged 486,556 cardiac vertices and 1,004,852 faces. The full proof carried all 13,979 unresolved face and pair witnesses into 224 certified subdomains. The integrated GPU accepts only membership in the matching proved region. Neither time nor drive scale selects a region. The export path verifies the reported regional witness against the accepted coordinates.
+
+On the M6, 30,000 control and 30,000 treatment forecast records passed admission. All 514 out-of-domain adversarial inputs were rejected. Independent rational tests verified 2,070 nested admissions across the two trajectories. The native intervention replay has crossed the former failure and passed 22 simulated seconds. The preregistered treatment and recovery measurements require both matched 60 s native endpoints.
+
+The tested configuration uses the supported 32-section bed contact model, variable pleural pressure, anatomical cardiac deformation and active Brain control. The dense volumetric tissue scene has separate equilibrium, clearance and runtime requirements.
