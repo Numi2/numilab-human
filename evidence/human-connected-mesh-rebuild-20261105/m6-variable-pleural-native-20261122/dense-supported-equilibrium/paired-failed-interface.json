@@ -1,0 +1,212 @@
+{
+  "geometry": {
+    "reference_sha256": "ebd501e40b3e310347420846a76e145e832f1fe64d3f099931bcb844baef9174",
+    "installed_pose_sha256": "d7f4abe7414212cc97a0dcb6fd140291e94bafd63caa641b3140fda57da904d6",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "mesh_sha256": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+  "map_sha256": "c2ae8658649e3088deff97b7c397f7e9d5130d7a47224994f2c3584ee92f0f7d",
+  "mass_sha256": "a012fc021222c6d35b5548df3a8010d654beb3d2fa0bf584d260535f05b2df06",
+  "physical_endpoint_sha256": "4b9ff9f5465171aa9550b40117dc939b1cb12b5d75372301b8cb713da2f99663",
+  "native_log_sha256": "dd28afea96a414d847369447f637fb3c2c4248ac0d91dc71ac9e39c8817b3a08",
+  "joined_interface_rejections": [
+    {
+      "material": 15,
+      "all_four_vertices_on_joined_interface": 89050,
+      "mass_kg": 0.03606680574506545,
+      "material_mass_kg": 3.452571282803902,
+      "components": 6486,
+      "maximum_component_cells": 3782,
+      "failed_components": []
+    },
+    {
+      "material": 16,
+      "all_four_vertices_on_joined_interface": 184395,
+      "mass_kg": 0.19755184212919152,
+      "material_mass_kg": 10.48710842716525,
+      "components": 9677,
+      "maximum_component_cells": 37940,
+      "failed_components": [
+        {
+          "cells": 5,
+          "mass_kg": 9.507682233051874e-06,
+          "boundary_faces_by_adjacent_material": {
+            "16": 4,
+            "15": 4
+          },
+          "reference_volume_m3": 1.000884578656758e-08,
+          "aggregate_installed_J": 0.7191779256653474,
+          "aggregate_accepted_J": 0.7198869025479833,
+          "accepted_cell_J_range": [
+            0.4320497430101091,
+            1.0829381701273622
+          ],
+          "witnesses": [
+            {
+              "source_row": 1032537,
+              "reference_m3": 9.999241086539787e-10,
+              "installed_J": 0.7158363045334826,
+              "accepted_J": 0.4320497430101091,
+              "witnessed_alphas": [
+                1,
+                0.5
+              ]
+            }
+          ],
+          "retained_source_rows": [
+            835427,
+            843123,
+            1032537,
+            1138284,
+            1149616
+          ]
+        },
+        {
+          "cells": 1,
+          "mass_kg": 2.0369794563493718e-07,
+          "boundary_faces_by_adjacent_material": {
+            "15": 2,
+            "16": 2
+          },
+          "reference_volume_m3": 2.1441889014210716e-10,
+          "aggregate_installed_J": 0.754787248639522,
+          "aggregate_accepted_J": 0.5463352318306952,
+          "accepted_cell_J_range": [
+            0.5463352318306952,
+            0.5463352318306952
+          ],
+          "witnesses": [
+            {
+              "source_row": 871103,
+              "reference_m3": 2.1441889014210716e-10,
+              "installed_J": 0.754787248639522,
+              "accepted_J": 0.5463352318306952,
+              "witnessed_alphas": [
+                1
+              ]
+            }
+          ],
+          "retained_source_rows": [
+            871103
+          ]
+        },
+        {
+          "cells": 3,
+          "mass_kg": 4.9334437725937405e-06,
+          "boundary_faces_by_adjacent_material": {
+            "16": 4,
+            "15": 4
+          },
+          "reference_volume_m3": 5.194250770069413e-09,
+          "aggregate_installed_J": 0.9483159117576283,
+          "aggregate_accepted_J": 1.0497439052369701,
+          "accepted_cell_J_range": [
+            0.6870339172885105,
+            2.3617881305405235
+          ],
+          "witnesses": [
+            {
+              "source_row": 947257,
+              "reference_m3": 3.4530328606572967e-10,
+              "installed_J": 1.3847343642330594,
+              "accepted_J": 2.3617881305405235,
+              "witnessed_alphas": [
+                1,
+                0.5,
+                0.25,
+                0.125,
+                0.0625,
+                0.03125,
+                0.015625,
+                0.0078125,
+                0.00390625,
+                0.00195312,
+                0.000976562,
+                0.000488281,
+                0.000244141,
+                0.00012207,
+                6.10352e-05,
+                3.05176e-05,
+                1.52588e-05,
+                7.62939e-06,
+                3.8147e-06,
+                1.90735e-06,
+                9.53674e-07,
+                4.76837e-07,
+                2.38419e-07,
+                1.19209e-07,
+                5.96046e-08,
+                2.98023e-08
+              ]
+            }
+          ],
+          "retained_source_rows": [
+            947257,
+            1032588,
+            1140475
+          ]
+        },
+        {
+          "cells": 1,
+          "mass_kg": 1.1386808134828854e-07,
+          "boundary_faces_by_adjacent_material": {
+            "16": 2,
+            "15": 2
+          },
+          "reference_volume_m3": 1.1990414805612608e-10,
+          "aggregate_installed_J": 0.758150192356312,
+          "aggregate_accepted_J": 0.5096198153663796,
+          "accepted_cell_J_range": [
+            0.5096198153663796,
+            0.5096198153663796
+          ],
+          "witnesses": [
+            {
+              "source_row": 1032012,
+              "reference_m3": 1.1990414805612608e-10,
+              "installed_J": 0.758150192356312,
+              "accepted_J": 0.5096198153663796,
+              "witnessed_alphas": [
+                1
+              ]
+            }
+          ],
+          "retained_source_rows": [
+            1032012
+          ]
+        },
+        {
+          "cells": 1,
+          "mass_kg": 5.970020768366204e-08,
+          "boundary_faces_by_adjacent_material": {
+            "15": 2,
+            "16": 2
+          },
+          "reference_volume_m3": 6.286487360019485e-11,
+          "aggregate_installed_J": 1.3697217881759314,
+          "aggregate_accepted_J": 0.6002463376243273,
+          "accepted_cell_J_range": [
+            0.6002463376243273,
+            0.6002463376243273
+          ],
+          "witnesses": [
+            {
+              "source_row": 1032163,
+              "reference_m3": 6.286487360019485e-11,
+              "installed_J": 1.3697217881759314,
+              "accepted_J": 0.6002463376243273,
+              "witnessed_alphas": [
+                1,
+                0.5,
+                0.25
+              ]
+            }
+          ],
+          "retained_source_rows": [
+            1032163
+          ]
+        }
+      ]
+    }
+  ]
+}

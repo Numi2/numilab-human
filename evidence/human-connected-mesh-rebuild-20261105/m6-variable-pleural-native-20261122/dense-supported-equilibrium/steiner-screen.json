@@ -1,0 +1,144 @@
+{
+  "source": {
+    "reference_sha256": "ebd501e40b3e310347420846a76e145e832f1fe64d3f099931bcb844baef9174",
+    "installed_pose_sha256": "d7f4abe7414212cc97a0dcb6fd140291e94bafd63caa641b3140fda57da904d6",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "matched_state": "4b9ff9f5465171aa9550b40117dc939b1cb12b5d75372301b8cb713da2f99663",
+  "materials": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "rows": [
+    {
+      "source_rows": [
+        835427,
+        843123,
+        1032537,
+        1138284,
+        1149616
+      ],
+      "old_J": [
+        0.4320497430101091,
+        1.0829381701273622
+      ],
+      "volume_weighted_J": 0.7198869025479833,
+      "boundary_triangles": 8,
+      "finite_geometric_trials": 85,
+      "passing_force_energy": 0,
+      "best": null,
+      "closest_force": {
+        "parent": 4,
+        "barycentric": [
+          0.0,
+          0.0,
+          0.5000000000000009,
+          0.49999999999999917
+        ],
+        "worst_shape": 0.00033097513916380934,
+        "loaded_J": [
+          0.7158363045334785,
+          0.7218496269208348
+        ],
+        "accepted_J": [
+          0.4320497430104529,
+          1.0829381701270036
+        ],
+        "errors": [
+          {
+            "relative_force": 0.009848029497840846,
+            "relative_energy": 0.0008894371998239163,
+            "interior_force_N": 0.0012994460053108575
+          },
+          {
+            "relative_force": 0.14658969700623237,
+            "relative_energy": 0.022772267214524466,
+            "interior_force_N": 0.1891133054649881
+          }
+        ],
+        "force_energy_pass": false
+      }
+    },
+    {
+      "source_rows": [
+        871103
+      ],
+      "volume_weighted_J": 0.5463352318306952,
+      "old_J": [
+        0.5463352318306952,
+        0.5463352318306952
+      ],
+      "single_cell_fixed_boundary": true
+    },
+    {
+      "source_rows": [
+        947257,
+        1032588,
+        1140475
+      ],
+      "old_J": [
+        0.6870339172885105,
+        2.3617881305405235
+      ],
+      "volume_weighted_J": 1.0497439052369701,
+      "boundary_triangles": 8,
+      "finite_geometric_trials": 3,
+      "passing_force_energy": 0,
+      "best": null,
+      "closest_force": {
+        "parent": 1,
+        "barycentric": [
+          0.11992676974529894,
+          0.4400366151273513,
+          0.0,
+          0.44003661512734976
+        ],
+        "worst_shape": 0.00033679772916931267,
+        "loaded_J": [
+          0.6830366282762579,
+          1.3854923515568003
+        ],
+        "accepted_J": [
+          0.6869614694182395,
+          2.3625903946161424
+        ],
+        "errors": [
+          {
+            "relative_force": 0.0011577094970703068,
+            "relative_energy": 0.0003979006000753774,
+            "interior_force_N": 0.05851811608452236
+          },
+          {
+            "relative_force": 0.0387700558065509,
+            "relative_energy": 0.006434135745516732,
+            "interior_force_N": 0.057303511605501074
+          }
+        ],
+        "force_energy_pass": false
+      }
+    },
+    {
+      "source_rows": [
+        1032012
+      ],
+      "volume_weighted_J": 0.5096198153663796,
+      "old_J": [
+        0.5096198153663796,
+        0.5096198153663796
+      ],
+      "single_cell_fixed_boundary": true
+    },
+    {
+      "source_rows": [
+        1032163
+      ],
+      "volume_weighted_J": 0.6002463376243273,
+      "old_J": [
+        0.6002463376243273,
+        0.6002463376243273
+      ],
+      "single_cell_fixed_boundary": true
+    }
+  ],
+  "scope": "Authoring screen with fixed exterior faces, one new interior point and original bulk and shear constants. Force comparison uses the transpose of its source interpolation. A passing trial still needs source-carrier mass, free-node dynamics and native qualification."
+}

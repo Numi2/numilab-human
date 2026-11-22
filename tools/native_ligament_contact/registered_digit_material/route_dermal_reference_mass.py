@@ -208,6 +208,11 @@ def route(control, material, case):
         raise ValueError(
             "Inherited allocation was not admitted by the production reader"
         )
+    if (
+        Path(launch["argv"][-3]).resolve() != source.resolve()
+        or launch["argv"][-2] != lineage["flow_sha256"]
+    ):
+        raise ValueError("Parent reader was admitted against a different carrier flow")
     count = int(launch["argv"][-1])
     if count < 0:
         raise ValueError("Invalid inherited allocation count")
