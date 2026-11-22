@@ -1,0 +1,122 @@
+{
+  "tet_count": 1448804,
+  "touching": 28,
+  "anchor_max_error_m": 4.536153048365254e-08,
+  "jacobian_range": [
+    0.7469443067800295,
+    1.253039029100318
+  ],
+  "before_stretch": {
+    "15": {
+      "cells": 705091,
+      "min_stretch": 0.026727740732946502,
+      "max_stretch": 15.86752657249911,
+      "cells_max_stretch_over_1_5": 9,
+      "cells_min_stretch_under_0_5": 12,
+      "reference_volume_fraction_max_stretch_over_1_5": 8.342447418576153e-07,
+      "worst_stretch_cell": 39737,
+      "worst_cell_xyz_m": [
+        0.02927595004439354,
+        -0.8376619517803192,
+        6.50161127850879e-05
+      ]
+    },
+    "16": {
+      "cells": 743713,
+      "min_stretch": 0.027512962631448094,
+      "max_stretch": 15.295049342296084,
+      "cells_max_stretch_over_1_5": 23,
+      "cells_min_stretch_under_0_5": 20,
+      "reference_volume_fraction_max_stretch_over_1_5": 1.173958035114773e-06,
+      "worst_stretch_cell": 818603,
+      "worst_cell_xyz_m": [
+        -0.0882179718464613,
+        -0.7380499392747879,
+        0.06034786533564329
+      ]
+    }
+  },
+  "after_stretch": {
+    "15": {
+      "cells": 705091,
+      "min_stretch": 0.7196652014738,
+      "max_stretch": 1.297929431686611,
+      "cells_max_stretch_over_1_5": 0,
+      "cells_min_stretch_under_0_5": 0,
+      "reference_volume_fraction_max_stretch_over_1_5": 0.0,
+      "worst_stretch_cell": 395814,
+      "worst_cell_xyz_m": [
+        0.009667603997513652,
+        -0.8543520867824554,
+        0.0021241038921289146
+      ]
+    },
+    "16": {
+      "cells": 743713,
+      "min_stretch": 0.7339754238891094,
+      "max_stretch": 1.291350534309129,
+      "cells_max_stretch_over_1_5": 0,
+      "cells_min_stretch_under_0_5": 0,
+      "reference_volume_fraction_max_stretch_over_1_5": 0.0,
+      "worst_stretch_cell": 1130385,
+      "worst_cell_xyz_m": [
+        0.011085457867011428,
+        -0.8538679927587509,
+        0.011722904164344072
+      ]
+    }
+  },
+  "initial_layer_pairs": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "initial_broad_phase_pairs": 11604767,
+  "native_binary_hash": "ca7bc686a026d0ea5ce4c0d67e84e7e3094be2c4ca4b1ffc2fff45c842996f5c",
+  "pose_sha256": "977a5a30fa3af4a44dd4da368d9070bbe6bc04668dcf45b8a4544da2120925fa",
+  "archive": "https://github.com/Numi2/numilab-human/releases/download/human-closed-skin-diagnostic-packs-20261121/registered-loaded-skin-fat-strain-bounded-28-977a5a30fa3af4a4.node.zst",
+  "native_run": {
+    "exit_code": 1,
+    "accepted_steps": null,
+    "watchdog": null,
+    "wall_seconds": 156.56181045807898
+  },
+  "native-outcome.json": {
+    "accepted_steps": 0,
+    "wall_seconds": 156.56181045807898,
+    "matter_code": 6,
+    "object_index": 15,
+    "failing_index": 24331,
+    "diagnostics": [
+      0,
+      1.7458523511886597,
+      9.999999717180685e-10,
+      1.7458523511886597
+    ],
+    "localization": "fixed FEM-to-plane contact at zero initial separation",
+    "rollback_brain_metadata": [
+      1,
+      0,
+      0,
+      0
+    ],
+    "rollback_respiratory_status": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}
