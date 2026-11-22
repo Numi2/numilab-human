@@ -1,0 +1,5 @@
+# Deep-fat boundary through the eighth native step
+
+Forty-five deep-fat nodes moved by at most 1.57 µm. Eleven augmentations along established mass routes preserved every donor quota. All construction cell gates and all three layers passed at release. In the integrated scene 26 of the original 29 deep-fat crossings cleared at the eighth step. The other three remained in one neighborhood. No new deep-fat crossing pair appeared. All skin cells passed, and all fat cells retained positive volume. Two fat cells outside the edited neighborhoods fell below the original shape floor. Their IDs and native witnesses are in the log.
+
+The complete simulation advanced 0.125 ms in 96.851 s of body runtime. The bed reaction at the endpoint was zero. The skin still crossed other nonocular anatomy in 11,663 triangle pairs, including 10,795 skin–muscle pairs. The checked bones had zero skin crossings. The two recovery receipts preserve the accepted frame and the compensated physical coordinates on GitHub.
