@@ -1,0 +1,7 @@
+# Native certification of seated material coordinates
+
+The complete native scene installed 311,020 registered skin/fat nodes, 1,448,804 cells, 28 bed points and 14 deep attachments. The original compiler rejected 824 skin cells and 1,159 fat cells. Every nominal determinant was within the configured material interval. Absolute displacement magnitudes entered the error bound even on rigidly translated cells with unit determinant.
+
+Matter now proves exact one-word differences for eligible stored high and low components and retains its conservative bounds for other edges. Material limits, the Metal deformation operation, mechanical reference, mass mapping and material equations are unchanged. The input replay reproduced each of the original 1,983 witnesses. The updated certificate admitted every cell, with minimum lower margin 0.0450 and minimum upper margin 0.0241. The Apple M6 executed 16,646 proved inputs from a stratified 50,000-case campaign, with zero disagreements against exact binary rational arithmetic. Collapsed and inverted fixtures still rejected.
+
+Replacing only the compiler object left the legacy interval active. A consistent rebuild across the compiler, validation and runtime resolved that failure. The full native scene then completed material compilation, allocated the Metal runtime and entered the first active solve. A disk watchdog stopped the first RAM-backed trial before it generated an accepted physical step. Separate motion evidence must establish actual support forces, geometry, physiology and throughput.
