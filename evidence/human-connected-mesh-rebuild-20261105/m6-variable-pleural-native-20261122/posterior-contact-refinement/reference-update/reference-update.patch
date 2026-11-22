@@ -1,0 +1,40 @@
+--- a/matter/src/metal/fem.metalinc
++++ b/matter/src/metal/fem.metalinc
+@@ -4748,22 +4748,29 @@
+ ) {
+     if (!updateEligible || next.restAndFixed.w > 0.5f || !(alpha > 0.0f))
+         return next;
+-    next.velocityAndInverseMass.xyz += alpha * correction;
+-    next.deltaVelocity.xyz = next.velocityAndInverseMass.xyz -
+-        acceptedState.velocityAndInverseMass.xyz;
+-    if (next.referenceDisplacementAndMode.w == 1.0f) {
++    if (next.referenceDisplacementAndMode.w == 1.0f && dt > 0.0f) {
++        // Update the authoritative displacement along the physical Newton direction.
++        // Recover velocity and the inertial increment from this same displacement.
+         for (uint axis = 0u; axis < 3u; ++axis) {
+-            const MRCompensatedScalar update = mrCompensatedProduct(
+-                dt, next.velocityAndInverseMass[axis]);
++            const MRCompensatedScalar dv = mrCompensatedProduct(alpha, correction[axis]);
++            const MRCompensatedScalar du = mrCompensatedMultiply({dt, 0.0f}, dv);
+             const MRCompensatedScalar displacement = mrCompensatedAdd(
+-                {acceptedState.referenceDisplacementAndMode[axis],
+-                 acceptedState.referenceDisplacementLow[axis]}, update);
++                {next.referenceDisplacementAndMode[axis], next.referenceDisplacementLow[axis]}, du);
++            const MRCompensatedScalar stepDisplacement = mrCompensatedAdd(displacement,
++                {-acceptedState.referenceDisplacementAndMode[axis], -acceptedState.referenceDisplacementLow[axis]});
++            const MRCompensatedScalar velocity = mrCompensatedDivide(stepDisplacement, {dt, 0.0f});
++            const MRCompensatedScalar stepVelocity = mrCompensatedAdd(velocity,
++                {-acceptedState.velocityAndInverseMass[axis], 0.0f});
++            next.velocityAndInverseMass[axis] = velocity.high + velocity.low;
++            next.deltaVelocity[axis] = stepVelocity.high + stepVelocity.low;
+             next.referenceDisplacementAndMode[axis] = displacement.high;
+             next.referenceDisplacementLow[axis] = displacement.low;
+             next.positionAndMass[axis] = femReferencePositionProjection(
+                 next.restAndFixed[axis], displacement.high, displacement.low);
+         }
+     } else {
++        next.velocityAndInverseMass.xyz += alpha * correction;
++        next.deltaVelocity.xyz = next.velocityAndInverseMass.xyz - acceptedState.velocityAndInverseMass.xyz;
+         next.positionAndMass.xyz = acceptedState.positionAndMass.xyz +
+             dt * next.velocityAndInverseMass.xyz;
+     }

@@ -1,0 +1,186 @@
+{
+  "three_step_comparison": "e0777bc98d04be19132ce08e995f7f9d8366061c50c05e54b1c7b3cfb1faac02",
+  "control": "1b15fae8a037a20a368a29ad9d06631eb70e198b0a5b75f6225e034798d49d2c",
+  "kinematics": {
+    "endpoint": {
+      "accepted_steps": 2,
+      "simulated_s": 3.125000148429535e-05,
+      "frame_sha256": "cd58825931b8e77fab41f18451de5008d823ed4ea2f7262818554272f04e5733",
+      "physical_nodes_sha256": "78105d3cb6bcb84410d96bf06a6f4d8f1a14374b2586ddc53a5fb8da98468c70",
+      "complete_wall_s": 209.8668863750063,
+      "end_to_end_factor": 1.4890391725951206e-07,
+      "material_audits": [
+        {
+          "phase": "reference",
+          "step": "0",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281176253255e-18",
+          "minimum_shape": "1.000001415754589e-05",
+          "minimum_shape_local_cell": "660058"
+        },
+        {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281106876872e-18",
+          "minimum_shape": "1.000001415906212e-05",
+          "minimum_shape_local_cell": "660058"
+        },
+        {
+          "phase": "reference",
+          "step": "0",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.000290144947699e-18",
+          "minimum_shape": "1.000005435317736e-05",
+          "minimum_shape_local_cell": "1063201"
+        },
+        {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.00029008938963e-18",
+          "minimum_shape": "1.000005439735261e-05",
+          "minimum_shape_local_cell": "1063201"
+        }
+      ],
+      "layer_crossing_pairs": 0,
+      "checked_banks": 878,
+      "skin_self_intersections": 0,
+      "physical_skin_tissue_pairs": 10895,
+      "ocular_source_pairs": 350,
+      "maximum_skin_motion_m": 0.011827719558919439,
+      "pleural_pressure_pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 10895
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    "loads": {
+      "0": [
+        2.818361282348633,
+        16.779394149780273,
+        -15.790635108947754
+      ],
+      "1": [
+        -2.522200584411621,
+        -13.313531875610352,
+        17.861881256103516
+      ]
+    },
+    "articulated_gravity_N": 811.448223907348,
+    "terminal_bed_N": 2252.141237258911,
+    "weight_N": 952.8644362797845,
+    "loaded_bed_N": 953.1774406368413,
+    "body_s": 64.345075333,
+    "body_real_time_factor": 4.85662676165498e-07,
+    "skin_motion": {
+      "accepted_steps": 2,
+      "simulated_s": 3.125000148429535e-05,
+      "physical_node_sha256": "78105d3cb6bcb84410d96bf06a6f4d8f1a14374b2586ddc53a5fb8da98468c70",
+      "registered_outer_nodes": 76153,
+      "reference_to_loaded": {
+        "rms_m": 0.011709041299151767,
+        "maximum_m": 0.011718850233592093,
+        "p99_m": 0.01171875,
+        "peak_joint_node_one_based": 25585,
+        "peak_donor": 1,
+        "nodes_over_10_um": 76152,
+        "nodes_over_100_um": 76150
+      },
+      "loaded_to_accepted": {
+        "rms_m": 2.549465844903691e-06,
+        "maximum_m": 0.0001497616962775214,
+        "p99_m": 7.602727122319872e-09,
+        "peak_joint_node_one_based": 26419,
+        "peak_donor": 128,
+        "nodes_over_10_um": 192,
+        "nodes_over_100_um": 12
+      },
+      "reference_to_accepted": {
+        "rms_m": 0.011709046845389835,
+        "maximum_m": 0.01182771978786871,
+        "p99_m": 0.011718757304857271,
+        "peak_joint_node_one_based": 26972,
+        "peak_donor": 128,
+        "nodes_over_10_um": 76152,
+        "nodes_over_100_um": 76150
+      }
+    },
+    "material_stretch": {
+      "15": {
+        "stretch_envelope": 37,
+        "severe": 3,
+        "stress_cap": 0
+      },
+      "16": {
+        "stretch_envelope": 16,
+        "severe": 0,
+        "stress_cap": 0
+      }
+    },
+    "pleural_owner_enabled": true,
+    "prefix_launch": "35a9705f4ae0a29620a09b1694b9c55da56892f701a32fa8e04bb4068120bb64",
+    "three_step_launch": "0fdfee4ba4a81a0423ed851c83ff54b4b3592d71517b264fa8df143d5320b943",
+    "rejection": {
+      "trial": {
+        "stopped_at": 2,
+        "residual": 0.036324355751276016,
+        "alpha": 2.38419e-07,
+        "full_trial_witnesses": [
+          950449,
+          1035269
+        ],
+        "last_rejected_trial": {
+          "alpha": 4.76837e-07,
+          "valid_tile_min_J": 0.473373,
+          "first_bad_tet": 1035269,
+          "trial_J": 0.35,
+          "current_J": 0.35,
+          "reason": 8,
+          "invalid_tiles": 1,
+          "tile_witness_tets": [
+            1035269
+          ],
+          "tile_witnesses_complete": true
+        },
+        "receipt": "d6b4f25c5ffa39db69ae1614c5e8854fa4cff22f98dfdd223de0336e2a1c0bae"
+      },
+      "matter_object": 14,
+      "code": 10,
+      "common_rollback": true,
+      "respiratory_rollback": true
+    }
+  },
+  "accepted_material_difference_m": {
+    "maximum": 1.3229886073101726e-10,
+    "rms": 1.3969352548319887e-12,
+    "largest_node_row": 267406
+  },
+  "accepted_bed_difference_N": -0.00047683715774837765
+}
