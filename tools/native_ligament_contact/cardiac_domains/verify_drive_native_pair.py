@@ -92,6 +92,42 @@ def verify(previous, c, t, out):
             receipt=sha(case / "terminal.receipt.json"),
             coupled_trace=sha(case / "resting-coupled.csv"),
         )
+    # A respiratory pressure change tests the interface to the articulated body.
+    # Identical recorded states are reported as observations, never a pass gate.
+    ownership = {}
+    for filename in (
+        "resting-body-motion-partition.csv",
+        "resting-com-support-impulses.csv",
+        "resting-support-point-motion.csv",
+        "resting-com-momentum-diagnostic.csv",
+    ):
+        a, b = [sha(p / filename) for p in (c, t)]
+        ownership[filename] = dict(
+            control_sha256=a, treatment_sha256=b, identical=a == b
+        )
+    poses = [
+        json.loads((p / "terminal.receipt.json").read_text())["accepted_body_poses"]
+        for p in (c, t)
+    ]
+    peak = {
+        k: max(
+            abs(float(a[k]) - float(b[k]))
+            for a, b in zip(data[1], data[2], strict=True)
+        )
+        for k in (
+            "diaphragm_mm",
+            "rib_mm",
+            "pleural_pa",
+            "diaphragm_activation",
+            "airflow_ml_s",
+        )
+    }
+    results["body_response"] = dict(
+        trace_identity=ownership,
+        terminal_rigid_count=len(poses[0]),
+        identical_terminal_rigid_poses=poses[0] == poses[1],
+        maximum_absolute_respiratory_difference=peak,
+    )
     results.update(
         original_compared_columns=len(data[0][0]),
         original_identical_trace_samples=len(data[0]),
