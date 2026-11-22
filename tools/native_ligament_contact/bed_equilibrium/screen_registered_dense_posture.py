@@ -17,14 +17,33 @@ def load_geometry(full, donor):
     elements=input_file('TETGEN_ELEMENTS','TETGEN_ELEMENTS_SHA256')
     mapping=input_file('COMBINED_NODE_MAP_CSV','COMBINED_NODE_MAP_SHA256')
     frames=input_file('DONOR_FRAMES_CSV','DONOR_FRAMES_SHA256')
-    reference=np.loadtxt(mesh,skiprows=1,usecols=(1,2,3))
-    t=np.loadtxt(elements,skiprows=1,usecols=(1,2,3,4,5),dtype=np.int32)
-    mat=t[:,4]; t=t[:,:4]-1
-    owner=np.full(len(reference),-1);local=np.empty_like(reference)
-    outer=[]; shared=0
+    with mesh.open() as f:
+        n,dim,nattr,nmarkers=map(int,next(f).split())
+        if (dim,nattr,nmarkers)!=(3,0,0):raise ValueError('unexpected TetGen node schema')
+        coords=np.loadtxt(f,dtype=np.float64)
+    if coords.shape!=(n,4) or not np.array_equal(coords[:,0],np.arange(1,n+1)) or not np.isfinite(coords).all():
+        raise ValueError('invalid TetGen node identity or coordinates')
+    reference=np.ascontiguousarray(coords[:,1:])
+    del coords
+    with elements.open() as f:
+        nt,corners,attrs=map(int,next(f).split())
+        if (corners,attrs)!=(4,1):raise ValueError('unexpected TetGen element schema')
+        elements_table=np.loadtxt(f,dtype=np.int32)
+    if elements_table.shape!=(nt,6) or not np.array_equal(elements_table[:,0],np.arange(1,nt+1)):
+        raise ValueError('invalid or missing element identities')
+    mat=elements_table[:,5].copy();t=np.ascontiguousarray(elements_table[:,1:5]-1)
+    if set(np.unique(mat))!={15,16} or t.min()<0 or t.max()>=n:raise ValueError('invalid tissue or node binding')
+    del elements_table
+    owner=np.full(n,-1);local=np.empty_like(reference)
+    used=np.zeros(n,dtype=np.uint8);outer=[];shared=0
     with mapping.open() as f:
         for row in csv.DictReader(f):
             i=int(row['joint_node_id'])-1
+            if not 0<=i<n or row['source_partition'] not in ('skin','fat'):
+                raise ValueError('unrecognized skin/fat material node')
+            role=1 if row['source_partition']=='skin' else 2
+            if used[i]&role:raise ValueError('repeated source material node')
+            used[i]|=role
             xyz=[float(row['donor_local_'+a+'_m']) for a in 'xyz']
             k=int(row['donor_body'])
             if owner[i]>=0:

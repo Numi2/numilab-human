@@ -1,0 +1,7 @@
+# Connected skin and fat at the loaded skeleton pose
+
+The 311,020-node material construction preserves the original tetrahedral connectivity, reference geometry and mass owners. All 705,091 skin and 743,713 fat tetrahedra pass the signed-volume, normalized-shape and relative-volume checks. Absolute Float32 position storage and the native reference-plus-high/low displacement representation reconstruct the same positions. The release recovery record verifies every downloaded coordinate and the original source identities.
+
+Rounding the smooth candidate directly produced 351 inverted tetrahedra and 2,013 total violations. A bounded discrete fit on the Float32 grid followed by a neighborhood integer solve eliminated these violations. The largest shift from the qualified continuous candidate was 2.29 µm. A separate construction that tied large tissue regions rigidly passed several geometry metrics with anatomically unacceptable donor motion and remains excluded.
+
+The new coordinates alone do not establish a supported start. They place 92 outer nodes below the physical plane, with maximum penetration 6.529 mm. Fourteen registered deep attachment sites have a maximum initial target discrepancy of 0.9071 mm. This artifact is an initialization proposal for further contact and attachment fitting. It has not been selected for physical stepping. The native motion evidence for the 32-section bed model is separate.
