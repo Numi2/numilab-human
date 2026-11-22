@@ -1,0 +1,37 @@
+{
+  "accepted_steps": 2,
+  "root_observations": [
+    {
+      "source_step": 0,
+      "root_generalized_force_xyz_N": [
+        2.835200786590576,
+        16.752405166625977,
+        -15.785506248474121
+      ]
+    },
+    {
+      "source_step": 1,
+      "root_generalized_force_xyz_N": [
+        -2.5469555854797363,
+        -13.301152229309082,
+        17.869375228881836
+      ]
+    }
+  ],
+  "root_vertical_gravity_target_N": 811.448223907348,
+  "total_weight_N": 952.8644362797845,
+  "tissue_weight_N": 141.41624398673704,
+  "weight_less_tissue_minus_root_gravity_N": -3.161430061027204e-05,
+  "final_bed_reaction_N": 3491.910219192505,
+  "final_root_fem_minus_gravity_N": -793.5788486784662,
+  "parity": {
+    "physical_nodes": true,
+    "body_poses": true,
+    "coupled_trace": true,
+    "native_pack": true
+  },
+  "launch_sha256": "593f47387c18579610c2159bdb09730415931071d0ff15d36a2bdff2a33bb7be",
+  "matched_launch_sha256": "29d7d9b0eaf86599271dc694e13d83491734ee08cfaac12c4592d314b76f0897",
+  "binary_sha256": "0e9a4611cf9d523e1386ac633481e0688f083dbbe19c69d4ec2cb9edcfee764b",
+  "scope": "Accepted FEM body contact and anchor loads projected onto the floating-root translation coordinates. Bed force acts on the skin. These forces can differ in a moving body. The archived initial gravity target is a balance reference, not a new runtime force."
+}

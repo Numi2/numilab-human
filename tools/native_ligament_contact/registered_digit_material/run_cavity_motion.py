@@ -88,6 +88,7 @@ def run(
     trace_root=None,
     recruitment_reference=None,
     recruitment_fraction=1.0,
+    capture_fem_body_load=False,
 ):
     config = json.loads((parent / "launch.json").read_text())
     argv = config["argv"].copy()
@@ -128,6 +129,8 @@ def run(
             NUMI_HUMAN_SKIN_FAT_FIXED_CAVITY_MASS_MOMENTS="1",
             NUMI_HUMAN_CAVITY_ROUTE_WITNESS="1",
         )
+        if capture_fem_body_load:
+            env["NUMI_HUMAN_ACCEPTED_FEM_BODY_LOAD_CAPTURE"] = "1"
         if env.get("NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS") != "2":
             raise ValueError("Unexpected capture schedule in the parent")
         env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = str(steps)
@@ -271,6 +274,7 @@ if __name__ == "__main__":
     for arg in ("parent", "owner", "proposal", "out"):
         parser.add_argument(arg, type=lambda x: Path(x).resolve())
     parser.add_argument("--diagnose", action="store_true")
+    parser.add_argument("--capture-fem-body-load", action="store_true")
     parser.add_argument("--steps", type=int, default=2)
     parser.add_argument("--trace-root", type=int)
     parser.add_argument("--recruitment-reference", type=lambda x: Path(x).resolve())
