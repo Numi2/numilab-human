@@ -2,18 +2,23 @@
 import json,sys,subprocess,os,re
 from pathlib import Path
 from emit_skin_source_registration import sha
-base,reg=map(Path,sys.argv[1:]);d=reg/'material';p=d/'p1';s=p/'current-paired-volume-state.json';st=json.loads(s.read_text());roles=[json.loads((p/(k+'-p1-receipt.json')).read_text()) for k in ['skin','fat']]
+base,reg=map(Path,sys.argv[1:3]);
+if len(sys.argv) not in (3,4,5):raise ValueError('Expected base, registration, optional replacement mesh')
+d=reg/'material';p=d/'p1';s=p/'current-paired-volume-state.json';st=json.loads(s.read_text());roles=[json.loads((p/(k+'-p1-receipt.json')).read_text()) for k in ['skin','fat']]
 w=json.loads((d/'witnesses/receipt.json').read_text());assert w['current_state_sha256']==sha(s)
-flow=reg/'fine-mass-routed/current-density-closed-flow.npz';mc=json.loads((reg/'fine-mass-routed/mass-transfer.json').read_text());assert sha(flow)==mc['new_flow_sha256']==w['verified_flow_sha256']
-mesh=base/'constitutive-witness-repaired-tetgen';ledger=st['source330_identity'];labels=base/'paired-floor-child.labels.csv';wall=json.loads((base/'paired-floor-wall-lineage.json').read_text());assert sha(labels)==wall['labels_sha256']
+flow=reg/'fine-mass-routed/current-density-closed-flow.npz';mc=json.loads((reg/'fine-mass-routed/mass-transfer.json').read_text());assert sha(flow)==mc.get('new_flow_sha256',mc.get('flow_sha256'))==w['verified_flow_sha256']
+mesh=Path(sys.argv[3]) if len(sys.argv)>=4 else base/'constitutive-witness-repaired-tetgen';ledger=st['source330_identity'];labels=base/'paired-floor-child.labels.csv';wall=json.loads((base/'paired-floor-wall-lineage.json').read_text());assert sha(labels)==wall['labels_sha256']
+if len(sys.argv)==5:
+    labels=Path(sys.argv[4]);binding=json.loads(labels.with_suffix('.json').read_text());assert sha(labels)==binding['labels_sha256'] and binding['native_p1_state_sha256']==sha(s)
 old=json.loads((base.parent/'captured-fat-sliver-495/proposal/compiler/mass-allocation/run-manifest.json').read_text())['argv']
 proof=base/'validate_complete_fine_p1';args=[proof,ledger['source330_mass']['path'],ledger['source330_labels']['path'],mesh/'mesh.ele',sha(s),ledger['source330_mass']['sha256']]
 for v in roles:args.extend([v['p1_one_hop_path'],v['p1_one_hop_sha256'],v['role_geometry_sha256']])
 args.extend([sum(v['cells'] for v in roles),mesh/'mesh.node',ledger['source330_tets']['path'],ledger['source330_nodes']['path']])
 for field in ('carrier','witness'):
     for v in w['roles']:args.extend([v[field+'_path'],v[field+'_sha256']])
-moves=sum(int(n)for n in re.findall(r'augmentations=(\d+)',mc['solver_output']))+len(mc['qualified_additional_routes'])
-args.extend([mc['distance_bound_m'],ledger['source330_tets']['sha256'],ledger['source330_nodes']['sha256'],labels,sha(labels),old[old.index('--source-body-count')+1],old[old.index('--coordinate-frame-sha256')+1],flow,sha(flow),moves]);args=list(map(str,args))
+solver_log=mc['solver_output'] if 'solver_output' in mc else '\n'.join(q['solver'] for q in mc['history'])
+moves=sum(int(n)for n in re.findall(r'augmentations=(\d+)',solver_log))+(len(mc['qualified_additional_routes']) if 'qualified_additional_routes' in mc else mc['used_new_typed_routes'])
+args.extend([mc.get('distance_bound_m',mc.get('admitted_route_distance_m')),ledger['source330_tets']['sha256'],ledger['source330_nodes']['sha256'],labels,sha(labels),old[old.index('--source-body-count')+1],old[old.index('--coordinate-frame-sha256')+1],flow,sha(flow),moves]);args=list(map(str,args))
 assert len(args)==34
 directory=d/'native-role-flow';directory.mkdir(exist_ok=False)
 env={'NUMI_HUMAN_NATIVE_ROLE_FLOW_OUTPUT':str(directory)}

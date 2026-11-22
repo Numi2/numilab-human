@@ -4,12 +4,12 @@ from pathlib import Path
 from emit_skin_source_registration import sha
 import numpy as np
 baseline,reg,out=map(Path,sys.argv[1:]);fine=baseline/'refit-motion-qualification';m=reg/'fine-mass-routed';source=baseline/'certify_live_parent_flow_witnesses.py'
-flow=m/'current-density-closed-flow.npz';r=json.loads((m/'mass-transfer.json').read_text());assert sha(flow)==r['new_flow_sha256'] and r['density_outliers']==0
+flow=m/'current-density-closed-flow.npz';r=json.loads((m/'mass-transfer.json').read_text());identifier=r.get('new_flow_sha256',r.get('flow_sha256'));bound=r.get('distance_bound_m',r.get('admitted_route_distance_m'));assert sha(flow)==identifier and r['density_outliers']==0
 code=source.read_text();a=code.index('root = Path(');b=code.index('labels_path =',a)
 code=code[:a]+'''root=baseline
 args=type('Options',(),dict(emit_witnesses=True))()
-closure=dict(transport_distance_limit_m=mass['distance_bound_m'])
-closed=dict(candidate_sha256=mass['new_flow_sha256'])
+closure=dict(transport_distance_limit_m=transport_limit)
+closed=dict(candidate_sha256=flow_identity)
 candidate=flow
 p1=destination/'p1'
 state=json.loads((p1/'current-paired-volume-state.json').read_text())
@@ -25,4 +25,4 @@ if not np.all(np.isfinite(distance)&(distance<=closure['transport_distance_limit
 report['maximum_carrier_distance_m']=float(distance.max())
 '''+code[b:]
 code=code.replace('out = root/"paired-live-parent-flow-witness"',"out=destination/'witnesses'")
-exec(compile(code,str(source),'exec'),dict(baseline=baseline,mass=r,flow=flow,destination=out,fine=fine,sha=lambda p:sha(Path(p))))
+exec(compile(code,str(source),'exec'),dict(baseline=baseline,mass=r,flow_identity=identifier,transport_limit=bound,flow=flow,destination=out,fine=fine,sha=lambda p:sha(Path(p))))

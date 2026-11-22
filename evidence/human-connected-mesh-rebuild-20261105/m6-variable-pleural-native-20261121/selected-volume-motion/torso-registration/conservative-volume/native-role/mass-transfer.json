@@ -1,0 +1,61 @@
+{
+  "recipient_partition": null,
+  "one_hop_support_sha256": "1d71237df25d586d56138376acd33640823df6172f3cf48ecc1bd26126fff450",
+  "geometry_sha256": "7cd4d9bdc20ed940b04a39fd51528f400efd17b4855348bb517dfd807cf325ed",
+  "baseline_flow_sha256": "2b43e0e1cbdd5822d25f619ddd3542366d62764565ccc99acaf896614d8d9c80",
+  "source_carriers": 71639,
+  "source_parent_rows": 28632,
+  "full_mesh_cells": 1448804,
+  "new_typed_routes": 28913,
+  "retained_routes": 960493,
+  "invalidated_distance_routes": 823,
+  "maximum_used_route_distance_m": 0.18744397321608472,
+  "admitted_route_distance_m": 0.187444,
+  "source_mass_kg": 13.939679709969152,
+  "maximum_carrier_mass_error_kg": 3.469446951953614e-18,
+  "unmet_groups": 0,
+  "history": [
+    {
+      "iteration": 0,
+      "unmet_groups": 1330,
+      "unmet_kg": 0.11606691719710654,
+      "solver": "maximum augmentations=4391 moved_kg=0.063811606140785321 unassigned_kg=0.0054703192794082712 largest_kg=0.0019813354820446354 groups_above_1e-15=22"
+    },
+    {
+      "iteration": 1,
+      "unmet_groups": 0,
+      "unmet_kg": 5.17417881636462e-17,
+      "solver": "maximum augmentations=564 moved_kg=0.0054703192794082946 unassigned_kg=0 largest_kg=0 groups_above_1e-15=0\nminimum augmentations=13081 moved_kg=0.11027346529032871 unassigned_kg=0 largest_kg=0 groups_above_1e-15=0"
+    }
+  ],
+  "used_new_typed_routes": 1640,
+  "flow_sha256": "6623c9d65f50c3045bdfcfc1c7b640b01f955350a2af87ffac45c9e34a1801c3",
+  "density_outliers": 0,
+  "result_mass_kg": 13.939679709969152,
+  "nodal_mass_kg": 13.939679709969152,
+  "native_reference_volumes_sha256": "7edcfb6bb94807fb34a0ffa600520a77fbb199a4ae4edc29500023f45617d4fb",
+  "pre_rounding_flow_sha256": "29edd26336c5b23de393c9f2507680650f015a31a9fa2e8c05e75e18550653ca",
+  "corrected_recipients": [
+    33993,
+    34696,
+    45887,
+    55239
+  ],
+  "corrected_cells": 876,
+  "unchanged_carrier_route_masses": true,
+  "minimum_native_density_margin_kg_m3": 5.331912689143792e-11,
+  "source_ledger_compaction": {
+    "source_flow_sha256": "ec31637a7dcd08342d9aeef9182a5c62027dac9a9f461fbea66f224fbd26eb0e",
+    "cycles": 30219,
+    "positive_input_edges": 201666,
+    "positive_output_edges": 171444,
+    "expanded_rows_removed": 1119418,
+    "maximum_parent_recipient_change_kg": 8.673617379884035e-19,
+    "maximum_carrier_change_kg": 8.673617379884035e-19,
+    "maximum_recipient_change_kg": 1.734723475976807e-18,
+    "additional_active_edges": 0,
+    "archived_compensation_amounts_identical": true,
+    "cell_masses_changed": 0,
+    "minimum_actual_density_margin_kg_m3": 5.331912689143792e-11
+  }
+}
