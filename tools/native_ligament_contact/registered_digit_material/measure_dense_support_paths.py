@@ -111,8 +111,19 @@ def measure(case, bed, reader, all_banks=False):
             "ambiguous": [],
         }
         for r in support["largest_force_changes"]
+        + (support.get("largest_endpoint_loads", []) if all_banks else [])
         if r["endpoint_N"] > 0
     }
+    peak_nodes = []
+    if all_banks and "largest_endpoint_loads" in support:
+        records = support["largest_endpoint_loads"]
+        peak_nodes = [r["outer_material_node"] for r in records]
+        if len(set(peak_nodes)) != len(records) or not np.isclose(
+            sum(r["endpoint_N"] for r in records),
+            support["endpoint_barrier_N"] * support["top_four_endpoint_load_fraction"],
+            rtol=1e-12,
+        ):
+            raise ValueError("Peak loads disagree with the independent force total")
     samples = {i: coords[i, :2] for i in rows}
     deep_hits = hits(coords[joined], faces, samples)
     sys.path.insert(0, str(reader.parent / "src"))
@@ -263,7 +274,9 @@ def measure(case, bed, reader, all_banks=False):
                     (lo, hi, sid) for lo, hi in zip(depths[::2], depths[1::2])
                 )
     if all_banks and scanned != verified["checked_banks"]:
-        raise ValueError("Column analysis and whole-body audit use different anatomical banks")
+        raise ValueError(
+            "Column analysis and whole-body audit use different anatomical banks"
+        )
     for i, r in rows.items():
         if all_banks and i in queries:
             r["deep_query_world_m"] = queries[i].tolist()
@@ -358,6 +371,7 @@ def measure(case, bed, reader, all_banks=False):
             if all_banks
             else {}
         ),
+        **({"largest_loaded_nodes_in_order": peak_nodes} if peak_nodes else {}),
         "frame": receipt["pack_file_sha256"],
         "bed_digest": sha(bed),
         "physical_nodes": verified["physical_nodes_sha256"],

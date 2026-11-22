@@ -10,7 +10,7 @@ from fit_native_bed_barrier_load import force
 from run_bed_work import digest as sha
 
 
-def measure(case, material, transfer):
+def measure(case, material, transfer, peak_loads=False):
     job = json.loads((case / "launch.json").read_text())
     receipt = json.loads((case / "terminal.receipt.json").read_text())
     audit = json.loads((case / "accepted-layers.json").read_text())
@@ -138,6 +138,19 @@ def measure(case, material, transfer):
                 endpoint_rows=int(np.sum(final[mask] > 0)),
             )
         )
+
+    def record(i):
+        return dict(
+            outer_material_node=int(outer[i]),
+            donor_body=int(donors[i]),
+            nodal_mass_kg=float(nodal[outer[i]]),
+            initial_gap_um=float(ref[i] * 1e6),
+            endpoint_gap_um=float(end[i] * 1e6),
+            initial_N=float(init[i]),
+            endpoint_N=float(final[i]),
+            gap_change_um=float((end[i] - ref[i]) * 1e6),
+        )
+
     return dict(
         source_launch=sha(case / "launch.json"),
         receipt=sha(case / "terminal.receipt.json"),
@@ -159,19 +172,16 @@ def measure(case, material, transfer):
         entered_band=int(np.sum((final > 0) & (init == 0))),
         load_by_donor=groups,
         top_four_endpoint_load_fraction=float(np.sort(final)[-4:].sum() / final.sum()),
-        largest_force_changes=[
-            dict(
-                outer_material_node=int(outer[i]),
-                donor_body=int(donors[i]),
-                nodal_mass_kg=float(nodal[outer[i]]),
-                initial_gap_um=float(ref[i] * 1e6),
-                endpoint_gap_um=float(end[i] * 1e6),
-                initial_N=float(init[i]),
-                endpoint_N=float(final[i]),
-                gap_change_um=float((end[i] - ref[i]) * 1e6),
-            )
-            for i in order[:8]
-        ],
+        largest_force_changes=[record(i) for i in order[:8]],
+        **(
+            {
+                "largest_endpoint_loads": [
+                    record(i) for i in np.lexsort((outer, -final))[:4] if final[i] > 0
+                ]
+            }
+            if peak_loads
+            else {}
+        ),
         scope="The preparation law uses zero closing speed and the inertial barrier stiffness in world metres. The native plane reaction is the accepted root impulse divided by its duration. Actual closing speed, frozen stiffness and the path within the step can affect that comparison.",
     )
 
@@ -180,4 +190,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     for key in ("case", "material", "transfer"):
         parser.add_argument(key, type=lambda p: Path(p).resolve())
+    parser.add_argument(
+        "--peak-loads",
+        action="store_true",
+        help="Also retain the four largest endpoint forces with deterministic node tie breaking.",
+    )
     print(json.dumps(measure(**vars(parser.parse_args())), indent=2))
