@@ -61,8 +61,19 @@ def main(full,selected,binary,ram,output):
     native=Path(argv[4])
     if mode=='motion' and native.is_dir():
         for p in native.rglob('*'):
-            if p.is_file() and p.suffix in ('.csv','.json','.log') and p.stat().st_size<=300000:
+            if p.is_file() and p.suffix in ('.csv','.json','.log') and (p.stat().st_size<=300000 or p.name=='resting-ocular-sclera-window.json'):
                 dest=output/'native'/p.relative_to(native);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+        if proc.returncode==0 and os.environ.get('NUMI_SELECTED_RETAIN_TERMINAL_PACK')=='1':
+            step=result['requested_roots']
+            receipt=native/'accepted-geometry'/f'step-{step}.receipt.json'
+            accepted=json.loads(receipt.read_text())
+            pack=native/'accepted-geometry'/f'step-{step}.mrvpack'
+            if accepted['accepted_step']!=step or Path(accepted['accepted_pack_path'])!=pack or sha(pack)!=accepted['pack_file_sha256']:
+                raise ValueError('Terminal geometry does not match its native transaction')
+            dst=output/'terminal.mrvpack.zst'
+            subprocess.run(['/opt/homebrew/bin/zstd','-q','-1','-T1',str(pack),'-o',str(dst)],check=True)
+            result['terminal_pack_sha256']=accepted['pack_file_sha256']
+            result['terminal_archive_sha256']=sha(dst)
         result['native_artifacts']=[str(p.relative_to(native)) for p in native.rglob('*') if p.is_file()]
     (output/'admission.json').write_text(json.dumps(result,indent=2)+'\n')
     if proc.returncode:sys.exit(1)

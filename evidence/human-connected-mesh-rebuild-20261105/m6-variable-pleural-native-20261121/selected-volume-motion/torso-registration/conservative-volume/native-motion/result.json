@@ -1,0 +1,80 @@
+{
+  "device": "Apple M6",
+  "os_build": "26A425",
+  "physical_binary_sha256": "1a8dffa5fe2a7e307004a6893917c011e51a29ebb5e6c82f83e7b23869276a26",
+  "actual_registered_outer_rows": 76153,
+  "source_mass_kg": 13.939679709969152,
+  "physical_roots": 8,
+  "simulated_seconds": 0.0001250000059371814,
+  "wall_seconds": 244.43332683295012,
+  "gpu_seconds": 97.4420678748,
+  "end_to_end_rtf": 5.113869191111102e-07,
+  "gpu_span_rtf": 1.2828135595171242e-06,
+  "physical_skin_other_tissue_pairs_before": 13912,
+  "physical_skin_other_tissue_pairs_after": 11663,
+  "removal": 2249,
+  "ocular_source_pairs": 350,
+  "ocular_presentation_only_pairs": 274,
+  "steps_with_completed_breath": 0,
+  "terminal_normal_support_N": 0.0,
+  "trial_results": {
+    "coupled-1": {
+      "exit_code": 1,
+      "wall_seconds": 4.042572124861181,
+      "watchdog": null,
+      "accepted_steps": null,
+      "requested_roots": 1,
+      "errors": [
+        "myosim_articulated_visual=failed error=\"loaded-knee immutable source file is absent or redirected: /Volumes/NumiVolumeAdmission/material/registration/registered-O.csv\""
+      ],
+      "launch_sha256": "931e2bd3689ca00c00bd47c0aaecf4fa5909e46f42c86c2e1ea541987993b2bd"
+    },
+    "coupled-2": {
+      "exit_code": 1,
+      "wall_seconds": 11.113252999959514,
+      "watchdog": null,
+      "accepted_steps": null,
+      "requested_roots": 1,
+      "errors": [
+        "myosim_articulated_visual=failed error=\"registered O/I/D full86 role consumer rejected: direct authoring identity carries nonzero source embedding barycentric or residual data\""
+      ],
+      "launch_sha256": "841b5e32f86050fc5db7961883335ad9608d1365dd039c53f8f77f85091a5550"
+    },
+    "coupled-3": {
+      "exit_code": -15,
+      "wall_seconds": 148.72841004095972,
+      "watchdog": "OS disk below 1 GiB",
+      "accepted_steps": null,
+      "requested_roots": 1,
+      "errors": [],
+      "launch_sha256": "e3fe9b177f425ce7de9f8fc38607b2c9952cdaf759ca2e78d16ca024018b4b9c"
+    },
+    "coupled-4": {
+      "exit_code": 0,
+      "wall_seconds": 170.70842141704634,
+      "watchdog": null,
+      "accepted_steps": 1,
+      "requested_roots": 1,
+      "errors": [],
+      "launch_sha256": "e3fe9b177f425ce7de9f8fc38607b2c9952cdaf759ca2e78d16ca024018b4b9c"
+    },
+    "coupled-8": {
+      "exit_code": -15,
+      "wall_seconds": 165.694586167112,
+      "watchdog": "OS disk below 1 GiB",
+      "accepted_steps": null,
+      "requested_roots": 8,
+      "errors": [],
+      "launch_sha256": "c4b219f5faf44da5e3ffe39ebc7de95cf72c5146b52d7a7124a1204e518e3f3b"
+    },
+    "coupled-8-retry": {
+      "exit_code": 0,
+      "wall_seconds": 244.43332683295012,
+      "watchdog": null,
+      "accepted_steps": 8,
+      "requested_roots": 8,
+      "errors": [],
+      "launch_sha256": "c4b219f5faf44da5e3ffe39ebc7de95cf72c5146b52d7a7124a1204e518e3f3b"
+    }
+  }
+}
