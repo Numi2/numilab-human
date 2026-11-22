@@ -1,0 +1,88 @@
+{
+  "geometry": {
+    "reference_sha256": "351a3b29288f6f9ca82d816930d88899d1b82a84d4216183fe5ca716a85b66c3",
+    "installed_pose_sha256": "c6b23afe8dacdad906e1b9df10ebe35be75a0faf30e93394f57db75bb68d6869",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "accepted_geometry_sha256": "8fc3ffd2705f366cb1d38678a95d522bca0e202293e44ca438f115ec5d6e9d69",
+  "failed_launch_sha256": "d82d22ac0d629af1266cd059799e50bdd9e00473d291b1c5f34a7a1c2dd48741",
+  "global_element_offset": 3315,
+  "before_failure": [
+    {
+      "limit": "compression",
+      "native_cell": 1035269,
+      "source_cell": 1032163,
+      "material": 16,
+      "nodes": [
+        128756,
+        128740,
+        128558,
+        128523
+      ],
+      "center_material_m": [
+        0.010422652121633291,
+        -0.8449199944734573,
+        0.0031555015011690557
+      ],
+      "minimum_material_altitude_um": 21.448552376043548,
+      "condition_edge_matrix": 499.900866981629,
+      "start_J": 1.418760193229089,
+      "accepted_J": 0.4965667347543924,
+      "accepted_over_start": 0.35000047021633,
+      "accepted_principal_stretches": [
+        1.0492485374113847,
+        0.9945155194065338,
+        0.4758692973446636
+      ],
+      "geometric_donor_body": 128,
+      "anatomical_region_id": 128,
+      "node_layers": [
+        "I",
+        "I",
+        "I",
+        "I"
+      ]
+    },
+    {
+      "limit": "expansion",
+      "native_cell": 950449,
+      "source_cell": 947257,
+      "material": 16,
+      "nodes": [
+        132164,
+        131444,
+        131581,
+        133374
+      ],
+      "center_material_m": [
+        0.04419528227299452,
+        -0.8095564097166061,
+        0.013867704896256328
+      ],
+      "minimum_material_altitude_um": 18.499219350510664,
+      "condition_edge_matrix": 1140.3074301855045,
+      "start_J": 1.1063980397208426,
+      "accepted_J": 2.4999991701877433,
+      "accepted_over_start": 2.2595838752737873,
+      "accepted_principal_stretches": [
+        2.747355891839549,
+        0.9841946356743773,
+        0.9245788390280313
+      ],
+      "geometric_donor_body": 128,
+      "anatomical_region_id": 128,
+      "node_layers": [
+        "I",
+        "I",
+        "I",
+        "I"
+      ]
+    }
+  ],
+  "witness_centers_separation_m": 0.05005921469393373,
+  "failed_trial_J": 2.500000238418579,
+  "current_newton_J": 2.5,
+  "newton_iteration": 5,
+  "trial_reason": "upper material determinant bound",
+  "failed_step": 4
+}

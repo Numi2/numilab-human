@@ -11,7 +11,7 @@ from supported_material_admission import installed_topology,material_state,stres
 from fit_posterior_equilibrium import materials
 
 def read(p):return json.loads(p.read_text())
-def measure(root,free_interface=False):
+def measure(root,free_interface=False,held=False):
     case=root/'bonded-equilibrium'
     def config(run):
         j=read(run/'launch.json');cwd,args,pins,env=matched_horizon(j)
@@ -61,6 +61,16 @@ def measure(root,free_interface=False):
             raise ValueError('Unqualified loaded transfer')
         out['fitted_releasing_four_cavity_vertices']=metrics(var)
         expected_frames.extend([var,var.parent/'accepted-2',var.parent/'accepted-1'])
+    if held:
+        extra=case/'held-volume/three'
+        if config(extra)!=config(paired):raise ValueError('Different physical configuration for held release')
+        e=read(extra/'launch.json')['environment']
+        if sha(Path(e['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']))!=read(extra.parent/'verified-mass.json')['loaded_pose']:
+            raise ValueError('Unqualified held mass map')
+        if e['DYLD_LIBRARY_PATH']!=read(paired/'launch.json')['environment']['DYLD_LIBRARY_PATH'] or e['NUMI_MATTER_METALLIB_OVERRIDE']!=read(paired/'launch.json')['environment']['NUMI_MATTER_METALLIB_OVERRIDE']:
+            raise ValueError('Different held-volume solver')
+        out['held_parent_volume']=metrics(extra)
+        expected_frames.extend([extra,extra.parent/'accepted-1',extra.parent/'accepted-2',extra.parent/'accepted-4',extra.parent/'accepted-5',extra.parent/'six'])
     # A terminal frame on the same material is independently compared against both
     # release references so a change of starting volume cannot hide a smaller cell.
     ref_run=root/'fold-repair/accepted-2'
@@ -92,8 +102,8 @@ def measure(root,free_interface=False):
         motion=read(run/'motion.json');text=(run/'stdout.log').read_text()
         fascia=next(l for l in text.splitlines() if l.startswith('resting_fascia_fem_terminal_audit=passed'))
         observed=metrics(run)
-        name=('free-interface-' if run.parent.name=='free-interface' else '')+run.name
+        name=(run.parent.name+'-' if run.parent.name in ('free-interface','held-volume') else '')+run.name
         out['measured_endpoints'][name]=dict(audit=rep,volume=stats,stretch=stretch,motion=motion,terminal_skeleton_upward_N=observed['loads_N'][-1][2],
                  bone_contact_normal_N=float(re.search('body_contact_normal_force_N=([^ ]+)',fascia)[1]))
     return out
-if __name__=='__main__':print(json.dumps(measure(Path(sys.argv[1]).resolve(),'--free-interface' in sys.argv[2:]),indent=2,allow_nan=False))
+if __name__=='__main__':print(json.dumps(measure(Path(sys.argv[1]).resolve(),'--free-interface' in sys.argv[2:] or '--held' in sys.argv[2:], '--held' in sys.argv[2:]),indent=2,allow_nan=False))
