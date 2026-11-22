@@ -17,7 +17,7 @@ def bind(trial, owner, fit, out, deep_fit=None):
     env = job['environment']
     manifest = json.loads((owner/'identities.json').read_text())
     report = json.loads(fit.read_text())
-    _, original, t, _, pins = inputs(trial)
+    reference, original, t, roles, pins = inputs(trial)
     if (manifest['binary_sha256']!=sha(owner/'numi-human-native')
             or job['pins'][str(owner/'numi-human-native')]!=manifest['binary_sha256']
             or report['source']!=pins or report['proposal_sha256']!=env['NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256']):
@@ -43,7 +43,7 @@ def bind(trial, owner, fit, out, deep_fit=None):
         if not balance or np.max(abs(np.asarray(balance['emitted_dt2_acceleration'])))>.01:
             raise ValueError('Excessive emitted volume acceleration over one native increment')
     layers=report.get('node_roles', ['I']*len(rows))
-    if len(layers)!=len(rows) or not set(layers)<={'I','D'}:
+    if len(layers)!=len(rows) or not set(layers)<={'I','D','O'}:
         raise ValueError('Unknown anatomical material role')
     role=dict(zip(map(int,rows),layers))
     if deep_fit is not None:
@@ -68,16 +68,29 @@ def bind(trial, owner, fit, out, deep_fit=None):
     mapping = Path(env['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_COMBINED_NODE_MAP_CSV'])
     if sha(mapping)!=report['map_sha256'] or sha(mapping)!=env['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_COMBINED_NODE_MAP_SHA256']:
         raise ValueError('Unknown shared material map')
+    outer_ids=[]
     membership={i:set() for i in rows}
     with mapping.open() as stream:
         for r in csv.DictReader(stream):
             n=int(r['joint_node_id'])-1
+            if r['registered_surface_layer']=='O':outer_ids.append(n)
             if n in membership:
                 if r['registered_surface_layer']!=role[n] or r['source_partition'] in membership[n]:
                     raise ValueError('Not a single shared interface node')
                 membership[n].add(r['source_partition'])
-    if any(m!=({'fat','skin'} if role[i]=='I' else {'fat'}) for i,m in membership.items()):
+    if any(m!=({'fat','skin'} if role[i]=='I' else {'skin'} if role[i]=='O' else {'fat'}) for i,m in membership.items()):
         raise ValueError('Missing material owner')
+    if 'O' in role.values():
+        bed=report['registered_bed']
+        outer=sorted(i for i in rows if role[i]=='O')
+        loaded=[i for i in outer if original[i,2]<bed['width_m']]
+        if outer!=bed['outer_nodes'] or loaded!=bed['loaded_nodes'] or bed['native_added_constraints']!=0:
+            raise ValueError('Incomplete registered bed material')
+        preserve_z=sorted(set(outer)-set(loaded)) if bed.get('redistributed') else outer
+        if bed.get('redistributed') and (abs(bed['reaction_drift_N'])>.002 or np.max(np.abs(bed['moment_drift_Nm']))>.001):
+            raise ValueError('Change to initial support wrench')
+        if not np.array_equal(original[preserve_z,2],coords[np.searchsorted(rows,preserve_z),2]) or not np.array_equal(original[loaded,:2],coords[np.searchsorted(rows,loaded),:2]):
+            raise ValueError('Initial contact application points or gaps moved')
     inc='NumiHumanLoadedSkinPoseData.inc'
     header=(owner/inc).read_text()
     anchor_table=re.search(r'constexpr Anchor anchors\[\]=\{(.*?)\};',header,re.S)
@@ -85,19 +98,40 @@ def bind(trial, owner, fit, out, deep_fit=None):
     if len(anchors)!=14 or set(anchors).intersection(rows):
         raise ValueError('Joint attachment changed')
     key='NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE'
+    from supported_material_admission import check_installed
+    original[rows] = coords
+    admission = check_installed(reference, original, t, roles, env, owner)
+    manifest['installed_tissue_admission'] = admission
     out.mkdir(exist_ok=False)
     new=out/'current.node'
     write_coordinates(Path(env[key]),new,rows,coords)
-    original[rows]=coords
     if not np.array_equal(np.loadtxt(new,skiprows=1,usecols=(1,2,3)),original):
         raise ValueError('Unexpected emitted coordinates')
-    case=out/'native-owner'
+    bed = report.get('registered_bed', {})
+    compile_loaded_owner(owner, out, fit, manifest, old=pins['installed_pose_sha256'], nodes=rows,
+                         footprint=(outer_ids, original, bed['first_contact_m'], bed['width_m']) if bed.get('redistributed') else None,
+                         deep_fit=deep_fit)
+
+
+def compile_loaded_owner(owner, out, fit, manifest, old, nodes, footprint=None, deep_fit=None):
+    new = out/'current.node'
+    inc = 'NumiHumanLoadedSkinPoseData.inc'
+    key = 'NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE'
+    header = (owner/inc).read_text()
+    case = out/'native-owner'
+    if case.exists() or sha(owner/'numi-human-native') != manifest['binary_sha256']:
+        raise ValueError('Existing output or unmatched source binary')
     subprocess.run(['cp','-cR',str(owner),str(case)],check=True)
-    old=pins['installed_pose_sha256']
     if header.count(old)!=1:
         raise ValueError('Unknown native pose pin')
     pin=sha(new)
     (case/inc).write_text(header.replace(old,pin))
+    if footprint is not None:
+        from material_bed_release import bind_contact_footprint
+        outer, current, first, width = footprint
+        occupied = bind_contact_footprint(case, outer, current, first, width)
+        manifest['registered_bed_footprint'] = dict(contact_nodes=len(occupied), minimum_gap_m=first,
+            outer_nodes=len(outer), loader_sha256=sha(case/'NumiHumanLoadedSkinPose.hpp'))
     cmds=[[a.replace(str(owner)+'/',str(case)+'/') for a in cmd] for cmd in manifest['commands']]
     for cmd in cmds:
         subprocess.run(cmd,check=True)
@@ -109,7 +143,7 @@ def bind(trial, owner, fit, out, deep_fit=None):
     manifest.update(commands=cmds,binary=binary,binary_sha256=binary,binary_path=str(case/'numi-human-native'),
                     parent_pose_owner_sha256=sha(owner/'numi-human-native'),
                     loaded_pose_override=dict(key=key,parent_sha256=parent,immediate_parent_sha256=old,path=str(new),sha256=pin,
-                                              header_sha256=sha(case/inc),fit_sha256=sha(fit),nodes=rows.tolist()))
+                                              header_sha256=sha(case/inc),fit_sha256=sha(fit),nodes=nodes.tolist()))
     if deep_fit is not None:
         manifest['loaded_pose_override']['deep_fit_sha256']=sha(deep_fit)
     (case/'identities.json').write_text(json.dumps(manifest,indent=2)+'\n')

@@ -18,6 +18,10 @@ def run(root, region, native, fit, output):
         ('fit.json',fit),('parent-material-recovery.json',root/'paired-fat-material-recovery.json'),
         ('native-launch.json',native/'launch.json'),('execution.json',native/'execution.json'),
         ('stdout.log',native/'stdout.log'),('stderr.log',native/'stderr.log'))}
+    if 'registered_bed_footprint' in manifest:
+        loader=owner/'NumiHumanLoadedSkinPose.hpp'
+        if sha(loader)!=manifest['registered_bed_footprint']['loader_sha256']:raise ValueError('Unmatched bed footprint code')
+        files['native-owner/NumiHumanLoadedSkinPose.hpp']=loader
     receipt=native/('failure.json' if (native/'failure.json').is_file() else 'terminal.receipt.json')
     files[receipt.name]=receipt
     for p in sorted((native/'native-traces').rglob('*.csv')):

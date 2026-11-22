@@ -31,7 +31,7 @@ def loaded_mass_moments(points, retired_cells, retired_mass, new_cells, new_mass
                 passed=bool(abs(dm.sum())<=1.e-10*total and np.all(abs(signed)<=tol)))
 
 
-def balance_rounded_moments(initial, rounded, dm):
+def balance_rounded_moments(initial, rounded, dm, fixed=None):
     """Choose nearby binary32 points before certifying the loaded mass moments."""
     out=rounded.copy()
     # Six independently certified cavities share one native first-moment gate.
@@ -42,7 +42,7 @@ def balance_rounded_moments(initial, rounded, dm):
         if abs(drift)<=5e-15:
             continue
         ulp=np.abs(np.spacing(out[:,axis].astype('f4')).astype(float))
-        active=np.flatnonzero(abs(weights)*ulp>1e-19)
+        active=np.flatnonzero((abs(weights)*ulp>1e-19) & (True if fixed is None else ~fixed[:,axis]))
         if not len(active):
             raise ValueError('No Float32 carrier for the proposed moment change')
         w=weights[active]*ulp[active]*1e15
@@ -68,6 +68,7 @@ class Patch:
         self.t = tets
         self.free = free
         self.mass = rho_mass
+        self.bed = None
         self.role = role
         self.mu, self.bulk = props[role - 15].T
         edges = x[tets[:, 1:]] - x[tets[:, :1]]
@@ -95,10 +96,20 @@ class Patch:
         np.add.at(gradient, self.t, (self.G @ stress)*V[:, None, None])
         grad = gradient[self.free]
         grad[:, 2] += 9.81*self.mass
+        if self.bed is not None:
+            from material_bed_release import stationary_bed
+            outer,dt,width=self.bed
+            gaps=y[self.free[outer],2]
+            if np.min(gaps)<=width*1e-4:return np.inf,None,J,None
+            potential,reaction,stiffness=stationary_bed(gaps,self.mass[outer],dt,width)
+            energy+=potential.sum()
+            grad[outer,2]-=reaction
         if not hessian:
             return energy, grad.ravel(), J, None
         n = len(self.free)
         H = np.zeros((n, 3, n, 3))
+        if self.bed is not None:
+            H[outer,2,outer,2]+=stiffness
         T = self.G @ invt
         slots = self.scatter[self.t]
         for a in range(4):
@@ -121,7 +132,7 @@ class Patch:
                     bad_cells=int(np.sum((vol<=1e-18)|(q<1e-5))), outside_material_bounds=int(np.sum((J<.4)|(J>2.5))))
 
 
-def solve(native, evidence, proposal, ledger, owner, output, predict=False, expand=False, balance_load=False):
+def solve(native, evidence, proposal, ledger, owner, output, predict=False, expand=False, balance_load=False, redistribute_bed=False, warm_start=None, project_guards=False):
     x, y, t, tags, pins = inputs(native)
     y = y.astype(float)
     j = json.loads(evidence.read_text())
@@ -134,6 +145,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
             or sha(proposal) != j['mesh_sha256'] or sha(matched) != j['physical_endpoint_sha256']):
         raise ValueError("Unmatched material registration or motion")
     installed = 'installed_witness_rows' in j
+    extended=j.get('forecast_steps',1)>1
     if installed:
         with np.load(proposal) as repair:
             adjacency = np.vstack((t[repair['retained_input_cell_rows']], repair['replacement_tetrahedra']))
@@ -172,7 +184,8 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 if source < 0 or not r['merge_peer_partition']:
                     raise ValueError("Invalid bonded anatomical source")
                 record = (int(r['source_tetgen_node_id']), r['merge_peer_partition'], int(r['merge_peer_tetgen_node_id']), source)
-            elif installed and i in core and layer == 'D' and partition == 'fat' and not r['merge_peer_partition']:
+            elif (installed and i in core and not r['merge_peer_partition']
+                  and ((layer=='D' and partition=='fat') or (extended and layer=='O' and partition=='skin'))):
                 record = None
             else:
                 raise ValueError("Unidentified material layer")
@@ -185,7 +198,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
     if not core.issubset(meta) or (not expand and set(meta)!=touched):
         raise ValueError("Missing anatomical source")
     for i,entries in peers.items():
-        if layers[i]=='D' and set(entries)=={'fat'}:
+        if (layers[i]=='D' and set(entries)=={'fat'}) or (layers[i]=='O' and set(entries)=={'skin'}):
             continue
         skin, fat = entries['skin'], entries['fat']
         if skin != (fat[2], 'fat', fat[0], fat[3]) or fat[1] != 'skin' or len(entries) != 2:
@@ -237,6 +250,29 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 constraints.append(row)
     weights = np.array(constraints)
     basis = np.kron(null_space(weights/np.linalg.norm(weights,axis=1)[:,None]),np.eye(3))
+    fixed=np.zeros((len(free),3),dtype=bool)
+    if extended:
+        # Preserve the initial bed gaps of every outer node. A node already
+        # carrying a reaction keeps its entire application point during fitting.
+        outer=np.flatnonzero([layers[i]=='O' for i in free])
+        if not len(outer):raise ValueError('No registered outer skin in support batch')
+        width=float.fromhex('0x1.4f8b580000000p-17')
+        dt=float(launch['argv'][launch['argv'].index('--muscle-step-seconds')+1])
+        fixed[outer,2]=True
+        supported=outer[y[free[outer],2]<width]
+        fixed[supported]=True
+        if redistribute_bed:
+            import re
+            header=(owner/'NumiHumanLoadedSkinPose.hpp').read_text()
+            strict=re.search(r'if\(minimum!=(0x[0-9a-fA-F.]+p[-+0-9]+)\)',header)
+            if not strict:raise ValueError('Unknown compiled first-contact rule')
+            first_contact=float.fromhex(strict.group(1))
+            if np.float32(first_contact)!=first_contact:raise ValueError('Unrepresentable first-contact gap')
+            fixed[supported,2]=y[free[supported],2]==first_contact
+        mask=fixed.ravel()
+        basis=basis@null_space(basis[mask])
+        basis[mask]=0.0
+        patch.bed=(outer,dt,width)
     start = y[nodes].copy()
     end = np.loadtxt(matched,skiprows=1,usecols=(1,2,3))[nodes]
     delta = end-start
@@ -305,6 +341,25 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 parts.extend((J-lo,hi-J))
         return np.concatenate(parts)
     conditions=[dict(type='ineq',fun=limits,jac=lambda v:limits(v,True))]
+    if redistribute_bed:
+        from material_bed_release import stationary_bed
+        xy=start[local[supported],:2]
+        mid=xy.mean(0);scale=max(np.ptp(xy,axis=0).max(),1e-4)
+        wrench_basis=np.vstack((np.ones(len(xy)),((xy-mid)/scale).T))
+        reaction0=stationary_bed(start[local[supported],2],mass[supported],dt,width)[1]
+        wrench_scale=max(reaction0.sum(),1.)
+        Bz=B[local[supported],2,:]
+        def wrench(v,jac=False):
+            gap=pose(v)[local[supported],2]
+            _,force,stiffness=stationary_bed(np.maximum(gap,width*1.01e-4),mass[supported],dt,width)
+            if jac:
+                return -(wrench_basis*stiffness)@Bz/wrench_scale
+            return wrench_basis@(force-reaction0)/wrench_scale
+        conditions.append(dict(type='eq',fun=wrench,jac=lambda v:wrench(v,True)))
+        movable=~fixed[supported,2]
+        margin=float(np.nextafter(np.float32(first_contact),np.float32(np.inf)))
+        conditions.append(dict(type='ineq',fun=lambda v:(pose(v)[local[supported[movable]],2]-margin)/width,
+            jac=lambda v:Bz[movable]/width))
     if balance_load:
         from bonded_volume_acceleration import volume_rate
         dt=float(launch['argv'][launch['argv'].index('--muscle-step-seconds')+1])
@@ -334,21 +389,54 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 return E,dE
             u=acceleration(v)
             return E+1e5*(u@u),dE+2e5*u@acceleration(v,True)
-    result=minimize(obj,np.zeros(basis.shape[1]),jac=True,method='SLSQP',
-                    constraints=conditions,
+    guess=np.zeros(basis.shape[1])
+    if warm_start is not None:
+        init=json.loads(warm_start.read_text())
+        if init['source']!=pins or init['proposal_sha256']!=sha(proposal) or init['evidence_sha256']!=sha(evidence) or not np.array_equal(init['node_ids'],free):
+            raise ValueError('Incompatible registration warm start')
+        guess=np.linalg.lstsq(basis,(np.asarray(init['emitted_coordinates'])-start[local]).ravel(),rcond=None)[0]
+    if project_guards:
+        if not redistribute_bed or warm_start is None:raise ValueError('Guard projection requires a physically evaluated warm start')
+        # Use the nearest feasible material registration instead of trading
+        # a large quadratic acceleration penalty against the energy objective.
+        # The same full set of inequalities is checked after each solve.
+        origin=guess.copy()
+        def distance(v):
+            d=v-origin
+            return .5*(d@d),d
+        active_limits=np.flatnonzero(limits(guess)<.02)
+        slack=.0005
+        for cycle in range(6):
+            selected_limits=dict(type='ineq',fun=lambda v:limits(v)[active_limits]-slack,
+                jac=lambda v:limits(v,True)[active_limits])
+            result=minimize(distance,guess,jac=True,method='SLSQP',
+                constraints=[selected_limits,*conditions[1:],dict(type='ineq',fun=acc_limits,jac=acc_jac)],
+                options=dict(maxiter=100,ftol=1e-10))
+            guess=result.x.copy()
+            missing=np.setdiff1d(np.flatnonzero(limits(guess)<slack-1e-7),active_limits)
+            if not len(missing):break
+            active_limits=np.union1d(active_limits,missing)
+    else:
+        result=minimize(obj,guess,jac=True,method='SLSQP',constraints=conditions,
                     options=dict(maxiter=160,ftol=1.e-9))
-    if balance_load and np.max(abs(acceleration(result.x)))<guard:
-        result=minimize(energy_objective,result.x,jac=True,method='SLSQP',
-            constraints=conditions+[dict(type='ineq',fun=acc_limits,jac=acc_jac)],
-            options=dict(maxiter=160,ftol=1.e-8))
+        if balance_load and np.max(abs(acceleration(result.x)))<guard:
+            result=minimize(energy_objective,result.x,jac=True,method='SLSQP',
+                constraints=conditions+[dict(type='ineq',fun=acc_limits,jac=acc_jac)],
+                options=dict(maxiter=160,ftol=1.e-8))
     v=result.x
     hist=dict(success=bool(result.success),message=str(result.message),iterations=int(result.nit),
               minimum_constraint=float(limits(v).min()),installed_J_bounds=[floor0,ceil0],
               replay_J_bounds=[floor2,ceil2])
     selected=pose(v)
     selected[local]=selected[local].astype('f4')
-    if balance_load and cavity_delta:
-        selected[local]=balance_rounded_moments(start[local],selected[local],cavity_delta)
+    if redistribute_bed:
+        from material_bed_release import balance_emitted_mass
+        W=list(weights[len(cavity_delta):]);tol=[8e-11]*len(W)
+        if cavity_delta:
+            W.append(np.sum(cavity_delta,axis=0));tol.append(5e-15)
+        selected[local]=balance_emitted_mass(start[local],selected[local],W,tol,fixed)
+    elif balance_load and cavity_delta:
+        selected[local]=balance_rounded_moments(start[local],selected[local],cavity_delta,fixed)
     emitted=selected[local]-start[local]
     result=dict(source=pins, proposal_sha256=sha(proposal), map_sha256=sha(mapping), evidence_sha256=sha(evidence),
                 mass_sha256=sha(flow), accepted_pose_sha256=sha(matched), material_sha256=material_pins,
@@ -361,6 +449,16 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 installed_before=patch.stats(start), installed_after=patch.stats(selected),
                 reference_motion_before=patch.stats(end), reference_motion_after=patch.stats(selected+delta))
     result['installed_witness_rows' if installed else 'source_witness_rows']=rows.tolist()
+    if extended:
+        if np.any(emitted[fixed]!=0):raise ValueError('Initial bed gap or traction application point moved')
+        result['registered_bed']=dict(width_m=width,dt_s=dt,outer_nodes=free[outer].tolist(),loaded_nodes=free[supported].tolist(),
+            frozen_coordinates_during_registration=int(fixed.sum()),native_added_constraints=0)
+    if redistribute_bed:
+        emitted_forces=stationary_bed(selected[local[supported],2],mass[supported],dt,width)[1]
+        change=emitted_forces-reaction0
+        result['registered_bed'].update(redistributed=True,first_contact_m=first_contact,initial_reaction_N=reaction0.tolist(),
+            emitted_reaction_N=emitted_forces.tolist(),reaction_drift_N=float(change.sum()),
+            moment_drift_Nm=(xy.T@change).tolist(),warm_start_sha256=sha(warm_start) if warm_start else None)
     full_pose=y.copy()
     full_pose[free]=selected[local]
     result['loaded_mass_first_moment']=loaded_mass_moments(full_pose,*mass_map_data)
@@ -370,13 +468,15 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
             rounded_acc=volume_rate(selected,-gg.reshape(-1,3)/mass[:,None],witness_cells,slots,refdet,mass,basis)*dt**2
             result['initial_volume_force_balance']=dict(window_s=dt,witness_rows=rows.tolist(),initial_dt2_acceleration=acceleration(np.zeros(basis.shape[1])).tolist(),
                 emitted_dt2_acceleration=rounded_acc.tolist(),requested_absolute_bound=guard,
-                scope='Material force contribution at zero velocity before contact and skeletal reactions.')
+                scope=('Skin/fat elasticity, gravity and the stationary unilateral bed reaction at release. Skeletal and other contact forces remain in the native scene.'
+                       if extended else 'Material force contribution at zero velocity before contact and skeletal reactions.'))
         else:
             result['initial_volume_force_balance']=None
     if predict:
         future=patch.evaluate(selected+prediction_factor*delta)[2]
         result['extrapolated_witness_J']={str(int(k)):float(d) for k,d in zip(rows,future[witness_index])}
-        result['extrapolation_scope']='Only the original rejecting cells constrain the secant predictor. Mandatory native checks cover all cells.'
+        result['extrapolation_scope']=('One additional secant increment, with bounds on the witnesses and every incident material element. Native motion is independently evaluated.'
+            if 'forecast_limits' in j else 'Only the rejecting cells constrain the secant predictor. Mandatory native checks cover all cells.')
     output.write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     print(json.dumps({a:result[a] for a in ('skin_cells','fat_cells','maximum_displacement_m','max_material_donor_moment_change_kg_m','installed_before','installed_after','reference_motion_after')}))
 
@@ -388,4 +488,7 @@ if __name__=='__main__':
     parser.add_argument('--predict',action='store_true')
     parser.add_argument('--expand',action='store_true')
     parser.add_argument('--balance-load',action='store_true')
+    parser.add_argument('--redistribute-bed',action='store_true')
+    parser.add_argument('--warm-start',type=Path)
+    parser.add_argument('--project-guards',action='store_true')
     solve(**vars(parser.parse_args()))
