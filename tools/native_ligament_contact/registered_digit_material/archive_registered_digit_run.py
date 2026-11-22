@@ -10,7 +10,27 @@ def archive(root, case=None, native=None):
     native = native if native is not None else root / "verified-motion-one"
     out = native / "physical-recovery.json"
     proof = json.loads((case / "supported-registration.json").read_text())
-    run = json.loads((native / "matched-digital-interfaces.json").read_text())
+    physical = native / "physical-response.json"
+    if physical.exists():
+        report = json.loads(physical.read_text())
+        layer = json.loads((native / "accepted-layers.json").read_text())
+        end = json.loads((native / "native-outcome.json").read_text())
+        if (
+            end["exit_code"]
+            or report["step"] != end["accepted_steps"]
+            or report["pose"] != proof["current"]
+            or layer["inputs"]["NATIVE_ACCEPTED_NODE_SHA256"]
+            != report["terminal_native_node_sha256"]
+        ):
+            raise ValueError("Unmatched accepted posterior endpoint")
+        terminal = report["terminal_native_node_sha256"]
+        prefix = "supported-posterior-physical-standalone-"
+    else:
+        terminal = json.loads((native / "matched-digital-interfaces.json").read_text())[
+            "repaired"
+        ]["accepted_material"]
+        prefix = "registered-digits-physical-"
+
     source = {
         "native/numi-human-native": case / "native-owner/numi-human-native",
         "native/NumiHumanLoadedSkinPoseData.inc": case
@@ -32,12 +52,7 @@ def archive(root, case=None, native=None):
             "loaded.node",
             "accepted.node",
         )
-    ] != [
-        proof["native_binary"],
-        proof["reference"],
-        proof["current"],
-        run["repaired"]["accepted_material"],
-    ]:
+    ] != [proof["native_binary"], proof["reference"], proof["current"], terminal]:
         raise ValueError("Archive not bound to accepted physical run")
     tag = "human-closed-skin-diagnostic-packs-20261121"
     repo = "Numi2/numilab-human"
@@ -45,16 +60,14 @@ def archive(root, case=None, native=None):
     zstd = "/opt/homebrew/bin/zstd"
     with tempfile.TemporaryDirectory(dir=root) as tmp:
         tmp = Path(tmp)
-        f = tmp / (
-            "registered-digits-physical-" + expected["accepted.node"][:16] + ".tar.zst"
-        )
+        f = tmp / (prefix + expected["accepted.node"][:16] + ".tar.zst")
         with (
             f.open("xb") as sink,
             subprocess.Popen(
                 [zstd, "-q", "-3", "-T1", "-c"], stdin=subprocess.PIPE, stdout=sink
             ) as proc,
         ):
-            with tarfile.open(fileobj=proc.stdin, mode="w|") as tar:
+            with tarfile.open(fileobj=proc.stdin, mode="w|", dereference=True) as tar:
                 for name, p in source.items():
                     tar.add(p, arcname=name, recursive=False)
             proc.stdin.close()

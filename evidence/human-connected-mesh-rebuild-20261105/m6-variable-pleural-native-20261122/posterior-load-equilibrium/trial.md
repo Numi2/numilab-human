@@ -1,0 +1,7 @@
+# Supported tissue initialization on SSH Numi
+
+Control is the published complete pelvic-contact scene c8c8c689 and its matched one- and two-step runs. The treatment changes only the registered starting coordinates in the posterior support region. Reference mesh, mass, material definitions, physical bed, bone attachments, initial velocities, Brain, varying pleural pressure, solver timestep and acceptance gates are held fixed. Each independent model restart is deterministic.
+
+Fit the initial coordinates using the actual installed skin/fat strain energies, source cell volume and nodal weight. Keep the existing outer surface and its 143 support gaps for the first comparison. Check the gradient numerically and require reduced free-node vertical force imbalance, positive cells, existing volume/stretch gates and exact emitted layer intersections before the full-scene trial. The variational solve is offline registration. Every physical step uses the existing Metal owner.
+
+Prediction: the control's second-step sacral/pelvic volume obstruction will ease when the interior tissues carry the initial load more consistently. A successful short physical result accepts both original 15.625 µs steps. At the matched first step we also predict at least a 25% decrease in the amount by which the bed force exceeds body weight. The two measurements are independent. Retain all failures, including new geometry witnesses, global crossing changes, residuals and clocks. If the remaining failure moves to another interface, identify its physical owner before extending the horizon.

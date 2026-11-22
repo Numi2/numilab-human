@@ -1,0 +1,330 @@
+{
+  "source": {
+    "reference_sha256": "75146563b76fcb8b7435dd98eb0f30a481cf1bd3a7cb3e10e342f22d82921b4f",
+    "installed_pose_sha256": "66eb2e3492eaad08b962bcd87985dce0cd95b336baad735641a0d7cd597eb5f3",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "accepted": "f80ee52453094127c2bd196d25bafd8b9f4e5bded657db542813083b9660210a",
+  "old_mass": "dc4eaebf2abce50116cf350b3e7445ba7d21ab291c6874075dfa7711fff9f3a9",
+  "observed_rows": [
+    277017,
+    312934,
+    719642,
+    818769,
+    1031612,
+    1031941,
+    1064386,
+    1228480,
+    1248280,
+    1389708
+  ],
+  "eligible_geometry": 6,
+  "excluded": {
+    "exact source oriented_boundary": 25,
+    "edge link is not a simple ring": 10,
+    "registered or observed strain bounds": 1,
+    "material boundary": 12,
+    "new 2-3 edge already exists": 7,
+    "motion inversion": 2,
+    "source, load or observed motion shape": 1
+  },
+  "proposals": [
+    {
+      "witness": 277017,
+      "type": "shape",
+      "kind": "4-4",
+      "old": [
+        276898,
+        276985,
+        277017,
+        277019
+      ],
+      "new": [
+        [
+          43477,
+          43309,
+          43399,
+          43333
+        ],
+        [
+          43309,
+          43477,
+          43399,
+          43395
+        ],
+        [
+          43399,
+          43309,
+          152685,
+          43333
+        ],
+        [
+          43309,
+          43399,
+          152685,
+          43395
+        ]
+      ],
+      "material": 15,
+      "groups": [
+        18495
+      ],
+      "observed_min_J": 0.9994709943670196,
+      "observed_max_J": 1.0002875400086717,
+      "minimum_shape": 2.2155685438595992e-05,
+      "energy_relative_error": [
+        1.2822602549432518e-07,
+        0.6471650206069743
+      ],
+      "energy_absolute_change_J": [
+        -1.2822602549432517e-27,
+        -1.2941153774762429e-16
+      ],
+      "preserves_local_mass_and_first_moment": true,
+      "whole_cavity_mass_kg": 4.276636566026702e-09
+    },
+    {
+      "witness": 719642,
+      "type": "determinant",
+      "kind": "3-2",
+      "old": [
+        719642,
+        721749,
+        959703
+      ],
+      "new": [
+        [
+          129095,
+          129341,
+          304921,
+          128924
+        ],
+        [
+          129095,
+          304921,
+          129341,
+          129317
+        ]
+      ],
+      "material": 16,
+      "groups": [
+        34664,
+        34665,
+        44592
+      ],
+      "observed_min_J": 0.9156884548895209,
+      "observed_max_J": 0.9158750414601119,
+      "minimum_shape": 0.07893888855568286,
+      "energy_relative_error": [
+        0.025669284503364555,
+        0.11248152992333396
+      ],
+      "energy_absolute_change_J": [
+        -5.56547218247667e-08,
+        -2.68613465331983e-07
+      ],
+      "preserves_local_mass_and_first_moment": false,
+      "whole_cavity_mass_kg": 7.234148131119228e-05
+    },
+    {
+      "witness": 1031612,
+      "type": "determinant",
+      "kind": "3-2",
+      "old": [
+        746828,
+        1031612,
+        1031681
+      ],
+      "new": [
+        [
+          128887,
+          128882,
+          274832,
+          128791
+        ],
+        [
+          274832,
+          128882,
+          128887,
+          129013
+        ]
+      ],
+      "material": 16,
+      "groups": [
+        36570,
+        46327,
+        46392
+      ],
+      "observed_min_J": 0.8723997577653737,
+      "observed_max_J": 0.8766220143402652,
+      "minimum_shape": 0.11212949867078063,
+      "energy_relative_error": [
+        0.006002005817352676,
+        0.03427798641138418
+      ],
+      "energy_absolute_change_J": [
+        -2.0905004645581436e-08,
+        -1.2440312803455846e-07
+      ],
+      "preserves_local_mass_and_first_moment": false,
+      "whole_cavity_mass_kg": 4.6876251059023414e-05
+    },
+    {
+      "witness": 1031941,
+      "type": "determinant",
+      "kind": "4-4",
+      "old": [
+        1031900,
+        1031941,
+        1031952,
+        1032138
+      ],
+      "new": [
+        [
+          128744,
+          274456,
+          273911,
+          128667
+        ],
+        [
+          274456,
+          128744,
+          273911,
+          128808
+        ],
+        [
+          128744,
+          273911,
+          128740,
+          128667
+        ],
+        [
+          273911,
+          128744,
+          128740,
+          128808
+        ]
+      ],
+      "material": 16,
+      "groups": [
+        46589,
+        46604,
+        46637,
+        46810
+      ],
+      "observed_min_J": 0.7468940036483643,
+      "observed_max_J": 0.8435975869962199,
+      "minimum_shape": 0.006722619393676235,
+      "energy_relative_error": [
+        0.004898860932138661,
+        0.009034167161242425
+      ],
+      "energy_absolute_change_J": [
+        6.687359309211777e-08,
+        1.2411150614344273e-07
+      ],
+      "preserves_local_mass_and_first_moment": false,
+      "whole_cavity_mass_kg": 5.888372799080674e-05
+    },
+    {
+      "witness": 1064386,
+      "type": "determinant",
+      "kind": "4-4",
+      "old": [
+        705742,
+        982385,
+        1036750,
+        1064386
+      ],
+      "new": [
+        [
+          125995,
+          247817,
+          247841,
+          125410
+        ],
+        [
+          247817,
+          125995,
+          247841,
+          263710
+        ],
+        [
+          125995,
+          247841,
+          262079,
+          125410
+        ],
+        [
+          247841,
+          125995,
+          262079,
+          263710
+        ]
+      ],
+      "material": 16,
+      "groups": [
+        33161,
+        39358,
+        44838,
+        46950
+      ],
+      "observed_min_J": 0.7931359355016887,
+      "observed_max_J": 1.0054731068614604,
+      "minimum_shape": 0.006229122968455226,
+      "energy_relative_error": [
+        0.2013057850077265,
+        0.19240593367853262
+      ],
+      "energy_absolute_change_J": [
+        1.0311169341592185e-05,
+        9.887932164637718e-06
+      ],
+      "preserves_local_mass_and_first_moment": false,
+      "whole_cavity_mass_kg": 0.0003496491652979574
+    },
+    {
+      "witness": 1064386,
+      "type": "determinant",
+      "kind": "3-2",
+      "old": [
+        1032296,
+        1032368,
+        1064386
+      ],
+      "new": [
+        [
+          125410,
+          126558,
+          263710,
+          125995
+        ],
+        [
+          125410,
+          263710,
+          126558,
+          262079
+        ]
+      ],
+      "material": 16,
+      "groups": [
+        46950,
+        47016
+      ],
+      "observed_min_J": 0.8074171566214553,
+      "observed_max_J": 0.80821962096007,
+      "minimum_shape": 0.05381329164574309,
+      "energy_relative_error": [
+        0.009020744498772274,
+        0.03344203953119944
+      ],
+      "energy_absolute_change_J": [
+        -5.378806062582829e-08,
+        -2.0332643540576319e-07
+      ],
+      "preserves_local_mass_and_first_moment": false,
+      "whole_cavity_mass_kg": 3.610451404241582e-05
+    }
+  ],
+  "interpretation": "Fixed-boundary geometries evaluated at the observed native coordinates. Mass feasibility is an aggregate test. Source carrier assignment and recomputed native motion are required for promotion."
+}

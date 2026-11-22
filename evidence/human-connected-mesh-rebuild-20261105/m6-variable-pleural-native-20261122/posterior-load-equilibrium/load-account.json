@@ -1,0 +1,138 @@
+{
+  "source": {
+    "reference_sha256": "75146563b76fcb8b7435dd98eb0f30a481cf1bd3a7cb3e10e342f22d82921b4f",
+    "installed_pose_sha256": "6a6a752f62f2d3a26a6b86d5f1373d6e4f1296618b4a53728baaabe42bca315b",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "fitted_pose": "66eb2e3492eaad08b962bcd87985dce0cd95b336baad735641a0d7cd597eb5f3",
+  "mass": "dc4eaebf2abce50116cf350b3e7445ba7d21ab291c6874075dfa7711fff9f3a9",
+  "materials": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "measurement_rows": 1267,
+  "incident_tetrahedra": 6056,
+  "results": {
+    "parent": {
+      "groups": {
+        "D": {
+          "count": 574,
+          "total_N": [
+            -5.307793769894102,
+            3.565016541401305,
+            61.91622927867126
+          ],
+          "force_l2_N": 20.21618190239335,
+          "max_N": 13.057901786733616,
+          "max_row": 227720
+        },
+        "I": {
+          "count": 337,
+          "total_N": [
+            191.10346174528658,
+            329.58478098107764,
+            5585.635132864901
+          ],
+          "force_l2_N": 2593.2414905547416,
+          "max_N": 1757.2119319166004,
+          "max_row": 118553
+        },
+        "O": {
+          "count": 200,
+          "total_N": [
+            48.19907032445745,
+            -424.09532732946496,
+            -1294.3436824155287
+          ],
+          "force_l2_N": 1242.9931812864043,
+          "max_N": 701.69781873508,
+          "max_row": 25986
+        },
+        "bed": {
+          "count": 143,
+          "total_N": [
+            -221.54974817959533,
+            71.10538141518153,
+            -3178.855138689011
+          ],
+          "force_l2_N": 2273.3070224523917,
+          "max_N": 1701.5504157051314,
+          "max_row": 24331
+        },
+        "interior": {
+          "count": 13,
+          "total_N": [
+            0.012987532148094049,
+            0.0052621673080186955,
+            -0.05742677277563304
+          ],
+          "force_l2_N": 0.05136411060029912,
+          "max_N": 0.04024013157819672,
+          "max_row": 304912
+        }
+      },
+      "stationary_bed_N": 952.8642230432279
+    },
+    "candidate": {
+      "groups": {
+        "D": {
+          "count": 574,
+          "total_N": [
+            -1.7640803541510623,
+            3.012364964656252,
+            10.634838227502343
+          ],
+          "force_l2_N": 6.832479001011943,
+          "max_N": 4.153075467006644,
+          "max_row": 288116
+        },
+        "I": {
+          "count": 337,
+          "total_N": [
+            162.91752464851538,
+            118.17197051768085,
+            883.1788673947806
+          ],
+          "force_l2_N": 1247.908903639626,
+          "max_N": 932.2628242402636,
+          "max_row": 113797
+        },
+        "O": {
+          "count": 200,
+          "total_N": [
+            163.35598890527103,
+            -131.1808756643725,
+            229.5076363081555
+          ],
+          "force_l2_N": 882.2136525114279,
+          "max_N": 549.558115942449,
+          "max_row": 28237
+        },
+        "bed": {
+          "count": 143,
+          "total_N": [
+            -335.67962650130903,
+            -6.073908010502992,
+            -147.14112184198763
+          ],
+          "force_l2_N": 1101.1659572802225,
+          "max_N": 970.311517014794,
+          "max_row": 23186
+        },
+        "interior": {
+          "count": 13,
+          "total_N": [
+            -0.02233506787537612,
+            0.028900265287855526,
+            0.07413802205290847
+          ],
+          "force_l2_N": 0.08343179150872182,
+          "max_N": 0.083428781758257,
+          "max_row": 306493
+        }
+      },
+      "stationary_bed_N": 952.8642230432279
+    }
+  },
+  "scope": "Initial skin/fat constitutive stress, P1 gravity and stationary bed tractions. Other anatomy contact, skeleton insertion reactions and inertia are determined by the native owner."
+}
