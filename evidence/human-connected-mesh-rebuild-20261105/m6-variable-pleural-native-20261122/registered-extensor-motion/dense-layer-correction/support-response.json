@@ -1,0 +1,138 @@
+{
+  "source_launch": "f8b3726ee77173dfeb2f2faba6f619486a24a2492f43bb33a0c83293ccc2ecf3",
+  "receipt": "93f7531ff45ef450d332eda9d4c77fd98aaf686fcec96d761fcd4247110084aa",
+  "physical_step": 2,
+  "dt_s": 1.5625e-05,
+  "width_m": 9.999999747378752e-06,
+  "weight_N": 952.8644362797845,
+  "native": {
+    "mean_normal_force_N": 3491.910219192505,
+    "root_dt_s": 1.5625e-05,
+    "valid_contact_sample_count": 131.0
+  },
+  "initial_rows": 143,
+  "endpoint_rows": 131,
+  "initial_barrier_N": 953.1772364842716,
+  "endpoint_barrier_N": 3485.301308563491,
+  "endpoint_barrier_minus_native_N": -6.608910629013735,
+  "minimum_initial_gap_um": 8.332934157806449,
+  "minimum_endpoint_gap_um": 7.490010655172244,
+  "left_band": 17,
+  "entered_band": 5,
+  "load_by_donor": [
+    {
+      "donor_body": 1,
+      "names": [
+        "sacrum"
+      ],
+      "initial_N": 13.519326029504638,
+      "endpoint_N": 35.38600043475906,
+      "initial_rows": 17,
+      "endpoint_rows": 16
+    },
+    {
+      "donor_body": 20,
+      "names": [
+        "torso"
+      ],
+      "initial_N": 176.41621204583274,
+      "endpoint_N": 2686.2281407774135,
+      "initial_rows": 7,
+      "endpoint_rows": 4
+    },
+    {
+      "donor_body": 128,
+      "names": [
+        "pelvis"
+      ],
+      "initial_N": 763.2416984089341,
+      "endpoint_N": 763.6871673513186,
+      "initial_rows": 119,
+      "endpoint_rows": 111
+    }
+  ],
+  "top_four_endpoint_load_fraction": 0.7707305345960389,
+  "largest_force_changes": [
+    {
+      "outer_material_node": 24331,
+      "donor_body": 20,
+      "nodal_mass_kg": 0.005373484442279023,
+      "initial_gap_um": 9.570389011059888,
+      "endpoint_gap_um": 8.526095627041895,
+      "initial_N": 94.7272688560129,
+      "endpoint_N": 1038.5951916187755,
+      "gap_change_um": -1.0442933840179927
+    },
+    {
+      "outer_material_node": 23186,
+      "donor_body": 20,
+      "nodal_mass_kg": 0.002611185339148229,
+      "initial_gap_um": 9.778651474334765,
+      "endpoint_gap_um": 8.031582715131712,
+      "initial_N": 12.391821024499622,
+      "endpoint_N": 870.1993902873829,
+      "gap_change_um": -1.747068759203052
+    },
+    {
+      "outer_material_node": 23181,
+      "donor_body": 20,
+      "nodal_mass_kg": 0.0020595611063571706,
+      "initial_gap_um": 9.706172022561077,
+      "endpoint_gap_um": 8.444038164343027,
+      "initial_N": 17.139332059203717,
+      "endpoint_N": 441.1496840495587,
+      "gap_change_um": -1.2621338582180508
+    },
+    {
+      "outer_material_node": 24247,
+      "donor_body": 20,
+      "nodal_mass_kg": 0.0016894361868511436,
+      "initial_gap_um": 9.70186465565348,
+      "endpoint_gap_um": 8.503081576592686,
+      "initial_N": 14.470250861101139,
+      "endpoint_N": 336.28387482169654,
+      "gap_change_um": -1.1987830790607945
+    },
+    {
+      "outer_material_node": 24013,
+      "donor_body": 128,
+      "nodal_mass_kg": 0.001115549476990788,
+      "initial_gap_um": 9.496190614299849,
+      "endpoint_gap_um": 8.760265820070835,
+      "initial_N": 26.910277017197128,
+      "endpoint_N": 155.00542222142877,
+      "gap_change_um": -0.7359247942290148
+    },
+    {
+      "outer_material_node": 26771,
+      "donor_body": 128,
+      "nodal_mass_kg": 0.002165058946068099,
+      "initial_gap_um": 9.334217793366406,
+      "endpoint_gap_um": 101.71191464211637,
+      "initial_N": 90.21511872585667,
+      "endpoint_N": 0.0,
+      "gap_change_um": 92.37769684874996
+    },
+    {
+      "outer_material_node": 24859,
+      "donor_body": 128,
+      "nodal_mass_kg": 0.000769491607742036,
+      "initial_gap_um": 8.873681508703157,
+      "endpoint_gap_um": 68.55294295809652,
+      "initial_N": 88.93787198690688,
+      "endpoint_N": 0.0,
+      "gap_change_um": 59.679261449393366
+    },
+    {
+      "outer_material_node": 26851,
+      "donor_body": 128,
+      "nodal_mass_kg": 0.0008271039207595965,
+      "initial_gap_um": 8.999321835290175,
+      "endpoint_gap_um": 95.66976936755539,
+      "initial_N": 76.10710028537694,
+      "endpoint_N": 0.0,
+      "gap_change_um": 86.67044753226521
+    }
+  ],
+  "scope": "The preparation law uses zero closing speed and the inertial barrier stiffness in world metres. The native plane reaction is the accepted root impulse divided by its duration. Actual closing speed, frozen stiffness and the path within the step can affect that comparison."
+}

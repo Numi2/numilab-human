@@ -1,5 +1,7 @@
 # Bilateral extensor digitorum under supported native motion
 
+The follow-up native trial resolved the dense left outer- and inner-skin regressions recorded below. [Corrected registration and dense load findings](dense-layer-correction/README.md)
+
 The tested NHTISS4 registration rotates existing donor frames about their named MyoSim sites. A donor with two distinct sites can rotate about their line. Three noncollinear sites fix the frame. Sixteen of the nineteen donor frames change per side. The 72 named site entries remain within 0.100 µm after serialization. Source positions, topology, skinning weights, masses and actuator routes remain identical. These banks represent the passive muscle envelopes. The existing muscle and tendon owners produce the forces.
 
 The authoring fit used the compact entrance and 16-second terminal poses. Two independently initialized 8-second native runs tested a pose excluded from the fit. Each comparison checked topology, all 877 other geometry banks, articulated poses, and complete physiological and support-impulse traces. Counts below are intersecting triangle pairs summed over both extensors.

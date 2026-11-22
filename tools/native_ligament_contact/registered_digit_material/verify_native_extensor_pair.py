@@ -132,6 +132,40 @@ def compare(control, edited, reader, predicate, initial=False, dense=False):
         predicate_sha256=sha(predicate),
         banks=result,
     )
+    prior_dir = control / ("initial-envelope" if initial else "envelope")
+    class_file = prior_dir / "physical-banks.json"
+    if class_file.is_file():
+        envelope_file = prior_dir / (
+            "initial-envelope.json" if initial else "accepted-envelope.json"
+        )
+        classes = json.loads(class_file.read_text())
+        envelope = json.loads(envelope_file.read_text())
+        if (
+            classes["pack_sha256"] != report["source_pack_sha256"]
+            or envelope["pack_sha256"] != classes["pack_sha256"]
+            or classes["audit_sha256"] != sha(envelope_file)
+            or classes["checked_banks"] != same + 1
+        ):
+            raise ValueError("Whole-body audit refers to different geometry")
+        expected = {
+            (sem, stable): count for sem, stable, _, count in envelope["affected_banks"]
+        }
+        change = 0
+        for sid, regional in result.items():
+            original = regional["control"]["skin"]
+            if expected.get((51005, sid), 0) != original:
+                raise ValueError(
+                    "Independent whole-body audit disagrees on an edited muscle"
+                )
+            change += regional["edited"]["skin"] - original
+        # Every other emitted vertex and triangle, including the skin itself,
+        # was compared above. Only these two nonocular banks can change the sum.
+        report["derived_skin_clearance"] = {
+            "control_nonocular_pairs": classes["physical_nonocular_pairs"],
+            "edited_nonocular_pairs": classes["physical_nonocular_pairs"] + change,
+            "unchanged_skin_self_pairs": envelope["skin_self_intersections"],
+            "control_classification_sha256": sha(class_file),
+        }
     if dense:
         for name in ("physical-reference.node", "physical-accepted.node"):
             if sha(control / name) != sha(edited / name):
