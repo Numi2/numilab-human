@@ -1,0 +1,109 @@
+{
+  "shared-registered-motion-16s": {
+    "requested_steps": 8000,
+    "accepted_steps": 1824,
+    "advanced_s": 3.648,
+    "process_seconds": 511.963149207877,
+    "process_rtf": 0.007125512853111172,
+    "exit_code": 1,
+    "variable_pleural_pressure": true,
+    "first_observed_step": 32,
+    "last_observed_step": 1824,
+    "supported_weight_N": 952.8644362797845,
+    "first_observed_bed_force_N": 953.041329416346,
+    "final_observed_bed_force_N": 952.9054308327129,
+    "first_observed_vertical_com_velocity_m_s": 0.0008473066647522628,
+    "accepted_pelvic_crossing_count": 0,
+    "rejected_pelvic_crossings": 0,
+    "rejected_geometry_flags": 0,
+    "rejected_right_post": {
+      "candidate_step": "1824",
+      "endpoint": "1",
+      "side": "0",
+      "free_residual_N": "0.109085195",
+      "external_force_N": "0.917092741",
+      "release_gap_m": "4.90245247e-06",
+      "penetration_m": "0"
+    }
+  },
+  "unilateral-sampled-motion-16s": {
+    "requested_steps": 8000,
+    "accepted_steps": 1824,
+    "advanced_s": 3.648,
+    "process_seconds": 512.9848124589771,
+    "process_rtf": 0.007111321644228458,
+    "exit_code": 1,
+    "variable_pleural_pressure": true,
+    "first_observed_step": 32,
+    "last_observed_step": 1824,
+    "supported_weight_N": 952.8644362797845,
+    "first_observed_bed_force_N": 953.041329416346,
+    "final_observed_bed_force_N": 952.9054308327129,
+    "first_observed_vertical_com_velocity_m_s": 0.0008473066647522628,
+    "accepted_pelvic_crossing_count": 0,
+    "rejected_pelvic_crossings": 0,
+    "rejected_geometry_flags": 0,
+    "rejected_right_post": {
+      "candidate_step": "1824",
+      "endpoint": "1",
+      "side": "0",
+      "free_residual_N": "0.122080527",
+      "external_force_N": "0.916647315",
+      "release_gap_m": "3.73936871e-07",
+      "penetration_m": "0"
+    }
+  },
+  "paired_prefix": {
+    "candidate-contact": {
+      "rows": 1824,
+      "changed": 0
+    },
+    "pelvic-endpoint-crossings": {
+      "rows": 1824,
+      "changed": 0
+    },
+    "fresh-force-certificate": {
+      "rows": 7296,
+      "changed": 0
+    }
+  },
+  "whole_body_skin": {
+    "accepted_step": 1823,
+    "accepted_time_s": 3.6460001731757075,
+    "skin_self": {
+      "intersecting": 217,
+      "transverse": 217,
+      "boundary_only": 0,
+      "first_transverse": [
+        [
+          4067,
+          4090
+        ],
+        [
+          4069,
+          4090
+        ],
+        [
+          4070,
+          4090
+        ]
+      ]
+    },
+    "skin_to_nonocular": {
+      "intersecting": 14336,
+      "transverse": 14336,
+      "boundary_only": 0
+    },
+    "scope": "Skin surface intersections only. No through-volume containment test, pairwise interior audit, or dense motion coverage. Ocular interfaces are reported separately from other interfaces."
+  },
+  "recovery": {
+    "repository": "Numi2/numilab-human",
+    "release_tag": "human-closed-skin-diagnostic-packs-20261121",
+    "asset": "connected-torso-verified-packed-endpoint-accepted-1823-f5530fa71cb765.mrvpack.zst",
+    "compressed_sha256": "8a17a88f263498167566cd1b0994241f2fde91a1e283c4fbcd00e45fa042e376",
+    "restored_sha256": "f5530fa71cb76578a4baf20090b2c5aa18f74787a99a9e3b57b9877a7f7d7171",
+    "restored_bytes": 296595456,
+    "independent_download_verified": true,
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-closed-skin-diagnostic-packs-20261121/connected-torso-verified-packed-endpoint-accepted-1823-f5530fa71cb765.mrvpack.zst"
+  }
+}
