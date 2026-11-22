@@ -1,0 +1,55 @@
+{
+  "current": "1151d45ae7c3b8d3e9905ba348387b0735d32cf642f2ebaee8f8d003477edd31",
+  "parent": {
+    "reference_sha256": "ebd501e40b3e310347420846a76e145e832f1fe64d3f099931bcb844baef9174",
+    "installed_pose_sha256": "d7095c0eb67faefeb4a1a3b918cb8c4798232cc6c688206978e673690b46414d",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "material_admission": {
+    "cells": 1448799,
+    "invalid_geometry": 0,
+    "outside_stretch_envelope": 0,
+    "outside_stress_cap": 0,
+    "minimum_stretch": 0.6666669782106209,
+    "maximum_stretch": 1.494871650297661,
+    "peak_stress_Pa": 400081.5955172965,
+    "peak_stress_row": 39204,
+    "passed": true
+  },
+  "cavity_moments": {
+    "mass_drift_kg": -3.2356658585114273e-19,
+    "first_moment_kg_m": [
+      -1.3120376926492477e-15,
+      -2.4695296031567285e-15,
+      -4.326221950070896e-15
+    ],
+    "first_moment_limit_kg_m": 1.559026481021049e-13,
+    "affected_nodes": 166,
+    "changed_mass_kg": 0.01886291350343259,
+    "passed": true
+  },
+  "source_donor_moments": [
+    {
+      "material": 15,
+      "donor": 1,
+      "delta_kg_m": -9.51040744016675e-17
+    },
+    {
+      "material": 15,
+      "donor": 20,
+      "delta_kg_m": -4.974577421351466e-15
+    },
+    {
+      "material": 15,
+      "donor": 128,
+      "delta_kg_m": 1.0752938838365921e-15
+    }
+  ],
+  "bed_normal_N": 953.1774406368413,
+  "support_rows": 143,
+  "registered_outer_nodes": 76153,
+  "nodes_changed": 115,
+  "max_delta_m": 1.0944031600956805e-06,
+  "source_material_mass_unchanged": true,
+  "native_binary_sha256": "5fbc0d9eba1a93a9b734ca4874638dab3367614575de4baca0edbc8bf5928d40"
+}
