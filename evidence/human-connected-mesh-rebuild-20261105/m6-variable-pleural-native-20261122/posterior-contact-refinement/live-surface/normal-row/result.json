@@ -1,0 +1,58 @@
+{
+  "step_s": 1.5625e-05,
+  "node": {
+    "node": 25679,
+    "root": 0,
+    "newton": 15,
+    "raw_rhs_Ns": [
+      -0.000531780708,
+      0.000240953741,
+      -0.00113583496
+    ],
+    "mass_kg": 0.00111554947,
+    "point_m": [
+      -0.0972183719,
+      -0.823948324,
+      1.00974851e-09
+    ],
+    "velocity_m_s": [
+      -0.303184688,
+      0.139884323,
+      -0.658964694
+    ]
+  },
+  "limiter": {
+    "root": 0,
+    "iteration": 15,
+    "fraction": 1.34846969e-08,
+    "pair": 24013,
+    "node": 25679,
+    "gap_m": 1.00974851e-09,
+    "floor_m": 1.00953668e-09,
+    "closing_displacement_m": 1.41380397e-05,
+    "total_displacement_m": 1.58607836e-05,
+    "normal_impulse_Ns": 4.89567981e-07,
+    "diagonal_kg": 4.22405355e-06,
+    "point_xyz_m": [
+      -0.0972183719,
+      -0.823948324,
+      1.00974851e-09
+    ]
+  },
+  "already_applied_normal_N": 0.031332350784,
+  "raw_net_signed_normal_rhs_over_dt_N": -72.69343744,
+  "fresh_physical_residual": 0.01603507809340954,
+  "accepted_steps": 0,
+  "variable_pleural_pressure": true,
+  "matched_iteration_history": true,
+  "all_other_failure_fields_match": true,
+  "first_reporting_objects": [
+    2,
+    14
+  ],
+  "binary": "d109fecf0295b8f4988b037c297a14a985a0587f71f2f4b380e039963822cca1",
+  "dylib": "530820231c777d7987d21e1895f49dc27de8658ed1bdbcc0acf1e406b0e608f7",
+  "metallib": "d1fb933774bd69911b815a5826f7ff482f0dc698947545752f1418c4f49488bf",
+  "launch_sha256": "4e4b710c651f723514c4ac37e21c39591ecd09b76aa9d33e5a6b36865c436fe8",
+  "scope": "The signed momentum imbalance includes inertia and the existing contact reaction. It is measured at the failed Newton candidate, not an accepted contact multiplier."
+}

@@ -16,6 +16,14 @@ A second fit included the local elastic and gravitational forces of the complete
 
 The dense baseline's last qualified geometry capture is at 31.25 µs. It passes the skin/fat cell gates and contains 10,895 exterior skin intersections with muscles, tendons and vessels. The new fit has yet to qualify through 16 seconds of motion or establish sustained throughput.
 
+## Coupled momentum at the limiting corner
+
+At Newton iteration 15 of the first dense step, a diagnostic copy of the assembled GPU momentum row located the same vertex at 1.00974851 nm above the bed. Its signed vertical impulse residual was −0.00113583496 N·s, equivalent to −72.69344 N over 15.625 µs, including inertia and the existing 0.03133 N bed reaction. The node velocity was −0.65896 m/s. This measurement establishes a downward imbalance at the limiting trial. Calculating a supporting reaction requires solving for it together with the neighboring material and skeleton.
+
+Both native launches returned the same 16 Newton histories, correction fractions, physical residual and restored common coordinates. The first continuum to report the common failure changed from object 2 to 14. The verifier checked all other stored failure fields. Both launches accepted zero physical steps.
+
+The next solver comparison should enforce the unilateral bed reaction within the coupled momentum equation, with a nonnegative normal reaction, friction limited by that reaction, and a common signed-distance definition in the solve and fresh collision certificate. The current fit stays experimental. The normal-row recovery receipt links the exact executable, source, selected library and full native diagnostics to the independently restored parent checkpoint.
+
 ## Reproduction
 
 The recovery receipt identifies the independently downloaded private Human GitHub release archive and SHA-256 for each member. It contains the original and corrected contact source, native executables, selected dylibs and metallibs, exact launches, force observations, failed roots, fitted coordinates and parent recovery receipts. The full-scene trials used the existing run_cavity_motion.py entry point with the registered resting adult on SSH Numi. The checks and launch receipts identify the native executable and both libraries selected for each run.
