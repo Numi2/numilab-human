@@ -1,0 +1,93 @@
+{
+  "source": {
+    "reference_sha256": "75146563b76fcb8b7435dd98eb0f30a481cf1bd3a7cb3e10e342f22d82921b4f",
+    "installed_pose_sha256": "383f6ceff318403e39023fdfd6f9caae613ab950c05b483b3fa882f3ed2c3cf8",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "accepted_s": 3.125000148429535e-05,
+  "probe_nodes": 161,
+  "source_witnesses": [
+    {
+      "source_row": 871103,
+      "nodal_masses_kg": [
+        0.0002569322849814461,
+        0.00013215010756781068,
+        0.00010509640626299807,
+        0.00015973663114380343
+      ],
+      "registered_J": 0.754787248639522,
+      "accepted_J": 0.5463326205113053,
+      "actual_delta_J": -0.2084546281282167,
+      "dermis_J_acceleration_per_s2": -74814008.82580078,
+      "adipose_J_acceleration_per_s2": 5689906.336618996,
+      "combined_elastic_J_acceleration_per_s2": -69124102.48918179,
+      "uniform_gravity_J_acceleration_per_s2": 3.5688572097569706e-11
+    },
+    {
+      "source_row": 947257,
+      "nodal_masses_kg": [
+        0.000202574267289819,
+        0.00018969558090509972,
+        0.0002569322849814461,
+        0.0002630656993355109
+      ],
+      "registered_J": 1.3847343642330594,
+      "accepted_J": 2.3618022157785883,
+      "actual_delta_J": 0.9770678515455289,
+      "dermis_J_acceleration_per_s2": 2186503304.7409883,
+      "adipose_J_acceleration_per_s2": 3261756.2619309514,
+      "combined_elastic_J_acceleration_per_s2": 2189765061.002919,
+      "uniform_gravity_J_acceleration_per_s2": 3.5688572097569706e-11
+    },
+    {
+      "source_row": 1032012,
+      "nodal_masses_kg": [
+        9.104990445816993e-05,
+        5.201608191087004e-05,
+        7.250449438154086e-05,
+        0.00011787046884288358
+      ],
+      "registered_J": 0.758150192356312,
+      "accepted_J": 0.5040824342595707,
+      "actual_delta_J": -0.2540677580967413,
+      "dermis_J_acceleration_per_s2": -434330507.29235315,
+      "adipose_J_acceleration_per_s2": 5213521.865465478,
+      "combined_elastic_J_acceleration_per_s2": -429116985.4268877,
+      "uniform_gravity_J_acceleration_per_s2": 1.7844286048784853e-11
+    },
+    {
+      "source_row": 1032163,
+      "nodal_masses_kg": [
+        6.774860071238061e-05,
+        8.85214647300359e-05,
+        8.368886925673649e-05,
+        6.391167786392678e-05
+      ],
+      "registered_J": 1.3697217881759314,
+      "accepted_J": 0.6002501543217799,
+      "actual_delta_J": -0.7694716338541515,
+      "dermis_J_acceleration_per_s2": -1161993878.4847004,
+      "adipose_J_acceleration_per_s2": -8069221.0677237585,
+      "combined_elastic_J_acceleration_per_s2": -1170063099.5524242,
+      "uniform_gravity_J_acceleration_per_s2": -0.0
+    },
+    {
+      "source_row": 1032537,
+      "nodal_masses_kg": [
+        0.0002998694887837803,
+        0.0005245307350551385,
+        0.00012205055399097469,
+        0.00022868862840005576
+      ],
+      "registered_J": 0.7158363045334826,
+      "accepted_J": 0.430753429891381,
+      "actual_delta_J": -0.2850828746421016,
+      "dermis_J_acceleration_per_s2": -688374489.6619481,
+      "adipose_J_acceleration_per_s2": -244242.5002280504,
+      "combined_elastic_J_acceleration_per_s2": -688618732.1621761,
+      "uniform_gravity_J_acceleration_per_s2": -0.0
+    }
+  ],
+  "launch_sha256": "ea3fc152f992de0028e8996fd9f99b4c4042601c5c1e0fec9319a52a96bdfdcd",
+  "scope": "Reference-coordinate derivative at zero initial velocity. Elastic forces and lumped masses are evaluated on the installed mesh. Native contact, attachment and implicit time integration contribute to subsequent motion."
+}

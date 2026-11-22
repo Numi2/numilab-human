@@ -1,0 +1,247 @@
+{
+  "accepted": [
+    {
+      "run": "recruited-two",
+      "verified_endpoint": {
+        "accepted_steps": 2,
+        "simulated_s": 3.125000148429535e-05,
+        "frame_sha256": "b67d21f8e9ffcbc11f2cedf0304bbb67dc47fb9e23b4e36c018e33932a49564d",
+        "physical_nodes_sha256": "24bdd328ba6573a478b99bbdb62cd687a6705a505a2c29e0538af2275c399d06",
+        "complete_wall_s": 209.07295233313926,
+        "end_to_end_factor": 1.4946936528882627e-07,
+        "material_audits": [
+          {
+            "phase": "reference",
+            "step": "0",
+            "material": "15",
+            "cells": "705090",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "0",
+            "minimum_volume_m3": "1.001281176253255e-18",
+            "minimum_shape": "1.000000202919351e-05",
+            "minimum_shape_local_cell": "636727"
+          },
+          {
+            "phase": "accepted",
+            "step": "2",
+            "material": "15",
+            "cells": "705090",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "0",
+            "minimum_volume_m3": "1.001280771802339e-18",
+            "minimum_shape": "1.000000201770946e-05",
+            "minimum_shape_local_cell": "636727"
+          },
+          {
+            "phase": "reference",
+            "step": "0",
+            "material": "16",
+            "cells": "743709",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "0",
+            "minimum_volume_m3": "1.000290144947699e-18",
+            "minimum_shape": "1.000000477467782e-05",
+            "minimum_shape_local_cell": "1389458"
+          },
+          {
+            "phase": "accepted",
+            "step": "2",
+            "material": "16",
+            "cells": "743709",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "1",
+            "minimum_volume_m3": "1.000290395883917e-18",
+            "minimum_shape": "9.982678079242671e-06",
+            "minimum_shape_local_cell": "1248030"
+          }
+        ],
+        "layer_crossing_pairs": 6,
+        "checked_banks": 878,
+        "skin_self_intersections": 0,
+        "physical_skin_tissue_pairs": 11791,
+        "ocular_source_pairs": 350,
+        "maximum_skin_motion_m": 0.011796147205318424,
+        "pleural_pressure_pa": [
+          -490.332489014,
+          -490.332489014
+        ]
+      },
+      "material_checks": {
+        "passed": false,
+        "failures": {
+          "material_layer_crossings": 6,
+          "physical_skin_tissue_pairs": 11791,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      },
+      "support_N": 3491.884231567383,
+      "weight_N": 952.8644362797845,
+      "native_horizon_factor": 4.798860973736555e-07,
+      "device": "Apple M6",
+      "macOS": "27.0",
+      "launch_sha256": "ea3fc152f992de0028e8996fd9f99b4c4042601c5c1e0fec9319a52a96bdfdcd"
+    },
+    {
+      "run": "shared-deep-two",
+      "verified_endpoint": {
+        "accepted_steps": 2,
+        "simulated_s": 3.125000148429535e-05,
+        "frame_sha256": "20f649fbe92a8345fdad4e3fefd0d3e27dcce0abdcaf5d062c382addb2753d88",
+        "physical_nodes_sha256": "51163c680a64196c653eee399b71c59ddf0de49c16aafffec2533580a8ad121b",
+        "complete_wall_s": 209.62355108303018,
+        "end_to_end_factor": 1.490767679625725e-07,
+        "material_audits": [
+          {
+            "phase": "reference",
+            "step": "0",
+            "material": "15",
+            "cells": "705090",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "0",
+            "minimum_volume_m3": "1.001281176253255e-18",
+            "minimum_shape": "1.000000202919351e-05",
+            "minimum_shape_local_cell": "636727"
+          },
+          {
+            "phase": "accepted",
+            "step": "2",
+            "material": "15",
+            "cells": "705090",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "0",
+            "minimum_volume_m3": "1.001281072122425e-18",
+            "minimum_shape": "1.000000202873466e-05",
+            "minimum_shape_local_cell": "636727"
+          },
+          {
+            "phase": "reference",
+            "step": "0",
+            "material": "16",
+            "cells": "743709",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "0",
+            "minimum_volume_m3": "1.000290144947699e-18",
+            "minimum_shape": "1.000000477467782e-05",
+            "minimum_shape_local_cell": "1389458"
+          },
+          {
+            "phase": "accepted",
+            "step": "2",
+            "material": "16",
+            "cells": "743709",
+            "nonfinite": "0",
+            "inverted": "0",
+            "volume_le_1e_18": "0",
+            "shape_lt_1e_5": "1",
+            "minimum_volume_m3": "1.000290128101355e-18",
+            "minimum_shape": "9.982678262125491e-06",
+            "minimum_shape_local_cell": "1248030"
+          }
+        ],
+        "layer_crossing_pairs": 0,
+        "checked_banks": 878,
+        "skin_self_intersections": 0,
+        "physical_skin_tissue_pairs": 11791,
+        "ocular_source_pairs": 350,
+        "maximum_skin_motion_m": 0.011796147205318424,
+        "pleural_pressure_pa": [
+          -490.332489014,
+          -490.332489014
+        ],
+        "endpoint_anatomy": {
+          "passed": false,
+          "failures": {
+            "physical_skin_tissue_pairs": 11791,
+            "fat_shape_lt_1e_5": 1
+          },
+          "scope": "Exact terminal frame and installed material cells only"
+        }
+      },
+      "material_checks": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 11791,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      },
+      "support_N": 3479.817867279053,
+      "weight_N": 952.8644362797845,
+      "native_horizon_factor": 4.777636872679808e-07,
+      "device": "Apple M6",
+      "macOS": "27.0",
+      "launch_sha256": "34a9bf9d52f164f0e2c3fbf2a67a11b06166fade15b4d681652b0d6c1bed12fe"
+    }
+  ],
+  "rejected": [
+    {
+      "run": "recruited-three",
+      "launch_sha256": "ce6e6f7752fb9ee03635e5ad699025d50871d2941c2546d61a8e7f1c260fecc5",
+      "failure_sha256": "f0c85388e65e273598f93d01ed1fa8eb4e96c7ad82f9a92096f9d33f4b18793e",
+      "wall_s": 243.40098449983634,
+      "accepted_prefix": 2,
+      "root": 2,
+      "step_fraction": 1.49012e-08,
+      "fresh_matter_diagnostics": [
+        0.06757448613643646,
+        4.3360451229546015e-08,
+        0,
+        -902
+      ],
+      "final_restricting_element": 950449,
+      "last_invalid_J": 2.5,
+      "full_correction_invalid_tiles": 5
+    },
+    {
+      "run": "shared-recruited-three",
+      "launch_sha256": "ea8b73bcdc33bdc5c47b7378f4df4eb53d665ca8536d4f7fed609576248be129",
+      "failure_sha256": "665443adae9e21a2a744e9bee50ffe33f9b8ac8e71ea91e2155125b0a1ebbd5d",
+      "wall_s": 257.5704837499652,
+      "accepted_prefix": 2,
+      "root": 2,
+      "step_fraction": 3.05176e-05,
+      "fresh_matter_diagnostics": [
+        0.05251573026180267,
+        6.287107225944055e-07,
+        0,
+        -902
+      ],
+      "final_restricting_element": 1035269,
+      "last_invalid_J": 0.349999,
+      "full_correction_invalid_tiles": 2
+    },
+    {
+      "run": "expanded-edge-terminal",
+      "launch_sha256": "ae2ae20c97f288cc1060fcbd1dbf3a23ce6169b2c2dec93f8b2c812f0e48a41d",
+      "failure_sha256": "bec576923bf43c0fb5abc39b9bc6139f519ab0bb305f4c74942d1a1218f7ee1f",
+      "wall_s": 258.5379251248669,
+      "accepted_prefix": 2,
+      "root": 2,
+      "step_fraction": 7.45058e-09,
+      "fresh_matter_diagnostics": [
+        0.0654861256480217,
+        1.9299161380104124e-08,
+        0,
+        -902
+      ],
+      "final_restricting_element": 1035269,
+      "last_invalid_J": 0.35,
+      "full_correction_invalid_tiles": 1
+    }
+  ]
+}
