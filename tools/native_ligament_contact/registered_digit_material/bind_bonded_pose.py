@@ -36,6 +36,8 @@ def bind(trial, owner, fit, out, deep_fit=None):
             or report['reference_motion_after']['minimum_J']<=report['reference_motion_before']['minimum_J']
             or report['max_material_donor_moment_change_kg_m']>1e-10):
         raise ValueError('Ineligible physical registration')
+    if 'loaded_mass_first_moment' in report and not report['loaded_mass_first_moment']['passed']:
+        raise ValueError('Loaded mass moment would be rejected by the native material owner')
     if 'initial_volume_force_balance' in report:
         balance=report['initial_volume_force_balance']
         if not balance or np.max(abs(np.asarray(balance['emitted_dt2_acceleration'])))>.01:

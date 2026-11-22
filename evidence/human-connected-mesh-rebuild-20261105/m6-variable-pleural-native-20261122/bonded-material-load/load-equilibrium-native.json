@@ -1,0 +1,102 @@
+{
+  "stationary-native-three": {
+    "launch_sha256": "7cc7e69cb89e30f6af241286e12a872d0828e4956052338238f88cdecb1e0648",
+    "execution": {
+      "exit": 1,
+      "wall_s": 78.48109241598286
+    },
+    "loaded_mass_certificate": []
+  },
+  "closed-load-three": {
+    "launch_sha256": "6ed4c906f5d725903bf9f77e2c8a24dff32520e3412609aab6f4c59f595dc8e0",
+    "execution": {
+      "exit": 0,
+      "wall_s": 228.6330579170026
+    },
+    "loaded_mass_certificate": [
+      "registered_loaded_cavity_mass=PASS changed_cells=5 mass_drift_kg=4.7433845046240819e-20 first_moment_change_kg_m=1.7718303590721041e-15,1.0464940543645759e-15,-3.9766259258540303e-18"
+    ],
+    "accepted_endpoint": {
+      "accepted_steps": 3,
+      "simulated_s": 4.687500222644303e-05,
+      "frame_sha256": "5137e7cff111cac7b126a74bea9ea2d6ae2fc9da81dac9ea398fc856d289beb8",
+      "physical_nodes_sha256": "01fb1c105b66556e356d06432ffc6ed05f88933ee58f19b4a6432b25d8af7687",
+      "complete_wall_s": 228.6330579170026,
+      "end_to_end_factor": 2.0502285475908474e-07,
+      "material_audits": [
+        {
+          "phase": "reference",
+          "step": "0",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281176253255e-18",
+          "minimum_shape": "1.000000202919351e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        {
+          "phase": "accepted",
+          "step": "3",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001283837548886e-18",
+          "minimum_shape": "1.000000173048108e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        {
+          "phase": "reference",
+          "step": "0",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.000290144947699e-18",
+          "minimum_shape": "1.000000477467782e-05",
+          "minimum_shape_local_cell": "1389458"
+        },
+        {
+          "phase": "accepted",
+          "step": "3",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "2",
+          "minimum_volume_m3": "1.000119023452005e-18",
+          "minimum_shape": "9.943767301123036e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      ],
+      "layer_crossing_pairs": 11,
+      "checked_banks": 878,
+      "skin_self_intersections": 0,
+      "physical_skin_tissue_pairs": 11790,
+      "ocular_source_pairs": 350,
+      "maximum_skin_motion_m": 0.011843197643630515,
+      "pleural_pressure_pa": [
+        -490.332489014,
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "material_layer_crossings": 11,
+          "physical_skin_tissue_pairs": 11790,
+          "fat_shape_lt_1e_5": 2
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    }
+  }
+}

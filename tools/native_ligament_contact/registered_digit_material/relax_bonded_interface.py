@@ -6,11 +6,61 @@ from pathlib import Path
 
 import numpy as np
 from scipy.linalg import null_space
-from scipy.optimize import minimize
+from scipy.optimize import Bounds, LinearConstraint, milp, minimize
 from fit_dorsal_material import inputs
 from fit_posterior_equilibrium import materials
 from material_context import sha
 from torso_cell_geometry import geom
+
+
+def loaded_mass_moments(points, retired_cells, retired_mass, new_cells, new_mass):
+    ids=np.union1d(retired_cells,new_cells)
+    removed=np.searchsorted(ids,retired_cells)
+    added=np.searchsorted(ids,new_cells)
+    dm=np.zeros(len(ids))
+    for c in range(4):
+        np.add.at(dm,removed[:,c],-retired_mass/4)
+        np.add.at(dm,added[:,c],new_mass/4)
+    displacement=points[ids]-points[ids[0]]
+    total=float(retired_mass.sum())
+    radius=float(np.abs(displacement).max())
+    signed=dm@displacement
+    tol=1e-10*total*radius
+    return dict(mass_drift_kg=float(dm.sum()),first_moment_kg_m=signed.tolist(),
+                first_moment_limit_kg_m=tol,affected_nodes=len(ids),changed_mass_kg=total,
+                passed=bool(abs(dm.sum())<=1.e-10*total and np.all(abs(signed)<=tol)))
+
+
+def balance_rounded_moments(initial, rounded, dm):
+    """Choose nearby binary32 points before certifying the loaded mass moments."""
+    out=rounded.copy()
+    # Six independently certified cavities share one native first-moment gate.
+    # Compensate the arithmetic rounding error without altering any mass.
+    weights=np.sum(dm,axis=0)
+    for axis in range(3):
+        drift=weights@(out[:,axis]-initial[:,axis])
+        if abs(drift)<=5e-15:
+            continue
+        ulp=np.abs(np.spacing(out[:,axis].astype('f4')).astype(float))
+        active=np.flatnonzero(abs(weights)*ulp>1e-19)
+        if not len(active):
+            raise ValueError('No Float32 carrier for the proposed moment change')
+        w=weights[active]*ulp[active]*1e15
+        n=len(w)
+        # Minimize the sum of coordinate shifts measured in metres. Finite
+        # registration and material checks are repeated on the emitted points.
+        A=np.block([[np.eye(n),-np.eye(n)],[-np.eye(n),-np.eye(n)]])
+        solution=milp(np.r_[np.zeros(n),ulp[active]/ulp[active].max()],
+                      integrality=np.r_[np.ones(n),np.zeros(n)],
+                      bounds=Bounds(np.r_[np.full(n,-16.),np.zeros(n)],np.full(2*n,16.)),
+                      constraints=[LinearConstraint(np.r_[w,np.zeros(n)][None,:],-drift*1e15-4.,-drift*1e15+4.),
+                                   LinearConstraint(A,-np.inf,0.)],options={'time_limit':4.})
+        if solution.x is None:
+            raise ValueError('No conservative Float32 rounding on the local lattice')
+        out[active,axis]=(out[active,axis]+np.rint(solution.x[:n])*ulp[active]).astype('f4')
+    if np.max(abs(weights@(out-initial)))>5e-15:
+        raise ValueError('Rounded first moments failed closure')
+    return out
 
 
 class Patch:
@@ -142,6 +192,7 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
             mass+=dm[free]
             if np.max(abs(dm[free]))>1e-17:
                 cavity_delta.append(dm[free].copy())
+        mass_map_data=(t[retired],em[retired],new,nm)
         t=np.vstack((t[keep],new))
         em=np.r_[em[keep],nm]
         tags=np.r_[tags[keep],new_tags]
@@ -272,6 +323,8 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
               replay_J_bounds=[floor2,ceil2])
     selected=pose(v)
     selected[local]=selected[local].astype('f4')
+    if balance_load and cavity_delta:
+        selected[local]=balance_rounded_moments(start[local],selected[local],cavity_delta)
     emitted=selected[local]-start[local]
     result=dict(source=pins, proposal_sha256=sha(proposal), map_sha256=sha(mapping), evidence_sha256=sha(evidence),
                 mass_sha256=sha(flow), accepted_pose_sha256=sha(matched), material_sha256=material_pins,
@@ -283,6 +336,9 @@ def solve(native, evidence, proposal, ledger, owner, output, predict=False, expa
                 skin_cells=int((roles==15).sum()),fat_cells=int((roles==16).sum()),
                 installed_before=patch.stats(start), installed_after=patch.stats(selected),
                 reference_motion_before=patch.stats(end), reference_motion_after=patch.stats(selected+delta))
+    full_pose=y.copy()
+    full_pose[free]=selected[local]
+    result['loaded_mass_first_moment']=loaded_mass_moments(full_pose,*mass_map_data)
     if balance_load:
         e,gg,_,_=patch.evaluate(selected)
         if gg is not None:

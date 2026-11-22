@@ -11,6 +11,7 @@ from scipy.sparse.csgraph import connected_components
 from scipy.spatial import cKDTree
 from fit_dorsal_material import inputs
 from material_context import sha
+from torso_cell_geometry import geom
 
 
 def components(t,n):
@@ -60,6 +61,7 @@ def audit(native, proposal, ledger, owner, folds, interface, output):
         raise ValueError('Wrong nodal registration')
     layers=np.full(len(y),-1,dtype='i1')
     donors=np.full(len(y),-1,dtype='i4')
+    dmap={}
     with mapping.open() as src:
         for r in csv.DictReader(src):
             n=int(r['joint_node_id'])-1
@@ -68,6 +70,7 @@ def audit(native, proposal, ledger, owner, folds, interface, output):
             if layers[n] not in (-1,code) or donors[n] not in (-1,donor):
                 raise ValueError('Inconsistent nodal ownership')
             layers[n],donors[n]=code,donor
+            if code==3:dmap[int(r['registered_surface_vertex_row'])]=n
     if (layers<0).any() or (size==0).any():raise ValueError('Unregistered or unused physical nodes')
     fold=json.loads(folds.read_text())
     fold_nodes=np.unique([n for f in fold['faces'].values() for n in f])
@@ -114,6 +117,36 @@ def audit(native, proposal, ledger, owner, folds, interface, output):
         source_groups=len(np.unique(source_group[source_rows])),
         cells_with_group_also_in_contiguous_material=int(can_share_group.sum()),
         cells_with_exclusive_source_group=int((~can_share_group).sum()))
+    accepted=native/'physical-accepted.node'
+    if accepted.exists():
+        layer_report=json.loads((native/'accepted-layers.json').read_text())
+        if sha(accepted)!=layer_report['inputs']['NATIVE_ACCEPTED_NODE_SHA256']:
+            raise ValueError('Wrong physical frame')
+        face_src=Path(env['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_SURFACE_D_FACES_CSV'])
+        if sha(face_src)!=env['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_SURFACE_D_FACES_SHA256']:
+            raise ValueError('Unknown D surface')
+        df=np.loadtxt(face_src,skiprows=1,delimiter=',',usecols=(1,2,3),dtype=int)
+        if set(dmap)!=set(range(len(dmap))):raise ValueError('Incomplete deep surface')
+        df=np.array([dmap[i] for i in range(len(dmap))])[df]
+        end=np.loadtxt(accepted,skiprows=1,usecols=(1,2,3))
+        qa=[]
+        for off in range(0,len(t),48000):
+            block=t[off:off+48000]
+            volume,shape=geom(end,block)
+            for i in np.flatnonzero((volume<=1e-18)|(shape<1e-5)):
+                row=off+i
+                qa.append(dict(native_material_row=int(row),source_row=int(keep[row]) if row<len(keep) else None,
+                               material=int(tag[row]),component=int(cells[row]),in_main=bool(cells[row]==biggest),
+                               volume_m3=float(volume[i]),shape=float(shape[i]),nodes=t[row].tolist()))
+        failures=[]
+        for a,b in layer_report['witnesses'].get('2-2',[]):
+            if max(a,b)>=len(df):
+                raise ValueError('Headwall witness needs its source facet map')
+            ids=np.r_[df[a],df[b]]
+            group_ids=np.unique(labels[ids])
+            failures.append(dict(faces=[a,b],components=group_ids.tolist(),involves_main=bool(biggest in group_ids),donors=np.unique(donors[ids]).tolist()))
+        d['matched_motion']=dict(physical_nodes_sha256=sha(accepted),quality_witnesses=qa,deep_self_pairs=failures,
+                                 all_material_layer_pair_counts=layer_report['pair_counts'])
     from locate_tissue_components import locate
     d['adipose_host_location']=locate(y,t,tag,labels,biggest,fi)
     output.write_text(json.dumps(d,indent=2,allow_nan=False)+'\n')

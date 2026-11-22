@@ -29,6 +29,33 @@ class TestBondedPatch(unittest.TestCase):
         swapped[3,2]=-1.
         self.assertTrue(np.isinf(p.evaluate(swapped)[0]))
 
+    def test_loaded_mass_and_location(self):
+        from relax_bonded_interface import loaded_mass_moments
+        points=np.array([[0.,0.,0.],[1.,0.,0.],[0.,1.,0.],[0.,0.,1.],[2.,0.,0.]])
+        t=np.array([[0,1,2,3]])
+        m=np.array([1.])
+        self.assertTrue(loaded_mass_moments(points,t,m,t,m)['passed'])
+        other=np.array([[0,4,2,3]])
+        mismatch=loaded_mass_moments(points,t,m,other,m)
+        self.assertFalse(mismatch['passed'])
+        self.assertEqual(mismatch['mass_drift_kg'],0.)
+        np.testing.assert_array_equal(mismatch['first_moment_kg_m'],[.25,0.,0.])
+        shifted=loaded_mass_moments(points+33,t,m,other,m)
+        self.assertEqual(mismatch,shifted)
+
+    def test_float32_moment_closure(self):
+        from relax_bonded_interface import balance_rounded_moments
+        # Unequal coordinate binades make the first rounded pose fail closure.
+        x=np.array([[1.,.25,.125],[.5,.25,.125],[.375,.25,.125]],dtype='f4').astype(float)
+        dm=np.array([[1e-5,-2e-5,1e-5]])
+        candidate=x.copy()
+        candidate[0,0]=np.nextafter(np.float32(1),np.float32(2))
+        self.assertGreater(np.max(abs(dm@(candidate-x))),5e-15)
+        result=balance_rounded_moments(x,candidate,dm)
+        self.assertLessEqual(np.max(abs(dm@(result-x))),5e-15)
+        np.testing.assert_array_equal(result,result.astype('f4'))
+        np.testing.assert_array_equal(result[:,1:],candidate[:,1:])
+
     def test_initial_volume_acceleration_gradient(self):
         from bonded_volume_acceleration import volume_rate
         x=np.array([[.0,.0,.0],[1.,.0,.0],[.0,1.,.0],[.0,.0,1.],[.0,.0,-.7]])
