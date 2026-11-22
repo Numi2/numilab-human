@@ -1,0 +1,11 @@
+# Native motion through the previous full-volume rejection
+
+Six fixed-boundary material cavities now enter the same Apple M6 full-body scene together. The final two repairs reconnect a skin and a fat patch across the tissue thickness. All registered vertices, exterior triangles and entheses keep their coordinates. The native loader checks every carrier against its original donor and distance limit. The replacement mass and first moments close in both the reference and installed coordinates.
+
+The two-step run accepted 31.25 µs. Fresh physical residuals were 0.00000894 and 0.00000803. The prior four-cavity case rejected the second step at 0.0249753. The six-cavity run installed 1,448,799 material cells, changed 166 lumped node masses and retained 14 physical attachments. Its cold end-to-end factor was 1.56e-7, with 56.57 s spent inside the native horizon. This diagnostic run includes solver tracing.
+
+At the second endpoint the three tissue layer boundaries had zero crossings. The skin had zero self-intersections. The 878-bank audit found 11,795 physical skin-to-tissue triangle pairs. Both materials had zero inversions. One fat cell missed the shape threshold, at 0.00000998268 against 0.00001. The accepted bed reaction was 3,491.92 N against 952.86 N of body weight. The physiological trace contains a pleural pressure sample, with insufficient elapsed physical time for a ventilation or gas-response test.
+
+A separate four-step request reproduced the two-step prefix and rolled back on the third step. Its residual was 0.0677739. Five retained fat cells appeared in the final material backtracking trials. The compressed trace gives their source rows and the complete trial series. The first two roots were dynamically accepted. The endpoint shape audit and external tissue crossings remain independent qualification failures.
+
+The recovery receipts identify the independently downloaded and verified owner, the six-cavity input, accepted native frame, compensated material coordinates and crossing witnesses. The exact fallback for wide-coordinate tetrahedron pairs agreed with an independent integer oracle on 304 cases. A real 125-source, 75-cell carrier graph passed per-source and per-cell conservation and rejected a disconnected source.

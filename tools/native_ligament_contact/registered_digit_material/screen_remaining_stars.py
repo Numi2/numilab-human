@@ -9,6 +9,7 @@ from audit_cavity_response import elastic
 from fit_posterior_equilibrium import materials
 from fit_dorsal_material import inputs
 from material_context import sha
+from cavity_material_witness import accepted_node_pin
 
 
 @lru_cache(None)
@@ -32,17 +33,15 @@ def load_module(path):
 
 def screen(lib, run, first, witness, owner, out):
     exact = load_module(lib / "fixed_boundary_volume_flip_198_root.py")
-    cavity = load_module(lib / "local_fixed_boundary_cavity_repair_625.py")
+    cavity_path = lib / "local_fixed_boundary_cavity_repair_625.py"
+    if not cavity_path.is_file():
+        cavity_path = lib / "bounded625-local-cavity-repair" / cavity_path.name
+    cavity = load_module(cavity_path)
     r, y, t, role, pins = inputs(run)
     x = r.astype(float)
     y = y.astype(float)
     p = first / "physical-accepted.node"
-    if (
-        sha(p)
-        != json.loads((first / "physical-recovery.json").read_text())[
-            "verified_member_sha256"
-        ]["accepted.node"]
-    ):
+    if sha(p) != accepted_node_pin(first):
         raise ValueError("Changed matched pose")
     z = np.loadtxt(p, skiprows=1, usecols=(1, 2, 3))
     props, materials_pin = materials(owner)
@@ -160,10 +159,13 @@ def screen(lib, run, first, witness, owner, out):
                 accepted=sha(p),
                 native_material=materials_pin,
                 reference_modules={
-                    n: sha(lib / n)
-                    for n in (
-                        "fixed_boundary_volume_flip_198_root.py",
-                        "local_fixed_boundary_cavity_repair_625.py",
+                    n: sha(path)
+                    for n, path in (
+                        (cavity_path.name, cavity_path),
+                        (
+                            "fixed_boundary_volume_flip_198_root.py",
+                            lib / "fixed_boundary_volume_flip_198_root.py",
+                        ),
                     )
                 },
                 edge_stars=[

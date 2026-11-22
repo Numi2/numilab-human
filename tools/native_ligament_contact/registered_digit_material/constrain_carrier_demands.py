@@ -50,13 +50,19 @@ def solve(x, y, old, new, prior, supply, bounds=(850.0, 950.0)):
             slot += 1
     # Full-support sources may serve any remaining sink capacity.
     goal = np.r_[pre @ (b @ hi - a @ (prior / total)), np.ones(len(groups))]
+    # Reserve an interior margin for unrestricted sources. A boundary
+    # solution can leave a small, singleton carrier facing roundoff even
+    # when a feasible interior allocation exists. All exact physical
+    # equations and original density bounds remain active.
+    eq = np.column_stack((eq, np.zeros(len(eq))))
+    upper = np.column_stack((upper, lo))
     result = linprog(
-        np.zeros(n + slots),
+        np.r_[np.zeros(n + slots), -1.0],
         A_eq=eq,
         b_eq=goal,
         A_ub=upper,
         b_ub=hi,
-        bounds=list(zip(np.zeros(n), hi - lo)) + [(0.0, 1.0)] * slots,
+        bounds=list(zip(np.zeros(n), hi - lo)) + [(0.0, 1.0)] * slots + [(0.0, 1.0)],
         method="highs",
         options={
             "primal_feasibility_tolerance": 1e-10,

@@ -8,6 +8,7 @@ from screen_remaining_stars import load_module
 from fit_dorsal_material import inputs
 from fit_posterior_equilibrium import materials
 from material_context import sha
+from cavity_material_witness import accepted_node_pin
 from audit_cavity_response import elastic
 from torso_cell_geometry import geom
 
@@ -41,8 +42,7 @@ def screen(lib, run, first, witness, owner, out):
     x = rx.astype(float)
     y = y.astype(float)
     p = first / "physical-accepted.node"
-    rec = json.loads((first / "physical-recovery.json").read_text())
-    if sha(p) != rec["verified_member_sha256"]["accepted.node"]:
+    if sha(p) != accepted_node_pin(first):
         raise ValueError("Unknown deformation")
     z = np.loadtxt(p, skiprows=1, usecols=(1, 2, 3))
     pr, matpin = materials(owner)
@@ -72,10 +72,16 @@ def screen(lib, run, first, witness, owner, out):
         base = t[r]
         mat = tag[r]
         same = layers[base]
-        if not np.all(same == same[0]) or same[0] not in (1, 2, 4):
-            continue
-        opposite = {15: {1: 2, 2: 1}, 16: {2: 4, 4: 2}}[int(mat)].get(int(same[0]))
-        if opposite is None:
+        one_sheet = np.all(same == same[0]) and same[0] in (1, 2, 4)
+        opposite = (
+            {15: {1: 2, 2: 1}, 16: {2: 4, 4: 2}}[int(mat)].get(int(same[0]))
+            if one_sheet
+            else None
+        )
+        # A mixed-boundary or interior sliver has no unique opposite sheet.
+        # Try existing same-material vertices around its star, keeping every
+        # distinct exterior interface and exact oriented boundary.
+        if one_sheet and opposite is None:
             continue
         mid = x[base].mean(0)
         rad = 0.025
@@ -93,11 +99,18 @@ def screen(lib, run, first, witness, owner, out):
         candidates = set()
         for i in incident:
             if tag[i] == mat:
-                candidates.update(int(n) for n in t[i] if layers[n] & opposite)
-        near = local_nodes[(layers[local_nodes] & opposite) != 0]
+                candidates.update(
+                    int(n) for n in t[i] if opposite is None or layers[n] & opposite
+                )
+        near = (
+            local_nodes
+            if opposite is None
+            else local_nodes[(layers[local_nodes] & opposite) != 0]
+        )
         candidates.update(
             near[np.argsort(np.linalg.norm(x[near] - mid, axis=1))[:30]].tolist()
         )
+        candidates.difference_update(base.tolist())
         geom_cache = {}
         nc = 0
         for apex in sorted(candidates):

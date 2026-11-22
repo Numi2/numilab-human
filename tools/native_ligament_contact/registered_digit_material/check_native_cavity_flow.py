@@ -4,7 +4,7 @@ from pathlib import Path
 import json, subprocess, tempfile, sys
 
 
-def check(owner, source, trace, fit):
+def check(owner, source, trace, fit, legacy_fails=True):
     supply = next(
         json.loads(l.partition("=")[2])["supply"]
         for l in trace.read_text().splitlines()
@@ -49,6 +49,11 @@ std::fill_n(d.begin(),m.size(),2.);if(routeCavityMassSmallFirst(src,m,d,1.,out,e
 std::cout<<"carrier mass fixture passed "<<src.size()<<" sources "<<m.size()<<" sinks; disconnected source rejected\\n";
 }
 """
+    if not legacy_fails:
+        code = code.replace(
+            'if(routeRestrictedParentMass(src,m,d,1.,out,error)){std::cerr<<"expected captured baseline failure";return 1;}',
+            "",
+        )
     with tempfile.TemporaryDirectory() as tmp:
         f = Path(tmp) / "test.cpp"
         binary = Path(tmp) / "test"

@@ -171,7 +171,7 @@ def main(native, first, ledger, inventory, witnesses, prior, out, other=(), kind
     if start["source"] != pins:
         raise ValueError("Wrong retained source")
     accepted = first / "physical-accepted.node"
-    if sha(accepted) != start["accepted_coordinates_sha256"]:
+    if sha(accepted) != inv.get("accepted", start["accepted_coordinates_sha256"]):
         raise ValueError("Wrong matched pose")
     end = np.loadtxt(accepted, skiprows=1, usecols=(1, 2, 3))
     env = json.loads((native / "launch.json").read_text())["environment"]
