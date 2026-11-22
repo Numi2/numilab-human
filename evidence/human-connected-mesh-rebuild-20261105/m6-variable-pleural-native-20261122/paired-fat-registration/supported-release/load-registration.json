@@ -1,0 +1,190 @@
+{
+  "source": {
+    "reference_sha256": "9e5412c2a07f5f1ec9366e55ec73ea5089e1dab57b84ffb939fab52ce64bd6df",
+    "installed_pose_sha256": "a89277ee6b1219eb471e2ba27c0278d8a3d5f41e5f3e249a9bb01af264dbff65",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "proposal_sha256": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+  "map_sha256": "ca4c39029b0a8a906a26b173b9e1d6a6c7eae24c151c2841d852062f3ed42f2e",
+  "evidence_sha256": "55c812dcff7d4aa3a4f4d16497c66500d665c7e10810615001a36b7f4363aefa",
+  "mass_sha256": "6ade8d6a9851e37354db260267ac70326c2cd3696f1bb1d83e4250b6daaab064",
+  "accepted_pose_sha256": "40eb9c1cf220c77503ac89e50d9f1594265b3deeaceebc2becf91b33ecfe918d",
+  "material_sha256": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "cavity_moment_constraints": 4,
+  "node_roles": [
+    "I",
+    "I",
+    "I",
+    "I",
+    "I",
+    "I",
+    "I",
+    "I",
+    "I"
+  ],
+  "node_ids": [
+    128807,
+    128871,
+    128904,
+    128965,
+    129095,
+    129139,
+    129286,
+    129317,
+    129484
+  ],
+  "donors": [
+    128,
+    128,
+    128,
+    128,
+    128,
+    128,
+    128,
+    128,
+    128
+  ],
+  "emitted_coordinates": [
+    [
+      0.014525719918310642,
+      -0.836599588394165,
+      0.0019341944716870785
+    ],
+    [
+      0.016063503921031952,
+      -0.8435769081115723,
+      0.001960676396265626
+    ],
+    [
+      0.017600303515791893,
+      -0.8395811915397644,
+      0.0018122497713193297
+    ],
+    [
+      0.018852990120649338,
+      -0.836012601852417,
+      0.0017850506119430065
+    ],
+    [
+      0.02074403688311577,
+      -0.8422899842262268,
+      0.002263185800984502
+    ],
+    [
+      0.021475939080119133,
+      -0.8304176330566406,
+      0.0017981694545596838
+    ],
+    [
+      0.023372426629066467,
+      -0.8386749029159546,
+      0.002393218921497464
+    ],
+    [
+      0.02423761785030365,
+      -0.8430958986282349,
+      0.0025145895779132843
+    ],
+    [
+      0.02699592523276806,
+      -0.8365944027900696,
+      0.0028795176185667515
+    ]
+  ],
+  "mesh_mass_change_kg": 0.0,
+  "max_material_donor_moment_change_kg_m": 3.1052026681982154e-11,
+  "max_replacement_moment_change_kg_m": 1.7831697184659297e-12,
+  "maximum_displacement_m": 0.00023185474313063296,
+  "history": {
+    "success": true,
+    "message": "Optimization terminated successfully",
+    "iterations": 3,
+    "minimum_constraint": -7.06879443868047e-10,
+    "installed_J_bounds": [
+      0.6501662239574034,
+      1.4938973356077934
+    ],
+    "replay_J_bounds": [
+      0.7114442457683774,
+      1.9443319694143342
+    ]
+  },
+  "skin_cells": 81,
+  "fat_cells": 67,
+  "installed_before": {
+    "potential_J": 0.017252348490686933,
+    "free_force_l2_N": 15.165669291209968,
+    "minimum_J": 0.68438549890253,
+    "maximum_J": 1.4227593672455174,
+    "minimum_shape": 0.0008548857544965994,
+    "min_volume_m3": 3.980681744820563e-11,
+    "bad_cells": 0,
+    "outside_material_bounds": 0
+  },
+  "installed_after": {
+    "potential_J": 0.017124647023081946,
+    "free_force_l2_N": 14.909829880369843,
+    "minimum_J": 0.68438549890253,
+    "maximum_J": 1.4943545512593572,
+    "minimum_shape": 0.0007579147615964086,
+    "min_volume_m3": 3.587967816514552e-11,
+    "bad_cells": 0,
+    "outside_material_bounds": 0
+  },
+  "reference_motion_before": {
+    "potential_J": 0.012436696864576019,
+    "free_force_l2_N": 12.368879906886951,
+    "minimum_J": 0.7064442457683774,
+    "maximum_J": 1.949331969414334,
+    "minimum_shape": 0.0017316634894759652,
+    "min_volume_m3": 8.911184950260888e-11,
+    "bad_cells": 0,
+    "outside_material_bounds": 0
+  },
+  "reference_motion_after": {
+    "potential_J": 0.012375896683348488,
+    "free_force_l2_N": 12.202580329705782,
+    "minimum_J": 0.7114423897169923,
+    "maximum_J": 1.919459135992064,
+    "minimum_shape": 0.0017316634894759652,
+    "min_volume_m3": 8.774624144923002e-11,
+    "bad_cells": 0,
+    "outside_material_bounds": 0
+  },
+  "installed_witness_rows": [
+    746944
+  ],
+  "loaded_mass_first_moment": {
+    "mass_drift_kg": -4.79420648145934e-19,
+    "first_moment_kg_m": [
+      7.285549392348036e-16,
+      -2.0484757190050426e-15,
+      6.901983112923549e-16
+    ],
+    "first_moment_limit_kg_m": 1.559026481021049e-13,
+    "affected_nodes": 166,
+    "changed_mass_kg": 0.01886291350343259,
+    "passed": true
+  },
+  "initial_volume_force_balance": {
+    "window_s": 1.5625e-05,
+    "witness_rows": [
+      746944
+    ],
+    "initial_dt2_acceleration": [
+      0.2660682022843547
+    ],
+    "emitted_dt2_acceleration": [
+      0.005320750092757167
+    ],
+    "requested_absolute_bound": 0.005,
+    "scope": "Material force contribution at zero velocity before contact and skeletal reactions."
+  },
+  "extrapolated_witness_J": {
+    "746944": 2.2987073402019016
+  },
+  "extrapolation_scope": "Only the original rejecting cells constrain the secant predictor. Mandatory native checks cover all cells."
+}

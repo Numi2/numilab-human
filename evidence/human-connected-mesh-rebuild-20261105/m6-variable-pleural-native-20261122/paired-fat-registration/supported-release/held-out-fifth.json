@@ -1,0 +1,167 @@
+{
+  "pins": {
+    "reference_sha256": "9e5412c2a07f5f1ec9366e55ec73ea5089e1dab57b84ffb939fab52ce64bd6df",
+    "installed_pose_sha256": "eb4947de6d571074222f8c935726e3e6cd3f71b496bfef482cc3465d76c2acd2",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "accepted_sha256": "52d750b44c8cb35012825846148c3c4f82e0746b253013a702df838d3a091919",
+  "proposal_sha256": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+  "mass_sha256": "6ade8d6a9851e37354db260267ac70326c2cd3696f1bb1d83e4250b6daaab064",
+  "material_sha256": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "failed_trace_sha256": "c628c0cd1d93ef0481c11dbeeadbbc15d812b92378d083e0c5ba5a0e36117cc5",
+  "dt_s": 1.5625e-05,
+  "accepted_steps": 4,
+  "material_nodes": 311020,
+  "material_cells": 1448799,
+  "skin_fat_mass_kg": 13.939679709969152,
+  "installed_witness_rows": [
+    120137,
+    1031811
+  ],
+  "native_full_trial": {
+    "alpha": 1,
+    "valid_tile_min_J": 0.370359,
+    "first_bad_tet": 123452,
+    "trial_J": 2.52272,
+    "current_J": 2.3598,
+    "reason": 4,
+    "invalid_tiles": 2,
+    "tile_witness_tets": [
+      123452,
+      1035126
+    ],
+    "tile_witnesses_complete": true
+  },
+  "results": {
+    "loaded": {
+      "witness_J": [
+        1.1992785071289325,
+        1.367447336801267
+      ],
+      "elastic_internal_force_sum_N": [
+        -3.4128578270226454e-13,
+        -3.3256095189344273e-15,
+        4.165309250717709e-12
+      ],
+      "calculated_net_force_N": [
+        -3.4128578270226454e-13,
+        -3.3256095189344273e-15,
+        -136.74825795477165
+      ],
+      "predictions": {
+        "mass_plus_nodal_tangent": {
+          "witness_rank": [
+            166,
+            46
+          ],
+          "witness_score": [
+            0.037221799402296904,
+            0.12665340948667916
+          ],
+          "max": 6.00129153974204,
+          "counts_at_or_above_one": 3,
+          "top_installed_cells": [
+            1004435,
+            39736,
+            1115719,
+            458254,
+            120123,
+            1362060,
+            313822,
+            39204,
+            129649,
+            313483,
+            312980,
+            1257825
+          ],
+          "predicted_witness_J": [
+            1.2476937016148355,
+            1.238584162622245
+          ]
+        }
+      }
+    },
+    "accepted": {
+      "witness_J": [
+        2.140818752083397,
+        0.5130568366163841
+      ],
+      "elastic_internal_force_sum_N": [
+        -1.2172962800754065e-12,
+        2.409580939654827e-14,
+        -1.6680666778388638e-11
+      ],
+      "calculated_net_force_N": [
+        -1.2172962800754065e-12,
+        2.409580939654827e-14,
+        -136.74825795480388
+      ],
+      "predictions": {
+        "mass_plus_nodal_tangent": {
+          "witness_rank": [
+            9809,
+            16
+          ],
+          "witness_score": [
+            0.000848077933530904,
+            0.1301333639009415
+          ],
+          "max": 2.2151928587231366,
+          "counts_at_or_above_one": 1,
+          "top_installed_cells": [
+            1218261,
+            1362060,
+            313588,
+            120123,
+            129649,
+            39204,
+            313457,
+            1112073,
+            39736,
+            1311048,
+            746944,
+            313596
+          ],
+          "predicted_witness_J": [
+            2.1392999982168015,
+            0.49183770196044785
+          ]
+        },
+        "accepted_displacement_secant": {
+          "witness_rank": [
+            2,
+            1
+          ],
+          "witness_score": [
+            0.7113285697410645,
+            1.2980874492817827
+          ],
+          "max": 1.2980874492817827,
+          "counts_at_or_above_one": 1,
+          "top_installed_cells": [
+            1031811,
+            120137,
+            313012,
+            313040,
+            312929,
+            870989,
+            746944,
+            313130,
+            994426,
+            390208,
+            41902,
+            21359
+          ],
+          "predicted_witness_J": [
+            2.396314635441725,
+            0.30139480348506564
+          ]
+        }
+      }
+    }
+  },
+  "scope": "Offline ranking at the installed and accepted poses. The local implicit predictor includes true elastic forces, gravity, physical lumped mass and the nodal diagonal of the two-material Hessian. Off-diagonal coupling, bed, attachment, damping and skeletal reactions act in the full native solver. A rank measures association with the retained first failing face per reduction tile."
+}

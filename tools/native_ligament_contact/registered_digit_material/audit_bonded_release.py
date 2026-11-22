@@ -5,7 +5,7 @@ import numpy as np
 from fit_dorsal_material import inputs
 from material_context import sha
 
-def run(root, accepted=None, rejected=None, screen_both=False):
+def run(root, accepted=None, rejected=None, screen_both=False, forecast_steps=1):
     accepted=accepted or root/'paired-fat-three-resumed'
     rejected=rejected or root/'four-physical-resumed'
     x,start,t,tags,pins=inputs(accepted)
@@ -45,7 +45,8 @@ def run(root, accepted=None, rejected=None, screen_both=False):
         t=np.vstack((t[keep],p['replacement_tetrahedra']))
         po=p['replacement_parent_offsets']
         parents=p['replacement_parent_cell_rows']
-    frame=[x.astype(float),start.astype(float),end,end+(end-start)/root_index]
+    if forecast_steps<1 or (not screen_both and forecast_steps!=1):raise ValueError('Invalid geometric lookahead')
+    frame=[x.astype(float),start.astype(float),end,end+(end-start)*(forecast_steps/root_index)]
     rows=[]; hits=[]
     for u in range(0,len(t),65536):
         cells=t[u:u+65536]
@@ -70,7 +71,8 @@ def run(root, accepted=None, rejected=None, screen_both=False):
         secant_scope='Diagnostic linear extension of accepted displacements. Only native GPU steps advance physical time.')
 
     if screen_both:
-        result.update(native_witness_rows=native, predicted_rows=hits, forecast_limits=[.4,2.4])
+        result.update(native_witness_rows=native, predicted_rows=hits, forecast_limits=[.4,2.4], forecast_steps=forecast_steps)
+        result['phases']=['installed',f'{root_index} accepted steps',f'{forecast_steps} additional steps along the secant']
     return result
 
 if __name__=='__main__':
@@ -80,4 +82,5 @@ if __name__=='__main__':
     parser.add_argument('--accepted',type=Path)
     parser.add_argument('--rejected',type=Path)
     parser.add_argument('--screen-both',action='store_true')
+    parser.add_argument('--forecast-steps',type=int,default=1)
     print(json.dumps(run(**vars(parser.parse_args())),indent=2))

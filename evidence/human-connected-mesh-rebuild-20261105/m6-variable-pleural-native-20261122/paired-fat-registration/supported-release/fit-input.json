@@ -1,0 +1,65 @@
+{
+  "geometry": {
+    "reference_sha256": "9e5412c2a07f5f1ec9366e55ec73ea5089e1dab57b84ffb939fab52ce64bd6df",
+    "installed_pose_sha256": "a89277ee6b1219eb471e2ba27c0278d8a3d5f41e5f3e249a9bb01af264dbff65",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "mesh_sha256": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+  "mass_sha256": "6ade8d6a9851e37354db260267ac70326c2cd3696f1bb1d83e4250b6daaab064",
+  "map_sha256": "ca4c39029b0a8a906a26b173b9e1d6a6c7eae24c151c2841d852062f3ed42f2e",
+  "physical_endpoint_sha256": "40eb9c1cf220c77503ac89e50d9f1594265b3deeaceebc2becf91b33ecfe918d",
+  "native_trace_sha256": "6205bc6f2a4f1621871a7236bb97a4f219c44c5a138812fe2b1568ac81178865",
+  "installed_witness_rows": [
+    746944
+  ],
+  "accepted_steps": 3,
+  "material_rows": 1448799,
+  "witnesses": [
+    {
+      "installed_row": 746944,
+      "global_element": 750259,
+      "node_ids": [
+        129095,
+        129286,
+        128965,
+        128904
+      ],
+      "source_rows": [
+        747047
+      ],
+      "J": [
+        0.8707787155753743,
+        1.9493319694143403,
+        2.309683211517902
+      ]
+    }
+  ],
+  "selected_alpha": 0.0078125,
+  "phases": [
+    "installed",
+    "three accepted steps",
+    "fourth-step secant diagnostic"
+  ],
+  "native_full_trial": {
+    "alpha": 1,
+    "valid_tile_min_J": 0.513057,
+    "first_bad_tet": 750259,
+    "trial_J": 2.50136,
+    "current_J": 2.49998,
+    "reason": 4,
+    "invalid_tiles": 1,
+    "tile_witness_tets": [
+      750259
+    ],
+    "tile_witnesses_complete": true
+  },
+  "secant_scope": "Diagnostic linear extension of accepted displacements. Only native GPU steps advance physical time.",
+  "native_witness_rows": [
+    746944
+  ],
+  "predicted_rows": [],
+  "forecast_limits": [
+    0.4,
+    2.4
+  ]
+}
