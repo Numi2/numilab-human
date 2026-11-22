@@ -1,0 +1,11 @@
+# Physical skin and fat at the matched native endpoint
+
+All 705,091 skin and 743,713 fat tetrahedra pass the original signed-volume and normalized-shape gates at release and at step eight on the Apple M6. An independent predicate on the compensated accepted coordinates finds zero crossings within or between the outer skin, inner skin and deep fat across 596,721 material facets. The prior sequence had 29 and then three deep-fat crossings. The final fit protected the outer surface, checked three measured displacement fields and their doubled values, and rebuilt both material registration and conservative mass mapping. The largest source carrier mass deviation was 4.34e-19 kg. Exact source and accepted material coordinates, native launch and frame recovery are retained.
+
+The integrated body advanced 0.125 ms in 97.930 s of motion and 242.168 s from launch to exit. Brain and physiology shared the accepted body clock. The release had one material vertex within 1 µm of the bed. The terminal bed reaction was 0 N. The body had no root assistance. Sustained weight-bearing rest and a 16-second run remain open.
+
+The independent target check found 11,663 nonocular skin-to-source triangle pairs, with zero bone pairs. It records 10,795 skin-to-muscle pairs. The largest banks are the bilateral extensor digitorum and brachioradialis. Their four banks account for 3,749 pairs. The muscle manifest distinguishes 10,024 pairs on route-linked surfaces and 771 on explicitly passive surfaces. These are geometric witnesses. The 350 source ocular pairs require their own anatomical interpretation, and 274 pairs belong to display-only eye components.
+
+The fine scene is the dense mechanical reference. The existing supported model is the independent control for gravity, bed reaction and coupled circulation. Its 60-second result at 0.10459× used a different contact discretization. Neither benchmark can certify the other.
+
+To replay an installed registered volume, invoke verify_registered_material_motion.sh with its input directory, parent selection, binary, fresh output, root count, Python, compiled boundary predicate, surface-audit entry point, and a fresh capture directory. A nonzero overall result preserves per-domain evidence when other anatomy still crosses. The zero material result above applies to the initial and eighth sampled states.
