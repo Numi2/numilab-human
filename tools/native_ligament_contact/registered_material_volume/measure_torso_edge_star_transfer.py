@@ -10,8 +10,24 @@ j=json.load(launch.open());env=j['environment'];prefix='NUMI_HUMAN_PHYSICAL_SKIN
 vol=Path(env[prefix+'TETGEN_NODE']);assert sha(vol)==env[prefix+'TETGEN_NODE_SHA256']
 with vol.open() as f:
     n=int(next(f).split()[0]);x=np.loadtxt(f,max_rows=n,usecols=(1,2,3)).astype('f4')
-p=np.load(star/'local-volume-proposal.npz');s=json.load((star/'edge-stars.json').open());assert sha(star/'local-volume-proposal.npz')==s['proposal_sha256']
-xx=np.vstack((x,p['new_points_world_m'].astype('f4')));sf=p['skin_faces'];touched=set(map(int,p['affected_skin_faces']));orig={r['primitive']:r for r in map(json.loads,(ledger/'target-witnesses.jsonl').open())}
+if star.is_file():
+    patch=np.load(star);nodes=patch['nodes'];now=patch['x'].astype('f4')
+    assert len(nodes)==len(np.unique(nodes)) and len(nodes)==len(now)
+    moved=nodes[np.any(x[nodes]!=now,axis=1)];xx=x.copy();xx[nodes]=now
+    face_file=Path(env[prefix+'SURFACE_O_FACES_CSV']);assert sha(face_file)==env[prefix+'SURFACE_O_FACES_SHA256']
+    full_faces=np.loadtxt(face_file,skiprows=1,delimiter=',',usecols=(1,2,3),dtype='i4')
+    surface_nodes=np.full(full_faces.max()+1,-1,dtype='i4')
+    mapping=Path(env[prefix+'COMBINED_NODE_MAP_CSV']);assert sha(mapping)==env[prefix+'COMBINED_NODE_MAP_SHA256']
+    for row in csv.DictReader(mapping.open()):
+        if row['registered_surface_layer']=='O':surface_nodes[int(row['registered_surface_vertex_row'])]=int(row['joint_node_id'])-1
+    assert (surface_nodes>=0).all()
+    full=surface_nodes[full_faces];affected=np.flatnonzero(np.isin(full,moved).any(1));sf=full[affected]
+    parent=affected;touched=set(map(int,affected));added_nodes=0;candidate_hash=sha(star)
+else:
+    p=np.load(star/'local-volume-proposal.npz');s=json.load((star/'edge-stars.json').open());assert sha(star/'local-volume-proposal.npz')==s['proposal_sha256']
+    xx=np.vstack((x,p['new_points_world_m'].astype('f4')));sf=p['skin_faces'];touched=set(map(int,p['affected_skin_faces']))
+    parent=p['skin_parent'];added_nodes=len(p['new_points_world_m']);candidate_hash=s['proposal_sha256']
+orig={r['primitive']:r for r in map(json.loads,(ledger/'target-witnesses.jsonl').open())}
 base=json.load((ledger/'initial-envelope.json').open());b=json.load(pose.open())['all_bodies'];poses={r['body_index']:{'position_m':r['current']['position_world_m'],'quaternion_xyzw':r['current']['orientation_world_xyzw']} for r in b}
 raw=subprocess.check_output(['/opt/homebrew/bin/zstd','-qdc',str(pack)]);assert hashlib.sha256(raw).hexdigest()==base['pack_sha256'] and sha(pose)==base['pose_sha256']
 patch_ids=np.unique(sf);remap=np.searchsorted(patch_ids,sf);rec=c._exact_surface_records(xx[patch_ids],remap)
@@ -30,7 +46,7 @@ for key,i,v,g in api['primitives'](raw,poses):
             ch,mc=c._candidate_target_rows_for_skin_aabb(g[mask],v,fl)
             ch=mask[np.asarray(ch,dtype='i4')];u=np.unique(g[ch]);targets=c._exact_surface_records(v[u],np.searchsorted(u,g[ch]))
             hit=ci._audit_pair_prepared_first(idx,[(a,b,vv,int(ch[k]),ee) for a,b,vv,k,ee in targets]);assert hit['aabb_candidate_pairs']==mc
-            new=sorted((int(p['skin_parent'][a]),b) for a,b in hit['triangle_pairs'])
+            new=sorted((int(parent[a]),b) for a,b in hit['triangle_pairs'])
     ocular=key[0]==51010 and 381<=key[1]<=397
     if not ocular:
         summ['original_pairs']+=len(prev);summ['proposed_pairs']+=len(fixed)+len(new)
@@ -38,4 +54,4 @@ for key,i,v,g in api['primitives'](raw,poses):
     if old or new:
         unchanged={b for a,b in fixed};removed={b for a,b in old}-{b for a,b in new}-unchanged;added={b for a,b in new}-{b for a,b in old}-unchanged
         rows.append(dict(semantic=key[0],stable_id=key[1],primitive=i,original_affected_pairs=len(old),proposed_affected_pairs=len(new),removed_target_faces=sorted(removed),new_target_faces=sorted(added)))
-out.write_text(json.dumps(dict(scope='offline exact same-pose facet swap; native state unmodified',whole_nonocular=dict(summ),affected_banks=rows,proposed_edge_nodes=len(p['new_points_world_m']),full_baseline_audit_sha256=sha(ledger/'initial-envelope.json'),candidate_sha256=s['proposal_sha256']),indent=2)+'\n')
+out.write_text(json.dumps(dict(scope='offline exact same-pose facet swap; native state unmodified',whole_nonocular=dict(summ),affected_banks=rows,proposed_edge_nodes=added_nodes,full_baseline_audit_sha256=sha(ledger/'initial-envelope.json'),candidate_sha256=candidate_hash),indent=2)+'\n')

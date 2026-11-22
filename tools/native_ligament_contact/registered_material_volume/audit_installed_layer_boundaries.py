@@ -6,7 +6,8 @@ from layer_contacts import run
 
 def sha(p):
     with p.open('rb') as s:return hashlib.file_digest(s,'sha256').hexdigest()
-launch,lib,out = map(Path,sys.argv[1:])
+launch,lib,out = map(Path,sys.argv[1:4])
+if len(sys.argv) not in (4,5):raise ValueError("Expected launch, predicates, output and optional changed connected volume")
 env = json.loads(launch.read_text())['environment']
 prefix='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_'
 inputs={}
@@ -79,6 +80,11 @@ with facet.open() as f:
 for layer,triangles in walls.items():
     if not triangles:raise ValueError('No registered headwall')
     groups[layer]=np.vstack((groups[layer],np.asarray(triangles,dtype='i4')))
+if len(sys.argv)==5:
+    patch_path=Path(sys.argv[4]);patch=np.load(patch_path);nodes=patch['nodes']
+    assert nodes.ndim==1 and len(nodes)==len(np.unique(nodes)) and int(nodes.min())>=0 and int(nodes.max())<len(current)
+    assert patch['x'].dtype==np.dtype('float32') and np.isfinite(patch['x']).all()
+    current[nodes]=patch['x'];inputs['OFFLINE_CONNECTED_VOLUME_SHA256']=sha(patch_path)
 run(current,groups,out,lib)
 d=json.loads(out.read_text());d.update(group_membership=['O plus skin O-I headwall','I counted once at the bonded interface','D plus fat I-D headwall'],headwall_counts={str(k):len(v) for k,v in walls.items()},topology=topology,reference_to_registered_float32_max_m=coordinate_delta,scope='registered initial Float32 geometry, O/I/D distinct facets, shared material features excluded',physical_nodes=count,physical_coordinate_sha256=hashlib.sha256(np.ascontiguousarray(current,dtype='<f4').tobytes()).hexdigest(),inputs=inputs,library_sha256=sha(lib))
 out.write_text(json.dumps(d,indent=2)+'\n')
