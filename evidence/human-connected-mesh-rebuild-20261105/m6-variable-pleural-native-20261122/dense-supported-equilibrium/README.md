@@ -1,5 +1,7 @@
 # Dense human release under real bed contact
 
+The follow-up native runs clear both tissue shape floors at the accepted endpoint and quantify the remaining load-transfer failure. [Connected tissue and bed reaction results](bonded-report.md)
+
 The experimental registered skin/fat preparation reduced the bed-force overshoot. The body still fails supported equilibrium. Keep the existing launch default. All measurements below came from the full native Apple M6 owner on SSH Numi, with gravity, recruited muscles, physical bed contact and the variable pleural pressure owner enabled.
 
 | Matched two-step release, 31.25 µs | Control | Loaded-coordinate fit | Guarded fit and paired reference repair |

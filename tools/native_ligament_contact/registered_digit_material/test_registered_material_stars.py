@@ -6,6 +6,8 @@ import numpy as np
 from registered_material_stars import project_mass
 from torso_cell_geometry import geom
 
+from fit_bonded_load import constrained_direction
+
 
 class MaterialStarTests(unittest.TestCase):
     def setUp(self):
@@ -44,6 +46,30 @@ class MaterialStarTests(unittest.TestCase):
                     & (assigned / self.volumes <= bounds[1])
                 )
             )
+
+    def test_joint_volume_bounds_on_actual_search_direction(self):
+        for n in (3, 10):
+            H = np.diag(np.linspace(1, 2, n))
+            direction = constrained_direction(
+                H,
+                np.full(n, 2.0),
+                np.eye(n),
+                np.full(n, -np.inf),
+                np.ones(n),
+                np.ones(n, dtype=bool),
+            )
+            np.testing.assert_allclose(direction, 1.0, atol=1.0e-7)
+
+    def test_incompatible_volume_bounds(self):
+        value = constrained_direction(
+            np.eye(1),
+            np.ones(1),
+            np.ones((2, 1)),
+            np.array([1.0, -np.inf]),
+            np.array([np.inf, 0.0]),
+            np.ones(2, dtype=bool),
+        )
+        self.assertIsNone(value)
 
     def test_impossible_source_mass(self):
         self.assertIsNone(

@@ -1,7 +1,7 @@
 """Prepare source-owned skin/fat cells and their exact force residual near loaded surfaces."""
 
+import argparse
 import json
-import sys
 from pathlib import Path
 
 import numpy as np
@@ -12,7 +12,7 @@ from supported_material_admission import stress_limits
 from support_patch import prepare
 
 
-def run(run, material, transfer, owner, out, witness=None):
+def run(run, material, transfer, owner, out, witness=None, *, bonded_interface=None):
     d = prepare(run, material, transfer, owner)
     t = d["t"]
     x = d["ref"]
@@ -23,42 +23,71 @@ def run(run, material, transfer, owner, out, witness=None):
     patches = np.flatnonzero(
         (layer == 1) & (np.minimum(y[:, 2], end[:, 2]) < d["width"])
     )
-    ids = np.flatnonzero(np.isin(t, patches).any(1))
-    candidates = np.unique(t[ids])
-    # The inner dermis/fat interface has a single shared physical coordinate.
-    # Both exposed surfaces, the contact footprint and skeletal sites stay exact.
     movable = np.isin(layer, [0, 2]) & (~np.isin(np.arange(len(layer)), d["anchors"]))
     # Also leave every replacement-cavity mass moment exactly unchanged.
     movable[np.unique(d["dm_tets"])] = False
-    free = candidates[movable[candidates]]
-    # Complete local stars for donor compensation and load redistribution.
-    neighbor = np.unique(t[np.isin(t, free).any(1)])
-    free = neighbor[movable[neighbor]]
-    repair_cells = np.array([], dtype=int)
-    if witness is not None:
-        record = json.loads(witness.read_text())
-        if (
-            record["source"]["reference_sha256"] != d["source"]["reference_sha256"]
-            or record["source"]["elements_sha256"] != d["source"]["elements_sha256"]
-        ):
-            raise ValueError("Witness from a different physical mesh")
+    if bonded_interface is not None and witness is not None:
+        raise ValueError("Select a bed-release witness or a bonded material interface")
+    if bonded_interface is not None:
+        event = json.loads(bonded_interface.read_text())
+        if event["material_sources"] != d["source"]:
+            raise ValueError("Unmatched material source")
+        witnesses = event["material_witnesses"]
         repair_cells = np.array(
-            sorted({r["native_material_row"] for r in record["material_witnesses"]})
+            [r["composed_material_row"] for r in witnesses], dtype=int
         )
-        expected = {
-            r["native_material_row"]: r["local_nodes"]
-            for r in record["material_witnesses"]
-        }
-        if not all(t[row].tolist() == expected[row] for row in repair_cells):
-            raise ValueError("Witness does not map to the active material")
-        interior = np.unique(t[repair_cells])
-        interior = interior[(layer[interior] == 0) & movable[interior]]
-        neighbors = np.unique(t[np.isin(t, interior).any(1)])
-        extra = neighbors[(layer[neighbors] == 0) & movable[neighbors]]
-        if not len(extra):
-            raise ValueError("No free interior at quality witness")
-        free = np.union1d(free, extra)
-    varied = np.flatnonzero(np.isin(t, free).any(1))
+        if (
+            not len(repair_cells)
+            or np.min(repair_cells) < 0
+            or np.max(repair_cells) >= len(t)
+        ):
+            raise ValueError("Invalid material witnesses")
+        if any(
+            t[i].tolist() != r["nodes"]
+            for i, r in zip(repair_cells, witnesses, strict=True)
+        ):
+            raise ValueError("Witness differs from the installed material")
+        seed = np.unique(t[repair_cells])
+        if not np.all(layer[seed] == 2):
+            raise ValueError("Expected a bonded material interface")
+        neighbors = np.unique(t[np.isin(t, seed).any(1)])
+        free = neighbors[movable[neighbors]]
+        varied = np.union1d(np.flatnonzero(np.isin(t, free).any(1)), repair_cells)
+        patches = np.intersect1d(patches, np.unique(t[varied]))
+    else:
+        ids = np.flatnonzero(np.isin(t, patches).any(1))
+        candidates = np.unique(t[ids])
+        # The inner dermis/fat interface has a single shared physical coordinate.
+        # Both exposed surfaces, the contact footprint and skeletal sites stay exact.
+        free = candidates[movable[candidates]]
+        # Complete local stars for donor compensation and load redistribution.
+        neighbor = np.unique(t[np.isin(t, free).any(1)])
+        free = neighbor[movable[neighbor]]
+        repair_cells = np.array([], dtype=int)
+        if witness is not None:
+            record = json.loads(witness.read_text())
+            if (
+                record["source"]["reference_sha256"] != d["source"]["reference_sha256"]
+                or record["source"]["elements_sha256"] != d["source"]["elements_sha256"]
+            ):
+                raise ValueError("Witness from a different physical mesh")
+            repair_cells = np.array(
+                sorted({r["native_material_row"] for r in record["material_witnesses"]})
+            )
+            expected = {
+                r["native_material_row"]: r["local_nodes"]
+                for r in record["material_witnesses"]
+            }
+            if not all(t[row].tolist() == expected[row] for row in repair_cells):
+                raise ValueError("Witness does not map to the active material")
+            interior = np.unique(t[repair_cells])
+            interior = interior[(layer[interior] == 0) & movable[interior]]
+            neighbors = np.unique(t[np.isin(t, interior).any(1)])
+            extra = neighbors[(layer[neighbors] == 0) & movable[neighbors]]
+            if not len(extra):
+                raise ValueError("No free interior at quality witness")
+            free = np.union1d(free, extra)
+        varied = np.flatnonzero(np.isin(t, free).any(1))
     rows = np.unique(np.r_[t[varied].ravel(), patches])
     complete = np.flatnonzero(np.isin(t, rows).any(1))
     full = np.unique(t[complete])
@@ -123,6 +152,11 @@ def run(run, material, transfer, owner, out, witness=None):
         source_cells=keep[varied],
         W=weights,
         guard_cells=np.searchsorted(varied, repair_cells),
+        **(
+            {"critical_nodes": np.searchsorted(rows, seed)}
+            if bonded_interface is not None
+            else {}
+        ),
         mass=d["mass"][rows],
         donor=d["donor"][rows],
         layer=layer[rows],
@@ -144,6 +178,8 @@ def run(run, material, transfer, owner, out, witness=None):
         "source_mass_groups": len(weights),
         "prepared_sha256": sha(out / "material.npz"),
     }
+    if bonded_interface is not None:
+        info["bound_witness"] = sha(bonded_interface)
     (out / "source.json").write_text(json.dumps(info, indent=2) + "\n")
     print(
         {
@@ -161,4 +197,19 @@ def run(run, material, transfer, owner, out, witness=None):
 
 
 if __name__ == "__main__":
-    run(*(Path(s).resolve() for s in sys.argv[1:]))
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ("trial", "material", "transfer", "owner", "out"):
+        parser.add_argument(name, type=Path)
+    parser.add_argument("witness", type=Path, nargs="?")
+    parser.add_argument("--bonded-interface", type=Path)
+    args = parser.parse_args()
+    run(
+        *(
+            getattr(args, k).resolve()
+            for k in ("trial", "material", "transfer", "owner", "out")
+        ),
+        args.witness.resolve() if args.witness else None,
+        bonded_interface=args.bonded_interface.resolve()
+        if args.bonded_interface
+        else None,
+    )

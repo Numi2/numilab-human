@@ -1,0 +1,300 @@
+{
+  "native": {
+    "physical_configuration_matched": true,
+    "matched_base": "1bd622d941b6ebbe44041e99f1d95260d84288695dfe6906d078708fe4143dad",
+    "diagnostic_launch": "6ad8a232b4c7a42f645136d2020ccb5c71405b7a2b60c019b76e592f82ec49d4",
+    "execution": {
+      "exit": 1,
+      "wall_s": 237.6870533330366
+    },
+    "qualification": {
+      "loaded_pose_sha256": "d7095c0eb67faefeb4a1a3b918cb8c4798232cc6c688206978e673690b46414d",
+      "reference": {
+        "reference_sha256": "ebd501e40b3e310347420846a76e145e832f1fe64d3f099931bcb844baef9174",
+        "installed_pose_sha256": "91fecf62c4176b86beeda2ec177be4836cbadac1774d5598c627046ac4dc8242",
+        "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+      },
+      "initial_material": {
+        "cells": 1448799,
+        "invalid_geometry": 0,
+        "outside_stretch_envelope": 0,
+        "outside_stress_cap": 0,
+        "minimum_stretch": 0.6666748693817557,
+        "maximum_stretch": 1.494871650297661,
+        "peak_stress_Pa": 395878.9132013293,
+        "peak_stress_row": 692346,
+        "passed": true
+      },
+      "mass_group_max_abs_kg_m": 7.336929497499087e-11,
+      "mass_source_unchanged": true,
+      "cavity_moments": {
+        "mass_drift_kg": -3.2356658585114273e-19,
+        "first_moment_kg_m": [
+          -1.3120376926492477e-15,
+          -2.4695296031567285e-15,
+          -4.326221950070896e-15
+        ],
+        "first_moment_limit_kg_m": 1.559026481021049e-13,
+        "affected_nodes": 166,
+        "changed_mass_kg": 0.01886291350343259,
+        "passed": true
+      },
+      "changed_nodes": 68,
+      "protected_surfaces_identical": true,
+      "anchors_identical": 14,
+      "native_binary_sha256": "d3d01edf3007f4f4dfc725ca8dfb5743aaaaf83d96ca343ae5c2b3b7f5cd8b0e"
+    },
+    "endpoint": {
+      "accepted_steps": 2,
+      "simulated_s": 3.125000148429535e-05,
+      "frame_sha256": "ce50ef901a75000a44e3019fa69b31df6361dd3d3c7dc640edc471d731d6a25c",
+      "physical_nodes_sha256": "e205366e544ea486ea8149359f098a8dffc1da437fcafb611020b68c51063038",
+      "complete_wall_s": 203.0811494581867,
+      "end_to_end_factor": 1.538793805711128e-07,
+      "material_audits": [
+        {
+          "phase": "reference",
+          "step": "0",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281176253255e-18",
+          "minimum_shape": "1.000001415754589e-05",
+          "minimum_shape_local_cell": "660058"
+        },
+        {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281001273559e-18",
+          "minimum_shape": "1.000001415654071e-05",
+          "minimum_shape_local_cell": "660058"
+        },
+        {
+          "phase": "reference",
+          "step": "0",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.000290144947699e-18",
+          "minimum_shape": "1.000005435317736e-05",
+          "minimum_shape_local_cell": "1063201"
+        },
+        {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.000290134384338e-18",
+          "minimum_shape": "1.000005442471161e-05",
+          "minimum_shape_local_cell": "1063201"
+        }
+      ],
+      "layer_crossing_pairs": 0,
+      "checked_banks": 878,
+      "skin_self_intersections": 0,
+      "physical_skin_tissue_pairs": 10895,
+      "ocular_source_pairs": 350,
+      "maximum_skin_motion_m": 0.011827719558919439,
+      "pleural_pressure_pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 10895
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    "physical_source": {
+      "reference_sha256": "ebd501e40b3e310347420846a76e145e832f1fe64d3f099931bcb844baef9174",
+      "installed_pose_sha256": "d7095c0eb67faefeb4a1a3b918cb8c4798232cc6c688206978e673690b46414d",
+      "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+    },
+    "loads": {
+      "0": [
+        2.83341383934021,
+        16.75019073486328,
+        -15.783506393432617
+      ],
+      "1": [
+        -2.542072057723999,
+        -13.279271125793457,
+        17.85394859313965
+      ]
+    },
+    "articulated_gravity_N": 811.448223907348,
+    "weight_N": 952.8644362797845,
+    "loaded_bed_N": 953.1772364842716,
+    "terminal_bed_N": 2252.304553985596,
+    "body_s": 54.539969666999994,
+    "body_real_time_factor": 5.729743099436212e-07,
+    "skin_motion": {
+      "accepted_steps": 2,
+      "simulated_s": 3.125000148429535e-05,
+      "physical_node_sha256": "e205366e544ea486ea8149359f098a8dffc1da437fcafb611020b68c51063038",
+      "registered_outer_nodes": 76153,
+      "reference_to_loaded": {
+        "rms_m": 0.011709041205134703,
+        "maximum_m": 0.011718850233592093,
+        "p99_m": 0.01171875,
+        "peak_joint_node_one_based": 25585,
+        "peak_donor": 1,
+        "nodes_over_10_um": 76152,
+        "nodes_over_100_um": 76150
+      },
+      "loaded_to_accepted": {
+        "rms_m": 2.549373369393355e-06,
+        "maximum_m": 0.00014976264410144027,
+        "p99_m": 7.780457840984087e-09,
+        "peak_joint_node_one_based": 26419,
+        "peak_donor": 128,
+        "nodes_over_10_um": 192,
+        "nodes_over_100_um": 12
+      },
+      "reference_to_accepted": {
+        "rms_m": 0.01170904681795751,
+        "maximum_m": 0.011827719787846037,
+        "p99_m": 0.011718757333056018,
+        "peak_joint_node_one_based": 26972,
+        "peak_donor": 128,
+        "nodes_over_10_um": 76152,
+        "nodes_over_100_um": 76150
+      }
+    },
+    "material_stretch": {
+      "15": {
+        "stretch_envelope": 37,
+        "severe": 3,
+        "stress_cap": 0
+      },
+      "16": {
+        "stretch_envelope": 16,
+        "severe": 0,
+        "stress_cap": 0
+      }
+    },
+    "material_caps": {
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+    },
+    "pleural_owner_enabled": true,
+    "rejection": {
+      "accepted_prefix": 2,
+      "matter_code": 10,
+      "passive_residual": 0.036324840039014816,
+      "common_fields_rolled_back": true,
+      "respiration_status_rolled_back": true
+    }
+  },
+  "baseline": {
+    "stopped_at": 2,
+    "residual": 0.049171023070812225,
+    "alpha": 1.49012e-08,
+    "full_trial_witnesses": [
+      874304,
+      950449,
+      1035126,
+      1035269,
+      1035624
+    ],
+    "last_rejected_trial": {
+      "alpha": 2.98023e-08,
+      "valid_tile_min_J": 0.387125,
+      "first_bad_tet": 950449,
+      "trial_J": 2.5,
+      "current_J": 2.5,
+      "reason": 4,
+      "invalid_tiles": 1,
+      "tile_witness_tets": [
+        950449
+      ],
+      "tile_witnesses_complete": true
+    },
+    "receipt": "adf101ba88845865977c0198f758139df582e3c6a44f4c165c4c433d63d10af4"
+  },
+  "first_change": {
+    "stopped_at": 2,
+    "residual": 0.04073918238282204,
+    "alpha": 7.62939e-06,
+    "full_trial_witnesses": [
+      874304,
+      950449,
+      1035126,
+      1035269
+    ],
+    "last_rejected_trial": {
+      "alpha": 1.52588e-05,
+      "valid_tile_min_J": 0.451435,
+      "first_bad_tet": 1035269,
+      "trial_J": 0.349997,
+      "current_J": 0.350003,
+      "reason": 2,
+      "invalid_tiles": 1,
+      "tile_witness_tets": [
+        1035269
+      ],
+      "tile_witnesses_complete": true
+    },
+    "receipt": "e1a8d446ed66c443a9371b5edd7a5af2d081ca28c405c1b8d3ca486cc3177927"
+  },
+  "conserved": {
+    "stopped_at": 2,
+    "residual": 0.036324840039014816,
+    "alpha": 7.62939e-06,
+    "full_trial_witnesses": [
+      950449,
+      1035269
+    ],
+    "last_rejected_trial": {
+      "alpha": 1.52588e-05,
+      "valid_tile_min_J": 0.473316,
+      "first_bad_tet": 1035269,
+      "trial_J": 0.35,
+      "current_J": 0.350005,
+      "reason": 2,
+      "invalid_tiles": 1,
+      "tile_witness_tets": [
+        1035269
+      ],
+      "tile_witnesses_complete": true
+    },
+    "receipt": "223d9fd9095ed01f9fe6f2044b68a48cf929bf9617ba55d0665aa5ded58e27db"
+  },
+  "limiting_source": {
+    "native_global_element": 1035269,
+    "composed_material_row": 1031954,
+    "parents": [
+      1032163
+    ],
+    "exactly_retained": true,
+    "material": 16,
+    "nodes": [
+      128756,
+      128740,
+      128558,
+      128523
+    ],
+    "reference_shape": 0.002493864750663291,
+    "installed_volume_ratio": 1.369721788175931
+  },
+  "relative_residual_reduction": 0.2612551504835958,
+  "next_gate": "Supported, source-registered load transfer and coupled equilibrium before any throughput claim."
+}

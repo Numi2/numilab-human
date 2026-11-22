@@ -1,0 +1,94 @@
+{
+  "pins": {
+    "reference_sha256": "ebd501e40b3e310347420846a76e145e832f1fe64d3f099931bcb844baef9174",
+    "installed_pose_sha256": "d7095c0eb67faefeb4a1a3b918cb8c4798232cc6c688206978e673690b46414d",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "receipt": "3c06808a63f1d3f7b063bfb129f14b7608a41e64bdffa2bdf0e0ba880f05e270",
+  "mass_flow": "a012fc021222c6d35b5548df3a8010d654beb3d2fa0bf584d260535f05b2df06",
+  "rule": "The authored nodal barrier coefficients are distributed over the reference material surface using their barycentric dual areas. Gravity, tissue deformation and the floor are identical for both measurements. No simulation steps or force changes are applied.",
+  "initial": {
+    "native_vertex_replay_N": 953.1772364842716,
+    "witness_local": 24331,
+    "rules": [
+      {
+        "order": 2,
+        "force_N": 311.3612570147966,
+        "max_node_N": 26.27328087711031,
+        "max_node": 24859,
+        "force_at_native_peak_N": 13.622753088763366,
+        "max_change_from_previous_N": null,
+        "center_of_pressure_xy_m": [
+          -0.01539125042997379,
+          -0.7990737499841323
+        ]
+      },
+      {
+        "order": 4,
+        "force_N": 311.33195576153935,
+        "max_node_N": 26.23667007200596,
+        "max_node": 24859,
+        "force_at_native_peak_N": 13.677837655381525,
+        "max_change_from_previous_N": 0.09849540288585423,
+        "center_of_pressure_xy_m": [
+          -0.015370233344702689,
+          -0.7990546081167147
+        ]
+      },
+      {
+        "order": 8,
+        "force_N": 311.3319557594207,
+        "max_node_N": 26.236670064442322,
+        "max_node": 24859,
+        "force_at_native_peak_N": 13.67783765539487,
+        "max_change_from_previous_N": 2.582319780231046e-08,
+        "center_of_pressure_xy_m": [
+          -0.015370233345131828,
+          -0.79905460811924
+        ]
+      }
+    ]
+  },
+  "endpoint": {
+    "native_vertex_replay_N": 2245.760718075169,
+    "witness_local": 23186,
+    "rules": [
+      {
+        "order": 2,
+        "force_N": 746.4087270326783,
+        "max_node_N": 192.9395410855609,
+        "max_node": 23186,
+        "force_at_native_peak_N": 192.9395410855609,
+        "max_change_from_previous_N": null,
+        "center_of_pressure_xy_m": [
+          -0.06710460533282087,
+          -0.5886443875352586
+        ]
+      },
+      {
+        "order": 4,
+        "force_N": 746.5660996868247,
+        "max_node_N": 192.82796632519145,
+        "max_node": 23186,
+        "force_at_native_peak_N": 192.82796632519145,
+        "max_change_from_previous_N": 0.9708911524581296,
+        "center_of_pressure_xy_m": [
+          -0.06702476575605316,
+          -0.5886805753726853
+        ]
+      },
+      {
+        "order": 8,
+        "force_N": 746.5660997102545,
+        "max_node_N": 192.82796642151067,
+        "max_node": 23186,
+        "force_at_native_peak_N": 192.82796642151067,
+        "max_change_from_previous_N": 9.631921216168848e-08,
+        "center_of_pressure_xy_m": [
+          -0.06702476576088497,
+          -0.5886805753794851
+        ]
+      }
+    ]
+  }
+}
