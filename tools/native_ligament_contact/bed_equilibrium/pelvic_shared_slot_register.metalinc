@@ -1,0 +1,43 @@
+// Sort the whole discovery batch before allocating stable storage. The side selects
+// force rows. It does not partition unused geometry storage.
+kernel void nm_pelvic_motion_register(device atomic_uint* metrics [[buffer(0)]],
+    device const uint2* queue [[buffer(1)]],device uint2* keys [[buffer(2)]],
+    device atomic_uint* live [[buffer(3)]],device const uint4* owners [[buffer(4)]],
+    uint lane [[thread_index_in_threadgroup]]){
+    uint demand=atomic_load_explicit(metrics+5,memory_order_relaxed);
+    if(lane<2)atomic_fetch_max_explicit(metrics+3+lane,atomic_load_explicit(metrics+lane,memory_order_relaxed),memory_order_relaxed);
+    if(!demand)return;
+    uint count=min(512u,demand);
+    threadgroup uint2 sorted[512];
+    threadgroup uint freeSlots[512],assigned[512];
+    sorted[lane]=lane<count?queue[lane]:uint2(UINT_MAX);
+    assigned[lane]=UINT_MAX;
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    for(uint width=2;width<=512;width*=2)for(uint offset=width/2;offset;offset/=2){
+        uint other=lane^offset;
+        if(other>lane){
+            uint2 a=sorted[lane],b=sorted[other];
+            if((lane&width)?pelvicKeyBefore(a,b):pelvicKeyBefore(b,a)){sorted[lane]=b;sorted[other]=a;}
+        }
+        threadgroup_barrier(mem_flags::mem_threadgroup);
+    }
+    if(!lane){
+        uint freeCount[2]={0,0},used[2]={0,0};
+        for(uint k=0;k<512;++k)if(!keys[k].x){
+            uint bank=k/256;freeSlots[bank*256+freeCount[bank]++]=k;
+        }
+        for(uint pass=0;pass<2;++pass)for(uint i=0;i<count;++i){
+            if((i&&all(sorted[i]==sorted[i-1]))||assigned[i]!=UINT_MAX)continue;
+            uint side=owners[sorted[i].x].z;
+            if(side>=2){atomic_fetch_or_explicit(metrics+2,4u,memory_order_relaxed);continue;}
+            uint home=side^pass;
+            if(used[home]<freeCount[home])assigned[i]=freeSlots[home*256+used[home]++];
+            else if(pass)atomic_fetch_or_explicit(metrics+2,2u,memory_order_relaxed);
+        }
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    if(lane<count&&assigned[lane]!=UINT_MAX){
+        uint slot=assigned[lane]; keys[slot]=sorted[lane]+1u;
+        atomic_store_explicit(live+slot,1u,memory_order_relaxed);
+    }
+}
