@@ -1,0 +1,543 @@
+{
+  "matched_steps": [
+    {
+      "name": "six-margin-trial",
+      "launch_sha256": "f919744a6bdf3616bdd72d6635f91d5762e902aaa2ee2fdc0d752d803628744f",
+      "frame_sha256": "2328375b8d15eeae81eb1850485aae2cba1c66ce6226a8b58f4675ae33d8d7e8",
+      "steps": 2,
+      "physical_s": 3.125000148429535e-05,
+      "cold_wall_s": 199.9678776669316,
+      "end_to_end_factor": 1.5627510702666783e-07,
+      "horizon_factor": 5.524606906033127e-07,
+      "joint_recruitment_cap": 0.0,
+      "active_muscles": 0,
+      "initial_generalized_acceleration_residual_max": 575.586137886,
+      "floating_root_included": false,
+      "balanced": false,
+      "initial_leg_joint_residual_Nm": {
+        "105": 19.0061115573,
+        "108": -9.26953773666,
+        "119": 16.5597544478,
+        "122": -8.95217685299
+      },
+      "native_material_audits": {
+        "15": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.00128102936213e-18",
+          "minimum_shape": "1.00000020300171e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        "16": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "1",
+          "minimum_volume_m3": "1.00028877531331e-18",
+          "minimum_shape": "9.982677993266147e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      },
+      "accepted_bed_N": 3491.917610168457,
+      "weight_N": 952.8644362797845,
+      "accepted_layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "skin_self": 0,
+      "skin_tissue_pairs": 11795,
+      "added_tissue_pairs": 0,
+      "removed_tissue_pairs": 0,
+      "bone_pairs": 0,
+      "pleural_Pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 11795,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    {
+      "name": "six-quality-two",
+      "launch_sha256": "d9e02d787d89b1afdb021479e402df1c92c0406c3130ca0250c019c90da250a7",
+      "frame_sha256": "1cd79de6b5472b12e44c93b9530f37129be8f6a6d9a5b0662d19b146015b8767",
+      "steps": 2,
+      "physical_s": 3.125000148429535e-05,
+      "cold_wall_s": 200.96765195811167,
+      "end_to_end_factor": 1.5549766930057424e-07,
+      "horizon_factor": 5.495194929350123e-07,
+      "joint_recruitment_cap": 0.0,
+      "active_muscles": 0,
+      "initial_generalized_acceleration_residual_max": 575.586137886,
+      "floating_root_included": false,
+      "balanced": false,
+      "initial_leg_joint_residual_Nm": {
+        "105": 19.0061115573,
+        "108": -9.26953773666,
+        "119": 16.5597544478,
+        "122": -8.95217685299
+      },
+      "native_material_audits": {
+        "15": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.00128102921856e-18",
+          "minimum_shape": "1.000000202988787e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        "16": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "1",
+          "minimum_volume_m3": "1.000288788614917e-18",
+          "minimum_shape": "9.909556812463041e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      },
+      "accepted_bed_N": 3491.91689491272,
+      "weight_N": 952.8644362797845,
+      "accepted_layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "skin_self": 0,
+      "skin_tissue_pairs": 11795,
+      "added_tissue_pairs": 0,
+      "removed_tissue_pairs": 0,
+      "bone_pairs": 0,
+      "pleural_Pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 11795,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    {
+      "name": "reserve-two",
+      "launch_sha256": "16b28c2e616bed0248d862b5e6967401a515528cade777d4174d4fb15b0c4713",
+      "frame_sha256": "a8b9c31532a3539e3b28eb7f29c915d9898631b3bdcb38ad7502481323d1a674",
+      "steps": 2,
+      "physical_s": 3.125000148429535e-05,
+      "cold_wall_s": 201.01026616687886,
+      "end_to_end_factor": 1.5546470376966507e-07,
+      "horizon_factor": 5.473666424698426e-07,
+      "joint_recruitment_cap": 0.0,
+      "active_muscles": 0,
+      "initial_generalized_acceleration_residual_max": 575.586137886,
+      "floating_root_included": false,
+      "balanced": false,
+      "initial_leg_joint_residual_Nm": {
+        "105": 19.0061115573,
+        "108": -9.26953773666,
+        "119": 16.5597544478,
+        "122": -8.95217685299
+      },
+      "native_material_audits": {
+        "15": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281032429292e-18",
+          "minimum_shape": "1.000000203008093e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        "16": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "1",
+          "minimum_volume_m3": "1.000288939902828e-18",
+          "minimum_shape": "9.924390046007789e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      },
+      "accepted_bed_N": 3491.916418075562,
+      "weight_N": 952.8644362797845,
+      "accepted_layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "skin_self": 0,
+      "skin_tissue_pairs": 11795,
+      "added_tissue_pairs": 0,
+      "removed_tissue_pairs": 0,
+      "bone_pairs": 0,
+      "pleural_Pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 11795,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    {
+      "name": "reactive-pinned-two",
+      "launch_sha256": "e4e4f9acd17d265acec3a491b0a7fe89a8b79a3817906082665bfab4c78fd765",
+      "frame_sha256": "5528f2b3c14bad5054c13735668323b24b26f830fcde38e9923037620052ed96",
+      "steps": 2,
+      "physical_s": 3.125000148429535e-05,
+      "cold_wall_s": 200.00892895809375,
+      "end_to_end_factor": 1.5624303198405163e-07,
+      "horizon_factor": 5.440936305576889e-07,
+      "joint_recruitment_cap": 0.0,
+      "active_muscles": 0,
+      "initial_generalized_acceleration_residual_max": 575.586137886,
+      "floating_root_included": false,
+      "balanced": false,
+      "initial_leg_joint_residual_Nm": {
+        "105": 19.0061115573,
+        "108": -9.26953773666,
+        "119": 16.5597544478,
+        "122": -8.95217685299
+      },
+      "native_material_audits": {
+        "15": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281035806245e-18",
+          "minimum_shape": "1.00000020309456e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        "16": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "1",
+          "minimum_volume_m3": "1.000289972170897e-18",
+          "minimum_shape": "9.982678002105754e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      },
+      "accepted_bed_N": 3492.003679275513,
+      "weight_N": 952.8644362797845,
+      "accepted_layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "skin_self": 0,
+      "skin_tissue_pairs": 11795,
+      "added_tissue_pairs": 0,
+      "removed_tissue_pairs": 0,
+      "bone_pairs": 0,
+      "pleural_Pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 11795,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    {
+      "name": "recruited-two",
+      "launch_sha256": "ea3fc152f992de0028e8996fd9f99b4c4042601c5c1e0fec9319a52a96bdfdcd",
+      "frame_sha256": "b67d21f8e9ffcbc11f2cedf0304bbb67dc47fb9e23b4e36c018e33932a49564d",
+      "steps": 2,
+      "physical_s": 3.125000148429535e-05,
+      "cold_wall_s": 209.07295233313926,
+      "end_to_end_factor": 1.4946936528882627e-07,
+      "horizon_factor": 4.798860973736555e-07,
+      "joint_recruitment_cap": 0.25,
+      "active_muscles": 153,
+      "initial_generalized_acceleration_residual_max": 67.3677955444,
+      "floating_root_included": false,
+      "balanced": false,
+      "initial_leg_joint_residual_Nm": {
+        "105": 9.54933867128e-05,
+        "108": 3.2256358883e-05,
+        "119": 7.81782874757e-05,
+        "122": -7.83939854661e-05
+      },
+      "native_material_audits": {
+        "15": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001280771802339e-18",
+          "minimum_shape": "1.000000201770946e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        "16": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "1",
+          "minimum_volume_m3": "1.000290395883917e-18",
+          "minimum_shape": "9.982678079242671e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      },
+      "accepted_bed_N": 3491.884231567383,
+      "weight_N": 952.8644362797845,
+      "accepted_layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          6
+        ]
+      ],
+      "skin_self": 0,
+      "skin_tissue_pairs": 11791,
+      "added_tissue_pairs": 0,
+      "removed_tissue_pairs": 4,
+      "bone_pairs": 0,
+      "pleural_Pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "material_layer_crossings": 6,
+          "physical_skin_tissue_pairs": 11791,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    },
+    {
+      "name": "recruited-half-replay",
+      "launch_sha256": "124433ac9b2d27049172f4fcedf011eb90b2dc08c66f659dd32351b655afb0fb",
+      "frame_sha256": "ae85de39f1fa4eb0844a487c15293f9925378cf8d782dd99d7d1601f12fda2b8",
+      "steps": 2,
+      "physical_s": 3.125000148429535e-05,
+      "cold_wall_s": 215.03222225001082,
+      "end_to_end_factor": 1.4532706381075305e-07,
+      "horizon_factor": 4.31473640236537e-07,
+      "joint_recruitment_cap": 0.125,
+      "active_muscles": 140,
+      "initial_generalized_acceleration_residual_max": 51.2840029101,
+      "floating_root_included": false,
+      "balanced": false,
+      "initial_leg_joint_residual_Nm": {
+        "105": 29.7578121506,
+        "108": -1.30095069576,
+        "119": 24.7528337134,
+        "122": -0.989307089616
+      },
+      "native_material_audits": {
+        "15": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "15",
+          "cells": "705090",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "0",
+          "minimum_volume_m3": "1.001281090906228e-18",
+          "minimum_shape": "1.000000202749644e-05",
+          "minimum_shape_local_cell": "636727"
+        },
+        "16": {
+          "phase": "accepted",
+          "step": "2",
+          "material": "16",
+          "cells": "743709",
+          "nonfinite": "0",
+          "inverted": "0",
+          "volume_le_1e_18": "0",
+          "shape_lt_1e_5": "1",
+          "minimum_volume_m3": "1.000290169730547e-18",
+          "minimum_shape": "9.982678921013711e-06",
+          "minimum_shape_local_cell": "1248030"
+        }
+      },
+      "accepted_bed_N": 3491.641521453857,
+      "weight_N": 952.8644362797845,
+      "accepted_layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "skin_self": 0,
+      "skin_tissue_pairs": 11791,
+      "added_tissue_pairs": 0,
+      "removed_tissue_pairs": 4,
+      "bone_pairs": 0,
+      "pleural_Pa": [
+        -490.332489014,
+        -490.332489014
+      ],
+      "endpoint_anatomy": {
+        "passed": false,
+        "failures": {
+          "physical_skin_tissue_pairs": 11791,
+          "fat_shape_lt_1e_5": 1
+        },
+        "scope": "Exact terminal frame and installed material cells only"
+      }
+    }
+  ],
+  "third_step": {
+    "six-four-roots": {
+      "accepted_before_rejection": 2,
+      "native_reason": [
+        0.06777388602495193,
+        4.387360164059828e-08,
+        0,
+        -902
+      ],
+      "wall_s": 236.33526270883158
+    },
+    "recruited-three": {
+      "accepted_before_rejection": 2,
+      "native_reason": [
+        0.06757448613643646,
+        4.3360451229546015e-08,
+        0,
+        -902
+      ],
+      "wall_s": 243.40098449983634
+    }
+  },
+  "first_half_recruitment_attempt": {
+    "launch_sha256": "38ee7147472cd10d48dac52639d64bfd76bd4b75e64f5b595622acd87d7547dc",
+    "log_sha256": "1b07cb4cda07fcb8cf64ad82a3d17823da7e8d4263f2d0f50d3150496cad5c98",
+    "audit_endpoint": null,
+    "reason": "Disk guard interrupted terminal export after two accepted roots. Outcomes above use the completed replay."
+  }
+}

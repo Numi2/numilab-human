@@ -9,9 +9,94 @@ def digest(p):
         return hashlib.file_digest(f, "sha256").hexdigest()
 
 
-def run(parent, owner, proposal, out, diagnose=False, steps=2):
+def execute_native(argv, cwd, env, out, minimum_free_bytes=2 * 2**30, timeout_s=900):
+    start = time.monotonic()
+    limit = None
+    with (out / "stdout.log").open("w") as so, (out / "stderr.log").open("w") as se:
+        process = subprocess.Popen(argv, cwd=cwd, env=env, stdout=so, stderr=se)
+        while process.poll() is None:
+            free = shutil.disk_usage(out).free
+            if free < minimum_free_bytes:
+                limit = dict(
+                    stop_reason="disk_reserve",
+                    available_bytes=free,
+                    min_free_bytes=minimum_free_bytes,
+                )
+            elif time.monotonic() - start > timeout_s:
+                limit = dict(stop_reason="wall_time", timeout_s=timeout_s)
+            if limit:
+                process.terminate()
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
+                break
+            try:
+                process.wait(timeout=1)
+            except subprocess.TimeoutExpired:
+                pass
+    result = dict(exit=process.returncode, wall_s=time.monotonic() - start)
+    if limit:
+        result.update(limit)
+    (out / "execution.json").write_text(json.dumps(result, indent=2) + chr(10))
+    return result
+
+
+def copy_recruitment_cap(argv, reference, fraction=1.0):
+    """Use the same biological recruitment bound as a recorded supported run."""
+    control = json.loads((reference / "launch.json").read_text())
+    receipt = json.loads((reference / "terminal.receipt.json").read_text())
+    if receipt["physical_endpoint"] != "accepted" or receipt["accepted_time_s"] < 16:
+        raise ValueError("Expected an accepted supported control")
+    for suffix in (".nhrigid", ".nhmyo", ".nheq"):
+        (a,) = [v for v in argv if v.endswith(suffix)]
+        (b,) = [v for v in control["argv"] if v.endswith(suffix)]
+        if digest(a) != digest(b) or control["pins"][b] != digest(b):
+            raise ValueError("Different musculoskeletal owner " + suffix)
+    flag = "--muscle-activation"
+    cap = control["argv"][control["argv"].index(flag) + 1]
+    if (
+        not 0 < float(cap) <= 1
+        or argv.count(flag) != 1
+        or float(argv[argv.index(flag) + 1]) != 0
+    ):
+        raise ValueError("Incorrect baseline activation configuration")
+    if not 0 < fraction <= 1:
+        raise ValueError(
+            "Recruitment sensitivity must stay within the tested control bound"
+        )
+    # The native source optimizer chooses the individual muscle activations.
+    selected = float(cap) * fraction
+    argv[argv.index(flag) + 1] = cap if fraction == 1 else repr(selected)
+    return dict(
+        scale=fraction,
+        selected_cap=selected,
+        launch_sha256=digest(reference / "launch.json"),
+        accepted_receipt_sha256=digest(reference / "terminal.receipt.json"),
+        activation_cap=float(cap),
+    )
+
+
+def run(
+    parent,
+    owner,
+    proposal,
+    out,
+    diagnose=False,
+    steps=2,
+    trace_root=None,
+    recruitment_reference=None,
+    recruitment_fraction=1.0,
+):
     config = json.loads((parent / "launch.json").read_text())
     argv = config["argv"].copy()
+    if recruitment_reference is not None:
+        config["recruitment_reference"] = copy_recruitment_cap(
+            argv, recruitment_reference, recruitment_fraction
+        )
+    elif recruitment_fraction != 1.0:
+        raise ValueError("A sensitivity scale requires a matched control")
     ids = json.loads((owner / "identities.json").read_text())
     old = Path(argv[4]).parent
     for name, pin in config["pins"].items():
@@ -46,18 +131,35 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
         if env.get("NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS") != "2":
             raise ValueError("Unexpected capture schedule in the parent")
         env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = str(steps)
-        if diagnose:
+        if diagnose or trace_root is not None:
+            root = 1 if trace_root is None else trace_root
+            if root < 0 or root >= steps:
+                raise ValueError("Trace root outside requested horizon")
             env.update(
-                NM_FEM_NEWTON_TRACE_ROOT="1",
-                NM_FEM_BACKTRACKING_TRACE_ROOT="1",
+                NM_FEM_NEWTON_TRACE_ROOT=str(root),
+                NM_FEM_BACKTRACKING_TRACE_ROOT=str(root),
                 NM_FEM_BACKTRACKING_TRACE_OBJECT="15",
                 NM_FEM_BACKTRACKING_TRACE_NEWTON="15",
-                NM_FEM_DEFORMABLE_LIMIT_TRACE_ROOT="1",
-                NM_FEM_RESIDUAL_ARMIJO_TRACE_ROOT="1",
+                NM_FEM_DEFORMABLE_LIMIT_TRACE_ROOT=str(root),
+                NM_FEM_RESIDUAL_ARMIJO_TRACE_ROOT=str(root),
             )
         pins = dict(config["pins"])
         pins[argv[0]] = ids["binary_sha256"]
         pins[str(proposal)] = digest(proposal)
+        override = ids.get("loaded_pose_override")
+        if override:
+            key = override["key"]
+            pose = Path(override["path"])
+            if (
+                key != "NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE"
+                or pins[env[key]] != override["parent_sha256"]
+                or digest(pose) != override["sha256"]
+                or digest(owner / "NumiHumanLoadedSkinPoseData.inc")
+                != override["header_sha256"]
+            ):
+                raise ValueError("Invalid compiled interior pose override")
+            env[key] = str(pose)
+            pins[str(pose)] = override["sha256"]
         (out / "launch.json").write_text(
             json.dumps(
                 dict(
@@ -74,24 +176,18 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
         env = {
             k: v for k, v in os.environ.items() if not k.startswith(("NUMI_", "NM_"))
         } | env
-        start = time.monotonic()
-        with (out / "stdout.log").open("w") as so, (out / "stderr.log").open("w") as se:
-            p = subprocess.Popen(argv, cwd=config["cwd"], env=env, stdout=so, stderr=se)
-            while p.poll() is None:
-                if (
-                    shutil.disk_usage(out).free < 2 * 2**30
-                    or time.monotonic() - start > 900
-                ):
-                    p.terminate()
-                    p.wait()
-                    raise RuntimeError("Resource limit")
-                time.sleep(1)
-        (out / "execution.json").write_text(
-            json.dumps(
-                dict(exit=p.returncode, wall_s=time.monotonic() - start), indent=2
+        execution = execute_native(argv, config["cwd"], env, out)
+        if "stop_reason" in execution:
+            # Preserve the small native failure receipt on a forced stop. A
+            # prefix can contain accepted steps even if the final export failed.
+            failure = scratch / "failure.json"
+            if failure.is_file():
+                shutil.copy2(failure, out / failure.name)
+            raise RuntimeError(
+                "Native run stopped by "
+                + execution["stop_reason"]
+                + "; see execution.json"
             )
-            + "\n"
-        )
         for f in scratch.iterdir():
             if f.is_file() and (
                 f.suffix in (".json", ".csv")
@@ -114,7 +210,7 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
                 target = traces / receipt.relative_to(native)
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(receipt, target)
-        if p.returncode == 0:
+        if execution["exit"] == 0:
             receipt = native / "accepted-geometry" / f"step-{steps}.receipt.json"
             state = json.loads(receipt.read_text())
             pack = native / "accepted-geometry" / f"step-{steps}.mrvpack"
@@ -153,7 +249,7 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
             ocular = native / "resting-ocular-sclera-window.json"
             if ocular.is_file():
                 shutil.copy2(ocular, traces / ocular.name)
-        if p.returncode:
+        if execution["exit"]:
             raise RuntimeError(
                 "Native admission or motion rejected; inspect retained owner output"
             )
@@ -176,4 +272,7 @@ if __name__ == "__main__":
         parser.add_argument(arg, type=lambda x: Path(x).resolve())
     parser.add_argument("--diagnose", action="store_true")
     parser.add_argument("--steps", type=int, default=2)
+    parser.add_argument("--trace-root", type=int)
+    parser.add_argument("--recruitment-reference", type=lambda x: Path(x).resolve())
+    parser.add_argument("--recruitment-fraction", type=float, default=1.0)
     run(**vars(parser.parse_args()))

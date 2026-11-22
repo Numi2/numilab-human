@@ -9,7 +9,32 @@ import sys
 from run_cavity_motion import digest
 
 
-def verify(trial, tools, implementation, predicate):
+def endpoint_anatomy(report, banks):
+    accepted = [r for r in report["material_audits"] if r["phase"] == "accepted"]
+    if sorted(int(r["material"]) for r in accepted) != [15, 16] or any(
+        int(r["step"]) != report["accepted_steps"] for r in accepted
+    ):
+        raise ValueError("Incomplete accepted skin/fat state")
+    counts = {
+        "skin_self_intersections": report["skin_self_intersections"],
+        "material_layer_crossings": report["layer_crossing_pairs"],
+        "physical_skin_tissue_pairs": report["physical_skin_tissue_pairs"],
+        "skin_bone_pairs": banks["bone_pairs"],
+    }
+    for r in accepted:
+        name = {15: "skin", 16: "fat"}[int(r["material"])]
+        for field in ("nonfinite", "inverted", "volume_le_1e_18", "shape_lt_1e_5"):
+            counts[name + "_" + field] = int(r[field])
+    if any(type(v) is not int or v < 0 for v in counts.values()):
+        raise ValueError("Invalid anatomy counts")
+    return dict(
+        passed=not any(counts.values()),
+        failures={k: v for k, v in counts.items() if v},
+        scope="Exact terminal frame and installed material cells only",
+    )
+
+
+def verify(trial, tools, implementation, predicate, require_clear=False):
     receipt = json.loads((trial / "terminal.receipt.json").read_text())
     launch = json.loads((trial / "launch.json").read_text())
     state = json.loads((trial / "admission.json").read_text())
@@ -109,8 +134,24 @@ def verify(trial, tools, implementation, predicate):
         maximum_skin_motion_m=envelope["maximum_skin_motion_m"],
         pleural_pressure_pa=pressure,
     )
+    result["endpoint_anatomy"] = endpoint_anatomy(result, banks)
     (trial / "verified-endpoint.json").write_text(json.dumps(result, indent=2) + "\n")
+    if require_clear and not result["endpoint_anatomy"]["passed"]:
+        raise SystemExit(
+            "Retained endpoint fails the material or anatomical clearance gate: "
+            + str(result["endpoint_anatomy"]["failures"])
+        )
 
 
 if __name__ == "__main__":
-    verify(*(Path(s).resolve() for s in sys.argv[1:]))
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    for key in ("trial", "tools", "implementation", "predicate"):
+        parser.add_argument(key, type=lambda value: Path(value).resolve())
+    parser.add_argument(
+        "--require-clear",
+        action="store_true",
+        help="Exit unsuccessfully when this measured physical frame fails anatomical clearance or cell quality.",
+    )
+    verify(**vars(parser.parse_args()))
