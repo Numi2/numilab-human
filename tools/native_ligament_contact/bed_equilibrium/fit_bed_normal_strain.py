@@ -15,7 +15,7 @@ def main(full,donor,prior,out,load=None):
     delta=-pins['root_translation_m'][2]
     ref=x.astype('f4').astype(float)
     if not np.array_equal(ref,x):raise ValueError('reference precision mismatch')
-    ids=np.flatnonzero(x[:,2]<.025)
+    ids=np.flatnonzero(x[:,2] < (.038 if delta>.005 else .025))
     ft=np.full(len(x),-1,np.int32);ft[ids]=np.arange(len(ids));selected=(ft[t]>=0).any(1)
     tet=t[selected];N=len(tet);nodes=ft[tet];mov=nodes>=0
     dm=(x[tet[:,1:]]-x[tet[:,:1]]).transpose(0,2,1)
