@@ -1,0 +1,189 @@
+// Eliminate the normal and two friction impulse unknowns on a stationary,
+// registered +Z bed. rhs is the complete unscaled FEM momentum imbalance.
+struct BedProjection {
+    float3 impulse;
+    float4 tangent;  // slip direction xy, kinetic coefficient, slip derivative
+};
+constant float bedInactive = -2.f;
+constant float bedSticking = -1.f;
+
+inline BedProjection projectBedMomentum(float3 rhs, float3 velocity, float mass,
+                                         float gap, float dt, float2 friction) {
+    BedProjection row = {float3(0), float4(0,0,bedInactive,0)};
+    const float lambda = -mass * (gap / dt) - rhs.z;
+    if (lambda <= 0.f) return row;
+    row.impulse.z = lambda;
+    const float2 cancel = -mass * velocity.xy - rhs.xy;
+    const float lengthCancel = length(cancel);
+    if (lengthCancel <= friction.x * lambda) {
+        row.impulse.xy = cancel;
+        row.tangent.z = bedSticking;
+    } else {
+        const float2 direction = cancel / lengthCancel;
+        row.impulse.xy = (friction.y * lambda) * direction;
+        row.tangent = float4(direction, friction.y, friction.y * lambda / lengthCancel);
+    }
+    return row;
+}
+
+// work = -d(rhs). Both the normal multiplier and the sliding direction
+// differentiate the actual coupled operator, including off-node terms.
+inline float3 applyBedMomentum(float3 work, float3 direction, float mass, float4 tangent) {
+    if (tangent.z == bedInactive) return work;
+    const float3 inertia = mass * direction;
+    if (tangent.z == bedSticking) return inertia;
+    const float2 du = work.xy - inertia.xy;
+    const float2 unit = tangent.xy;
+    const float2 traction = tangent.z * unit * (work.z - inertia.z)
+                          + tangent.w * (du - unit * dot(unit, du));
+    return float3(work.xy - traction, inertia.z);
+}
+
+kernel void nm_fem_registered_bed_residual(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],
+    constant NMPrimalContactArguments& contact [[buffer(1)]],
+    device const NMFEMNodeStateGPU* nodes [[buffer(2)]],
+    device float4* residual [[buffer(3)]],
+    device float4* tangent [[buffer(4)]],
+    device NMContactSampleGPU* samples [[buffer(5)]],
+    device const NMMaterialGPU* materials [[buffer(6)]],
+    device const NMContinuumObjectGPU* objects [[buffer(7)]],
+    device const NMSchedulerStateGPU* schedulers [[buffer(8)]],
+    constant NMMixedSolverGPU& solver [[buffer(9)]],
+    device NMMatterStatusGPU* status [[buffer(10)]],
+    constant uint& finalPass [[buffer(11)]],
+    device float4* candidateHistories [[buffer(12)]],
+    uint slot [[thread_position_in_grid]]) {
+    if (slot >= min(contact.activeCounts[0], d.reservedMixed1) || !environmentHealthy(status,0)) return;
+    const uint pairID = contact.activePairs[slot];
+    if (pairID >= d.contactPairCount) return;
+    tangent[pairID] = finalPass ? float4(0) : float4(0,0,bedInactive,0);
+    const NMContactPairGPU pair = contact.pairs[pairID];
+    const NMContactSampleGPU sample = primalContactSample(d,contact,0,pairID);
+    if (!(sample.identity.w & NM_CONTACT_VALID)) return;
+    const uint nodeID = pair.continuumNode - d.gridNodeCount;
+    const NMFEMNodeStateGPU node = nodes[nodeID];
+    const NMRigidStateGPU rigid = contact.rigidStates[pair.rigidProxy];
+    const float mass = node.positionAndMass.w;
+    const float3 position = node.positionAndMass.xyz;
+    const float3 n = sample.normalAndVelocity.xyz;
+    const float3 b = residual[nodeID].xyz;
+    const float3 v = node.velocityAndInverseMass.xyz;
+    const float offset = rigid.centerAndRadius.w;
+    const float scale = nmFixedPlaneContactArithmeticScale(n.x,n.y,n.z,
+        position.x,position.y,position.z,offset,sample.barrier.z);
+    const float floor = registeredPlaneCertificateFloor(n,position,offset,sample.barrier.z,
+        solver.contactAcceptance.x * d.numericalLimits.x);
+    const float margin = ccdDistanceRoundoff(floor,scale);
+    const float target = floor + 2.f * margin;  // one roundoff inside the feasible side of the swept bound
+    const float gap = sample.pointAndSeparation.w - target;
+    const float dt = objectTimestep(d,schedulers[pair.objectIndex]);
+    const float2 mu = sqrt(max(float2(0),materials[objects[pair.objectIndex].materialIndex].interfaceResponse.xy
+                                         * materials[pair.materialInterface].interfaceResponse.xy));
+    if (any(n != float3(0,0,1)) || !(mass>0 && dt>0) || !all(isfinite(b)) ||
+        !all(isfinite(v)) || !isfinite(gap) || !all(isfinite(mu)) || mu.y>mu.x) {
+        recordFailure(status[0],NM_STATUS_INVALID_DISPATCH,pair.objectIndex,pairID,float4(gap,mass,dt,-910));
+        return;
+    }
+    const BedProjection row = projectBedMomentum(b,v,mass,gap,dt,mu);
+    if (!all(isfinite(row.impulse)) || !all(isfinite(row.tangent))) {
+        recordFailure(status[0],NM_STATUS_NONFINITE_RESULT,pair.objectIndex,pairID,float4(row.impulse,-911));
+        return;
+    }
+    if (!finalPass) tangent[pairID] = row.tangent;
+    if (row.tangent.z == bedInactive) return;
+    residual[nodeID].xyz += row.impulse;
+    if (!finalPass) return;
+    // An active dual can support the body only at the physical boundary.
+    // The geometric certificate and the independent swept tests still run.
+    const bool feasible = abs(gap)<=margin &&
+        length(row.impulse.xy)<=mu.x*row.impulse.z*(1.f+8.f*kEpsilon);
+    tangent[pairID] = float4(gap,margin,row.impulse.z,feasible ? 0.f : 1.f);
+    const uint index=nmMPMMutableContactSampleIndex(d,contact,0,pairID);
+    if (index==NM_INVALID_INDEX) {
+        recordFailure(status[0],NM_STATUS_INVALID_DISPATCH,pair.objectIndex,pairID,float4(0,0,0,-913));
+        return;
+    }
+    device NMContactSampleGPU& out = samples[index];
+    const float3 bedImpulse = -row.impulse;
+    out.impulseAndNormal.xyz += bedImpulse;
+    out.impulseAndNormal.w += row.impulse.z;
+    out.angularImpulseAndTangent.xyz += cross(sample.pointAndSeparation.xyz-rigid.bodyCenter.xyz,bedImpulse);
+    out.angularImpulseAndTangent.w = length(out.impulseAndNormal.xy);
+    candidateHistories[pairID] = out.impulseAndNormal;
+}
+
+kernel void nm_fem_registered_bed_operator(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],
+    constant NMPrimalContactArguments& contact [[buffer(1)]],
+    device const NMFEMNodeStateGPU* nodes [[buffer(2)]],
+    device const float4* tangent [[buffer(3)]],
+    device const float4* direction [[buffer(4)]],
+    device float4* work [[buffer(5)]],
+    device const NMFGMRESStateGPU* states [[buffer(6)]],
+    constant uint& forceComplete [[buffer(7)]],
+    uint slot [[thread_position_in_grid]]) {
+    if (slot>=min(contact.activeCounts[0],d.reservedMixed1) || (!forceComplete && states[0].diagnostics.z>.5f)) return;
+    const uint pairID=contact.activePairs[slot];
+    if(pairID>=d.contactPairCount) return;
+    const float4 t=tangent[pairID];
+    if(t.z==bedInactive) return;
+    const uint i=contact.pairs[pairID].continuumNode-d.gridNodeCount;
+    work[i].xyz=applyBedMomentum(work[i].xyz,direction[i].xyz,nodes[i].positionAndMass.w,t);
+}
+
+kernel void nm_fem_registered_bed_certify(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],
+    constant NMPrimalContactArguments& contact [[buffer(1)]],
+    device const float4* reports [[buffer(2)]],
+    device NMMatterStatusGPU* status [[buffer(3)]],
+    uint slot [[thread_position_in_grid]]) {
+    if (slot>=min(contact.activeCounts[0],d.reservedMixed1)) return;
+    uint p=contact.activePairs[slot];
+    if (p>=d.contactPairCount) return;
+    float4 r=reports[p];
+    if (r.w>0.f) recordFailure(status[0],NM_STATUS_NONLINEAR_SOLVER_FAILURE,
+        contact.pairs[p].objectIndex,p,float4(r.xyz,-912));
+}
+
+// Enforce the known constrained rows of the inexact Newton direction before
+// evaluating any trial. Only the solver's proposed direction is changed.
+inline float3 admissibleBedDirection(float3 delta, float3 velocity, float gap,
+                                     float dt, float branch) {
+    float normalDelta = -gap/dt;
+    if (branch == bedInactive) {
+        delta.z = max(delta.z, normalDelta);
+    } else {
+        delta.z = normalDelta;
+        if (branch == bedSticking) delta.xy = -velocity.xy;
+    }
+    return delta;
+}
+
+kernel void nm_fem_registered_bed_direction(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],
+    constant NMPrimalContactArguments& contact [[buffer(1)]],
+    device const NMFEMNodeStateGPU* nodes [[buffer(2)]],
+    device const float4* tangent [[buffer(3)]],
+    device float4* direction [[buffer(4)]],
+    device const NMSchedulerStateGPU* schedulers [[buffer(5)]],
+    constant NMMixedSolverGPU& solver [[buffer(6)]],
+    device const NMFGMRESStateGPU* states [[buffer(7)]],
+    uint slot [[thread_position_in_grid]]) {
+    if (slot>=min(contact.activeCounts[0],d.reservedMixed1) || states[0].nonlinear.w>.5f) return;
+    const uint pairID=contact.activePairs[slot];
+    if(pairID>=d.contactPairCount) return;
+    const NMContactSampleGPU sample=primalContactSample(d,contact,0,pairID);
+    if (!(sample.identity.w & NM_CONTACT_VALID)) return;
+    const NMContactPairGPU pair=contact.pairs[pairID];
+    const uint i=pair.continuumNode-d.gridNodeCount;
+    const float3 n=sample.normalAndVelocity.xyz;
+    const float3 pos=nodes[i].positionAndMass.xyz;
+    const float offset=contact.rigidStates[pair.rigidProxy].centerAndRadius.w;
+    const float scale=nmFixedPlaneContactArithmeticScale(n.x,n.y,n.z,pos.x,pos.y,pos.z,offset,sample.barrier.z);
+    const float floor=registeredPlaneCertificateFloor(n,pos,offset,sample.barrier.z,
+        solver.contactAcceptance.x*d.numericalLimits.x);
+    const float target=floor+2.f*ccdDistanceRoundoff(floor,scale);
+    direction[i].xyz=admissibleBedDirection(direction[i].xyz,nodes[i].velocityAndInverseMass.xyz,
+        sample.pointAndSeparation.w-target,objectTimestep(d,schedulers[pair.objectIndex]),tangent[pairID].z);
+}
