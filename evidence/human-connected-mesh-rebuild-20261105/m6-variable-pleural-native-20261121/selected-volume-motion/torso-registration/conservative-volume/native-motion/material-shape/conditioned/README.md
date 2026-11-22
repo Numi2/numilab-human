@@ -1,0 +1,9 @@
+# Native skin and fat at the eighth physical step
+
+The same 311,020-node registered volume, topology and external skin were retained. Eight material vertices moved by at most 3.19 µm. All 1,448,804 skin and fat tetrahedra passed the original signed-volume and normalized-shape floors both at installation and at the eighth accepted step on the Apple M6. Eight distinct cells previously failed at that step. Five mass transfers along existing carrier routes preserved every donor quota. The checked flow delta restores the complete revised packet from its prior version. The unchanged-mass search is retained with its four unresolved cells.
+
+The full body and physiology accepted 0.125 ms in 99.336 s of motion and 243.412 s from launch to exit. Variable pleural pressure was enabled. The window was too short for a complete breath or beat. The initial equilibrium residual was 575.59 m/s². One outer-skin vertex started within 1 µm of the bed. The final reaction was zero. The measured endpoint is a release transient.
+
+The exact surface predicate checked 596,721 distinct registered material facets in compensated native coordinates. There were no outer- or inner-skin self-crossings, nor any crossings between these three layers. Deep fat had 29 self-crossing face pairs at the endpoint. All 29 identities also occur in the prior native endpoint. Both release meshes had zero of these crossings. The external audit found 11,663 physical nonocular skin-to-structure pairs, 350 source ocular pairs and 274 eye-display pairs. The checked bones had zero skin crossings. Both checks are endpoint samples.
+
+The native build receipt, launch, measured trace, source hashes, accepted output, physical witnesses and independent GitHub recovery receipts accompany this result. The linked MRV pack restores the exact accepted frame. The four node captures restore the coordinates consumed by the cell and layer checks.

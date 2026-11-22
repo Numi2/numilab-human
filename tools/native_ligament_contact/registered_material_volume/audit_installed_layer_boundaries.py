@@ -7,7 +7,11 @@ from layer_contacts import run
 def sha(p):
     with p.open('rb') as s:return hashlib.file_digest(s,'sha256').hexdigest()
 launch,lib,out = map(Path,sys.argv[1:4])
-if len(sys.argv) not in (4,5):raise ValueError("Expected launch, predicates, output and optional changed connected volume")
+if len(sys.argv) not in (4,5,7):
+    raise ValueError("Expected an optional connected patch or --accepted-nodes REFERENCE ACCEPTED")
+accepted = len(sys.argv) == 7
+if accepted and sys.argv[4] != "--accepted-nodes":
+    raise ValueError("Unknown endpoint input")
 env = json.loads(launch.read_text())['environment']
 prefix='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_'
 inputs={}
@@ -85,6 +89,25 @@ if len(sys.argv)==5:
     assert nodes.ndim==1 and len(nodes)==len(np.unique(nodes)) and int(nodes.min())>=0 and int(nodes.max())<len(current)
     assert patch['x'].dtype==np.dtype('float32') and np.isfinite(patch['x']).all()
     current[nodes]=patch['x'];inputs['OFFLINE_CONNECTED_VOLUME_SHA256']=sha(patch_path)
+if accepted:
+    def snapshot(path):
+        with path.open() as f:
+            if list(map(int, next(f).split())) != [count,3,0,0]:
+                raise ValueError("Unexpected registered native node layout")
+            values=np.loadtxt(f,dtype='f8')
+        if (values.shape!=(count,4) or not np.array_equal(values[:,0],np.arange(1,count+1))
+                or not np.isfinite(values[:,1:]).all()):
+            raise ValueError("Incomplete native cell capture")
+        return np.ascontiguousarray(values[:,1:])
+    reference_path,accepted_path=map(Path,sys.argv[5:7])
+    if not np.array_equal(snapshot(reference_path),current):
+        raise ValueError("The endpoint and registered material have different reference nodes")
+    current=snapshot(accepted_path)
+    inputs['NATIVE_REFERENCE_NODE_SHA256']=sha(reference_path)
+    inputs['NATIVE_ACCEPTED_NODE_SHA256']=sha(accepted_path)
 run(current,groups,out,lib)
 d=json.loads(out.read_text());d.update(group_membership=['O plus skin O-I headwall','I counted once at the bonded interface','D plus fat I-D headwall'],headwall_counts={str(k):len(v) for k,v in walls.items()},topology=topology,reference_to_registered_float32_max_m=coordinate_delta,scope='registered initial Float32 geometry, O/I/D distinct facets, shared material features excluded',physical_nodes=count,physical_coordinate_sha256=hashlib.sha256(np.ascontiguousarray(current,dtype='<f4').tobytes()).hexdigest(),inputs=inputs,library_sha256=sha(lib))
+if accepted:
+    d['scope']='accepted compensated native coordinates, O/I/D distinct facets, shared material features excluded'
+    d['accepted_coordinate_f64_sha256']=hashlib.sha256(np.ascontiguousarray(current,dtype='<f8').tobytes()).hexdigest()
 out.write_text(json.dumps(d,indent=2)+'\n')

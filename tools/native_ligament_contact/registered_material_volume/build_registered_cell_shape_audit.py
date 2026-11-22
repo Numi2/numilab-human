@@ -45,6 +45,15 @@ once('            const double restDet=det(z.femNodes,t);\n            const dou
                 auto& phases=shapeByMaterial[cell.identity.x];
                 phases[0].observe(restDet,restShape,auditTetIndex-firstCell);
                 phases[1].observe(currentDet,currentShape,auditTetIndex-firstCell);
+                if(currentDet/6.0<=1.0e-18 || currentShape<1.0e-5){
+                    if(phases[1].belowVolume+phases[1].belowShape<=256u)
+                        std::cout<<std::setprecision(16)<<"registered_cell_shape_witness local="<<(auditTetIndex-firstCell)
+                            <<" material="<<cell.identity.x<<" node0="<<(t[0]-continuumTransaction->restingFEMRegionLabelFirstNode)
+                            <<" node1="<<(t[1]-continuumTransaction->restingFEMRegionLabelFirstNode)
+                            <<" node2="<<(t[2]-continuumTransaction->restingFEMRegionLabelFirstNode)
+                            <<" node3="<<(t[3]-continuumTransaction->restingFEMRegionLabelFirstNode)
+                            <<" volume_m3="<<currentDet/6.0<<" shape="<<currentShape<<std::endl;
+                }
             }''')
 once('        for(unsigned i=0;i<a.femNodes.size();++i) {\n            const auto& p=a.femNodes[i].positionAndMass;', '''        for(const auto& [material,phases]:shapeByMaterial){
             for(unsigned k=0;k<2;++k){
@@ -54,6 +63,30 @@ once('        for(unsigned i=0;i<a.femNodes.size();++i) {\n            const aut
                     <<" nonfinite="<<v.nonfinite<<" inverted="<<v.inverted<<" volume_le_1e_18="<<v.belowVolume
                     <<" shape_lt_1e_5="<<v.belowShape<<" minimum_volume_m3="<<v.minimumVolume
                     <<" minimum_shape="<<v.minimumShape<<" minimum_shape_local_cell="<<v.minimumShapeRow<<std::endl;
+            }
+        }
+        if(measureShape){
+            if(const char* prefix=std::getenv("NUMI_HUMAN_REGISTERED_CELL_NODE_PREFIX")){
+                const auto first=continuumTransaction->restingFEMRegionLabelFirstNode;
+                const auto count=continuumTransaction->restingFEMSourceNodeRegionLabels.size();
+                require(count && first<=a.femNodes.size() && count<=a.femNodes.size()-first,
+                        "registered shape capture has invalid node ownership");
+                for(unsigned k=0;k<2;++k){
+                    const auto& snapshot=k?a:z;
+                    std::ofstream file(std::string(prefix)+(k?"-accepted.node":"-reference.node"));
+                    require(file.good(),"unable to create registered TetGen node capture");
+                    file<<std::setprecision(17)<<count<<" 3 0 0"<<std::endl;
+                    for(std::size_t i=0;i<count;++i){
+                        const auto& n=snapshot.femNodes[first+i];
+                        const auto& pos=n.positionAndMass;const auto& r=n.restAndFixed;
+                        const auto& u=n.referenceDisplacementAndMode;const auto& l=n.referenceDisplacementLow;
+                        const bool relative=u.w==1.0f;
+                        file<<i+1<<" "<<(relative?(double(r.x)+u.x)+l.x:double(pos.x))
+                            <<" "<<(relative?(double(r.y)+u.y)+l.y:double(pos.y))
+                            <<" "<<(relative?(double(r.z)+u.z)+l.z:double(pos.z))<<'\\n';
+                    }
+                    file.close();require(file.good(),"registered TetGen node capture failed");
+                }
             }
         }
         for(unsigned i=0;i<a.femNodes.size();++i) {

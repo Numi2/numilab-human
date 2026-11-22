@@ -1,13 +1,24 @@
 """Keep verified release and accepted geometry assets outside the source checkout."""
-import hashlib,json,subprocess,sys,tempfile
+import argparse,hashlib,json,subprocess,tempfile
 from pathlib import Path
 from emit_skin_source_registration import sha
-scene=Path(sys.argv[1]).resolve()
+parser=argparse.ArgumentParser()
+parser.add_argument('scene',type=Path)
+parser.add_argument('--accepted-run',type=Path)
+parser.add_argument('--step',type=int,default=8)
+args=parser.parse_args()
+scene=args.scene.resolve()
 out=scene/'recovery';out.mkdir(exist_ok=True)
 repo='Numi2/numilab-human';tag='human-closed-skin-diagnostic-packs-20261121'
-for path,src,label,key in [
+packs=[
     (scene/'coupled-3/initial-registered.mrvpack.zst',scene/'coupled-3/initial-pack-identity.json','reference','sha256'),
-    (scene/'coupled-8-retry/terminal.mrvpack.zst',scene/'coupled-8-retry/native/accepted-geometry/step-8.receipt.json','accepted-8','pack_file_sha256')]:
+    (scene/'coupled-8-retry/terminal.mrvpack.zst',scene/'coupled-8-retry/native/accepted-geometry/step-8.receipt.json','accepted-8','pack_file_sha256')]
+if args.accepted_run is not None:
+    if args.step < 1: raise ValueError('Expected a positive accepted step')
+    run=args.accepted_run.resolve()
+    receipt=run/'native/accepted-geometry'/f'step-{args.step}.receipt.json'
+    packs=[(run/'terminal.mrvpack.zst',receipt,run.name+'-accepted-'+str(args.step),'pack_file_sha256')]
+for path,src,label,key in packs:
     identity=json.loads(src.read_text())[key]
     name='connected-torso-'+label+'-'+identity[:14]+'.mrvpack.zst'
     compressed=sha(path)
