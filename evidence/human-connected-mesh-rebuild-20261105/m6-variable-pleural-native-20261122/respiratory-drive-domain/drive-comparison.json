@@ -1,0 +1,108 @@
+{
+  "checks": {
+    "matches_pre_intervention": true,
+    "ventilation_reduced_five_percent": true,
+    "gas_directions": true,
+    "both_gas_differences_halved": true
+  },
+  "control_run_sha256": "817851a2d0d0f178346e0fb48af10258e885888f14857cf1192f3d425b19f710",
+  "treatment_run_sha256": "d59d981d2923d7bc8405e6ae3a4d142277aa8617a5695913b4675626a203e78e",
+  "source_binary": "41919c3d3753692851d7b9e8bb5d1c17eb4cdbfa8bd8cd3399a7e860c9e8990a",
+  "accepted_s": 60.00000284984708,
+  "samples": 938,
+  "inspired_ml": [
+    2097.4834254899997,
+    1548.06334459
+  ],
+  "inspired_volume_fractional_change": -0.2619425136919249,
+  "gas": {
+    "PaO2_mmhg": {
+      "end_mean_difference": -3.518799239060981,
+      "recovery_mean_difference": -1.7171825035666444,
+      "peak_absolute_difference": 4.8103485103000025,
+      "halved": true
+    },
+    "PaCO2_mmhg": {
+      "end_mean_difference": 1.290572370795131,
+      "recovery_mean_difference": -0.0930617257981042,
+      "peak_absolute_difference": 1.469707489000001,
+      "halved": true
+    }
+  },
+  "mechanics": {
+    "diaphragm_mm": [
+      {
+        "min": 7.27391379769e-05,
+        "max": 20.432516098
+      },
+      {
+        "min": 7.2740658652e-05,
+        "max": 17.3642158508
+      }
+    ],
+    "airflow_ml_s": [
+      {
+        "min": -813.537742943,
+        "max": 672.664144076
+      },
+      {
+        "min": -638.804514892,
+        "max": 498.697161674
+      }
+    ],
+    "pleural_pa": [
+      {
+        "min": -762.047485352,
+        "max": -471.609191895
+      },
+      {
+        "min": -694.075622559,
+        "max": -475.366668701
+      }
+    ],
+    "lung_volume_ml": [
+      {
+        "min": 2500.00157394,
+        "max": 3025.78532137
+      },
+      {
+        "min": 2500.00157394,
+        "max": 2890.82690142
+      }
+    ]
+  },
+  "physiology": {
+    "breaths": {
+      "terminal": 11.0,
+      "max_abs": 11.0
+    },
+    "complete_filling_ejection_cycles": {
+      "terminal": 70.0,
+      "max_abs": 70.0
+    },
+    "blood_error_ml": {
+      "terminal": 0.0186264514923,
+      "max_abs": 0.0186264514923
+    },
+    "oxygen_balance_error_stpd_ml": {
+      "terminal": 0.000232830643654,
+      "max_abs": 0.000232830643654
+    },
+    "co2_balance_error_stpd_ml": {
+      "terminal": 0.000465661287308,
+      "max_abs": 0.000465661287308
+    },
+    "aortic_ejected_ml": {
+      "terminal": 4971.21876106,
+      "max_abs": 4971.21876106
+    },
+    "pulmonary_ejected_ml": {
+      "terminal": 4968.94586831,
+      "max_abs": 4968.94586831
+    }
+  },
+  "treatment_wall_s": 577.0897051668726,
+  "treatment_end_to_end_factor": 0.10396997609322686,
+  "control_trace": "b6f4a08f6d1ea1116976341d8ef8bd0fd6e396ecc94969aecec769b7384c6128",
+  "treatment_trace": "f35222f20d2119610349819b3f0464a8a0f2cf78906e98e67343b50407e14048"
+}

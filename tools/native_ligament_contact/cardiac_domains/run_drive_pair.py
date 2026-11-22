@@ -54,6 +54,14 @@ def run(control, launcher, owner, out, treatment):
         if data["accepted_step"] != 30000 or data["physical_endpoint"] != "accepted":
             raise ValueError("Terminal receipt unavailable")
         shutil.copyfile(receipt, out / "terminal.receipt.json")
+        shutil.copyfile(
+            scratch / "native/resting-ocular-sclera-window.json",
+            out / "resting-ocular-sclera-window.json",
+        )
+        if not (out / "terminal.mrvpack").exists():
+            (out / "terminal.mrvpack").hardlink_to(
+                receipt.with_suffix("").with_suffix(".mrvpack")
+            )
     (out / "source.json").write_text(
         json.dumps(
             dict(

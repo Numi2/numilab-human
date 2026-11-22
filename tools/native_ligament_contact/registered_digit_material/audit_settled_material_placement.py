@@ -9,6 +9,14 @@ from material_context import sha
 from torso_cell_geometry import geom
 
 
+def transport_material_nodes(points, opening, settled):
+    """Apply the registered rigid motion once to already world-space material nodes."""
+    before = Rotation.from_quat(opening["quaternion_xyzw"])
+    after = Rotation.from_quat(settled["quaternion_xyzw"])
+    local = before.inv().apply(points - np.array(opening["position_m"]))
+    return (after.apply(local) + np.array(settled["position_m"])).astype("<f4")
+
+
 def audit(compact, native, report, split, out):
     targetfile = compact / "terminal.receipt.json"
     state = json.loads(targetfile.read_text())
@@ -16,10 +24,33 @@ def audit(compact, native, report, split, out):
         raise ValueError("Missing actual 60 s endpoint")
     # The same native receipt contains opening geometry. Explicitly select the accepted transform.
     end = {r["body_index"]: r for r in state["accepted_registered_body_poses"]}
-    srcfile = native / "registered-initial-bodies.json"
-    original = {
-        r["body_index"]: r["current"] for r in json.loads(srcfile.read_text())["bodies"]
+    # Source donor maps precede the common bed-height translation. The loaded
+    # material is already in world space. Read the actual opening registration
+    # from the same run as the material to avoid applying the translation twice.
+    srcfile = native / "native/accepted-geometry/step-1.receipt.json"
+    opening = json.loads(srcfile.read_text())
+    initial = opening["initial_anatomical_registration"]
+    if (
+        opening["physical_endpoint"] != "accepted"
+        or opening["accepted_step"] != 1
+        or initial["coordinate_source"]
+        != "source pack transformed by native initialBodies before physical stepping"
+    ):
+        raise ValueError("Missing native opening skeletal frame")
+    original = {r["body_index"]: r for r in initial["body_poses"]}
+    authorfile = native / "registered-initial-bodies.json"
+    author = {
+        r["body_index"]: r["current"]
+        for r in json.loads(authorfile.read_text())["bodies"]
     }
+    shift = np.stack(
+        [
+            np.array(t["position_m"]) - author[d]["position_world_m"]
+            for d, t in original.items()
+        ]
+    )
+    if np.max(np.ptp(shift, axis=0)) > 2e-6:
+        raise ValueError("Unexpected nonrigid change to the authoring frames")
     src, loaded, tets, role, ids = inputs(native)
     ref = src.astype(float)
     y = loaded.astype(float)
@@ -47,11 +78,8 @@ def audit(compact, native, report, split, out):
     for d in np.unique(owner):
         a = original[d]
         b = end[d]
-        prev = np.array(a["local_to_world_row_major_f32"]).reshape(3, 3)
-        nxt = Rotation.from_quat(b["quaternion_xyzw"]).as_matrix()
         sel = owner == d
-        local = np.linalg.solve(prev, (y[sel] - np.array(a["position_world_m"])).T)
-        trial[sel] = (nxt @ local).T + b["position_m"]
+        trial[sel] = transport_material_nodes(y[sel], a, b)
     outer = np.load(split / "physical.npz")["Orows"]
     support = {}
     for b, info in measures["donors"].items():
@@ -87,11 +115,13 @@ def audit(compact, native, report, split, out):
         native_material_source=ids,
         pose_source=sha(srcfile),
         terminal_pose=sha(targetfile),
+        authoring_frame_sha256=sha(authorfile),
+        authoring_to_opening_translation_m=np.median(shift, axis=0).tolist(),
         donor_report=sha(report),
         posed_outer_below_bed=below,
         rows=support,
         volume=failed,
-        scope="Counterfactual rigid-donor transport of every installed material node to the actual 60 s registered skeleton. No forces applied and no trial geometry installed.",
+        scope="Counterfactual rigid-donor transport from the native opening registration to the actual 60 s registered skeleton, rounded to Float32 before checking every cell. No forces applied and no trial geometry installed.",
     )
     out.write_text(json.dumps(result, indent=2) + "\n")
     print(below, failed)
