@@ -5,9 +5,9 @@ from pathlib import Path
 from material_context import sha
 
 
-def archive(root):
-    case = root / "routed-target-1.5mm"
-    native = root / "verified-motion-one"
+def archive(root, case=None, native=None):
+    case = case if case is not None else root / "routed-target-1.5mm"
+    native = native if native is not None else root / "verified-motion-one"
     out = native / "physical-recovery.json"
     proof = json.loads((case / "supported-registration.json").read_text())
     run = json.loads((native / "matched-digital-interfaces.json").read_text())
@@ -117,4 +117,8 @@ def archive(root):
 
 
 if __name__ == "__main__":
-    archive(Path(sys.argv[1]).resolve())
+    if len(sys.argv) not in (2, 4):
+        raise SystemExit(
+            "Expected production root and optionally case and motion folders"
+        )
+    archive(*(Path(v).resolve() for v in sys.argv[1:]))
