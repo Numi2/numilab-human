@@ -11,8 +11,17 @@ def capture(run):
     j=json.loads((run/"launch.json").read_text())
     result=json.loads((run/"envelope/physical-banks.json").read_text())
     report=json.loads((run/"envelope/accepted-envelope.json").read_text())
-    receipt=json.loads((run/"native/accepted-geometry"/f"step-{report['accepted_step']}.receipt.json").read_text())
-    compressed=run/"terminal.mrvpack.zst"
+    if (run/"terminal.receipt.json").is_file():
+        capture_root=run/"native-traces"
+        receipt_path=run/"terminal.receipt.json"
+        compressed=run/"accepted-terminal.mrvpack.zst"
+    else:
+        capture_root=run/"native"
+        receipt_path=capture_root/"accepted-geometry"/f"step-{report['accepted_step']}.receipt.json"
+        compressed=run/"terminal.mrvpack.zst"
+    receipt=json.loads(receipt_path.read_text())
+    if receipt['accepted_step']!=report['accepted_step'] or receipt['physical_endpoint']!='accepted':
+        raise ValueError("Different accepted transaction")
     raw=subprocess.check_output(["/opt/homebrew/bin/zstd","-qdc",str(compressed)])
     h=hashlib.sha256(raw).hexdigest()
     if h!=receipt["pack_file_sha256"] or h!=report["pack_sha256"] or h!=result["pack_sha256"]:
@@ -29,7 +38,7 @@ def capture(run):
         offset=index[2]+4*first
         # Global index bases can differ. The full index stream must nevertheless agree.
         domain[key]=hashlib.sha256(memoryview(raw)[offset:offset+4*n]).hexdigest()
-    receipt_path=run/"native/resting-ocular-sclera-window.json"
+    receipt_path=capture_root/"resting-ocular-sclera-window.json"
     if hashlib.sha256(receipt_path.read_bytes()).hexdigest()!=result["window_receipt_sha256"]:
         raise ValueError("Ocular presentation manifest differs from the physical audit")
     windows=json.loads(receipt_path.read_text())

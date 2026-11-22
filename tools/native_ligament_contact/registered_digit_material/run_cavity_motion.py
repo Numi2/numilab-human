@@ -43,6 +43,9 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
             NUMI_HUMAN_SKIN_FAT_FIXED_CAVITY_MASS_MOMENTS="1",
             NUMI_HUMAN_CAVITY_ROUTE_WITNESS="1",
         )
+        if env.get("NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS") != "2":
+            raise ValueError("Unexpected capture schedule in the parent")
+        env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = str(steps)
         if diagnose:
             env.update(
                 NM_FEM_NEWTON_TRACE_ROOT="1",
@@ -91,7 +94,8 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
         )
         for f in scratch.iterdir():
             if f.is_file() and (
-                f.suffix in (".json", ".csv") or f.name.endswith("accepted.node")
+                f.suffix in (".json", ".csv")
+                or f.name in ("physical-reference.node", "physical-accepted.node")
             ):
                 shutil.copy2(f, out / f.name)
         traces = out / "native-traces"
