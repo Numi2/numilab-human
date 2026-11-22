@@ -101,8 +101,21 @@ if accepted:
             raise ValueError("Incomplete native cell capture")
         return np.ascontiguousarray(values[:,1:])
     reference_path,accepted_path=map(Path,sys.argv[5:7])
-    if not np.array_equal(snapshot(reference_path),current):
-        raise ValueError("The endpoint and registered material have different reference nodes")
+    expected_initial=current
+    pose=env.get("NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE")
+    if pose and not constructed:
+        pose=Path(pose)
+        identity=sha(pose)
+        pin=json.loads(launch.read_text())["pins"].get(str(pose))
+        installed=any(line.startswith("registered_loaded_material_install=PASS ") and
+                      ("pose_sha256="+identity) in line.split() for line in
+                      (launch.parent/"stdout.log").read_text().splitlines())
+        if identity!=pin or not installed:
+            raise ValueError("Initial tissue pose lacks a matched native installation receipt")
+        expected_initial=snapshot(pose)
+        inputs["NATIVE_LOADED_START_NODE_SHA256"]=identity
+    if not np.array_equal(snapshot(reference_path),expected_initial):
+        raise ValueError("Endpoint capture and installed initial material have different coordinates")
     current=snapshot(accepted_path)
     inputs['NATIVE_REFERENCE_NODE_SHA256']=sha(reference_path)
     inputs['NATIVE_ACCEPTED_NODE_SHA256']=sha(accepted_path)

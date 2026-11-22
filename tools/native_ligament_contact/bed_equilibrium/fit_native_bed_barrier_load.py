@@ -12,7 +12,7 @@ def force(gap,mass,dt,width):
     k=10./np.maximum(dt*dt*sh/mass,1.e-20)
     return 2*d*k*(2*off*np.log(s/sh)+off*off/s)
 
-def main(launch,pose,mom,out,placement=None):
+def main(launch,pose,mom,out,placement=None,subset=None):
     l=json.loads(launch.read_text());env=l['environment'];pref='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_'
     get=lambda key:Path(env[pref+key])
     frag='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_RECORDED_ALLOCATION_'
@@ -22,6 +22,12 @@ def main(launch,pose,mom,out,placement=None):
     if placement:
         from prepare_posterior_patch_inputs import patch
         ids,weight_prior,props=patch(launch,placement)
+        if subset:
+            chosen=np.asarray(json.loads(subset.read_text())['selected']['active_nodes'])
+            keep=np.isin(ids,chosen)
+            assert np.array_equal(ids[keep],chosen)
+            ids=ids[keep];weight_prior=weight_prior[keep]
+            props['chosen_by_unilateral_fit']=len(ids)
     else:assert len(ids)==28
     cells=np.empty(len(t))
     for name,mat in [('SKIN',15),('FAT',16)]:

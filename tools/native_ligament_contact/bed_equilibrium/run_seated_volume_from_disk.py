@@ -9,6 +9,8 @@ old=Path(j['argv'][4]).parent
 assert old==Path('/Volumes/NumiVolumeAdmission') and not any(p.startswith(str(old)+'/') for p in j['pins'])
 prepared=out/'source';prepared.mkdir()
 j['argv'][4]=str(prepared/'native')
+# Native environment keys take precedence over the inherited process environment.
+j['environment']['NUMI_HUMAN_REGISTERED_CELL_NODE_PREFIX']=str(out/'physical')
 for key in ('NUMI_HUMAN_SKIN_REFERENCE_POSE_DUMP','NUMI_HUMAN_SKIN_REFERENCE_DUMP','NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT','NUMI_HUMAN_COUPLED_TRACE_CSV'):
     j['environment'][key]=str(prepared/Path(j['environment'][key]).relative_to(old))
 assert not any('/Volumes/NumiVolumeAdmission' in v for v in j['environment'].values())
@@ -21,6 +23,9 @@ with tempfile.TemporaryDirectory(prefix='native-volume-',dir=out) as temp:
     cmd=[sys.executable,str(Path(__file__).with_name('admit_current_volume.py')),str(source),str(selection),str(binary),temp,str(out)]
     start=shutil.disk_usage(out).free
     proc=subprocess.run(cmd,env=env)
+    opening=tmp/'native'/'resting-human.mrvpack'
+    if opening.is_file() and os.environ.get('NUMI_SELECTED_RETAIN_OPENING_PACK')=='1':
+        (out/'initial-material-display.mrvpack').hardlink_to(opening)
     files={}
     for path in ('coupled.csv','failure.json','registered-initial-bodies.json'):
         x=tmp/path

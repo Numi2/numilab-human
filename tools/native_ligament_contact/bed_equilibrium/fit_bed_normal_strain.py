@@ -15,7 +15,15 @@ def main(full,donor,prior,out,load=None):
     delta=-pins['root_translation_m'][2]
     ref=x.astype('f4').astype(float)
     if not np.array_equal(ref,x):raise ValueError('reference precision mismatch')
-    ids=np.flatnonzero(x[:,2] < (.038 if delta>.005 else .025))
+    if delta>.005 and load:
+        from scipy.spatial import cKDTree
+        rows=np.asarray(json.loads(load.read_text())['nodes'])
+        radial=cKDTree(x[rows,:2]).query(x[:,:2])[0]
+        free=((x[:,2]<.07)&(radial<.055)) | (q0[:,2]<2e-5)
+        env=json.loads((full/'launch.json').read_text())['environment']
+        free[[a[1] for a in anchors(env).values()]]=False
+        ids=np.flatnonzero(free)
+    else:ids=np.flatnonzero(x[:,2] < .025)
     ft=np.full(len(x),-1,np.int32);ft[ids]=np.arange(len(ids));selected=(ft[t]>=0).any(1)
     tet=t[selected];N=len(tet);nodes=ft[tet];mov=nodes>=0
     dm=(x[tet[:,1:]]-x[tet[:,:1]]).transpose(0,2,1)
@@ -52,12 +60,24 @@ def main(full,donor,prior,out,load=None):
         lo=np.maximum(0,(width-q0[ids,2])/delta);hi=np.maximum(lo,1.01)
         ci=ft[contact];assert (ci>=0).all()
         gap=np.asarray(band['gaps']) if band else np.zeros(len(contact))
-        lo[ci]=hi[ci]=(gap-q0[contact,2])/delta
-        opt=linprog(obj,A_ub=A,b_ub=b,bounds=[*zip(lo,hi),(0,1.)],method='highs',
-                    options={'primal_feasibility_tolerance':1e-10,'dual_feasibility_tolerance':1e-10})
+        lo[ci]=(gap-q0[contact,2])/delta
+        provisional=bool(band and band.get('select_unilateral'))
+        cap=1.
+        objective=obj.copy()
+        if provisional:
+            objective[:len(ids)]=.002*vol[ids]/vol[ids].sum()
+            objective[ci]+=np.asarray(band['individual_force_N'])/band['weight_N']
+            objective[-1]=.02
+            cap=.55
+        else:
+            hi[ci]=lo[ci]
+        from fit_spectral_bed_rows import solve
+        opt=solve(objective,M,f0,A,b,[*zip(lo,hi),(0,cap)],delta>.005)
         entry={'support_set':name,'required_skin_points':len(contact),'solver_status':opt.message};hist.append(entry)
         if not opt.success:continue
-        q=q0.copy();q[ids,2]=(q0[ids,2]+delta*opt.x[:-1]).astype('f4');q[contact,2]=gap
+        q=q0.copy();q[ids,2]=(q0[ids,2]+delta*opt.x[:-1]).astype('f4');pinned=contact[np.isclose(opt.x[ci],lo[ci],rtol=0,atol=1e-9)]
+        if provisional:q[pinned,2]=gap[np.isin(contact,pinned)]
+        else:q[contact,2]=gap
         if q[:,2].min() < -1e-12:raise ValueError('penetrating fitted output')
         q[q[:,2]<0,2]=0
         grad=((q[tet[:,1:],2]-x[tet[:,1:],2]-(q[tet[:,:1],2]-x[tet[:,:1],2]))[:,None,:]@inv)[:,0,:]
@@ -65,17 +85,18 @@ def main(full,donor,prior,out,load=None):
         sv=np.linalg.svd(F,compute_uv=False)
         J,shape,det,bad=audit(q,t,reference);fail=int(bad.sum())
         active=(outer & (q[:,2]<width)) if band else (outer & (q[:,2]==0))
-        if band and not np.array_equal(np.flatnonzero(active),contact):raise ValueError('unaccounted active bed points')
+        if band and not provisional and not np.array_equal(np.flatnonzero(active),contact):raise ValueError('unaccounted active bed points')
         entry.update(geometry_failures=fail,lp_max_gradient=float(opt.x[-1]),max_emitted_gradient=float(abs(grad).max()),
                      max_stretch=float(sv[:,0].max()),min_stretch=float(sv[:,2].min()),touching=int(active.sum()))
         stretch=max(entry['max_stretch'],1/entry['min_stretch'])
+        if provisional:entry['active_nodes']=np.flatnonzero(active).tolist()
         score=(fail,stretch>1.5,-entry['touching'] if stretch<=1.5 else 0,stretch)
         if best is None or score<best[0]:best=(score,q.copy(),dict(entry))
     print(json.dumps(hist),flush=True)
     if best is None:raise ValueError('No admissible normal construction')
     out.mkdir(exist_ok=False);q=best[1];np.save(out/'displacement.npy',q-x)
     shutil.copyfile(prior/'construction-boundary.npz',out/'parent-construction-boundary.npz')
-    np.savez_compressed(out/'construction-boundary.npz',node=locked,axis=np.ones((len(locked),3),bool),value=q[locked],trial_contact=np.asarray(band['nodes']) if band else np.flatnonzero(outer&(q[:,2]==0)))
+    np.savez_compressed(out/'construction-boundary.npz',node=locked,axis=np.ones((len(locked),3),bool),value=q[locked],trial_contact=np.asarray(best[2].get('active_nodes',band['nodes'])) if band else np.flatnonzero(outer&(q[:,2]==0)))
     result=dict(source=pins,failed=best[2]['geometry_failures'],fits=hist,selected=best[2],movable_nodes=len(ids),checked_incident_cells=N,
                 scope='Construction only. All physical contact reactions and elastic forces are solved by the existing native owners.')
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n')

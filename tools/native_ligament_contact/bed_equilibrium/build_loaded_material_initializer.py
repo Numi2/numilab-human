@@ -6,12 +6,14 @@ from evaluate_registered_bed_transfer import digest
 from build_distinct_registry import replace
 from screen_registered_dense_posture import initial_body_targets
 
-def build(src,full,donor,authoring,pose,app,out):
+def build(src,full,donor,authoring,pose,app,out,band_path=None,physical=None):
     code=Path(__file__).resolve().parent;main='numilab_human_myosim_visual_probe.mm'
     prior=json.loads((src/'registered-cell-audit-build.json').read_text())
     if digest(src/main)!=prior['source_sha256'] or digest(src/'numi-human-native')!=prior['binary_sha256']:raise ValueError('changed native owner')
     proven=json.loads((pose/'loaded-registration.json').read_text());recovered=json.loads((pose/'recovery.json').read_text())
-    if proven['source']!=recovered['source'] or proven['outer_rows_below_plane'] or proven['min_outer_height_m']!=0 or proven['largest_attachment_error_m']>2e-7:raise ValueError('unqualified loaded bed or attachment')
+    band=json.loads(band_path.read_text()) if band_path else {}
+    if bool(band_path)!=bool(physical):raise ValueError('An IPC pose requires its matched solver closure')
+    if proven['source']!=recovered['source'] or proven['outer_rows_below_plane'] or proven['min_outer_height_m']!=band.get('minimum_m',0.) or proven['largest_attachment_error_m']>2e-7:raise ValueError('unqualified loaded bed or attachment')
     target,identity=initial_body_targets(donor)
     if any(proven['source'].get(k)!=v for k,v in identity.items()):raise ValueError('wrong skeletal operating point')
     reference=json.loads(authoring.read_text())['all_bodies']
@@ -55,8 +57,15 @@ def build(src,full,donor,authoring,pose,app,out):
               'std::copy(requestedRootPose->begin(),requestedRootPose->end(),overriddenPoseQ.begin());}\n                poseQ = overriddenPoseQ;')
     (out/main).write_text(s)
     cmds=[[a.replace(str(src)+'/',str(out)+'/') for a in cmd] for cmd in prior['commands']]
+    if band:
+        from bind_barrier_initialization import bind
+        bind(out,src,band,pose)
+        link=cmds[-1]
+        link[link.index('lib/libmetalrobo.dylib')]=str(physical/'libmetalrobo.dylib')
+        original=next(v for v in link if v.endswith('/app-runtime.mm.o'))
+        link[link.index(original)]=str(physical/'app-runtime.mm.o')
     for cmd in cmds:subprocess.run(cmd,check=True,cwd=app/'build-native')
-    (out/'identities.json').write_text(json.dumps(dict(commands=cmds,parent=prior['binary_sha256'],binary=digest(out/'numi-human-native'),
+    (out/'identities.json').write_text(json.dumps(dict(commands=cmds,binary_sha256=digest(out/'numi-human-native'),lib_sha256=digest(physical/'libmetalrobo.dylib') if physical else None,parent=prior['binary_sha256'],binary=digest(out/'numi-human-native'),
         generated_header=digest(out/'NumiHumanLoadedSkinPoseData.inc'),source=digest(out/main),initializer=digest(out/'NumiHumanLoadedSkinPose.hpp'),
         reference_body_dump=digest(authoring),initial_coordinate_node=recovered['decoded_node_sha256']),indent=2)+'\n')
 if __name__=='__main__':build(*(Path(v).resolve() for v in sys.argv[1:]))

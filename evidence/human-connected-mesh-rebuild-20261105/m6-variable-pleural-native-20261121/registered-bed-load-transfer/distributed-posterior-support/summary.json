@@ -1,0 +1,184 @@
+{
+  "initial_support_nodes": 143,
+  "predicted_initial_normal_N": 952.8642230432279,
+  "initial_ipc_gap_m": [
+    8.332934157806449e-06,
+    9.90475200524088e-06
+  ],
+  "inferred_weight_N": 952.8644045016867,
+  "projected_balance_missing_mass_kg": 0.47604381789148853,
+  "constructed_crossings": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "candidates": 11604211,
+  "all_cell_stretch_range": [
+    0.6899362879878649,
+    1.4601691949876139
+  ],
+  "native": {
+    "accepted_steps": 1,
+    "requested_steps": 1,
+    "accepted_seconds": 1.5625000742147677e-05,
+    "native_launch_wall_seconds": 172.7020490418654,
+    "end_to_end_factor": 9.047374266161693e-08,
+    "device": "Apple M6",
+    "dt_s": 1.5625e-05,
+    "exit_code": 0,
+    "watchdog": null,
+    "bed_reaction": [
+      {
+        "normal_impulse_Ns": "0.07330052554607391",
+        "mean_normal_force_N": "4691.23363494873",
+        "valid_contact_sample_count": "130",
+        "impulse_on_plane_xyz_Ns": "[-9.614448572392575e-06,4.04224410885945e-05,-0.07330052554607391]",
+        "angular_impulse_on_plane_xyz_Nms": "[0.03665554150938988,-0.006931042298674583,-5.80082050873898e-05]",
+        "root_dt_s": "1.5625e-05",
+        "scope": "last_accepted_root_existing_frame_reduction",
+        "articulated_support_rows": "0"
+      }
+    ],
+    "bed_history": [
+      {
+        "accepted_rows": "76153",
+        "loaded_rows": "130",
+        "normal_impulse_sum_Ns": "0.07330054145154463",
+        "diagnostic_sample_rows": "0",
+        "scope": "accepted_terminal_microstep_not_integrated_load",
+        "articulated_support_rows": "0"
+      }
+    ],
+    "initial_install": [
+      {
+        "registered_loaded_material_install": "PASS",
+        "cells": "1448804",
+        "nodes": "311020",
+        "fixed_bed_offset_m": "0",
+        "minimum_skin_gap_m": "8.3329341578064486e-06",
+        "ipc_width_m": "9.9999997473787516e-06",
+        "outer_contact_nodes": "143",
+        "anchors": "14",
+        "pose_sha256": "e820369eabc1e0f61b7534c7384fbdb2c52aa7a113881f935a6ce23a4cfce334",
+        "reference_and_mass_changed": "0",
+        "initial_forces_applied": "0"
+      }
+    ],
+    "material_endpoints": [
+      {
+        "phase": "reference",
+        "step": "0",
+        "material": "15",
+        "cells": "705091",
+        "nonfinite": "0",
+        "inverted": "0",
+        "volume_le_1e_18": "0",
+        "shape_lt_1e_5": "0",
+        "minimum_volume_m3": "1.001281176253255e-18",
+        "minimum_shape": "1.000000202919351e-05",
+        "minimum_shape_local_cell": "636802"
+      },
+      {
+        "phase": "accepted",
+        "step": "1",
+        "material": "15",
+        "cells": "705091",
+        "nonfinite": "0",
+        "inverted": "0",
+        "volume_le_1e_18": "0",
+        "shape_lt_1e_5": "0",
+        "minimum_volume_m3": "1.001281362989916e-18",
+        "minimum_shape": "1.000000205177751e-05",
+        "minimum_shape_local_cell": "636802"
+      },
+      {
+        "phase": "reference",
+        "step": "0",
+        "material": "16",
+        "cells": "743713",
+        "nonfinite": "0",
+        "inverted": "0",
+        "volume_le_1e_18": "0",
+        "shape_lt_1e_5": "0",
+        "minimum_volume_m3": "1.000290144947699e-18",
+        "minimum_shape": "1.000000477467782e-05",
+        "minimum_shape_local_cell": "1389708"
+      },
+      {
+        "phase": "accepted",
+        "step": "1",
+        "material": "16",
+        "cells": "743713",
+        "nonfinite": "0",
+        "inverted": "0",
+        "volume_le_1e_18": "0",
+        "shape_lt_1e_5": "0",
+        "minimum_volume_m3": "1.000285785125499e-18",
+        "minimum_shape": "1.000000482423578e-05",
+        "minimum_shape_local_cell": "1389708"
+      }
+    ],
+    "failure": null,
+    "pleural_samples_pa": [
+      "-490.332489014"
+    ],
+    "variable_pleural_configured": true
+  },
+  "prior_28_point_relative_residual": 0.025304388254880905,
+  "release_render_skin": {
+    "initial": {
+      "vertices": 76153,
+      "faces": 152261,
+      "same_indices": true,
+      "maximum_physical_error_m": 0.011718850233592093,
+      "rms_physical_error_m": 0.011709041205134703,
+      "beyond_two_microns": 76153,
+      "worst_vertex": 25584,
+      "maximum_from_original_outer_m": 0.0
+    },
+    "initial_pack_sha256": "8a9c565264fcfc4cb7592474f34f2b22cf976189fa6dc5b75c5ab06e3abba41c",
+    "initial_pose_sha256": "e820369eabc1e0f61b7534c7384fbdb2c52aa7a113881f935a6ce23a4cfce334",
+    "accepted": {
+      "vertices": 76153,
+      "faces": 152261,
+      "same_indices": true,
+      "maximum_physical_error_m": 2.9634585360063267e-08,
+      "rms_physical_error_m": 2.620889438179653e-09,
+      "beyond_two_microns": 0,
+      "worst_vertex": 25631,
+      "maximum_from_original_outer_m": 0.011751600249889691
+    },
+    "accepted_step": 1,
+    "accepted_pack_sha256": "385e384a26f85189a0ce2da378a51e10b21fa690eda6ecc24e9a79383e99ddc5",
+    "accepted_nodes_sha256": "d117b0dd8b25b0cb6315fc7f3c957737fb68a28c4e7e0c3c1141589e6a2f975e"
+  },
+  "accepted_layer_pairs": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ]
+}
