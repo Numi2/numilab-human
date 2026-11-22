@@ -11,7 +11,7 @@ def join(native, ledger, out, fits):
     masses = []
     ancestors = []
     retired = set()
-    nodes = set()
+    cell_keys = set()
     counts = [0]
     parents = [0]
     if out.exists():
@@ -31,12 +31,15 @@ def join(native, ledger, out, fits):
                 sha = str(p["source_volume_sha256"])
                 if total is not None and (nt != total or sha != identity):
                     raise ValueError("Mismatched imported models")
-                if set(old) & retired or set(tt.ravel()) & nodes:
-                    raise ValueError("Coupled cavity requires a joint local mass solve")
+                keys = {tuple(sorted(c)) for c in tt}
+                if set(old) & retired or keys & cell_keys or len(keys) != len(tt):
+                    raise ValueError(
+                        "Overlapping old or replacement cells require a joint local solve"
+                    )
                 total = nt
                 identity = sha
                 retired.update(old.tolist())
-                nodes.update(tt.ravel().tolist())
+                cell_keys.update(keys)
                 tets.extend(tt)
                 masses.extend(p["replacement_mass_kg"])
                 old_ancestry = p["replacement_parent_cell_rows"]

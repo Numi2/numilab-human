@@ -8,9 +8,10 @@ from fit_dorsal_material import inputs
 from material_context import sha
 from fit_cavity_mass import point_mass_features
 from torso_cell_geometry import geom
+from registered_density import density_bounds
 
 
-def solve(x, y, old, new, prior, supply):
+def solve(x, y, old, new, prior, supply, bounds=(850.0, 950.0)):
     n = len(new)
     nodes = np.unique(old)
     oi = np.searchsorted(nodes, old)
@@ -25,8 +26,8 @@ def solve(x, y, old, new, prior, supply):
     pre = u[:, keep].T / s[keep, None]
     total = prior.sum()
     vol = geom(x, new)[0]
-    hi = 950 * vol / total
-    lo = 850 * vol / total
+    hi = bounds[1] * vol / total
+    lo = bounds[0] * vol / total
     groups = {}
     for row in supply:
         mask = tuple(row["allowed"])
@@ -104,7 +105,11 @@ def main(run, trial, proposal, fit, ledger, first, out):
         raise ValueError("Expected one explicit carrier witness")
     with np.load(ledger) as f:
         prior = f["element_mass_kg"][old]
-    m = solve(x, y, t[old], new, prior, lines[0])
+    bounds = density_bounds(
+        Path(json.loads((run / "launch.json").read_text())["argv"][0]).parent,
+        tag[old[0]],
+    )
+    m = solve(x, y, t[old], new, prior, lines[0], bounds)
     if m is None:
         raise ValueError(
             "No feasible joint route at these coordinates and density bounds"

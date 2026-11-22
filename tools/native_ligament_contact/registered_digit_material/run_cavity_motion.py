@@ -111,19 +111,44 @@ def run(parent, owner, proposal, out, diagnose=False, steps=2):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(receipt, target)
         if p.returncode == 0:
-            with (out / "terminal.mrvpack.zst").open("wb") as sink:
+            receipt = native / "accepted-geometry" / f"step-{steps}.receipt.json"
+            state = json.loads(receipt.read_text())
+            pack = native / "accepted-geometry" / f"step-{steps}.mrvpack"
+            if (
+                state["accepted_step"] != steps
+                or state["physical_endpoint"] != "accepted"
+                or state["surface_audit_endpoint"] != "passed"
+                or Path(state["accepted_pack_path"]) != pack
+                or digest(pack) != state["pack_file_sha256"]
+            ):
+                raise ValueError("Missing or mismatched terminal physical state")
+            dst = out / "accepted-terminal.mrvpack.zst"
+            with dst.open("wb") as sink:
                 subprocess.run(
-                    [
-                        "zstd",
-                        "-q",
-                        "-3",
-                        "-T1",
-                        "-c",
-                        str(native / "resting-human.mrvpack"),
-                    ],
+                    ["zstd", "-q", "-3", "-T1", "-c", str(pack)],
                     stdout=sink,
                     check=True,
                 )
+            shutil.copy2(receipt, out / "terminal.receipt.json")
+            (out / "admission.json").write_text(
+                json.dumps(
+                    dict(
+                        exit_code=0,
+                        accepted_steps=steps,
+                        requested_roots=steps,
+                        wall_seconds=json.loads((out / "execution.json").read_text())[
+                            "wall_s"
+                        ],
+                        terminal_pack_sha256=state["pack_file_sha256"],
+                        terminal_archive_sha256=digest(dst),
+                    ),
+                    indent=2,
+                )
+                + "\n"
+            )
+            ocular = native / "resting-ocular-sclera-window.json"
+            if ocular.is_file():
+                shutil.copy2(ocular, traces / ocular.name)
         if p.returncode:
             raise RuntimeError(
                 "Native admission or motion rejected; inspect retained owner output"

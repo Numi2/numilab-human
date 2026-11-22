@@ -6,6 +6,7 @@ import numpy as np
 from fit_dorsal_material import inputs
 from torso_cell_geometry import geom
 from material_context import sha
+from registered_density import density_bounds
 
 
 def emit(run, fit, ledger, out):
@@ -20,12 +21,35 @@ def emit(run, fit, ledger, out):
     mass = np.array(solution["mass_kg"])
     prior = np.load(ledger)["element_mass_kg"][old]
     volume = geom(ref.astype(float), t)[0]
-    if len(set(old)) != len(old) or len(t) != len(mass) or np.any(tag[old] != 16):
+    if (
+        len(set(old)) != len(old)
+        or len(t) != len(mass)
+        or np.any(tag[old] != tag[old[0]])
+    ):
         raise ValueError("Invalid ancestry")
+    env = config["environment"]
+    label_path = Path(
+        env["NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_CHILD_LABELS"]
+    )
+    if (
+        sha(label_path)
+        != env[
+            "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_CHILD_LABELS_SHA256"
+        ]
+    ):
+        raise ValueError("Changed registered ancestry")
+    labels = np.loadtxt(
+        label_path, delimiter=",", skiprows=1, usecols=(0, 1, 2, 3), dtype=np.int32
+    )
+    if not np.array_equal(labels[old, 0], old) or not np.all(
+        labels[old, 1:] == labels[old[0], 1:]
+    ):
+        raise ValueError("A proposed cavity crosses a native material, donor or region")
+    lo, hi = density_bounds(Path(config["argv"][0]).parent, tag[old[0]])
     if (
         not np.all(np.isfinite(mass))
-        or np.min(mass / volume) < 850 - 1e-6
-        or np.max(mass / volume) > 950 + 1e-6
+        or np.min(mass / volume) < lo - 1e-6
+        or np.max(mass / volume) > hi + 1e-6
     ):
         raise ValueError("Material density")
     if abs(prior.sum() - mass.sum()) > prior.sum() * 1e-10:

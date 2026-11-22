@@ -1,0 +1,290 @@
+{
+  "source": {
+    "reference_sha256": "75146563b76fcb8b7435dd98eb0f30a481cf1bd3a7cb3e10e342f22d82921b4f",
+    "installed_pose_sha256": "383f6ceff318403e39023fdfd6f9caae613ab950c05b483b3fa882f3ed2c3cf8",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "accepted": "8360d4f811c9145ecacad4bb10d83869dc802e9c7d64667cab0af65bd7330b29",
+  "native_material": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "reference_modules": {
+    "fixed_boundary_volume_flip_198_root.py": "650794951cbcf338de9cde691a8f43377b9d023ccea78b876e87c847880243e0",
+    "local_fixed_boundary_cavity_repair_625.py": "21dbb6dcad194c00c530141b279a4a21847ac313e0e50a38a0b7f561abdadd3b"
+  },
+  "edge_stars": [
+    {
+      "row": 312934,
+      "valence": 4,
+      "count": 1
+    },
+    {
+      "row": 818769,
+      "valence": 4,
+      "count": 1
+    },
+    {
+      "row": 1031941,
+      "valence": 4,
+      "count": 1
+    }
+  ],
+  "rejection": {
+    "oriented_boundary": 2
+  },
+  "proposals": [
+    {
+      "witness": 1031941,
+      "kind": "4-4",
+      "material": 16,
+      "old": [
+        1031900,
+        1031941,
+        1031952,
+        1032138
+      ],
+      "new": [
+        [
+          128744,
+          274456,
+          273911,
+          128667
+        ],
+        [
+          274456,
+          128744,
+          273911,
+          128808
+        ],
+        [
+          128740,
+          128744,
+          273911,
+          128667
+        ],
+        [
+          128744,
+          128740,
+          273911,
+          128808
+        ]
+      ],
+      "reference_min_shape_before": 0.00597142545517948,
+      "reference_min_shape_after": 0.006722619393676235,
+      "min_J": 0.7603201596807027,
+      "max_J": 0.7743484575292111,
+      "energy_relative_error": [
+        0.001975996808689422,
+        0.004461723857254562
+      ],
+      "local_nodal_force_L2_difference_N": [
+        0.0017553804007496914,
+        0.021946271471422876
+      ],
+      "stretch_gate": true
+    }
+  ],
+  "geometry_candidates": [
+    {
+      "witness": 312934,
+      "kind": "4-4",
+      "material": 15,
+      "old": [
+        312926,
+        312934,
+        313520,
+        313521
+      ],
+      "new": [
+        [
+          26085,
+          128744,
+          128667,
+          26042
+        ],
+        [
+          128744,
+          26085,
+          128667,
+          26131
+        ],
+        [
+          26082,
+          26085,
+          128667,
+          26042
+        ],
+        [
+          26085,
+          26082,
+          128667,
+          26131
+        ]
+      ],
+      "reference_min_shape_before": 0.006209851681440547,
+      "reference_min_shape_after": 0.007246576142726586,
+      "min_J": 0.5590526747906674,
+      "max_J": 0.8115304481538244,
+      "energy_relative_error": [
+        0.004469085108561528,
+        0.11293854405040385
+      ],
+      "local_nodal_force_L2_difference_N": [
+        1.12931520755421,
+        6.448635111507328
+      ],
+      "stretch_gate": false
+    },
+    {
+      "witness": 818769,
+      "kind": "4-4",
+      "material": 16,
+      "old": [
+        707177,
+        818769,
+        1031827,
+        1031870
+      ],
+      "new": [
+        [
+          278868,
+          129677,
+          278721,
+          129484
+        ],
+        [
+          129677,
+          278868,
+          278721,
+          129657
+        ],
+        [
+          129677,
+          129474,
+          278721,
+          129484
+        ],
+        [
+          129474,
+          129677,
+          278721,
+          129657
+        ]
+      ],
+      "reference_min_shape_before": 0.0002774728230661312,
+      "reference_min_shape_after": 0.0011191122973237117,
+      "min_J": 0.776462054328182,
+      "max_J": 4.4820022276761105,
+      "energy_relative_error": [
+        1.1562018893991655,
+        1.14969967623013
+      ],
+      "local_nodal_force_L2_difference_N": [
+        0.24110247135346372,
+        0.2385765591806009
+      ],
+      "stretch_gate": false
+    },
+    {
+      "witness": 818769,
+      "kind": "4-4",
+      "material": 16,
+      "old": [
+        707177,
+        818769,
+        1031827,
+        1031870
+      ],
+      "new": [
+        [
+          129677,
+          129474,
+          278868,
+          129484
+        ],
+        [
+          129474,
+          129677,
+          278868,
+          129657
+        ],
+        [
+          278868,
+          129474,
+          278721,
+          129484
+        ],
+        [
+          129474,
+          278868,
+          278721,
+          129657
+        ]
+      ],
+      "reference_min_shape_before": 0.0002774728230661312,
+      "reference_min_shape_after": 0.005575453521745495,
+      "min_J": 0.6264047148567876,
+      "max_J": 0.8066915286447227,
+      "energy_relative_error": [
+        0.04711615078779736,
+        0.04245162841523756
+      ],
+      "local_nodal_force_L2_difference_N": [
+        0.03128762094793987,
+        0.05208189166582132
+      ],
+      "stretch_gate": false
+    },
+    {
+      "witness": 1031941,
+      "kind": "4-4",
+      "material": 16,
+      "old": [
+        1031900,
+        1031941,
+        1031952,
+        1032138
+      ],
+      "new": [
+        [
+          128744,
+          274456,
+          273911,
+          128667
+        ],
+        [
+          274456,
+          128744,
+          273911,
+          128808
+        ],
+        [
+          128740,
+          128744,
+          273911,
+          128667
+        ],
+        [
+          128744,
+          128740,
+          273911,
+          128808
+        ]
+      ],
+      "reference_min_shape_before": 0.00597142545517948,
+      "reference_min_shape_after": 0.006722619393676235,
+      "min_J": 0.7603201596807027,
+      "max_J": 0.7743484575292111,
+      "energy_relative_error": [
+        0.001975996808689422,
+        0.004461723857254562
+      ],
+      "local_nodal_force_L2_difference_N": [
+        0.0017553804007496914,
+        0.021946271471422876
+      ],
+      "stretch_gate": true
+    }
+  ]
+}

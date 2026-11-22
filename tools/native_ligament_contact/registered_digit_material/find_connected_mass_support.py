@@ -1,6 +1,6 @@
 """Find face-connected conservative mass carriers for multiple observed material limits."""
 
-import json, sys
+import json
 from collections import defaultdict
 from pathlib import Path
 import numpy as np
@@ -9,9 +9,10 @@ from fit_cavity_mass import tet_faces, point_mass_features
 from fit_dorsal_material import inputs
 from material_context import sha
 from torso_cell_geometry import geom
+from registered_density import density_bounds
 
 
-def route(x, y, t, old, new, mass):
+def route(x, y, t, old, new, mass, bounds=(850.0, 950.0)):
     nodes = np.unique(t[old])
     total = mass[old].sum()
     coords = []
@@ -26,8 +27,8 @@ def route(x, y, t, old, new, mass):
     retain = s > s[0] * (64 * np.finfo(float).eps)
     pre = u[:, retain].T / s[retain, None]
     vol = geom(x, new)[0]
-    lo = vol * 850 / total
-    hi = vol * 950 / total
+    lo = vol * bounds[0] / total
+    hi = vol * bounds[1] / total
     if min(lo) <= 0:
         raise ValueError("Nonpositive candidate cell")
     orig = mass[old] / total
@@ -51,21 +52,23 @@ def route(x, y, t, old, new, mass):
     v = (hi - sol.x) * total
     if (
         np.max(abs(b @ (v / total) - rhs)) > 1.0e-10
-        or np.any(v / vol < 850 - 1e-6)
-        or np.any(v / vol > 950 + 1e-6)
+        or np.any(v / vol < bounds[0] - 1e-6)
+        or np.any(v / vol > bounds[1] + 1e-6)
     ):
         return None
     return v
 
 
-def search(x, y, t, tag, mass, core, new, ban, rng):
+def search(x, y, t, tag, mass, core, new, ban, rng, bounds=(850.0, 950.0), labels=None):
     mid = x[t[core]].mean(axis=(0, 1))
     r = np.linalg.norm(x[t].mean(axis=1) - mid, axis=1)
     allowed = tag == tag[core[0]]
+    if labels is not None:
+        allowed &= np.all(labels == labels[core[0]], axis=1)
     if len(ban):
-        allowed &= ~np.isin(t, list(ban)).any(axis=1)
+        allowed[np.array(sorted(ban), dtype=int)] = False
     if not allowed[core].all():
-        return None, {"issue": "two proposals share physical vertices"}
+        return None, {"issue": "proposals share a retired tetrahedron"}
     ids = np.flatnonzero(allowed)
     ids = ids[np.argpartition(r[ids], 2500)[:2500]]
     ids = np.unique(np.r_[ids, core])
@@ -85,7 +88,7 @@ def search(x, y, t, tag, mass, core, new, ban, rng):
         tests += 1
         oi = np.r_[core, extra].astype(int)
         nt = np.vstack([new, t[np.array(extra, dtype=int)]])
-        return route(x, y, t, oi, nt, mass)
+        return route(x, y, t, oi, nt, mass, bounds)
 
     def connected(extra):
         group = original | set(extra)
@@ -100,6 +103,7 @@ def search(x, y, t, tag, mass, core, new, ban, rng):
 
     largest = False
     sizes = []
+    best = None
     for trial in range(18):
         picked = set(original)
         front = set.union(*(adj[i] for i in original)) - picked
@@ -125,8 +129,8 @@ def search(x, y, t, tag, mass, core, new, ban, rng):
             if solution is None:
                 continue
             largest = True
-            sizes.append(len(extra) + 3)
-            if len(extra) > 29:
+            sizes.append(len(extra) + len(core))
+            if len(extra) > 32 - len(core):
                 # Prune low-leverage carriers first. Removing an articulation
                 # cell is allowed only if all remaining carriers stay connected.
                 for n in sorted(extra, key=lambda i: merit[i]):
@@ -137,19 +141,22 @@ def search(x, y, t, tag, mass, core, new, ban, rng):
                     if m is not None:
                         extra = trial_extra
                         solution = m
-                    if len(extra) <= 29:
+                    if len(extra) <= 32 - len(core):
                         break
-            if len(extra) <= 29:
-                return (
-                    np.r_[core, extra].astype(int),
-                    np.vstack([new, t[np.array(extra, dtype=int)]]),
-                    solution,
-                ), dict(tests=tests, feasible_sizes=sizes)
+            proposal = (
+                np.r_[core, extra].astype(int),
+                np.vstack([new, t[np.array(extra, dtype=int)]]),
+                solution,
+            )
+            if best is None or len(proposal[0]) < len(best[0]):
+                best = proposal
+            if len(extra) <= 32 - len(core):
+                return proposal, dict(tests=tests, feasible_sizes=sizes)
             break
-    return None, dict(tests=tests, larger_domain_feasible=largest, feasible_sizes=sizes)
+    return best, dict(tests=tests, larger_domain_feasible=largest, feasible_sizes=sizes)
 
 
-def main(native, first, ledger, inventory, witnesses, prior, out):
+def main(native, first, ledger, inventory, witnesses, prior, out, other=(), kind="3-2"):
     out.mkdir(exist_ok=False)
     x, y, t, tag, pins = inputs(native)
     x = x.astype(float)
@@ -167,20 +174,44 @@ def main(native, first, ledger, inventory, witnesses, prior, out):
     if sha(accepted) != start["accepted_coordinates_sha256"]:
         raise ValueError("Wrong matched pose")
     end = np.loadtxt(accepted, skiprows=1, usecols=(1, 2, 3))
-    ban = set(start["proposal"]["physical_nodes"])
+    env = json.loads((native / "launch.json").read_text())["environment"]
+    pfx = "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
+    label_file = Path(env[pfx + "CHILD_LABELS"])
+    if sha(label_file) != env[pfx + "CHILD_LABELS_SHA256"]:
+        raise ValueError("Changed material donor or regional identity")
+    labels = np.loadtxt(
+        label_file, delimiter=",", skiprows=1, usecols=(0, 1, 2, 3), dtype=np.int32
+    )
+    if not np.array_equal(labels[:, 0], np.arange(len(t))) or not np.array_equal(
+        labels[:, 1], tag
+    ):
+        raise ValueError("Wrong source tissue order")
+    ban = set(start["proposal"]["retired_rows"])
+    for extra in other:
+        more = json.loads(extra.read_text())
+        if more["source"] != pins or more["ledger_sha256"] != sha(flow):
+            raise ValueError("Other regional source changed")
+        ban.update(more["proposal"]["retired_rows"])
     rng = np.random.default_rng(51)
     for row in witnesses:
         rec = next(
-            c for c in inv["proposals"] if c["witness"] == row and c["kind"] == "3-2"
+            c for c in inv["proposals"] if c["witness"] == row and c["kind"] == kind
         )
+        limit = density_bounds(
+            Path(json.loads((native / "launch.json").read_text())["argv"][0]).parent,
+            tag[row],
+        )
+        core = np.array(rec["old"])
+        ori = {tuple(sorted(c)): c for c in t[core]}
+        new = np.array([ori.get(tuple(sorted(c)), c) for c in rec["new"]])
         found, diagnosis = search(
-            x, y, t, tag, mass, np.array(rec["old"]), np.array(rec["new"]), ban, rng
+            x, y, t, tag, mass, core, new, ban, rng, limit, labels[:, 2:]
         )
         prop = None
         if found:
             old, new, m = found
             nodes = np.unique(t[old])
-            ban.update(nodes.tolist())
+            ban.update(old.tolist())
             delta = (
                 point_mass_features(new, [], nodes) @ m
                 - point_mass_features(t[old], [], nodes) @ mass[old]
@@ -205,6 +236,7 @@ def main(native, first, ledger, inventory, witnesses, prior, out):
             ledger_sha256=sha(flow),
             inventory_sha256=sha(inventory),
             constrained_pose_count=2,
+            source_label_sha256=sha(label_file),
             search=diagnosis,
         )
         (out / f"{row}.json").write_text(
@@ -213,8 +245,16 @@ def main(native, first, ledger, inventory, witnesses, prior, out):
 
 
 if __name__ == "__main__":
-    main(
-        *(Path(v).resolve() for v in sys.argv[1:5]),
-        [int(i) for i in sys.argv[5].split(",")],
-        *(Path(v).resolve() for v in sys.argv[6:]),
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    for name in ("native", "first", "ledger", "inventory"):
+        parser.add_argument(name, type=lambda p: Path(p).resolve())
+    parser.add_argument("witnesses", type=lambda v: [int(i) for i in v.split(",")])
+    for name in ("prior", "out"):
+        parser.add_argument(name, type=lambda p: Path(p).resolve())
+    parser.add_argument(
+        "--other", nargs="*", type=lambda p: Path(p).resolve(), default=[]
     )
+    parser.add_argument("--kind", choices=("3-2", "4-4", "fan"), default="3-2")
+    main(**vars(parser.parse_args()))
