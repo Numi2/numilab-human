@@ -1,0 +1,7 @@
+// For a fixed horizontal bed the signed gap is affine in dz over a P1
+// triangle. Every corner must remain feasible; lateral displacement has zero
+// derivative. The calling limiter retains its existing collision floor.
+inline float registeredPlaneFraction(float separation, float floor, float dz, float boundaryRoundoff) {
+    const float closing = max(8.f*kEpsilon*abs(dz) + boundaryRoundoff - dz, 0.f);
+    return closing>0.f ? clamp(.9f*(separation-floor)/closing,0.f,1.f) : 1.f;
+}
