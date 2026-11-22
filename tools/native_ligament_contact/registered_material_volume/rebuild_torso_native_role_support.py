@@ -7,6 +7,7 @@ from emit_skin_source_registration import sha
 def main():
     ap=argparse.ArgumentParser()
     for k in ('base','reg','proposal','out'):ap.add_argument(k,type=Path)
+    ap.add_argument("--prior-mesh",type=Path)
     args=ap.parse_args();base,reg,out=args.base,args.reg,args.out;out.mkdir(parents=True,exist_ok=True)
     sys.path.insert(0,str(base.parent/'resting-clearance-and-atrium-016'))
     from screen_paired_mass_routes import COMPILER
@@ -15,7 +16,12 @@ def main():
     assert sha(entry)==json.load((base.parent/'resting-clearance-and-atrium-013/fine-local-current-p1.json').open())['owner_sha256']
     spec=importlib.util.spec_from_file_location('physical_role_owner',entry);api=importlib.util.module_from_spec(spec);spec.loader.exec_module(api);owner=api._load_230(api.OWNER230)
     prior=reg/'material/p1';ps=prior/'current-paired-volume-state.json';st=json.load(ps.open());s=np.load(args.proposal)
-    original=base/'constitutive-witness-repaired-tetgen';mesh=out/'mesh';mesh.mkdir(exist_ok=True)
+    original=args.prior_mesh or base/'constitutive-witness-repaired-tetgen'
+    if args.prior_mesh:
+        rec=json.loads((original/'receipt.json').read_text())
+        if sha(original/'mesh.node')!=rec['mesh_node_sha256'] or sha(original/'mesh.ele')!=rec['mesh_ele_sha256']:
+            raise ValueError('Cannot reuse prior mesh with changed identities')
+    mesh=out/'mesh';mesh.mkdir(exist_ok=True)
     old=np.loadtxt(original/'mesh.node',skiprows=1,usecols=(1,2,3),dtype='f4');assert array_hash(old,'<f4')==st['geometry_sha256']
     points=old.copy();points[s['nodes']]=s['x'];moved=np.flatnonzero(np.any(points!=old,1))
     dst=mesh/'mesh.node'

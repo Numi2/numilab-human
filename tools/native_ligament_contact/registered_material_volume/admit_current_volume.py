@@ -9,7 +9,11 @@ def main(full,selected,binary,ram,output):
     if 'physical_volume_release_reference' in a:
         seed=a['physical_volume_release_reference'];source=Path(seed['launch_path'])
         if sha(source)!=seed['launch_sha256']:raise ValueError('Parent native source changed')
-        src=source.parent
+        # A derived volume carries its parent receipt as provenance. A prepared
+        # launch owns its own output directory, including traces and failures.
+        # Legacy configs may still address the retained parent's output root.
+        if not Path(a['argv'][4]).is_relative_to(src):
+            src=source.parent
     def relocate(v):return v.replace(str(src),str(ram))
     argv=[relocate(v) for v in a['argv']];env={k:relocate(v) for k,v in a['environment'].items()}
     if not Path(argv[4]).is_relative_to(ram):raise ValueError('Output must be isolated to the trial volume')

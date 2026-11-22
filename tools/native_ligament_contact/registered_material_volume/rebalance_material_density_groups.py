@@ -8,9 +8,11 @@ from emit_skin_source_registration import sha
 def main():
     parser=argparse.ArgumentParser()
     for k in ('parent','dense','volumes','elements','geometry','output'):parser.add_argument(k,type=Path)
-    a=parser.parse_args();out=a.output;out.mkdir(exist_ok=True)
+    parser.add_argument('--parent-receipt',type=Path);a=parser.parse_args();out=a.output;out.mkdir(exist_ok=True)
     name='current-density-closed-flow.npz';src=a.parent/name;r=json.loads((a.parent/'mass-transfer.json').read_text())
-    assert r['flow_sha256']==sha(src) and r['source_ledger_compaction']['source_flow_sha256']==sha(a.dense/name)
+    authority=json.loads(a.parent_receipt.read_text()) if a.parent_receipt else r
+    if r['flow_sha256']!=sha(src) or (a.parent_receipt and authority['flow_sha256']!=r['parent_flow_sha256']) or authority['source_ledger_compaction']['source_flow_sha256']!=sha(a.dense/name):
+        raise ValueError('Input flow is outside the certified ancestry')
     f=dict(np.load(src));dense=np.load(a.dense/name);c=f['carrier_row'];g=f['group'];cg=f['group_for_cell']
     assert np.array_equal(c,dense['carrier_row']) and np.array_equal(g,dense['group'])
     v=np.fromfile(a.volumes,dtype='f8');assert len(v)==len(cg) and (v>1e-18).all()
