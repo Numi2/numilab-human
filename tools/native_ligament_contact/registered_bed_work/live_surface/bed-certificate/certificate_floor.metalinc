@@ -1,0 +1,26 @@
+// The arithmetic bound for a fixed plane depends on the operands of its
+// signed-distance expression. The bed owner uses that same scale in CCD.
+inline float registeredPlaneCertificateFloor(float3 n, float3 point, float offset,
+                                              float width, float authoredClearance) {
+    const float scale = nmFixedPlaneContactArithmeticScale(
+        n.x, n.y, n.z, point.x, point.y, point.z, offset, width);
+    return max(authoredClearance, 16.0f * kEpsilon * max(scale, 1.0e-12f));
+}
+
+inline float analyticContactCertificateFloor(constant NMPrimalContactArguments& contact,
+                                             const NMMatterDispatchGPU dispatch,
+                                             const NMContactPairGPU pair,
+                                             const NMContactSampleGPU sample,
+                                             uint environment, float authoredClearance) {
+    const float3 point = sample.pointAndSeparation.xyz;
+    if (contact.planeEnabled[0] != 0u && pair.rigidProxy < dispatch.rigidProxyCount) {
+        const NMRigidProxyGPU proxy = contact.rigidProxies[pair.rigidProxy];
+        if (proxy.shapeKind == NM_RIGID_PLANE && proxy.flags == 0u &&
+            proxy.bodyIndex == NM_INVALID_INDEX && proxy.adaptiveObjectIndex == NM_INVALID_INDEX) {
+            const uint index = environment * dispatch.rigidProxyCount + pair.rigidProxy;
+            return registeredPlaneCertificateFloor(sample.normalAndVelocity.xyz, point,
+                contact.rigidStates[index].centerAndRadius.w, sample.barrier.z, authoredClearance);
+        }
+    }
+    return max(authoredClearance, 16.0f * kEpsilon * max(maximumAbsoluteCoordinate(point), 1.0e-12f));
+}

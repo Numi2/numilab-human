@@ -1,0 +1,83 @@
+{
+  "device": "Apple M6",
+  "cases": 8192,
+  "exact_float32": true,
+  "witness_old_floor_m": 1.5715567087681848e-06,
+  "witness_new_floor_m": 9.999999717180685e-10,
+  "observed_gap_m": 1.0097485070303946e-09,
+  "translated_z_1m_floor_m": 1.9073486328125e-06,
+  "metallib": "ff7cd9b6cddc6b5af1cd7c297d54319734b6ecf00c93f75f03d80eed07d639b7",
+  "parent_metallib": "d1fb933774bd69911b815a5826f7ff482f0dc698947545752f1418c4f49488bf",
+  "commands": [
+    [
+      "xcrun",
+      "-sdk",
+      "macosx",
+      "metal",
+      "-std=metal4.0",
+      "-O3",
+      "-fno-fast-math",
+      "-I",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/build",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/include",
+      "-c",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/build/src/matter_kernels.metal",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/build/NumiMatter.air"
+    ],
+    [
+      "xcrun",
+      "-sdk",
+      "macosx",
+      "metallib",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/build/NumiMatter.air",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/build/NumiMatter.metallib"
+    ],
+    [
+      "xcrun",
+      "-sdk",
+      "macosx",
+      "metal",
+      "-std=metal4.0",
+      "-O3",
+      "-fno-fast-math",
+      "-I",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/build",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+      "-I",
+      "/Users/numi/Work/skin-fat-native-integration-209/include",
+      "-c",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/check_floor.metal",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/test.air"
+    ],
+    [
+      "xcrun",
+      "-sdk",
+      "macosx",
+      "metallib",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/test.air",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/test.metallib"
+    ],
+    [
+      "xcrun",
+      "clang++",
+      "-std=c++17",
+      "-O2",
+      "-fobjc-arc",
+      "-framework",
+      "Metal",
+      "-framework",
+      "Foundation",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/check_floor.mm",
+      "-o",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/bed-certificate/check-floor"
+    ]
+  ]
+}

@@ -24,6 +24,16 @@ Both native launches returned the same 16 Newton histories, correction fractions
 
 The next solver comparison should enforce the unilateral bed reaction within the coupled momentum equation, with a nonnegative normal reaction, friction limited by that reaction, and a common signed-distance definition in the solve and fresh collision certificate. The current fit stays experimental. The normal-row recovery receipt links the exact executable, source, selected library and full native diagnostics to the independently restored parent checkpoint.
 
+## Contact area and the final collision check
+
+In the fitted starting pose, 346 triangles intersect the bed response band. Their summed area projected onto the bed is 66.21 cm². Fifteen skin nodes carry half the entire human weight. Force divided by the summed area is 143.92 kPa. The projected areas may overlap. A pressure measurement at a particular anatomical site needs a matched sensor footprint and pose. Supine volunteer experiments provide comparisons for the occiput, scapula and sacrum on a rigid board. [Rigid-board pressure-mapping study](https://www.ajemjournal.com/article/S0735-67570900452-5/fulltext)
+
+Two final-certificate paths used the largest world-coordinate component to bound roundoff even on the fixed horizontal bed. At the measured corner this gave a 1.572 µm threshold, mostly from its horizontal position. Both now use the fixed-plane distance arithmetic also used by the limiter. The authored 1 nm minimum remains. Translating the board in the normal direction still increases the cancellation bound when the plane offset calls for it. All 8,192 Apple M6 evaluations agreed exactly with the independent Float32 calculation.
+
+With both repairs installed and variable pleural coupling active, the native replay still rejected the first step. It reproduced the prior momentum row, all 16 Newton iterate histories and the fresh physical residual of 0.01603508. The corrected clearance is a separate defect. Settling requires the solver to find a feasible load distribution throughout the body and into the skeleton.
+
+[Current device and full-scene comparison](bed-certificate/comparison.json) · [Support force distribution](bed-certificate/support-distribution.json) · [Verified recovery](bed-certificate/recovery.json)
+
 ## Reproduction
 
 The recovery receipt identifies the independently downloaded private Human GitHub release archive and SHA-256 for each member. It contains the original and corrected contact source, native executables, selected dylibs and metallibs, exact launches, force observations, failed roots, fitted coordinates and parent recovery receipts. The full-scene trials used the existing run_cavity_motion.py entry point with the registered resting adult on SSH Numi. The checks and launch receipts identify the native executable and both libraries selected for each run.
