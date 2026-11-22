@@ -97,6 +97,7 @@ def run(source, owner, out, steps, enabled=True):
             for name in (
                 "resting-ocular-sclera-window.json",
                 "resting-local-bed-footprint.csv",
+                "resting-local-bed-sections.csv",
                 "resting-support-point-motion.csv",
                 "resting-com-momentum-diagnostic.csv",
             ):
