@@ -13,10 +13,10 @@ from material_context import sha
 from supported_material_admission import check_installed
 
 def read(p):return json.loads(p.read_text())
-def prepare(root,reader,predicate,release_witness=False):
+def prepare(root,reader,predicate,release_witness=False,hold_parent_volume=False):
     out=root/'bonded-equilibrium';old=root/'material-direction/release/owner';dest=out/'owner'
     if release_witness:
-        out=out/'free-interface';dest=out/'owner'
+        out=out/('held-volume' if hold_parent_volume else 'free-interface');dest=out/'owner'
     run=root/'fold-repair/accepted-2';launch=read(run/'launch.json');env=launch['environment']
     prior=read(old/'identities.json');fit=read(out/'fit.json');x,y,src,tags,pins=inputs(run)
     if pins!=fit['source'] or not fit['moved'] or fit['emitted']['free_force_l2_N']>=fit['initial']['free_force_l2_N']:raise ValueError('Unqualified mechanical start')
@@ -42,12 +42,19 @@ def prepare(root,reader,predicate,release_witness=False):
     affected=np.intersect1d(rows,fixed)
     if release_witness:
         target=read(root/'material-direction/release/result.json')['source_cell']
-        if not np.array_equal(affected,np.sort(src[target])):raise ValueError('Released vertices differ from registered witness')
+        if hold_parent_volume:
+            if not np.array_equal(affected,fit['released_cavity_nodes']) or not np.isin(src[target],affected).all():
+                raise ValueError('Missing ancestry for fitted cavity vertices')
+        elif not np.array_equal(affected,np.sort(src[target])):raise ValueError('Released vertices differ from registered witness')
     elif len(affected):raise ValueError('Cavity/mass-replacement rows moved')
     original=Path(env['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE'])
     write_coordinates(original,out/'current.node',rows,values)
     cur=np.loadtxt(out/'current.node',skiprows=1,usecols=(1,2,3))
     if not np.array_equal(cur[rows],values) or not np.array_equal(np.flatnonzero((cur!=y).any(1)),rows):raise ValueError('Emitted geometry differs')
+    if hold_parent_volume:
+        ids=src[target]
+        def vol(q):return np.linalg.det(q[ids[1:]].astype(float)-q[ids[0]].astype(float))
+        if vol(cur)<vol(y) or abs(vol(cur)/vol(y)-fit['witness_initial_to_previous_volume'])>1e-9:raise ValueError('Changed comparison volume')
     admission=check_installed(x,cur,src,tags,env,old)
     if not admission['passed']:raise ValueError(admission)
     subprocess.run([sys.executable,str(reader),str(run/'launch.json'),str(predicate),str(out/'layers.json'),'--accepted-nodes',str(run/'physical-reference.node'),str(out/'current.node')],check=True,env=dict(os.environ,PYTHONPATH=str(predicate.parent)+os.pathsep+os.environ.get('PYTHONPATH','')))
@@ -56,6 +63,11 @@ def prepare(root,reader,predicate,release_witness=False):
     loader=prior['loaded_pose_override'];oldhash=sha(original);newhash=sha(out/'current.node')
     if sha(old/header)!=loader['header_sha256'] or oldhash!=loader['sha256'] or body.count(oldhash)!=1:raise ValueError('Different registered pose owner')
     (dest/header).write_text(body.replace(oldhash,newhash))
+    if hold_parent_volume:
+        from observe_release import with_pose_capture
+        (dest/main).write_text(with_pose_capture((old/main).read_text()))
+        prior['observed_owner']=sha(old/main)
+        prior['source']=sha(dest/main)
     compile_cmd,link_cmd=prior['commands'];source=Path(compile_cmd[compile_cmd.index('-c')+1]).parent
     if sha(source/header)!=sha(old/header) or sha(source/main)!=sha(old/main):raise ValueError('Stale source during build')
     commands=[[v.replace(str(prefix)+'/',str(dest)+'/') for v in c] for prefix,c in [(source,compile_cmd),(old,link_cmd)]]
@@ -69,4 +81,4 @@ def prepare(root,reader,predicate,release_witness=False):
     prior['loaded_pose_override']=dict(loader,path=str(out/'current.node'),sha256=newhash,header_sha256=sha(dest/header),immediate_parent_sha256=oldhash,fit_sha256=sha(out/'fit.json'),nodes=rows.tolist())
     (dest/'identities.json').write_text(json.dumps(prior,indent=2)+'\n')
     (out/'preparation.json').write_text(json.dumps(dict(material=admission,initial_layers=sha(out/'layers.json'),fit=sha(out/'fit.json'),loaded_pose=newhash,source_pose=oldhash,native=binary,protected_attachments=len(protected),reference=pins['reference_sha256']),indent=2)+'\n')
-if __name__=='__main__':prepare(*(Path(v).resolve() for v in sys.argv[1:4]),release_witness='--free-interface' in sys.argv[4:])
+if __name__=='__main__':prepare(*(Path(v).resolve() for v in sys.argv[1:4]),release_witness='--free-interface' in sys.argv[4:] or '--hold-parent-volume' in sys.argv[4:],hold_parent_volume='--hold-parent-volume' in sys.argv[4:])

@@ -11,8 +11,8 @@ from supported_material_admission import installed_topology
 def read(p):
     return json.loads(p.read_text())
 
-def verify(root):
-    case=root/'bonded-equilibrium/free-interface'
+def verify(root,held=False):
+    case=root/'bonded-equilibrium'/('held-volume' if held else 'free-interface')
     run=root/'fold-repair/accepted-2'
     material=root/'fold-repair/material'
     env=read(run/'launch.json')['environment']
@@ -67,4 +67,4 @@ def verify(root):
         max_nodal_transport_error_kg_m=float(abs(nodal-transport).max()),max_centroid_transport_error_kg_m=float(abs(direct-transport).max()),
         loaded_cavity_moment_kg_m=cm.tolist(),native_limit_kg_m=absolute_limit,reference=pins['reference_sha256'],
         material_ledger=sha(path),cavity=env['NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256'],loaded_pose=prep['loaded_pose'])
-if __name__=='__main__':print(json.dumps(verify(Path(sys.argv[1]).resolve()),indent=2,allow_nan=False))
+if __name__=='__main__':print(json.dumps(verify(Path(sys.argv[1]).resolve(),'--hold-parent-volume' in sys.argv[2:]),indent=2,allow_nan=False))

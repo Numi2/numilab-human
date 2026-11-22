@@ -1,5 +1,6 @@
 """Compare the actual presented outer skin to registered material and interior anatomy at release."""
 import sys,subprocess,hashlib,runpy,json,time
+import re
 from collections import Counter
 from pathlib import Path
 import numpy as np
@@ -27,6 +28,18 @@ def scan_banks(audit,raw,poses,vertices,faces,result,out,filename,check_skin=Fal
                 stats.append([key[0],key[1],i,hit['count']])
     result.update(target_banks_by_semantic=dict(banks),intersection_pairs_by_semantic=dict(pairs),nonocular_pairs=sum(v for k,v in pairs.items() if k!='ocular'),affected_banks=stats,wall_seconds=time.monotonic()-start)
     (out/filename).write_text(json.dumps(result,indent=2)+'\n')
+
+def release_root_error(body_rows, log):
+    """Compare the recorded registration or execution frame with the executed starting root."""
+    if not log.is_file():return None
+    rows=re.findall(r'^resting_initial_support_alignment=applied .*?executed_root_xyz_m=(\[[^\]]+\])',log.read_text(),re.M)
+    if not rows:return None
+    if any(row!=rows[0] for row in rows):raise ValueError('Ambiguous initial root placement')
+    executed=np.asarray(json.loads(rows[0]),dtype=float)
+    root=[r['current']['position_world_m'] for r in body_rows if r['body_index']==0]
+    if len(root)!=1 or executed.shape!=(3,) or not np.isfinite(executed).all() or not np.isfinite(root).all():
+        raise ValueError('Invalid executed or supplied root')
+    return float(np.linalg.norm(executed-root[0]))
 
 def at_release():
     impl,pack,identity,pose,reference,current,out=map(Path,sys.argv[1:8])
@@ -57,8 +70,11 @@ def at_release():
     tri=np.loadtxt(indices,skiprows=1,delimiter=',',usecols=(1,2,3),dtype='i4')
     if len(vertices)!=len(xyz) or len(tri)!=len(faces): raise ValueError('Presentation has different physical skin dimensions')
     error=np.linalg.norm(vertices.astype('f8')-xyz.astype('f8'),axis=1)
-    result=dict(scope='initial native pack with exact full-volume release-pose body transforms',pose_count=len(poses),pose_sha256=sha(pose),pack_sha256=pkhash,skin_vertices=len(vertices),skin_faces=len(faces),same_triangle_indices=bool(np.array_equal(tri,faces)),max_skin_position_difference_m=float(error.max()),changed_skin_positions=int((error>0).sum()))
+    root_error=release_root_error(p['all_bodies'],current.parent/'stdout.log')
+    result=dict(scope='native opening mesh in supplied anatomical registration coordinates',executed_root_error_m=root_error,pose_count=len(poses),pose_sha256=sha(pose),pack_sha256=pkhash,skin_vertices=len(vertices),skin_faces=len(faces),same_triangle_indices=bool(np.array_equal(tri,faces)),max_skin_position_difference_m=float(error.max()),changed_skin_positions=int((error>0).sum()))
     out.mkdir(exist_ok=True);(out/'displayed-skin.json').write_text(json.dumps(result,indent=2)+'\n')
+    if root_error is not None and root_error>2e-6:
+        raise ValueError(f'Registration root differs from executed placement by {root_error:.9g} m; use the native executed pose capture')
     if not result['same_triangle_indices'] or error.max()>2e-7:raise ValueError('Rendered-to-material mismatch; retain parity witness before wider comparison')
     scan_banks(audit,raw,poses,vertices,faces,result,out,'initial-envelope.json')
 

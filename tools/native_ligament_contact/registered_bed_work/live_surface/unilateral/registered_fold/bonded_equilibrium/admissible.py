@@ -3,7 +3,7 @@ import numpy as np
 from scipy.optimize import linprog
 from scipy.sparse import coo_matrix, vstack
 
-def material_direction(x,pos,cells,free,force,moment_rows,trust_um=40.):
+def material_direction(x,pos,cells,free,force,moment_rows,trust_um=40.,protected_volume=None):
     R=x[cells[:,1:]]-x[cells[:,:1]]
     Y=pos[cells[:,1:]]-pos[cells[:,:1]]
     def gradients(e):
@@ -45,6 +45,17 @@ def material_direction(x,pos,cells,free,force,moment_rows,trust_um=40.):
         for j in range(3):
             grad=np.zeros_like(G);grad[:,:,j]=G[:,:,i]
             upper(grad,.04);upper(-grad,.04)
+    if protected_volume is not None:
+        row,parent_det=protected_volume
+        # The current configuration is compared to the same starting volume
+        # across releases, including after Float32 emission.
+        gradient=np.zeros((len(free),3))
+        for i,idx in enumerate(ids[row]):
+            if idx>=0:gradient[idx]-=H[row,i]*1e-6
+        scale=np.max(abs(gradient))
+        if not scale>0:raise ValueError('Witness has no movable corner')
+        lhs.append(coo_matrix(gradient.reshape(1,-1)/scale).tocsr())
+        rhs.append(np.array([(1-parent_det*1.0001/det[row])/scale]))
     c=-force.ravel()
     result=linprog(c/max(abs(c).max(),1e-30),A_ub=vstack(lhs),b_ub=np.concatenate(rhs),
                    A_eq=moment_rows,b_eq=np.zeros(len(moment_rows)),bounds=(-trust_um,trust_um),method='highs')

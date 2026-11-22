@@ -11,7 +11,7 @@ from supported_material_admission import installed_topology,material_state,stres
 from fit_posterior_equilibrium import materials
 
 def read(p):return json.loads(p.read_text())
-def measure(root):
+def measure(root,free_interface=False):
     case=root/'bonded-equilibrium'
     def config(run):
         j=read(run/'launch.json');cwd,args,pins,env=matched_horizon(j)
@@ -50,6 +50,17 @@ def measure(root):
     if not config(control)==config(base)==config(exp)==config(paired):raise ValueError('Unmatched physical scene or execution options')
     out={name:metrics(run) for name,run in [('unchanged_release',control),('fitted',base),('fitted_with_contact_stopping_test',exp),('fitted_with_matched_preflight_and_stopping_test',paired)]}
     if len({read(r/'launch.json')['environment']['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE'] for r in (base,exp,paired)})!=1:raise ValueError('Different fitted states')
+    expected_frames=[paired,paired.parent/'accepted-2',paired.parent/'accepted-1']
+    if free_interface:
+        var=case/'free-interface/three'
+        if config(var)!=config(paired):raise ValueError('Unmatched material release')
+        a=read(var/'launch.json')['environment'];b=read(paired/'launch.json')['environment']
+        for key in ('NUMI_MATTER_METALLIB_OVERRIDE','DYLD_LIBRARY_PATH'):
+            if a[key]!=b[key]:raise ValueError('Different bed solver in matched tissue experiment')
+        if sha(Path(a['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']))!=read(var.parent/'verified-mass.json')['loaded_pose']:
+            raise ValueError('Unqualified loaded transfer')
+        out['fitted_releasing_four_cavity_vertices']=metrics(var)
+        expected_frames.extend([var,var.parent/'accepted-2',var.parent/'accepted-1'])
     # A terminal frame on the same material is independently compared against both
     # release references so a change of starting volume cannot hide a smaller cell.
     ref_run=root/'fold-repair/accepted-2'
@@ -57,7 +68,7 @@ def measure(root):
     t,tags=installed_topology(src,roles,read(ref_run/'launch.json')['environment'])
     props,ident=materials(case/'owner');limits=stress_limits(ident)
     out['measured_endpoints']={}
-    for run in [paired,paired.parent/'accepted-2',paired.parent/'accepted-1']:
+    for run in expected_frames:
         if not (run/'verified-endpoint.json').is_file():continue
         rep=read(run/'verified-endpoint.json');rc=read(run/'terminal.receipt.json')
         if sha(run/'physical-accepted.node')!=rep['physical_nodes_sha256'] or rc['accepted_step']!=rep['accepted_steps']:raise ValueError('Unmatched material endpoint')
@@ -81,7 +92,8 @@ def measure(root):
         motion=read(run/'motion.json');text=(run/'stdout.log').read_text()
         fascia=next(l for l in text.splitlines() if l.startswith('resting_fascia_fem_terminal_audit=passed'))
         observed=metrics(run)
-        out['measured_endpoints'][run.name]=dict(audit=rep,volume=stats,stretch=stretch,motion=motion,terminal_skeleton_upward_N=observed['loads_N'][-1][2],
+        name=('free-interface-' if run.parent.name=='free-interface' else '')+run.name
+        out['measured_endpoints'][name]=dict(audit=rep,volume=stats,stretch=stretch,motion=motion,terminal_skeleton_upward_N=observed['loads_N'][-1][2],
                  bone_contact_normal_N=float(re.search('body_contact_normal_force_N=([^ ]+)',fascia)[1]))
     return out
-if __name__=='__main__':print(json.dumps(measure(Path(sys.argv[1]).resolve()),indent=2,allow_nan=False))
+if __name__=='__main__':print(json.dumps(measure(Path(sys.argv[1]).resolve(),'--free-interface' in sys.argv[2:]),indent=2,allow_nan=False))

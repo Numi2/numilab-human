@@ -48,10 +48,10 @@ def stiffness(reference, current, cells, free, roles, props):
             cols.append(np.broadcast_to(cj[:,None,:],g.shape).ravel())
     return coo_matrix((np.concatenate(blocks),(np.concatenate(rows),np.concatenate(cols))),shape=(3*n,3*n)).tocsc()
 
-def relax(root, constrained=False, release_witness=False):
+def relax(root, constrained=False, release_witness=False,hold_parent_volume=False):
     out=root/'bonded-equilibrium'
     if release_witness:
-        out=out/'free-interface';out.mkdir(exist_ok=True)
+        out=out/('held-volume' if hold_parent_volume else 'free-interface');out.mkdir(exist_ok=True)
     run=root/'fold-repair/accepted-2'; ledger=root/'fold-repair/material'; owner=root/'material-direction/release/owner'
     e=read(run/'launch.json')['environment']
     X,Y,src,source_roles,pins=inputs(run)
@@ -108,6 +108,10 @@ def relax(root, constrained=False, release_witness=False):
     # only when their full installed stars and replacement masses are evaluated.
     allowed=t[row] if release_witness else np.empty(0,dtype=int)
     if release_witness and not np.all(layer[allowed]==2):raise ValueError('Witness is not an entirely bonded cell')
+    if hold_parent_volume:
+        # Give the connected remeshed stars the same freedom as the other
+        # material stars. The outer and deep surfaces and entheses remain fixed.
+        allowed=protected
     free=np.setdiff1d(np.unique(t[first]),np.r_[anchors,np.setdiff1d(protected,allowed)])
     free=free[np.isin(layer[free],[0,2])]
     incident=np.flatnonzero(np.isin(t,free).any(1))
@@ -145,13 +149,20 @@ def relax(root, constrained=False, release_witness=False):
                     max_unbalanced_force_N=float(np.linalg.norm(force,axis=1).max()),
                     source_moment_drift_kg_m=float(abs(W@(pos[f]-y[f])).max()),
                     admission=certify(x,pos,cells,tags,props,limits))
+    target_rows=np.flatnonzero(incident==row)
+    if len(target_rows)!=1:raise ValueError('Witness is missing from the connected tissue solve')
+    target_row=int(target_rows[0]);witness_cell=cells[target_row]
+    def volume_factor(q):
+        pts=q[witness_cell]
+        return float(np.linalg.det(pts[1:]-pts[0]))
+    initial_volume=volume_factor(y)
     start=assess(y); pos=y.copy()
     if not start['admission']['passed']:raise ValueError('Starting material region inadmissible')
     history=[]
-    for it in range(28 if constrained else 16):
+    for it in range((48 if hold_parent_volume else 28) if constrained else 16):
         en,force=evaluate(pos)
         if constrained:
-            delta=material_direction(x,pos,cells,f,force,C)
+            delta=material_direction(x,pos,cells,f,force,C,protected_volume=(target_row,initial_volume) if hold_parent_volume else None)
         else:
             A=stiffness(x,pos,cells,f,tags,props)
             solver=splu(A)
@@ -164,6 +175,7 @@ def relax(root, constrained=False, release_witness=False):
             step=2.**-back
             test=pos.copy();test[f]+=step*delta
             emitted=emit_conservative(test,y,f,W) if constrained else test.astype('f4').astype(float)
+            if hold_parent_volume and volume_factor(emitted)<initial_volume:continue
             edges=emitted[cells[:,1:]]-emitted[cells[:,:1]]
             if np.any(np.linalg.det(edges)<=0) or not certify(x,emitted,cells,tags,props,limits)['passed']:continue
             a=assess(emitted)
@@ -180,8 +192,9 @@ def relax(root, constrained=False, release_witness=False):
         np.savez_compressed(out/'preload.npz',rows=moved,coordinates=final[f[used]].astype('f4'))
     result=dict(source=pins,endpoint=sha(endpoint),materials=matfiles,registered_mass=sha(flow),registered_map=sha(mp),witness_source_row=int(retained[row]),bed_nodes=len(bed),strain_witnesses=len(severe),free_bonded=int(sum(layer[free]==2)),free_interior=int(sum(layer[free]==0)),closed_star_cells=len(cells),donor_material_rows=len(gids),anchors=len(anchors),largest_change_m=float(np.linalg.norm(final-y,axis=1).max()),moved=len(moved),initial=start,emitted=after,iterations=history)
     if release_witness:
-        result['released_cavity_nodes']=allowed.tolist()
-        result['moved_witness_nodes']=np.intersect1d(allowed,moved).tolist()
+        result['released_cavity_nodes']=np.intersect1d(protected,moved).tolist()
+        result['moved_witness_nodes']=np.intersect1d(t[row],moved).tolist()
+    if hold_parent_volume:result['witness_initial_to_previous_volume']=volume_factor(final)/initial_volume
     (out/'fit.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
     print('fitted',len(free),len(cells),len(moved),start['free_force_l2_N'],after['free_force_l2_N'],flush=True)
-if __name__=='__main__':relax(Path(sys.argv[1]).resolve(), '--constrained' in sys.argv[2:], '--free-interface' in sys.argv[2:])
+if __name__=='__main__':relax(Path(sys.argv[1]).resolve(), '--constrained' in sys.argv[2:], '--free-interface' in sys.argv[2:] or '--hold-parent-volume' in sys.argv[2:], '--hold-parent-volume' in sys.argv[2:])
