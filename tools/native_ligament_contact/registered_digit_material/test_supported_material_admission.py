@@ -34,3 +34,20 @@ class MaterialAdmissionTests(unittest.TestCase):
             y = self.x.copy(); y[:, 0] *= scale
             with self.assertRaises(ValueError):
                 certify(self.x, y, self.t, np.array([15]), self.p)
+
+    def test_global_mass_cancellation_cannot_hide_local_transfer(self):
+        from transfer_registered_loading import donor_account
+        cells = np.vstack((self.t, self.t))
+        before = np.array([1., 1.]); after = np.array([.9, 1.1])
+        for roles, donors in (([15, 16], [4, 4]), ([16, 16], [4, 5])):
+            with self.assertRaises(ValueError):
+                donor_account(cells, np.array(roles), np.array(donors), self.x, self.x, before, after)
+        result = donor_account(cells, np.array([16, 16]), np.array([4, 4]), self.x, self.x, before, after)
+        self.assertEqual(len(result), 1)
+        self.assertLess(abs(result[0]['mass_delta_kg']), 1.e-12)
+
+    def test_material_specific_stress_limit(self):
+        F = np.eye(3); F[0, 1] = .1
+        for tag, failed in ((15, 1), (16, 0)):
+            r = certify(self.x, self.x @ F.T, self.t, np.array([tag]), self.p, [1.e3, 5.e5])
+            self.assertEqual(r['outside_stress_cap'], failed)

@@ -1,0 +1,57 @@
+{
+  "reference": {
+    "reference_sha256": "9e5412c2a07f5f1ec9366e55ec73ea5089e1dab57b84ffb939fab52ce64bd6df",
+    "installed_pose_sha256": "eb4947de6d571074222f8c935726e3e6cd3f71b496bfef482cc3465d76c2acd2",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "remesh_sha256": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+  "material_sha256": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "phases": {
+    "accepted_endpoint": {
+      "pose_sha256": "5898993413ca4d6e984694a653b36a2c10497d1b755af2e3c1a370fceaaceb87",
+      "regions": {
+        "dermis": {
+          "cells": 705090,
+          "reference_volume_m3": 0.0036557021067944195,
+          "outside_existing_registration_stretch_envelope": 38,
+          "affected_reference_volume_m3": 2.2284864088935606e-07,
+          "severe_distortion_count": 3,
+          "outside_native_component_stress_cap": 0,
+          "max_stress_Pa": 911277.8021153143,
+          "maximum_stress_row": 313457,
+          "max_stretch": 3.174863101574527,
+          "max_stretch_row": 39736,
+          "min_stretch": 0.3055160062531514,
+          "min_stretch_row": 312980,
+          "upper_stretch_p99_by_cell": 1.0000140203472505,
+          "lower_stretch_p01_by_cell": 0.9999861321711295
+        },
+        "adipose": {
+          "cells": 743709,
+          "reference_volume_m3": 0.011511360630003586,
+          "outside_existing_registration_stretch_envelope": 17,
+          "affected_reference_volume_m3": 4.5741419591863215e-07,
+          "severe_distortion_count": 0,
+          "outside_native_component_stress_cap": 0,
+          "max_stress_Pa": 10509.457046440255,
+          "maximum_stress_row": 1032309,
+          "max_stretch": 2.528014780789398,
+          "max_stretch_row": 947134,
+          "min_stretch": 0.4139155114200477,
+          "min_stretch_row": 1032309,
+          "upper_stretch_p99_by_cell": 1.000065975691496,
+          "lower_stretch_p01_by_cell": 0.9998852579812538
+        }
+      },
+      "extreme_rows": [
+        39736,
+        312980,
+        313457
+      ]
+    }
+  },
+  "scope": "Principal stretches from the actual physical reference to each loaded or accepted state. The 2/3 to 1.5 envelope is the existing engineering registration check. The 1/3 to 3 interval reports severe distortion. Neither is a clinical acceptance range. Stress uses the current two constitutive laws and maximum absolute first Piola component."
+}
