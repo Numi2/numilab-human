@@ -1,0 +1,236 @@
+{
+  "failure": "dd2f6f29f76df2305be4b37d7a76cd5627ffec0f5d7693e61882a609636e59bd",
+  "log": "734fe92c4912f752a427bb995b46d9b9c47c3683670f7a03fe745144cc460e5b",
+  "root": 2,
+  "requested_steps": 4,
+  "rollback_common_coordinates_equal": true,
+  "rollback_respiratory_status_equal": true,
+  "domain_norms": {
+    "root": 2,
+    "environment": 0,
+    "nonvascular_norm": 0.0491710268,
+    "vascular_norm": 4.38640164e-08,
+    "mechanical_threshold": 1.24999997e-05,
+    "vascular_threshold": 9.99999975e-06
+  },
+  "work": {
+    "root": 2,
+    "environment": 0,
+    "microtick": 0,
+    "used_columns": 512,
+    "cycles_with_work": 32,
+    "encoded_cycles": 64,
+    "budget_exhausted_solves": 0,
+    "active_newton_begins": 16,
+    "active_restart_begins": 16,
+    "has_outer_sample": true,
+    "last_newton_iteration": 15,
+    "final_newton_latched": false,
+    "last_newton_norm": 0.0491710268,
+    "last_newton_threshold": 9.99999975e-06,
+    "minimum_newton_norm": 0.0491710268,
+    "final_newton_norm": 0.0491710268,
+    "final_fgmres_residual_estimate": 3.25203519e-06,
+    "nonvascular_norm": 0.0491710268,
+    "vascular_norm": 4.38640164e-08,
+    "mechanical_threshold": 1.24999997e-05,
+    "vascular_threshold": 9.99999975e-06,
+    "status_code_at_microtick_end": 10,
+    "status_failing_index_at_microtick_end": 4294967295
+  },
+  "iterations": [
+    {
+      "iteration": 0,
+      "physical_residual": 0.0658376589,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 0.25,
+        "after_deformable_limit": 0.25,
+        "after_rigid_limit": 0.25,
+        "after_support_limit": 0.25,
+        "after_vascular_limit": 0.25,
+        "final_line_search": 0.25
+      }
+    },
+    {
+      "iteration": 1,
+      "physical_residual": 0.0496070758,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 0.0078125,
+        "after_deformable_limit": 0.0078125,
+        "after_rigid_limit": 0.0078125,
+        "after_support_limit": 0.0078125,
+        "after_vascular_limit": 0.0078125,
+        "final_line_search": 0.0078125
+      }
+    },
+    {
+      "iteration": 2,
+      "physical_residual": 0.0492200702,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 0.0009765625,
+        "after_deformable_limit": 0.0009765625,
+        "after_rigid_limit": 0.0009765625,
+        "after_support_limit": 0.0009765625,
+        "after_vascular_limit": 0.0009765625,
+        "final_line_search": 0.0009765625
+      }
+    },
+    {
+      "iteration": 3,
+      "physical_residual": 0.0491720289,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.52587891e-05,
+        "after_deformable_limit": 1.52587891e-05,
+        "after_rigid_limit": 1.52587891e-05,
+        "after_support_limit": 1.52587891e-05,
+        "after_vascular_limit": 1.52587891e-05,
+        "final_line_search": 1.52587891e-05
+      }
+    },
+    {
+      "iteration": 4,
+      "physical_residual": 0.0491712801,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 3.81469727e-06,
+        "after_deformable_limit": 3.81469727e-06,
+        "after_rigid_limit": 3.81469727e-06,
+        "after_support_limit": 3.81469727e-06,
+        "after_vascular_limit": 3.81469727e-06,
+        "final_line_search": 3.81469727e-06
+      }
+    },
+    {
+      "iteration": 5,
+      "physical_residual": 0.0491710939,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 9.53674316e-07,
+        "after_deformable_limit": 9.53674316e-07,
+        "after_rigid_limit": 9.53674316e-07,
+        "after_support_limit": 9.53674316e-07,
+        "after_vascular_limit": 9.53674316e-07,
+        "final_line_search": 9.53674316e-07
+      }
+    },
+    {
+      "iteration": 6,
+      "physical_residual": 0.0491710454,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 2.38418579e-07,
+        "after_deformable_limit": 2.38418579e-07,
+        "after_rigid_limit": 2.38418579e-07,
+        "after_support_limit": 2.38418579e-07,
+        "after_vascular_limit": 2.38418579e-07,
+        "final_line_search": 2.38418579e-07
+      }
+    },
+    {
+      "iteration": 7,
+      "physical_residual": 0.0491710342,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    },
+    {
+      "iteration": 8,
+      "physical_residual": 0.0491710342,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    },
+    {
+      "iteration": 9,
+      "physical_residual": 0.0491710342,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 2.98023224e-08,
+        "after_deformable_limit": 2.98023224e-08,
+        "after_rigid_limit": 2.98023224e-08,
+        "after_support_limit": 2.98023224e-08,
+        "after_vascular_limit": 2.98023224e-08,
+        "final_line_search": 2.98023224e-08
+      }
+    },
+    {
+      "iteration": 10,
+      "physical_residual": 0.0491710342,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    },
+    {
+      "iteration": 11,
+      "physical_residual": 0.0491710305,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    },
+    {
+      "iteration": 12,
+      "physical_residual": 0.0491710305,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    },
+    {
+      "iteration": 13,
+      "physical_residual": 0.0491710268,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    },
+    {
+      "iteration": 14,
+      "physical_residual": 0.0491710268,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 2.98023224e-08,
+        "after_deformable_limit": 2.98023224e-08,
+        "after_rigid_limit": 2.98023224e-08,
+        "after_support_limit": 2.98023224e-08,
+        "after_vascular_limit": 2.98023224e-08,
+        "final_line_search": 2.98023224e-08
+      }
+    },
+    {
+      "iteration": 15,
+      "physical_residual": 0.0491710268,
+      "minimum_fraction_per_stage": {
+        "before_contact_limits": 1.49011612e-08,
+        "after_deformable_limit": 1.49011612e-08,
+        "after_rigid_limit": 1.49011612e-08,
+        "after_support_limit": 1.49011612e-08,
+        "after_vascular_limit": 1.49011612e-08,
+        "final_line_search": 1.49011612e-08
+      }
+    }
+  ],
+  "already_limited_before_contact": true
+}

@@ -1,0 +1,23 @@
+# Dense human release under real bed contact
+
+The experimental registered skin/fat preparation reduced the bed-force overshoot. The body still fails supported equilibrium. Keep the existing launch default. All measurements below came from the full native Apple M6 owner on SSH Numi, with gravity, recruited muscles, physical bed contact and the variable pleural pressure owner enabled.
+
+| Matched two-step release, 31.25 µs | Control | Loaded-coordinate fit | Guarded fit and paired reference repair |
+|---|---:|---:|---:|
+| Initial bed force (N) | 953.18 | 953.18 | 953.18 |
+| Final bed reaction (N) | 3491.91 | 2007.83 | 2252.41 |
+| Articulated vertical force from FEM (N) | 17.87 | 17.88 | 17.86 |
+| Dermis / adipose cells below the installed shape limit | 0 / 0 | 1 / 0 | 0 / 1 |
+| Skin/anatomy triangle pairs excluding ocular sources | 10,895 | 10,895 | 10,895 |
+
+The model weighs 952.86 N. Its articulated gravity target is 811.45 N. At the starting pose the plane supplies the body's weight in aggregate, but the local dermal forces at four of the contact nodes are far from equilibrium. Correcting the initial loaded coordinates within tissue removed 58.45% of the excess bed reaction. Repairing the dermal material coordinates and retaining the release-pose guards removed 48.82%. Neither trial established skeletal support or static equilibrium.
+
+The material repair moves four interior dermal nodes equally in the reference and loaded configurations. The production P1 and typed source-carrier readers passed for both layers. All 1,448,799 installed cells passed initial geometry, strain and stress admission. The maximum change in source-group mass was 2.54e-19 kg, with zero new source routes and zero native density outliers. Re-emission reproduced the material nodes, mass map and lineage receipts byte for byte. Original surface positions, the coupled circulation, all fourteen attachments and the bed barrier are preserved. The packet also retains two rejected alternatives and the source margin inventory. There are 1,385 reference cells within one percent of the existing shape floor.
+
+At the two-step endpoint, both targeted dermis cells passed, with zero inverted cells, zero traced skin self-intersections, zero inter-layer crossing pairs and zero skin/bone pairs. One adipose cell fell below the shape floor (0.00000998671 against 0.000010). Of the 10,895 remaining nonocular skin/anatomy pairs, 10,027 involve muscle envelopes. Thirty-eight dermis and seventeen adipose cells left the initial registration stretch envelope. Three dermis cells crossed the more severe threefold distortion criterion. No cell exceeded the native stress limit at that accepted endpoint.
+
+The registered reference surface and the loaded starting skin differ by up to 11.72 mm. Using the actual captured loaded coordinates, the largest outer-skin displacement over the two accepted steps was 0.151 mm, with 190 of 76,153 nodes moving more than 10 µm. The dense native horizon took 55.50 s (5.63e-7×). Cold launch through return took 200.85 s (1.56e-7×). These are initialization measurements. The last 16 s compact control reached 0.10225× during stepping and 0.09678× end to end, with three breaths, nineteen pumping cycles and 13,913 nonocular skin/anatomy pairs at its endpoint.
+
+The four-step diagnostic accepted two steps. At root 2 all 16 Newton corrections were already shortened on the FEM objects before the deformable, rigid, support and vascular contact stages. The final fraction was 1.49e-8. The support reduction copied the per-object minimum into the environment scalar. Its change on that scalar is not evidence that the bed caused the restriction. The nonvascular residual stalled at 0.049171 against a Newton target of 1e-5. The vascular residual was 4.39e-8. FGMRES used 512 columns with zero exhausted solves. The failed update preserved the recorded common coordinates and respiratory status. This diagnostic tests one rejected transaction and does not establish all-history rollback parity.
+
+The recoverable native launch, selected physical configurations, complete source and numeric witnesses retain the passing and failed trials. No rejection tolerance or material law was relaxed. The candidate is excluded from the default scene.
