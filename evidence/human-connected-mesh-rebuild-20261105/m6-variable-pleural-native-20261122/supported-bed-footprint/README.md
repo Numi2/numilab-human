@@ -18,12 +18,23 @@ All three audits used frozen native body transforms, 108,987 skin faces and 878 
 
 Retain this footprint correction for the compact load path. Reject whole-body anatomical qualification and the promotion of the compact model as a substitute for the dense skin/fat reference. The next registration and mechanical coupling changes must be evaluated on the same loaded pose and through motion. A bed-stiffness change cannot resolve 8,859 crossings present before stepping. The separate dense load witness, including measured skeleton and bed forces, is in the neighboring paired-fat-registration/supported-material-strain evidence.
 
-The two recovery receipts identify the downloadable source, tested binaries, native geometry, mode and exact input hashes. Both archives passed independent download and per-file SHA-256 restoration. The native owner build starts from the existing registered drive-heart build. On Numi the commands used the pinned working Apple's developer tools, the existing app build/native object dependencies and the recovered Human inputs.
+The two recovery receipts identify the downloadable source, tested binaries, native geometry, mode and exact input hashes. Both archives passed independent download and per-file SHA-256 restoration. The native owner build starts from the existing registered drive-heart build. On Numi the commands used the pinned working Apple developer tools, the existing app build/native object dependencies and the recovered Human inputs.
 
 ```sh
 python3 build_bed_footprint.py "$drive_heart" "$app" "$owner"
 NUMI_RETAIN_SUPPORT_GEOMETRY=1 python3 run_bed_work.py "$drive_control" "$owner" "$trial" 8000 --disabled
-python3 check_drive_anatomy.py "$trial" "$retained_surface_reader" "$registered_envelope_reader"
+python3 check_drive_anatomy.py "$trial" "$retained_surface_reader" "$registered_envelope_reader" --require-clear
 ```
 
 The final switch disables the optional thoracic diagnostic capture. Native breathing, Brain control, circulation, contact and geometry certification ran together. For the independent startup audit, build with `--with-registration-capture` and run 32 steps with `NUMI_CAPTURE_BED_COLUMNS=1` and geometry retention. `check_initial_bed_anatomy.py` checks this pack against the loaded physical footprint.
+
+
+## Why the forearms need a registration repair
+
+An independent exact-plane check classified all 8,859 initial skin/anatomy pairs and all 14,064 at 16 seconds as transverse. In each pair both triangles have vertices strictly on both sides of the other triangle’s plane. Tangential contact and coplanar seams cannot explain these counts.
+
+The right and left extensor digitorum have stable tissue IDs 137 and 138. The installed NHTISS4 source surfaces have zero self-intersections after exact seam welding. Applying their actual binding weights and the 19 native body transforms per muscle reproduced the native forearm envelopes to within 0.19 µm in the two captured poses. The initial registered muscles contain 359 and 358 self-intersecting face pairs. These rise to 460 and 421 by 16 seconds. The folded surfaces prevent interpreting them as clean solids for signed penetration or bed-compression estimates.
+
+Repair the source-to-body mappings across the wrist and four digit branches, and test the linked muscles, tendons, bones and skin in the same actual loaded motion. Preserve the named muscle force routes and endpoints. A previously tried branch-weight fit retained substantial intersections. Its measured results are in the sibling registered-digital-material/diagnosis evidence. The dense tissue-to-skeleton support imbalance is a separate mechanical failure. Keep the reduced and dense configuration IDs alongside their respective results.
+
+The compact endpoint audit now supports the same explicit clearance request as the dense audit. The documented command exits unsuccessfully for this 16-second result and retains the witnesses. Its failure message and the bilateral binding replay are in this directory. This endpoint check covers external skin versus nonocular physical banks and skin self-intersections.
