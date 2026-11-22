@@ -24,8 +24,20 @@ def main(full,donor,seed,out,tool,warm=None):
         if warm is not None:
             if json.loads((warm/'result.json').read_text())['source']!=pins:raise ValueError('unmatched warm lattice pose')
             initial=temp/'warm';(x+np.load(warm/'displacement.npy')).astype('f4').tofile(initial);args.append(str(initial))
+        boundary=seed/'construction-boundary.npz'
+        if boundary.exists():
+            data=np.load(boundary);assert data['axis'].all()
+            fixed=np.zeros(len(x),np.uint8);fixed[data['node']]=1
+            if not np.array_equal(wanted[data['node']],data['value']):raise ValueError('displaced attachment')
+            path=temp/'fixed';fixed.tofile(path)
+            if warm is None:args.append('-')
+            args.append(str(path))
         subprocess.run(args,check=True)
         points=np.fromfile(d,'f4').reshape(x.shape).astype(float)
+    if boundary.exists():
+        import shutil
+        if np.any(points[:,2]<0) or not np.array_equal(points[data['node']],data['value']):raise ValueError('unilateral bound or anchor lost in quantization')
+        shutil.copyfile(boundary,out/boundary.name)
     if not np.isfinite(points).all():raise ValueError('nonfinite Float32 pose')
     j,h,det,bad=audit(points,t,ref)
     result=dict(source=pins,seed=str(seed),failed=int(bad.sum()),min_J=float(j.min()),max_J=float(j.max()),

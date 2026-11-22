@@ -12,13 +12,16 @@ from untangle_registered_donor_field import differentials
 from fit_connected_material_cells import groups,severity
 
 
-def solve(y,t,ref,nodes,original,radius):
+def solve(y,t,ref,nodes,original,radius,fixed=None):
     ids=np.searchsorted(nodes,t).clip(max=len(nodes)-1);mask=nodes[ids]==t
     p=y[nodes].astype('f4');ulps=np.abs(np.spacing(p)).astype(float)
     if not np.all(ulps>0):raise ValueError('invalid emission')
     current=(y[nodes]-original[nodes])
     lower=np.maximum(-64,np.ceil((-radius-current)/ulps)).ravel()
     upper=np.minimum(64,np.floor((radius-current)/ulps)).ravel()
+    if fixed is not None:
+        lower[2::3]=np.maximum(lower[2::3],np.maximum(-64,np.ceil(-y[nodes,2]/ulps[:,2])))
+        lock=np.repeat(fixed[nodes],3);lower[lock]=0.;upper[lock]=0.
     if np.any(lower>upper):raise ValueError('outside construction box')
     det,grad,_=differentials(y,t);n=3*len(nodes)
     # Each row is the oriented margin in material units, and its derivative under
@@ -63,6 +66,10 @@ def main(full,donor,seed,warm,out):
         if json.loads((f/'result.json').read_text())['source']!=pins:raise ValueError('wrong source')
     exact=x+np.load(seed/'displacement.npy');y=(x+np.load(warm/'displacement.npy')).astype('f4').astype(float)
     ref=np.concatenate([differentials(x,t[k:k+32768])[0] for k in range(0,len(t),32768)])
+    boundary=seed/'construction-boundary.npz';fixed=None
+    if boundary.exists():
+        data=np.load(boundary);fixed=np.zeros(len(x),bool);fixed[data['node']]=True
+        if not np.all(data['axis']) or np.any(y[:,2]<0) or not np.array_equal(y[data['node']],data['value']):raise ValueError('unmatched initial anchor/bed')
     history=[]
     for it in range(6):
         J,s,d,bad=audit(y,t,ref);log=dict(iteration=it,failed=int(bad.sum()),inverted=int((d<=0).sum()))
@@ -75,7 +82,7 @@ def main(full,donor,seed,warm,out):
         changes=0
         for nodes,incident in groups(t,active):
             part=t[incident];r=ref[incident];start=y[nodes].copy()
-            proposal=solve(y,part,r,nodes,exact,2.e-6)
+            proposal=solve(y,part,r,nodes,exact,2.e-6,fixed)
             if proposal is None:continue
             y[nodes]=proposal;j,h,det,f=audit(y,part,r)
             def merit(a,b):return (int(a.sum()),float(np.linalg.norm(b)))
@@ -84,6 +91,10 @@ def main(full,donor,seed,warm,out):
         if it>=1 and not changes:break
     j,h,det,bad=audit(y,t,ref)
     out.mkdir(exist_ok=False);np.save(out/'displacement.npy',y-x)
+    if fixed is not None:
+        import shutil
+        if np.any(y[:,2]<0) or not np.array_equal(y[data['node']],data['value']):raise ValueError('lattice constraints lost')
+        shutil.copyfile(boundary,out/boundary.name)
     result=dict(source=pins,history=history,seed=str(seed),warm=str(warm),failed=int(bad.sum()),min_J=float(j.min()),max_J=float(j.max()),
                 quality=measure(y,owner,t,mat),failure_by_role={str(k):int(np.count_nonzero(bad&(mat==k))) for k in np.unique(mat)},
                 correction_to_seed=errors(y,exact),discrepancy_to_rigid_donors=errors(y,target),outer_error=errors(y[outer],target[outer]),

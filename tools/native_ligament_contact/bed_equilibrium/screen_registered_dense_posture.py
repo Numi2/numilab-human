@@ -6,6 +6,26 @@ from scipy.spatial.transform import Rotation
 from evaluate_registered_bed_transfer import digest
 
 
+def initial_body_targets(donor):
+    if donor.is_dir():
+        receipt=donor/'terminal.receipt.json'
+        return json.loads(receipt.read_text())['initial_anatomical_registration']['body_poses'],dict(target_receipt_sha256=digest(receipt))
+    # A rigid first placement is a construction input. Its donor receipt remains the
+    # original accepted native reference; the new pose is checked against actual GPU FK.
+    cfg=json.loads(donor.read_text());receipt=Path(cfg['placement_reference_receipt'])
+    source=Path(cfg['placement_reference_launch'])
+    if digest(receipt)!=cfg['placement_reference_receipt_sha256'] or digest(source)!=cfg['placement_reference_launch_sha256']:
+        raise ValueError('changed native reference receipt or launch')
+    old=json.loads(source.read_text())['argv'];new=cfg['argv']
+    i=old.index('--root-pose')+1;j=new.index('--root-pose')+1
+    if i!=j or old[:i]!=new[:j] or old[i+3:]!=new[j+3:]:raise ValueError('joint posture changed in rigid placement')
+    delta=np.array(new[j:j+3],dtype='f4').astype(float)-np.array(old[i:i+3],dtype='f4').astype(float)
+    if not np.array_equal(delta,cfg['construction_translation_m']):raise ValueError('root placement mismatch')
+    rows=json.loads(receipt.read_text())['initial_anatomical_registration']['body_poses']
+    for r in rows:r['position_m']=(np.asarray(r['position_m'])+delta).tolist()
+    return rows,dict(target_receipt_sha256=digest(receipt),target_configuration_sha256=digest(donor),root_translation_m=delta.tolist())
+
+
 def load_geometry(full, donor):
     source=json.loads((full/'launch.json').read_text())['environment']
     key='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_'
@@ -55,8 +75,8 @@ def load_geometry(full, donor):
             local[i]=xyz
             if row['registered_surface_layer']=='O':outer.append(i)
     assert np.all(owner>=0)
-    target=json.loads((donor/'terminal.receipt.json').read_text())
-    poses={row['body_index']:row for row in target['initial_anatomical_registration']['body_poses']}
+    target,pose_identity=initial_body_targets(donor)
+    poses={row['body_index']:row for row in target}
     with frames.open() as f:original={int(row['donor']):row for row in csv.DictReader(f)}
     posed=np.empty_like(reference);error=0.
     rotations=np.zeros((int(owner.max())+1,3,3))
@@ -73,7 +93,7 @@ def load_geometry(full, donor):
     assert error<1e-6
     mask=np.zeros(len(reference),bool);mask[outer]=True
     pins=dict(shared_interface_rows=shared,max_source_reconstruction_m=error,reference_sha256=digest(mesh),
-              elements_sha256=digest(elements),target_receipt_sha256=digest(donor/'terminal.receipt.json'))
+              elements_sha256=digest(elements),**pose_identity)
     return reference,posed,owner,t,mat,mask,rotations,pins
 
 def measure(x,owner,t,mat):

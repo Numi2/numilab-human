@@ -10,7 +10,8 @@ launch,lib,out = map(Path,sys.argv[1:4])
 if len(sys.argv) not in (4,5,7):
     raise ValueError("Expected an optional connected patch or --accepted-nodes REFERENCE ACCEPTED")
 accepted = len(sys.argv) == 7
-if accepted and sys.argv[4] != "--accepted-nodes":
+constructed=accepted and sys.argv[4]=="--constructed-nodes"
+if accepted and sys.argv[4] not in ("--accepted-nodes","--constructed-nodes"):
     raise ValueError("Unknown endpoint input")
 env = json.loads(launch.read_text())['environment']
 prefix='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_'
@@ -110,4 +111,15 @@ d=json.loads(out.read_text());d.update(group_membership=['O plus skin O-I headwa
 if accepted:
     d['scope']='accepted compensated native coordinates, O/I/D distinct facets, shared material features excluded'
     d['accepted_coordinate_f64_sha256']=hashlib.sha256(np.ascontiguousarray(current,dtype='<f8').tobytes()).hexdigest()
+if constructed:
+    launch_info=json.loads(launch.read_text());current_pin=launch_info['pins'].get(str(accepted_path))
+    if not current_pin or current_pin!=sha(accepted_path):raise ValueError("unmatched constructed state")
+    d['scope']='constructed loaded current positions before motion, all registered O/I/D distinct facets and headwalls, shared material features excluded'
+    d['inputs']['CONSTRUCTED_NODE_SHA256']=d['inputs'].pop('NATIVE_ACCEPTED_NODE_SHA256')
+    d['constructed_coordinate_f64_sha256']=d.pop('accepted_coordinate_f64_sha256')
+    d['witness_node_rows']={}
+    for key,hits in d['witnesses'].items():
+        i,j=map(int,key.split('-'))
+        if len(hits)!=d['pair_counts'][i][j]:raise ValueError('incomplete constructed triangle witnesses')
+        d['witness_node_rows'][key]=[[groups[i][a].tolist(),groups[j][b].tolist()] for a,b in hits]
 out.write_text(json.dumps(d,indent=2)+'\n')
