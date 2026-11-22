@@ -1,0 +1,1530 @@
+[
+  {
+    "run": "fold-repair/three",
+    "launch": "6b0851c3cd77223c6699728745f7efeab0f4ab7ac7b049f97ae305e98e52d63b",
+    "source": "a928149dcee4ff8ef6fc126eda4f09930136b562d5226734757de5293ec533be",
+    "accepted_steps": 2,
+    "simulated_s": 3.125e-05,
+    "wall_s": 261.291219209088,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 10,
+            "object_index": 12,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 48,
+            "diagnostics": [
+              0.035921149,
+              2.72036758e-08,
+              0,
+              -902
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.73872149e-06,
+              0.035921149,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0646976009,
+              0.035921149,
+              1.82560778,
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 768,
+        "cycles_with_work": 48,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 32,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 0.035921149,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.035921149,
+        "final_newton_norm": 0.035921149,
+        "final_fgmres_residual_estimate": 1.73872149e-06,
+        "nonvascular_norm": 0.035921149,
+        "vascular_norm": 9.00486441e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 10,
+        "status_failing_index_at_microtick_end": 4294967295
+      }
+    ],
+    "failed": true,
+    "fresh": 0.035921149,
+    "failing_native_index": 4294967295,
+    "matter_diagnostics": [
+      0.03592114895582199,
+      2.720367575648197e-08,
+      0,
+      -902
+    ],
+    "matter_code": 10,
+    "rollback_common": true,
+    "rollback_respiratory": true,
+    "last_tissue_line_search": {
+      "root": 2,
+      "iteration": 15,
+      "material_alpha": 1.49012e-08,
+      "full_trial": {
+        "alpha": 1,
+        "valid_tile_min_J": 0.359692,
+        "first_bad_tet": 950449,
+        "trial_J": 2.71137,
+        "current_J": 2.40792,
+        "reason": 4,
+        "invalid_tiles": 2,
+        "tile_witness_tets": [
+          950449,
+          1035269
+        ],
+        "tile_witnesses_complete": true
+      }
+    }
+  },
+  {
+    "run": "material-direction/three",
+    "launch": "232e06dc8119954722c0303e63579ffcdceb5e4df833bb1cb39a075874274461",
+    "source": "29f62344df2160a68a083f8986fb5a2e0852672d7bede89516738add824b74f1",
+    "accepted_steps": 2,
+    "simulated_s": 3.125e-05,
+    "wall_s": 265.3194880001247,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 10,
+            "object_index": 14,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              0.000602195039,
+              3.91018466e-06,
+              0,
+              -902
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              5.70680143e-08,
+              0.000602213142,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0646976009,
+              0.000602213142,
+              0.13437736,
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 848,
+        "cycles_with_work": 53,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 37,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 0.000602213142,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.000602213142,
+        "final_newton_norm": 0.000602213142,
+        "final_fgmres_residual_estimate": 5.70680143e-08,
+        "nonvascular_norm": 0.000602213142,
+        "vascular_norm": 2.56778243e-09,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 10,
+        "status_failing_index_at_microtick_end": 4294967295
+      }
+    ],
+    "failed": true,
+    "fresh": 0.000602195039,
+    "failing_native_index": 4294967295,
+    "matter_diagnostics": [
+      0.0006021950393915176,
+      3.910184659616789e-06,
+      0,
+      -902
+    ],
+    "matter_code": 10,
+    "rollback_common": true,
+    "rollback_respiratory": true,
+    "last_tissue_line_search": {
+      "root": 2,
+      "iteration": 15,
+      "material_alpha": 3.05176e-05,
+      "full_trial": {
+        "alpha": 1,
+        "valid_tile_min_J": 0.350505,
+        "first_bad_tet": 874304,
+        "trial_J": 0.347835,
+        "current_J": 0.35,
+        "reason": 2,
+        "invalid_tiles": 1,
+        "tile_witness_tets": [
+          874304
+        ],
+        "tile_witnesses_complete": true
+      }
+    }
+  },
+  {
+    "run": "material-direction/quantized/three",
+    "launch": "e36316a066e5f6f45dbc8303084d67be1c7c4fa5793029a10e803e07fa3ac9d7",
+    "source": "5a08c78fb5dc3697445e4e4fc1d73b8177b4c3239b89990f3853d96582c9acf9",
+    "accepted_steps": 2,
+    "simulated_s": 3.125e-05,
+    "wall_s": 267.93376949988306,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 10,
+            "object_index": 12,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              0.000602394983,
+              7.82273946e-06,
+              0,
+              -902
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.72631314e-08,
+              0.000602430082,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0646976009,
+              0.000602430082,
+              0.134371385,
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 928,
+        "cycles_with_work": 58,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 42,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 0.000602430082,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.000602430082,
+        "final_newton_norm": 0.000602430082,
+        "final_fgmres_residual_estimate": 1.72631314e-08,
+        "nonvascular_norm": 0.000602430082,
+        "vascular_norm": 1.08128662e-09,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 10,
+        "status_failing_index_at_microtick_end": 4294967295
+      }
+    ],
+    "failed": true,
+    "fresh": 0.000602394983,
+    "failing_native_index": 4294967295,
+    "matter_diagnostics": [
+      0.0006023949827067554,
+      7.822739462426398e-06,
+      0,
+      -902
+    ],
+    "matter_code": 10,
+    "rollback_common": true,
+    "rollback_respiratory": true,
+    "last_tissue_line_search": {
+      "root": 2,
+      "iteration": 15,
+      "material_alpha": 6.10352e-05,
+      "full_trial": {
+        "alpha": 1,
+        "valid_tile_min_J": 0.350505,
+        "first_bad_tet": 874304,
+        "trial_J": 0.347836,
+        "current_J": 0.35,
+        "reason": 2,
+        "invalid_tiles": 1,
+        "tile_witness_tets": [
+          874304
+        ],
+        "tile_witnesses_complete": true
+      }
+    }
+  },
+  {
+    "run": "material-direction/dynamic/three",
+    "launch": "b650eba79fed18b838112fe26e68fba5aa2dbbf4d8e2dd9d58e5bec0efb4397e",
+    "source": "d2727a420184c66b7214474a11250f46d731d806f57574b6a028fd357cffa14d",
+    "accepted_steps": 2,
+    "simulated_s": 3.125e-05,
+    "wall_s": 264.2081103329547,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 10,
+            "object_index": 2,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 48,
+            "diagnostics": [
+              0.023617046,
+              2.1131072e-07,
+              0,
+              -902
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.659183e-06,
+              0.0236170497,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0646976009,
+              0.0236170497,
+              0.886301517,
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 768,
+        "cycles_with_work": 48,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 32,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 0.0236170497,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.0236170497,
+        "final_newton_norm": 0.0236170497,
+        "final_fgmres_residual_estimate": 1.659183e-06,
+        "nonvascular_norm": 0.0236170497,
+        "vascular_norm": 6.60352839e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 10,
+        "status_failing_index_at_microtick_end": 4294967295
+      }
+    ],
+    "failed": true,
+    "fresh": 0.023617046,
+    "failing_native_index": 4294967295,
+    "matter_diagnostics": [
+      0.02361704595386982,
+      2.1131072003299778e-07,
+      0,
+      -902
+    ],
+    "matter_code": 10,
+    "rollback_common": true,
+    "rollback_respiratory": true,
+    "last_tissue_line_search": {
+      "root": 2,
+      "iteration": 15,
+      "material_alpha": 2.38419e-07,
+      "full_trial": {
+        "alpha": 1,
+        "valid_tile_min_J": 0.357793,
+        "first_bad_tet": 950449,
+        "trial_J": 2.70957,
+        "current_J": 2.5,
+        "reason": 4,
+        "invalid_tiles": 1,
+        "tile_witness_tets": [
+          950449
+        ],
+        "tile_witnesses_complete": true
+      }
+    }
+  },
+  {
+    "run": "material-direction/coupled/three",
+    "launch": "50756d14220663e4f1a3dcb8881cdf434a7f4f812ff2caa7f5c10d5534325d38",
+    "source": "fca85541938bf17b9ee0f4ed9f358a86a14f68cfebdd631145be4f9dda0ba673",
+    "accepted_steps": 3,
+    "simulated_s": 4.6875e-05,
+    "wall_s": 255.4191163748037,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              2.73948375e-09,
+              9.53674607e-05,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0646976009,
+              9.53674607e-05,
+              0.227747843,
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 688,
+        "cycles_with_work": 43,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 16,
+        "active_restart_begins": 27,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 9.53674607e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.50409303e-05,
+        "final_newton_norm": 9.53674607e-05,
+        "final_fgmres_residual_estimate": 2.73948375e-09,
+        "nonvascular_norm": 9.53674607e-05,
+        "vascular_norm": 3.90620736e-09,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      }
+    ],
+    "failed": true,
+    "terminal_rejection": {
+      "object": "BodyParts3D whole-body skin-fat bonded shell",
+      "element": 1035269,
+      "loaded_relative_J": 0.246715,
+      "loaded_determinant_m3": 5.35096e-10,
+      "candidate_determinant_m3": 1.32016e-10
+    },
+    "fresh": 9.53673807e-05,
+    "qualified_endpoint": false,
+    "last_tissue_line_search": {
+      "root": 2,
+      "iteration": 15,
+      "material_alpha": 9.53674e-07,
+      "full_trial": {
+        "alpha": 1,
+        "valid_tile_min_J": 0.35,
+        "first_bad_tet": 950449,
+        "trial_J": 2.71919,
+        "current_J": 2.5,
+        "reason": 4,
+        "invalid_tiles": 1,
+        "tile_witness_tets": [
+          950449
+        ],
+        "tile_witnesses_complete": true
+      }
+    }
+  },
+  {
+    "run": "material-direction/release/three-1",
+    "launch": "bea67b4b9bf206868a2d018be84da1102eb167147ecfa2f2b0e59ca0b3be5c30",
+    "source": "3c46a9d243d7c5fabd6308ce8e6fd8ffe2b22fa5c2c1db5efc5f8d225e5f4611",
+    "accepted_steps": 2,
+    "simulated_s": 3.125e-05,
+    "wall_s": 257.6441750829108,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 10,
+            "object_index": 15,
+            "failing_index": 1035269,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              0.246715158,
+              0.349999994,
+              0,
+              -913
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              2.73948375e-09,
+              9.53674607e-05,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0646976009,
+              9.53674607e-05,
+              0.227747843,
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 688,
+        "cycles_with_work": 43,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 16,
+        "active_restart_begins": 27,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 9.53674607e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.50409303e-05,
+        "final_newton_norm": 9.53674607e-05,
+        "final_fgmres_residual_estimate": 2.73948375e-09,
+        "nonvascular_norm": 9.53674607e-05,
+        "vascular_norm": 3.90620736e-09,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 10,
+        "status_failing_index_at_microtick_end": 1035269
+      }
+    ],
+    "failed": true,
+    "fresh": 9.53673807e-05,
+    "failing_native_index": 1035269,
+    "matter_diagnostics": [
+      0.24671515822410583,
+      0.3499999940395355,
+      0,
+      -913
+    ],
+    "matter_code": 10,
+    "rollback_common": true,
+    "rollback_respiratory": true,
+    "last_tissue_line_search": {
+      "root": 2,
+      "iteration": 15,
+      "material_alpha": 9.53674e-07,
+      "full_trial": {
+        "alpha": 1,
+        "valid_tile_min_J": 0.35,
+        "first_bad_tet": 950449,
+        "trial_J": 2.71919,
+        "current_J": 2.5,
+        "reason": 4,
+        "invalid_tiles": 1,
+        "tile_witness_tets": [
+          950449
+        ],
+        "tile_witnesses_complete": true
+      }
+    }
+  },
+  {
+    "run": "material-direction/release/three-2",
+    "launch": "8a590c34f4ed095a53abc82e2552fc92f55cdb9b1a38be7646ff246dc3b8c6af",
+    "source": "8cc3977c40e33b9acf709751f2bd1948935dbe32c94ecd35517ed529fef74def",
+    "accepted_steps": 2,
+    "simulated_s": 3.125e-05,
+    "wall_s": 254.73164749983698,
+    "physical_prefix_loads_equal_to_control": true,
+    "physical_prefix_trace_equal_to_control": true,
+    "terminal_certificates": [
+      {
+        "root": 0,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              9.02435477e-06,
+              9.02435477e-06,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0263735987,
+              9.02435477e-06,
+              0,
+              1
+            ]
+          }
+        ]
+      },
+      {
+        "root": 1,
+        "status": [
+          {
+            "code": 0,
+            "object_index": 4294967295,
+            "failing_index": 4294967295,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              null,
+              0,
+              0,
+              0
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              1.32055433e-09,
+              2.01293406e-05,
+              1,
+              16
+            ],
+            "nonlinear": [
+              0.0473659337,
+              2.01293406e-05,
+              0.0107731456,
+              0
+            ]
+          }
+        ]
+      },
+      {
+        "root": 2,
+        "status": [
+          {
+            "code": 10,
+            "object_index": 15,
+            "failing_index": 10,
+            "completed_microsteps_at_certificate": 0,
+            "fgmres_iterations_microstep_max": 64,
+            "diagnostics": [
+              0.496524125,
+              0.496524125,
+              1035269,
+              2
+            ]
+          }
+        ],
+        "fgmres": [
+          {
+            "diagnostics": [
+              0,
+              0,
+              1,
+              0
+            ],
+            "nonlinear": [
+              0.0646976009,
+              0,
+              0,
+              1
+            ]
+          }
+        ]
+      }
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 736,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 15,
+        "active_restart_begins": 31,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.02435477e-06,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.02435477e-06,
+        "final_newton_norm": 9.02435477e-06,
+        "final_fgmres_residual_estimate": 9.02435477e-06,
+        "nonvascular_norm": 9.02434749e-06,
+        "vascular_norm": 1.13923964e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 1,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 876,
+        "cycles_with_work": 55,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 8,
+        "active_newton_begins": 14,
+        "active_restart_begins": 41,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "final_newton_latched": false,
+        "last_newton_norm": 2.01293406e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 1.14487557e-05,
+        "final_newton_norm": 2.01293406e-05,
+        "final_fgmres_residual_estimate": 1.32055433e-09,
+        "nonvascular_norm": 2.01293315e-05,
+        "vascular_norm": 1.84012965e-08,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 0,
+        "status_failing_index_at_microtick_end": 4294967295
+      },
+      {
+        "root": 2,
+        "environment": 0,
+        "microtick": 0,
+        "used_columns": 528,
+        "cycles_with_work": 33,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 2,
+        "active_newton_begins": 11,
+        "active_restart_begins": 22,
+        "has_outer_sample": true,
+        "last_newton_iteration": 10,
+        "final_newton_latched": true,
+        "last_newton_norm": 9.91970373e-05,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 9.85555889e-05,
+        "final_newton_norm": 0,
+        "final_fgmres_residual_estimate": 0,
+        "nonvascular_norm": 9.91970373e-05,
+        "vascular_norm": 9.99436711e-09,
+        "mechanical_threshold": 1.24999997e-05,
+        "vascular_threshold": 9.99999975e-06,
+        "status_code_at_microtick_end": 10,
+        "status_failing_index_at_microtick_end": 10
+      }
+    ],
+    "failed": true,
+    "failing_native_index": 10,
+    "matter_diagnostics": [
+      0.4965241253376007,
+      0.4965241253376007,
+      1035269,
+      2
+    ],
+    "matter_code": 10,
+    "rollback_common": true,
+    "rollback_respiratory": true,
+    "residual_status": "geometry rejected during line search before final force assembly"
+  }
+]

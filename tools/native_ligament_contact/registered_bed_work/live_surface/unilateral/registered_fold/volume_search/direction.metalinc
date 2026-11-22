@@ -1,0 +1,88 @@
+// Project only the Newton search vector. Fresh forces, material validity,
+// contact and acceptance are evaluated downstream on the actual trial.
+inline float3x3 registeredTrialF(thread const NMFEMNodeStateGPU (&p)[4],
+                                  const float3x3 invRest, const bool reference) {
+    if (!reference) {
+        const float3 x=p[0].positionAndMass.xyz;
+        return float3x3(p[1].positionAndMass.xyz-x,p[2].positionAndMass.xyz-x,
+                        p[3].positionAndMass.xyz-x)*invRest;
+    }
+    float hi[12],lo[12],ir[9],basis[9],fh[9],fl[9];
+    for (uint i=0;i<4;++i)
+        for (uint k=0;k<3;++k) {
+            hi[3*i+k]=p[i].referenceDisplacementAndMode[k];
+            lo[3*i+k]=p[i].referenceDisplacementLow[k];
+        }
+    matrixComponents(invRest,ir);
+    matrixComponents(float3x3(1.f),basis);
+    nmFEMReferenceDeformationWords(hi,lo,ir,basis,fh,fl);
+    return componentsMatrix(fh);
+}
+
+kernel void nm_fem_registered_volume_direction(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],
+    constant NMMicrostepGPU& micro [[buffer(1)]],
+    device const NMContinuumObjectGPU* objects [[buffer(2)]],
+    device const NMMaterialGPU* materials [[buffer(3)]],
+    device const NMFEMNodeStateGPU* accepted [[buffer(4)]],
+    device const NMFEMNodeStateGPU* candidate [[buffer(5)]],
+    device float4* direction [[buffer(6)]],
+    device const NMTetrahedronGPU* tets [[buffer(7)]],
+    device const NMSchedulerStateGPU* schedule [[buffer(8)]],
+    device const NMAdaptiveStateGPU* adaptive [[buffer(9)]],
+    device const NMFGMRESStateGPU* states [[buffer(10)]],
+    constant uint* rows [[buffer(11)]],
+    constant uint& count [[buffer(12)]],
+    uint row [[thread_position_in_grid]]) {
+    if (row>=count || d.environmentCount!=1 || states[0].nonlinear.w>.5f) return;
+    const NMTetrahedronGPU t=environmentTetrahedron(d,tets,0u,rows[row]);
+    const uint owner=t.identity.y;
+    if (owner>=d.objectCount || !(t.identity.w & NM_OBJECT_ACTIVE)) return;
+    const NMContinuumObjectGPU object=objects[owner];
+    if (!objectDue(object,schedule[owner],adaptive[owner],micro)) return;
+    const float dt=objectTimestep(d,schedule[owner]);
+    const float3x3 inv=matrixFromRows(t.inverseRestRow0,t.inverseRestRow1,t.inverseRestRow2);
+    const bool reference=(t.identity.w & NM_TETRAHEDRON_REFERENCE_DISPLACEMENT_GRADIENT)!=0u;
+    const NMMaterialGPU mat=materials[t.identity.x];
+    const float lo=max(d.numericalLimits.z,mat.validity.x),hi=mat.validity.y;
+    float3 gRef[4]; float3 next[4]; float w[4];
+    NMFEMNodeStateGPU p[4];
+    for(uint k=0;k<4;++k){
+        const uint n=t.nodes[k];
+        p[k]=candidate[n];
+        if(p[k].restAndFixed.w>.5f || !(p[k].positionAndMass.w>0.f)) return;
+        w[k]=1.f/p[k].positionAndMass.w;
+        next[k]=direction[n].xyz;
+        if(k)gRef[k]=transpose(inv)[k-1];
+    }
+    gRef[0]=-gRef[1]-gRef[2]-gRef[3];
+    const float current=determinant(registeredTrialF(p,inv,reference));
+    if (!(current>=lo && current<=hi)) return;
+    float target=0.f,lastError=INFINITY;
+    for(uint refine=0;refine<=5;++refine){
+        for(uint k=0;k<4;++k)
+            p[k]=femTrialNodeAtAlpha(accepted[t.nodes[k]],candidate[t.nodes[k]],next[k],1.f,dt,true);
+        const float3x3 F=registeredTrialF(p,inv,reference);
+        const float J=determinant(F);
+        if (!isfinite(J)) return;
+        if(refine==0u){
+            if(J>lo && J<hi)return;
+            // Leave ten percent of the present distance to the material limit.
+            target=.1f*current+.9f*(J<=lo?lo:hi);
+        }else if(J>lo && J<hi){
+            for(uint k=0;k<4;++k)direction[t.nodes[k]].xyz=next[k];
+            return;
+        }
+        const float err=target-J;
+        if(!(abs(err)<lastError))return;
+        lastError=abs(err);
+        const float3x3 cofactor=cofactorMatrix(F);
+        float3 gradient[4];float denominator=0.f;
+        for(uint k=0;k<4;++k){
+            gradient[k]=cofactor*gRef[k];
+            denominator+=w[k]*dot(gradient[k],gradient[k]);
+        }
+        if(!(denominator>0.f) || !isfinite(denominator))return;
+        for(uint k=0;k<4;++k) next[k]+=(err/(dt*denominator))*w[k]*gradient[k];
+    }
+}

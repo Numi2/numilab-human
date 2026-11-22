@@ -1,0 +1,54 @@
+inline MRCompensatedScalar registeredNeg(MRCompensatedScalar a){return {-a.high,-a.low};}
+inline MRCompensatedScalar registeredMul(MRCompensatedScalar a,MRCompensatedScalar b){
+    const auto p=mrCompensatedProduct(a.high,b.high);
+    return mrCompensatedAdd(p,{fma(a.low,b.high,fma(a.high,b.low,a.low*b.low)),0.f});
+}
+inline MRCompensatedScalar registeredVolumeWord(device const NMFEMNodeStateGPU* nodes,uint4 ids){
+    NMFEMNodeStateGPU a=nodes[ids[0]];
+    bool ref=a.referenceDisplacementAndMode.w==1.f;
+    for(uint i=1;i<4;++i)ref=ref && nodes[ids[i]].referenceDisplacementAndMode.w==1.f;
+    MRCompensatedScalar edge[3][3];
+    for(uint i=1;i<4;++i){
+        const NMFEMNodeStateGPU b=nodes[ids[i]];
+        for(uint k=0;k<3;++k){
+            if(ref){
+                const auto rest=mrCompensatedSum(b.restAndFixed[k],-a.restAndFixed[k]);
+                const auto disp=mrCompensatedSum(b.referenceDisplacementAndMode[k],-a.referenceDisplacementAndMode[k]);
+                const auto low=mrCompensatedSum(b.referenceDisplacementLow[k],-a.referenceDisplacementLow[k]);
+                edge[i-1][k]=mrCompensatedAdd(mrCompensatedAdd(rest,disp),low);
+            }else edge[i-1][k]=mrCompensatedSum(b.positionAndMass[k],-a.positionAndMass[k]);
+        }
+    }
+    MRCompensatedScalar det={0.f,0.f};
+    for(uint k=0;k<3;++k){
+        const uint i=(k+1)%3,j=(k+2)%3;
+        const auto cross=mrCompensatedAdd(registeredMul(edge[1][i],edge[2][j]),
+                                           registeredNeg(registeredMul(edge[1][j],edge[2][i])));
+        det=mrCompensatedAdd(det,registeredMul(edge[0][k],cross));
+    }
+    return det;
+}
+kernel void nm_fem_registered_release_reset(device atomic_uint* first [[buffer(0)]],uint i [[thread_position_in_grid]]){
+    if(!i)atomic_store_explicit(first,0xffffffffu,memory_order_relaxed);
+}
+kernel void nm_fem_registered_release_check(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],device const NMTetrahedronGPU* tets [[buffer(1)]],
+    device const NMFEMNodeStateGPU* nodes [[buffer(2)]],device const float4* bounds [[buffer(3)]],
+    device atomic_uint* first [[buffer(4)]],uint i [[thread_position_in_grid]]){
+    if(i>=d.tetrahedronCount || !(tets[i].identity.w&NM_OBJECT_ACTIVE))return;
+    const float4 b=bounds[i];const auto det=registeredVolumeWord(nodes,tets[i].nodes);
+    const auto margin=mrCompensatedAdd(det,{-b.x,-b.y});
+    if(!(isfinite(margin.high) && margin.high*b.w>0.f))
+        atomic_fetch_min_explicit(first,i,memory_order_relaxed);
+}
+kernel void nm_fem_registered_release_finish(
+    device const NMTetrahedronGPU* tets [[buffer(0)]],device const NMFEMNodeStateGPU* nodes [[buffer(1)]],
+    device const float4* bounds [[buffer(2)]],device atomic_uint* first [[buffer(3)]],
+    device NMMatterStatusGPU* status [[buffer(4)]],uint i [[thread_position_in_grid]]){
+    if(i)return;
+    const uint row=atomic_load_explicit(first,memory_order_relaxed);
+    if(row==0xffffffffu)return;
+    const float4 b=bounds[row];const auto det=registeredVolumeWord(nodes,tets[row].nodes);
+    recordFailure(status[0],NM_STATUS_NONLINEAR_SOLVER_FAILURE,tets[row].identity.y,row,
+                  float4(.35f*(det.high/b.x),.35f,b.z,-913.f));
+}

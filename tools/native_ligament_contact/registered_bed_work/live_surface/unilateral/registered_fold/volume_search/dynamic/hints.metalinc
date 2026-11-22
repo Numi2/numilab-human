@@ -1,0 +1,35 @@
+// Reuse the full-trial geometry records produced by the previous Newton
+// iteration. Hints affect only search directions; each trial is certified afresh.
+kernel void nm_fem_registered_volume_hints(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],
+    device const NMContinuumObjectGPU* objects [[buffer(1)]],
+    device const float4* partials [[buffer(2)]],
+    device uint* rows [[buffer(3)]],
+    device atomic_uint* claims [[buffer(4)]],
+    device const NMTetrahedronGPU* tets [[buffer(5)]],
+    constant uint& owner [[buffer(6)]],constant uint& maxTiles [[buffer(7)]],
+    constant uint& iteration [[buffer(8)]],uint tile [[thread_position_in_grid]]) {
+    const auto object=objects[owner];
+    if(tile>=(object.elementCount+255u)/256u)return;
+    if(iteration==0u){rows[tile]=0xffffffffu;return;}
+    const float4 r=partials[owner*NM_MIXED_LINE_SEARCH_MAX_STEPS*maxTiles+tile];
+    if(r.w==2.f || r.w==4.f){
+        const uint e=as_type<uint>(r.x);
+        if(e>=object.elementOffset && e-object.elementOffset<object.elementCount &&
+           (e-object.elementOffset)/256u==tile)rows[tile]=e;
+    }
+    const uint e=rows[tile];
+    if(e==0xffffffffu)return;
+    const uint4 id=tets[e].nodes;
+    for(uint k=0;k<4;++k)atomic_store_explicit(&claims[id[k]],0xffffffffu,memory_order_relaxed);
+}
+kernel void nm_fem_registered_volume_claim(
+    device const uint* rows [[buffer(0)]],device atomic_uint* claims [[buffer(1)]],
+    device const NMTetrahedronGPU* tets [[buffer(2)]],constant uint& count [[buffer(3)]],
+    uint tile [[thread_position_in_grid]]){
+    if(tile>=count)return;
+    const uint e=rows[tile];
+    if(e==0xffffffffu)return;
+    const uint4 id=tets[e].nodes;
+    for(uint k=0;k<4;++k)atomic_fetch_min_explicit(&claims[id[k]],e,memory_order_relaxed);
+}
