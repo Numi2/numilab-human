@@ -8,7 +8,6 @@ from pathlib import Path
 import numpy as np
 from fit_native_bed_barrier_load import force
 from material_context import sha
-
 from support_patch import prepare
 
 
@@ -31,11 +30,26 @@ def clipped_simplices(z, width):
     return np.asarray(ids, dtype=int), np.asarray(pieces).reshape(-1, 3, 3)
 
 
-def integrate(x, faces, area, density, dt, width, order):
+def integrate(x, faces, area, density, dt, width, order, *, normal_direction=None):
+    # The optional third return is the positive energy Hessian applied to a
+    # material normal displacement. The bed force derivative has opposite sign.
+    if normal_direction is not None:
+        normal_direction = np.asarray(normal_direction)
+        if (
+            normal_direction.shape != (len(x),)
+            or not np.isfinite(normal_direction).all()
+        ):
+            raise ValueError("Invalid material direction")
+        action = np.zeros(len(x))
+
     ids, bary = clipped_simplices(x[faces, 2], width)
     result = np.zeros(len(x))
     if not len(ids):
-        return result, np.zeros(3)
+        return (
+            (result, np.zeros(3), action)
+            if normal_direction is not None
+            else (result, np.zeros(3))
+        )
     sub_area = np.abs(np.linalg.det(bary)) * area[ids]
     point, weight = np.polynomial.legendre.leggauss(order)
     a, b = np.meshgrid((point + 1) / 2, (point + 1) / 2, indexing="ij")
@@ -56,7 +70,26 @@ def integrate(x, faces, area, density, dt, width, order):
         result.sum(), traction.sum(), rtol=3e-14, atol=1e-13
     ) or not np.allclose(result @ x, centroid, rtol=2e-12, atol=1e-11):
         raise ValueError("Integrated plane load failed resultant or moment balance")
-    return result, centroid
+    if normal_direction is None:
+        return result, centroid
+    # Both the force and its first derivative vanish at the clipping boundary.
+    # The stationary radial IPC law uses constant force below its gap floor.
+    distance = np.maximum(gaps, 1e-4 * width)
+    squared = distance**2
+    width_squared = width**2
+    ratio = (squared - width_squared) / squared
+    log_gap = np.log(squared / width_squared)
+    unit_k = 10.0 / max(dt**2 * width_squared, 1e-20)
+    first = -unit_k * squared * (2 * ratio * log_gap + ratio**2)
+    second = -unit_k * (2 * log_gap + 4 * ratio - ratio**2)
+    curvature = np.where(
+        gaps < 1e-4 * width, 0.0, np.maximum(4 * squared * second + 2 * first, 0.0)
+    )
+    dq = np.einsum("fqi,fi->fq", basis, normal_direction[faces[ids]])
+    variation = coeff * weights[None, :] * sub_area[:, None] * curvature * dq
+    local_action = np.einsum("fq,fqi->fi", variation, basis)
+    np.add.at(action, faces[ids].ravel(), local_action.ravel())
+    return result, centroid, action
 
 
 def compare(run, material, transfer, owner, bed_path):
