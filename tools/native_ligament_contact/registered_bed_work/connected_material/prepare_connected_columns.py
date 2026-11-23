@@ -109,8 +109,20 @@ def prepare(dense,case,opening,surface_lib,out):
     global_error=float(np.linalg.norm(epoch-posed,axis=1).max())
     rigid_equivalent=(angular<1e-6 and origin_error<1e-6 and global_error<1e-6)
     if rigid_equivalent: posed=np.ascontiguousarray(epoch)
-    current_posed=(current@relative[0].T+translation[0] if rigid_equivalent else
-                   np.einsum("nij,nj->ni",relative[donor],current-x[donor])+y[donor])
+    # The dense owner also moves the skeleton while placing the body on the bed.
+    # Express the preloaded nodes in that skeleton before mapping into the target scene.
+    loaded_datum=dense/"native-initial-bodies.json"
+    identities["INSTALLED_CURRENT_SKELETON"]=digest(loaded_datum)
+    loaded_bodies={r["body_index"]:r["current"] for r in read(loaded_datum)["all_bodies"]}
+    if old.keys()!=loaded_bodies.keys():raise ValueError("Incomplete loaded skeleton")
+    ar,xr=transform(loaded_bodies,"orientation_world_xyzw","position_world_m")
+    loaded_relative=b@ar.transpose(0,2,1)
+    loaded_translation=y-xr@loaded_relative[0].T
+    loaded_offsets=np.linalg.norm(loaded_translation-loaded_translation[0],axis=1)
+    loaded_angles=Rotation.from_matrix(loaded_relative@loaded_relative[0].T).magnitude()
+    rigid_loaded=loaded_angles.max()<1e-6 and loaded_offsets.max()<1e-6
+    current_posed=(current@loaded_relative[0].T+loaded_translation[0] if rigid_loaded else
+                   np.einsum("nij,nj->ni",loaded_relative[donor],current-xr[donor])+y[donor])
     registration=dict(global_rotation_residual_rad=angular,global_origin_residual_m=origin_error,
                       global_node_residual_m=global_error,single_rigid_transform=rigid_equivalent)
     epochs={}
@@ -120,6 +132,9 @@ def prepare(dense,case,opening,surface_lib,out):
         nodes=np.array([v[i] for i in range(len(v))],dtype="i4")
         f=np.loadtxt(pinned("SURFACE_"+k+"_FACES_CSV","SURFACE_"+k+"_FACES_SHA256"),delimiter=",",skiprows=1,usecols=(1,2,3),dtype="i4")
         epochs[k]=np.ascontiguousarray(nodes[f])
+        if k=="O":
+            np.savez_compressed(out/"outer-boundaries.npz",nodes=nodes,triangles=f,
+                                reference_xyz=posed[nodes].astype("f4"),loaded_xyz=current_posed[nodes].astype("f4"))
     # Float32 reference coordinates are the same ones carried by the solver.
     deformations=[];emitted=[];loaded=[];quantized_loaded=[]
     for start in range(0,len(cells),50000):
@@ -177,9 +192,10 @@ def prepare(dense,case,opening,surface_lib,out):
     terminal=dict(source_vertex=17764,status=labels[info[sample,0]],tet_count=int(info[sample,1]),heights_m=h[sample,:3].tolist(),
                   minimum_determinant_ratio=float(h[sample,3]),original_skin_m=float(data["skin_m"][sample]),original_fat_m=float(data["fat_m"][sample]))
     report=dict(registration=registration,base_cells=base_cells,mass=mass_by_role,
-        loaded_state=dict(inversions=int(sum(j_loaded<=0)),float32_inversions=int(sum(j_loaded_f32<=0)),
+        loaded_state=dict(opening_skeleton_sha256=identities["INSTALLED_CURRENT_SKELETON"],single_rigid_transform=bool(rigid_loaded),
+                          registration_to_loaded_root_offset_m=(xr[0]-x[0]).tolist(),inversions=int(sum(j_loaded<=0)),float32_inversions=int(sum(j_loaded_f32<=0)),
                           min_J=float(j_loaded.min()),float32_min_J=float(j_loaded_f32.min())),
-        float32_inversions=int(sum(qjac<=0)),float32_min_J=float(qjac.min()),cells=len(cells),nodes=len(posed),source_identities=identities,datum_pose=digest(opening/"terminal.receipt.json"),
+        float32_inversions=int(sum(qjac<=0)),float32_min_J=float(qjac.min()),cells=len(cells),nodes=len(posed),source_identities=identities,datum_pose=digest(opening/"terminal.receipt.json"),outer_boundaries=digest(out/"outer-boundaries.npz"),
         enrolled_columns=n,traversal_counts=reasons,projected_area_m2=float(data["area_m2"].sum()),traversed_area_m2=float(data["area_m2"][reached].sum()),
         worst_jacobian_ratio=float(jac.min()),inverted_after_rigid_registration=int(np.count_nonzero(jac<=0)),
         posed_cell_ratios={str(m):np.quantile(jac[mat==m],[0,.01,.5,.99,1]).tolist() for m in (15,16)},shoulder=terminal,

@@ -12,12 +12,15 @@ def certify(root):
     def trace(path):
         with (root/path).open() as f:
             return list(csv.DictReader(f))
-    reference=read("installed-prior/connected-columns.json")
-    matched=read("installed-matched/connected-columns.json")
+    reference=read("material-source/control/connected-columns.json")
+    matched=read("material-source/corrected/connected-columns.json")
+    for case in (matched,reference):
+        if case["loaded_state"]["opening_skeleton_sha256"]!=case["source_identities"]["INSTALLED_CURRENT_SKELETON"]:
+            raise ValueError("Loaded tissue did not use the installed bearing pose")
     lengths=read("installed-assigned/assignment.json")
     run=read("registered-79/terminal.receipt.json")
     replay=read("launcher-79/terminal.receipt.json")
-    for field in ("accepted_body_poses","accepted_step","accepted_root_fingerprint_hex","accepted_transaction_fingerprint","accepted_time_s"):
+    for field in ("accepted_body_poses","pack_file_sha256","accepted_step","accepted_root_fingerprint_hex","accepted_transaction_fingerprint","accepted_time_s"):
         if run[field]!=replay[field]:
             raise ValueError("Native repeats differ in "+field)
     if reference["source_identities"]["INSTALLED_TETRAHEDRA"]!=matched["source_identities"]["INSTALLED_TETRAHEDRA"]:
@@ -57,6 +60,13 @@ def certify(root):
         raise ValueError("Wrong registered endpoint")
     env={c:read(c+"/envelope/accepted-envelope.json") for c in ("pose-one","registered-79")}
     times=[read(c+"/execution.json")["cold_wall_s"] for c in ("registered-79","launcher-79")]
+    windows=[]
+    for c in ("registered-79","launcher-79"):
+        line,=[l for l in (root/c/"stdout.log").read_text().splitlines() if l.startswith("resting_integrated_throughput ")]
+        t=dict(v.split("=",1) for v in line.split()[1:])
+        if abs(float(t["real_time_factor"])-float(t["simulated_s"])/float(t["wall_s"]))>1e-7:
+            raise ValueError("Inconsistent in-run throughput")
+        windows.append(t)
     devices=re.findall(r'Apple M\d+(?: (?:Pro|Max|Ultra))?',(root/"registered-79/stdout.log").read_text())
     if not devices:raise ValueError("Unidentified native device")
     init=next(l for l in (root/"registered-79/stdout.log").read_text().splitlines() if l.startswith("resting_initialization=dynamic_release"))
@@ -71,7 +81,7 @@ def certify(root):
         registered_columns=len(assigned),total_positive_columns=matched["enrolled_columns"],operative_column_sha256=digest(used),
         source_area_m2=matched["projected_area_m2"],registered_area_m2=lengths["sensitivity"]["45"]["area_m2"],
         preserved_body_mass_kg=float(mass[-1]["total_body_mass_kg"]),control_and_two_updates=controls,
-        cold_wall_s=times,cold_end_to_end_factors=[run["accepted_time_s"]/t for t in times],sustained_realtime_factor=None,
+        short_in_run_windows=windows,cold_wall_s=times,cold_end_to_end_factors=[run["accepted_time_s"]/t for t in times],sustained_realtime_factor=None,
         native_pleural_observations_pa=pressure,maximum_observed_root_assistance_n=0,maximum_observed_root_assistance_nm=0,
         maximum_observed_mass_residual_kg=0,last_gpu_bed_support_N=float(mass[-1]["normal_force_last_physical_step_n"]),
         independent_endpoint_pressure_integral_N=bed["normal_reaction_at_endpoint_N"],

@@ -1,0 +1,113 @@
+{
+  "controls": [
+    {
+      "recruitment": "normal",
+      "initial_max_root_acceleration_m_s2": 3.1967926770448685,
+      "initial_joint_rms_rad_s2": 19.023188725796093,
+      "initial_joint_peak_rad_s2": 144.29517090320587,
+      "static_residual_rms": 0.257519831906,
+      "static_balanced": false,
+      "local_shear_sum_N": 869.0827263213615,
+      "net_xy_reaction_N": [
+        0.4820775093321572,
+        12.678204155236017
+      ],
+      "relative_change_of_local_shear": null,
+      "native_accepted_steps_before_failure": 79,
+      "failed_vertex": 17764,
+      "excess_at_rejection_m": 4.5925379000000266e-05,
+      "matched_time_s": 0.1580000075045973,
+      "matched_pack": "230a56a2f36a1c03b99e9f85d2a531ce8519e9d9508682253209dc5b659caa0b",
+      "matched_skin_self": 27,
+      "matched_crossings": 8348,
+      "matched_bone_crossings": 1706,
+      "matched_pelvis_dz_m": -0.03485760860973606,
+      "matched_shoulder_dz_m": -0.005653324509886759
+    },
+    {
+      "recruitment": "one shear estimate",
+      "initial_max_root_acceleration_m_s2": 3.0767726711928844,
+      "initial_joint_rms_rad_s2": 16.80325120085546,
+      "initial_joint_peak_rad_s2": 140.9207284450531,
+      "static_residual_rms": 0.202271336781,
+      "static_balanced": false,
+      "local_shear_sum_N": 862.1020182863062,
+      "net_xy_reaction_N": [
+        0.12034549627060187,
+        10.029221935837995
+      ],
+      "relative_change_of_local_shear": 0.09006383399340763,
+      "native_accepted_steps_before_failure": 81,
+      "failed_vertex": 17764,
+      "excess_at_rejection_m": 4.693865800001196e-05,
+      "matched_time_s": 0.1580000075045973,
+      "matched_pack": "a6750fbd8573b3e348a5fa1afdb4e066c990289d520065752872e7c8bed7a9e2",
+      "matched_skin_self": 36,
+      "matched_crossings": 8465,
+      "matched_bone_crossings": 1736,
+      "matched_pelvis_dz_m": -0.033018551986445266,
+      "matched_shoulder_dz_m": -0.005473689698999298
+    },
+    {
+      "recruitment": "updated shear estimate",
+      "initial_max_root_acceleration_m_s2": 2.9148010071367025,
+      "initial_joint_rms_rad_s2": 15.944176376069235,
+      "initial_joint_peak_rad_s2": 138.98926973342896,
+      "static_residual_rms": 0.195991161817,
+      "static_balanced": false,
+      "local_shear_sum_N": 884.9426926272147,
+      "net_xy_reaction_N": [
+        0.021409164219221566,
+        9.974653650715481
+      ],
+      "relative_change_of_local_shear": 0.08242219108408506,
+      "native_accepted_steps_before_failure": 82,
+      "failed_vertex": 17764,
+      "excess_at_rejection_m": 1.181662099999925e-05,
+      "matched_time_s": 0.1580000075045973,
+      "matched_pack": "8b614e5515927c57e3bfd166d203cf490abdbe13269cbcaf50781a30c58745e2",
+      "matched_skin_self": 36,
+      "matched_crossings": 8465,
+      "matched_bone_crossings": 1741,
+      "matched_pelvis_dz_m": -0.030956506934986267,
+      "matched_shoulder_dz_m": -0.005352418443909204
+    }
+  ],
+  "longest_measured_prefix_s": 0.16400000778958201,
+  "matched_opening_surfaces": {
+    "native_opening": {
+      "nonocular_crossings": 8249,
+      "skin_self": 3,
+      "bone_crossings": 1673,
+      "muscle_crossings": 5986,
+      "vessel_crossings": 590
+    },
+    "dense_reference": {
+      "nonocular_crossings": 10764,
+      "skin_self": 0,
+      "bone_crossings": 0,
+      "muscle_crossings": 9896,
+      "vessel_crossings": 792
+    },
+    "dense_loaded": {
+      "nonocular_crossings": 10894,
+      "skin_self": 0,
+      "bone_crossings": 0,
+      "muscle_crossings": 10026,
+      "vessel_crossings": 792
+    }
+  },
+  "installed_cells": 1448799,
+  "total_skin_fat_mass_kg": 13.939679709969152,
+  "earlier_pose_loaded_f32_inversions": 2080,
+  "corrected_pose_loaded_f32_inversions": 0,
+  "latest_dense_trial_pose_loaded_f32_inversions": 0,
+  "old_to_native_dense_root_shift_m": [
+    0.0,
+    0.0,
+    -0.01171875
+  ],
+  "sixteen_seconds_qualified": false,
+  "sustained_factor": null,
+  "disposition": "Keep the registered normal-traction launch as the comparison scene. Both shear trials improve initial joint accelerations but worsen the matched skin and tissue crossing audits. Preserve them as tested controls."
+}

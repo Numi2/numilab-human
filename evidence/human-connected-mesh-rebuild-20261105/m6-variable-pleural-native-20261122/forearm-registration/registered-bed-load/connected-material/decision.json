@@ -13,13 +13,20 @@
     "nodal_kg": 13.939679709969152
   },
   "old_registered_reference_inversions_f32": 2080,
-  "old_registered_loaded_inversions_f32": 2115,
+  "old_registered_loaded_inversions_f32": 2080,
   "matched_reference_inversions_f32": 0,
   "matched_loaded": {
+    "opening_skeleton_sha256": "16df8fa77365db8a38af2481982e011172b78630a0661dd38ae29eedabd16bbf",
+    "single_rigid_transform": true,
+    "registration_to_loaded_root_offset_m": [
+      0.0,
+      0.0,
+      -0.01171875
+    ],
     "inversions": 0,
     "float32_inversions": 0,
-    "min_J": 0.6374671848165763,
-    "float32_min_J": 0.6374667585012596
+    "min_J": 0.6374671848165219,
+    "float32_min_J": 0.6374663609924168
   },
   "registered_columns": 3564,
   "total_positive_columns": 49209,
@@ -72,6 +79,26 @@
         "allowed_depth_m": 0.126275002956,
         "area_m2": 8.72169839568e-05
       }
+    }
+  ],
+  "short_in_run_windows": [
+    {
+      "accepted_start_step": "32",
+      "accepted_end_step": "79",
+      "simulated_s": "0.0940000044648",
+      "wall_s": "1.362056125",
+      "real_time_factor": "0.0690133121091",
+      "includes": "physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export",
+      "excludes": "terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization"
+    },
+    {
+      "accepted_start_step": "32",
+      "accepted_end_step": "79",
+      "simulated_s": "0.0940000044648",
+      "wall_s": "1.360001541",
+      "real_time_factor": "0.0691175720254",
+      "includes": "physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export",
+      "excludes": "terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization"
     }
   ],
   "cold_wall_s": [
