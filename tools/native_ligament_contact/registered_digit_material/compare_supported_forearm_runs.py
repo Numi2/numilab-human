@@ -18,8 +18,68 @@ def table(path):
         return list(csv.DictReader(stream))
 
 
+def audited_capture(case, name, receipt):
+    folder = case / name
+    f, b = read(folder / "accepted-envelope.json"), read(folder / "physical-banks.json")
+    if (
+        f["pack_sha256"] != receipt["pack_file_sha256"]
+        or b["pack_sha256"] != f["pack_sha256"]
+        or b["audit_sha256"] != sha(folder / "accepted-envelope.json")
+        or b["checked_banks"] != 878
+        or b["native_log_sha256"] != sha(case / "stdout.log")
+        or f["accepted_step"] != receipt["accepted_step"]
+    ):
+        raise ValueError("Unmatched native whole-body geometry")
+    return f, b
+
+
+def paired_geometry(control, case, name, receipt):
+    old, ob = audited_capture(control, name, read(control / receipt))
+    new, nb = audited_capture(case, name, read(case / receipt))
+    if (
+        old["accepted_step"] != new["accepted_step"]
+        or old["accepted_time_s"] != new["accepted_time_s"]
+    ):
+        raise ValueError("Different native capture clocks")
+
+    def bank_rows(frame):
+        rows = {
+            (sem, bank): pairs for sem, bank, body, pairs in frame["affected_banks"]
+        }
+        if len(rows) != len(frame["affected_banks"]):
+            raise ValueError("Repeated anatomical identity")
+        return rows
+
+    a, b = bank_rows(old), bank_rows(new)
+    changes = [
+        (sem, bank, a.get((sem, bank), 0), b.get((sem, bank), 0))
+        for sem, bank in sorted(a.keys() | b.keys(), key=str)
+        if a.get((sem, bank), 0) != b.get((sem, bank), 0)
+    ]
+    return dict(
+        time_s=new["accepted_time_s"],
+        checked_banks=nb["checked_banks"],
+        source=[old["pack_sha256"], new["pack_sha256"]],
+        external=[ob["physical_nonocular_pairs"], nb["physical_nonocular_pairs"]],
+        skin_self=[old["skin_self_intersections"], new["skin_self_intersections"]],
+        improved=[x for x in changes if x[2] > x[3]],
+        worsened=[x for x in changes if x[2] < x[3]],
+    )
+
+
 def compare(control, case, baseline, ancestry, diagnostic):
     reference = read(baseline)
+    if baseline.resolve() == (control / "envelope/accepted-envelope.json").resolve():
+        f, b = audited_capture(
+            control, "envelope", read(control / "terminal.receipt.json")
+        )
+        ref_pack = f["pack_sha256"]
+        ref_external = b["physical_nonocular_pairs"]
+        ref_self = f["skin_self_intersections"]
+    else:
+        ref_pack = reference["edited_pack_sha256"]
+        ref_external = reference["derived_skin_clearance"]["edited_nonocular_pairs"]
+        ref_self = reference["derived_skin_clearance"]["unchanged_skin_self_pairs"]
     a = read(control / "terminal.receipt.json")
     b = read(case / "terminal.receipt.json")
     env = read(case / "launch.json")["environment"]
@@ -30,7 +90,7 @@ def compare(control, case, baseline, ancestry, diagnostic):
         or b["accepted_time_s"] != a["accepted_time_s"]
         or env.get("NM_VASCULAR_STEP_EXTERNAL_PRESSURE") != "1"
         or run["exit_code"] != 0
-        or reference["edited_pack_sha256"] != a["pack_file_sha256"]
+        or ref_pack != a["pack_file_sha256"]
     ):
         raise ValueError("Different run clocks or pleural configuration")
     frame = read(case / "envelope/accepted-envelope.json")
@@ -137,17 +197,22 @@ def compare(control, case, baseline, ancestry, diagnostic):
         peak_absolute_physiological_trace_differences=trace,
         terminal_measurements={k: float(trace1[-1][k]) for k in keys},
         clearance=dict(
-            control_external=reference["derived_skin_clearance"][
-                "edited_nonocular_pairs"
-            ],
+            control_external=ref_external,
             edited_external=banks["physical_nonocular_pairs"],
-            control_skin_self=reference["derived_skin_clearance"][
-                "unchanged_skin_self_pairs"
-            ],
+            control_skin_self=ref_self,
             edited_skin_self=frame["skin_self_intersections"],
             edited_skin_bone=banks["bone_pairs"],
             semantic=frame["intersection_pairs_by_semantic"],
         ),
+        measured_bank_changes={
+            key: paired_geometry(control, case, key, receipt)
+            for key, receipt in [
+                ("envelope", "terminal.receipt.json"),
+                ("envelope-3999", "step-3999.receipt.json"),
+            ]
+            if (control / key / "accepted-envelope.json").is_file()
+            and (case / key / "accepted-envelope.json").is_file()
+        },
         edited_other_captures={
             p.parent.name: dict(
                 time_s=read(p)["accepted_time_s"],
