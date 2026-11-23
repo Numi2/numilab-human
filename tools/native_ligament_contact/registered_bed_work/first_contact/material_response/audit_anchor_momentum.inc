@@ -30,6 +30,12 @@
                     }
                     peakTravel=std::max(peakTravel,std::hypot(dp[0],dp[1],dp[2]));
                     for(int k=0;k<3;k++) impulse[k]-=m*dv[k];
+                    if (std::getenv("NUMI_HUMAN_FIRST_ROOT_RELEASE_TARGETS")!=nullptr) {
+                        const auto originalPrecision=std::cout.precision();
+                        std::cout<<std::setprecision(17)<<"first_root_fixed_displacement="<<node
+                            <<" "<<dp[0]<<" "<<dp[1]<<" "<<dp[2]<<" "<<dv[0]<<" "<<dv[1]<<" "<<dv[2]<<"\n";
+                        std::cout.precision(originalPrecision);
+                    }
                     sumMagnitude+=m*speed;
                     ++count;
                 }
