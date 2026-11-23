@@ -1,0 +1,87 @@
+{
+  "source_archive": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "reference_cortex_arrays": "20945d5a2b6edd43c4b0f09c9d8925f74dd104189ba54328c1057e9d29ab77a7",
+  "source_proximity": "1b80e3dce42ab457325fdfdb9cf8092e0506816c7e8f15f4a1e633f57f43ef79",
+  "source_model": "a80f7e9d344daecba126ba01af1170e1b9a38ec230f10a63a35d8223fa056753",
+  "source_muscles": "e5bb8a8168706bb3b23cf42b1d849659569ba2e6027bcc85729c3110fdbb8c4b",
+  "source_tendons": "d0f5da8c63d5e3335eef72e7e79e8e5780ae43f0cf254e840dd7ad604b72da48",
+  "bilateral": [
+    {
+      "body": 34,
+      "source": "scapula_r",
+      "source_site": 656,
+      "muscle": "DELT3",
+      "matched_sites": 11,
+      "max_heldout_coordinate_error_m": 2.200156352118196e-09,
+      "source_cortex_distance_m": 5.5036097428125415e-05,
+      "assembled_cortex_distance_m": 0.048767757846330105,
+      "assembled_tendon_admission": "surface_distance_exceeds_gate",
+      "archived_source_cortex_distance_m": 5.5036363300993245e-05,
+      "native_frame_row_rotation": [
+        [
+          0.6247931655731402,
+          -0.27063443313507857,
+          0.7323868539609029
+        ],
+        [
+          0.5025676262332648,
+          -0.5784692148601283,
+          -0.642494473533717
+        ],
+        [
+          0.5975443760218613,
+          0.7695000786619588,
+          -0.22541150730138698
+        ]
+      ],
+      "native_frame_translation_m": [
+        0.07791139268763493,
+        -0.0014136967590009202,
+        0.007691153390463275
+      ],
+      "source_mesh_vertices": 770,
+      "source_vertices_outside_loaded_skin": 287,
+      "source_vertices_indeterminate": 0,
+      "source_max_skin_exposure_m": 0.019445026683634136
+    },
+    {
+      "body": 84,
+      "source": "scapula_l",
+      "source_site": 1077,
+      "muscle": "DELT3_l",
+      "matched_sites": 11,
+      "max_heldout_coordinate_error_m": 2.200156352118196e-09,
+      "source_cortex_distance_m": 5.50360974281045e-05,
+      "assembled_cortex_distance_m": 0.048752726218227856,
+      "assembled_tendon_admission": "surface_distance_exceeds_gate",
+      "archived_source_cortex_distance_m": 5.503636330098371e-05,
+      "native_frame_row_rotation": [
+        [
+          0.6247931655731402,
+          -0.27063443313507857,
+          -0.7323868539609029
+        ],
+        [
+          0.5025676262332648,
+          -0.5784692148601283,
+          0.642494473533717
+        ],
+        [
+          -0.5975443760218613,
+          -0.7695000786619588,
+          -0.22541150730138698
+        ]
+      ],
+      "native_frame_translation_m": [
+        0.07791139268763493,
+        -0.0014136967590009202,
+        -0.007691153390463275
+      ],
+      "source_mesh_vertices": 770,
+      "source_vertices_outside_loaded_skin": 294,
+      "source_vertices_indeterminate": 0,
+      "source_max_skin_exposure_m": 0.021842037222596717
+    }
+  ],
+  "scope": "Static source-cortex comparison with a proper rigid frame validated by leaving every identified site out in turn. This measures the registration error of the assembled force-to-bone interface. Original cortex tested against the current loaded skin with the same native opening skeleton."
+}

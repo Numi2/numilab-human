@@ -1,0 +1,779 @@
+{
+  "source": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+  "rigid_fit": "95f42cdaaeda04c1ecf7babbde304ffcf85532aaac73e806b3f237ce3ec95bc2",
+  "source_frame": "d0f8f3a09afad13a29d4475d33560e15108cf680dd1e6e5a9b28677fcc5dc6d5",
+  "mujoco": "3.12.0",
+  "transformed": [
+    {
+      "body": "scapula_r",
+      "sites": 37,
+      "wraps": 2
+    },
+    {
+      "body": "scapula_l",
+      "sites": 37,
+      "wraps": 2
+    }
+  ],
+  "changed_tendons": 38,
+  "cases": [
+    {
+      "angles_rad": [
+        0.1,
+        0.0,
+        0.0
+      ],
+      "source_equality_rows": 51,
+      "maximum_equality_residual": 0.0,
+      "peak_length_change_m": 0.05422538031480435,
+      "length_witness": "DELT3_tendon_l",
+      "base_length_m": 0.15264009223805636,
+      "candidate_length_m": 0.098414711923252,
+      "moment_witness": {
+        "joint": "shoulder_elv_r",
+        "tendon": "LAT3_tendon",
+        "baseline_m": 0.009764882771823302,
+        "candidate_m": -0.03588417593070048
+      },
+      "peak_moment_arm_change_m": 0.04564905870252378,
+      "opposite_direction_pairs": [
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "m_glenohum_ligament",
+          "baseline_m": -0.0022432944652914233,
+          "candidate_m": 0.01170110357599785
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": -0.003813728888593659,
+          "candidate_m": 0.011455047359970603
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT2_tendon",
+          "baseline_m": 0.008946919041741275,
+          "candidate_m": -0.022636953869725748
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.009764882771823302,
+          "candidate_m": -0.03588417593070048
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "BIClong_tendon",
+          "baseline_m": 0.0016905944033585028,
+          "candidate_m": -0.0016451799700334389
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": 0.01986737437759123,
+          "candidate_m": -0.005801220516812865
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.005646666009773148,
+          "candidate_m": -0.0024072335985669824
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "BICshort_tendon",
+          "baseline_m": 0.004436406084162847,
+          "candidate_m": -0.0026612839515438576
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "m_glenohum_ligament_l",
+          "baseline_m": -0.0022432944649444786,
+          "candidate_m": 0.01173635130989614
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": -0.003813728885644629,
+          "candidate_m": 0.011499996373579012
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT2_tendon_l",
+          "baseline_m": 0.008946919030639044,
+          "candidate_m": -0.022484551481793954
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.009764882769047745,
+          "candidate_m": -0.03578985334484752
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "BIClong_tendon_l",
+          "baseline_m": 0.0016905944116851754,
+          "candidate_m": -0.0016638657646117492
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": 0.019867374377417757,
+          "candidate_m": -0.005954342572472847
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.005646666001446476,
+          "candidate_m": -0.0023722106390344777
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "BICshort_tendon_l",
+          "baseline_m": 0.004436406070285059,
+          "candidate_m": -0.0027205682318065523
+        }
+      ],
+      "peak_step_halving_change_m": 7.341349750333848e-10
+    },
+    {
+      "angles_rad": [
+        0.25,
+        0.0,
+        0.0
+      ],
+      "source_equality_rows": 51,
+      "maximum_equality_residual": 0.0,
+      "peak_length_change_m": 0.05252912806030874,
+      "length_witness": "TRIlong_tendon_l",
+      "base_length_m": 0.2820815993227728,
+      "candidate_length_m": 0.33461072738308156,
+      "moment_witness": {
+        "joint": "shoulder_elv_r",
+        "tendon": "LAT3_tendon",
+        "baseline_m": 0.0006201576280284726,
+        "candidate_m": -0.04449518012095143
+      },
+      "peak_moment_arm_change_m": 0.045115337748979904,
+      "opposite_direction_pairs": [
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "s_glenohum_ligament",
+          "baseline_m": -0.0010893172331175038,
+          "candidate_m": 0.015524020384460878
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "m_glenohum_ligament",
+          "baseline_m": -0.0031591076726789065,
+          "candidate_m": 0.01015929383743619
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": -0.004985402169907505,
+          "candidate_m": 0.008526400228567321
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT2_tendon",
+          "baseline_m": 0.0030614494550551537,
+          "candidate_m": -0.031217323551158135
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "TRIlong_tendon",
+          "baseline_m": -0.0017245500222307084,
+          "candidate_m": 0.0015967002886529966
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "s_glenohum_ligament",
+          "baseline_m": 0.002249207795707031,
+          "candidate_m": -0.004179598131481832
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "coracohum_ligament",
+          "baseline_m": 0.0010758326878662627,
+          "candidate_m": -0.0038935724255839683
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": -0.007483015118658897,
+          "candidate_m": 0.0027325226803487364
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "BIClong_tendon",
+          "baseline_m": 0.0044607631533022385,
+          "candidate_m": -0.00400772680597683
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": 0.019450610052283712,
+          "candidate_m": -0.005679229813509989
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "SUPSP_tendon",
+          "baseline_m": -0.0014283426517935902,
+          "candidate_m": 0.020059558172164094
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "TMAJ_tendon",
+          "baseline_m": 0.007222119934036097,
+          "candidate_m": -0.0019729499534104633
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.0039706329196809165,
+          "candidate_m": -0.005220914950365696
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "BICshort_tendon",
+          "baseline_m": 0.004626147145914139,
+          "candidate_m": -0.0014297988348843658
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "s_glenohum_ligament_l",
+          "baseline_m": -0.0010893172348522273,
+          "candidate_m": 0.01554821600288636
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "m_glenohum_ligament_l",
+          "baseline_m": -0.0031591076745871023,
+          "candidate_m": 0.010197955944632464
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": -0.004985402170080977,
+          "candidate_m": 0.008579232357169841
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT2_tendon_l",
+          "baseline_m": 0.0030614494439529234,
+          "candidate_m": -0.0310778742296236
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "TRIlong_tendon_l",
+          "baseline_m": -0.001724550025006266,
+          "candidate_m": 0.0016095942967364605
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "s_glenohum_ligament_l",
+          "baseline_m": 0.002249207795707031,
+          "candidate_m": -0.004208279159867434
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "coracohum_ligament_l",
+          "baseline_m": 0.0010758326878662627,
+          "candidate_m": -0.003915938377729855
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": -0.007483015118658897,
+          "candidate_m": 0.0027225147747333973
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "BIClong_tendon_l",
+          "baseline_m": 0.004460763150526681,
+          "candidate_m": -0.004058294481024127
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": 0.019450610050375516,
+          "candidate_m": -0.005841023315716897
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "SUPSP_tendon_l",
+          "baseline_m": -0.0014283426524874796,
+          "candidate_m": 0.020144675069722062
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "TMAJ_tendon_l",
+          "baseline_m": 0.007222119931260539,
+          "candidate_m": -0.0019452613991832732
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.003970632925232032,
+          "candidate_m": -0.005190254317999354
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "BICshort_tendon_l",
+          "baseline_m": 0.004626147162567484,
+          "candidate_m": -0.001480641440010366
+        }
+      ],
+      "peak_step_halving_change_m": 3.3029134982598407e-10
+    },
+    {
+      "angles_rad": [
+        0.1,
+        0.12,
+        0.0
+      ],
+      "source_equality_rows": 51,
+      "maximum_equality_residual": 0.0,
+      "peak_length_change_m": 0.054335205102481465,
+      "length_witness": "DELT3_tendon_l",
+      "base_length_m": 0.15320589467247084,
+      "candidate_length_m": 0.09887068956998937,
+      "moment_witness": {
+        "joint": "shoulder_elv_r",
+        "tendon": "LAT3_tendon",
+        "baseline_m": 0.006154301840366471,
+        "candidate_m": -0.03475305756228675
+      },
+      "peak_moment_arm_change_m": 0.04090735940265322,
+      "opposite_direction_pairs": [
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "m_glenohum_ligament",
+          "baseline_m": -0.0019000613186992419,
+          "candidate_m": 0.010185989188574163
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": -0.00414330845622396,
+          "candidate_m": 0.010896701853335687
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT2_tendon",
+          "baseline_m": 0.0043154093520847425,
+          "candidate_m": -0.02314927224356111
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.006154301840366471,
+          "candidate_m": -0.03475305756228675
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "BIClong_tendon",
+          "baseline_m": 0.0015246942014490725,
+          "candidate_m": -0.0017448099770556167
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": 0.019860436586624508,
+          "candidate_m": -0.005605798389721194
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.005781463868759217,
+          "candidate_m": -0.0021569140168375966
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "BICshort_tendon",
+          "baseline_m": 0.004506811085436269,
+          "candidate_m": -0.002619371503032042
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "m_glenohum_ligament_l",
+          "baseline_m": -0.0019000613206074377,
+          "candidate_m": 0.010216458486839164
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": -0.004143308454315764,
+          "candidate_m": 0.010943263337517826
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT2_tendon_l",
+          "baseline_m": 0.004315409346533627,
+          "candidate_m": -0.023002777194136566
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.006154301837590913,
+          "candidate_m": -0.034664630721437106
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "BIClong_tendon_l",
+          "baseline_m": 0.001524694223653533,
+          "candidate_m": -0.0017612408448330894
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": 0.019860436586624508,
+          "candidate_m": -0.005758496328042705
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.005781463874310332,
+          "candidate_m": -0.002121595413240307
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "BICshort_tendon_l",
+          "baseline_m": 0.004506811088211826,
+          "candidate_m": -0.0026795192259454477
+        }
+      ],
+      "peak_step_halving_change_m": 8.645861804268407e-10
+    },
+    {
+      "angles_rad": [
+        0.1,
+        0.0,
+        0.12
+      ],
+      "source_equality_rows": 51,
+      "maximum_equality_residual": 0.0,
+      "peak_length_change_m": 0.05444537871494662,
+      "length_witness": "DELT3_tendon_l",
+      "base_length_m": 0.15367446907158566,
+      "candidate_length_m": 0.09922909035663904,
+      "moment_witness": {
+        "joint": "shoulder_elv_r",
+        "tendon": "LAT3_tendon",
+        "baseline_m": 0.00842009856838466,
+        "candidate_m": -0.03824752335956916
+      },
+      "peak_moment_arm_change_m": 0.04666762192795382,
+      "opposite_direction_pairs": [
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "m_glenohum_ligament",
+          "baseline_m": -0.0025474310981835058,
+          "candidate_m": 0.012633245588533624
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": -0.004049733667334243,
+          "candidate_m": 0.011437017664178704
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT2_tendon",
+          "baseline_m": 0.008275239912758359,
+          "candidate_m": -0.02474562250665002
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.00842009856838466,
+          "candidate_m": -0.03824752335956916
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": -0.003055651340289067,
+          "candidate_m": 0.0010008240930448054
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "BIClong_tendon",
+          "baseline_m": 0.001752557696188539,
+          "candidate_m": -0.0016889903725614273
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": 0.019540159342835983,
+          "candidate_m": -0.008352523384047572
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "SUBSC_tendon",
+          "baseline_m": 0.01581706472950084,
+          "candidate_m": -0.0015013019966092498
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "TMAJ_tendon",
+          "baseline_m": 0.006571725731652211,
+          "candidate_m": -0.0012479921818187023
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.00344605470270487,
+          "candidate_m": -0.0033450634123743934
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "BICshort_tendon",
+          "baseline_m": 0.0036030633615569125,
+          "candidate_m": -0.0045001848386627685
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "m_glenohum_ligament_l",
+          "baseline_m": -0.002547431099397812,
+          "candidate_m": 0.012663004534535503
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": -0.004049733664038269,
+          "candidate_m": 0.011474461262400702
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT2_tendon_l",
+          "baseline_m": 0.008275239907207244,
+          "candidate_m": -0.02459762697415435
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.00842009856838466,
+          "candidate_m": -0.03815628843162333
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "BIClong_tendon_l",
+          "baseline_m": 0.0017525577072907692,
+          "candidate_m": -0.0017086570019975154
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": 0.019540159342835983,
+          "candidate_m": -0.0084861181567919
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "SUBSC_tendon_l",
+          "baseline_m": 0.01581706472811306,
+          "candidate_m": -0.00157964921421172
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "TMAJ_tendon_l",
+          "baseline_m": 0.006571725730264432,
+          "candidate_m": -0.0012171713317798982
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.0034460547054804276,
+          "candidate_m": -0.0033099422425131304
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "BICshort_tendon_l",
+          "baseline_m": 0.003603063378210258,
+          "candidate_m": -0.004557977217878317
+        }
+      ],
+      "peak_step_halving_change_m": 2.914335439641036e-11
+    },
+    {
+      "angles_rad": [
+        0.35,
+        0.15,
+        -0.15
+      ],
+      "source_equality_rows": 51,
+      "maximum_equality_residual": 0.0,
+      "peak_length_change_m": 0.05024009791304282,
+      "length_witness": "DELT3_tendon_l",
+      "base_length_m": 0.14914651351116864,
+      "candidate_length_m": 0.09890641559812582,
+      "moment_witness": {
+        "joint": "shoulder_rot_r",
+        "tendon": "TRIlong_tendon",
+        "baseline_m": 0.03902405912858953,
+        "candidate_m": -0.02423370561444038
+      },
+      "peak_moment_arm_change_m": 0.06325776474302991,
+      "opposite_direction_pairs": [
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "m_glenohum_ligament",
+          "baseline_m": -0.002189880410861933,
+          "candidate_m": 0.006952320303829639
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "i_glenohum_ligament",
+          "baseline_m": -0.005313862118383471,
+          "candidate_m": 0.006230439848070589
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "DELT2_tendon",
+          "baseline_m": 0.0024061991121815396,
+          "candidate_m": -0.0043655940543119165
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "DELT3_tendon",
+          "baseline_m": 0.01127796707273143,
+          "candidate_m": -0.009670979633780163
+        },
+        {
+          "joint": "shoulder_elv_r",
+          "tendon": "TRIlong_tendon",
+          "baseline_m": -0.002268520032933097,
+          "candidate_m": 0.008134729001518792
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "s_glenohum_ligament",
+          "baseline_m": 0.002924215385807782,
+          "candidate_m": -0.006231581951496311
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "m_glenohum_ligament",
+          "baseline_m": 0.001176810345178414,
+          "candidate_m": -0.004355816627527043
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "coracohum_ligament",
+          "baseline_m": 0.001040429292373246,
+          "candidate_m": -0.005642326289523324
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": -0.010097138408715622,
+          "candidate_m": 0.0028551048303349087
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "TRIlong_tendon",
+          "baseline_m": -0.007078968453089195,
+          "candidate_m": 0.008591984207440007
+        },
+        {
+          "joint": "elv_angle_r",
+          "tendon": "BIClong_tendon",
+          "baseline_m": 0.005519482640381489,
+          "candidate_m": -0.005939296499057888
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "LAT3_tendon",
+          "baseline_m": 0.006330368701457089,
+          "candidate_m": -0.0042829368052110794
+        },
+        {
+          "joint": "shoulder_rot_r",
+          "tendon": "TRIlong_tendon",
+          "baseline_m": 0.03902405912858953,
+          "candidate_m": -0.02423370561444038
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "m_glenohum_ligament_l",
+          "baseline_m": -0.002189880408953737,
+          "candidate_m": 0.006985348433366511
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "i_glenohum_ligament_l",
+          "baseline_m": -0.00531386211456708,
+          "candidate_m": 0.006295507051778947
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "DELT2_tendon_l",
+          "baseline_m": 0.0024061991177326547,
+          "candidate_m": -0.004187829800994525
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "DELT3_tendon_l",
+          "baseline_m": 0.011277967079670324,
+          "candidate_m": -0.009340111461336731
+        },
+        {
+          "joint": "shoulder_elv_l",
+          "tendon": "TRIlong_tendon_l",
+          "baseline_m": -0.0022685200107286363,
+          "candidate_m": 0.008148298347165905
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "s_glenohum_ligament_l",
+          "baseline_m": 0.0029242153865016714,
+          "candidate_m": -0.006273252852254107
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "m_glenohum_ligament_l",
+          "baseline_m": 0.0011768103463927204,
+          "candidate_m": -0.0043745272161610504
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "coracohum_ligament_l",
+          "baseline_m": 0.0010404292920263014,
+          "candidate_m": -0.005672098520384527
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": -0.010097138403164507,
+          "candidate_m": 0.002835480802931833
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "TRIlong_tendon_l",
+          "baseline_m": -0.007078968441986965,
+          "candidate_m": 0.008576401838711334
+        },
+        {
+          "joint": "elv_angle_l",
+          "tendon": "BIClong_tendon_l",
+          "baseline_m": 0.005519482640381489,
+          "candidate_m": -0.005998925520223074
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "LAT3_tendon_l",
+          "baseline_m": 0.006330368701457089,
+          "candidate_m": -0.004253984306479275
+        },
+        {
+          "joint": "shoulder_rot_l",
+          "tendon": "TRIlong_tendon_l",
+          "baseline_m": 0.03902405912303841,
+          "candidate_m": -0.024068014839451198
+        }
+      ],
+      "peak_step_halving_change_m": 8.881784197001252e-11
+    }
+  ],
+  "scope": "Offline native-source kinematic comparison, five source-equality-projected joint poses. The rigid map was applied to scapula sites and actual tendon wrapping geometries together. Central differences evaluate complete wrapped tendon lengths. No dynamics were advanced or applied to the Apple GPU scene."
+}
