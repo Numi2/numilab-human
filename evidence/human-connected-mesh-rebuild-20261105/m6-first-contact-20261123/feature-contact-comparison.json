@@ -1,0 +1,404 @@
+{
+  "device": "Apple M6",
+  "scope": "complete full-volume scene at first contact under gravity",
+  "reference": "native-material-origin-16",
+  "runs": {
+    "native-material-origin-16": {
+      "binary": "8761ab73e4df6cdf424b044b2b16dc4163f6631829f052d05334398c863b0754",
+      "metallib": "d897c3a119b3be54d436eebd3031419814279328708df33f80160f0c15d07680",
+      "launch": "bd8ef70125a70604042017ee8e18b87f659fb817744f9f86ae6f194962e153f9",
+      "roots_accepted": 16,
+      "simulated_seconds": 0.000250000011874,
+      "cold_wall_seconds": 325.5072930830065,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 3635156,
+          "last_workspace_active_contacts": 658852,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 9.70528436e-06,
+          "mechanical_threshold": 1.24999997e-05,
+          "vascular_norm": 9.37689215e-09
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 128,
+          "minimum_newton_norm": 5.31703017e-06,
+          "last_fgmres_residual_norm": 9.7052889e-06,
+          "last_fgmres_cycle_accepted": 1
+        }
+      },
+      "native_body_window_factor": 1.3848304412540121e-06,
+      "native_body_window_wall_s": 180.527524834,
+      "last_bed_reaction_N": 0.001859460212472186,
+      "world_weight_N": 952.8644330643456,
+      "material": {
+        "cells": 1448799,
+        "invalid_geometry": 6,
+        "outside_stretch_envelope": 3,
+        "outside_stress_cap": 0,
+        "minimum_stretch": 0.5401011498477494,
+        "maximum_stretch": 1.5627245232381413,
+        "peak_stress_Pa": 10462.42100608588,
+        "peak_stress_row": 666727,
+        "passed": false
+      },
+      "complete_breaths": 0,
+      "complete_filling_ejection_cycles": 0,
+      "layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          29
+        ]
+      ],
+      "physical_skin_tissue_pairs": 10764
+    },
+    "native-feature-contact-16": {
+      "binary": "8761ab73e4df6cdf424b044b2b16dc4163f6631829f052d05334398c863b0754",
+      "metallib": "83df1c1c33aac4b3145b19a539f7523b2bf3d0c4d2e4cc4d7d670b791916ed09",
+      "launch": "51fa74949e296dcf616be4546f6123d45f564131a1b8f30500da6b05fad164c7",
+      "roots_accepted": 0,
+      "simulated_seconds": 0.0,
+      "cold_wall_seconds": 204.4650287500117,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 0,
+          "last_workspace_active_contacts": 0,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 0,
+          "mechanical_threshold": 0,
+          "vascular_norm": 0
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 0,
+          "minimum_newton_norm": 0,
+          "last_fgmres_residual_norm": 0,
+          "last_fgmres_cycle_accepted": 1
+        }
+      },
+      "failure": {
+        "segment_start": 0,
+        "matter_code": 2,
+        "matter_object_index": 4294967295,
+        "matter_failing_index": 4207296,
+        "matter_diagnostics": [
+          6024454,
+          4207296,
+          371794,
+          0
+        ]
+      }
+    },
+    "native-swept-contact-16": {
+      "binary": "e2eb23e06059e5c343eee02b8149daef126d18f2ade9f40f6c20485ebfb86827",
+      "metallib": "04fe1cb3becfd764ba40eab0bc92391cb46a65b7cddde35c9896ca2573171a58",
+      "launch": "6576dfbdb98016b65b3b37ab7cfaf723a3891a1a676e6e942156a6f0f50e2594",
+      "roots_accepted": 0,
+      "simulated_seconds": 0.0,
+      "cold_wall_seconds": 206.5830581248738,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 0,
+          "last_workspace_active_contacts": 0,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 0,
+          "mechanical_threshold": 0,
+          "vascular_norm": 0
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 0,
+          "minimum_newton_norm": 0,
+          "last_fgmres_residual_norm": 0,
+          "last_fgmres_cycle_accepted": 1
+        }
+      },
+      "failure": {
+        "segment_start": 0,
+        "matter_code": 2,
+        "matter_object_index": 4294967295,
+        "matter_failing_index": 4207296,
+        "matter_diagnostics": [
+          4283427,
+          4207296,
+          371794,
+          0
+        ]
+      }
+    },
+    "native-swept-slab-16": {
+      "binary": "e2eb23e06059e5c343eee02b8149daef126d18f2ade9f40f6c20485ebfb86827",
+      "metallib": "87503abc5129ccabe7866c96ccc11bf548b78a1952121d7b61cb2326418144b5",
+      "launch": "e90ee2bc53beef9a706a0d671b4fe0c68bfe313a44286e8fe2d6f8967b685cd0",
+      "roots_accepted": 0,
+      "simulated_seconds": 0.0,
+      "cold_wall_seconds": 208.3600382078439,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 2115962,
+          "last_workspace_active_contacts": 1115862,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 3.02117181,
+          "mechanical_threshold": 3.77646465e-05,
+          "vascular_norm": 2.20128431e-08
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 1024,
+          "minimum_newton_norm": 3.02117181,
+          "last_fgmres_residual_norm": 1.62231779,
+          "last_fgmres_cycle_accepted": 0
+        }
+      },
+      "failure": {
+        "segment_start": 0,
+        "matter_code": 10,
+        "matter_object_index": 19,
+        "matter_failing_index": 4294967295,
+        "matter_diagnostics": [
+          0.9999922513961792,
+          0.0001347091601928696,
+          0,
+          -902
+        ]
+      }
+    },
+    "native-feature-width-16": {
+      "binary": "e2eb23e06059e5c343eee02b8149daef126d18f2ade9f40f6c20485ebfb86827",
+      "metallib": "67e75e70274d77dc499d0c8e273e153a33113cb60625fd36afc368d1a71692fe",
+      "launch": "f8f89d5e8425d7a9e805e538e5a55b014154258e64c93e48db4361a58ea9a426",
+      "roots_accepted": 0,
+      "simulated_seconds": 0.0,
+      "cold_wall_seconds": 258.2272722921334,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 2115920,
+          "last_workspace_active_contacts": 1115862,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 0.00734863896,
+          "mechanical_threshold": 1.24999997e-05,
+          "vascular_norm": 2.67683404e-08
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 1024,
+          "minimum_newton_norm": 0.00734863849,
+          "last_fgmres_residual_norm": 9.23932305e-07,
+          "last_fgmres_cycle_accepted": 0
+        }
+      },
+      "failure": {
+        "segment_start": 0,
+        "matter_code": 10,
+        "matter_object_index": 18,
+        "matter_failing_index": 4294967295,
+        "matter_diagnostics": [
+          0.007348638493567705,
+          1.2537187954464457e-09,
+          0,
+          -902
+        ]
+      }
+    },
+    "native-aligned-feature-16": {
+      "binary": "e2eb23e06059e5c343eee02b8149daef126d18f2ade9f40f6c20485ebfb86827",
+      "metallib": "f49495d4e103080699d434fcc67189eef9f10c49baf83c8c32499b10e22b297e",
+      "launch": "5bcd5b7cfa34190974e5df5d12ab871582e173f110b6de0170079f7dbb5811b6",
+      "roots_accepted": 0,
+      "simulated_seconds": 0.0,
+      "cold_wall_seconds": 256.85995674994774,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 2115781,
+          "last_workspace_active_contacts": 659089,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 0.00969975349,
+          "mechanical_threshold": 1.24999997e-05,
+          "vascular_norm": 1.01874829e-08
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 1024,
+          "minimum_newton_norm": 0.00969975349,
+          "last_fgmres_residual_norm": 1.87549153e-06,
+          "last_fgmres_cycle_accepted": 0
+        }
+      },
+      "failure": {
+        "segment_start": 0,
+        "matter_code": 10,
+        "matter_object_index": 4,
+        "matter_failing_index": 4294967295,
+        "matter_diagnostics": [
+          0.009699658490717411,
+          8.522644748154562e-06,
+          0,
+          -902
+        ]
+      }
+    },
+    "native-slab-control-16": {
+      "binary": "e2eb23e06059e5c343eee02b8149daef126d18f2ade9f40f6c20485ebfb86827",
+      "metallib": "535293439068f25624267a696d12c4597b4030d565b63fb35aa41e0148b13dd3",
+      "launch": "ff1bdea325ea7d0a8fbc055d93325f5cc98cf4bad56106d92238dab2bf51dd3d",
+      "roots_accepted": 16,
+      "simulated_seconds": 0.000250000011874,
+      "cold_wall_seconds": 336.3063000419643,
+      "root_zero": {
+        "matter_contact_work": {
+          "last_workspace_candidates": 1467679,
+          "last_workspace_active_contacts": 658852,
+          "last_workspace_surface_primitives": 371794
+        },
+        "matter_solver_domain_norms": {
+          "nonvascular_norm": 9.70528436e-06,
+          "mechanical_threshold": 1.24999997e-05,
+          "vascular_norm": 9.37883904e-09
+        },
+        "matter_fgmres_active_work": {
+          "used_columns_sum": 128,
+          "minimum_newton_norm": 5.31703017e-06,
+          "last_fgmres_residual_norm": 9.7052889e-06,
+          "last_fgmres_cycle_accepted": 1
+        }
+      },
+      "native_body_window_factor": 1.3055057578390413e-06,
+      "native_body_window_wall_s": 191.496675042,
+      "last_bed_reaction_N": 0.001871364588623692,
+      "world_weight_N": 952.8644330643456,
+      "material": {
+        "cells": 1448799,
+        "invalid_geometry": 6,
+        "outside_stretch_envelope": 3,
+        "outside_stress_cap": 0,
+        "minimum_stretch": 0.5400899017725049,
+        "maximum_stretch": 1.5627737941052766,
+        "peak_stress_Pa": 10460.980364247438,
+        "peak_stress_row": 666727,
+        "passed": false
+      },
+      "complete_breaths": 0,
+      "complete_filling_ejection_cycles": 0,
+      "layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          29
+        ]
+      ],
+      "physical_skin_tissue_pairs": 10764
+    }
+  },
+  "release_pairs": {
+    "release_pack": "c40702b3923f86d858e87f233e983737be24d119128cac60ee47e5445a34fa16",
+    "accepted_pack": "9ddbc701507aecc9aedcb4e0bbed7d5fc38aa71e6d0e6abc003b42154cfa6af0",
+    "accepted_time_s": 0.0002500000118743628,
+    "release": 10764,
+    "endpoint": 10764,
+    "persistent": 10761,
+    "new": 3,
+    "cleared": 3,
+    "affected_banks": 76,
+    "by_semantic": {
+      "51005": [
+        9896,
+        9896,
+        9893,
+        3,
+        3
+      ],
+      "51006": [
+        76,
+        76,
+        76,
+        0,
+        0
+      ],
+      "51011": [
+        792,
+        792,
+        792,
+        0,
+        0
+      ]
+    },
+    "semantic_columns": [
+      "release",
+      "endpoint",
+      "persistent",
+      "new",
+      "cleared"
+    ]
+  },
+  "strict_release_pairs": 10764,
+  "unique_transverse_skin_faces": 2713,
+  "forearm_routes": [
+    {
+      "member": "right brachioradialis",
+      "stable_id": 109,
+      "outside_site_count": 0,
+      "site_count": 3,
+      "ambiguous_site_count": 0,
+      "maximum_outside_site_depth_mm": 0,
+      "maximum_exterior_vertex_depth_mm": 2.4422585746432275,
+      "sampled_exterior_area_cm2": 5.460818088785536
+    },
+    {
+      "member": "left brachioradialis",
+      "stable_id": 110,
+      "outside_site_count": 0,
+      "site_count": 3,
+      "ambiguous_site_count": 0,
+      "maximum_outside_site_depth_mm": 0,
+      "maximum_exterior_vertex_depth_mm": 2.5708324498402955,
+      "sampled_exterior_area_cm2": 3.0747070367626734
+    },
+    {
+      "member": "right extensor digitorum",
+      "stable_id": 137,
+      "outside_site_count": 7,
+      "site_count": 36,
+      "ambiguous_site_count": 0,
+      "maximum_outside_site_depth_mm": 3.082595705019006,
+      "maximum_exterior_vertex_depth_mm": 13.564643986368974,
+      "sampled_exterior_area_cm2": 36.05230767309475
+    },
+    {
+      "member": "left extensor digitorum",
+      "stable_id": 138,
+      "outside_site_count": 9,
+      "site_count": 36,
+      "ambiguous_site_count": 0,
+      "maximum_outside_site_depth_mm": 2.850100860552123,
+      "maximum_exterior_vertex_depth_mm": 14.432693558070156,
+      "sampled_exterior_area_cm2": 32.57627181930185
+    }
+  ]
+}

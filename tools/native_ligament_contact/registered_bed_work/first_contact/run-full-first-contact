@@ -7,7 +7,30 @@ prior="$material/run-tissue-registration"
 if [[ "${1:-}" == --help ]];then
     "$prior" --help
     echo 'Use --full-first-contact [new-output-directory] for 16 full-volume native steps of 15.625 microseconds each. This exercises contact at release. Supported rest remains unqualified.'
+    echo 'Use --check-full-first-contact RUN to check the native terminal frame, registered skin and fat, and anatomical crossings. A failing frame returns a nonzero exit.'
     exit
+fi
+if [[ "${1:-}" == --check-full-first-contact ]]; then
+    [[ $# == 2 && -f "$2/execution.json" ]] || { echo 'Expected a completed first-contact run directory' >&2; exit 2; }
+    prep="$assembly/full-tissue-release"
+    tools=$(dirname "$(cat "$prep/audit.path")")
+    predicate=$(cat "$prep/predicate.path")
+    sources="$here"
+    at="$here"
+    while [[ "$at" != / && ! -f "$at/resting-surface-clearance-001/audit.py" ]]; do
+        if [[ -f "$at/fit_posterior_equilibrium.py" || -f "$at/material_context.py" ||
+              -f "$at/run_cavity_motion.py" || -f "$at/torso_cell_geometry.py" ]]; then
+            sources="$sources:$at"
+        fi
+        if [[ -f "$at/capsule-material-contact-042/recovery-checkout/src/numilab_human/capsular_material_registration.py" ]]; then
+            sources="$sources:$at/capsule-material-contact-042/recovery-checkout/src"
+        fi
+        at=$(dirname "$at")
+    done
+    reader="$at/resting-surface-clearance-001/audit.py"
+    [[ -f "$reader" && -f "$predicate" ]] || { echo 'Missing registered boundary predicate or replay reader' >&2; exit 1; }
+    export PYTHONPATH="$sources:$tools:$(dirname "$predicate")"
+    exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/verify_first_touch.py" "$2" "$tools" "$reader" "$predicate"
 fi
 if [[ "${1:-}" != --full-first-contact ]];then exec "$prior" "$@";fi
 shift
