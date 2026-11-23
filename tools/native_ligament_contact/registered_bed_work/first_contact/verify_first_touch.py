@@ -46,7 +46,7 @@ def verify(run, tools, reader, predicate):
     motion=json.loads((run/'material-motion.json').read_text())
     material=motion['material']
     failures=dict(endpoint['endpoint_anatomy']['failures'])
-    for name in ('outside_stretch_envelope','outside_stress_cap'):
+    for name in ('invalid_geometry','outside_stretch_envelope','outside_stress_cap'):
         if material[name]:failures[name]=material[name]
     print(f"{count} accepted steps, {r['accepted_time_s']:.9g} simulated s, "
           f"bed reaction {motion['last_bed_reaction_N']:.6g} N, weight {motion['world_weight_N']:.6g} N")

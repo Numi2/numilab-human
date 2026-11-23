@@ -16,7 +16,13 @@ def measure(run, out):
     cfg = json.loads((run/'launch.json').read_text())
     e = cfg['environment']
     x,y,original,roles,_ = inputs(run)
-    cells, role = installed_topology(original,roles,e)
+    if 'NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ' in e:
+        cells, role = installed_topology(original,roles,e)
+    else:
+        cells, role = original, roles
+        pin=e['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_ELEMENTS_SHA256']
+        if (not cfg.get('registered_volume_verification') or cfg['pins'].get(e['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_ELEMENTS'])!=pin):
+            raise ValueError('Missing native registration for direct material topology')
     capture=run/'physical-accepted.node'
     begin=run/'physical-reference.node'
     def read_pose(p):
@@ -45,7 +51,8 @@ def measure(run, out):
         raise ValueError('Missing native root or mass evidence')
     wall=json.loads((run/'execution.json').read_text())['wall_s']
     witness=np.array([131581,130206,130605,130659])
-    if not np.array_equal(cells[870989],witness):raise ValueError('Wrong material witness')
+    witness_rows=np.flatnonzero(np.all(cells==witness,axis=1))
+    if len(witness_rows)!=1:raise ValueError('Physical witness must identify one emitted tetrahedron')
     def vol(p):
         a=p[witness].astype(float)
         return np.linalg.det(a[1:]-a[:1])

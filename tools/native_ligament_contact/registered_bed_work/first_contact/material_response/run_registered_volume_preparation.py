@@ -78,6 +78,9 @@ def prepare(control, certificate, output, support=None, carriers=None, witnesses
             if sha(f)!=build[key]['sha256']:raise ValueError('Changed release owner')
             extra_pins[str(f)]=build[key]['sha256']
         args[0]=build['executable']['path']
+        selected_library_dir=str(Path(build['library']['path']).parent)
+        old_library_path=runtime.get('DYLD_LIBRARY_PATH','').split(os.pathsep)
+        runtime['DYLD_LIBRARY_PATH']=os.pathsep.join(dict.fromkeys([selected_library_dir,*filter(None, old_library_path)]))
         runtime['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']=build['release_pose']['path']
 
     args[4]=str(output/'native-traces')
