@@ -1,0 +1,101 @@
+{
+  "accepted_step": 92,
+  "skin_vertex": 17764,
+  "thickness_source_vertex": 19049,
+  "nominal_dermis_m": 0.0024520316617063893,
+  "nominal_fat_m": 0.004252281958129069,
+  "fault": {
+    "invalid_columns_observed": 1,
+    "material_step_index": 92,
+    "vertex": 17764,
+    "region": 1,
+    "depth_m": 0.126162350178,
+    "allowed_depth_m": 0.12611952424,
+    "area_m2": 8.74160541571e-05
+  },
+  "tissue_source_sha256": "457dacd227da82b9e53c61763e9bed3ffd23af30060c997f1f27a4f8672b4ceb",
+  "accepted_pack_sha256": "1c620f5e773f9359da0c5be4679b568ff04675f81425e0f4ff42e89043ef86bd",
+  "frames": {
+    "initial": {
+      "point_m": [
+        -0.09813769906759262,
+        -0.4125678539276123,
+        2.519977897463832e-05
+      ],
+      "first_bone_boundary_m": 0.05128116321224673,
+      "first_muscle": "ascending part of right trapezius",
+      "first_muscle_boundary_m": 0.032925521174200195,
+      "surfaces": [
+        {
+          "semantic": 51005,
+          "stable_id": 153,
+          "primitive": 343,
+          "muscle": "ascending part of right trapezius",
+          "heights_m": [
+            0.032925521174200195,
+            0.04288549260493793
+          ],
+          "faces": [
+            2508,
+            2629
+          ]
+        },
+        {
+          "semantic": 51004,
+          "stable_id": 10,
+          "primitive": 9,
+          "muscle": null,
+          "heights_m": [
+            0.05128116321224673,
+            0.05417169214639634
+          ],
+          "faces": [
+            3375,
+            3247
+          ]
+        }
+      ]
+    },
+    "accepted": {
+      "point_m": [
+        -0.09814263880252838,
+        -0.41107481718063354,
+        -0.004682337865233421
+      ],
+      "first_bone_boundary_m": 0.050194169194019075,
+      "first_muscle": "ascending part of right trapezius",
+      "first_muscle_boundary_m": 0.031718761695247025,
+      "surfaces": [
+        {
+          "semantic": 51005,
+          "stable_id": 153,
+          "primitive": 343,
+          "muscle": "ascending part of right trapezius",
+          "heights_m": [
+            0.031718761695247025,
+            0.0418351844990319
+          ],
+          "faces": [
+            2508,
+            2630
+          ]
+        },
+        {
+          "semantic": 51004,
+          "stable_id": 10,
+          "primitive": 9,
+          "muscle": null,
+          "heights_m": [
+            0.050194169194019075,
+            0.05307611901429657
+          ],
+          "faces": [
+            3375,
+            3247
+          ]
+        }
+      ]
+    }
+  },
+  "scope": "Vertical intersections of the bed-normal ray with the registered muscles and bones. Distances measure geometry only. Contact connectivity, material identity in uncovered intervals and load distribution require a coupled mechanical model."
+}
