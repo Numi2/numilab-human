@@ -15,4 +15,4 @@ esac
 shift
 if (( $# > 1 )); then exit 2; fi
 out=${1:-$(mktemp -d "$here/registered-contact.XXXXXX")/run}
-exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/run_bed_prefix.py" "$here/live-source" "$here/live-owner" "$out" "$steps"
+exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/run_bed_prefix.py" "$here/live-source" "$here/endpoint-fk-owner" "$out" "$steps"

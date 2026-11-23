@@ -1,0 +1,29 @@
+// Use the same anatomical weights and compensated height as the native support pass.
+kernel void nm_registered_bed_endpoint(
+    constant MRHumanRestingSupportDispatchGPU& d [[buffer(0)]],
+    device const MRHumanRestingVertexMap* maps [[buffer(1)]],
+    device const MRHumanRestingInfluence* weights [[buffer(2)]],
+    device const MRArticulatedBodyPoseGPU* bodies [[buffer(3)]],
+    device const float4* bodyLow [[buffer(4)]],
+    device const MRHumanRestingSupportRotationZBasisGPU* basis [[buffer(5)]],
+    device const float4* stock [[buffer(6)]], device atomic_uint* witness [[buffer(7)]],
+    device float4* faults [[buffer(8)]], constant uint& step [[buffer(9)]],
+    uint pointIndex [[thread_position_in_grid]]) {
+    const float4 c=stock[pointIndex];
+    if(c.x==0.0f) return;
+    auto z=nm_human_resting_support::skinWorldZBasis(maps[pointIndex],weights,bodies,bodyLow,basis,d,0u);
+    const float depth=-(z.high+z.low);
+    const float allowed=dot(c.yz,bedPressureTable[256].xy);
+    if(isfinite(depth) && depth<=allowed) return;
+    if(faults[pointIndex].x==0.0f) faults[pointIndex]=float4(float(step+1u),depth,allowed,c.x);
+    atomic_fetch_min_explicit(witness,pointIndex,memory_order_relaxed);
+}
+
+kernel void nm_registered_bed_endpoint_decision(device const atomic_uint* witness [[buffer(0)]],
+    device MRNumiHumanStandStatusGPU* status [[buffer(1)]]) {
+    const uint v=atomic_load_explicit(witness,memory_order_relaxed);
+    if(v!=MR_INVALID_INDEX && status[0].code==MR_NUMI_HUMAN_STAND_SUCCESS) {
+        status[0].code=MR_NUMI_HUMAN_STAND_CONTACT_FAILED;
+        status[0].failingIndex=v;
+    }
+}
