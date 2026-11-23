@@ -1,0 +1,220 @@
+{
+  "launch": "d7b2ea5fdf9444e86857379ce6833d5937fa2de3ae62e434d29173110cbe9db7",
+  "control": "7562dd87a27fe334544b2d9f838ca1700d27e1446d1420a6fd34ee67d66a56a3",
+  "variable_pleural": "1",
+  "accepted_s": 6.25000029685907e-05,
+  "accepted_steps": 4,
+  "samples": 4,
+  "timing": {
+    "warm": 1.4421106557e-06,
+    "body": 1.3569803632297567e-06,
+    "cold": 3.3381775485377487e-07,
+    "cold_wall_s": 187.22791720880195
+  },
+  "poses": [
+    {
+      "step": 0,
+      "pack": "c40702b3923f86d858e87f233e983737be24d119128cac60ee47e5445a34fa16",
+      "sides": {
+        "DELT3": {
+          "previous_origin": {
+            "enclosed": 0,
+            "distance_mm": 18.640676821889656
+          },
+          "registered_origin": {
+            "enclosed": 1,
+            "distance_mm": 26.312995851940304
+          },
+          "unchanged_intermediate": {
+            "enclosed": 0,
+            "distance_mm": 18.230524023518125
+          },
+          "traction": [
+            {
+              "enclosed": 1,
+              "distance_mm": 27.941363831782073
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 28.138955084777347
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 24.53584652640962
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 23.585339604400087
+            }
+          ],
+          "proximal_line_samples": 81,
+          "outside_proximal_samples": 32
+        },
+        "DELT3_l": {
+          "previous_origin": {
+            "enclosed": 0,
+            "distance_mm": 21.243662715665163
+          },
+          "registered_origin": {
+            "enclosed": 1,
+            "distance_mm": 21.116701616082707
+          },
+          "unchanged_intermediate": {
+            "enclosed": 0,
+            "distance_mm": 26.63027119583928
+          },
+          "traction": [
+            {
+              "enclosed": 1,
+              "distance_mm": 23.423715442023195
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 21.490947674637066
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 19.49843057495759
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 22.522474741959194
+            }
+          ],
+          "proximal_line_samples": 81,
+          "outside_proximal_samples": 46
+        }
+      }
+    },
+    {
+      "step": 4,
+      "pack": "874ea3139273e9abedacb3b19d3b80c87edf8e54785d38501224ceb3ea73f97e",
+      "sides": {
+        "DELT3": {
+          "previous_origin": {
+            "enclosed": 0,
+            "distance_mm": 18.640423248514672
+          },
+          "registered_origin": {
+            "enclosed": 1,
+            "distance_mm": 26.313205668572643
+          },
+          "unchanged_intermediate": {
+            "enclosed": 0,
+            "distance_mm": 18.23031171748336
+          },
+          "traction": [
+            {
+              "enclosed": 1,
+              "distance_mm": 27.941567132272464
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 28.13912071792138
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 24.53602267613421
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 23.585549201169982
+            }
+          ],
+          "proximal_line_samples": 81,
+          "outside_proximal_samples": 32
+        },
+        "DELT3_l": {
+          "previous_origin": {
+            "enclosed": 0,
+            "distance_mm": 21.243325274712454
+          },
+          "registered_origin": {
+            "enclosed": 1,
+            "distance_mm": 21.11701436825337
+          },
+          "unchanged_intermediate": {
+            "enclosed": 0,
+            "distance_mm": 26.629955508404414
+          },
+          "traction": [
+            {
+              "enclosed": 1,
+              "distance_mm": 23.424033983345467
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 21.491266522660755
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 19.49875422061759
+            },
+            {
+              "enclosed": 1,
+              "distance_mm": 22.522779413861645
+            }
+          ],
+          "proximal_line_samples": 81,
+          "outside_proximal_samples": 46
+        }
+      }
+    }
+  ],
+  "physiology": {
+    "lung_volume_ml": {
+      "minimum": 2499.99994412,
+      "maximum": 2499.99994412,
+      "terminal": 2499.99994412,
+      "maximum_control_delta": 0.0
+    },
+    "pleural_pa": {
+      "minimum": -490.332489014,
+      "maximum": -490.332489014,
+      "terminal": -490.332489014,
+      "maximum_control_delta": 0.0
+    },
+    "PaO2_mmhg": {
+      "minimum": 99.9998245239,
+      "maximum": 99.9998703003,
+      "terminal": 99.9998703003,
+      "maximum_control_delta": 0.0
+    },
+    "PaCO2_mmhg": {
+      "minimum": 39.9999961853,
+      "maximum": 40.0,
+      "terminal": 39.9999961853,
+      "maximum_control_delta": 0.0
+    },
+    "blood_ml": {
+      "minimum": 5149.99963343,
+      "maximum": 5150.00056475,
+      "terminal": 5149.99963343,
+      "maximum_control_delta": 0.0
+    },
+    "lv_ml": {
+      "minimum": 118.757161545,
+      "maximum": 118.762596685,
+      "terminal": 118.762596685,
+      "maximum_control_delta": 0.0
+    },
+    "rv_ml": {
+      "minimum": 138.360468554,
+      "maximum": 138.365896419,
+      "terminal": 138.365896419,
+      "maximum_control_delta": 0.0
+    },
+    "complete_filling_ejection_cycles": {
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "terminal": 0.0,
+      "maximum_control_delta": 0.0
+    },
+    "breaths": {
+      "minimum": 0.0,
+      "maximum": 0.0,
+      "terminal": 0.0,
+      "maximum_control_delta": 0.0
+    }
+  }
+}
