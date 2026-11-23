@@ -1,0 +1,9 @@
+"""Retain the live Human force owner, input generators, native receipts and geometry witnesses."""
+import sys
+from pathlib import Path
+from archive_cavity_trial import archive_files,sha
+def run(p):
+    paths=['exercise_articulated_ligaments.mm','verify_articulated_routes.py','rebind_skin_frames.py','run_registered_cortex_scene.py','classify_connected_boundary.py','register_carpal_wall.py','loads/result.json','loads-stable/result.json','wrist/result.json','wrist/cortical-facets.npz','boundaries/faces.npz','boundaries/result.json','surfaces/registration.json','trial/launch.json','trial/execution.json','trial/stderr.log','scene-rebound/launch.json','scene-rebound/execution.json','scene-rebound/stderr.log','scene-rebound/registered-initial-bodies.json','integrated/prepare_live_cortex.py','integrated/build_live_cortex.py','integrated/native_free_span.metalinc','integrated/CorticalTables.metalinc','integrated/CorticalIdentity.inc','integrated/NumiHumanCorticalRegistration.inc','integrated/build.json','integrated/registration.json','integrated/app/NumiHumanRegisteredLigaments.hpp','integrated/app/NumiHumanRegisteredLigamentMaterial.inc','integrated/app/numi-human-native','integrated/numi_human.mm','integrated/libmetalrobo.dylib','integrated/metal/NumiMatter.metallib','integrated/metal/src/metal/numi_human.metalinc','archive_live_cortical_scene.py']
+    paths.extend(str(s.relative_to(p)) for s in (p/'surfaces').glob('*.csv'))
+    archive_files({k:p/k for k in paths},'native-articulated-shoulder-'+sha(p/'integrated/build.json')[:16]+'.tar.zst',p/'recovery.json','Integrated native passive-ligament force owner, pose-matched material sidecars, independent force and torque checks and the next physical volume registration failure.')
+if __name__=='__main__':run(Path(sys.argv[1]).resolve())

@@ -1,0 +1,273 @@
+{
+  "native_scene_build": "91fc7e901876786bf8111beed5b90b9845b9a604d3cbcdb275c1a1f52ae9a11e",
+  "device": "SSH Numi, Apple M6",
+  "scene_launch": "d7bb997c96b71d2f52f8f72d34eb0ff3600108bfb8c0123e7af18d0758740e3e",
+  "scene_execution": {
+    "exit": 1,
+    "wall_s": 8.50524254096672
+  },
+  "ligament_admission": "registered_ligament_source_geometry=admitted rows=34 retained_source_bone_meshes=185 source_bone_records=185 bone_payload_sha256=2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29 path_guard=all_current_pose_registered_meshes endpoint_projection=bounded_current_registered_surface",
+  "volume_admission": "registered_volume_native_preflight=FAIL physical_admission=0 scene_installation=0 simulation_steps=0 reason=pinned registered-volume import rejected: combined-node-map CSV omits a physical volume node",
+  "source_geometry": {
+    "bones": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "pose": "fc5cdda710eb9be4825084d6c0e6a4a334d5af40021d20c1289816d144bd9ac9",
+    "records": [
+      {
+        "fiber": "coracoclavicular_complex/0",
+        "tag": 3659531856,
+        "route": "da200650ef6bf96c8083e248eecece8d336615c8677abaa4bd50dc7202c91c91",
+        "section": "fc1b32eb1c0bc596c5fd00eca3fdd0c282698639662d8a661814b73717602b05",
+        "length": 0.03717837905953265,
+        "reference": 0.03679932921764052,
+        "owners": [
+          84,
+          79
+        ],
+        "loaded": true
+      },
+      {
+        "fiber": "coracoclavicular_complex/1",
+        "tag": 652856359,
+        "route": "26e9cc27f81a5001d5a7542f91045bd61e43540426e1f38de73213dda0d36b5a",
+        "section": "0b0c36b25ca27d59ec1c325f52b85e43dc861d41276a6ebeddb5ab5fa608f80f",
+        "length": 0.034355761535936856,
+        "reference": 0.033294888357674114,
+        "owners": [
+          34,
+          29
+        ],
+        "loaded": true
+      },
+      {
+        "fiber": "coracohumeral_capsuloligament/0",
+        "tag": 813471705,
+        "route": "307c97d9323030364df2010b48de2a41518c9d902411c588e9217a81d99a295a",
+        "section": "c38a13ec93b2738a82b4926658121d2f22cb434989c9b36ea9923ed19eb0c072",
+        "length": 0.04389299399875595,
+        "reference": 0.0501,
+        "owners": [
+          84,
+          91
+        ],
+        "loaded": false
+      },
+      {
+        "fiber": "coracohumeral_capsuloligament/1",
+        "tag": 2029508620,
+        "route": "78f7d80cd3bc87dbeb666a2ef47a555c623ab469d4db756d85980da4cc89fc60",
+        "section": "9e360c605dd3f303ad1a3e671af13ada316a04414fec2f3dd4c2537552ac9db9",
+        "length": 0.03712104330477962,
+        "reference": 0.0501,
+        "owners": [
+          34,
+          41
+        ],
+        "loaded": false
+      },
+      {
+        "fiber": "superior_glenohumeral_capsuloligament/0",
+        "tag": 4026223130,
+        "route": "effb4a1af1c825dc9a3eb74618770df530bbc9798569e36cd87d6f373dbe40df",
+        "section": "6d0306dd7d972ccc79288d43c5dcd3d86b60338fc30562b58a5fd51e068a478c",
+        "length": 0.04227918724498381,
+        "reference": 0.0448,
+        "owners": [
+          84,
+          91
+        ],
+        "loaded": false
+      },
+      {
+        "fiber": "superior_glenohumeral_capsuloligament/1",
+        "tag": 4013868333,
+        "route": "ef3ec52d60a0f389517c53af9f58671a0250bcdf446a91ad2c05234236e55964",
+        "section": "5e56f6e122fac06b564f391b28b58982057213645168662e8f4c194034be468e",
+        "length": 0.03615516942287292,
+        "reference": 0.0448,
+        "owners": [
+          34,
+          41
+        ],
+        "loaded": false
+      }
+    ],
+    "source_meshes": 185
+  },
+  "force_transfer": {
+    "tested_kernels": [
+      "nm_numi_human_apply_pre_source_rigid_corrections",
+      "nm_numi_human_audit_passive_ligaments"
+    ],
+    "positive_perturbations": 104,
+    "negative_cases": 8,
+    "maximum_force_error_n": 0.0015994644246006828,
+    "maximum_moment_error_nm": 7.566100636591244e-05,
+    "prior_roundoff_failure": [
+      {
+        "fiber": "coracoclavicular_complex/0",
+        "suite": "wide",
+        "cases": 13,
+        "passed": false,
+        "invalid": [
+          3
+        ],
+        "max_force_error_n": 23.93959629293059,
+        "max_moment_error_nm": 0.9710588243436072,
+        "audit_errors": null
+      }
+    ]
+  },
+  "surface_frames": {
+    "changed_bones": [
+      41,
+      42,
+      43,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      59,
+      60,
+      61,
+      62,
+      64,
+      65,
+      66,
+      67,
+      69,
+      70,
+      71,
+      72,
+      74,
+      75,
+      76,
+      91,
+      92,
+      93,
+      95,
+      96,
+      97,
+      98,
+      99,
+      100,
+      102,
+      103,
+      104,
+      105,
+      106,
+      107,
+      109,
+      110,
+      111,
+      112,
+      114,
+      115,
+      116,
+      117,
+      119,
+      120,
+      121,
+      122,
+      124,
+      125,
+      126
+    ],
+    "layers": {
+      "O": {
+        "source": "f59e3bdadf2933b2de1833dd1527a825f021fe05ac8604c1d1ae063cd9b64fb4",
+        "rows": 76153,
+        "local_frames_changed": 45552,
+        "max_roundtrip_m": 5.551115123125783e-17
+      },
+      "I": {
+        "source": "92fcc7d374911741dd24020043cb7debd4e2057d1bb45f87c29c79480cc68540",
+        "rows": 118196,
+        "local_frames_changed": 64794,
+        "max_roundtrip_m": 5.551115123125783e-17
+      },
+      "D": {
+        "source": "6069491f562dd62631b5db047118c8b09c03ad971248be037bf092a333a697dd",
+        "rows": 103505,
+        "local_frames_changed": 28886,
+        "max_roundtrip_m": 5.551115123125783e-17
+      }
+    }
+  },
+  "connected_boundary": {
+    "elements": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "node_map": "41b0db0c411ff459532a0d4306bd1f628366d9d788c9b268ea26b848441d1574",
+    "cortical": "112b1c03bda6dfada9f7f5b6f590b5e1208ad376fe1e3a26ccf2f35e48c4dfd6",
+    "cells": 1457361,
+    "boundary": 365534,
+    "shared": 236593,
+    "inherited_layers": {
+      "O": {
+        "old_source_rows": 152261,
+        "inherited": 152261
+      },
+      "I": {
+        "old_source_rows": 236387,
+        "inherited": 236000
+      },
+      "D": {
+        "old_source_rows": 207893,
+        "inherited": 206307
+      }
+    },
+    "head_walls": 180,
+    "cortical_walls": 4526,
+    "new_or_retriangulated": {
+      "O": 54,
+      "I": 593,
+      "D": 2206
+    },
+    "initial_roles": {
+      "outer_O": 152261,
+      "inner_I": 236387,
+      "outer_I": 236387,
+      "inner_D": 207893,
+      "donor_skin_OI_headwall": 90,
+      "donor_fat_ID_headwall": 90
+    },
+    "face_table": "05f6cc962735d190c9509c47b4878ac42d68c60369169d1fe31f8f32cadd25bd"
+  },
+  "current_scaphoid": {
+    "material_geometry": "b76c1e0a598ca63d0a6fc71ea7d8686e9205f0da8350e7ccaa6e2a38fff47314",
+    "original_domain": "955ef5b26039cd1c37ab101c91dadd5a4f3ce4919c1f52fbbbbef65079436d3e",
+    "bones": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "capture": "fc5cdda710eb9be4825084d6c0e6a4a334d5af40021d20c1289816d144bd9ac9",
+    "cortical_rows": 210,
+    "bank": 81,
+    "body": 96,
+    "layers": {
+      "15": {
+        "cells": 5200,
+        "penetration_mm3": 10.3444332570391
+      },
+      "16": {
+        "cells": 2520,
+        "penetration_mm3": 27.878893802296705
+      }
+    },
+    "wall_gap_m": {
+      "min": 0.006473856227840216,
+      "max": 0.009978009272457757,
+      "median": 0.008181452227750761
+    },
+    "remaining_one_sided_skin_faces": 0
+  },
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-articulated-shoulder-91fc7e901876786b.tar.zst",
+    "archive_sha256": "c79c5130110a9dc452ca77e2e21b758c0f0d75f2f830e6feeede34eeb70465be",
+    "size_bytes": 53206207
+  },
+  "qualification": "Supported rest pose and controlled relative pose perturbations only. Four slack shoulder rows require an exterior slack path. Native coupled motion, dynamic path certification, full tissue contact and throughput remain unqualified."
+}

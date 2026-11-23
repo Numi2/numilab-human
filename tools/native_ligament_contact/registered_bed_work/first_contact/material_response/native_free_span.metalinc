@@ -1,0 +1,49 @@
+// Internal registered-shoulder rows use the same articulated force owner as every
+// straight fiber. All tabulated offsets are relative to a material attachment,
+// so repartitioning a rigid body's center of mass leaves the path unchanged.
+inline bool nhRegisteredFreeSpan(
+    NMNumiHumanPassiveLigamentGPU fiber, MRArticulatedBodyPoseGPU a,
+    MRArticulatedBodyPoseGPU b, thread float3& p, thread float3& q,
+    thread float3& force, thread float& stretch, thread float& tension) {
+    if (!nhKnownCorticalRow(fiber) ||
+        abs(dot(a.orientation,a.orientation)-1.0f)>1e-5f ||
+        abs(dot(b.orientation,b.orientation)-1.0f)>1e-5f) return false;
+    uint index=nhCorticalIndex(fiber.reserved0);
+    if(index>=6)return false;
+    const auto c=nhRouteTable[index];
+    const float4 qa=a.orientation,qb=b.orientation;
+    const float3 start=fiber.firstLocalPoint.xyz,end=fiber.secondLocalPoint.xyz;
+    const float3 attachmentDelta=b.position.xyz-a.position.xyz+
+        humanQuaternionRotate(qb,end)-humanQuaternionRotate(qa,start);
+    float total;
+    float3 direction;
+    if(c.range.y!=0) {
+        const float3 target=humanQuaternionRotate(float4(-qa.xyz,qa.w),
+            b.position.xyz-a.position.xyz+humanQuaternionRotate(qb,end))-start;
+        NHCorticalLigamentSpan span;
+        if (!nhSlidingLigamentPath(nhRegisteredEdges+c.range.x,c.range.y,c.range.y,float3(0),target,span) &&
+            (!c.range.w || !nhSlidingLigamentPath(nhRegisteredEdges+c.range.z,c.range.w,c.range.w,float3(0),target,span)))
+            return false;
+        total=span.lengthM;
+        direction=humanQuaternionRotate(qa,normalize(span.secondLoadPoint-span.firstLoadPoint));
+        p=a.position.xyz+humanQuaternionRotate(qa,start+span.firstLoadPoint);
+        q=b.position.xyz+humanQuaternionRotate(qb,end);
+    } else {
+        // A feasible path shorter than slack length certifies zero elastic force.
+        // Its length is an upper bound, not a unique unloaded string shape.
+        const float3 da=humanQuaternionRotate(qa,c.firstOffset.xyz);
+        const float3 db=humanQuaternionRotate(qb,c.secondOffset.xyz);
+        const float3 freeSpan=attachmentDelta+db-da;
+        const float spanLength=length(freeSpan);
+        if(!(spanLength>1e-8f))return false;
+        total=c.firstOffset.w+spanLength;
+        if(total*fiber.reference.z>fiber.reference.x)return false;
+        direction=freeSpan/spanLength;
+        if(!nhSlackRouteClear(index,qa,qb,attachmentDelta,direction))return false;
+        p=a.position.xyz+humanQuaternionRotate(qa,start+c.firstOffset.xyz);
+        q=b.position.xyz+humanQuaternionRotate(qb,end+c.secondOffset.xyz);
+    }
+    if(!nhCorticalLigamentLaw(fiber,total,stretch,tension))return false;
+    force=tension*direction;
+    return all(isfinite(force)) && all(isfinite(p)) && all(isfinite(q));
+}
