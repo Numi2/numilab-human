@@ -1,0 +1,139 @@
+{
+  "qualification": "Native material reader; independent exact full-layer checks in the source and initial physical pose. No elapsed dynamics.",
+  "native_volume": {
+    "native": {
+      "native_imported": true,
+      "nodes": 314015,
+      "cells": 1457361,
+      "inverted": 0,
+      "below_shape": 0,
+      "below_volume": 0,
+      "nonfinite": 0,
+      "density_outliers": 0,
+      "zero_mass_nodes": 0,
+      "maximum_nodal_error_kg": 1.3877787807814457e-17,
+      "skin_kg": 3.452571282803943,
+      "fat_kg": 10.487108427165424,
+      "node_sha256": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+      "element_sha256": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+      "label_sha256": "a68ebf0310ca8c246bee20ea7eb31025cdfc4cad523a1a5151ad6b0eedf4240c"
+    },
+    "native_command": [
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/motion-repair-work/native-material/verify-native-material",
+      "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/deep-fat-native",
+      "0c6e10d411604cb317eb5a9da234da568d683e6cc0276ac184f80fd29067b80a",
+      "157",
+      "0.187444"
+    ],
+    "material": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "initial": "8513086ef6b6ee75be9897d5c385647d3aa76b77714e86bb0b5c89f298b732f7",
+    "cells": 1457361,
+    "unchanged_topology": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "minimum_normalized_shape": [
+      1.0000002302107744e-05,
+      1.0000002302107744e-05
+    ],
+    "loaded_jacobian_range": [
+      0.40847616580230306,
+      2.4920520652626075
+    ],
+    "layer_intersections": {
+      "reference": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ],
+      "starting": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    },
+    "source_mass": "deep-fat-credits",
+    "cell_mass": "b4fcc5bf7af3099b24c3a4c3409d2d4108a63bacc100f88db8a9e14eb9c34c0e",
+    "node_mass": "0f792ed119996565c9f2029305fe6e3486c1db8d4f900dc40ade8e261d3091be"
+  },
+  "mass_routing": {
+    "trials": [
+      {
+        "ring": 0,
+        "cells": 120,
+        "carriers": 2,
+        "edges": 219,
+        "result": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+      },
+      {
+        "ring": 1,
+        "cells": 507,
+        "carriers": 4,
+        "edges": 763,
+        "result": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+      },
+      {
+        "ring": 2,
+        "cells": 1273,
+        "carriers": 6,
+        "edges": 1696,
+        "result": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+      },
+      {
+        "ring": 3,
+        "cells": 3261,
+        "carriers": 21,
+        "edges": 4479,
+        "result": "Optimization terminated successfully. (HiGHS Status 7: Optimal)"
+      }
+    ],
+    "geometry": "554c762a5bf533e6abd9ef2ff4f6265369f7a4a48560f486ecd3b64d0eeac45e",
+    "source_flow": "867656a07652ba205d8d7ec1aed9f67d4102a3174d602cac972674c9bbd3ebbe",
+    "source_body_mass": 10.48710842716525,
+    "affected_cells": 120,
+    "changed_cells": 2087,
+    "changed_credits": 2197,
+    "mass_reassigned_kg": 4.0610243016450205e-07,
+    "maximum_carrier_error_kg": 2.6020852139652106e-18,
+    "first_moment_error_kg_m": [
+      8.212891317312181e-21,
+      -1.2127501755793077e-21,
+      -3.735197063881418e-21
+    ],
+    "density_range_kg_m3": [
+      850.0000005,
+      950.0000000000197
+    ],
+    "updated": "83de90d3eef228b97837492859739642607787f0d13b1fded3d7950520ab31d4"
+  },
+  "moved_nodes": 18,
+  "maximum_displacement_um": 10.26745424536278,
+  "initial_deep_fat_self_pairs": 13,
+  "other_bone_tissue_contacts": "Independent anatomical clearance still requires checking",
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/source-separated-deep-fat-dfdb8e4beb2a.tar.zst",
+    "archive_sha256": "1d3508456ecfb324d55a1f030fc804c14328f0919440d6c8b0e32353f6a10457",
+    "size_bytes": 55795757
+  }
+}
