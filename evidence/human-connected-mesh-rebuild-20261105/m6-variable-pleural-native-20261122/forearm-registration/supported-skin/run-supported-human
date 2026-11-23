@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+case_dir=/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057
+runner=/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/skin-publication/tools/native_ligament_contact/registered_bed_work/run_bed_work.py
+python=/Users/numi/numi-human-prep-venv-20261005/bin/python3
+if [[ "${1:-}" == "--help" ]]; then
+    echo "Run the supported 16-second native Numi Human development scene on the M6. Optional argument: a new output directory."
+    exit 0
+fi
+if (( $# > 1 )); then exit 2; fi
+if [[ ! -f "$case_dir/bearing-motion.json" ]]; then
+    echo "Missing matched native verification" >&2
+    exit 1
+fi
+if (( $# == 1 )); then
+    out=$1
+else
+    work=$(mktemp -d "$case_dir/native-replay.XXXXXX")
+    out="$work/run"
+fi
+echo "Native evidence directory: $out"
+exec "$python" "$runner" "$case_dir/free-source" "$case_dir/free-owner" "$out" 8000 --no-bed-work-audit

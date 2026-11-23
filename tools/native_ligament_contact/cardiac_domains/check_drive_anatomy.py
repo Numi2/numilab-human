@@ -5,14 +5,25 @@ import json, mmap, runpy, subprocess, sys, tempfile, hashlib
 from certify_heart import sha
 
 
-def check(case, audit_source, bank_source, require_clear=False):
-    saved = case / "terminal.mrvpack"
-    receipt = case / "terminal.receipt.json"
-    state = json.loads(receipt.read_text())
+def check(case, audit_source, bank_source, require_clear=False, accepted_step=None):
     launch = json.loads((case / "launch.json").read_text())
-    steps = int(launch["argv"][launch["argv"].index("--muscle-step-count") + 1])
-    if steps <= 0:
-        raise ValueError("Invalid requested step count")
+    horizon = int(launch["argv"][launch["argv"].index("--muscle-step-count") + 1])
+    steps = horizon if accepted_step is None else accepted_step
+    if steps <= 0 or steps > horizon:
+        raise ValueError("Capture is outside the requested native horizon")
+    terminal = steps == horizon
+    if not terminal:
+        scheduled = launch["environment"]["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"].split(",")
+        if str(steps) not in scheduled:
+            raise ValueError("Intermediate native state was not scheduled for capture")
+    stem = "terminal" if terminal else f"step-{steps}"
+    saved = case / (stem + ".mrvpack")
+    receipt = case / (stem + ".receipt.json")
+    state = json.loads(receipt.read_text())
+    if not terminal:
+        terminal_receipt = json.loads((case / "terminal.receipt.json").read_text())
+        if state["base_pack_file_sha256"] != terminal_receipt["base_pack_file_sha256"]:
+            raise ValueError("Intermediate geometry belongs to a different native launch")
     expected = Path(launch["argv"][4]) / f"accepted-geometry/step-{steps}.mrvpack"
     if (
         state["physical_endpoint"] != "accepted"
@@ -29,12 +40,14 @@ def check(case, audit_source, bank_source, require_clear=False):
     sys.path.insert(0, str(audit_source.parent / "src"))
     module = runpy.run_path(str(audit_source))
     audit = runpy.run_path(str(bank_source))["scan_banks"]
-    out = case / "envelope"
+    out = case / ("envelope" if terminal else f"envelope-{steps}")
     out.mkdir(exist_ok=True)
     if saved.exists():
         stream = saved.open("rb")
     else:
-        compressed = case / "accepted.mrvpack.zst"
+        compressed = case / ("accepted.mrvpack.zst" if terminal else f"step-{steps}.mrvpack.zst")
+        if not compressed.exists() and not terminal:
+            raise FileNotFoundError(compressed)
         if not compressed.exists():
             recovery = json.loads((case / "frame-recovery.json").read_text())
             compressed = case / recovery["url"].split("/")[-1]
@@ -115,4 +128,5 @@ if __name__ == "__main__":
     for name in ("case", "audit_source", "bank_source"):
         parser.add_argument(name, type=lambda value: Path(value).resolve())
     parser.add_argument("--require-clear", action="store_true", help="Require zero physical nonocular skin/anatomy pairs and zero skin self-intersections at this endpoint.")
+    parser.add_argument("--accepted-step", type=int, help="Inspect a scheduled accepted intermediate frame.")
     check(**vars(parser.parse_args()))

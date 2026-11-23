@@ -1,0 +1,163 @@
+{
+  "source": {
+    "reference_sha256": "351a3b29288f6f9ca82d816930d88899d1b82a84d4216183fe5ca716a85b66c3",
+    "installed_pose_sha256": "c6b23afe8dacdad906e1b9df10ebe35be75a0faf30e93394f57db75bb68d6869",
+    "elements_sha256": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755"
+  },
+  "accepted": "8fc3ffd2705f366cb1d38678a95d522bca0e202293e44ca438f115ec5d6e9d69",
+  "previous_cavities": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+  "materials": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "results": [
+    {
+      "source_cell": 1032163,
+      "counts": {
+        "patches": 87,
+        "geometric": 24,
+        "valid_topology": 24
+      },
+      "direct_neighbors": {
+        "1031443": {
+          "same_material": true,
+          "same_donor_and_region": true,
+          "previous_replacement": false
+        },
+        "313452": {
+          "same_material": false,
+          "same_donor_and_region": false,
+          "previous_replacement": false
+        },
+        "1448685": {
+          "same_material": true,
+          "same_donor_and_region": true,
+          "previous_replacement": true
+        },
+        "1448695": {
+          "same_material": false,
+          "same_donor_and_region": false,
+          "previous_replacement": true
+        }
+      },
+      "best": {
+        "worst": 0.3523967420559983,
+        "relative_energy_force": [
+          [
+            0.0049002166530144565,
+            0.33202503239814835
+          ],
+          [
+            0.0013716522706862468,
+            0.3523967420559983
+          ]
+        ],
+        "installed_rows": [
+          1031443,
+          1031954,
+          1448642,
+          1448644,
+          1448685
+        ],
+        "replacement": [
+          [
+            128523,
+            128558,
+            128740,
+            274412
+          ],
+          [
+            128523,
+            128740,
+            128756,
+            274412
+          ],
+          [
+            128740,
+            128558,
+            273911,
+            274412
+          ],
+          [
+            128558,
+            128667,
+            128740,
+            273911
+          ]
+        ]
+      },
+      "passing": []
+    },
+    {
+      "source_cell": 947257,
+      "counts": {
+        "patches": 141,
+        "geometric": 1,
+        "valid_topology": 1
+      },
+      "direct_neighbors": {
+        "1032360": {
+          "same_material": true,
+          "same_donor_and_region": true,
+          "previous_replacement": false
+        },
+        "994385": {
+          "same_material": true,
+          "same_donor_and_region": true,
+          "previous_replacement": false
+        },
+        "400317": {
+          "same_material": false,
+          "same_donor_and_region": false,
+          "previous_replacement": false
+        },
+        "1140231": {
+          "same_material": true,
+          "same_donor_and_region": true,
+          "previous_replacement": false
+        }
+      },
+      "best": {
+        "worst": 0.7951169729467029,
+        "relative_energy_force": [
+          [
+            0.062232016802517165,
+            0.6782559774759224
+          ],
+          [
+            0.1237745549607247,
+            0.7951169729467029
+          ]
+        ],
+        "installed_rows": [
+          947134,
+          994385,
+          1032240,
+          1032360,
+          1032361
+        ],
+        "replacement": [
+          [
+            131444,
+            132164,
+            133374,
+            284216
+          ],
+          [
+            131444,
+            131581,
+            132164,
+            284216
+          ],
+          [
+            133374,
+            132164,
+            133526,
+            284216
+          ]
+        ]
+      },
+      "passing": []
+    }
+  ]
+}

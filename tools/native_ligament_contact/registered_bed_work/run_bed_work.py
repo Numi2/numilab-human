@@ -1,6 +1,6 @@
 """Run a cold supported native trajectory with a bounded GPU virtual-work audit."""
 
-import hashlib, json, os, shutil, subprocess, sys, tempfile, time
+import hashlib, json, os, shutil, subprocess, tempfile, time
 from pathlib import Path
 
 
@@ -9,7 +9,7 @@ def digest(p):
         return hashlib.file_digest(f, "sha256").hexdigest()
 
 
-def run(source, owner, out, steps, enabled=True):
+def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
     parent = json.loads((source / "launch.json").read_text())
     if parent["headless"] or steps <= 0 or steps > 32000 or steps % 32:
         raise ValueError(
@@ -27,12 +27,28 @@ def run(source, owner, out, steps, enabled=True):
         raise ValueError("Different timestep")
     argv[0] = str(owner / "numi-human-native")
     argv[argv.index("--muscle-step-count") + 1] = str(steps)
+    # Native captures use zero-based submission endpoints. The true terminal
+    # accepted state is always available separately.
+    cadence = 32
+    if (
+        len(intermediate_steps) > 6
+        or len(set(intermediate_steps)) != len(intermediate_steps)
+        or any(
+            step <= 0 or step >= steps or (step + 1) % cadence
+            for step in intermediate_steps
+        )
+    ):
+        raise ValueError("Invalid intermediate native capture schedule")
+    if intermediate_steps and os.environ.get("NUMI_RETAIN_SUPPORT_GEOMETRY") != "1":
+        raise ValueError("Intermediate geometry was requested without retention")
     out.mkdir(exist_ok=False)
     with tempfile.TemporaryDirectory(dir=out, prefix="live-") as tmp:
         live = Path(tmp) / "native"
         argv[4] = str(live)
         env = parent["environment"].copy()
-        env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = str(steps)
+        env["NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS"] = ",".join(
+            map(str, sorted((*intermediate_steps, steps)))
+        )
         env["NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"] = str(out / "failure.json")
         if enabled:
             env["NUMI_HUMAN_THORACIC_BED_AUDIT_END_STEP"] = str(steps)
@@ -88,16 +104,42 @@ def run(source, owner, out, steps, enabled=True):
         if os.environ.get("NUMI_RETAIN_SUPPORT_GEOMETRY") == "1":
             for name, artifact, identity in (
                 ("initial", live / "resting-human.mrvpack", r["base_pack_file_sha256"]),
-                ("accepted", receipt.with_suffix("").with_suffix(".mrvpack"), r["pack_file_sha256"]),
+                (
+                    "accepted",
+                    receipt.with_suffix("").with_suffix(".mrvpack"),
+                    r["pack_file_sha256"],
+                ),
             ):
                 if digest(artifact) != identity:
                     raise ValueError("Native geometry digest mismatch")
                 with (out / (name + ".mrvpack.zst")).open("wb") as archive:
-                    subprocess.run(["zstd", "-q", "-3", "-T1", "-c", str(artifact)], stdout=archive, check=True)
+                    subprocess.run(
+                        ["zstd", "-q", "-3", "-T1", "-c", str(artifact)],
+                        stdout=archive,
+                        check=True,
+                    )
+            for sample in intermediate_steps:
+                frame = live / f"accepted-geometry/step-{sample}.mrvpack"
+                proof = frame.with_suffix(".receipt.json")
+                observed = json.loads(proof.read_text())
+                if (
+                    observed["physical_endpoint"] != "accepted"
+                    or observed["accepted_step"] != sample
+                    or observed["pack_file_sha256"] != digest(frame)
+                    or observed["base_pack_file_sha256"] != r["base_pack_file_sha256"]
+                ):
+                    raise ValueError("Intermediate accepted geometry is inconsistent")
+                shutil.copy2(proof, out / proof.name)
+                with (out / (frame.name + ".zst")).open("wb") as output:
+                    subprocess.run(
+                        ["zstd", "-q", "-3", "-T1", "-c", str(frame)],
+                        stdout=output,
+                        check=True,
+                    )
             for name in (
+                "resting-local-bed-sections.csv",
                 "resting-ocular-sclera-window.json",
                 "resting-local-bed-footprint.csv",
-                "resting-local-bed-sections.csv",
                 "resting-support-point-motion.csv",
                 "resting-com-momentum-diagnostic.csv",
             ):
@@ -116,8 +158,12 @@ def run(source, owner, out, steps, enabled=True):
 
 
 if __name__ == "__main__":
-    run(
-        *(Path(s).resolve() for s in sys.argv[1:4]),
-        int(sys.argv[4]),
-        "--disabled" not in sys.argv[5:],
-    )
+    import argparse
+
+    parser = argparse.ArgumentParser(description=__doc__)
+    for key in ("source", "owner", "out"):
+        parser.add_argument(key, type=lambda v: Path(v).resolve())
+    parser.add_argument("steps", type=int)
+    parser.add_argument("--no-bed-work-audit", "--disabled", dest="enabled", action="store_false", help="Skip only the optional thoracic bed virtual-work observer.")
+    parser.add_argument("--intermediate-steps", type=int, nargs="+", default=[])
+    run(**vars(parser.parse_args()))
