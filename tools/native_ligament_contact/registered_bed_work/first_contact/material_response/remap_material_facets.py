@@ -35,10 +35,25 @@ def remap(parent,mesh,dest):
         match[rid]=start+pos//4
     if np.any(match<0):raise ValueError(f'{sum(match<0)} lost registered material facets')
     dest.mkdir(exist_ok=True);out=dest/'facet-ancestry-current.csv'
+    labels = np.loadtxt(mesh/'current-child.labels.csv',delimiter=',',skiprows=1,usecols=(4,),dtype='i8')
+    corrected_walls=0
     with source.open()as fp,out.open('w') as outfp:
         reader=csv.DictReader(fp);writer=csv.DictWriter(outfp,cols,lineterminator='\n');writer.writeheader()
         for idx,r in enumerate(reader):
-            r['joint_element_id']=str(int(match[idx])+1);r['child_tet_row']=str(int(match[idx]));writer.writerow(r)
-    result=dict(source=sha(source),tetrahedra=sha(mesh/'mesh.ele'),recovered_facets=len(key),missing=0,duplicate=0,changed_incident_row=int(np.count_nonzero(match!=prev)),result=sha(out))
+            target_cell=int(match[idx])
+            if r['face_source_role'] in ('donor_skin_OI_headwall','donor_fat_ID_headwall') and r['parent_source_node_rows']=='[-1,-1,-1]':
+                # The final field names the incident cell in the *current* joint mesh.
+                # Its two source-face fields remain in their immutable atlas domain.
+                origin=json.loads(r['face_ancestry_source_rows'])
+                if (json.loads(r['face_ancestry_parent_face_rows']) != [int(prev[idx])] or
+                    len(origin)!=1 or origin!=json.loads(r['face_ancestry_source_original_ids']) or
+                    origin != [int(labels[target_cell])]):
+                    raise ValueError('Derived wall no longer traces to the same source face')
+                r['face_ancestry_parent_face_rows']=f'[{target_cell}]'
+                corrected_walls+=target_cell!=prev[idx]
+            r['joint_element_id']=str(target_cell+1)
+            r['child_tet_row']=str(target_cell)
+            writer.writerow(r)
+    result=dict(source=sha(source),tetrahedra=sha(mesh/'mesh.ele'),recovered_facets=len(key),reindexed_derived_wall_rows=int(corrected_walls),missing=0,duplicate=0,changed_incident_row=int(np.count_nonzero(match!=prev)),result=sha(out))
     (dest/'facets.json').write_text(json.dumps(result,indent=2)+'\n');print(result)
 if __name__=='__main__':remap(*(Path(s).resolve()for s in sys.argv[1:]))

@@ -13,8 +13,10 @@ static std::string setting(const std::string& key) {
     return value;
 }
 
+#include "verify_volume_bindings.hpp"
+
 int main(int argc, char** argv) try {
-    if (argc != 3) return 2;
+    if (argc != 3 && argc != 4) return 2;
     tissue::PhysicalSkinRegisteredSurfaceCSVFiles files;
     files.donorCount = std::stoul(argv[2]);
     std::vector<tissue::PhysicalSkinDonorFrameRow> frames(files.donorCount);
@@ -58,6 +60,11 @@ int main(int argc, char** argv) try {
     files.d37InnerFaceCount = std::stoul(setting("D37_INNER_FACE_COUNT"));
     files.d37DeepFaceCount = std::stoul(setting("D37_DEEP_FACE_COUNT"));
     files.maxParentRegistrationDistanceM = std::stod(setting("MAX_PARENT_REGISTRATION_DISTANCE_M"));
+    if (argc == 4) {
+        if (std::string(argv[3]) != "--volume") return 2;
+        verifyVolume(files,frames);
+        return 0;
+    }
     tissue::PhysicalSkinRegisteredSurfaceCSVSet imported;
     tissue::PhysicalSkinRegisteredSurfaceCSVReport audit;
     std::string error;
