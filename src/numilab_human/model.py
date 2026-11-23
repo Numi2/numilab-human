@@ -10286,6 +10286,15 @@ def _numi_human_semantic_enthesis_envelope(
     }, "admitted_semantic_multi_enthesis_map"
 
 
+# MyoSim terminal extensor routes and their labeled, same-side distal phalanges.
+_DIGITAL_EXTENSOR_INSERTIONS = {
+    ("EDC2", 1): "FJ3193", ("EDC2_l", 1): "FJ3183",
+    ("EDC3", 1): "FJ3196", ("EDC3_l", 1): "FJ3186",
+    ("EDC4", 1): "FJ3197", ("EDC4_l", 1): "FJ3187",
+    ("EDC5", 1): "FJ3194", ("EDC5_l", 1): "FJ3184",
+}
+
+
 def numi_human_tendon_attachment_envelope_payload(
     myosim_artifact: Path, bone_artifact: Path, output: Path,
     maximum_surface_distance_m: float = 0.012,
@@ -10293,6 +10302,7 @@ def numi_human_tendon_attachment_envelope_payload(
     maximum_force_amplification: float = 4.0,
     migrate_semantic_rigid_foot_endpoints: bool = False,
     maximum_migrated_endpoint_distance_m: float = 0.025,
+    register_digital_extensor_insertions: bool = False,
 ) -> dict[str, Any]:
     """Compile fail-closed BodyParts3D enthesis force-transfer laws.
 
@@ -10310,7 +10320,15 @@ def numi_human_tendon_attachment_envelope_payload(
     the default compiler.  The explicit rigid-foot migration option emits
     NHTENDON3 and moves only 18 route-private, one-to-one named endpoints onto
     their exact registered surface; lumped EDL/FDL endpoints remain fixed.
+    The independent digital-extensor option registers the eight terminal EDC
+    sites to the closest point on their named distal phalanx and rebuilds
+    each four-node traction map about the inferred insertion.
     """
+    migrating_sites = set()
+    if migrate_semantic_rigid_foot_endpoints:
+        migrating_sites.update(_NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES)
+    if register_digital_extensor_insertions:
+        migrating_sites.update(_DIGITAL_EXTENSOR_INSERTIONS)
     for value, label in (
         (maximum_surface_distance_m, "maximum surface distance"),
         (maximum_patch_radius_m, "maximum patch radius"),
@@ -10484,10 +10502,8 @@ def numi_human_tendon_attachment_envelope_payload(
             surfaces = surfaces_by_body.get(body_index, [])
             envelope: dict[str, Any] | None = None
             semantic_key = (name, endpoint_ordinal)
-            migrate_endpoint = (
-                migrate_semantic_rigid_foot_endpoints
-                and semantic_key in _NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES
-            )
+            migrate_endpoint = semantic_key in migrating_sites
+            digital_member = _DIGITAL_EXTENSOR_INSERTIONS.get(semantic_key) if migrate_endpoint else None
             semantic_members = (
                 _NUMI_HUMAN_SEMANTIC_ENTHESIS_MEMBERS.get(semantic_key)
                 or source_component_members.get(semantic_key)
@@ -10654,6 +10670,15 @@ def numi_human_tendon_attachment_envelope_payload(
                         "node_bone_stable_ids": [source_surface["stable_id"]] * 4,
                         "source_endpoint_migration_m": 0.0,
                     }
+            elif digital_member is not None:
+                if len(surfaces) != 1 or surfaces[0]["member_id"] != digital_member:
+                    raise ImportError(f"Terminal extensor {name} has no unique registered {digital_member}")
+                envelope, reason = _numi_human_tendon_surface_envelope(
+                    source_point, surfaces[0], min(maximum_surface_distance_m, maximum_migrated_endpoint_distance_m),
+                    maximum_patch_radius_m, maximum_force_amplification, migrate_endpoint_to_surface=True,
+                )
+                if envelope is None:
+                    raise ImportError(f"Terminal extensor {name} registration failed: {reason}")
             elif semantic_key in source_component_point_reasons:
                 reason = source_component_point_reasons[semantic_key]
             elif not surfaces:
@@ -10886,13 +10911,19 @@ def numi_human_tendon_attachment_envelope_payload(
             })
     if len(endpoint_payload) != 2 * muscle_count:
         raise ImportError("Numi Human tendon envelope endpoint coverage is incomplete")
+    if register_digital_extensor_insertions:
+        admitted = {item["muscle"] for item in endpoint_manifest
+                    if (item["muscle"], 1) in _DIGITAL_EXTENSOR_INSERTIONS and item["endpoint"] == "insertion"
+                    and item["attachment_mode"] == "registered_bone_migrated_distributed_envelope"}
+        if admitted != {name for name, _ in _DIGITAL_EXTENSOR_INSERTIONS}:
+            raise ImportError("Incomplete bilateral terminal extensor registration")
     payload_magic = (
         _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE_MAGIC
-        if migrate_semantic_rigid_foot_endpoints else _NUMI_HUMAN_TENDON_ENVELOPE_MAGIC
+        if migrating_sites else _NUMI_HUMAN_TENDON_ENVELOPE_MAGIC
     )
     payload_abi = (
         _NUMI_HUMAN_TENDON_MIGRATED_ENVELOPE_ABI
-        if migrate_semantic_rigid_foot_endpoints else _NUMI_HUMAN_TENDON_ENVELOPE_ABI
+        if migrating_sites else _NUMI_HUMAN_TENDON_ENVELOPE_ABI
     )
     header = struct.pack(
         "<8s10I32s32s32s", payload_magic,
@@ -10937,14 +10968,11 @@ def numi_human_tendon_attachment_envelope_payload(
             **({
                 "maximum_migrated_endpoint_distance_m":
                     maximum_migrated_endpoint_distance_m,
-            } if migrate_semantic_rigid_foot_endpoints else {}),
+            } if migrating_sites else {}),
             "maximum_patch_radius_m": maximum_patch_radius_m,
             "maximum_sampled_total_force_amplification": maximum_force_amplification,
-            "route_private_surface_migration": migrate_semantic_rigid_foot_endpoints,
-            "migratable_scope": sorted(
-                f"{muscle}:{endpoint}"
-                for muscle, endpoint in _NUMI_HUMAN_RIGID_FOOT_MIGRATABLE_ENTHESES
-            ) if migrate_semantic_rigid_foot_endpoints else [],
+            "route_private_surface_migration": bool(migrating_sites),
+            "migratable_scope": sorted(f"{name}:{endpoint}" for name, endpoint in migrating_sites),
             "multiple_bone_members_fail_closed": True,
             "multiple_bone_exception": (
                 "only exact source-pinned toe maps, declared bilateral hip/tibia/fibula/rigid-foot "
@@ -11137,6 +11165,17 @@ def numi_human_tendon_attachment_envelope_payload(
             "source-authored or clinical enthesis areas."
         ),
     }
+    if register_digital_extensor_insertions:
+        manifest_value["runtime_contract"] = (
+            "Each registered route uses its resolved attachment point. Its four cortical nodes carry "
+            "the terminal force and moment through the articulated point Jacobians."
+        )
+        manifest_value["evidence_boundary"] = (
+            "The eight terminal finger extensor insertions are inferred on the matched distal phalanges. "
+            "The admission map identifies every enabled endpoint migration. Thumb and intermediate guide "
+            "sites retain their existing owners. Native route mechanics and supported motion require "
+            "independent verification."
+        )
     write_json(output / "numi-human-tendon-attachments.manifest.json", manifest_value)
     write_json(output / "numi-human-pack.manifest.json", {
         "schema": "numi.human.pack.v2",

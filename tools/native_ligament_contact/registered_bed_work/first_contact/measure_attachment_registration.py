@@ -1,5 +1,8 @@
 """Locate bilateral native force sites relative to their own rigid cortical surfaces."""
+import argparse
 import ctypes as C
+import hashlib
+import subprocess
 import json
 from pathlib import Path
 import runpy
@@ -11,17 +14,20 @@ from measure_forearm_enclosure import Enclosure
 from verify_native_extensor_pair import loaded
 
 
-def measure(run, routes, reader, library, out):
-    receipt,pose,raw=loaded(run,False,True)
+def measure(run, routes, reader, library, out, compact=False):
+    receipt,pose,raw=loaded(run,False,not compact)
     data=json.loads(routes.read_text())
     if receipt['pack_file_sha256']!=data['pack']:raise ValueError('Unmatched force routes')
     sys.path.insert(0,str(reader.parent/'src'));audit=runpy.run_path(str(reader))
     h=audit['clearance']._PACK_HEADER;d=audit['clearance']._PACK_DIRECTORY
     sections={r[0]:r for r in (d.unpack_from(raw,h.size+i*d.size) for i in range(h.unpack_from(raw)[2]))}
     prim,inst=sections[4],sections[5]
-    reference=run/'native-traces/resting-human.mrvpack'
-    if sha(reference)!=receipt['base_pack_file_sha256']:raise ValueError('Unbound rigid source')
-    source=reference.read_bytes()
+    if compact:
+        source = subprocess.check_output(['zstd', '-qdc', run / 'initial.mrvpack.zst'])
+    else:
+        source = (run / 'native-traces/resting-human.mrvpack').read_bytes()
+    if hashlib.sha256(source).hexdigest() != receipt['base_pack_file_sha256']:
+        raise ValueError('Unbound rigid source')
     base_sections={r[0]:r for r in (d.unpack_from(source,h.size+i*d.size) for i in range(h.unpack_from(source)[2]))}
     bp,bi=base_sections[4],base_sections[5]
     if bp[4]!=prim[4]:raise ValueError('Primitive table changed size')
@@ -67,4 +73,9 @@ def measure(run, routes, reader, library, out):
         scope='Distance of each named force site to the nearest surface owned by its declared rigid body. The nearest point is a diagnostic landmark.',sites=rows),indent=2)+'\n')
 
 
-if __name__=='__main__':measure(*(Path(p).resolve() for p in sys.argv[1:]))
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ('run', 'routes', 'reader', 'library', 'out'):
+        parser.add_argument(name, type=lambda v: Path(v).resolve())
+    parser.add_argument('--compact', action='store_true', help='read the supported-motion replay')
+    measure(**vars(parser.parse_args()))

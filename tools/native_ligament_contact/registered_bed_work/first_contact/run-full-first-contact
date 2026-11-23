@@ -8,7 +8,23 @@ if [[ "${1:-}" == --help ]];then
     "$prior" --help
     echo 'Use --full-first-contact [new-output-directory] for 16 full-volume native steps of 15.625 microseconds each. This exercises contact at release. Supported rest remains unqualified.'
     echo 'Use --check-full-first-contact RUN to check the native terminal frame, registered skin and fat, and anatomical crossings. A failing frame returns a nonzero exit.'
+    echo 'Use --registered-finger-motion [new-output-directory] for 16 seconds of supported native motion with experimentally registered distal finger extensor insertions.'
     exit
+fi
+if [[ "${1:-}" == --registered-finger-motion ]]; then
+    shift
+    [[ $# -le 1 ]] || { echo 'Expected at most one output directory' >&2; exit 2; }
+    source_dir="$here/connected-digit-registration-064/supported-input"
+    [[ -f "$source_dir/launch.json" ]] || { echo 'Missing installed registered tendon scene' >&2; exit 1; }
+    runner_root="$here"
+    while [[ "$runner_root" != / && !( -f "$runner_root/run_bed_work.py" && -f "$runner_root/patch-owner/identities.json" ) ]]; do
+        runner_root=$(dirname "$runner_root")
+    done
+    [[ -f "$runner_root/patch-owner/identities.json" ]] || { echo 'Missing pinned native support owner' >&2; exit 1; }
+    out=${1:-$(mktemp -d "$here/finger-motion.XXXXXX")/run}
+    export NUMI_RETAIN_SUPPORT_GEOMETRY=1
+    exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$runner_root/run_bed_work.py" \
+        "$source_dir" "$runner_root/patch-owner" "$out" 8000 --no-bed-work-audit --intermediate-steps 3999
 fi
 if [[ "${1:-}" == --check-full-first-contact ]]; then
     [[ $# == 2 && -f "$2/execution.json" ]] || { echo 'Expected a completed first-contact run directory' >&2; exit 2; }

@@ -1,0 +1,154 @@
+{
+  "hardware": "Apple M6, 12 GPU cores, Metal 4, macOS 27.0 (26A425)",
+  "compiler_source_parent": "32b410dac504cf4f27a5102885823a08a30a1ad9",
+  "tendon_sha256": "c7003fe9cf9e2eb12099f233680bec63045398c0fff4a2364c0be650b4f4c94e",
+  "supported_original": {
+    "launch": "794a3484c10b37e13201a9c40c3b3c92d7f78758eda0e203a4c4a2e66d41bf57",
+    "native": "bc2817354b911f4013e4500b2c285cc4b9d690cb9d28fdc6bb4f320a1bb75b33",
+    "measured_s": 16.00000076,
+    "cold_wall_s": 172.3723409168888,
+    "cold_factor": 0.09282232099936831,
+    "body_factor": 0.09780287503116027,
+    "warm_factor": 0.100116662399,
+    "trace": {
+      "breaths": 3.0,
+      "complete_filling_ejection_cycles": 19.0,
+      "tidal_ml": 528.815435246,
+      "last_lv_stroke_ml": 69.2871763022,
+      "PaO2_mmhg": 102.711769104,
+      "PaCO2_mmhg": 38.946056366
+    },
+    "pleural_pa": [
+      -770.013977051,
+      -470.339874268
+    ],
+    "last_second_weight_n": 952.8644362797845,
+    "last_second_mean_reaction_n": 952.7125613872515,
+    "last_second_max_com_speed_m_s": 9.000636721742653e-05,
+    "geometry": {
+      "3999": {
+        "accepted_time_s": 7.9980003798846155,
+        "skin_vertices": 54551,
+        "nonocular_pairs": 11502,
+        "skin_self_intersections": 32,
+        "pack_sha256": "d592eac9053c039b569b1e999c924b47c938f45d9ad6e63b41fe1553585400c4"
+      },
+      "8000": {
+        "accepted_time_s": 16.00000075995922,
+        "skin_vertices": 54551,
+        "nonocular_pairs": 11543,
+        "skin_self_intersections": 24,
+        "pack_sha256": "c2379c41c170d4c56c2314f1f249e172d70c8560ed825ae4f3c517ad3814a07e"
+      }
+    }
+  },
+  "supported_registered": {
+    "launch": "dc835df2460c47586712b6340db4751caa679a389561867c2693351eefcb33cd",
+    "native": "bc2817354b911f4013e4500b2c285cc4b9d690cb9d28fdc6bb4f320a1bb75b33",
+    "measured_s": 16.00000076,
+    "cold_wall_s": 172.96436216612346,
+    "cold_factor": 0.09250460938671755,
+    "body_factor": 0.09735401930119765,
+    "warm_factor": 0.0997027962885,
+    "trace": {
+      "breaths": 3.0,
+      "complete_filling_ejection_cycles": 19.0,
+      "tidal_ml": 528.815435246,
+      "last_lv_stroke_ml": 69.2871763022,
+      "PaO2_mmhg": 102.711769104,
+      "PaCO2_mmhg": 38.946056366
+    },
+    "pleural_pa": [
+      -770.013977051,
+      -470.339874268
+    ],
+    "last_second_weight_n": 952.8644362797845,
+    "last_second_mean_reaction_n": 952.4885857692752,
+    "last_second_max_com_speed_m_s": 4.625285200506894e-05,
+    "geometry": {
+      "3999": {
+        "accepted_time_s": 7.9980003798846155,
+        "skin_vertices": 54551,
+        "nonocular_pairs": 11508,
+        "skin_self_intersections": 32,
+        "pack_sha256": "c01ba7cb43037391485508790e142fe6a02ec11f3181189fa650b0f7a8569000"
+      },
+      "8000": {
+        "accepted_time_s": 16.00000075995922,
+        "skin_vertices": 54551,
+        "nonocular_pairs": 11548,
+        "skin_self_intersections": 24,
+        "pack_sha256": "fe28e68511c7222f90028f75dd4ebbf180450742588ac168fefce51513818a6c"
+      }
+    }
+  },
+  "full_volume": {
+    "accepted_steps": 16,
+    "simulated_s": 0.0002500000118743628,
+    "complete_wall_s": 324.53546716598794,
+    "end_to_end_factor": 7.703318655969796e-07,
+    "physical_skin_tissue_pairs": 10764,
+    "layer_crossing_pairs": 29,
+    "skin_self_intersections": 0,
+    "frame_sha256": "aee0e18ba0a9358c3db1b8627133d4ff4a1ebb6b05339ee89ee4ac26ec25180a"
+  },
+  "stress": {
+    "cells": 1448799,
+    "invalid_geometry": 6,
+    "outside_stretch_envelope": 3,
+    "outside_stress_cap": 0,
+    "minimum_stretch": 0.5400449394157466,
+    "maximum_stretch": 1.562904431009483,
+    "peak_stress_Pa": 10461.209344511699,
+    "peak_stress_row": 666727,
+    "passed": false
+  },
+  "full_bed_reaction_n": 0.001842191181822272,
+  "full_weight_n": 952.8644330643456,
+  "full_native": "8761ab73e4df6cdf424b044b2b16dc4163f6631829f052d05334398c863b0754",
+  "native_frame_recovery": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/registered-extensor-native-motion-ed4c65b447c5a2e0.tar.zst",
+  "terminal-skin": {
+    "release_depth_mm": {
+      "EDC2": -3.3608948495272517,
+      "EDC3": 5.166788252862543,
+      "EDC4": 6.640052957872275,
+      "EDC5": -10.129883928680776,
+      "EDC2_l": -5.6793249022106105,
+      "EDC3_l": 3.257500865478238,
+      "EDC4_l": 6.5966093236027215,
+      "EDC5_l": -8.198235719692883
+    },
+    "maximum_skin_face_motion_in_phalanx_frame_mm": 0.6661918468387017
+  },
+  "matched-arms": {
+    "release_depth_mm": {
+      "EDC2": -3.360862159733032,
+      "EDC3": 5.166846430688831,
+      "EDC4": 6.6401041837149855,
+      "EDC5": -10.130129076967165,
+      "EDC2_l": -5.679384371818764,
+      "EDC3_l": 3.257570090618893,
+      "EDC4_l": 6.596634000521943,
+      "EDC5_l": -8.19850890414354
+    },
+    "maximum_skin_face_motion_in_phalanx_frame_mm": 0.007477060538049431
+  },
+  "matched-source": {
+    "release_depth_mm": {
+      "EDC2": -3.360862159733032,
+      "EDC3": 5.166846430688831,
+      "EDC4": 6.6401041837149855,
+      "EDC5": -10.130129076967165,
+      "EDC2_l": -5.679384371818764,
+      "EDC3_l": 3.257570090618893,
+      "EDC4_l": 6.596634000521943,
+      "EDC5_l": -8.19850890414354
+    },
+    "maximum_skin_face_motion_in_phalanx_frame_mm": 0.007477060538049431
+  },
+  "rigid_donor_counterfactual": {
+    "0": 2089,
+    "3999": 23546,
+    "8000": 23314
+  }
+}
