@@ -1,0 +1,3 @@
+The registered tissue tracer now follows connected tetrahedra across repeated dermis–fat interfaces and along supplied unit directions. The original vertical-path interface remains compatible. Replaying the original Numi M6 preparation reproduced both arrays, all 49,209 footprint paths and the original receipt byte for byte.
+
+Walking the installed native footprint found 485 additional paths that reach deep fat after multiple interface transitions. The existing ownership, source-surface correspondence and 45-degree incidence checks admitted zero additional support rows. The current native stock still has 3,564 directly matched material columns. No corresponding native performance or motion gain was measured.

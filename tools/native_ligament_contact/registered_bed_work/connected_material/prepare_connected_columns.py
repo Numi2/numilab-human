@@ -27,10 +27,8 @@ def native_functions(surface_lib, volume_lib):
     return lower,walk
 
 
-def prepare(dense,case,opening,surface_lib,out):
+def load_registered_layers(dense,opening):
     read=lambda p:json.loads(p.read_text())
-    work=Path(__file__).resolve().parent
-    lower,walk=native_functions(surface_lib,work/"trace_columns.dylib")
     pre="NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
     env=read(dense/"launch.json")["environment"]; identities={}
     def pinned(key,identity=None):
@@ -133,8 +131,24 @@ def prepare(dense,case,opening,surface_lib,out):
         f=np.loadtxt(pinned("SURFACE_"+k+"_FACES_CSV","SURFACE_"+k+"_FACES_SHA256"),delimiter=",",skiprows=1,usecols=(1,2,3),dtype="i4")
         epochs[k]=np.ascontiguousarray(nodes[f])
         if k=="O":
-            np.savez_compressed(out/"outer-boundaries.npz",nodes=nodes,triangles=f,
-                                reference_xyz=posed[nodes].astype("f4"),loaded_xyz=current_posed[nodes].astype("f4"))
+            outer_nodes,outer_faces=nodes,f
+    return dict(reference=source,posed=posed,loaded=current_posed,cells=cells,material=mat,element_mass=mass,
+                donor=donor,layers=layers,faces=epochs,outer_nodes=outer_nodes,outer_faces=outer_faces,
+                registration=registration,base_cells=base_cells,mass_by_role=mass_by_role,
+                identities=identities,rigid_loaded=rigid_loaded,root_offset=xr[0]-x[0])
+
+
+def prepare(dense,case,opening,surface_lib,out):
+    read=lambda p:json.loads(p.read_text())
+    work=Path(__file__).resolve().parent
+    lower,walk=native_functions(surface_lib,work/"trace_columns.dylib")
+    m=load_registered_layers(dense,opening)
+    source,posed,current_posed,cells,mat=(m[k] for k in ("reference","posed","loaded","cells","material"))
+    donor,layers,epochs=(m[k] for k in ("donor","layers","faces"))
+    registration,base_cells,mass_by_role,identities,rigid_loaded=(m[k] for k in ("registration","base_cells","mass_by_role","identities","rigid_loaded"))
+    nodes=m["outer_nodes"]
+    np.savez_compressed(out/"outer-boundaries.npz",nodes=nodes,triangles=m["outer_faces"],
+                        reference_xyz=posed[nodes].astype("f4"),loaded_xyz=current_posed[nodes].astype("f4"))
     # Float32 reference coordinates are the same ones carried by the solver.
     deformations=[];emitted=[];loaded=[];quantized_loaded=[]
     for start in range(0,len(cells),50000):
@@ -193,7 +207,7 @@ def prepare(dense,case,opening,surface_lib,out):
                   minimum_determinant_ratio=float(h[sample,3]),original_skin_m=float(data["skin_m"][sample]),original_fat_m=float(data["fat_m"][sample]))
     report=dict(registration=registration,base_cells=base_cells,mass=mass_by_role,
         loaded_state=dict(opening_skeleton_sha256=identities["INSTALLED_CURRENT_SKELETON"],single_rigid_transform=bool(rigid_loaded),
-                          registration_to_loaded_root_offset_m=(xr[0]-x[0]).tolist(),inversions=int(sum(j_loaded<=0)),float32_inversions=int(sum(j_loaded_f32<=0)),
+                          registration_to_loaded_root_offset_m=m["root_offset"].tolist(),inversions=int(sum(j_loaded<=0)),float32_inversions=int(sum(j_loaded_f32<=0)),
                           min_J=float(j_loaded.min()),float32_min_J=float(j_loaded_f32.min())),
         float32_inversions=int(sum(qjac<=0)),float32_min_J=float(qjac.min()),cells=len(cells),nodes=len(posed),source_identities=identities,datum_pose=digest(opening/"terminal.receipt.json"),outer_boundaries=digest(out/"outer-boundaries.npz"),
         enrolled_columns=n,traversal_counts=reasons,projected_area_m2=float(data["area_m2"].sum()),traversed_area_m2=float(data["area_m2"][reached].sum()),

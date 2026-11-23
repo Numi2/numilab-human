@@ -1,4 +1,5 @@
 """Analytic connected and disconnected two-layer tetrahedral samples."""
+import ctypes
 import itertools
 from pathlib import Path
 import numpy as np
@@ -36,6 +37,35 @@ def main(surface_lib,volume_lib):
     info,_=solve(grid,inverted,cells);assert list(info[:,0])==[3,3,1]
     print("Two connected rays and an outside ray verified under reference, deformed, disconnected and inverted geometry.")
 
+def check_reentrant_layers(volume_lib):
+    """A connected ray may cross the folded interface three times before reaching deep fat."""
+    grid=np.array([(x,y,z) for z in range(5) for y in range(2) for x in range(2)],float)
+    cells=[];material=[]
+    for level in range(4):
+        for axes in itertools.permutations(range(3)):
+            point=np.array([0,0,level]);corners=[int(point@[1,2,4])]
+            for a in axes:
+                point[a]+=1;corners.append(int(point@[1,2,4]))
+            p=grid[corners]
+            if np.linalg.det(p[1:]-p[0])<0:corners[1],corners[2]=corners[2],corners[1]
+            cells.append(corners);material.append(15+level%2)
+    tri=np.array([[0,1,3],[0,3,2]],'i4')
+    cells=np.array(cells,'i4');mat=np.array(material,'i4')
+    layer=np.repeat(np.array([1,2,2,2,3],'i4'),4)
+    info=np.zeros((1,5),'i4');h=np.zeros((1,4));length=np.zeros((1,2));seq=np.zeros((1,3),'i4')
+    ptr=lambda d:np.ctypeslib.ndpointer(dtype=d,flags='C_CONTIGUOUS')
+    f8,i4,integer=ptr('f8'),ptr('i4'),ctypes.c_int
+    args=(grid,grid,len(grid),cells,mat,len(cells),layer,tri,len(tri),np.array([0],'i4'),np.array([[.6,.2]]),np.zeros(1),1,info,h)
+    lib=ctypes.CDLL(str(volume_lib));walk=lib.trace_material_directors
+    walk.argtypes=[f8,f8,integer,i4,i4,integer,i4,i4,integer,i4,f8,f8,integer,i4,f8,f8,i4,f8]
+    for unit in (np.array([[0.,0.,1.]]),np.array([[.01,0.,1.]])):
+        unit/=np.linalg.norm(unit)
+        if walk(*args,length,seq,unit) or info[0,0]!=0 or seq[0,0]!=3 or not np.allclose(length,2/unit[0,2]):
+            raise AssertionError("Lost a reentrant or oblique material path")
+    if walk(*args,length,seq,np.array([[0.,0.,2.]]))!=8:raise AssertionError("Accepted a non-unit material direction")
+    print("Three authenticated interface transitions retain both material lengths along vertical and oblique rays.")
+
+
 if __name__=="__main__":
     import sys
-    main(*(Path(x).resolve() for x in sys.argv[1:]))
+    a,b=map(lambda x:Path(x).resolve(),sys.argv[1:]);main(a,b);check_reentrant_layers(b)

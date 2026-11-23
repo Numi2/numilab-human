@@ -40,9 +40,25 @@ bool height(const double* x,const std::array<int,3>& f,double px,double py,doubl
 
 // Outputs per ray: status, crossed cells, interface slot, deep slot, first invalid cell.
 // Coordinates record the outer, interface and deep heights and minimum posed/reference J.
-extern "C" int trace_registered_columns(const double* source,const double* posed,int nodes,
+// Ray/triangle coordinate in metres along the supplied unit director.
+static bool director_height(const double* x,const std::array<int,3>& f,const double* o,
+                            const double* d,double& hit) {
+    const double *a=x+3*f[0],*b=x+3*f[1],*c=x+3*f[2];
+    const std::array<double,3> ab={b[0]-a[0],b[1]-a[1],b[2]-a[2]};
+    const std::array<double,3> ac={c[0]-a[0],c[1]-a[1],c[2]-a[2]};
+    const std::array<double,3> u={o[0]-a[0],o[1]-a[1],o[2]-a[2]};
+    const std::array<double,3> dir={d[0],d[1],d[2]};
+    auto cross=[](auto a,auto b){return std::array<double,3>{a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]};};
+    auto dot=[](auto a,auto b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];};
+    auto p=cross(dir,ac);double det=dot(ab,p);
+    if(std::abs(det)<1.e-18)return false;
+    auto q=cross(u,ab);double v=dot(u,p)/det,w=dot(dir,q)/det;
+    if(v < -1.e-10 || w < -1.e-10 || v+w>1.+1.e-10)return false;
+    hit=o[2]+dot(ac,q)/det;return std::isfinite(hit);
+}
+static int trace_columns_impl(const double* source,const double* posed,int nodes,
     const int* cells,const int* material,int count,const int* layers,const int* outer,int faces,
-    const int* first,const double* xy,const double* z0,int rays,int* info,double* heights) {
+    const int* first,const double* xy,const double* z0,int rays,int* info,double* heights,double* material_length,int* interval,const double* direction=nullptr,double* incidence=nullptr,const Key* interfaces=nullptr,int interface_count=0) {
     if(nodes<=0 || nodes>=(1<<20) || count<=0 || count>100000000 || rays<=0 || faces<=0) return 1;
     std::vector<Face> sorted;sorted.reserve(4ULL*count);
     std::vector<int> neighbor(4ULL*count,-1);
@@ -78,7 +94,11 @@ extern "C" int trace_registered_columns(const double* source,const double* posed
         if(first[i]>=faces)return 6;
         int entered=start[first[i]];
         if(entered<0||material[entered/4]!=15){result[0]=2;continue;}
-        double z=z0[i]; h[0]=z;h[3]=std::numeric_limits<double>::infinity();
+        if(incidence)incidence[i]=1.;
+        const double origin[3]={xy[2*i],xy[2*i+1],z0[i]};
+        double z=z0[i]; double lengths[2]={0.,0.}; int transitions=0;
+        if(interval) { std::fill_n(interval+3*i,3,-1); std::fill_n(material_length+2*i,2,0.); }
+        h[0]=z;h[3]=std::numeric_limits<double>::infinity();
         for(int it=1;;++it){
             const int t=entered/4;result[1]=it;result[4]=t;h[3]=std::min(h[3],jacobian[t]);
             if(!(jacobian[t]>0)){result[0]=3;break;}
@@ -87,14 +107,22 @@ extern "C" int trace_registered_columns(const double* source,const double* posed
             for(int j=0;j<4;++j) {
                 if(j==entered%4)continue;
                 double hit;
-                if(!height(posed,face(c,j),xy[2*i],xy[2*i+1],hit)||hit<=z+1e-11)continue;
+                bool intersects=direction?director_height(posed,face(c,j),origin,direction+3*i,hit):height(posed,face(c,j),origin[0],origin[1],hit);
+                if(!intersects || hit<=z+1.e-11)continue;
                 if(std::abs(hit-next)<=1e-11)edge=true;
                 else if(hit<next){next=hit;exit=4*t+j;edge=false;}
             }
             if(exit<0||edge){result[0]=4;break;}
+            lengths[material[t]-15]+=next-z;
             const auto f=face(c,exit%4);
             auto isLayer=[&](int n){return layers[f[0]]==n&&layers[f[1]]==n&&layers[f[2]]==n;};
             const int other=neighbor[exit];
+            if(interval) {
+                interval[3*i]=transitions;
+                interval[3*i+1]=isLayer(1)?1:isLayer(2)?2:isLayer(3)?3:0;
+                interval[3*i+2]=material[t];
+                std::copy_n(lengths,2,material_length+2*i);
+            }
             if(other<0){
                 if(other==-1 && isLayer(3) && material[t]==16 && std::isfinite(h[1])){
                     result[0]=0;result[3]=exit;result[4]=-1;h[2]=next;
@@ -102,12 +130,53 @@ extern "C" int trace_registered_columns(const double* source,const double* posed
                 break;
             }
             if(material[t]!=material[other/4]){
-                if(material[t]!=15||!isLayer(2)||std::isfinite(h[1])){result[0]=6;break;}
-                h[1]=next;result[2]=exit;
+                if(!isLayer(2) || (!interval && (material[t]!=15 || std::isfinite(h[1])))){result[0]=6;break;}
+                if(interfaces && !std::binary_search(interfaces,interfaces+interface_count,key(f[0],f[1],f[2]))){result[0]=6;break;}
+                if(incidence){
+                    const double *a=posed+3*f[0],*b=posed+3*f[1],*c=posed+3*f[2];
+                    double u[3],v[3];for(int k=0;k<3;k++){u[k]=b[k]-a[k];v[k]=c[k]-a[k];}
+                    const double nx=u[1]*v[2]-u[2]*v[1],ny=u[2]*v[0]-u[0]*v[2],nz=u[0]*v[1]-u[1]*v[0];
+                    const double norm=std::sqrt(nx*nx+ny*ny+nz*nz);
+                    if(!(norm>0.)){result[0]=4;break;}
+                    incidence[i]=std::min(incidence[i],std::abs(nz)/norm);
+                }
+                ++transitions;
+                if(!std::isfinite(h[1])){h[1]=next;result[2]=exit;}
             }
             if(it>=count){result[0]=7;break;}
             z=next;entered=other;
         }
     }
     return 0;
+}
+
+extern "C" int trace_registered_columns(const double* source,const double* posed,int nodes,
+    const int* cells,const int* material,int count,const int* layers,const int* outer,int faces,
+    const int* first,const double* xy,const double* z0,int rays,int* info,double* heights) {
+    return trace_columns_impl(source,posed,nodes,cells,material,count,layers,outer,faces,first,xy,z0,rays,info,heights,nullptr,nullptr);
+}
+extern "C" int trace_material_intervals(const double* source,const double* posed,int nodes,
+    const int* cells,const int* material,int count,const int* layers,const int* outer,int faces,
+    const int* first,const double* xy,const double* z0,int rays,int* info,double* heights,double* lengths,int* intervals) {
+    if(!lengths || !intervals)return 7;
+    return trace_columns_impl(source,posed,nodes,cells,material,count,layers,outer,faces,first,xy,z0,rays,info,heights,lengths,intervals);
+}
+
+extern "C" int trace_material_directors(const double* source,const double* posed,int nodes,
+    const int* cells,const int* material,int count,const int* layers,const int* outer,int faces,
+    const int* first,const double* xy,const double* z0,int rays,int* info,double* heights,double* lengths,int* intervals,const double* directions) {
+    if(!lengths || !intervals || !directions)return 7;
+    for(int i=0;i<rays;i++){
+        auto d=directions+3*i;
+        if(!std::isfinite(d[0]+d[1]+d[2]) || std::abs(d[0]*d[0]+d[1]*d[1]+d[2]*d[2]-1.)>1.e-7)return 8;
+    }
+    return trace_columns_impl(source,posed,nodes,cells,material,count,layers,outer,faces,first,xy,z0,rays,info,heights,lengths,intervals,directions);
+}
+
+extern "C" int trace_qualified_intervals(const double* source,const double* posed,int nodes,
+    const int* cells,const int* material,int count,const int* layers,const int* outer,int faces,
+    const int* first,const double* xy,const double* z0,int rays,int* info,double* heights,double* lengths,int* intervals,
+    double* incidence,const Key* interfaces,int interface_count) {
+    if(!lengths || !intervals || !incidence || !interfaces || interface_count<=0)return 7;
+    return trace_columns_impl(source,posed,nodes,cells,material,count,layers,outer,faces,first,xy,z0,rays,info,heights,lengths,intervals,nullptr,incidence,interfaces,interface_count);
 }
