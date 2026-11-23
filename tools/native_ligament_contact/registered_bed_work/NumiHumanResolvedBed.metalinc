@@ -1,0 +1,96 @@
+// Compiled into the same native skin library. The current support pass already
+// produces every source vertex height. Evaluate the two physical layers only
+// for vertices carrying a positive lower-envelope quadrature weight.
+#include "NumiHumanBedPressureTable.metalinc"
+
+kernel void nm_registered_bed_columns(
+    device const float4* stock [[buffer(0)]], device const uint* heights [[buffer(1)]],
+    device float2* fk [[buffer(2)]], device float4* firstFailure [[buffer(3)]],
+    constant uint& step [[buffer(4)]], uint v [[thread_position_in_grid]]) {
+    const float4 c=stock[v];  // x=projected area, y/z=dermis/adipose thickness
+    fk[v]=0.0f;
+    if (c.x==0.0f) return;
+    float depth=-nm_human_resting_support::orderedFloatValue(heights[v]);
+    if (depth<=0.0f) return;
+    float dmax=dot(c.yz,bedPressureTable[256].xy);
+    if (!(depth<=dmax) || heights[v]==0xffffffffu) {
+        if (firstFailure[v].x==0.0f)
+            firstFailure[v]=float4(float(step+1u),depth,dmax,c.x);
+        fk[v]=float2(NAN);
+        return;
+    }
+    uint lo=0,hi=256;
+    for (uint i=0;i<8;++i) {
+        uint m=(lo+hi)/2u;
+        if (dot(c.yz,bedPressureTable[m].xy)<depth) lo=m; else hi=m;
+    }
+    float a=dot(c.yz,bedPressureTable[lo].xy);
+    float b=dot(c.yz,bedPressureTable[hi].xy);
+    // The tangent is the exact derivative of this piecewise-linear law.
+    float slope=bedPressureStep/(b-a);
+    fk[v]=c.x*float2(float(lo)*bedPressureStep+(depth-a)*slope,slope);
+}
+
+// Every skinning term contributes its share of the pressure integral. First
+// moments give the exact transpose of the native affine point Jacobians.
+struct BedTerm { float4 weightedLocal; uint4 index; };
+kernel void nm_registered_bed_tiles(
+    device const BedTerm* terms [[buffer(0)]], device const uint2* ranges [[buffer(1)]],
+    device const float2* fk [[buffer(2)]], device float4* moments [[buffer(3)]],
+    device float* tangents [[buffer(4)]], uint tile [[threadgroup_position_in_grid]],
+    ushort lane [[thread_index_in_simdgroup]]) {
+    const uint2 r=ranges[tile];float4 f=0.0f;float k=0.0f;
+    for (uint i=r.x+lane;i<r.y;i+=32u) {
+        const BedTerm t=terms[i];const float2 val=fk[t.index.x];
+        f+=t.weightedLocal*val.x;k+=t.weightedLocal.w*val.y;
+    }
+    f=simd_sum(f);k=simd_sum(k);
+    if (lane==0) {moments[tile]=f;tangents[tile]=k;}
+}
+
+kernel void nm_registered_bed_donors(
+    device const uint4* donors [[buffer(0)]],device const float4* partial [[buffer(1)]],
+    device const float* partialK [[buffer(2)]],device float4* sums [[buffer(3)]],
+    device float* stiffness [[buffer(4)]], uint i [[thread_position_in_grid]]) {
+    const uint4 d=donors[i];float4 f=0.0f;float k=0.0f;
+    for (uint j=d.y;j<d.z;++j) { f+=partial[j];k+=partialK[j]; }
+    sums[i]=f;stiffness[i]=k;
+}
+
+kernel void nm_registered_bed_rows(
+    device const uint2* ranges [[buffer(0)]],device const uint4* donors [[buffer(1)]],
+    device const float4* sums [[buffer(2)]],device const float* stiffness [[buffer(3)]],
+    device MRNumiHumanStandContactGPU* contacts [[buffer(4)]],
+    device MRArticulatedPointWorldGPU* points [[buffer(5)]],device float4* low [[buffer(6)]],
+    device float* jac [[buffer(7)]],constant MRHumanRestingSupportDispatchGPU& d [[buffer(8)]],
+    uint2 id [[thread_position_in_grid]]) {
+    const uint row=id.y,scalar=id.x,nv=d.counts.z;
+    // The initial pose-only capture uses rigid contacts and certifies its
+    // immutable global plane. Only the compliant force owner publishes loads.
+    if (contacts[row].planePoint.w==0.0f) return;
+    const uint query=contacts[row].pointQueryIndex,offset=d.strides.y;
+    const uint2 range=ranges[row];float F=0.0f,K=0.0f,action=0.0f;
+    const uint axis=scalar/(nv+1u),component=scalar%(nv+1u);
+    for (uint s=range.x;s<range.y;++s) {
+        const float4 m=sums[s];F+=m.w;K+=stiffness[s];
+        if (m.w==0.0f) continue;
+        const uint p=offset+4u*(donors[s].x-d.identity.x);
+        float4 probe;
+        for (uint j=0;j<4;++j)
+            probe[j]=component==nv ? points[p+j].position[axis]+low[p+j][axis]
+                                  : jac[(3u*(p+j)+axis)*nv+component];
+        action+=m.w*probe.x+dot(m.xyz,probe.yzw-probe.xxx);
+    }
+    if (scalar==0u) {
+        contacts[row].planePoint.x=F;
+        contacts[row].planePoint.y=K;
+        contacts[row].planePoint.z=-2.0f;
+    }
+    if (!(F>0.0f) || !isfinite(F)) return;
+    if (component==nv) {
+        // One lane owns one packed scalar. Vector stores would race on
+        // adjacent components of this three-axis publication.
+        reinterpret_cast<device float*>(&points[query].position)[axis]=action/F;
+        reinterpret_cast<device float*>(&low[query])[axis]=0.0f;
+    } else jac[(3u*query+axis)*nv+component]=action/F;
+}

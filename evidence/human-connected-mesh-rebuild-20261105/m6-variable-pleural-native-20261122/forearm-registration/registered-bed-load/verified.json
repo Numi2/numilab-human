@@ -1,0 +1,75 @@
+{
+  "parent": "87f13a2ddecf3530d2891c3196b966629ab2fcf17fc6aad73c23de46d387ee0b",
+  "device": "Apple M6",
+  "gpu_shader": "856f4207508ab176612d315bd8e8fa5c870904c73eead02b017b4032e5dc0cf9",
+  "stand_shader": "055a064960f8fce184315be95944f3bb92278e3413da2a366334103a47cb5400",
+  "executable": "3aa9d49a815d36e67b02aa8c35cc4462cd0167386a5e33b9503468fcc9a8178c",
+  "control_match": true,
+  "admitted_endpoint": {
+    "step": 8,
+    "time_s": 0.01600000075995922,
+    "physical_root": "0x3268024503acfa51",
+    "pose": "b70372169d768b4c5c58c332e89b4291f9e6cb13246145b9e15be03e0449d274",
+    "columns": "cff17be7531b5fd459c3325de7ddcb305b0053a1cb9cf1e6afcaac3a685a2f0b",
+    "map": "72948043769a54b225b78691ceeb5a8dcec4ebe6022c1b00269341700967bf34",
+    "influences": "1037ed7c66830f00991ccaeb52f729e8a2a5100d33fe610a3b038cac0f62230e",
+    "checked_columns": 49294,
+    "opening_replay_error_m": 2.2680328498614344e-07,
+    "count_beyond_material_domain": 0,
+    "resolved_count": 0,
+    "largest_signed_excess_m": -2.4371916782863195e-05,
+    "witnesses": []
+  },
+  "rejected_endpoint": {
+    "step": 9,
+    "time_s": 0.018000000854954123,
+    "physical_root": "0x4c20880b80614645",
+    "pose": "49371d0349528bed32210bfaf69b7a197d365b4e2152f8900a75794225d2e141",
+    "columns": "cff17be7531b5fd459c3325de7ddcb305b0053a1cb9cf1e6afcaac3a685a2f0b",
+    "map": "72948043769a54b225b78691ceeb5a8dcec4ebe6022c1b00269341700967bf34",
+    "influences": "1037ed7c66830f00991ccaeb52f729e8a2a5100d33fe610a3b038cac0f62230e",
+    "checked_columns": 49294,
+    "opening_replay_error_m": 2.2680328498614344e-07,
+    "count_beyond_material_domain": 3,
+    "resolved_count": 3,
+    "largest_signed_excess_m": 0.00033194318929642783,
+    "witnesses": [
+      {
+        "vertex": 17764,
+        "region": 1,
+        "physical_depth_m": 0.0017625267568030227,
+        "allowed_depth_m": 0.001430583567506595
+      },
+      {
+        "vertex": 17765,
+        "region": 1,
+        "physical_depth_m": 0.0017225612318983261,
+        "allowed_depth_m": 0.001430583567506595
+      },
+      {
+        "vertex": 18369,
+        "region": 1,
+        "physical_depth_m": 0.0016689012409129753,
+        "allowed_depth_m": 0.001430583567506595
+      }
+    ]
+  },
+  "live_material_witness": {
+    "invalid_columns_observed": 3,
+    "pre_dynamics_step": 9,
+    "vertex": 17764,
+    "region": 1,
+    "depth_m": 0.00176251376979,
+    "allowed_depth_m": 0.00143058365211,
+    "area_m2": 8.74160541571e-05
+  },
+  "accepted_brain_time_us": 18000,
+  "first_failed_candidate_brain_time_us": 20000,
+  "virtual_work": {
+    "max_relative_force_error": 1.81907601511e-05,
+    "max_relative_tangent_error": 0.00186595811584,
+    "max_force_normalized_transfer_error": 1.46363074063e-05,
+    "open_row_N": 0,
+    "excess_strain_propagated": true
+  }
+}

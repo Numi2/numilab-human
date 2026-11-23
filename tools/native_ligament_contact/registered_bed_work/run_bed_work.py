@@ -11,9 +11,9 @@ def digest(p):
 
 def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
     parent = json.loads((source / "launch.json").read_text())
-    if parent["headless"] or steps <= 0 or steps > 32000 or steps % 32:
+    if parent["headless"] or steps <= 0 or steps > 32000 or (steps > 32 and steps % 32):
         raise ValueError(
-            "Expected visible supported 2ms scene and complete 32-step samples"
+            "Expected visible supported 2ms scene and a short prefix or complete 32-step samples"
         )
     for name, d in parent["pins"].items():
         if digest(name) != d:
@@ -52,6 +52,8 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
         env["NUMI_HUMAN_RESTING_COMMON_FAILURE_RECEIPT"] = str(out / "failure.json")
         if enabled:
             env["NUMI_HUMAN_THORACIC_BED_AUDIT_END_STEP"] = str(steps)
+        if env.get("NUMI_HUMAN_RESOLVED_BED_WITNESS"):
+            env["NUMI_HUMAN_COMPLETE_BED_FOOTPRINT_CSV"] = str(out / "registered-bed-columns.csv")
         if os.environ.get("NUMI_CAPTURE_BED_COLUMNS") == "1":
             env["NUMI_HUMAN_BED_QUADRATURE_CAPTURE"] = "1"
         pins = {**parent["pins"], **{str(owner / n): d for n, d in identities.items()}}
@@ -96,13 +98,10 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
             # A surface inspection can stop the native scene after an accepted
             # mechanics segment. Keep the physical observations already written.
             for name in (
-                "resting-surface-audit.csv",
-                "resting-coupled.csv",
+                "resting-surface-audit.csv", "resting-coupled.csv",
                 "resting-support-selected-skin-witness.csv",
-                "resting-com-support-impulses.csv",
-                "resting-local-bed-sections.csv",
-                "resting-local-bed-footprint.csv",
-                "resting-support-point-motion.csv",
+                "resting-com-support-impulses.csv", "resting-local-bed-sections.csv",
+                "resting-local-bed-footprint.csv", "resting-support-point-motion.csv",
             ):
                 if (live / name).is_file():
                     shutil.copy2(live / name, out / name)
@@ -114,6 +113,11 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
         if r["physical_endpoint"] != "accepted" or r["accepted_step"] != steps:
             raise ValueError("No matching accepted physical endpoint")
         shutil.copy2(receipt, out / "terminal.receipt.json")
+        if env.get("NUMI_HUMAN_RESOLVED_BED_WITNESS"):
+            from audit_terminal_bed import inspect
+            curves, = [Path(k) for k in parent["pins"] if k.endswith("/curves.json")]
+            proof = inspect(receipt,out / "registered-bed-columns.csv",curves)
+            (out / "terminal-bed-certificate.json").write_text(json.dumps(proof,indent=2) + "\n")
         if os.environ.get("NUMI_RETAIN_SUPPORT_GEOMETRY") == "1":
             for name, artifact, identity in (
                 ("initial", live / "resting-human.mrvpack", r["base_pack_file_sha256"]),
@@ -168,6 +172,8 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
             needed.append("resting-thoracic-bed-work.csv")
         for name in needed:
             shutil.copy2(live / name, out / name)
+        if env.get("NUMI_HUMAN_RESOLVED_BED_WITNESS") and proof["count_beyond_material_domain"]:
+            raise ValueError("Terminal physical skin/fat is outside its registered material domain")
 
 
 if __name__ == "__main__":
@@ -177,12 +183,6 @@ if __name__ == "__main__":
     for key in ("source", "owner", "out"):
         parser.add_argument(key, type=lambda v: Path(v).resolve())
     parser.add_argument("steps", type=int)
-    parser.add_argument(
-        "--no-bed-work-audit",
-        "--disabled",
-        dest="enabled",
-        action="store_false",
-        help="Skip only the optional thoracic bed virtual-work observer.",
-    )
+    parser.add_argument("--no-bed-work-audit", "--disabled", dest="enabled", action="store_false", help="Skip only the optional thoracic bed virtual-work observer.")
     parser.add_argument("--intermediate-steps", type=int, nargs="+", default=[])
     run(**vars(parser.parse_args()))

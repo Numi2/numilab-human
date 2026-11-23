@@ -1,0 +1,18 @@
+#!/bin/bash
+set -euo pipefail
+here=$(dirname "$(realpath "$0")")
+parent=$(dirname "$here")
+case "${1:-}" in
+    --help)
+        "$parent/run-supported-human" --help
+        echo 'Use --resolved-contact for the real per-vertex material contact test; it returns a failure when the material domain is exceeded.'
+        echo 'Use --resolved-contact-prefix for the measured eight-step release and its independent endpoint certificate.'
+        exit 0 ;;
+    --resolved-contact) steps=32 ;;
+    --resolved-contact-prefix) steps=8 ;;
+    *) exec "$parent/run-supported-human" "$@" ;;
+esac
+shift
+if (( $# > 1 )); then exit 2; fi
+out=${1:-$(mktemp -d "$here/registered-contact.XXXXXX")/run}
+exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/run_bed_prefix.py" "$here/live-source" "$here/live-owner" "$out" "$steps"
