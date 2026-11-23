@@ -1,0 +1,228 @@
+{
+  "recovery": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/supported-shoulder-girdle-1054c0a9d4f00c89-20261123.tar.zst",
+  "archive_sha256": "6c41e1776b9c051ffe42bf371afbd33e3b7ed85a7c25ba0eb584365022ff772d",
+  "recovered_files": 88,
+  "bone_sha256": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+  "rigid": {
+    "launch": "2f6f68d5efaa8fac534348cd404211e9018e04dc1ac490579a5c5cfd97be1b37",
+    "control": "c10924a45efc1cfb3916bd22baabeeca491da5e412bbaad37b1328fe364db53d",
+    "source": "280d297aa496acccf3f1c5373a1304d23f9569362c2d6960910128bfba144975",
+    "selected": {
+      "l": "0dbfdc41a27193f41df75384873f875b849271c51a1224c42313d1872962df35",
+      "r": "dcf36ee0bfa9209c4e398978d9850e62ad571b9b89f29d66e6428371f86a5918"
+    },
+    "candidate": "bf26a498f7a16839ae10865d66ca210e23d57c7b132c49053554c200323df6f9",
+    "body_count": 103,
+    "changed_source_bodies": 66,
+    "changed_joint_rows": [
+      34,
+      84
+    ],
+    "max_rest_position_error_m": 7.379966428746412e-08,
+    "max_rest_rotation_error_rad": 1.1254857382036754e-07
+  },
+  "original_separate_bone_pairs": 78,
+  "candidate_separate_bone_pairs": 75,
+  "introduced_pairs": [],
+  "removed_pairs": [
+    [
+      10,
+      12
+    ],
+    [
+      10,
+      41
+    ],
+    [
+      11,
+      13
+    ]
+  ],
+  "source_axis_discrepancy_mm": {
+    "l": 39.32530150365623,
+    "r": 40.312459201781486
+  },
+  "retained_poses": 254,
+  "girdle_pairs_per_pose": 1089,
+  "new_pairs_in_motion": {},
+  "shoulder_maximum_mm3": [
+    0.0,
+    0.0
+  ],
+  "vascular": {
+    "source": "3b0acb6146358f3302f2b85e2214bafa9f2fae7b0e51af70fd0838d6609da4a4",
+    "candidate": "741a6b276015c4196dee4028ccc79260bce2b547521ddcc3e1795f2b2557f87c",
+    "source_parent": "50819725026ac710da1cd98e36489ac8d650b4a2b27fc5a5da812d25072e6120",
+    "candidate_parent": "44f050abab96b0f0f5d8f004b94c5244861a559429536ea1144da5196b8dd92a",
+    "rows": {
+      "475": {
+        "welded_control": 0,
+        "welded_candidate": 0,
+        "native_seam_opening_m": 0.0,
+        "registered_point_error_m": 6.348043210584262e-08,
+        "native_map": {
+          "vertex_count": 902,
+          "max_euclidean_residual_m": 2.38999946897409e-07,
+          "max_euclidean_residual_vertex": 293,
+          "max_absolute_component_residual_m": 2.384185791015625e-07,
+          "p95_euclidean_residual_m": 1.2013700229374393e-07,
+          "mean_euclidean_residual_m": 1.7085235654782904e-08,
+          "count_over_2um": 0
+        }
+      },
+      "477": {
+        "welded_control": 0,
+        "welded_candidate": 0,
+        "native_seam_opening_m": 0.0,
+        "registered_point_error_m": 6.356332615753746e-08,
+        "native_map": {
+          "vertex_count": 1089,
+          "max_euclidean_residual_m": 2.38999946897409e-07,
+          "max_euclidean_residual_vertex": 308,
+          "max_absolute_component_residual_m": 2.384185791015625e-07,
+          "p95_euclidean_residual_m": 1.2013700229374393e-07,
+          "mean_euclidean_residual_m": 1.732633929348149e-08,
+          "count_over_2um": 0
+        }
+      }
+    },
+    "unchanged_anatomy_rows": 523,
+    "rigid_sha256": "bf26a498f7a16839ae10865d66ca210e23d57c7b132c49053554c200323df6f9"
+  },
+  "attachment_wrench_tests": 210,
+  "sites": 60,
+  "wraps": 4,
+  "endpoints": 26,
+  "envelopes": 6,
+  "max_wrench_force_error": 1.618951264782979e-08,
+  "max_wrench_moment_error_m": 1.3770855351509203e-09,
+  "internal_cavities": {
+    "source_material": "297b791a17383ea6d8f8e5c10771e489729ff01d55aad49f60f23be42f776dd0",
+    "cortical_registration": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "layer_domains": {
+      "l": "40dfd23273e5b9f98709b994e09d9a9692621f9a5942d21faa4f817ef3944331",
+      "r": "3d2843a97f5de7852763f0504aa7387db5f643954e695b63ba6496e3856605ed"
+    },
+    "sides": {
+      "l": {
+        "15": {
+          "control_mm3": 807010.4120673223,
+          "removed_overlap_mm3": 95.93066149467391,
+          "remaining_mm3": 806914.4814058276,
+          "overlap_after_mm3": 1.186550857568136e-15,
+          "volume_ledger_error_mm3": 0.0,
+          "source_outer_facets": 4748,
+          "changed_outer_facets": 0,
+          "cut_facets": {
+            "9": 64,
+            "11": 444,
+            "13": 0
+          },
+          "collapsed_float32_faces": 0
+        },
+        "16": {
+          "control_mm3": 2832490.669134099,
+          "removed_overlap_mm3": 5398.684758964861,
+          "remaining_mm3": 2827091.984375134,
+          "overlap_after_mm3": -7.178662556786526e-14,
+          "volume_ledger_error_mm3": 0.0,
+          "source_outer_facets": null,
+          "changed_outer_facets": null,
+          "cut_facets": {
+            "9": 417,
+            "11": 2557,
+            "13": 471
+          },
+          "collapsed_float32_faces": 0
+        }
+      },
+      "r": {
+        "15": {
+          "control_mm3": 811721.4817321323,
+          "removed_overlap_mm3": 0.0,
+          "remaining_mm3": 811721.4817321323,
+          "overlap_after_mm3": 0.0,
+          "volume_ledger_error_mm3": 0.0,
+          "source_outer_facets": 6953,
+          "changed_outer_facets": 0,
+          "cut_facets": {
+            "8": 0,
+            "10": 0,
+            "12": 0
+          },
+          "collapsed_float32_faces": 0
+        },
+        "16": {
+          "control_mm3": 2884484.23110424,
+          "removed_overlap_mm3": 453.19567384280305,
+          "remaining_mm3": 2884031.0354303964,
+          "overlap_after_mm3": -3.877161178916788e-14,
+          "volume_ledger_error_mm3": 4.656612873077393e-10,
+          "source_outer_facets": null,
+          "changed_outer_facets": null,
+          "cut_facets": {
+            "8": 125,
+            "10": 186,
+            "12": 272
+          },
+          "collapsed_float32_faces": 0
+        }
+      }
+    }
+  },
+  "declined_material_transfers": [
+    {
+      "transition_m": 0.03,
+      "moved_nodes": 152615,
+      "inverted": 939,
+      "min_jacobian": -2455.2230903012573,
+      "jacobian_quantiles": [
+        0.6439985462461625,
+        0.9999999999884185,
+        1.0,
+        1.0000000000035756,
+        1.0000000000851854
+      ],
+      "changed_volume_m3": -0.0002008881549554344,
+      "parent_mass_kg": 13.939679709969152,
+      "min_bed_m": -0.00978254960677868,
+      "prior_min_bed_m": 4.043023693611758e-08
+    },
+    {
+      "transition_m": 0.06,
+      "moved_nodes": 158542,
+      "inverted": 575,
+      "min_jacobian": -435.56531019811246,
+      "jacobian_quantiles": [
+        0.7860535157891702,
+        0.9999999840912074,
+        1.0,
+        1.0000000000115574,
+        1.0000826297469094
+      ],
+      "changed_volume_m3": -0.0001439712071982733,
+      "parent_mass_kg": 13.939679709969152,
+      "min_bed_m": -0.008894234484467729,
+      "prior_min_bed_m": 4.043023693611758e-08
+    },
+    {
+      "transition_m": 0.09,
+      "moved_nodes": 169103,
+      "inverted": 517,
+      "min_jacobian": -358.7019263493996,
+      "jacobian_quantiles": [
+        0.8588933172188864,
+        0.9997062479140042,
+        1.0,
+        1.000101864331435,
+        1.0074527126836104
+      ],
+      "changed_volume_m3": -0.00010125958600458385,
+      "parent_mass_kg": 13.939679709969152,
+      "min_bed_m": -0.00871085036753398,
+      "prior_min_bed_m": 4.043023693611758e-08
+    }
+  ],
+  "native_failure": "BodyParts3D bone and soft-tissue payloads have different visual registrations",
+  "native_accepted_steps": 0
+}
