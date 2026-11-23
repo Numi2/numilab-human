@@ -1,0 +1,107 @@
+{
+  "control": {
+    "launch": "7562dd87a27fe334544b2d9f838ca1700d27e1446d1420a6fd34ee67d66a56a3",
+    "binary": "53e9443c9dd2efa0a037a0b8409923ae4bb4c1762780f67066e66169d4b0aa0d",
+    "mode": "unscaled",
+    "accepted_s": 6.25000029686e-05,
+    "cold_wall_s": 184.87168383412063,
+    "body_wall_s": 42.858665584,
+    "cold_factor": 3.3807234116328617e-07,
+    "body_factor": 1.4582815894278148e-06,
+    "material": {
+      "cells": 1448799,
+      "invalid_geometry": 0,
+      "outside_stretch_envelope": 0,
+      "outside_stress_cap": 0,
+      "minimum_stretch": 0.8145344567844909,
+      "maximum_stretch": 1.3360167250937975,
+      "peak_stress_Pa": 26054.849159174883,
+      "peak_stress_row": 375460,
+      "passed": true
+    },
+    "final_reaction_N": 1.503083879583755e-05,
+    "active_columns": [
+      111,
+      113,
+      105,
+      162
+    ],
+    "active_cycles": [
+      7,
+      8,
+      8,
+      11
+    ],
+    "coarse": null,
+    "geometry": {
+      "checked_banks": 878,
+      "layer_crossing_pairs": 0,
+      "skin_self_intersections": 0,
+      "physical_skin_tissue_pairs": 10761
+    },
+    "accepted_positions": "a5aafcc8272568de31076f764942cc53a64a7558b4f858ce188635ee240378a2"
+  },
+  "candidate": {
+    "launch": "b191692c925e033ac94650af74410c4eb19bd9222e407318c80009c88debbf78",
+    "binary": "53e9443c9dd2efa0a037a0b8409923ae4bb4c1762780f67066e66169d4b0aa0d",
+    "mode": "bed",
+    "accepted_s": 6.25000029686e-05,
+    "cold_wall_s": 196.40384812490083,
+    "body_wall_s": 54.205112833,
+    "cold_factor": 3.1822188600324076e-07,
+    "body_factor": 1.1530278178950822e-06,
+    "material": {
+      "cells": 1448799,
+      "invalid_geometry": 0,
+      "outside_stretch_envelope": 0,
+      "outside_stress_cap": 0,
+      "minimum_stretch": 0.8145335525825101,
+      "maximum_stretch": 1.336022285860332,
+      "peak_stress_Pa": 19998.146383669075,
+      "peak_stress_row": 375460,
+      "passed": true
+    },
+    "final_reaction_N": 1.517773284831492e-05,
+    "active_columns": [
+      111,
+      113,
+      105,
+      162
+    ],
+    "active_cycles": [
+      7,
+      8,
+      8,
+      11
+    ],
+    "coarse": {
+      "root": 3,
+      "mode_count": 6,
+      "factor_valid_last_linearization": 1,
+      "nonzero_adds_cumulative": 491,
+      "factor_attempts_cumulative": 64,
+      "valid_factors_cumulative": 64
+    },
+    "geometry": {
+      "checked_banks": 878,
+      "layer_crossing_pairs": 0,
+      "skin_self_intersections": 0,
+      "physical_skin_tissue_pairs": 10761
+    },
+    "accepted_positions": "8985f67b3071057f9b487df48d4dfdf6e2cc24eb1dd7ca74ba34db57de97a08d"
+  },
+  "maximum_material_position_difference_m": 2.3179125511029667e-09,
+  "maximum_trace_absolute_differences": {
+    "time_s": 0.0,
+    "lung_volume_ml": 0.0,
+    "pleural_pa": 0.0,
+    "PaCO2_mmhg": 0.0,
+    "PaO2_mmhg": 0.0,
+    "blood_ml": 0.0,
+    "lv_ml": 0.0,
+    "rv_ml": 0.0
+  },
+  "body_wall_change_fraction": 0.26474102948356504,
+  "cold_wall_change_fraction": 0.06237928952455274,
+  "same_physical_columns": true
+}
