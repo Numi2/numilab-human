@@ -1,0 +1,126 @@
+{
+  "native_source": "351a3b29288f6f9ca82d816930d88899d1b82a84d4216183fe5ca716a85b66c3",
+  "mass_kg": {
+    "15": 3.452571282803902,
+    "16": 10.48710842716525
+  },
+  "materials": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "nodes": 311020,
+  "tetrahedra": 1448799,
+  "ports": 19,
+  "deep_attachments": 14,
+  "steps": [
+    {
+      "step_s": 1.5625e-05,
+      "nodes": 27,
+      "bound": 0.0018297065349045525,
+      "nested_solve_nodes": 102,
+      "nested_difference": 0.0017521538184103594
+    },
+    {
+      "step_s": 0.000125,
+      "nodes": 187,
+      "bound": 0.0006698186614449825,
+      "nested_solve_nodes": 473,
+      "nested_difference": 6.825085217135218e-05
+    },
+    {
+      "step_s": 0.0005,
+      "nodes": 471,
+      "bound": 0.0011788099299734887,
+      "nested_solve_nodes": 895,
+      "nested_difference": 3.668096629129426e-05
+    },
+    {
+      "step_s": 0.001,
+      "nodes": 673,
+      "bound": 0.004770132267903874,
+      "nested_solve_nodes": 1439,
+      "nested_difference": 3.326118746640142e-05
+    },
+    {
+      "step_s": 0.002,
+      "nodes": 4643,
+      "bound": 0.0056841689823366355,
+      "nested_solve_nodes": 6766,
+      "nested_difference": 4.235457637597713e-06
+    }
+  ],
+  "native_endpoint": {
+    "frame": "0584fda9890621123db0d6f11ed72096ec734e8ee0b3c2f01ddd3321448b1e09",
+    "crossings": 29,
+    "both_faces_on_main": 26,
+    "cell_failures": 8,
+    "failure_components": [
+      {
+        "cell": 859174,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 897690,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 958916,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 993861,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 1217389,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 1227442,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 1314301,
+        "component": 0,
+        "material": 16
+      },
+      {
+        "cell": 1354618,
+        "component": 0,
+        "material": 16
+      }
+    ]
+  },
+  "weighted_registration": {
+    "weighted-terminal": {
+      "inverted_main": 237,
+      "inverted_other": 0,
+      "failed_main": 15726,
+      "failed_other": 0
+    },
+    "weighted-middle": {
+      "inverted_main": 237,
+      "inverted_other": 0,
+      "failed_main": 12644,
+      "failed_other": 0
+    }
+  },
+  "unilateral_registration": {
+    "terminal": {
+      "minimum_gap_m": -2.947674656444965e-19,
+      "inverted": 253,
+      "geometric_failures": 15989
+    },
+    "middle": {
+      "minimum_gap_m": -2.320870275476783e-19,
+      "inverted": 256,
+      "geometric_failures": 12956
+    }
+  }
+}
