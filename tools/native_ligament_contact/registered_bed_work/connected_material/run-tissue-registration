@@ -1,0 +1,19 @@
+#!/bin/bash
+set -eu
+here=$(dirname "$(realpath "$0")")
+parent=$(dirname "$here")
+case "${1:-}" in
+    --help)
+        "$parent/run-material-support" --help
+        echo 'Use --registered-material to replay the 79-step registered-pose release with measured muscle recruitment.'
+        echo 'Use --registered-material-16s to request 16 seconds. The current material limit rejects trial 80.'
+        exit 0 ;;
+    --registered-material) steps=79 ;;
+    --registered-material-16s) steps=8000 ;;
+    *) exec "$parent/run-material-support" "$@" ;;
+esac
+shift
+if (( $# > 1 )); then exit 2; fi
+out=${1:-$(mktemp -d "$here/registered-material.XXXXXX")/run}
+export PYTHONPATH="$parent${PYTHONPATH:+:$PYTHONPATH}"
+exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/run_registered_material.py" "$here/calibrated/recruited-source" "$here/calibrated/native" "$out" "$steps"

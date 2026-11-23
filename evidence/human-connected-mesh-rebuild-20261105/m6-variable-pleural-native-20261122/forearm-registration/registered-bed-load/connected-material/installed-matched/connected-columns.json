@@ -1,0 +1,85 @@
+{
+  "registration": {
+    "global_rotation_residual_rad": 1.661763150966793e-09,
+    "global_origin_residual_m": 4.497462273930264e-09,
+    "global_node_residual_m": 4.573530930766057e-09,
+    "single_rigid_transform": true
+  },
+  "base_cells": 1448804,
+  "mass": {
+    "skin_kg": 3.452571282803902,
+    "fat_kg": 10.48710842716525,
+    "total_kg": 13.939679709969152,
+    "nodal_kg": 13.939679709969152
+  },
+  "loaded_state": {
+    "inversions": 0,
+    "float32_inversions": 0,
+    "min_J": 0.6374671848165763,
+    "float32_min_J": 0.6374667585012596
+  },
+  "float32_inversions": 0,
+  "float32_min_J": 0.9875067011408756,
+  "cells": 1448799,
+  "nodes": 311020,
+  "source_identities": {
+    "TETGEN_NODE": "351a3b29288f6f9ca82d816930d88899d1b82a84d4216183fe5ca716a85b66c3",
+    "TETGEN_ELEMENTS": "960f956cf55f681784de38e620a01d4c75f1baaac60f5dd99a3f65df1c323755",
+    "COMBINED_NODE_MAP_CSV": "0030b87531d04fe5cee3ebb8ae86750b583041b495827bd7b50b677fcbf1c30a",
+    "CAVITY_REPLACEMENTS": "3cf9d840abf1196c651937249639c18c386b8c37f892485e1a713e3102f5554d",
+    "INSTALLED_TETRAHEDRA": "20f351d51da18ceba60540138eb2720a112283a9b5426559c554fa31243949f6",
+    "INSTALLED_CURRENT_NODES": "dbba22b6a021d3b5d4c243a7f563f742827e05c6b88c8c66caa095d0c0f950c4",
+    "MASS_FLOW": "bb538d201dda3298c94f02642af291274081a6db1685ee3ba118a06f56516c9e",
+    "SURFACE_O_FACES_CSV": "8ae2f01ff101668297d2d74f655b4ca8ee0465c4781dc08930254db753034440",
+    "SURFACE_I_FACES_CSV": "ac5b16f7de6cb3495d347dcd053e252e96b26c499cd8b99a6d5ad44da454cb37",
+    "SURFACE_D_FACES_CSV": "fd9bb3dc957f5a2d2c07ddc0c5504dd3bd4b010ab8d58327f000cc3efb071361"
+  },
+  "datum_pose": "a38da3b36008ed0a937b2877b9a04845e44e0f62ad7fc45dd2d2b845531679e8",
+  "enrolled_columns": 49209,
+  "traversal_counts": {
+    "through_skin_and_fat": 32093,
+    "no_outer_face": 4485,
+    "unowned_outer": 0,
+    "invalid_posed_cell": 0,
+    "tangent_or_ambiguous": 3,
+    "exited_before_deep_face": 5878,
+    "material_order": 6750,
+    "cycle": 0
+  },
+  "projected_area_m2": 0.5402860063785937,
+  "traversed_area_m2": 0.4681667500378819,
+  "worst_jacobian_ratio": 0.9999999722755466,
+  "inverted_after_rigid_registration": 0,
+  "posed_cell_ratios": {
+    "15": [
+      0.9999999722755466,
+      0.9999999999622698,
+      1.0,
+      1.0000000000371854,
+      1.0000000252794907
+    ],
+    "16": [
+      0.9999999859227416,
+      0.9999999999402684,
+      1.0,
+      1.000000000058711,
+      1.0000000249362062
+    ]
+  },
+  "shoulder": {
+    "source_vertex": 17764,
+    "status": "through_skin_and_fat",
+    "tet_count": 6,
+    "heights_m": [
+      0.002635862192757709,
+      0.005083289214128971,
+      0.009802085867988752
+    ],
+    "minimum_determinant_ratio": 1.0000000000000004,
+    "original_skin_m": 0.0024520316617063893,
+    "original_fat_m": 0.004252281958129069
+  },
+  "reference_columns": "52804a92bccb079980e5d8ebf51e3a0155495d99fd45d56ce2b157bed99aa32f",
+  "paths": "e951e75457a3129ed97af45527c0f09034b7988c4fa75907d89373ff059813e0",
+  "scope": "Authoring audit of registered material connectivity in the opening pose. No physical state advances."
+}

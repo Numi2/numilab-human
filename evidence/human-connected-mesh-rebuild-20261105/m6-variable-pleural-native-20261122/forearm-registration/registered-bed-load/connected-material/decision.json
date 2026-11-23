@@ -1,0 +1,201 @@
+{
+  "parent_revision": "d8c3cac28c788506545814bb0140561606b4933a",
+  "device": "Apple M6",
+  "accepted_seconds": 0.1580000075045973,
+  "native_root": "0x59474065457d3385",
+  "base_pack_sha256": "2297bcf833bd98bca7f0ac76619193232c3acfb0e1a1da87a5d297b6676f25e5",
+  "binary_sha256": "39183c1401d082d3123835749e6a4f3a2820df61e133adce9d5b5cdd0d885fe8",
+  "installed_cells": 1448799,
+  "installed_mass": {
+    "skin_kg": 3.452571282803902,
+    "fat_kg": 10.48710842716525,
+    "total_kg": 13.939679709969152,
+    "nodal_kg": 13.939679709969152
+  },
+  "old_registered_reference_inversions_f32": 2080,
+  "old_registered_loaded_inversions_f32": 2115,
+  "matched_reference_inversions_f32": 0,
+  "matched_loaded": {
+    "inversions": 0,
+    "float32_inversions": 0,
+    "min_J": 0.6374671848165763,
+    "float32_min_J": 0.6374667585012596
+  },
+  "registered_columns": 3564,
+  "total_positive_columns": 49209,
+  "operative_column_sha256": "65523272a9c742f105de3ba9b9b83e30c1c51f2040cf36e5502807f412329026",
+  "source_area_m2": 0.5402860063785937,
+  "registered_area_m2": 0.1463638617541625,
+  "preserved_body_mass_kg": 97.13195069110952,
+  "control_and_two_updates": [
+    {
+      "case": "pose-control-16",
+      "steps_before_rejection": 73,
+      "seconds_before_rejection": 0.146,
+      "trial": 74,
+      "witness": {
+        "invalid_columns_observed": 1,
+        "material_step_index": 73,
+        "vertex": 17764,
+        "region": 1,
+        "depth_m": 0.126148045063,
+        "allowed_depth_m": 0.12611952424,
+        "area_m2": 8.72169839568e-05
+      }
+    },
+    {
+      "case": "stock-control-16",
+      "steps_before_rejection": 75,
+      "seconds_before_rejection": 0.15,
+      "trial": 76,
+      "witness": {
+        "invalid_columns_observed": 1,
+        "material_step_index": 75,
+        "vertex": 17764,
+        "region": 1,
+        "depth_m": 0.126279130578,
+        "allowed_depth_m": 0.126275002956,
+        "area_m2": 8.72169839568e-05
+      }
+    },
+    {
+      "case": "recruited-16",
+      "steps_before_rejection": 79,
+      "seconds_before_rejection": 0.158,
+      "trial": 80,
+      "witness": {
+        "invalid_columns_observed": 1,
+        "material_step_index": 79,
+        "vertex": 17764,
+        "region": 1,
+        "depth_m": 0.126320928335,
+        "allowed_depth_m": 0.126275002956,
+        "area_m2": 8.72169839568e-05
+      }
+    }
+  ],
+  "cold_wall_s": [
+    15.055800749920309,
+    15.341509750112891
+  ],
+  "cold_end_to_end_factors": [
+    0.01049429453331691,
+    0.010298856506181515
+  ],
+  "sustained_realtime_factor": null,
+  "native_pleural_observations_pa": [
+    -536.836730957,
+    -577.963989258,
+    -594.549987793
+  ],
+  "maximum_observed_root_assistance_n": 0,
+  "maximum_observed_root_assistance_nm": 0,
+  "maximum_observed_mass_residual_kg": 0,
+  "last_gpu_bed_support_N": 939.503446300816,
+  "independent_endpoint_pressure_integral_N": 939.5257229929456,
+  "opening_weight_N": 952.8644332121041,
+  "opening_unbalanced_moment_Nm": [
+    -22.969187352344616,
+    -0.6402584477443827
+  ],
+  "opening_recruitment": "resting_initialization=dynamic_release recruitment_activation_cap=0.25 recruited_muscles=416 active_muscles=262 maximum_activation=0.25 normalized_residual_rms=0.257519831906 maximum_acceleration_residual=311.764891518 floating_root_residual_evaluated=1 maximum_root_acceleration_residual=3.85097895212 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+  "geometry": {
+    "pose-one": {
+      "accepted_step": 1,
+      "accepted_time_s": 0.0020000000949949026,
+      "nonocular_pairs": 8514,
+      "skin_self_intersections": 34
+    },
+    "registered-79": {
+      "accepted_step": 79,
+      "accepted_time_s": 0.1580000075045973,
+      "nonocular_pairs": 8348,
+      "skin_self_intersections": 27
+    }
+  },
+  "motion": {
+    "step": 79,
+    "time_s": 0.1580000075045973,
+    "vertex": 17764,
+    "pelvis_translation_m": -0.03485760860973606,
+    "pelvis_rotation_contribution_m": 0.018595707287443537,
+    "relative_to_pelvis_m": 0.010608576812405771,
+    "total_z_m": -0.005653324509886759,
+    "body_contributions": [
+      {
+        "body": 20,
+        "weight": 0.7511935234069824,
+        "relative_z_m": 0.00810768206621176
+      },
+      {
+        "body": 34,
+        "weight": 0.15409360826015472,
+        "relative_z_m": 0.001638653858510247
+      },
+      {
+        "body": 26,
+        "weight": 0.027909940108656883,
+        "relative_z_m": 0.0003012340196008767
+      },
+      {
+        "body": 41,
+        "weight": 0.026527373120188713,
+        "relative_z_m": 0.00027696445497228374
+      },
+      {
+        "body": 29,
+        "weight": 0.008263210766017437,
+        "relative_z_m": 8.919746184109894e-05
+      },
+      {
+        "body": 23,
+        "weight": 0.005376453977078199,
+        "relative_z_m": 5.8028055008627116e-05
+      },
+      {
+        "body": 84,
+        "weight": 0.00548250088468194,
+        "relative_z_m": 5.765559611891979e-05
+      },
+      {
+        "body": 42,
+        "weight": 0.007419528905302286,
+        "relative_z_m": 1.4744071932645306e-05
+      },
+      {
+        "body": 43,
+        "weight": 0.005307319574058056,
+        "relative_z_m": 1.1956581699040914e-05
+      },
+      {
+        "body": 91,
+        "weight": 0.0007880762568674982,
+        "relative_z_m": 9.302312657149963e-06
+      }
+    ],
+    "positive_skin_donors": 86,
+    "sampled_last_step_support": [
+      {
+        "step": 32,
+        "time_s": 0.06400000303983688,
+        "normal_impulse_last_physical_step_Ns": 1.8967585732025327,
+        "normal_force_last_physical_step_N": 948.3792331373869
+      },
+      {
+        "step": 64,
+        "time_s": 0.12800000607967377,
+        "normal_impulse_last_physical_step_Ns": 1.8820866683090571,
+        "normal_force_last_physical_step_N": 941.0431534115218
+      },
+      {
+        "step": 79,
+        "time_s": 0.1580000075045973,
+        "normal_impulse_last_physical_step_Ns": 1.8790074398275465,
+        "normal_force_last_physical_step_N": 939.503446300816
+      }
+    ],
+    "scope": "Forward-kinematic decomposition of the same native material point. Terms include contact and internal forces acting on all coordinates; a displacement term alone does not identify a force cause."
+  },
+  "qualification_16s": false,
+  "disposition": "Preserve the matched anatomical datum for future physical transfer. Reduced tissue-normal contact still fails the shoulder material domain and whole-body geometry. The dense loaded mesh was checked at initialization; its motion was not integrated in this reduced trajectory."
+}
