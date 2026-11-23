@@ -1,0 +1,70 @@
+{
+  "parent_topology": "1fe61a0c9bd403d4715bd1b4c0e912655234b2e123b56887c5c64ea299fc2a19",
+  "source_positions": "ebf9e631a48d0394c12e9cf6d2a861583fe10c44079ff19af28c97b88ed3c18f",
+  "splice": "675aa22436a78ea240a29492ee8fbb0d483dbcd408c0535f97bf4f00dedcc2f0",
+  "cells": 1450018,
+  "inverted": 0,
+  "below_volume_floor": 9,
+  "below_quality_floor": 218,
+  "unique_failed_cells": 225,
+  "orphan_original_interior_nodes": 150,
+  "missing_registered_boundary_or_attachment_nodes": 0,
+  "regions": [
+    {
+      "material": 15,
+      "configuration": "-pYMQzq8/1O3S2000",
+      "source_cells": 20162,
+      "new_cells": 21559,
+      "new_nodes": 457,
+      "inverted": 0,
+      "small": 8,
+      "low_quality": 126,
+      "union_invalid": 132,
+      "regional_capacity": {
+        "source_mass_kg": 0.06723534936851952,
+        "source_centroid_m": [
+          0.21543485576004545,
+          -0.7951960824405865,
+          0.11565910785185954
+        ],
+        "density_interval_kg_m3": [
+          900.0,
+          1100.0
+        ],
+        "minimum_capacity_kg": 0.06781316982157136,
+        "maximum_capacity_kg": 0.08288276311525389,
+        "feasible": false,
+        "solver_message": "The problem is infeasible. (HiGHS Status 8: model_status is Infeasible; primal_status is None)"
+      }
+    },
+    {
+      "material": 16,
+      "configuration": "-pYMQz",
+      "source_cells": 9177,
+      "new_cells": 8999,
+      "new_nodes": 1,
+      "inverted": 0,
+      "small": 1,
+      "low_quality": 92,
+      "union_invalid": 93,
+      "regional_capacity": {
+        "source_mass_kg": 0.10549921360252709,
+        "source_centroid_m": [
+          0.20934334867454393,
+          -0.7757853881904875,
+          0.10583644933502004
+        ],
+        "density_interval_kg_m3": [
+          850.0,
+          950.0
+        ],
+        "minimum_capacity_kg": 0.09744515933280748,
+        "maximum_capacity_kg": 0.10890929572490249,
+        "feasible": true,
+        "total_error_kg": 4.163336342344337e-17,
+        "first_moment_error_kg_m": 1.7386779678756764e-13
+      }
+    }
+  ],
+  "scope": "Source reference construction. Regional capacity is a feasibility check. Per-carrier allocations and moving-state acceptance remain outstanding."
+}
