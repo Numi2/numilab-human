@@ -1,0 +1,179 @@
+{
+  "scope": "Measured material and wrench response for two load-bearing fibers in the native Metal library. The current whole-body force assembly still uses straight fibers.",
+  "rotational_and_translational_probes": {
+    "fixed": {
+      "coracoclavicular_complex/0": 13,
+      "coracoclavicular_complex/1": 9,
+      "coracohumeral_capsuloligament/0": 13,
+      "coracohumeral_capsuloligament/1": 13,
+      "superior_glenohumeral_capsuloligament/0": 13,
+      "superior_glenohumeral_capsuloligament/1": 13
+    },
+    "switching": {
+      "coracoclavicular_complex/0": 13,
+      "coracoclavicular_complex/1": 13,
+      "coracohumeral_capsuloligament/0": 13,
+      "coracohumeral_capsuloligament/1": 13,
+      "superior_glenohumeral_capsuloligament/0": 13,
+      "superior_glenohumeral_capsuloligament/1": 13
+    }
+  },
+  "force_tests": {
+    "quarter": {
+      "input": "fab0139215daca5b1c48955e837eabb3beb9f805ac60617deaa31d0eb67c61f0",
+      "output": "514a67c34eead90703adebd6371821a3501b7e30900f07764ce93b037fa1630e",
+      "trials": 26,
+      "nonfinite": [],
+      "wrong_features": [],
+      "maximum_force_error_n": 0.0015994644246006828,
+      "maximum_length_error_m": 1.8721252659226195e-08,
+      "maximum_torque_error_nm": 7.470733204950619e-05,
+      "maximum_tension_error_n": 0.002118347958870004,
+      "native": "Apple M6 26 force evaluations 0.000446875 GPU seconds"
+    },
+    "fine": {
+      "input": "601bf5b6fb6322606e532a1304594d7433b14e5c09569fc5b91e23bb16df40d6",
+      "output": "f2b0812fb15df794dae44114d85ae4d08b2cc16d5248c771ed08c50c28faacb2",
+      "trials": 26,
+      "nonfinite": [],
+      "wrong_features": [],
+      "maximum_force_error_n": 0.0012938681087035775,
+      "maximum_length_error_m": 1.366117695356106e-08,
+      "maximum_torque_error_nm": 6.028451061190765e-05,
+      "maximum_tension_error_n": 0.0016969118219520851,
+      "native": "Apple M6 26 force evaluations 0.000081875 GPU seconds"
+    },
+    "coracoclavicular_complex/0": {
+      "translate": {
+        "energy_derivative_force_or_torque": [
+          9.022220106177665,
+          -25.526449885261616,
+          -28.130178496030016
+        ],
+        "native": [
+          9.02214527130127,
+          -25.526275634765625,
+          -28.1300048828125
+        ],
+        "max_absolute_error": 0.00017425049599140152
+      },
+      "rotate": {
+        "energy_derivative_force_or_torque": [
+          0.27335050379104026,
+          0.8286492351683449,
+          -0.6642774259194444
+        ],
+        "native": [
+          0.27334919571876526,
+          0.8286446928977966,
+          -0.6642735600471497
+        ],
+        "max_absolute_error": 4.542270548246741e-06
+      }
+    },
+    "coracoclavicular_complex/1": {
+      "translate": {
+        "energy_derivative_force_or_torque": [
+          -14.945377483711885,
+          -81.16346004370736,
+          -71.62007505320325
+        ],
+        "native": [
+          -14.945195198059082,
+          -81.1625747680664,
+          -71.61931610107422
+        ],
+        "max_absolute_error": 0.0008852756409538642
+      },
+      "rotate": {
+        "energy_derivative_force_or_torque": [
+          0.6008311181542536,
+          -2.085564750294854,
+          2.2380878361742425
+        ],
+        "native": [
+          0.6008246541023254,
+          -2.085543394088745,
+          2.2380642890930176
+        ],
+        "max_absolute_error": 2.3547081224872812e-05
+      }
+    },
+    "metallib": "3eb8c3a02cc2f3542e8875ad828a1f50eb19022cd1f1b67f4781afcb0fc64378",
+    "passed": true
+  },
+  "missing_feature": {
+    "native": "Apple M6 26 force evaluations 0.000336542 GPU seconds",
+    "library": "3eb8c3a02cc2f3542e8875ad828a1f50eb19022cd1f1b67f4781afcb0fc64378",
+    "rejected": [
+      "translate_-1_y",
+      "rotate_1_y",
+      "translate_1_z",
+      "rotate_1_z"
+    ],
+    "valid": 22,
+    "total": 26
+  },
+  "matched_original_scene_shader_regression": {
+    "physical_nodes_identical": true,
+    "replay_identical": true,
+    "coupled_trace_rows": 2,
+    "coupled_trace_identical": true,
+    "elapsed_s": 177.47474208381027,
+    "original_simulated_s": 1.5625000742147677e-05,
+    "parent": "4ee47a0ec74015e7a29746642b241c0ea9cc8092815adef1810352e27e9433bb",
+    "launch": "ed61d099aa5024a8f10b4ee263927996afbf11bb9563ac4a6366f87bd6c5661f",
+    "execution": "60635fe711704ddda74d1ac3889517677cf2d2f462b2bd52c3d693621e991b71",
+    "accepted_steps": 2,
+    "simulated_s": 1.5625000742147677e-05,
+    "factor": 8.804070122141077e-08
+  },
+  "registered_bone_pair_count": 75,
+  "largest_separate_owner_bone_overlaps": [
+    {
+      "bones": [
+        "talus_l",
+        "calcn_l"
+      ],
+      "atlas_mm3": 0.0,
+      "current_mm3": 2527.1467187725407
+    },
+    {
+      "bones": [
+        "talus_r",
+        "calcn_r"
+      ],
+      "atlas_mm3": 0.14273082471816118,
+      "current_mm3": 2181.1133557632693
+    },
+    {
+      "bones": [
+        "femur_l",
+        "pelvis"
+      ],
+      "atlas_mm3": 213.89761072730002,
+      "current_mm3": 564.6016854559788
+    },
+    {
+      "bones": [
+        "femur_l",
+        "tibia_l"
+      ],
+      "atlas_mm3": 3.5039283146415707,
+      "current_mm3": 556.9015064046591
+    },
+    {
+      "bones": [
+        "capitate_r",
+        "thirdmc_r"
+      ],
+      "atlas_mm3": 0.0,
+      "current_mm3": 550.646905232584
+    }
+  ],
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-cortical-ligament-force-de04763518fb8337.tar.zst",
+    "archive_sha256": "82c261677098bd5ad2b091be12caf1140622bfe9315cc2f765714ad8e99cc8c5",
+    "size_bytes": 8450932
+  }
+}

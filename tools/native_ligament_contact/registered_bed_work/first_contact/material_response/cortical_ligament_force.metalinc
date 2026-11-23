@@ -1,0 +1,42 @@
+// One evaluation per candidate and load-bearing fiber. Geometry certification
+// supplies the current edge range. Forces act on the two sides of its free span.
+kernel void nm_numi_human_cortical_ligament_force(
+    device const NMNumiHumanPassiveLigamentGPU* fibers [[buffer(0)]],
+    device const uint4* ranges [[buffer(1)]],
+    device const NHCorticalLigamentEdge* features [[buffer(2)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(3)]],
+    device float4* result [[buffer(4)]],
+    device uint* selectedFeatureRange [[buffer(5)]],
+    constant NMNumiHumanTendonFEMLoadDispatchGPU& dispatch [[buffer(6)]],
+    uint2 gid [[thread_position_in_grid]]) {
+    if(gid.x>=dispatch.passiveLigamentCount || gid.y>=dispatch.environmentCount)return;
+    uint i=gid.y*dispatch.passiveLigamentCount+gid.x;
+    const auto fiber=fibers[gid.x];const uint4 range=ranges[gid.x];
+    selectedFeatureRange[i]=0xffffffffu;
+    result[3*i]=float4(NAN);result[3*i+1]=float4(NAN);result[3*i+2]=float4(NAN);
+    if(!validBody(fiber.firstBodyIndex,dispatch)||!validBody(fiber.secondBodyIndex,dispatch))return;
+    const uint base=gid.y*dispatch.bodyPoseStride;
+    const auto first=poses[base+(fiber.firstBodyIndex-dispatch.articulationFirstBody)];
+    const auto second=poses[base+(fiber.secondBodyIndex-dispatch.articulationFirstBody)];
+    const float4 a=first.position,qa=first.orientation,b=second.position,qb=second.orientation;
+    if(fiber.flags!=NM_NUMI_HUMAN_PASSIVE_LIGAMENT_ACTIVE || range.y==0 ||
+       abs(dot(qa,qa)-1.0f)>1e-5f || abs(dot(qb,qb)-1.0f)>1e-5f)return;
+    const float3 p=fiber.firstLocalPoint.xyz;
+    const float3 target=humanQuaternionRotate(float4(-qa.xyz,qa.w),
+        b.xyz-a.xyz+humanQuaternionRotate(qb,fiber.secondLocalPoint.xyz));
+    // The compact edge coordinates are relative to the proximal enthesis;
+    // eliminating a world translation before the iterative solve improves accuracy.
+    NHCorticalLigamentSpan span;
+    uint selected=range.x;
+    if(!nhSlidingLigamentPath(features+range.x,range.y,range.y,float3(0),target-p,span)) {
+        selected=range.z;
+        if(!range.w || !nhSlidingLigamentPath(features+range.z,range.w,range.w,float3(0),target-p,span))return;
+    }
+    float stretch,tension;
+    if(!nhCorticalLigamentLaw(fiber,span.lengthM,stretch,tension))return;
+    const float3 force=humanQuaternionRotate(qa,normalize(span.secondLoadPoint-span.firstLoadPoint))*tension;
+    selectedFeatureRange[i]=selected;
+    result[3*i]=float4(force,span.lengthM);
+    result[3*i+1]=float4(cross(humanQuaternionRotate(qa,p+span.firstLoadPoint),force),tension);
+    result[3*i+2]=float4(cross(humanQuaternionRotate(qb,fiber.secondLocalPoint.xyz),-force),stretch);
+}

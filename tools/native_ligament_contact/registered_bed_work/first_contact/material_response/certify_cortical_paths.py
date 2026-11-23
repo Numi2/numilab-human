@@ -19,7 +19,10 @@ class Cortex:
         self.xyz=self.rotation.apply(self.local)*1000+self.center
         f=key[f];self.faces=f
         pts=self.xyz[f];self.normal=np.cross(pts[:,1]-pts[:,0],pts[:,2]-pts[:,0])
-        sign=np.einsum('ij,ij->',self.normal,pts[:,0]-self.xyz.mean(0));self.normal*=np.sign(sign)
+        # The summed signed volume determines the orientation of the source solid.
+        # A local centroid test reverses valid normals in concave regions such as the scapula.
+        signed_volume6=np.einsum('ij,ij->',self.normal,pts[:,0]-self.xyz.mean(0))
+        self.normal*=1 if signed_volume6>0 else -1
         self.normal/=np.maximum(1.e-25,np.linalg.norm(self.normal,axis=1))[:,None]
         e=np.sort(np.stack((f[:,[0,1]],f[:,[1,2]],f[:,[2,0]]),axis=1),axis=2)
         self.edges,self.inverse=np.unique(e.reshape(-1,2),axis=0,return_inverse=True)
@@ -27,6 +30,9 @@ class Cortex:
         self.lo=self.xyz.min(0);self.hi=self.xyz.max(0);self.solid=None
         counts=np.bincount(self.inverse)
         if np.all(counts==2):
+            directed=f[:,[[0,1],[1,2],[2,0]]].reshape(-1,2)
+            balance=np.bincount(self.inverse,weights=np.sign(directed[:,1]-directed[:,0]))
+            if np.any(balance):raise ValueError('Inconsistent source cortical triangle winding')
             self.solid=closed_solid(self.xyz,f)[2]
         self.tris=self.xyz[f]
         self.face_lo=self.tris.min(1);self.face_hi=self.tris.max(1)
@@ -96,6 +102,7 @@ def run(parent,source,sections,output):
             options=[(*o.feature(p),o.sid,o) for o in owners]
             distance,i,t,sid,o=min(options,key=lambda item:item[0])
             if distance>3e-5:raise ValueError(f'No registered cortical edge at a bend: {distance} mm')
+            if o.solid is None:raise ValueError('A load-bearing cortical feature requires an oriented closed solid')
             pair=o.edges[i];incident=np.flatnonzero(o.inverse==i)//3
             edges.append(dict(stable_id=sid,body=o.body,source_edge=o.first[pair].tolist(),incident_faces=incident.tolist()))
             intervals.append(o.verts[i]);normals.append(o.normal[incident]);seeds.append(t)

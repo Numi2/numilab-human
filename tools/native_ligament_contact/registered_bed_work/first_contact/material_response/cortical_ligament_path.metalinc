@@ -1,0 +1,118 @@
+// Sliding, frictionless string on a specified sequence of cortical edges.
+// Coordinates are in one translated frame (metres). A caller certifies the
+// contact features and segment clearance for the same candidate geometry.
+struct NHCorticalLigamentEdge {
+    float4 startAndFraction; // xyz start, w initial material fraction
+    float4 end;
+    float4 faceNormal0;
+    float4 faceNormal1;
+};
+struct NHCorticalLigamentSpan {
+    float3 firstLoadPoint;
+    float3 secondLoadPoint;
+    float lengthM;
+};
+inline bool nhCorticalCone(float3 reaction, float3 a, float3 b) {
+    float ab=clamp(dot(a,b),-1.0f,1.0f);
+    float ra=dot(reaction,a), rb=dot(reaction,b);
+    float error=min(length(reaction-max(ra,0.0f)*a),length(reaction-max(rb,0.0f)*b));
+    float det=1.0f-ab*ab;
+    if(det>1e-10f) {
+        float x=(ra-ab*rb)/det,y=(rb-ab*ra)/det;
+        if(min(x,y)>=0.0f) error=min(error,length(reaction-x*a-y*b));
+    }
+    return error<=1e-4f;
+}
+inline bool nhSolveCorticalPath(device const NHCorticalLigamentEdge* edges,
+                                  uint count, uint firstOwnerEdges, float3 start, float3 end,
+                                  bool warmStart, thread NHCorticalLigamentSpan& span) {
+    constexpr uint maxEdges=24;
+    if(count==0 || count>maxEdges || firstOwnerEdges>count)return false;
+    float3 point[maxEdges+2],direction[maxEdges],tangent[maxEdges+1];
+    float width[maxEdges],offset[maxEdges],invLength[maxEdges+1];
+    float diag[maxEdges],upper[maxEdges],step[maxEdges];
+    point[0]=start;point[count+1]=end;
+    for(uint j=0;j<count;++j) {
+        float3 edge=edges[j].end.xyz-edges[j].startAndFraction.xyz;
+        width[j]=length(edge);
+        if(!(width[j]>1e-8f))return false;
+        direction[j]=edge/width[j];offset[j]=edges[j].startAndFraction.w*width[j];
+    }
+    // A newly occupied edge can begin far from the minimizer. Exact coordinate
+    // minimization with fixed neighbors supplies a feasible start for Newton.
+    for(uint j=0;j<count;++j)point[j+1]=edges[j].startAndFraction.xyz+offset[j]*direction[j];
+    for(uint sweep=0;sweep<(warmStart?3u:0u);++sweep)for(uint k=0;k<count;++k) {
+        uint j=(sweep&1u)?count-1u-k:k;
+        float3 origin=edges[j].startAndFraction.xyz,d=direction[j];
+        float3 p=point[j]-origin,q=point[j+2]-origin;
+        float a=dot(p,d),b=dot(q,d),ha=length(p-a*d),hb=length(q-b*d);
+        if(!(ha+hb>1e-9f))return false;
+        offset[j]=clamp((hb*a+ha*b)/(ha+hb),0.0f,width[j]);
+        point[j+1]=origin+offset[j]*d;
+    }
+    for(uint iter=0;iter<12;++iter) {
+        for(uint j=0;j<count;++j)point[j+1]=edges[j].startAndFraction.xyz+offset[j]*direction[j];
+        float lengthSum=0.0f;
+        for(uint j=0;j<=count;++j) {
+            float3 diff=point[j+1]-point[j];float l=length(diff);
+            if(!(l>1e-8f))return false;
+            lengthSum+=l;invLength[j]=1.0f/l;tangent[j]=diff/l;
+        }
+        float maxGradient=0.0f;
+        for(uint j=0;j<count;++j) {
+            float3 d=direction[j];float a=dot(d,tangent[j]),b=dot(d,tangent[j+1]);
+            maxGradient=max(maxGradient,abs(a-b));
+            step[j]=b-a;
+            // Hessian of sum of Euclidean segment lengths, in arclength coordinates.
+            diag[j]=max(0.0f,1-a*a)*invLength[j]+max(0.0f,1-b*b)*invLength[j+1];
+            if(j+1<count)upper[j]=-(dot(d,direction[j+1])-b*dot(tangent[j+1],direction[j+1]))*invLength[j+1];
+        }
+        if(maxGradient<=2e-5f) {
+            for(uint j=0;j<count;++j) {
+                if(!nhCorticalCone(tangent[j]-tangent[j+1],edges[j].faceNormal0.xyz,edges[j].faceNormal1.xyz))return false;
+            }
+            // At a convex departure edge the interior lies behind both tangent planes.
+            // A positive reaction alone cannot detect a free span entering the cortex.
+            if(firstOwnerEdges==count) {
+                float3 u=tangent[count];
+                if(max(dot(u,edges[count-1].faceNormal0.xyz),dot(u,edges[count-1].faceNormal1.xyz))<0.0f)return false;
+            }
+            span.firstLoadPoint=point[firstOwnerEdges];span.secondLoadPoint=point[firstOwnerEdges+1];
+            span.lengthM=lengthSum;return isfinite(lengthSum);
+        }
+        for(uint j=1;j<count;++j) {
+            if(!(diag[j-1]>1e-6f))return false;
+            float factor=upper[j-1]/diag[j-1];diag[j]-=factor*upper[j-1];step[j]-=factor*step[j-1];
+        }
+        if(!(diag[count-1]>1e-6f))return false;
+        step[count-1]/=diag[count-1];
+        for(uint j=count-1;j>0;--j)step[j-1]=(step[j-1]-upper[j-1]*step[j])/diag[j-1];
+        float alpha=1.0f;
+        for(uint j=0;j<count;++j) {
+            if(step[j]>0)alpha=min(alpha,.99f*(width[j]-offset[j])/step[j]);
+            if(step[j]<0)alpha=min(alpha,-.99f*offset[j]/step[j]);
+        }
+        if(!(alpha>1e-7f))return false;
+        bool accepted=false;
+        for(uint ls=0;ls<12;++ls) {
+            float trial=0.0f;float3 prev=start;
+            for(uint j=0;j<count;++j) {
+                float3 p=edges[j].startAndFraction.xyz+(offset[j]+alpha*step[j])*direction[j];
+                trial+=length(p-prev);prev=p;
+            }
+            trial+=length(end-prev);
+            if(trial<=lengthSum+2.0f*FLT_EPSILON*lengthSum) {accepted=true;break;}
+            alpha*=.5f;
+        }
+        if(!accepted)return false;
+        for(uint j=0;j<count;++j)offset[j]+=alpha*step[j];
+    }
+    return false;
+}
+
+inline bool nhSlidingLigamentPath(device const NHCorticalLigamentEdge* edges,
+                                  uint count, uint firstOwnerEdges, float3 start, float3 end,
+                                  thread NHCorticalLigamentSpan& span) {
+    return nhSolveCorticalPath(edges,count,firstOwnerEdges,start,end,false,span) ||
+           nhSolveCorticalPath(edges,count,firstOwnerEdges,start,end,true,span);
+}
