@@ -17,6 +17,10 @@ At release, 10,764 triangle pairs crossed through one another across 76 muscle, 
 
 The extensor entries include the insertion of the left index-finger extensor, 0.89 mm outside. The executed route and the surface representation have separate owners. Refit the brachioradialis bulk using the enclosed named sites as constraints. For the extensors, reconcile skin, the phalanges, attachment sites and the envelope in one registered frame before fitting the bulk. Preserve sourced attachment identities and verify the resulting route lengths and moment arms across joint motion. A rigid muscle-surface edit cannot change an exterior force site.
 
+### Distal index-finger insertion
+
+The native MyoSim payload expresses the two index-finger extensor insertions as exact bilateral mirrors in their own bone coordinates. The right insertion is 0.28 mm from the surface of its phalanx and 0.48 mm inside the skin. The left is 1.64 mm from its phalanx and 0.89 mm outside the skin. The closest points on the two phalanges are 0.76 and 0.75 mm inside the skin, respectively. All 16 exterior force-route entries also have a closest point on their own cortical surface lying inside the skin. These distances were measured against matched, typed rigid instances from the same native frame. Nearest cortical points do not identify tendon footprints. Preserve the measured local coordinates when testing registration of the phalanges, force paths and skin.
+
 ## Native contact trials
 
 Twenty-two of the 29 deep-fat intersection pairs at the accepted endpoint share exactly one vertex. They overlap beyond that vertex. The legacy candidate rule excludes such triangle pairs. Five matched experimental variants retained the original capacity, constitutive laws, convergence tolerances and independent physical acceptance checks.
