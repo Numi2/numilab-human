@@ -22,7 +22,7 @@ if [[ "${1:-}" == --registered-finger-motion ]]; then
     done
     [[ -f "$runner_root/patch-owner/identities.json" ]] || { echo 'Missing pinned native support owner' >&2; exit 1; }
     out=${1:-$(mktemp -d "$here/finger-motion.XXXXXX")/run}
-    export NUMI_RETAIN_SUPPORT_GEOMETRY=1
+    export NUMI_RETAIN_SUPPORT_GEOMETRY=1 NUMI_CAPTURE_BED_COLUMNS=1
     exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$runner_root/run_bed_work.py" \
         "$source_dir" "$runner_root/patch-owner" "$out" 8000 --no-bed-work-audit --intermediate-steps 3999
 fi
