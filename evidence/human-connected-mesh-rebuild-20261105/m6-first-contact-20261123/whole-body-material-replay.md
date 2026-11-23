@@ -1,0 +1,16 @@
+# Conservative material transfer in the rebuilt resting adult
+
+The registered material contains 311,361 physical nodes and 1,450,187 tetrahedra. On SSH Numi the native geometry and material reader consumed the mass obtained by summing the solved source transfers. It reported zero inverted, sub-threshold, nonfinite or out-of-density cells and zero massless nodes. Maximum difference from the independently constructed nodal mass was 6.94e−18 kg. This checks the input at its material reference pose. [Native material check](whole-body-native-solved-masses.json)
+
+| Material | Source carriers | Physical recipients | Allocated mass | Largest relative source debit error |
+|---|---:|---:|---:|---:|
+| Skin | 48,573 | 706,663 | 3.4525712828 kg | 6.52e−15 |
+| Subcutaneous fat | 23,066 | 743,524 | 10.4871084272 kg | 1.29e−14 |
+
+The full allocation has 4,967,363 positive transfers. Each spatial transfer was recomputed from source quadrature, typed neighborhood and the actual emitted recipient. The prior six-parent skin exception continues to carry 0.30936 g on the same 1,004 source/recipient pairs. Its largest distance is 48.89 mm. Fat uses ordinary admissibility throughout. The exact determinant audit identified roundoff-sized discrepancies in 19 cells. On each one the correction exchanged mass between two recipients of a single existing source carrier. The final maximum relative departure from target cell mass is 1.57e−12. No cell geometry, tissue bounds or regional authorizations were changed. [Independent full-domain verification](whole-body-conservative-transfers.json)
+
+Only residual neighborhoods needed a fresh flow solve. The skin solve used 254 carriers and 91 recipients, and the fat solve used 871 carriers and 663 recipients. All 71,639 source points have a primary recipient. The native reader progressed through topology, render binding, whole-volume P1 support and the rebuilt carrier witnesses. It then rejected the registered geometric donor/region of 1,312 skin cells and 542 fat cells when checked against maximum integrated corner support. Every witness is in the rebuilt forearm portion. The P1 fractions sum to one in every cell. The previous geometric labels came from each replacement's old primary cell. The registered point, source parent and incident-cell evidence must remain consistent when correcting them. [Cell ownership witnesses](forearm-primary-owner-audit.json) · [Native carrier witnesses](whole-body-carrier-witnesses.json)
+
+The rebuilt candidate has zero accepted simulation steps at this checkpoint. Supported settling, motion clearance, ligament equilibrium and end-to-end speed still require the complete scene. The measured shoulder tests used the previous dense material and the separate compact supported scene. [Native motion measurements](shoulder-physical-motion.md)
+
+The recovery manifests identify the source and binary, production launch configuration, signed geometry, unchanged original quadrature, donor tables, cleared balances and the rejected normal entry point. A separate GitHub download was checked member by member. [Whole-body inputs and runs](whole-body-material-recovery.json) · [Finite-element support inputs](whole-body-preference-recovery.json) · [Full material registration](material-joint-recovery.json)
