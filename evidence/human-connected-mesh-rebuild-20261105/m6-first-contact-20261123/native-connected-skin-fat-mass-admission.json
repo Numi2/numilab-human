@@ -1,0 +1,100 @@
+{
+  "device": "SSH Numi Apple M6",
+  "native_verifier": {
+    "SKIN": "PASS_SOURCE_ONLY_SKIN_SOURCE_CARRIER_FEASIBLE_ALLOCATION",
+    "FAT": "PASS_SOURCE_ONLY_FAT_SOURCE_CARRIER_FEASIBLE_ALLOCATION"
+  },
+  "independent_replay": [
+    "Native P1 reader and paired merge PASS",
+    "parents 28632 skin 707604 fat 749757",
+    "merged slots 1850559 region entries 7304896",
+    "paired support hash eb71d1563d5b604c5e7bca8c1403f1c1be8626dbf5f8554ae17b2ffa7cf3251b",
+    "parent ledger mass kg 13.939679709969074",
+    "Native reader rejects incorrect volume pin",
+    "Native carrier witness reader and coordinate replay PASS",
+    "skin 48573 fat 23066 total 71639",
+    "additional exact tuple witness rows 670001",
+    "typed exact allowlist entries 2523659",
+    "retained compensation parent rows 6 retained compensation child rows 6184",
+    "Live reference-volume replay parent determinant rows differing from captured ledger 5348 maximum absolute change m3 1.6940658945086007e-20",
+    "Native TetGen and full typed mass support PASS",
+    "nodes 314015 cells 1457361 label sha256 32042e7079ebd5d1985a8b1c6634b0641326ba39b43ceaa62a9d0ca42d979ddd",
+    "minimum emitted reference volume m3 1.000290144947699e-18 maximum float32 rounding m 0",
+    "Native direct density outliers 0 worst cell 0 density 0 delta kg/m3 0",
+    "Native full grouped allocation feasibility replay PASS",
+    "total kg 13.939679709969152 aggregate edges 2146322 expanded edges 4987976",
+    "max parent mass error kg 7.1795867861990104e-16 max donor mass error kg 3.8113956435381624e-13",
+    "minimum density kg/m3 849.99999999999079 maximum density kg/m3 1100.0000000000114",
+    "max transport distance m 0.18744397321608472",
+    "result sha256 11019e35aabdebeb5558f0c06c8d94c4b87b838e2d9ab33e640571f0a948ceab",
+    "carrier trace sha256 78d83f4f4817097a46387868dcc692ff6e1a7511e71832eede33080a5b9460ea",
+    "Production role-flow writer PASS",
+    "Production skin-role-flow reader PASS 707604 cells 2956120 expanded rows b6c6747f4d634f8d6cfa88b8eb2edb10a15a966a77b5eaba4efdbbf5011f1982",
+    "Production fat-role-flow reader PASS 749757 cells 2031856 expanded rows 78bc648bf9af1d0ac3a5a8550feee3a4f4062ab2f9eebe6b46c94651177af1a3"
+  ],
+  "whole_scene_mass": [
+    "registered_volume_current_fractional_recorded_carrier_allocation=PASS source_proof=paired_role_replay transport_receipt_sha256=11019e35aabdebeb5558f0c06c8d94c4b87b838e2d9ab33e640571f0a948ceab mass_transport_receipt_sha256=64b410cc66d1d362168029116632410fef0c21b2883a0eb425964d5f6615c481 candidate_parent_rows=28632 candidate_child_rows=1457361 skin_receipt_sha256=b6c6747f4d634f8d6cfa88b8eb2edb10a15a966a77b5eaba4efdbbf5011f1982 skin_parent_rows=14316 skin_child_rows=707604 skin_flow_rows=1039406 skin_carrier_rows=2956120 skin_child_source_donor_rows=1349188 skin_source_donor_rows=18063 skin_csv_sha256=3d956b3b29327caedc4069961563e6a58aceeff038e9aec0430b416a99060718,dc695a7488c27e351127208ace7daf43c98a5f1b0c8a417391c588e3ac9b2914,b1ff5120e2f3d7dfffbe1fced0454f4b1ab07cfafb55c7835c28e2f587cd206b,b77475272aeed1fe00fcdf73c64c2e64da9e6cf2058c58e2a68caee1ed275372,5ed310bd6e9f83771af7fe0431dc89a64304567beddff2c5d131757eb5cb3869,0fd0a10af7fabb54a286aef38bff58c9037e16b1d25e2a438c4cf4712fc04b84 fat_receipt_sha256=78bc648bf9af1d0ac3a5a8550feee3a4f4062ab2f9eebe6b46c94651177af1a3 fat_parent_rows=14316 fat_child_rows=749757 fat_flow_rows=1106916 fat_carrier_rows=2031856 fat_child_source_donor_rows=1324689 fat_source_donor_rows=18063 fat_csv_sha256=bb641cac55e705ecf1c52bbeeb8c2fe93728bbca8085a1ac91ca3272455ce954,9dc8052c8ecb14027f445f62d5516681777a4e933b93f578f2e0a1ed48267d1b,cc0862d399e5da5897471716157c468a42f4baae5d9c49f1c35719293eb3a38e,bf99923fbd1b122e1346d1ee56119d37c13f556d24be131b42f19bfa27e6b8e9,9661d9acf8d1f38a40119d2eb9f6f095510bb22fd696f31672c2db48ea9b6dca,1bdc653ff97796eafa8d2c9c0836360bc67b98cf5c40ee3a65d3d31e41d3501a source_preparation=1 physical_admission=0 native_steps=0",
+    "registered_volume_fractional_mass=PASS p1_skin_sha256=8ac16cc4f6232f966fea3944bfa29c04948656a7928a2d9fffc24f5e78658e14 p1_fat_sha256=1772395bcd0042060420bce970c8d957f3003fe69be1763cb63381d8caf0501c support_sha256=eb71d1563d5b604c5e7bca8c1403f1c1be8626dbf5f8554ae17b2ffa7cf3251b carrier_packet_sha256=17cfec37ba97a506a65d0b353ae7f7210a9b47ac154c57051c074a980b61460e carrier_trace_sha256=6458a6f33f5a813c7817daafad6e5cc9081d1ec7d1307aa0cc987c777146c4ae carrier_count=71639 projection_rows=0 source_centroid_rows=0 carrier_witness_rows=0 rest_basis_rejects=0 receipt_path=/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/scene-live-tissue-mass/native-traces/registered-volume-fractional-mass-3582c4f2823707ce.json mass_mapping_path_sha256=3582c4f2823707ce3d2452f1060a6402b59ce7e86711914c98a322040e50f168 transport_receipt_sha256=64b410cc66d1d362168029116632410fef0c21b2883a0eb425964d5f6615c481 physical_admission=0 simulation_steps=0"
+  ],
+  "reconciled_routes": {
+    "SKIN": {
+      "flow_sha256": "c949bb8481b0f20b0561d20ff7083441264cf58e9549d7600685af8dfa9edba7",
+      "native_source_edges": 2958947,
+      "bad_edges_before": 22,
+      "previously_unsupported_kg": 4.290225285438678e-05,
+      "unsupported_edges_after": 0,
+      "retained_exception_kg": 0.0003093585917832521,
+      "original_flow": "90dd773deeeda61789bb262b734f3fd3a631b4b90be58b24866ab9ad55b63ed2",
+      "maximum_target_error_kg": 2.710505431213761e-20,
+      "maximum_source_error_kg": 5.421010862427522e-20,
+      "solves": [
+        {
+          "unmatched": [],
+          "balanced_exchanges": 67,
+          "maximum_material_path_m": 0.09829457150459135,
+          "volume_reach_m": 0.187444
+        }
+      ]
+    },
+    "FAT": {
+      "flow_sha256": "867656a07652ba205d8d7ec1aed9f67d4102a3174d602cac972674c9bbd3ebbe",
+      "native_source_edges": 2032029,
+      "bad_edges_before": 70,
+      "previously_unsupported_kg": 7.498747775530887e-05,
+      "unsupported_edges_after": 0,
+      "retained_exception_kg": 0.0,
+      "original_flow": "84b67ce71212fa81dc7f6c9f2ca6e9de7b59afb6eb2b166ee60b835eecba38a5",
+      "maximum_target_error_kg": 1.7618285302889447e-19,
+      "maximum_source_error_kg": 9.75781955236954e-19,
+      "solves": [
+        {
+          "solves": [
+            {
+              "eligible_pairs": 65499,
+              "fixed_point_deficit_kg": 1.7102056211464585e-19,
+              "maximum_carrier_discrepancy_kg": 7.453889935837843e-20,
+              "maximum_child_discrepancy_kg": 1.7618285302889447e-19,
+              "carrier_deficits": 0,
+              "child_deficits": 0,
+              "unmatched_carriers": [],
+              "unmatched_children": [],
+              "augmentations": 182,
+              "connected_receivers": 3936,
+              "connected_radius_m": 0.02,
+              "active_source_points": 71
+            }
+          ],
+          "unmatched": []
+        }
+      ]
+    }
+  },
+  "blocking_guard": "myosim_articulated_visual=failed error=\"registered-volume transactional replacement rejected: cooked-parent baseline reference/topology/material source does not match the imported parent\"",
+  "native_steps": 0,
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-connected-tissue-mass-0c51d6377f6b817f.tar.zst",
+    "archive_sha256": "10a3d22027d2fc234b65bdb92cd827d2ead698852021e1d2e6636168329f828a",
+    "size_bytes": 476460779
+  },
+  "qualification": "Current two-role material allocation passes the independent native writer/readers and full-scene receiving code. The coarse parent consistency check still blocks replacement before stepping."
+}
