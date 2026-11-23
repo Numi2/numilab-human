@@ -1,0 +1,120 @@
+{
+  "parent_launch": "2380e4a70dd379adeadff622f3ef516aaac79b05e94e7ebe00e512c94509f9fa",
+  "subdivided_launch": "bddde02fad7506a9dc2f415a591d81a6e947e4aba38cd0acf75908d29fbcfd3f",
+  "native_pose_sha256": "1ee033a4284099dbbc4a6e9c9fb1fdabec3fe8b8a36d592fc501efbc9478508d",
+  "physical_time_s": 1.56250007421e-05,
+  "one_root": {
+    "launch": "2380e4a70dd379adeadff622f3ef516aaac79b05e94e7ebe00e512c94509f9fa",
+    "binary": "eb961bef496243229d7fe02588fdd8f012e1e22490249c93d5e361e3650a53d8",
+    "physical_nodes": "e14feeccfafb9acae54965111829d228adfb5ff11e175f1b3e49f4df21d7c396",
+    "source_materials": {
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+    },
+    "cells": 1450187,
+    "accepted_steps": 1,
+    "accepted_seconds": 1.56250007421e-05,
+    "end_to_end_cold_wall_s": 157.34384129196405,
+    "cold_factor": 9.930481303749641e-08,
+    "native_body_window_wall_s": 15.690244958,
+    "native_body_window_factor": 9.958417337634326e-07,
+    "material": {
+      "cells": 1450187,
+      "invalid_geometry": 2,
+      "outside_stretch_envelope": 12,
+      "outside_stress_cap": 0,
+      "minimum_stretch": 0.08262222260011962,
+      "maximum_stretch": 29.53225232978498,
+      "peak_stress_Pa": 41325.17472310632,
+      "peak_stress_row": 1439499,
+      "passed": false
+    },
+    "world_weight_N": 952.8644330405119,
+    "last_bed_reaction_N": 0.4788413643836975,
+    "terminal_active_bed_rows": 6,
+    "last_bed_fraction_of_weight": 0.000502528321742217,
+    "peak_motion_m": 4.567649157622661e-05,
+    "witness_J_start": 1.0,
+    "witness_J_end": 1.00000000242931,
+    "variable_pleural": true,
+    "root_assistance": false,
+    "pleural_Pa_first_last": [
+      -490.332489014,
+      -490.332489014
+    ],
+    "complete_breaths": 0,
+    "complete_filling_ejection_cycles": 0
+  },
+  "two_roots": {
+    "launch": "bddde02fad7506a9dc2f415a591d81a6e947e4aba38cd0acf75908d29fbcfd3f",
+    "binary": "eb961bef496243229d7fe02588fdd8f012e1e22490249c93d5e361e3650a53d8",
+    "physical_nodes": "1ee033a4284099dbbc4a6e9c9fb1fdabec3fe8b8a36d592fc501efbc9478508d",
+    "source_materials": {
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+      "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+    },
+    "cells": 1450187,
+    "accepted_steps": 2,
+    "accepted_seconds": 1.56250007421e-05,
+    "end_to_end_cold_wall_s": 160.7503382919822,
+    "cold_factor": 9.720042214604368e-08,
+    "native_body_window_wall_s": 19.731637917,
+    "native_body_window_factor": 7.918755051087672e-07,
+    "material": {
+      "cells": 1450187,
+      "invalid_geometry": 2,
+      "outside_stretch_envelope": 10,
+      "outside_stress_cap": 0,
+      "minimum_stretch": 0.06592000281721769,
+      "maximum_stretch": 37.87537292307432,
+      "peak_stress_Pa": 53334.013288909475,
+      "peak_stress_row": 1439499,
+      "passed": false
+    },
+    "world_weight_N": 952.8644330405119,
+    "last_bed_reaction_N": 0.4945086548104882,
+    "terminal_active_bed_rows": 6,
+    "last_bed_fraction_of_weight": 0.0005189706296755686,
+    "peak_motion_m": 3.622249858681432e-05,
+    "witness_J_start": 1.0,
+    "witness_J_end": 1.0000000004613305,
+    "variable_pleural": true,
+    "root_assistance": false,
+    "pleural_Pa_first_last": [
+      -490.332489014,
+      -490.332489014
+    ],
+    "complete_breaths": 0,
+    "complete_filling_ejection_cycles": 0
+  },
+  "first_root_FEM_force_on_articulated_xyz_N": {
+    "one": [
+      2.871908187866211,
+      16.7562198638916,
+      -15.722960472106934
+    ],
+    "two": [
+      10.910506248474121,
+      61.942935943603516,
+      -66.52049255371094
+    ]
+  },
+  "initial_root_force_norm_ratio": 3.953400146456919,
+  "matched_time_displacement_difference": {
+    "rms_m": 2.4213146277783052e-08,
+    "max_m": 9.545507954906131e-06,
+    "max_node": 294007
+  },
+  "candidate_sha256": "8d0d327cd2d8c76e4f3abd424b76f09d341cb13e24bab75a657392c6f3f97b57",
+  "offline_patch_on_two_root_displacements": {
+    "cells": 1450187,
+    "invalid_geometry": 2,
+    "outside_stretch_envelope": 6,
+    "outside_stress_cap": 0,
+    "minimum_stretch": 0.6151589709983055,
+    "maximum_stretch": 1.6636364634326866,
+    "peak_stress_Pa": 12075.983726461098,
+    "peak_stress_row": 37244,
+    "passed": false
+  }
+}

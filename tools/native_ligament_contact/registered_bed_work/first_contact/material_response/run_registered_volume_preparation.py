@@ -7,7 +7,7 @@ from bind_registered_shoulder import sha
 from run_cavity_motion import execute_native
 
 
-def prepare(control, certificate, output, support=None, carriers=None, witnesses=None, mass=None, release=None):
+def prepare(control, certificate, output, support=None, carriers=None, witnesses=None, mass=None, release=None, *, minimum_free_bytes=8*2**30):
     config=json.loads((control/'launch.json').read_bytes())
     check=json.loads(certificate.read_bytes())
     settings=check['settings']
@@ -102,7 +102,7 @@ def prepare(control, certificate, output, support=None, carriers=None, witnesses
     output.mkdir()
     (output/'launch.json').write_text(json.dumps(launch,indent=2)+'\n')
     env={k:v for k,v in os.environ.items() if not k.startswith(('NUMI_','NM_'))}
-    result=execute_native(args,launch['cwd'],env|runtime,output,minimum_free_bytes=8*2**30,timeout_s=500)
+    result=execute_native(args,launch['cwd'],env|runtime,output,minimum_free_bytes=minimum_free_bytes,timeout_s=500)
     print(result,flush=True)
     return result['exit']
 
