@@ -1,0 +1,224 @@
+{
+  "candidate": "502f6a986e239fd656fb7871753deed6fc8f7554bccf600c4c08fba0358cac8e",
+  "solver": "c326ace61dfca44e602ddb14827a7bd925eb86338ede2a840bcb2b2efe2577b4",
+  "allowed_distance_m": 0.187444,
+  "materials": [
+    {
+      "material": 15,
+      "typed_relaxation": {
+        "authenticated_group_combinations": 197,
+        "group_types": 75,
+        "fixed": {
+          "admitted": false,
+          "recipients": 197,
+          "edges": 466,
+          "orphan_kg": 0.0,
+          "sum_receiver_violations_kg": 0.0002428499647129157,
+          "max_receiver_violation_kg": 6.873025930381684e-05,
+          "max_carrier_violation_kg": 1.3877787807814457e-17,
+          "pools_outside": 15,
+          "owner_trace": [
+            "maximum augmentations=281 moved_kg=0.021903929661915771 unassigned_kg=0.00012142498235655943 largest_kg=6.8730259303816836e-05 groups_above_1e-15=12"
+          ]
+        },
+        "density": {
+          "admitted": false,
+          "recipients": 197,
+          "edges": 466,
+          "orphan_kg": 0.0,
+          "sum_receiver_violations_kg": 8.900576055679442e-06,
+          "max_receiver_violation_kg": 8.900576055678838e-06,
+          "max_carrier_violation_kg": 1.0408340855860843e-17,
+          "pools_outside": 1,
+          "owner_trace": [
+            "maximum augmentations=150 moved_kg=0.014427985450442698 unassigned_kg=0 largest_kg=0 groups_above_1e-15=0",
+            "minimum augmentations=242 moved_kg=0.010140373873757711 unassigned_kg=8.9005760556788385e-06 largest_kg=8.9005760556788385e-06 groups_above_1e-15=1"
+          ]
+        },
+        "scope": "Necessary capacity on already authenticated primary source group choices, relaxing all distance constraints. A negative result rules out this primary assignment at these masses. A pass still requires an actual carrier graph.",
+        "physical_carrier_flow": {
+          "material": "SKIN",
+          "original_cells": 33193,
+          "cells": 34766,
+          "reservoirs": 4229,
+          "cell_pools": 1027,
+          "carrier_classes": 358,
+          "reduced_edges": 67271,
+          "unreachable_cells": 0,
+          "orphan_carrier_mass_kg": 0.0,
+          "reference_p1_sha256": "75352758e1dc70ee0891a6de7912bf0dfc70102eee4e048d137d32306440c4ea",
+          "bin_m": 0.02,
+          "fixed_mass_feasible": false,
+          "joint_solve": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "lp_issued_first_moment_error_kg_m": 2.7376104855258987e-18,
+          "max_cell_mass_change_after_expansion": 2.6156377411212794e-18,
+          "routed_edges": 38989,
+          "max_distance_m": 0.18739417852687018,
+          "invalid_semantic_routes": 0,
+          "max_relative_carrier_mass_error": 1.813158304342571e-15,
+          "max_density_violation_kg_m3": -0.0009999998546845745,
+          "first_moment_error_kg_m": 3.198396408832238e-18,
+          "material_mass_error_kg": 1.3877787807814457e-17,
+          "passed": true
+        }
+      },
+      "source_trace": "7cc78e074a606caa0c7f63cdbbb2f2db40269b0eb0780d893147e49bb3c27104",
+      "original_cells": 33193,
+      "new_cells": 34766,
+      "positive_source_entries": 102878,
+      "carriers": 4229,
+      "maximum_native_replay_distance_error_m": 2.7755575615628914e-17,
+      "max_route_distance": 0.18744290500391889,
+      "distance_rejections": 355,
+      "identity": {
+        "admitted": true,
+        "recipients": 1302,
+        "edges": 6523,
+        "orphan_kg": 0.0,
+        "sum_receiver_violations_kg": 5.1454604567738576e-18,
+        "max_receiver_violation_kg": 2.9997142431419013e-18,
+        "max_carrier_violation_kg": 2.168404344971009e-19,
+        "pools_outside": 0,
+        "owner_trace": [
+          "maximum augmentations=2629 moved_kg=0.015829577965666287 unassigned_kg=4.1816296070270697e-18 largest_kg=4.0397648232517753e-18 groups_above_1e-15=0",
+          "minimum augmentations=306 moved_kg=3.0394859141740634e-18 unassigned_kg=8.941491549453208e-20 largest_kg=2.7105054312137611e-20 groups_above_1e-15=0"
+        ]
+      },
+      "fixed_regional_masses": {
+        "admitted": false,
+        "recipients": 1287,
+        "edges": 6466,
+        "orphan_kg": 8.833495411411295e-05,
+        "sum_receiver_violations_kg": 0.0021278689126582612,
+        "max_receiver_violation_kg": 0.00021059803857959806,
+        "max_carrier_violation_kg": 4.689564350791492e-05,
+        "pools_outside": 254,
+        "owner_trace": [
+          "maximum augmentations=2427 moved_kg=0.015563353778751175 unassigned_kg=0.0010197669792720715 largest_kg=0.00013756115275029488 groups_above_1e-15=164"
+        ]
+      },
+      "free_density_bounds": {
+        "admitted": false,
+        "recipients": 1287,
+        "edges": 6466,
+        "orphan_kg": 8.833495411411295e-05,
+        "sum_receiver_violations_kg": 0.011283838659332322,
+        "max_receiver_violation_kg": 0.00061016371717991,
+        "max_carrier_violation_kg": 4.689564350791492e-05,
+        "pools_outside": 633,
+        "owner_trace": [
+          "maximum augmentations=620 moved_kg=0.0071663102610284978 unassigned_kg=0.00016704718788054958 largest_kg=0.00010491130339011439 groups_above_1e-15=16"
+        ]
+      }
+    },
+    {
+      "material": 16,
+      "typed_relaxation": {
+        "authenticated_group_combinations": 166,
+        "group_types": 76,
+        "fixed": {
+          "admitted": false,
+          "recipients": 166,
+          "edges": 302,
+          "orphan_kg": 0.0,
+          "sum_receiver_violations_kg": 0.0017130215570457098,
+          "max_receiver_violation_kg": 0.000550878972384863,
+          "max_carrier_violation_kg": 2.7755575615628914e-17,
+          "pools_outside": 47,
+          "owner_trace": [
+            "maximum augmentations=175 moved_kg=0.036966013052768663 unassigned_kg=0.00085651077852295389 largest_kg=0.00019951469985243574 groups_above_1e-15=37"
+          ]
+        },
+        "density": {
+          "admitted": true,
+          "recipients": 166,
+          "edges": 302,
+          "orphan_kg": 0.0,
+          "sum_receiver_violations_kg": 1.1028898368843024e-18,
+          "max_receiver_violation_kg": 4.336808689942018e-19,
+          "max_carrier_violation_kg": 1.3877787807814457e-17,
+          "pools_outside": 0,
+          "owner_trace": [
+            "maximum augmentations=157 moved_kg=0.03516509206669443 unassigned_kg=0 largest_kg=0 groups_above_1e-15=0",
+            "minimum augmentations=29 moved_kg=0.00051095103547175199 unassigned_kg=0 largest_kg=0 groups_above_1e-15=0"
+          ]
+        },
+        "scope": "Necessary capacity on already authenticated primary source group choices, relaxing all distance constraints. A negative result rules out this primary assignment at these masses. A pass still requires an actual carrier graph.",
+        "physical_carrier_flow": {
+          "material": "FAT",
+          "original_cells": 17420,
+          "cells": 17235,
+          "reservoirs": 917,
+          "cell_pools": 821,
+          "carrier_classes": 281,
+          "reduced_edges": 36068,
+          "unreachable_cells": 0,
+          "orphan_carrier_mass_kg": 0.0,
+          "reference_p1_sha256": "25868ac39012259cc68f028cd894c8b85b4e84d5e27da71b5deaefaaab36b84e",
+          "bin_m": 0.02,
+          "fixed_mass_feasible": false,
+          "joint_solve": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+          "lp_issued_first_moment_error_kg_m": 1.531435568635775e-18,
+          "max_cell_mass_change_after_expansion": 1.0408340855860843e-17,
+          "routed_edges": 18150,
+          "max_distance_m": 0.18738310544974746,
+          "invalid_semantic_routes": 0,
+          "max_relative_carrier_mass_error": 1.1133318647970047e-15,
+          "max_density_violation_kg_m3": -0.0009999999540468707,
+          "first_moment_error_kg_m": 1.531435568635775e-18,
+          "material_mass_error_kg": 2.7755575615628914e-17,
+          "passed": true
+        }
+      },
+      "source_trace": "7f8d821886ab24fe394d415e380f2268682d64e8fb96cd0db2e393873797f60b",
+      "original_cells": 17420,
+      "new_cells": 17235,
+      "positive_source_entries": 24982,
+      "carriers": 917,
+      "maximum_native_replay_distance_error_m": 2.7755575615628914e-17,
+      "max_route_distance": 0.18744227676271089,
+      "distance_rejections": 6,
+      "identity": {
+        "admitted": true,
+        "recipients": 796,
+        "edges": 1718,
+        "orphan_kg": 0.0,
+        "sum_receiver_violations_kg": 9.12009028685864e-18,
+        "max_receiver_violation_kg": 3.3288394827094003e-18,
+        "max_carrier_violation_kg": 8.673617379884035e-19,
+        "pools_outside": 0,
+        "owner_trace": [
+          "maximum augmentations=1070 moved_kg=0.032880266757202903 unassigned_kg=5.8594165870806268e-19 largest_kg=1.3552527156068805e-19 groups_above_1e-15=0",
+          "minimum augmentations=129 moved_kg=3.2403377746111268e-18 unassigned_kg=4.2901826901615115e-18 largest_kg=3.3295144620892436e-18 groups_above_1e-15=0"
+        ]
+      },
+      "fixed_regional_masses": {
+        "admitted": false,
+        "recipients": 789,
+        "edges": 1702,
+        "orphan_kg": 2.988476311576305e-08,
+        "sum_receiver_violations_kg": 0.005803739723605592,
+        "max_receiver_violation_kg": 0.0004189288465233325,
+        "max_carrier_violation_kg": 2.988476311576305e-08,
+        "pools_outside": 323,
+        "owner_trace": [
+          "maximum augmentations=737 moved_kg=0.031068846375855167 unassigned_kg=0.0029018549194213131 largest_kg=0.00026829552182148201 groups_above_1e-15=212"
+        ]
+      },
+      "free_density_bounds": {
+        "admitted": false,
+        "recipients": 789,
+        "edges": 1702,
+        "orphan_kg": 2.988476311576305e-08,
+        "sum_receiver_violations_kg": 0.003071518262128296,
+        "max_receiver_violation_kg": 0.0006268246370448704,
+        "max_carrier_violation_kg": 2.988476311576305e-08,
+        "pools_outside": 110,
+        "owner_trace": [
+          "maximum augmentations=702 moved_kg=0.030066483451741937 unassigned_kg=0.00010194547533640542 largest_kg=9.7535932529377022e-05 groups_above_1e-15=16"
+        ]
+      }
+    }
+  ],
+  "scope": "Actual source carrier points and supplies and the existing native feasibility solver, using previously positive carrier choices on an explicit primary source row per receiver. Other semantically admitted routes are not represented in this restricted graph."
+}
