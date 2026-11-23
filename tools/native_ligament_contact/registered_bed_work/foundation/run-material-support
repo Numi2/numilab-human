@@ -1,0 +1,18 @@
+#!/bin/bash
+set -eu
+here=$(dirname "$(realpath "$0")")
+parent=$(dirname "$here")
+case "${1:-}" in
+    --help)
+        "$parent/run-certified-bed" --help
+        echo 'Use --material-support for the 184 ms experimental release with compliant bed contact and load-aware muscle recruitment.'
+        echo 'Use --material-support-16s to request 16 s. The current shoulder material limit stops the run at trial 93.'
+        exit 0 ;;
+    --material-support) steps=92 ;;
+    --material-support-16s) steps=8000 ;;
+    *) exec "$parent/run-certified-bed" "$@" ;;
+esac
+shift
+if (( $# > 1 )); then exit 2; fi
+out=${1:-$(mktemp -d "$here/material-contact.XXXXXX")/run}
+exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/trial.py" "$here/recruit-source" "$steps" "$out" --owner coupled-surface

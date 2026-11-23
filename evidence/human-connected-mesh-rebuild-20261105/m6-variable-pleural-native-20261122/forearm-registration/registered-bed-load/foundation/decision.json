@@ -1,0 +1,109 @@
+{
+  "parent_git_revision": "4fa54ac01c361acd2270993167e41b77d377be47",
+  "device": "Apple M6",
+  "dt_s": 0.002,
+  "goal_16s": false,
+  "sustained_realtime_factor": null,
+  "scope": "Reduced normal skin/fat/foam column contact on the existing native articulated human. Static, isotropic reference foam. Whole-body tissue equilibrium is open.",
+  "accepted_steps": 92,
+  "accepted_time_s": 0.18400000873953104,
+  "cold_wall_s": [
+    15.805875709047541,
+    15.307362125022337
+  ],
+  "cold_realtime_factors": [
+    0.011641241024956716,
+    0.012020360349269685
+  ],
+  "pressure_observations_pa": [
+    -536.836730957,
+    -577.963989258,
+    -607.858398438
+  ],
+  "force_and_material": {
+    "foundation": "66eda006bd12fd195894feca0ab559374b954e749594057cf846d3ebadc6989f",
+    "normal_reaction_at_endpoint_N": 940.8368014194386,
+    "peak_endpoint_pressure_Pa": 3702.480189029856,
+    "loaded_area_m2": 0.5277393350963093,
+    "peak_mattress_strain": 0.6233081336526832,
+    "backing_clearance_min_m": 0.07390802370821124,
+    "step": 92,
+    "time_s": 0.18400000873953104,
+    "physical_root": "0x7331b4c54a5ca4fb",
+    "pose": "d522da6b02d503491126d9273c9f0a9eb9ff84d14138a6b24a14063496c6bb6a",
+    "columns": "cff17be7531b5fd459c3325de7ddcb305b0053a1cb9cf1e6afcaac3a685a2f0b",
+    "map": "72948043769a54b225b78691ceeb5a8dcec4ebe6022c1b00269341700967bf34",
+    "influences": "1037ed7c66830f00991ccaeb52f729e8a2a5100d33fe610a3b038cac0f62230e",
+    "checked_columns": 49294,
+    "opening_replay_error_m": 2.2680328498614344e-07,
+    "count_beyond_material_domain": 0,
+    "resolved_count": 0,
+    "largest_signed_excess_m": -2.7552622689525075e-05,
+    "witnesses": []
+  },
+  "first_invalid_trial": {
+    "invalid_columns_observed": 1,
+    "material_step_index": 92,
+    "vertex": 17764,
+    "region": 1,
+    "depth_m": 0.126162350178,
+    "allowed_depth_m": 0.12611952424,
+    "area_m2": 8.74160541571e-05
+  },
+  "overload_m": 4.2825938000007335e-05,
+  "matched_interface": {
+    "qualified-prefix": {
+      "vertices": 21417,
+      "max_absolute_gap_m": 0.00468235559147219,
+      "min_gap_m": -0.0031532055228657846,
+      "max_gap_m": 0.00468235559147219,
+      "worst_vertex": 17764,
+      "gaps_outside_1mm": 12003
+    },
+    "surface-92": {
+      "vertices": 21417,
+      "max_absolute_gap_m": 9.476845140590773e-05,
+      "min_gap_m": -8.442382931628245e-08,
+      "max_gap_m": 9.476845140590773e-05,
+      "worst_vertex": 45716,
+      "gaps_outside_1mm": 0
+    }
+  },
+  "measured_source_geometry": {
+    "opening": {
+      "banks": 878,
+      "nonocular_pairs": 8636,
+      "skin_self_intersections": 17,
+      "bone_pairs": 1760
+    },
+    "legacy_plane": {
+      "banks": 878,
+      "nonocular_pairs": 8416,
+      "skin_self_intersections": 25,
+      "bone_pairs": 1740
+    },
+    "series_boundary": {
+      "banks": 878,
+      "nonocular_pairs": 8707,
+      "skin_self_intersections": 36,
+      "bone_pairs": 1852
+    },
+    "dense_unloaded_opening": {
+      "banks": 878,
+      "nonocular_pairs": 11327,
+      "skin_self_intersections": 150,
+      "bone_pairs": 82
+    }
+  },
+  "anatomical_pack_sha256": "1c620f5e773f9359da0c5be4679b568ff04675f81425e0f4ff42e89043ef86bd",
+  "binary_sha256": "a9dfe24e6bab2b3984cb6967efa01172d776346db121f954ae3f35fd27b5ed44",
+  "first_step_root_translation_peak_m_s2": [
+    6.578119471669197,
+    3.382367081940174
+  ],
+  "first_step_joint_peak_rad_s2": [
+    220.84760665893555,
+    156.12566471099854
+  ],
+  "disposition": "Retain the physically resolved contact branch as a reproducible experiment. Anatomical qualification fails at opening and at the accepted endpoint. Joint equilibrium and lateral tissue transfer remain open."
+}

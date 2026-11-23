@@ -1,0 +1,46 @@
+{
+  "device": "Apple M6",
+  "material_interpolation_max_absolute": {
+    "dermis_strain": 4.3072552295686517e-10,
+    "fat_strain": 1.5591318222458713e-06,
+    "foam_m": 6.197272139907284e-09
+  },
+  "mass_kg": 97.1319503784,
+  "force_N_at_opening": 952.864433212104,
+  "opening_xy_moment_Nm": [
+    -20.31214323656973,
+    -1.2832893003961503
+  ],
+  "legacy_plane_gate": {
+    "accepted_steps": 17,
+    "measured_rows": 3,
+    "impulse_over_dt_N": 250.59081241488457,
+    "first_rejection": {
+      "invalid_columns_observed": 3,
+      "material_step_index": 17,
+      "vertex": 17764,
+      "region": 1,
+      "depth_m": 0.126284271479,
+      "allowed_depth_m": 0.12611952424,
+      "area_m2": 8.74160541571e-05
+    }
+  },
+  "pressure_gate": {
+    "accepted_capture": 32,
+    "measured_rows": 38,
+    "impulse_over_dt_N": 946.7794776210212,
+    "reconstructed_pressure_integral_N": 946.8079574933973,
+    "limit_crossings_at_capture": 0,
+    "first_rejection": {
+      "invalid_columns_observed": 1,
+      "material_step_index": 88,
+      "vertex": 17764,
+      "region": 1,
+      "depth_m": 0.126154497266,
+      "allowed_depth_m": 0.12611952424,
+      "area_m2": 8.74160541571e-05
+    }
+  },
+  "step_s": 0.002,
+  "scope": "Short coupled reduced-contact release. Contact force at an accepted endpoint and the preceding step impulse can differ during motion. Static outer-volume wrench feasibility does not establish native dense FEM equilibrium."
+}

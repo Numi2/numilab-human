@@ -6,7 +6,7 @@ from scipy.spatial.transform import Rotation
 from scipy.optimize import brentq
 from run_bed_work import digest as sha
 
-def inspect(receipt,columns,curves):
+def inspect(receipt,columns,curves,foundation=None):
     data=json.loads(receipt.read_text());meta=data['skin_source_mapping']
     if data['physical_endpoint']!='accepted' or meta['influence_layout']!='vertex-major':raise ValueError("unexpected native capture")
     def records(key,dtype):
@@ -45,13 +45,33 @@ def inspect(receipt,columns,curves):
     cap=min(stress(2/3,*pr) for pr in props)
     ss,sf=[brentq(lambda s:stress(s,*pr)-cap,2/3,1.) for pr in props]
     limit=c['skin_m']*(1-ss)+c['fat_m']*(1-sf)
-    excess=-z[1]-limit
+    depth=-z[1]
+    series={}
+    if foundation is not None:
+        bed=json.loads(Path(foundation).read_text())
+        if bed['material']!=sha(curves) or not np.isclose(cap,bed['pressure_limit_pa']):raise ValueError('different tissue law')
+        pressure=np.linspace(0,cap,1025)
+        for corner in bed['pressure_pa'][1:-1]:pressure[np.argmin(abs(pressure-corner))]=corner
+        eps=np.array([[1-brentq(lambda s:stress(s,*pr)-pp,2/3,1.) for pr in props] for pp in pressure])
+        mattress=bed['foam_height_m']*np.interp(pressure,bed['pressure_pa'],bed['compression_fraction'])
+        depth+=bed['free_surface_z_m']; limit+=mattress[-1]
+        lo=np.zeros(len(v),int);hi=lo+1024
+        def closure(k):return c['skin_m']*eps[k,0]+c['fat_m']*eps[k,1]+mattress[k]
+        for _ in range(10):
+            m=(lo+hi)//2;below=closure(m)<depth;lo=np.where(below,m,lo);hi=np.where(below,hi,m)
+        p=pressure[lo]+(pressure[hi]-pressure[lo])*(np.maximum(depth,0)-closure(lo))/(closure(hi)-closure(lo))
+        force=c['area_m2']*p
+        series=dict(foundation=sha(foundation),normal_reaction_at_endpoint_N=float(force.sum()),
+                    peak_endpoint_pressure_Pa=float(p.max()),loaded_area_m2=float(c['area_m2'][depth>0].sum()),
+                    peak_mattress_strain=float(np.interp(p.max(),bed['pressure_pa'],bed['compression_fraction'])),
+                    backing_clearance_min_m=float(np.min(z[1]-bed['backing_z_m'])))
+    excess=depth-limit
     # Retain the signed values even when they are inside the observed opening
     # replay deviation. Report both the raw and numerically resolved counts.
     hits=np.flatnonzero(excess>0)
-    return dict(step=data['accepted_step'],time_s=data['accepted_time_s'],physical_root=data['accepted_root_fingerprint_hex'],
+    return dict(**series,step=data['accepted_step'],time_s=data['accepted_time_s'],physical_root=data['accepted_root_fingerprint_hex'],
         pose=sha(receipt),columns=sha(columns),map=meta['vertex_map']['sha256'],influences=meta['influences']['sha256'],
         checked_columns=len(v),opening_replay_error_m=deviation,
         count_beyond_material_domain=len(hits),resolved_count=int(sum(excess>deviation)),largest_signed_excess_m=float(max(excess)),
-        witnesses=[dict(vertex=int(v[i]),region=int(c['row'][i]),physical_depth_m=float(-z[1,i]),allowed_depth_m=float(limit[i]))
+        witnesses=[dict(vertex=int(v[i]),region=int(c['row'][i]),physical_depth_m=float(depth[i]),allowed_depth_m=float(limit[i]))
                    for i in sorted(hits,key=lambda k:-excess[k])[:12]])

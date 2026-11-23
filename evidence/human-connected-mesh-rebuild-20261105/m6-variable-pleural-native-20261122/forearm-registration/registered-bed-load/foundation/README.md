@@ -1,0 +1,20 @@
+# Supported release on a deformable mattress
+
+The Apple M6 native scene reproduced 92 accepted 2 ms steps (184 ms) with variable pleural pressure. Two cold launches, including preparation, native presentation and terminal capture, took 15.81 and 15.31 seconds. The 16-second request stopped on trial 93. Registered skin vertex 17764 over the right ascending trapezius exceeded its material shortening range by 42.83 μm. The body has yet to settle, and these captures cover only part of a breath and heartbeat.
+
+The native solver previously discarded positive support pressure when a region's pressure-weighted center rose above a rigid-plane admission threshold. The constitutive integral now admits loaded regions. At step 32, all 38 regions transferred 946.78 N to the skeleton. An independent integration at the accepted endpoint yielded 946.81 N. Initial muscle recruitment includes the measured support force once. Against the matched one-step control, the largest root translation acceleration component fell from 6.58 to 3.38 m/s² and right thumb-base flexion acceleration fell from 220.85 to 156.13 rad/s² in magnitude. The initial orientation still has a 20.31 Nm pitch imbalance. Rebalancing global tipping moments alone shortened the run in a separate retained trial.
+
+The foam, fat and dermis share normal traction. The uniform 20 cm foam thickness is an experimental choice. The foam curve uses measured compression knots from the [SYST’AM technical sheet](https://www.wimed.it/wp-content/uploads/2024/08/WI_ST_SYSTAM_MATERASSO-VISCOFLEX-SERIE-P161M.pdf). The reduced model uses independent fixed-area columns. Its measurements do not qualify lateral load transfer, foam hysteresis, dense three-dimensional tissue motion or patient-specific material properties.
+
+The viewer reconstructs the loaded outer skin from tissue shortening. A separate computation derives the opposing mattress face from foam shortening. In the matched accepted frame, 12,003 of 21,417 loaded vertices violated the 1 mm interface tolerance with the former plane clamp. With the material boundary all 21,417 pass. Maximum absolute error fell from 4.682 mm to 0.095 mm. The accepted skeletal poses match exactly. This check covers the registered loaded columns. The space between columns and whole-body anatomical clearance need separate qualification.
+
+| Geometry checked against 878 anatomy banks | Nonocular intersecting triangle pairs | Skin self-intersections |
+| --- | ---: | ---: |
+| Starting registered viewer mesh | 8,636 | 17 |
+| Legacy plane reconstruction at 184 ms | 8,416 | 25 |
+| Material boundary at 184 ms | 8,707 | 36 |
+| Dense unloaded outer reference in the starting skeleton | 11,327 | 150 |
+
+Exact binary32 plane-side tests confirm that all 8,636 opening pairs and all 8,707 accepted pairs cross transversely. At 184 ms the largest contributors are the right flexor digitorum profundus (456), the acromial left deltoid (407), the left extensor digitorum (380) and the humeral head of the left flexor carpi ulnaris (370). At 184 ms, 6,351 pairs involve muscle geometry, 1,852 involve bone and 504 belong to semantic 51011. The dense reference comparison found 82 bone pairs. Replacing the skin with that reference would still leave 11,327 nonocular pairs. The next registration change must address skin, deep tissue and their common attachments together and pass both opening and moving geometry checks. The material constants and rejection threshold remain in force.
+
+On SSH Numi, run `~/Work/run-numi-human-rest --material-support` for the reproducible prefix or `~/Work/run-numi-human-rest --material-support-16s` for the bounded qualification attempt. The machine-readable decision, sources, exact build identities and recovery manifest are in this directory. The archive retains native binaries, actual source and shader files, launch arguments, failed trials and hash-verified geometry. The adult is a mixed-source reference assembly.

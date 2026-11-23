@@ -9,11 +9,11 @@ def digest(p):
         return hashlib.file_digest(f, "sha256").hexdigest()
 
 
-def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
+def run(source, owner, out, steps, enabled=True, intermediate_steps=(), *, foundation=None, observe_endpoint=None):
     parent = json.loads((source / "launch.json").read_text())
-    if parent["headless"] or steps <= 0 or steps > 32000 or (steps > 32 and steps % 32):
+    if parent["headless"] or steps <= 0 or steps > 32000:
         raise ValueError(
-            "Expected visible supported 2ms scene and a short prefix or complete 32-step samples"
+            "Expected visible supported 2ms scene and a positive bounded step count"
         )
     for name, d in parent["pins"].items():
         if digest(name) != d:
@@ -22,6 +22,8 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
     for name, d in identities.items():
         if digest(owner / name) != d:
             raise ValueError("Stale owner pin " + name)
+    if foundation is not None and parent["pins"].get(str(foundation)) != digest(foundation):
+        raise ValueError("Missing or changed foundation data")
     argv = parent["argv"][:]
     if argv[argv.index("--muscle-step-seconds") + 1] != "0.002":
         raise ValueError("Different timestep")
@@ -116,8 +118,10 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
         if env.get("NUMI_HUMAN_RESOLVED_BED_WITNESS"):
             from audit_terminal_bed import inspect
             curves, = [Path(k) for k in parent["pins"] if k.endswith("/curves.json")]
-            proof = inspect(receipt,out / "registered-bed-columns.csv",curves)
+            proof = inspect(receipt,out / "registered-bed-columns.csv",curves,foundation)
             (out / "terminal-bed-certificate.json").write_text(json.dumps(proof,indent=2) + "\n")
+        if observe_endpoint is not None:
+            observe_endpoint(receipt)
         if os.environ.get("NUMI_RETAIN_SUPPORT_GEOMETRY") == "1":
             for name, artifact, identity in (
                 ("initial", live / "resting-human.mrvpack", r["base_pack_file_sha256"]),
