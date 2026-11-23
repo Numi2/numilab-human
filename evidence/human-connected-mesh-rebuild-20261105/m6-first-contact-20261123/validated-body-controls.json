@@ -1,0 +1,83 @@
+{
+  "declared_reference_mass_kg": 97.13195069110952,
+  "source": "mixed-source reference adult",
+  "supported_control": {
+    "executable": "41919c3d3753692851d7b9e8bb5d1c17eb4cdbfa8bd8cd3399a7e860c9e8990a",
+    "launch": "817851a2d0d0f178346e0fb48af10258e885888f14857cf1192f3d425b19f710",
+    "accepted_s": 60.00000284984708,
+    "wall_s": 575.5593356660102,
+    "end_to_end_factor": 0.10424642453313332,
+    "bed_weight_N": 952.8644362797845,
+    "late_mean_bed_load_N": 952.8078431326896,
+    "bed_model": "registered skin/fat sections on the articulated bed-contact points",
+    "full_skin_fat_volume": false,
+    "variable_pleural_pressure": true,
+    "cycles": {
+      "breaths": {
+        "terminal": 11.0,
+        "max_abs": 11.0
+      },
+      "complete_filling_ejection_cycles": {
+        "terminal": 70.0,
+        "max_abs": 70.0
+      },
+      "blood_error_ml": {
+        "terminal": 0.0186264514923,
+        "max_abs": 0.0186264514923
+      },
+      "oxygen_balance_error_stpd_ml": {
+        "terminal": 0.000232830643654,
+        "max_abs": 0.000232830643654
+      },
+      "co2_balance_error_stpd_ml": {
+        "terminal": 0.000465661287308,
+        "max_abs": 0.000465661287308
+      },
+      "aortic_ejected_ml": {
+        "terminal": 4971.21876106,
+        "max_abs": 4971.21876106
+      },
+      "pulmonary_ejected_ml": {
+        "terminal": 4968.94586831,
+        "max_abs": 4968.94586831
+      }
+    },
+    "drive_response_checks": {
+      "matches_pre_intervention": true,
+      "ventilation_reduced_five_percent": true,
+      "gas_directions": true,
+      "both_gas_differences_halved": true
+    },
+    "inspired_volume_change": -0.2619425136919249,
+    "endpoint_skin_self_pairs": 40,
+    "endpoint_physical_nonocular_pairs": 14141,
+    "endpoint": "a1f9b2393842946f0174589ddbbcd9b774d43a872b09322bb473d2f17860a66a",
+    "control_comparison": "1378ea47edfee68cd50da621e564d9c2016998730a77c85c62439382278e76e1"
+  },
+  "current_registered_material": {
+    "launch": "60c91fdc6782ab7a60bb0ff636a0216639f7e54a29560a920193039e19fabf63",
+    "native_build": "7fce7fccdc6b4263989e9dbfd3e5b0a5b19f44c58bf8e9946b1145a7b602fe64",
+    "shader": "3eb8c3a02cc2f3542e8875ad828a1f50eb19022cd1f1b67f4781afcb0fc64378",
+    "material_receipt": "fbf8db5bcd1c3a9641757929273327f1e555ffe60d1fcabbfc595dda9ac28329",
+    "skin_pose_registration": "b91255fa9e7d0ebc75416d47f0d12427551c70b98243a362b281301a391f56c7",
+    "first_bed_nodes": [
+      26199
+    ],
+    "rejected_fibers": [
+      "coracoclavicular_complex/0",
+      "coracoclavicular_complex/1",
+      "coracohumeral_capsuloligament/0",
+      "coracohumeral_capsuloligament/1",
+      "superior_glenohumeral_capsuloligament/0",
+      "superior_glenohumeral_capsuloligament/1"
+    ],
+    "accepted_seconds": 0.0
+  },
+  "previous_full_volume_control": {
+    "accepted_s": 6.25000029686e-05,
+    "last_bed_load_N": 1.503083879583755e-05,
+    "weight_N": 952.8644330643456,
+    "body_factor": 1.3569803632297567e-06,
+    "evidence": "116d6ad282050cdf132a398772bca6bf4b50d366e27065f479203403014f4d51"
+  }
+}
