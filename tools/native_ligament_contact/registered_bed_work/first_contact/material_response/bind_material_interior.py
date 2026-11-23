@@ -46,7 +46,7 @@ class HistoricalTissue:
         return int(ids[i]),w[i],int(np.count_nonzero(abs(best-best[i])<=1e-10))
 
 
-def compile_map(launch, material, layer_dir, parents, pose_file, dest):
+def compile_map(launch, material, layer_dir, parents, pose_file, dest, support=None):
     env=json.loads(launch.read_bytes())['environment']
     if sha(pose_file)!=json.loads((material/'receipt.json').read_bytes())['frame']:
         raise ValueError('Native donor snapshot differs from the certified material frame')
@@ -86,6 +86,17 @@ def compile_map(launch, material, layer_dir, parents, pose_file, dest):
     chosen=np.full(len(x),np.iinfo(np.int32).max,np.int32)
     np.minimum.at(chosen,target_nodes[admissible],order[admissible])
     unresolved=np.flatnonzero(chosen==np.iinfo(np.int32).max)
+    role_support = {}
+    if support is not None:
+        for m,tag in ((15,'skin'),(16,'fat')):
+            r=json.loads((support/(tag+'-p1-receipt.json')).read_bytes())
+            path=Path(r['p1_one_hop_path'])
+            if sha(path)!=r['p1_one_hop_sha256']:raise ValueError('Stale neighborhood')
+            packet=np.load(path)
+            rows=np.flatnonzero(labels[:,0]==m)
+            by_global=np.full(len(labels),-1,dtype='i4');by_global[rows]=np.arange(len(rows))
+            role_support[m]=(by_global,packet['cell_admissible_region_offsets'],packet['cell_admissible_region_ids'])
+    old_region_source=[]
     missing = []
     for n in unresolved:
         if n in created: continue
@@ -99,10 +110,22 @@ def compile_map(launch, material, layer_dir, parents, pose_file, dest):
         candidates=labels[inc]
         if n not in created:
             # A recomputed integration cell can have a new geometric donor.
-            # The rigid frame donor, immutable source parent and anatomical region
-            # stay fixed. Only a genuine incident cell in that region can carry it.
+            # Retain the frame and historical source registration. Prefer an
+            # incident current cell in the same anatomical region.
             keep=np.flatnonzero(candidates[:,2]==old_tags[n,1])
-            if not len(keep):raise ValueError(f'Existing node {n} has lost its anatomical region')
+            if not len(keep) and support is not None:
+                # Historical and operational ownership are separate in the registered
+                # importer. A changed operational region must neighbor the historical
+                # region in the source atlas and must be proved at an incident cell.
+                local=[]
+                for j,c in enumerate(inc):
+                    gids,offsets_region,regions=role_support[int(candidates[j,0])]
+                    i=gids[c]
+                    if i>=0 and old_tags[n,1] in regions[offsets_region[i]:offsets_region[i+1]]:
+                        local.append(j)
+                keep=np.asarray(local,dtype=int)
+                if len(keep):old_region_source.append(int(n))
+            if not len(keep):raise ValueError(f'Existing node {n} has lost its registered incident neighborhood')
         else:
             if len(np.unique(candidates[:,0]))!=1:raise ValueError('Constructed interior unexpectedly joins tissues')
             keep=np.arange(len(inc))
@@ -193,7 +216,7 @@ def compile_map(launch, material, layer_dir, parents, pose_file, dest):
             w=csv.writer(f);w.writerow(['joint_node_row','generated_mesh_node_row','material_partition','partition_source_id','historical_parent_tet','incident_tet']);w.writerows(history)
         source=dict(launch=sha(launch),mesh=mesh['node_sha256'],cells=mesh['element_sha256'],native_surface_table=sha(layer_dir/'registration.json'),parents=sha(parent_source),source_combined=sha(node_map),pose=sha(pose_file))
         (stage/'registration.json').write_text(json.dumps(dict(source=source,volume_nodes=len(x),retained=len(x)-len(created),new_interior=len(created),
-            replaced_interior_slots=len(retired),reselected_incident_donors=missing,combined_map_sha256=sha(target),**statistics),indent=2)+'\n')
+            replaced_interior_slots=len(retired),reselected_incident_donors=missing,changed_operational_region_nodes=old_region_source,combined_map_sha256=sha(target),**statistics),indent=2)+'\n')
         if dest.exists():raise FileExistsError(dest)
         stage.rename(dest)
 

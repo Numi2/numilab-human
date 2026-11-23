@@ -7,7 +7,7 @@ from bind_registered_shoulder import sha
 from run_cavity_motion import execute_native
 
 
-def prepare(control, certificate, output, support=None, carriers=None, witnesses=None):
+def prepare(control, certificate, output, support=None, carriers=None, witnesses=None, mass=None, release=None):
     config=json.loads((control/'launch.json').read_bytes())
     check=json.loads(certificate.read_bytes())
     settings=check['settings']
@@ -51,7 +51,35 @@ def prepare(control, certificate, output, support=None, carriers=None, witnesses
             runtime['NUMI_H706_FRACTIONAL_CARRIER_WITNESS_'+tag+'_CSV']=str(path)
             runtime['NUMI_H706_FRACTIONAL_CARRIER_WITNESS_'+tag+'_SHA256']=info['sha256']
             extra_pins[str(path)]=info['sha256']
+    if mass is not None:
+        verdict=json.loads((mass/'result.json').read_bytes())
+        if verdict['exit'] or len(verdict['receipts'])!=2:raise ValueError('Native mass replay is incomplete')
+        fields=('CHILD_MASS','TRANSPORT_FLOW','SOURCE_CARRIER_FLOW','CHILD_SOURCE_DONOR','SOURCE_PARENT','SOURCE_PARENT_DONOR')
+        for name,digest in verdict['receipts'].items():
+            tag=name.split('-')[0].upper()
+            prefix='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_RECORDED_ALLOCATION_'+tag+'_'
+            certified=mass/'role-flows'/name
+            if sha(certified)!=digest:raise ValueError('Changed native mass receipt')
+            role=json.loads(certified.read_bytes())
+            runtime[prefix+'RECEIPT_JSON']=str(certified);runtime[prefix+'RECEIPT_SHA256']=digest
+            extra_pins[str(certified)]=digest
+            for field in fields:
+                f=mass/'role-flows'/(tag.lower()+'-'+field.lower().replace('_','-')+'.csv')
+                digest=role['flow_csv'][f.name]['sha256']
+                if sha(f)!=digest:raise ValueError('Changed production role mass input')
+                runtime[prefix+field+'_CSV']=str(f);runtime[prefix+field+'_CSV_SHA256']=digest
+                extra_pins[str(f)]=digest
     args=config['argv'].copy()
+    if release is not None:
+        if mass is None:raise ValueError('Physical release requires the certified mass')
+        build=json.loads((release/'build.json').read_bytes())
+        for key in ('executable','release_pose','library'):
+            f=Path(build[key]['path'])
+            if sha(f)!=build[key]['sha256']:raise ValueError('Changed release owner')
+            extra_pins[str(f)]=build[key]['sha256']
+        args[0]=build['executable']['path']
+        runtime['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']=build['release_pose']['path']
+
     args[4]=str(output/'native-traces')
     args[args.index('--muscle-step-count')+1]='1'
     runtime['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']='1'
