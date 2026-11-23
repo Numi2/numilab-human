@@ -1,0 +1,300 @@
+{
+  "device": "SSH Numi Apple M6",
+  "source": "890a8c652e064b181bda37fe037711a0849d4c59ea356e355e382a9fe1dec347",
+  "p1": {
+    "skin": {
+      "cells": 707604,
+      "points": 201942,
+      "reprojected": 469,
+      "identical_retained_cells": 703543
+    },
+    "fat": {
+      "cells": 749757,
+      "points": 230470,
+      "reprojected": 3126,
+      "identical_retained_cells": 734033
+    }
+  },
+  "carrier_flow": {
+    "SKIN": {
+      "carrier_count": 48573,
+      "cells": 707604,
+      "flow_edges": 2958880,
+      "maximum_source_error_kg": 3.3068166260807885e-18,
+      "maximum_receiver_error_kg": 8.673617379884035e-19,
+      "unresolved_parents": 0,
+      "joint_allocation": {
+        "eligible_pairs": 11128,
+        "fixed_point_deficit_kg": 5.891764054747482e-19,
+        "maximum_carrier_discrepancy_kg": 6.505213034913027e-19,
+        "maximum_child_discrepancy_kg": 4.336808689942018e-19,
+        "carrier_deficits": 0,
+        "child_deficits": 0,
+        "unmatched_carriers": [],
+        "unmatched_children": []
+      }
+    },
+    "FAT": {
+      "carrier_count": 23066,
+      "cells": 749757,
+      "flow_edges": 2035432,
+      "maximum_source_error_kg": 2.7755575615628914e-17,
+      "maximum_receiver_error_kg": 1.734723475976807e-18,
+      "unresolved_parents": 0,
+      "joint_allocation": {
+        "eligible_pairs": 112458,
+        "fixed_point_deficit_kg": 4.39114464077921e-19,
+        "maximum_carrier_discrepancy_kg": 4.336808689942018e-18,
+        "maximum_child_discrepancy_kg": 1.734723475976807e-18,
+        "carrier_deficits": 0,
+        "child_deficits": 0,
+        "unmatched_carriers": [],
+        "unmatched_children": [],
+        "allowed_material_face_hops": 2,
+        "earlier_restrictions": [
+          {
+            "eligible_pairs": 48192,
+            "fixed_point_deficit_kg": 7.152338152209518e-05,
+            "maximum_carrier_discrepancy_kg": 7.15233815220935e-05,
+            "maximum_child_discrepancy_kg": 5.576711348954433e-05,
+            "carrier_deficits": 1,
+            "child_deficits": 7,
+            "unmatched_carriers": [
+              21770
+            ],
+            "unmatched_children": [
+              1443183,
+              1443219,
+              1444693,
+              1445517,
+              1447725,
+              1448272,
+              1452749
+            ]
+          },
+          {
+            "eligible_pairs": 76713,
+            "fixed_point_deficit_kg": 9.938265202252186e-06,
+            "maximum_carrier_discrepancy_kg": 9.938265202251136e-06,
+            "maximum_child_discrepancy_kg": 7.152507096448356e-06,
+            "carrier_deficits": 1,
+            "child_deficits": 4,
+            "unmatched_carriers": [
+              21770
+            ],
+            "unmatched_children": [
+              1443219,
+              1444693,
+              1448272,
+              1452749
+            ],
+            "allowed_material_face_hops": 1
+          }
+        ],
+        "transport_through_adjacent_cells_kg": 0.00661478927165703
+      }
+    }
+  },
+  "quadrature": {
+    "SKIN": {
+      "carriers": 48573,
+      "preserved_primary": 47188,
+      "rebound_primary": 1385,
+      "maximum_flow_distance_m": 0.18744397321608472,
+      "out_of_radius_edges": 0
+    },
+    "FAT": {
+      "carriers": 23066,
+      "preserved_primary": 21742,
+      "rebound_primary": 1324,
+      "maximum_flow_distance_m": 0.1874438759339406,
+      "out_of_radius_edges": 0
+    }
+  },
+  "cell_labels": {
+    "SKIN": {
+      "cells": 707604,
+      "changed": 292,
+      "ties": 22,
+      "witnesses": [
+        {
+          "child": 1437579,
+          "old": [
+            95,
+            97,
+            83093
+          ],
+          "new": [
+            97,
+            95,
+            83890
+          ]
+        },
+        {
+          "child": 1437582,
+          "old": [
+            93,
+            93,
+            86651
+          ],
+          "new": [
+            102,
+            93,
+            85874
+          ]
+        },
+        {
+          "child": 1437584,
+          "old": [
+            93,
+            93,
+            2147483818
+          ],
+          "new": [
+            102,
+            93,
+            85874
+          ]
+        },
+        {
+          "child": 1437593,
+          "old": [
+            93,
+            93,
+            2147483818
+          ],
+          "new": [
+            102,
+            93,
+            85874
+          ]
+        },
+        {
+          "child": 1437611,
+          "old": [
+            93,
+            93,
+            86651
+          ],
+          "new": [
+            100,
+            93,
+            88042
+          ]
+        },
+        {
+          "child": 1437630,
+          "old": [
+            100,
+            93,
+            88042
+          ],
+          "new": [
+            93,
+            93,
+            86651
+          ]
+        }
+      ]
+    },
+    "FAT": {
+      "cells": 749757,
+      "changed": 1372,
+      "ties": 68,
+      "witnesses": [
+        {
+          "child": 1438380,
+          "old": [
+            97,
+            95,
+            83890
+          ],
+          "new": [
+            95,
+            95,
+            83890
+          ]
+        },
+        {
+          "child": 1438436,
+          "old": [
+            93,
+            93,
+            86651
+          ],
+          "new": [
+            100,
+            93,
+            88042
+          ]
+        },
+        {
+          "child": 1438440,
+          "old": [
+            93,
+            93,
+            86651
+          ],
+          "new": [
+            100,
+            100,
+            88595
+          ]
+        },
+        {
+          "child": 1438516,
+          "old": [
+            93,
+            93,
+            2147483818
+          ],
+          "new": [
+            100,
+            93,
+            88042
+          ]
+        },
+        {
+          "child": 1438557,
+          "old": [
+            122,
+            100,
+            88036
+          ],
+          "new": [
+            102,
+            100,
+            88036
+          ]
+        },
+        {
+          "child": 1438647,
+          "old": [
+            100,
+            100,
+            88595
+          ],
+          "new": [
+            93,
+            93,
+            86651
+          ]
+        }
+      ]
+    }
+  },
+  "incidence_nodes": 601,
+  "native_stages": {
+    "scene-material-p1": "myosim_articulated_visual=failed error=\"registered-volume fractional source-carrier mass mapping rejected: current fractional support proof binding failed before solve: current Skin 1046c streaming carrier witness failed: current carrier witness source region is outside the authenticated one-hop child region support\"",
+    "scene-material-carriers": "myosim_articulated_visual=failed error=\"registered-volume fractional source-carrier mass mapping rejected: current fractional support proof binding failed before solve: current regional mass compensation rejected: shared-capacity child exact P1 tuple support does not sum to one or its primary donor/region tuple is not a maximum-share group\"",
+    "scene-material-labels": "myosim_articulated_visual=failed error=\"pinned registered-volume import rejected: operational-reference cell labels differ from its node's incident material/donor/region domain\"",
+    "scene-material-incidence": "myosim_articulated_visual=failed error=\"registered-volume fractional source-carrier mass mapping rejected: current role-local recorded-flow import rejected: recorded carrier allocation receipt is not a complete source-only replay- or feasibility-verified result\""
+  },
+  "qualification": "Source quadrature, current P1 input and native node eligibility passed. All current receiver and source masses close independently. An updated recorded allocation is still required to establish native physical admission. No motion or end-to-end throughput measured.",
+  "native_accepted_steps": 0,
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/registered-quadrature-44335edd10510aa6.tar.zst",
+    "archive_sha256": "6b6aaf5b8be58634324f04260621755da05a23e2153686da9f2f929d98c148e5",
+    "size_bytes": 211099336
+  }
+}
