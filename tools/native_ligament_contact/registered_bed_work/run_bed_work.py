@@ -93,6 +93,19 @@ def run(source, owner, out, steps, enabled=True, intermediate_steps=()):
             + "\n"
         )
         if p.returncode:
+            # A surface inspection can stop the native scene after an accepted
+            # mechanics segment. Keep the physical observations already written.
+            for name in (
+                "resting-surface-audit.csv",
+                "resting-coupled.csv",
+                "resting-support-selected-skin-witness.csv",
+                "resting-com-support-impulses.csv",
+                "resting-local-bed-sections.csv",
+                "resting-local-bed-footprint.csv",
+                "resting-support-point-motion.csv",
+            ):
+                if (live / name).is_file():
+                    shutil.copy2(live / name, out / name)
             raise ValueError(
                 "Native process failed; see preserved stderr and failure receipt"
             )
@@ -164,6 +177,12 @@ if __name__ == "__main__":
     for key in ("source", "owner", "out"):
         parser.add_argument(key, type=lambda v: Path(v).resolve())
     parser.add_argument("steps", type=int)
-    parser.add_argument("--no-bed-work-audit", "--disabled", dest="enabled", action="store_false", help="Skip only the optional thoracic bed virtual-work observer.")
+    parser.add_argument(
+        "--no-bed-work-audit",
+        "--disabled",
+        dest="enabled",
+        action="store_false",
+        help="Skip only the optional thoracic bed virtual-work observer.",
+    )
     parser.add_argument("--intermediate-steps", type=int, nargs="+", default=[])
     run(**vars(parser.parse_args()))
