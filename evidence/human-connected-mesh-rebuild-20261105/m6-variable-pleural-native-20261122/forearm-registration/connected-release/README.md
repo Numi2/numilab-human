@@ -1,0 +1,7 @@
+# Connected skin and fat release on Apple M6
+
+The native four-step comparison rejected the connected fit. The previous loaded volume remains the control. All four requested steps used 15.625 µs. Three completed for the control and two for the fitted volume. The fitted run retained 31.25 µs of accepted breathing and mechanics after 241.97 s of cold wall time. The next attempted step reached the lower fat determinant bound at native tetrahedron 1208352. The accepted FEM force transferred vertically to the skeleton at the second sample was 17.8714 N, compared with 17.8645 N in the control. The supported body has about 811 N of articulated skeletal weight.
+
+The fit used the registered material energies on the opening strain field and preserved the detailed outer surface. It moved 1,108 nodes, changed 18,261 cell stars, reduced local elastic energy from 1.54325 to 1.38672 J and lowered the residual force norm on movable nodes from 1,214.28 to 1,175.57 N. Installation checked all 1,448,799 cells, nine layer-pair counts, 7,795 source mass groups and the 13.93967971 kg tissue mass ledger. The geometry and mass checks apply at initialization. The release response remains unqualified.
+
+The recovery manifest identifies the tested executable, physical inputs, recorded commands, preparation tools, control ancestry, native trace, failed certificate and derivative fit attempts. During storage cleanup, 20 obsolete reference captures were independently restored and verified before deletion. The archived control remains reproducible.
