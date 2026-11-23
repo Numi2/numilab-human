@@ -195,6 +195,7 @@ def proposal(
     all_banks=False,
     parent_fit=None,
     other_run=None,
+    bed_clearance=False,
 ):
     out.mkdir(exist_ok=True)
     s, ids, f, frames, rr = prepare(case, base, reader, dec, lib, routes)
@@ -400,8 +401,36 @@ def proposal(
         ]
         if all_banks:
             options = [(1.0, 0.0, "enclosing"), (1.0, 1.0, "enclosing-bearing")]
+        floors = {}
+        if bed_clearance:
+            # Assess both extremes of the material update against the registered
+            # horizontal bed throughout the retained physical motion. Changes to
+            # upper skin must leave room for other skin to become load bearing.
+            from compare_supported_forearm_runs import table
+
+            support = table(case / "resting-com-momentum-diagnostic.csv")
+            if not support or any(
+                abs(float(r["support_normal_z"]) - 1) > 1e-6 for r in support
+            ):
+                raise ValueError("This screen requires the registered horizontal bed")
+            gaps = []
+            for state in ctx.values():
+                initial = state["skin"][:, 2].astype(float)
+                full = (
+                    api["positions"](test, *state["transforms"])[ids, 2]
+                    - state["material"][:, 2]
+                    + initial
+                )
+                gaps.append(np.minimum(initial, full))
+            low = np.min(gaps, axis=0)
+            # Use the supported positions floor of zero in the pinned reference scene.
+            floors = {
+                "above-20mm": ramp((low - 0.020) / 0.030),
+                "above-35mm": ramp((low - 0.035) / 0.040),
+            }
+            options = [(1.0, 1.0, k) for k in floors]
         for alpha, beta, label in options:
-            g = alpha * gate * (1 - beta * (1 - bearing))
+            g = alpha * gate * (1 - beta * (1 - bearing)) * floors.get(label, 1.0)
             blob, ss, vv = evaluate(g, label)
             # Preserve existing material at newly folded surface witnesses, with a
             # continuous transition into the surrounding anatomical patch.
@@ -452,6 +481,7 @@ if __name__ == "__main__":
         parser.add_argument(arg, type=lambda x: Path(x).resolve())
     parser.add_argument("--outer", dest="outer_only", action="store_true")
     parser.add_argument("--all-banks", action="store_true")
+    parser.add_argument("--bed-clearance", action="store_true")
     parser.add_argument("--parent-fit", type=Path)
     parser.add_argument("--other-run", type=Path)
     args = parser.parse_args()

@@ -1,0 +1,56 @@
+{
+  "control": "794a3484c10b37e13201a9c40c3b3c92d7f78758eda0e203a4c4a2e66d41bf57",
+  "trial": "46e28098053159586544c67b8c564431650b641017436c8146606b817cb4055a",
+  "seconds": 16.00000075995922,
+  "steps": 8000,
+  "endpoints_equal": {
+    "accepted_step": true,
+    "accepted_time_s": true,
+    "accepted_body_state_sha256": true,
+    "accepted_respiration_state_sha256": true,
+    "pack_file_sha256": true,
+    "base_pack_file_sha256": true,
+    "captured_vertex_buffer_sha256": true,
+    "accepted_cardiac_geometry_buffers": true,
+    "middle_geometry_and_cardiac_state": true
+  },
+  "traces_equal": {
+    "resting-coupled.csv": true,
+    "resting-com-support-impulses.csv": true,
+    "resting-surface-audit.csv": true,
+    "resting-support-selected-skin-witness.csv": true,
+    "resting-local-bed-sections.csv": true,
+    "resting-com-momentum-diagnostic.csv": true
+  },
+  "exact": true,
+  "timing": [
+    {
+      "resting_integrated_throughput": {
+        "wall_s": 159.174311,
+        "factor": 0.100116662399
+      },
+      "resting_integrated_body=completed": {
+        "wall_s": 163.594380583,
+        "factor": 0.09780287503116027
+      },
+      "cold": {
+        "wall_s": 172.3723409168888,
+        "factor": 0.09282232099913174
+      }
+    },
+    {
+      "resting_integrated_throughput": {
+        "wall_s": 158.0418925,
+        "factor": 0.100834028907
+      },
+      "resting_integrated_body=completed": {
+        "wall_s": 162.974898875,
+        "factor": 0.09817463223113303
+      },
+      "cold": {
+        "wall_s": 171.3249142500572,
+        "factor": 0.09338980748944913
+      }
+    }
+  ]
+}
