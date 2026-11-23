@@ -1,0 +1,53 @@
+{
+  "device": "SSH Numi Apple M6",
+  "baseline_recovery": "c4729a5be849871bc3fa9741a7b109d0b6214ef8cdb05c158d2097811b8a01ed",
+  "native_run": {
+    "exit": 1,
+    "wall_s": 13.420008416986093
+  },
+  "native_preflight": "registered_volume_native_preflight=PASS parent_nodes=7233 parent_tets=28632 O_rows=76153 I_rows=118397 D_rows=104435 volume_nodes=314015 volume_tets=1457361 mass_mapping=deferred_to_identity_bound_fractional_owner full86_bindings=86 O_direct_render_rows=76153 O_direct_render_nodes=314015 O_direct_render=typed_one_hot_prepared physical_admission=0 scene_installation=0 simulation_steps=0",
+  "ligaments": "registered_ligament_source_geometry=admitted rows=34 retained_source_bone_meshes=185 source_bone_records=185 bone_payload_sha256=2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29 path_guard=all_current_pose_registered_meshes endpoint_projection=bounded_current_registered_surface",
+  "blocking_guard": "myosim_articulated_visual=failed error=\"pinned current Skin P1 support rejected: fractional support CSR or exact tuple registry has the wrong current child domain\"",
+  "previous_guard": "myosim_articulated_visual=failed error=\"registered O/I/D full86 role consumer rejected: authoring vertex ID is not an exact unique active source row in its pinned namespace\"",
+  "source_frame_corrections": {
+    "I": 26,
+    "D": 102
+  },
+  "cortical_contact": {
+    "layers": {
+      "15": {
+        "facets": 562,
+        "samples": 389,
+        "area_m2": 0.0001989549777240891,
+        "interpolated_interior_nodes": 7392,
+        "relative_residual": 9.542289174633741e-16,
+        "minimum_thickness_m": 0.0012695968557411442,
+        "maximum_thickness_m": 0.002451319435928199
+      },
+      "16": {
+        "facets": 4174,
+        "samples": 2917,
+        "area_m2": 0.003137913706731028,
+        "interpolated_interior_nodes": 7638,
+        "relative_residual": 1.430197303620967e-15,
+        "minimum_thickness_m": 0.0005496502784121313,
+        "maximum_thickness_m": 0.009902744410341991
+      }
+    },
+    "material_reference": "b76c1e0a598ca63d0a6fc71ea7d8686e9205f0da8350e7ccaa6e2a38fff47314",
+    "elements": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "loaded": "ef00deb06bee165be226a2fe6e8040fa62918b68443b619189abf509391a7d41",
+    "bone": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "surface_binding": "10e0e48961f81b5118f7b7363256431ccb9ee4b9bc29a909f561d7e4c660ab50",
+    "cortex": "6a7b7ad9c0e7d42fb8c3e00e08d8e6feb171721d5ae83834896f9c8eb30f530f",
+    "program": "864e65a195aeb0d09c2cc51e0da87aa6cd31360fabe741456902ce51d5970994",
+    "rule": "Reference tributary area; three vertex quadrature points per face, accumulated per material and node. Positive thickness uses the existing role values, harmonically extended through same-material edges to interior cortical nodes."
+  },
+  "native_accepted_steps": 0,
+  "qualification": "The native scene validates topology, anatomical sources, all registered node frames, and 86-body role weights. Cortical nodal samples are compiled from certified material and skeletal inputs. The later runtime contact installation and force transmission through motion have not executed in this launch.",
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-connected-skin-preflight-0c90c544c3b1a88f.tar.zst",
+    "archive_sha256": "890a8c652e064b181bda37fe037711a0849d4c59ea356e355e382a9fe1dec347",
+    "size_bytes": 81429377
+  }
+}
