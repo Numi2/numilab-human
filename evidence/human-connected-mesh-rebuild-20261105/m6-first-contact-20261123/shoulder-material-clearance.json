@@ -1,0 +1,207 @@
+{
+  "previous": "41038192208e1356f7dfb45055893395a3e1a0f4",
+  "exact_closed_material": {
+    "mesh": "308334929a50a94ce696c8cfefb01e222c5e2a9ed877ef075fdca2c1707b36a4",
+    "baseline": "89728ca00d4562ca1803fdf0165277699b12d2f7d12f2963abaf971830ea8662",
+    "registration": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "fixed_join_vertices": 2023,
+    "unchanged_outer_skin_faces": 1383,
+    "layers": {
+      "15": {
+        "cells": 3285,
+        "inverted": 0,
+        "low": 13,
+        "overlap_mm3": {
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0
+        },
+        "volume_mm3": 291463.2766264614
+      },
+      "16": {
+        "cells": 14450,
+        "inverted": 0,
+        "low": 40,
+        "overlap_mm3": {
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0
+        },
+        "volume_mm3": 1532139.5876905527
+      }
+    }
+  },
+  "debit": {
+    "parent_mass": "bd30e9bcf79f0c3b84be5a5fc4c5a8d1ed095d6171ac2bf457d4329060b4649b",
+    "original": "46a7cbcd8530322740d0c7cad84f7e2cacaa4cdd08ff193139ad3c438a694c6e",
+    "cortical_overlap": {
+      "8": 55.368175408971666,
+      "9": 2400.1265280048488,
+      "10": 3.409121226332059,
+      "11": 2117.4022823406012,
+      "12": 394.4183772074999,
+      "13": 977.0866101140848
+    },
+    "materials": {
+      "15": {
+        "intersected_parents": 55,
+        "overlap_mm3": 95.9306614946741,
+        "displaced_mass_kg": 8.736041064363965e-05
+      },
+      "16": {
+        "intersected_parents": 1630,
+        "overlap_mm3": 5851.880432807664,
+        "displaced_mass_kg": 0.0053155593958234635
+      }
+    },
+    "parents": 1685,
+    "whole_cells_displaced": 331
+  },
+  "coarse_skin": {
+    "source": "4155fe1302c4a0e29e9f781c891c8e4696f7a9bd51207e2f4e3b348c3f0c06cd",
+    "candidate": "dc8451a5c2d3080a3c61664582293f02d4d4c8ce1edbbd754c5fb4c3b52e04bc",
+    "control_native": "f71c8b14ddbe4415c455b80ff1870b7b2a3e4308090f2eed00f7938e97f03d90",
+    "registered_native": "d33f2965db5db7794960f474d1b53af090eaced190a362b0db06458e993e25cf",
+    "original": "858aafee9fa9ec49baf9d88c207eebef5bd38b5e8ebfebd01f34529d5d28a9d9",
+    "header": "18399405b7e2fab55dd0ebb409a0d98a8afce418604162b80e79e08384e3c1c9",
+    "coarse_rows": 2411,
+    "projected": 79,
+    "errors": {
+      "control_point_m": 1.9937590489682577e-06,
+      "control_normal": 5.0838818599352464e-08,
+      "control_local_m": 2.438271739513276e-07,
+      "control_frame": 2.355709305401632e-07,
+      "max_embedding_residual_change_m": 3.08030968287909e-07,
+      "direct_material_position_m": 1.9937590489682577e-06,
+      "max_material_normal_change": 0.010532564761467009
+    }
+  },
+  "fine_skin": {
+    "rigid": "bf26a498f7a16839ae10865d66ca210e23d57c7b132c49053554c200323df6f9",
+    "bones": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "source_owners": {
+      "bodyparts3d-myosim-fullbody-muscle-surfaces.nhtissue": {
+        "source": "457dacd227da82b9e53c61763e9bed3ffd23af30060c997f1f27a4f8672b4ceb",
+        "result": "487dd8d7f98d8201887a70f841f8719be4066e2c8e6a3491997610c1032c7165",
+        "rows": 164,
+        "bindings": 595,
+        "cortical_bindings_changed": 50,
+        "max_linear_map_error": 5.1590145544455623e-08
+      },
+      "parent-0.nhtissue": {
+        "source": "773e9e71853d061532044f93f624579b9f78712ba9b46ec298db328d14ce953b",
+        "result": "9f34b5f871bfbe5fbdb8b5b8e824a8e40009c4ecf9f8e7294adf1b44768243ce",
+        "rows": 1,
+        "bindings": 21,
+        "cortical_bindings_changed": 0,
+        "max_linear_map_error": 0.0
+      },
+      "parent-1.nhtissue": {
+        "source": "d0f17a9cd2938b7dd05056a70c3504b59e5d1bb91d0123b5a2f83c13bf066626",
+        "result": "2bad3562c03739082bdb5ea0d38f9c4e878c806bf7e01261e7a2e12fd5db80d6",
+        "rows": 9,
+        "bindings": 93,
+        "cortical_bindings_changed": 8,
+        "max_linear_map_error": 5.1590145544455623e-08
+      },
+      "parent-2.nhtissue": {
+        "source": "155771968e7b72f31b73ea2ab627a981bc5d2653e2add94a2ef9bb5f1ddfb035",
+        "result": "a7621ef605bf309dfe429d60a240cf4dcf77d7f83786e5165a26d4461d21300c",
+        "rows": 2,
+        "bindings": 6,
+        "cortical_bindings_changed": 3,
+        "max_linear_map_error": 2.7445175965201685e-08
+      },
+      "parent-3.nhtissue": {
+        "source": "d7bfc9450e0cdcaab6620dced94186d160fa86905a3cc6544662a01443036661",
+        "result": "4a49179e8b0431af5ae3f5d67ab0a63d1a4e9216c1be07ae0a45dd1f0f158fe5",
+        "rows": 4,
+        "bindings": 16,
+        "cortical_bindings_changed": 7,
+        "max_linear_map_error": 5.1590145544455623e-08
+      },
+      "parent-4.nhtissue": {
+        "source": "19ffde77ec237fb040fcaa17f61d20d310b2dc971e90f8564fa64a1c114bc79e",
+        "result": "45124a7f4005ff8d8f02dc32abe06b12b159d89c9b3bab92d03626c59747db12",
+        "rows": 2,
+        "bindings": 2,
+        "cortical_bindings_changed": 0,
+        "max_linear_map_error": 0.0
+      },
+      "parent-5.nhtissue": {
+        "source": "09b05ef5df837fa018cf2e12158ab09ad2513d1af0c8ee4ad4e0db609df987fc",
+        "result": "af2bc6798ace1052597b719fc6c71c6d46a388a8fcce7c2d69aa02b5868d8001",
+        "rows": 1,
+        "bindings": 21,
+        "cortical_bindings_changed": 0,
+        "max_linear_map_error": 0.0
+      },
+      "parent-6.nhtissue": {
+        "source": "419f8478482adb43036fe0f6e4ad6162501e41f8872fa2e516369dee6c9a456d",
+        "result": "51c7bee55ca3daa2b2425d5fc416e092ab9864e9d9950104a402f44a077b5609",
+        "rows": 4,
+        "bindings": 8,
+        "cortical_bindings_changed": 0,
+        "max_linear_map_error": 0.0
+      },
+      "parent-7.nhtissue": {
+        "source": "44f050abab96b0f0f5d8f004b94c5244861a559429536ea1144da5196b8dd92a",
+        "result": "68581291d8f58fed8f7b2462ab29baa6f466be96d40aef16fac77a7fd5841d5c",
+        "rows": 4,
+        "bindings": 8,
+        "cortical_bindings_changed": 0,
+        "max_linear_map_error": 0.0
+      },
+      "resting-thorax.nhanatomy": {
+        "source": "741a6b276015c4196dee4028ccc79260bce2b547521ddcc3e1795f2b2557f87c",
+        "result": "dc35f486b5a5825af98b2800b2d5495a9477b92872c4b2faf8d91e2af97ae5bd",
+        "single_owner_rows_transported": 0
+      },
+      "source-clearance-patches.nhskin": {
+        "source": "4155fe1302c4a0e29e9f781c891c8e4696f7a9bd51207e2f4e3b348c3f0c06cd",
+        "result": "dc8451a5c2d3080a3c61664582293f02d4d4c8ce1edbbd754c5fb4c3b52e04bc",
+        "vertices": 61950,
+        "changed_bindings": 60,
+        "checked_positive_weights": 3717000,
+        "max_supported_material_point_error_m": 6.753554689363732e-08
+      }
+    }
+  },
+  "full_scene_trials": {
+    "native-with-tissues": {
+      "exit": 1,
+      "wall_s": 2.8829073749948293,
+      "last_diagnostic": "myosim_articulated_visual=failed error=\"loaded skin donor pose differs from measured skeleton at body 41 position m 0.023881\""
+    },
+    "native-registered-material": {
+      "exit": 1,
+      "wall_s": 3.591915416996926,
+      "last_diagnostic": "myosim_articulated_visual=failed error=\"physical outer first-touch placement rejected: FEM outer seed evaluator failed: candidate source payload hash does not match its declaration\""
+    },
+    "native-coarse-material": {
+      "exit": 1,
+      "wall_s": 3.6502559171058238,
+      "last_diagnostic": "myosim_articulated_visual=failed error=\"selected source registration failed: registered mechanical repair donor-local delta disagrees with its pinned world-to-donor map\""
+    }
+  },
+  "recovery": [
+    {
+      "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/shoulder-material-mesh-9384f29de6a28cca-20261123.tar.zst",
+      "sha256": "524ac3bc8b6645c37b12801c4e45ae213e1af7d09d8344edfea61610fc67c996",
+      "bytes": 129252525,
+      "verified_files": 56
+    },
+    {
+      "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/registered-shoulder-cortex-308334929a50a94c-20261123.tar.zst",
+      "sha256": "c640618c0db594b6e8cedfa96d51ad5c93a9efe59db8287aa0385f6463cc603d",
+      "bytes": 24986219,
+      "verified_files": 82
+    }
+  ]
+}
