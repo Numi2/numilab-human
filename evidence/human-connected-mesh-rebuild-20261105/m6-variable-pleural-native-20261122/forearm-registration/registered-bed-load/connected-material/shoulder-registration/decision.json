@@ -1,0 +1,258 @@
+{
+  "parent_revision": "22b5b9864f3c0598b9a92805aebe77f5cd57b041",
+  "device": [
+    "Chipset Model: Apple M6",
+    "      Total Number of Cores: 12",
+    "      Metal Support: Metal 4",
+    "arm64",
+    "ProductName:\t\tmacOS",
+    "ProductVersion:\t\t27.0",
+    "BuildVersion:\t\t26A425",
+    "Apple clang version 21.0.0 (clang-2100.3.34.2)"
+  ],
+  "control": {
+    "expected_run_s": 16,
+    "requested_steps": 8000,
+    "accepted_s": 0.158,
+    "failed_trial": 80,
+    "seconds_per_root": 0.002,
+    "wall_including_failed_trial_s": 14.91199095803313,
+    "accepted_time_over_trial_wall": 0.010595499986866944,
+    "witness": {
+      "invalid_columns_observed": 1,
+      "material_step_index": 79,
+      "vertex": 17764,
+      "region": 1,
+      "depth_m": 0.126320928335,
+      "allowed_depth_m": 0.126275002956,
+      "area_m2": 8.72169839568e-05
+    },
+    "binary_sha256": "39183c1401d082d3123835749e6a4f3a2820df61e133adce9d5b5cdd0d885fe8",
+    "pleural_evidence": "resting_vascular_external_pressure=accepted_absolute_pleural_gauge continuation_s=5 compartment_mask=2080819"
+  },
+  "admission": {
+    "physical_parent": {
+      "cells": 1448799,
+      "invalid_geometry": 0,
+      "outside_stretch_envelope": 0,
+      "outside_stress_cap": 0,
+      "minimum_stretch": 0.6666702906863551,
+      "maximum_stretch": 1.499999438758735,
+      "peak_stress_Pa": 409377.20503442106,
+      "peak_stress_row": 1448755,
+      "passed": true
+    },
+    "registered_physical": {
+      "cells": 1448799,
+      "invalid_geometry": 0,
+      "outside_stretch_envelope": 0,
+      "outside_stress_cap": 0,
+      "minimum_stretch": 0.6666702906863551,
+      "maximum_stretch": 1.499999438758735,
+      "peak_stress_Pa": 409377.20503442106,
+      "peak_stress_row": 1448755,
+      "passed": true
+    }
+  },
+  "mass": {
+    "updated_cell_mass_kg": 13.939679709969155,
+    "cell_mass_kg": 13.939679709969152,
+    "allocation_groups": 57137,
+    "largest_carrier_error_kg": 8.673617379884035e-19,
+    "largest_allocation_error_kg": 9.69276742202041e-17,
+    "material_source_kg": {
+      "skin_kg": 3.452571282803902,
+      "fat_kg": 10.48710842716525,
+      "total_kg": 13.939679709969152,
+      "nodal_kg": 13.939679709969152
+    },
+    "remap": {
+      "source_registration": "f5a244a12dce6b962ddfde55a4b71932f0cf69dea91822e5858b0580ef057744",
+      "source_flow": "bb538d201dda3298c94f02642af291274081a6db1685ee3ba118a06f56516c9e",
+      "installed_cells": 1448799,
+      "affected_cells": 36251,
+      "original_allocation_groups": 57137,
+      "affected_groups": 547,
+      "density_outliers_before_routing": 32141,
+      "groups_requiring_rerouting": 131,
+      "maximum_demand_change_kg": 5.151080163974531e-09,
+      "status": "density and recorded carrier quotas closed",
+      "eligible_routes": 2247,
+      "changed_routes": 485,
+      "changed_cell_masses": 37665,
+      "recovery": "37c218f2a23e2bae1c769fefa97d450bd9eb6c411cb247ef516a468a87bc1e0d"
+    }
+  },
+  "local_layer_intersections": {
+    "reference": {
+      "before": {
+        "changed": 15650,
+        "checked": 47566,
+        "counts": {},
+        "pairs": []
+      },
+      "after": {
+        "changed": 15650,
+        "checked": 47566,
+        "counts": {},
+        "pairs": []
+      },
+      "added": [],
+      "removed": []
+    },
+    "loaded": {
+      "before": {
+        "changed": 15650,
+        "checked": 47566,
+        "counts": {},
+        "pairs": []
+      },
+      "after": {
+        "changed": 15650,
+        "checked": 47566,
+        "counts": {},
+        "pairs": []
+      },
+      "added": [],
+      "removed": []
+    }
+  },
+  "material_pose_count": 2,
+  "shoulder_endpoints": [
+    {
+      "name": "scapula_r",
+      "source_site": 656,
+      "fixed_world_m": [
+        -0.16055380880789102,
+        -0.29121402305124516,
+        0.04370633300541908
+      ],
+      "corrected_cortex_distance_m": 0.0018835981296883117,
+      "corrected_skin": {
+        "side": "outside",
+        "qualified_axis_count": 3,
+        "distance_m": 0.018640676821889652
+      }
+    },
+    {
+      "name": "scapula_l",
+      "source_site": 1077,
+      "fixed_world_m": [
+        0.1110047161024508,
+        -0.29121060050635794,
+        0.044795352774121736
+      ],
+      "corrected_cortex_distance_m": 0.001787868826922073,
+      "corrected_skin": {
+        "side": "outside",
+        "qualified_axis_count": 3,
+        "distance_m": 0.021243655815425002
+      }
+    }
+  ],
+  "failure_footprint": {
+    "native_witness": {
+      "invalid_columns_observed": 1,
+      "material_step_index": 79,
+      "vertex": 17764,
+      "region": 1,
+      "depth_m": 0.126320928335,
+      "allowed_depth_m": 0.126275002956,
+      "area_m2": 8.72169839568e-05
+    },
+    "native_launch": "fb4c85157711ff20f98a5044ef74fd4baab24c381cd4a3b3b1149520fd3ab278",
+    "registered_geometry": "ebc20b0c933a4fad851c5ec5c7eefdcd2b9a2da8bdf6f7ca7f8df479e71d99da",
+    "captured_footprint_coordinate_m": [
+      -0.09749919176101685,
+      -0.4117845296859741,
+      5.68174027648638e-06
+    ],
+    "material_outer_at_fixed_footprint_xy": {
+      "reference": {
+        "parent": {
+          "face": 46424,
+          "nodes": [
+            23186,
+            23181,
+            24331
+          ],
+          "barycentric": [
+            0.17017416639701055,
+            0.020367682566858693,
+            0.8094581510361307
+          ],
+          "height_m": 0.002635862190293968
+        },
+        "candidate": {
+          "face": 46424,
+          "nodes": [
+            23186,
+            23181,
+            24331
+          ],
+          "barycentric": [
+            0.17017416639701055,
+            0.020367682566858693,
+            0.8094581510361307
+          ],
+          "height_m": 0.002635862190293968
+        },
+        "change_m": 0.0
+      },
+      "loaded": {
+        "parent": {
+          "face": 46424,
+          "nodes": [
+            23186,
+            23181,
+            24331
+          ],
+          "barycentric": [
+            0.17017416639701055,
+            0.020367682566858693,
+            0.8094581510361307
+          ],
+          "height_m": 0.01173372972192457
+        },
+        "candidate": {
+          "face": 46424,
+          "nodes": [
+            23186,
+            23181,
+            24331
+          ],
+          "barycentric": [
+            0.17017416639701055,
+            0.020367682566858693,
+            0.8094581510361307
+          ],
+          "height_m": 0.01173372972192457
+        },
+        "change_m": 0.0
+      }
+    },
+    "scope": "Opening material coordinates only. Root-80 material coordinates require the accepted and rejected native transfer."
+  },
+  "full_fit_bed_load": {
+    "spacing_m": 0.0025,
+    "straight_paths": 77255,
+    "additional_deep_paths": 9350,
+    "remaining": 679,
+    "covered_area_m2": 0.54128125,
+    "weight_N": 952.8644332121041,
+    "optimistic_capacity_N": 985.3494698042499,
+    "optimistic_balance_m": 0.1194820225660108,
+    "loaded_oblique": 7421,
+    "oblique_beyond_log_stretch_envelope": 2059,
+    "unresolved_reaction_upper_N": 5.120860282273139,
+    "oblique_reaction_N": 36.835556459581554,
+    "extreme_principal_stretches": [
+      0.36895579851419513,
+      2.2370301515165867
+    ],
+    "max_oblique_shear": 1.8480137240992682
+  },
+  "decision": "Keep the native comparison configuration. The two material poses pass the cell and mass checks. The restricted registration leaves both deltoid origins outside the skin and leaves the failed footprint unchanged. The independent-column contact model exceeds its validated material range under oblique load. Jointly register the shoulder girdle and its soft tissues, and use the existing tetrahedral volume for lateral load transfer.",
+  "sixteen_second_motion_qualified": false,
+  "whole_body_zero_crossings_verified": false
+}

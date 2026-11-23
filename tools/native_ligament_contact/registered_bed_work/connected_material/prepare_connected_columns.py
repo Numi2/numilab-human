@@ -132,7 +132,8 @@ def load_registered_layers(dense,opening):
         epochs[k]=np.ascontiguousarray(nodes[f])
         if k=="O":
             outer_nodes,outer_faces=nodes,f
-    return dict(reference=source,posed=posed,loaded=current_posed,cells=cells,material=mat,element_mass=mass,
+    return dict(reference=source,current_source=current,posed=posed,loaded=current_posed,cells=cells,material=mat,element_mass=mass,
+                reference_rotation=relative[0],reference_translation=translation[0],loaded_rotation=loaded_relative[0],loaded_translation=loaded_translation[0],
                 donor=donor,layers=layers,faces=epochs,outer_nodes=outer_nodes,outer_faces=outer_faces,
                 registration=registration,base_cells=base_cells,mass_by_role=mass_by_role,
                 identities=identities,rigid_loaded=rigid_loaded,root_offset=xr[0]-x[0])
