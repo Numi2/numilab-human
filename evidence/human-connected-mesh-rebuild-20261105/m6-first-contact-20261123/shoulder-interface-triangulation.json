@@ -1,0 +1,71 @@
+{
+  "mesh": "8ee00dba9c5dd64d37d339b15463a7230d9ccd3bfc2209ca7d9af1290a92c026",
+  "baseline": "89728ca00d4562ca1803fdf0165277699b12d2f7d12f2963abaf971830ea8662",
+  "registration": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+  "fixed_join_vertices": 2023,
+  "unchanged_outer_skin_faces": 1383,
+  "layers": {
+    "15": {
+      "cells": 3277,
+      "inverted": 0,
+      "low": 3,
+      "overlap_mm3": {
+        "8": 0.0,
+        "9": 0.0,
+        "10": 0.0,
+        "11": 0.0,
+        "12": 0.0,
+        "13": 0.0
+      },
+      "volume_mm3": 291440.807658505
+    },
+    "16": {
+      "cells": 14442,
+      "inverted": 0,
+      "low": 5,
+      "overlap_mm3": {
+        "8": 0.0,
+        "9": 0.0,
+        "10": 0.0,
+        "11": 0.0,
+        "12": 0.0,
+        "13": 0.0
+      },
+      "volume_mm3": 1532168.4106826761
+    }
+  },
+  "stage": "alternative static surface triangulation, before independent mass transfer or dynamic qualification",
+  "result": {
+    "source": "175d79ee70d08ee73510a3ce6dfe33430c4bfad4d8496f2f6c7c31add9e046f8",
+    "operations": [
+      {
+        "cell": 3842,
+        "original": 16,
+        "deviation_um": 51.94041716452002,
+        "material_transfer_mm3": 0.04766822199857994,
+        "removed": [
+          7936,
+          7935
+        ],
+        "added": [
+          [
+            5540,
+            5546,
+            5549
+          ],
+          [
+            5540,
+            5549,
+            3616
+          ]
+        ]
+      }
+    ]
+  },
+  "mass_qualified_parent": "2113f291ae152be44733a73bbca489e976d53337",
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/shoulder-interface-topology-8ee00dba9c5dd64d-20261123.tar.zst",
+    "sha256": "c3d62a83ff93af0f936b43610d543c897fa625c9516d1093f8a0e87f7e94b17d",
+    "verified_members": 13
+  }
+}
