@@ -12,9 +12,10 @@ from partition_carpal_material import solid
 def run(domain,baseline,conflicts,out):
     z=np.load(domain);ref=np.load(baseline);c=np.load(conflicts/'witnesses.npz')
     x=z['x'];t=z['t'];roles=z['role'];old=ref['x']
-    if len(x)!=len(old):raise ValueError('Quality verifier requires preserved node correspondence')
+    if len(x)<len(old) or not np.array_equal(z['fence'],ref['fence']):raise ValueError('Missing original joined boundary')
+    if not np.array_equal(z['locked'][:len(old)],ref['locked']) or np.any(z['locked'][len(old):]):raise ValueError('Changed exterior node identities')
     faces=ref['facets'];fixed=ref['locked'];skin=faces[ref['markers']==15]
-    if not np.array_equal(canonical(x,skin),canonical(old,skin)) or np.any(x[fixed]!=old[fixed]):raise ValueError('Protected surface/outer join changed')
+    if not np.array_equal(canonical(x,z['facets'][z['markers']==15]),canonical(old,skin)) or np.any(x[:len(old)][fixed]!=old[fixed]):raise ValueError('Protected surface/outer join changed')
     center=x.astype(float).mean(0);banks={}
     for sid in (8,9,10,11,12,13):
         y,inv=np.unique(c['cortex'+str(sid)],axis=0,return_inverse=True);fy=inv[c['faces'+str(sid)]]

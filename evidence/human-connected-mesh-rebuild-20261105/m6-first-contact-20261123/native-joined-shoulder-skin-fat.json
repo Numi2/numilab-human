@@ -1,0 +1,229 @@
+{
+  "qualification": "Full-size production native material import on SSH Numi. Dynamic scene binding and motion are separate outstanding work.",
+  "geometry": {
+    "candidate_sha256": "fa60db03ed62588ef45d28fff0de01d8c6e39a9d326831c00acfbcc8e587c765",
+    "missing_joining_faces": 0,
+    "joining_faces": 3127,
+    "skin_fat_intersection_mm3": 4.196643033083092e-14,
+    "materials": {
+      "15": {
+        "invalid": 0,
+        "cortex_intersection_mm3": 0.0
+      },
+      "16": {
+        "invalid": 0,
+        "cortex_intersection_mm3": 0.0
+      }
+    }
+  },
+  "cortical_clearance": {
+    "mesh": "fa60db03ed62588ef45d28fff0de01d8c6e39a9d326831c00acfbcc8e587c765",
+    "baseline": "89728ca00d4562ca1803fdf0165277699b12d2f7d12f2963abaf971830ea8662",
+    "registration": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "fixed_join_vertices": 2023,
+    "unchanged_outer_skin_faces": 1383,
+    "layers": {
+      "15": {
+        "cells": 3348,
+        "inverted": 0,
+        "low": 0,
+        "overlap_mm3": {
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0
+        },
+        "volume_mm3": 291532.9988580281
+      },
+      "16": {
+        "cells": 14517,
+        "inverted": 0,
+        "low": 0,
+        "overlap_mm3": {
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0
+        },
+        "volume_mm3": 1532076.1200478815
+      }
+    }
+  },
+  "native": {
+    "native_imported": true,
+    "nodes": 314015,
+    "cells": 1457361,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 0,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 0,
+    "skin_kg": 3.452571282803943,
+    "fat_kg": 10.487108427165397,
+    "node_sha256": "b76c1e0a598ca63d0a6fc71ea7d8686e9205f0da8350e7ccaa6e2a38fff47314",
+    "element_sha256": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "label_sha256": "a68ebf0310ca8c246bee20ea7eb31025cdfc4cad523a1a5151ad6b0eedf4240c"
+  },
+  "mass": {
+    "SKIN": {
+      "source_kg": 3.4525712828039024,
+      "cells_kg": 3.452571282803902,
+      "nodal_kg": 3.4525712828039024,
+      "mass_error_kg": -4.440892098500626e-16,
+      "density_range": [
+        899.9999999993338,
+        1100.0000000000339
+      ],
+      "first_moment_error_kg_m": [
+        -1.3877787807814457e-16,
+        2.6645352591003757e-15,
+        1.6653345369377348e-15
+      ],
+      "invalid_cells": 0,
+      "inverted": 0,
+      "passed_mass": true
+    },
+    "FAT": {
+      "source_kg": 10.487108427165248,
+      "cells_kg": 10.48710842716525,
+      "nodal_kg": 10.48710842716525,
+      "mass_error_kg": 1.7763568394002505e-15,
+      "density_range": [
+        849.9999999998773,
+        950.000000000342
+      ],
+      "first_moment_error_kg_m": [
+        -1.138533711753098e-13,
+        -1.1013412404281553e-13,
+        2.5157653738006047e-13
+      ],
+      "invalid_cells": 0,
+      "inverted": 0,
+      "passed_mass": true
+    },
+    "source_cell_mass": "bd30e9bcf79f0c3b84be5a5fc4c5a8d1ed095d6171ac2bf457d4329060b4649b",
+    "domain": "fa60db03ed62588ef45d28fff0de01d8c6e39a9d326831c00acfbcc8e587c765",
+    "quadrature_topology": "c0967e689d1ed983db9f4fcef0771eaed76fa5e2efdfb90300f014ec3fde5c62",
+    "emitted_cells": 1457361,
+    "emitted_active_nodes": 314015,
+    "total_nodal_kg": 13.93967970996915,
+    "source_total_nodal_kg": 13.939679709969152,
+    "scope": "assembled mass arrays prior to runtime geometry admission"
+  },
+  "density_repair": {
+    "SKIN": {
+      "targets": 12,
+      "total_transfer_kg": 4.566578577798782e-17,
+      "longest_path": 3
+    },
+    "FAT": {
+      "targets": 60,
+      "total_transfer_kg": 7.610510107354328e-16,
+      "longest_path": 3
+    }
+  },
+  "initial_native_trial": {
+    "native_imported": true,
+    "nodes": 314015,
+    "cells": 1457361,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 72,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 0,
+    "skin_kg": 3.452571282803943,
+    "fat_kg": 10.487108427165401,
+    "node_sha256": "b76c1e0a598ca63d0a6fc71ea7d8686e9205f0da8350e7ccaa6e2a38fff47314",
+    "element_sha256": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "label_sha256": "a68ebf0310ca8c246bee20ea7eb31025cdfc4cad523a1a5151ad6b0eedf4240c"
+  },
+  "material_subdivision": {
+    "mesh": "fa60db03ed62588ef45d28fff0de01d8c6e39a9d326831c00acfbcc8e587c765",
+    "mapping": "d7132fb4a1417f1b35171116efa77f923c9cc8f5d3f48a73ce5bcd9e7e0dc26e",
+    "parent_mesh": "175d79ee70d08ee73510a3ce6dfe33430c4bfad4d8496f2f6c7c31add9e046f8",
+    "source_donors": "d9daa3490552bf3b75daf94aece09e8d8fe06531ac30a9c52140f07e3f695432",
+    "subdivision": "d78ed6bf1ecf62acea007662b6bc600ac3662452bd6b28ef2c19ded01461600a",
+    "minimum_path_volume_m3": 4.843404978479027e-18,
+    "split_parents": 70,
+    "split_children": 215,
+    "uncovered_children": []
+  },
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-joined-skin-fat-fbf8db5bcd1c3a96.tar.zst",
+    "archive_sha256": "e39a5a13c33787bf97d7e0481751de485cfc4fbcb784e0ea2773bb653e33364f",
+    "size_bytes": 84327869,
+    "verified_member_sha256": {
+      "archive_native_shoulder_import.py": "9fb93b3c0f49bf05dbcb363f4e966cd411f750db0dff0a70fb9f8cf9c2129d35",
+      "balance_native_receivers.py": "dd286105032088e80d9746d691ce7b36f68b4a6e3e6e509ad31c2af3b58c0a1d",
+      "closed-flow/FAT-transport.json": "9a34b148e4bd9fab9d9c1aa92440e17893759551045aad2375834a4d768eef19",
+      "closed-flow/FAT-transport.npz": "57db03e9336d70b7dc51d9d8170c90968f89998afff8fee102c0a9cf7d00ad12",
+      "closed-flow/SKIN-transport.json": "84d69f08621084ffa0fb85810b6510beed4242f4d6772131bfb9694e8f8b0154",
+      "closed-flow/SKIN-transport.npz": "909fc001e350f38ab9c6c98fcd587fee3e6283d46f4b8cce1e7ff3606f1d28b0",
+      "closed-flow/result.json": "0e18b18c5e5188dfc674cba7f905df34891329ae7078cb797fc1496ff15349c6",
+      "closed-mass/result.json": "4f733527cb67b2f891d5b7003b0393051150db7e87373a68aa52798e942b12c5",
+      "closed-native/geometry.json": "fd1e2c08503efd37cc614edbf05c3e2ac7bab8d81d7a8879d2675ef4f80c0fc6",
+      "closed-native/native/cell-mass.f64": "dbc72261ca6f1184ae5bbbd7786ecb902f4d7ec350c649821ab00227525fda65",
+      "closed-native/native/current-child.labels.csv": "a68ebf0310ca8c246bee20ea7eb31025cdfc4cad523a1a5151ad6b0eedf4240c",
+      "closed-native/native/material-source-indices.npz": "e5da075dab6f7c2c83b0e064edf02fda45458fd93bf68c9384df67335a2a8c18",
+      "closed-native/native/mesh.ele": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+      "closed-native/native/mesh.node": "b76c1e0a598ca63d0a6fc71ea7d8686e9205f0da8350e7ccaa6e2a38fff47314",
+      "closed-native/native/native-import.json": "2c27374e732d0921677981ce1bdaa963e1e7bb3f9c58bd2a685bea289c88bfb7",
+      "closed-native/native/native-import.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "closed-native/native/node-mass.f64": "cd76f072a4531143d644ae4aa4eec5486f8d75fba2bc623e124d4a6059c7fcff",
+      "closed-native/native/result.json": "fbf8db5bcd1c3a9641757929273327f1e555ffe60d1fcabbfc595dda9ac28329",
+      "closed-native/receiver/FAT-mapping.npz": "05b9049ee891658aa3f3ec257c58a0c190b4340774435f70450510775e55a304",
+      "closed-native/receiver/SKIN-mapping.npz": "06aef2ca2a75a1d756ea95ecd006cbd2e71f5c7cfbcbba61569266460945e0ab",
+      "closed-native/receiver/result.json": "389083dd826eefce6d76b1dc9308c1d101fd8344e8bdce642ead497cdaeccc2e",
+      "construct_mass_transfer.py": "b20a142113e4f4f2c68c6a49b790a5fdf130b34a768336ed7a4d9e790858d8c0",
+      "density-witnesses.txt": "886f5db8893f38324e4679ffde4127288284acc38407c2660410f5616d078d8a",
+      "guarded-transfer/FAT-capacity.json": "44c2a35df09777f3f4d8de98d9d6abb0c981b22bec816fa9faef962c319ed5b5",
+      "guarded-transfer/FAT-capacity.npz": "b80262868284e0d598f2f8f87aec7c3b8a4fdfb86370ceaabf19f59c61591949",
+      "guarded-transfer/FAT-transport.json": "d2d8dc67364ec8a6cbc6940f80880321c8e97623ffaa495455acb2cb4559ae35",
+      "guarded-transfer/FAT-transport.npz": "93f9e190a511ff511402938045d766a5326ea7919f3dbfa6390c8f9fd6d616ea",
+      "guarded-transfer/SKIN-capacity.json": "d0b56db527582cf6c55fc811746ab679735eb6ce7c05b6d978fbe304529fd2d0",
+      "guarded-transfer/SKIN-capacity.npz": "a850449808edaa3484d3b0b338fedd3e813f321736bb434eb50fa43b6673f9e1",
+      "guarded-transfer/SKIN-transport.json": "025f6d949fbe5970baf95e8d87de0f4de4353780ee14728cf6546a2ad1de69c2",
+      "guarded-transfer/SKIN-transport.npz": "a993c04cdc35808e36d69e4967bf3d42c562fe943183820b71bcf474b4bda436",
+      "guarded-transfer/result.json": "e06af250a23c3f57a070f5926f86ee9ad84fd9d7c566040e34e01b3c99796099",
+      "import_joined_shoulder.py": "090e9957b80149a43efcf0023eb54dd659efcb0635e5a447b64e13c3eefdde6e",
+      "joined-integrated/result.json": "3c038670bc1bb5b908e0ee042929c6d0dcbccaa4387b1a697b90fd7de0fd2c42",
+      "joined-source/ancestry/overlap.npz": "d7132fb4a1417f1b35171116efa77f923c9cc8f5d3f48a73ce5bcd9e7e0dc26e",
+      "joined-source/ancestry/result.json": "58a4abe1da026e0192cff75cfac1bfca28eb4d4320cf73b9a8405d1cc519a23b",
+      "joined-source/result.json": "c0967e689d1ed983db9f4fcef0771eaed76fa5e2efdfb90300f014ec3fde5c62",
+      "joined-transfer/FAT-capacity.json": "44c2a35df09777f3f4d8de98d9d6abb0c981b22bec816fa9faef962c319ed5b5",
+      "joined-transfer/FAT-capacity.npz": "b80262868284e0d598f2f8f87aec7c3b8a4fdfb86370ceaabf19f59c61591949",
+      "joined-transfer/FAT-transport.json": "9a26209e54797b9fd9aa963721190caf1a3fcc591dffb572045a697079230bb0",
+      "joined-transfer/FAT-transport.npz": "149405aa9149ddac5d369a3da7a04064a15d9a2d23904e240f0a3864aea85cce",
+      "joined-transfer/SKIN-capacity.json": "d0b56db527582cf6c55fc811746ab679735eb6ce7c05b6d978fbe304529fd2d0",
+      "joined-transfer/SKIN-capacity.npz": "a850449808edaa3484d3b0b338fedd3e813f321736bb434eb50fa43b6673f9e1",
+      "joined-transfer/SKIN-transport.json": "9b99ddb4f553b59e502bacf26d239ce61a10328f962931b401da917347152427",
+      "joined-transfer/SKIN-transport.npz": "50bbabfcee865923aba3daf009ce32560d04eb5fe991308c057436888bfb90b1",
+      "joined-transfer/result.json": "39eee82f130f3eabab41855bfbd12e8d59a2fd38055ac86827310457dede78c6",
+      "native-transfer/SKIN-unreachable.json": "1bc7a285e0b99f3542248cd3872599c8a18c0ee2e28df15e29b4ec1a36d01fc7",
+      "needle-conditioned/admission.json": "4fce1a17434042cce88cbdb94b9984f91ddb4e26d8031eb47cc71203fc01f31a",
+      "needle-conditioned/domain.npz": "fa60db03ed62588ef45d28fff0de01d8c6e39a9d326831c00acfbcc8e587c765",
+      "needle-conditioned/result.json": "76739d1be9d33922546b1e6cee97413fff5c116ad7011fdd7755ff7667dd95ef",
+      "needle-ring/domain.npz": "5e68ef89d6f316818550b5a357d87264a5da43930fe6cc3c3c4b9b8d58995994",
+      "needle-ring/result.json": "10f17687ec45f43721715db1a866d6a7b43c1758d4e8e2282fa78491dc67f845",
+      "needle-ring/subdivision.npz": "d78ed6bf1ecf62acea007662b6bc600ac3662452bd6b28ef2c19ded01461600a",
+      "previous-recovery.json": "7eea83520d2226ba84f49ac42c4d5d8891b7d9880a447e94c426e6b21fc31fbc",
+      "qualify_material_patch.py": "0d5ed25785c88d7057faa3fa0cd5075b85cc8e831886cfc19077bc7d5ccf3482",
+      "refine_needle_stars.py": "72eca27533e86418a33320f55371ec1b848c593b16601112cf930312ae65d802",
+      "registered-native/native/native-import.json": "4f0c6b6471bf55585950ee16aa4a59ddcee5f9a6a8bb5645864d746ef57a6a84",
+      "registered-native/native/result.json": "7d801c41efc86c1f428d861c5a6fc5ed88e4933488d9a117106b427ce77d20ff",
+      "relax_material_field.py": "94b125f548fc5a8f413bfc0652af70ec67f86cf27c5926e46fb4837f98517a89",
+      "repair_native_density.py": "117125e8949ea90469ef2368627b5604a21fa8b081617dfcc242961c3cd119f0",
+      "ring-fixed.npy": "dd1b1705027f2eb3f211e4480d6c14fa82b80e3148943599699fd1d7c31733f2",
+      "subdivide_source_ancestry.py": "fdbface2b1ffd3044a5f98ec77bfaa0be5f4f1a3539ea56e11477e79d4fd4100"
+    },
+    "scope": "Source ancestry, conservative flow and exact native import for both shoulder regions. Includes failed density receipts and the complete restore-tested physical mesh, labels and masses."
+  }
+}
