@@ -1,0 +1,80 @@
+{
+  "accepted_steps": 2,
+  "simulated_s": 1.5625000742147677e-05,
+  "frame_sha256": "1cb3bdd722da555ff80e6b12eea647b851376aa97eac204d4a18d6f2bcfa723c",
+  "physical_nodes_sha256": "56b4814b3d72160e3da6193509fa37a36ebbb371afc835f21103474d3305cf49",
+  "complete_wall_s": 189.65302579198033,
+  "end_to_end_factor": 8.238730005439436e-08,
+  "material_audits": [
+    {
+      "phase": "reference",
+      "step": "0",
+      "material": "15",
+      "cells": "706663",
+      "nonfinite": "0",
+      "inverted": "0",
+      "volume_le_1e_18": "0",
+      "shape_lt_1e_5": "0",
+      "minimum_volume_m3": "1.001281176253255e-18",
+      "minimum_shape": "1.000001415754589e-05",
+      "minimum_shape_local_cell": "628794"
+    },
+    {
+      "phase": "accepted",
+      "step": "2",
+      "material": "15",
+      "cells": "706663",
+      "nonfinite": "0",
+      "inverted": "0",
+      "volume_le_1e_18": "0",
+      "shape_lt_1e_5": "0",
+      "minimum_volume_m3": "1.001282720323087e-18",
+      "minimum_shape": "1.000001402542253e-05",
+      "minimum_shape_local_cell": "628794"
+    },
+    {
+      "phase": "reference",
+      "step": "0",
+      "material": "16",
+      "cells": "743524",
+      "nonfinite": "0",
+      "inverted": "0",
+      "volume_le_1e_18": "0",
+      "shape_lt_1e_5": "0",
+      "minimum_volume_m3": "1.000290144947699e-18",
+      "minimum_shape": "1.000005435317736e-05",
+      "minimum_shape_local_cell": "1020744"
+    },
+    {
+      "phase": "accepted",
+      "step": "2",
+      "material": "16",
+      "cells": "743524",
+      "nonfinite": "0",
+      "inverted": "0",
+      "volume_le_1e_18": "0",
+      "shape_lt_1e_5": "1",
+      "minimum_volume_m3": "1.000298911477594e-18",
+      "minimum_shape": "9.903407887340531e-06",
+      "minimum_shape_local_cell": "1441513"
+    }
+  ],
+  "layer_crossing_pairs": 0,
+  "checked_banks": 878,
+  "skin_self_intersections": 0,
+  "physical_skin_tissue_pairs": 10132,
+  "ocular_source_pairs": 350,
+  "maximum_skin_motion_m": 4.578602237284768e-06,
+  "pleural_pressure_pa": [
+    -490.332489014,
+    -490.332489014
+  ],
+  "endpoint_anatomy": {
+    "passed": false,
+    "failures": {
+      "physical_skin_tissue_pairs": 10132,
+      "fat_shape_lt_1e_5": 1
+    },
+    "scope": "Exact terminal frame and installed material cells only"
+  }
+}
