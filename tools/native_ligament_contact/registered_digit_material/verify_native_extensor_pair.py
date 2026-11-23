@@ -37,7 +37,7 @@ def loaded(case, initial, dense):
     return receipt, poses, raw
 
 
-def compare(control, edited, reader, predicate, initial=False, dense=False):
+def compare(control, edited, reader, predicate, initial=False, dense=False, muscle_ids=(137, 138)):
     old, pose0, data0 = loaded(control, initial, dense)
     new, pose1, data1 = loaded(edited, initial, dense)
     if pose0 != pose1:
@@ -58,7 +58,7 @@ def compare(control, edited, reader, predicate, initial=False, dense=False):
     targets = {}
     for raw, poses in ((data0, pose0), (data1, pose1)):
         for (kind, sid), _, v, f in pr(raw, poses):
-            if kind == 51005 and sid in (137, 138):
+            if kind == 51005 and sid in muscle_ids:
                 targets.setdefault(sid, []).append((v.copy(), f.copy()))
     neighbors = {sid: [] for sid in targets}
     boxes = {
@@ -86,10 +86,10 @@ def compare(control, edited, reader, predicate, initial=False, dense=False):
             if mask.any():
                 ids, idx = np.unique(f[mask], return_inverse=True)
                 neighbors[sid].append((*key, v[ids], idx.reshape(-1, 3), 1.0))
-    if set(targets) != {137, 138}:
+    if len(muscle_ids) != 2 or set(targets) != set(muscle_ids):
         raise ValueError("Missing bilateral muscle bank")
-    lo, hi = boxes[137]
-    lo2, hi2 = boxes[138]
+    lo, hi = boxes[muscle_ids[0]]
+    lo2, hi2 = boxes[muscle_ids[1]]
     if ((hi >= lo2) & (hi2 >= lo)).all():
         raise ValueError("Bilateral envelopes overlap in the broad phase")
     result = {}
@@ -184,13 +184,14 @@ def compare(control, edited, reader, predicate, initial=False, dense=False):
 
 
 if __name__ == "__main__":
-    print(
-        json.dumps(
-            compare(
-                *(Path(p).resolve() for p in sys.argv[1:5]),
-                initial="--initial" in sys.argv[5:],
-                dense="--dense" in sys.argv[5:],
-            ),
-            indent=2,
-        )
-    )
+    import argparse
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ("control", "edited", "reader", "predicate"):
+        parser.add_argument(name, type=Path)
+    parser.add_argument("--initial", action="store_true")
+    parser.add_argument("--dense", action="store_true")
+    parser.add_argument("--muscle-ids", type=int, nargs=2, default=(137, 138))
+    args = parser.parse_args()
+    print(json.dumps(compare(args.control.resolve(), args.edited.resolve(),
+                             args.reader.resolve(), args.predicate.resolve(),
+                             args.initial, args.dense, args.muscle_ids), indent=2))

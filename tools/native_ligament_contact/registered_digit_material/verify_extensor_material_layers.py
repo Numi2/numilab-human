@@ -15,14 +15,14 @@ from solve_extensor_sites import Neighbors
 from verify_native_extensor_pair import loaded
 
 
-def surfaces(case, reader):
+def surfaces(case, reader, muscle_ids=(137, 138)):
     _, poses, data = loaded(case, initial=False, dense=True)
     sys.path.insert(0, str(reader.parent / "src"))
     pr = runpy.run_path(str(reader))["primitives"]
     return {
         sid: (v, f)
         for (kind, sid), _, v, f in pr(data, poses)
-        if (kind == 51005 and sid in (137, 138)) or (kind, sid) == (51007, 1)
+        if (kind == 51005 and sid in muscle_ids) or (kind, sid) == (51007, 1)
     }
 
 
@@ -91,14 +91,14 @@ def boundaries(case):
     return xyz, group_arrays, xyz[indices]
 
 
-def verify(control, edited, reader, predicate):
-    banks = [surfaces(case, reader) for case in (control, edited)]
+def verify(control, edited, reader, predicate, muscle_ids=(137, 138)):
+    banks = [surfaces(case, reader, muscle_ids) for case in (control, edited)]
     xyz, faces, outer = boundaries(control)
     if sha(control / "physical-accepted.node") != sha(
         edited / "physical-accepted.node"
     ):
         raise ValueError("Passive registration changed physical skin/fat nodes")
-    if set(banks[0]) != {1, 137, 138} or set(banks[1]) != set(banks[0]):
+    if len(set(muscle_ids)) != 2 or set(banks[0]) != {1, *muscle_ids} or set(banks[1]) != set(banks[0]):
         raise ValueError("Missing muscle or skin surface")
     presented = banks[0][1][0]
     if not np.array_equal(presented, banks[1][1][0]) or presented.shape != outer.shape:
@@ -115,7 +115,7 @@ def verify(control, edited, reader, predicate):
         presented_to_physical_outer_rms_mm=1000 * float(np.sqrt(np.mean(offset**2))),
         banks={},
     )
-    for sid in (137, 138):
+    for sid in muscle_ids:
         pts = [bank[sid][0] for bank in banks]
         if not np.array_equal(banks[0][sid][1], banks[1][sid][1]):
             raise ValueError("Changed extensor topology")
@@ -147,4 +147,5 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     for name in ("control", "edited", "reader", "predicate"):
         parser.add_argument(name, type=lambda p: Path(p).resolve())
+    parser.add_argument("--muscle-ids", type=int, nargs=2, default=(137, 138))
     print(json.dumps(verify(**vars(parser.parse_args())), indent=2))
