@@ -27,11 +27,12 @@ def quality(points,cells):
     return np.minimum(v/1e-18,q/1e-5)
 def score(quality):
     return (int(np.sum(quality<1)),float(np.maximum(0.,1.-quality).sum()))
-def run(source,out,*,interior=False):
+def run(source,out,*,interior=False,interface=False):
     data=np.load(source); x=data['x'].astype(float); t=data['t'].copy();roles=data['role'].copy()
     f=data['facets'].copy();mk=data['markers'].copy()
     frozen=data['locked'].copy();frozen[np.unique(f[mk==15])]=True
     if interior:frozen[np.unique(f[mk!=1000])]=True
+    if interface:frozen[np.unique(f[np.isin(mk,[15,16,115,116])])]=True
     results=[];scale=1.e6
     for it in range(100):
         q=quality(x,t);bad=t[q<1]
@@ -40,7 +41,7 @@ def run(source,out,*,interior=False):
         lengths=np.linalg.norm(x[pairs[:,0]]-x[pairs[:,1]],axis=1)*scale
         best=None
         for i in np.argsort(lengths):
-            if lengths[i]>(4500. if interior else 95.):break
+            if lengths[i]>(4500. if interior or interface else 95.):break
             endpoints=tuple(map(int,pairs[i]))
             for a,b in (endpoints,endpoints[::-1]):
                 if frozen[a]:continue
@@ -54,7 +55,7 @@ def run(source,out,*,interior=False):
                 if not len(newq) or np.min(newq)<=0:continue
                 old=score(q[incident]);new=score(newq)
                 if new[0]>old[0] or new[1]>=old[1]:continue
-                if new[0]==old[0] and (not interior or old[1]-new[1]<.05):continue
+                if new[0]==old[0] and (not (interior or interface) or old[1]-new[1]<.05):continue
                 cf,valid=collapse(faces,a,b);keepface=valid&np.any(faces==a,axis=1)
                 orig=x[faces[keepface]];trial=x[cf[keepface]]
                 mis=0.
@@ -64,7 +65,7 @@ def run(source,out,*,interior=False):
                     if np.any(np.einsum('ij,ij->i',normal,newnormal)<=0):continue
                     normal/=np.linalg.norm(normal,axis=1)[:,None]
                     mis=float(np.max(np.abs(normal@(x[b]-x[a])))*scale)
-                    if mis>0.5:continue
+                    if mis>(25. if interface else .5):continue
                 rank=(new[0]-old[0],new[1]-old[1],mis,lengths[i],a,b)
                 if best is None or rank<best[0]:best=(rank,a,b)
         if best is None:break

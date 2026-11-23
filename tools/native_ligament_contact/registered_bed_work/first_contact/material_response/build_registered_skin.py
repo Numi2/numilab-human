@@ -2,7 +2,7 @@
 import json,os,subprocess,sys
 from pathlib import Path
 from compile_connected_joint import digest
-def build(parent,coarse,out):
+def build(parent,coarse,out,ligaments=None):
     key='NumiHumanSelectedSkinReference.hpp';cfg=json.loads((parent/'registration.json').read_bytes());receipts=json.loads((coarse/'result.json').read_bytes())
     if digest(parent/key)!=receipts['original'] or digest(coarse/key)!=receipts['header'] or digest(parent/'numi-human-native')!=cfg['executable']:raise ValueError('Unmatched native registration')
     replacements={key:coarse/key}
@@ -10,7 +10,14 @@ def build(parent,coarse,out):
         if new in receipts:
             if digest(parent/name)!=receipts[old] or digest(coarse/name)!=receipts[new]:raise ValueError('Unmatched physical layer source')
             replacements[name]=coarse/name
+    if ligaments:
+        lig=json.loads((ligaments/'registration.json').read_bytes())
+        key_lig='NumiHumanRegisteredLigaments.hpp';mt='NumiHumanRegisteredLigamentMaterial.inc'
+        if digest(parent/key_lig)!=lig['source_header'] or digest(ligaments/key_lig)!=lig['header'] or digest(ligaments/mt)!=lig['material']:raise ValueError('Unmatched ligament definition')
+        cfg['ligament_registration']=digest(ligaments/'registration.json')
+        replacements[key_lig]=ligaments/key_lig
     out.mkdir()
+    if ligaments:os.link(ligaments/mt,out/mt)
     for f in parent.iterdir():
         if f.suffix in ('.hpp','.inc','.mm','.h'):os.link(replacements.get(f.name,f),out/f.name)
     cmds=[]

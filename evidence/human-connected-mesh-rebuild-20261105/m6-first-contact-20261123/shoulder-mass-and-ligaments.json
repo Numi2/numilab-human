@@ -1,0 +1,242 @@
+{
+  "previous": "4fa3a57120ee64c72c8700df96621671cfc798c9",
+  "emitted_tissue": {
+    "mesh": "175d79ee70d08ee73510a3ce6dfe33430c4bfad4d8496f2f6c7c31add9e046f8",
+    "baseline": "89728ca00d4562ca1803fdf0165277699b12d2f7d12f2963abaf971830ea8662",
+    "registration": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "fixed_join_vertices": 2023,
+    "unchanged_outer_skin_faces": 1383,
+    "layers": {
+      "15": {
+        "cells": 3277,
+        "inverted": 0,
+        "low": 3,
+        "overlap_mm3": {
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0
+        },
+        "volume_mm3": 291440.759990283
+      },
+      "16": {
+        "cells": 14443,
+        "inverted": 0,
+        "low": 6,
+        "overlap_mm3": {
+          "8": 0.0,
+          "9": 0.0,
+          "10": 0.0,
+          "11": 0.0,
+          "12": 0.0,
+          "13": 0.0
+        },
+        "volume_mm3": 1532168.458350898
+      }
+    }
+  },
+  "integrated_mass": {
+    "SKIN": {
+      "source_kg": 3.4525712828039024,
+      "cells_kg": 3.4525712828039024,
+      "nodal_kg": 3.4525712828039024,
+      "mass_error_kg": 0.0,
+      "density_range": [
+        899.9999999993338,
+        1100.000000000071
+      ],
+      "first_moment_error_kg_m": [
+        1.1102230246251565e-16,
+        0.0,
+        1.4432899320127035e-15
+      ],
+      "invalid_cells": 3,
+      "inverted": 0,
+      "passed_mass": true
+    },
+    "FAT": {
+      "source_kg": 10.487108427165248,
+      "cells_kg": 10.48710842716525,
+      "nodal_kg": 10.48710842716525,
+      "mass_error_kg": 1.7763568394002505e-15,
+      "density_range": [
+        849.9999999998773,
+        950.0000000007966
+      ],
+      "first_moment_error_kg_m": [
+        -1.1396439347777232e-13,
+        -1.2612133559741778e-13,
+        2.5002222514558525e-13
+      ],
+      "invalid_cells": 6,
+      "inverted": 0,
+      "passed_mass": true
+    },
+    "source_cell_mass": "bd30e9bcf79f0c3b84be5a5fc4c5a8d1ed095d6171ac2bf457d4329060b4649b",
+    "domain": "175d79ee70d08ee73510a3ce6dfe33430c4bfad4d8496f2f6c7c31add9e046f8",
+    "quadrature_topology": "c0967e689d1ed983db9f4fcef0771eaed76fa5e2efdfb90300f014ec3fde5c62",
+    "emitted_cells": 1457216,
+    "emitted_active_nodes": 313992,
+    "total_nodal_kg": 13.939679709969152,
+    "source_total_nodal_kg": 13.939679709969152,
+    "scope": "assembled mass arrays prior to runtime geometry admission"
+  },
+  "quadrature": {
+    "SKIN": {
+      "kg_deficit": 0.0,
+      "max_source_relative_error": 3.24146066713142e-15,
+      "max_parent_error_kg": 4.336808689942018e-19,
+      "density_range": [
+        899.9999999999997,
+        1100.0000000000002
+      ],
+      "first_moment_kg_m": [
+        6.938893903907228e-18,
+        6.938893903907228e-18,
+        -8.673617379884035e-19
+      ],
+      "mass_error_kg": -5.551115123125783e-17,
+      "passed": true
+    },
+    "FAT": {
+      "kg_deficit": 6.776263578034403e-20,
+      "max_source_relative_error": 6.709043832244201e-15,
+      "max_parent_error_kg": 1.734723475976807e-18,
+      "density_range": [
+        849.9999999999995,
+        950.000000000028
+      ],
+      "first_moment_kg_m": [
+        -1.1293743717999405e-13,
+        -9.50350909079134e-14,
+        2.4988691671445906e-13
+      ],
+      "mass_error_kg": -4.440892098500626e-16,
+      "passed": true
+    }
+  },
+  "native_ligaments": {
+    "rows": 34,
+    "control": "43a31ef4771e2a383ae2c7caab1b994f0c28076c2a43501860cd1ba3fe7708c0",
+    "registration": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "max_original_surface_error_m": 1.197129385527573e-07,
+    "admitted_rows": 28,
+    "rejected_rows": [
+      "registered ligament build failed name=superior_glenohumeral_capsuloligament side=0 bodies=84,91 stable_ids=11,13 cause=registered ligament endpoint normals do not face across inferred fiber span name=superior_glenohumeral_capsuloligament side=0 facing=0.670940,-0.048014 frame_joint=90 frame_pair=90,91 frame_origin_world_m=[0.127704,-0.338348,0.109989] frame_q_xyzw=-0.053154,0.689791,-0.039650,-0.720965 triangles=1131,645 stable_ids=11,13 p0_world_m=[0.128931,-0.314743,0.088596] p1_world_m=[0.127910,-0.344519,0.133985] normal0_world=[0.487505,-0.830804,0.268520] normal1_world=[0.630737,-0.679756,-0.374302] residuals_mm=0.000000,0.000000",
+      "registered ligament build failed name=coracohumeral_capsuloligament side=0 bodies=84,91 stable_ids=11,13 cause=registered ligament endpoint normals do not face across inferred fiber span name=coracohumeral_capsuloligament side=0 facing=-0.332671,-0.500584 frame_joint=90 frame_pair=90,91 frame_origin_world_m=[0.127704,-0.338348,0.109989] frame_q_xyzw=-0.053154,0.689791,-0.039650,-0.720965 triangles=8097,354 stable_ids=11,13 p0_world_m=[0.097721,-0.323055,0.101906] p1_world_m=[0.114946,-0.339624,0.127331] normal0_world=[0.263296,0.964695,-0.006267] normal1_world=[-0.462302,-0.214706,0.860336] residuals_mm=0.000000,0.000000",
+      "registered ligament build failed name=coracoclavicular_complex side=0 bodies=84,79 stable_ids=11,9 cause=registered ligament straight reference path intersects registered source mesh name=coracoclavicular_complex side=0 intersected_body=84 intersected_stable_id=11",
+      "registered ligament build failed name=superior_glenohumeral_capsuloligament side=1 bodies=34,41 stable_ids=10,12 cause=registered ligament endpoint normals do not face across inferred fiber span name=superior_glenohumeral_capsuloligament side=1 facing=0.770077,-0.391837 frame_joint=40 frame_pair=40,41 frame_origin_world_m=[-0.177935,-0.343135,0.104887] frame_q_xyzw=0.044059,0.664208,0.066657,-0.743266 triangles=23701,2787 stable_ids=10,12 p0_world_m=[-0.174951,-0.319469,0.083744] p1_world_m=[-0.173097,-0.349302,0.126458] normal0_world=[-0.333851,-0.878992,0.340466] normal1_world=[0.897816,-0.413992,0.150123] residuals_mm=0.000000,0.000000",
+      "registered ligament build failed name=coracohumeral_capsuloligament side=1 bodies=34,41 stable_ids=10,12 cause=registered ligament endpoint normals do not face across inferred fiber span name=coracohumeral_capsuloligament side=1 facing=-0.423915,-0.258762 frame_joint=40 frame_pair=40,41 frame_origin_world_m=[-0.177935,-0.343135,0.104887] frame_q_xyzw=0.044059,0.664208,0.066657,-0.743266 triangles=13801,3152 stable_ids=10,12 p0_world_m=[-0.147181,-0.327881,0.097127] p1_world_m=[-0.163137,-0.345248,0.119510] normal0_world=[-0.222764,0.974699,-0.018368] normal1_world=[0.711651,-0.363527,0.601167] residuals_mm=0.000000,0.000000",
+      "registered ligament build failed name=coracoclavicular_complex side=1 bodies=34,29 stable_ids=10,8 cause=registered ligament straight reference path intersects registered source mesh name=coracoclavicular_complex side=1 intersected_body=34 intersected_stable_id=10"
+    ],
+    "native": {
+      "exit": 1,
+      "wall_s": 4.361975458217785
+    },
+    "accepted_steps": 0
+  },
+  "source_wraps": {
+    "source_wrap": "4b631954e8d5b7523e564cff43e618904006ea7d3515c97856f64847e84c883e",
+    "rigid": "bf26a498f7a16839ae10865d66ca210e23d57c7b132c49053554c200323df6f9",
+    "material": "3a9c53aaef240b640424d6667f2cc8b0af425fdd83fc128583bbbeff64362a7b",
+    "bones": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "rows": [
+      {
+        "name": "superior_glenohumeral_capsuloligament",
+        "side": 0,
+        "source_geometry": "LIGhh_s_ellipsoid_s_glenohum_l",
+        "native_registered_material_triangles": [
+          645,
+          1131
+        ],
+        "wrap_active": true,
+        "path_m": 0.06200620059294763,
+        "control_length_m": 0.017386465147151958,
+        "arc_error_m": 1.4253342533776513e-06,
+        "intersected_banks": {
+          "13": [
+            47,
+            788
+          ]
+        },
+        "source_stiffness": 0.0
+      },
+      {
+        "name": "coracohumeral_capsuloligament",
+        "side": 0,
+        "source_geometry": "LIGhh_s_ellipsoid_coracohum_l",
+        "native_registered_material_triangles": [
+          354,
+          8097
+        ],
+        "wrap_active": false,
+        "path_m": 0.03489552585521358,
+        "control_length_m": 0.024770541098438337,
+        "arc_error_m": 0.0,
+        "intersected_banks": {
+          "11": [
+            0,
+            7456
+          ],
+          "13": [
+            0,
+            26
+          ]
+        },
+        "source_stiffness": 0.0
+      },
+      {
+        "name": "superior_glenohumeral_capsuloligament",
+        "side": 1,
+        "source_geometry": "LIGhh_s_ellipsoid_s_glenohum",
+        "native_registered_material_triangles": [
+          2787,
+          23701
+        ],
+        "wrap_active": true,
+        "path_m": 0.05802299267726391,
+        "control_length_m": 0.014971610387833718,
+        "arc_error_m": 1.4354716527797948e-06,
+        "intersected_banks": {
+          "12": [
+            0,
+            2809
+          ]
+        },
+        "source_stiffness": 0.0
+      },
+      {
+        "name": "coracohumeral_capsuloligament",
+        "side": 1,
+        "source_geometry": "LIGhh_s_ellipsoid_coracohum",
+        "native_registered_material_triangles": [
+          3152,
+          13801
+        ],
+        "wrap_active": false,
+        "path_m": 0.0325150432000473,
+        "control_length_m": 0.02523304143676038,
+        "arc_error_m": 0.0,
+        "intersected_banks": {
+          "10": [
+            0,
+            17182
+          ],
+          "12": [
+            0,
+            3557
+          ]
+        },
+        "source_stiffness": 0.0
+      }
+    ]
+  },
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/connected-shoulder-mass-ligaments-acdaf83cd7a01aab-20261123.tar.zst",
+    "bytes": 31083243,
+    "sha256": "9b474e1f35f929ff91b41fdbd073209f228d0f39a8f1cd588cad6757730d0c6d",
+    "verified_files": 147
+  }
+}
