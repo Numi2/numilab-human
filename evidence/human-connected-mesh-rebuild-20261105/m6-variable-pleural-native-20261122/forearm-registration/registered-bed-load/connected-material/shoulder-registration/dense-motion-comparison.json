@@ -1,0 +1,188 @@
+{
+  "parent": {
+    "launch": "3e6c62bc6f7c29b55cac0f44bd07638213f16bf3f6ba2e1ae037ed473768e472",
+    "binary": "3f60ef26d2d1443c25ab1eda6a70aefdd57906eb818fd3b126aeb63a4e62f2e3",
+    "full_tissue": true,
+    "variable_pleural": true,
+    "accepted_roots": 3,
+    "accepted_seconds": 4.68750022264e-05,
+    "native_exit": 1,
+    "wall_s": 277.7943948749453,
+    "accepted_per_wall": 1.6873991373188693e-07,
+    "first_failing_trial": 4,
+    "matter_code": 10,
+    "matter_diagnostics": [
+      0.056183040142059326,
+      9.2622741476589e-08,
+      0,
+      -902
+    ],
+    "full_line_search_trial": {
+      "alpha": 1,
+      "valid_tile_min_J": 0.351488,
+      "first_bad_tet": 874304,
+      "trial_J": 0.162898,
+      "current_J": 0.35,
+      "reason": 2,
+      "invalid_tiles": 1,
+      "tile_witness_tets": [
+        874304
+      ],
+      "tile_witnesses_complete": true
+    },
+    "final_selected_step": 2.98023e-08,
+    "last_domain_norm": {
+      "root": 3,
+      "environment": 0,
+      "nonvascular_norm": 0.0561830439,
+      "vascular_norm": 5.10398372e-08,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    }
+  },
+  "candidate": {
+    "launch": "64d7d7ee3998180d7e270a691586be6f2010fa5d6ce7964207505940e474ffbf",
+    "binary": "617030ab553d6e1df4ea0117a7ed4d12a2c5f7b81ac29932b3b354ef7b03ae0e",
+    "full_tissue": true,
+    "variable_pleural": true,
+    "accepted_roots": 3,
+    "accepted_seconds": 4.68750022264e-05,
+    "native_exit": 1,
+    "wall_s": 275.7071550420951,
+    "accepted_per_wall": 1.7001735852391318e-07,
+    "first_failing_trial": 4,
+    "matter_code": 10,
+    "matter_diagnostics": [
+      0.05793628841638565,
+      1.0572933462071887e-07,
+      0,
+      -902
+    ],
+    "full_line_search_trial": {
+      "alpha": 1,
+      "valid_tile_min_J": 0.351529,
+      "first_bad_tet": 874304,
+      "trial_J": 0.159026,
+      "current_J": 0.35,
+      "reason": 2,
+      "invalid_tiles": 1,
+      "tile_witness_tets": [
+        874304
+      ],
+      "tile_witnesses_complete": true
+    },
+    "final_selected_step": 2.98023e-08,
+    "last_domain_norm": {
+      "root": 3,
+      "environment": 0,
+      "nonvascular_norm": 0.0579362884,
+      "vascular_norm": 2.38715891e-08,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    }
+  },
+  "witness": {
+    "global_tet": 874304,
+    "skin_tet": 870989,
+    "nodes": [
+      131581,
+      130206,
+      130605,
+      130659
+    ],
+    "material": 16,
+    "donors": [
+      128,
+      128,
+      128,
+      128
+    ],
+    "layer_node_tags": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "reference_material_volume_m3": 2.1441889014210716e-10,
+    "opening_J": 0.7650212713121473,
+    "opening_principal_stretches": [
+      1.1380155887249621,
+      1.0069618121919341,
+      0.6675938064769953
+    ],
+    "opening_centroid_m": [
+      0.03768480936951694,
+      -0.8133414387992279,
+      0.013927140069540198
+    ],
+    "opening_loaded_quality": 0.002521449381899684,
+    "mass_kg": 2.0369794563493718e-07,
+    "full_star_cells": 90
+  },
+  "material_opening": {
+    "moved_nodes": 40,
+    "maximum_displacement_m": 3.4784496082549154e-06,
+    "initial_modes_s2": [
+      -646002665.7344775,
+      1600450964.2136722,
+      -219126606.0489695
+    ],
+    "final_modes_s2": [
+      -641550720.947022,
+      1557360192.430783,
+      -207469612.874972
+    ]
+  },
+  "held_out_boundary_responses": 10,
+  "conservative_embedding_assembled_mass_eigenvalues": [
+    0.9096119457282362,
+    1.0000000000000004
+  ],
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/dense-bonded-material-d03042694dc3614435fa.tar.zst",
+    "archive_sha256": "1e4ba56b66081fd17f7d571c3732b9e1a1c0a5bb247955eddcb04a1a9fb8d876",
+    "size_bytes": 14792165,
+    "verified_member_sha256": {
+      "comparison.json": "d03042694dc3614435fa7170060b9313aaed1462b223be78fe80e3c9088da442",
+      "embedded.json": "9098a646b9d6e4017d35f8a8d2c05dc6f2ec0242b788471f27788721d846af24",
+      "fit_released_modes.py": "dba178182d5d3a1ae9752da841c16b05507ba72125fc09f43d8454b1466e5d52",
+      "initial-pockets.json": "13f994eb487c2bac0931a4d43f06b255cf329d1e0c565eb0cb2878ccbe24336e",
+      "initial-reconnectivity.json": "cec42ceb49baab3d1ad03ffb0877289bbd98a04136a9be3275742783dc6ed0e1",
+      "limiting-cell.json": "11e3d6cad61da064fa997a6f8c92332f51f49c6da2ead8a1282add0befe80fe0",
+      "measure_release.py": "70445731ed342ec621fa6fdf529fc958564221d3f9ed8bf47e97a81967b43761",
+      "native-four/execution.json": "1ec1098d64752857658abd1ff6732b432cba034c1c8bdd127569b8bbb8102387",
+      "native-four/failure.json": "8f962de3f7d12af9f4452267702963ddde91fe9e11fd5a1ec4731b8f149ee14a",
+      "native-four/launch.json": "64d7d7ee3998180d7e270a691586be6f2010fa5d6ce7964207505940e474ffbf",
+      "native-four/native-traces/resting-coupled.csv": "7a171f4a4dcb3e204791b7862aeba12a810b006544d17593d51b278ec85958b0",
+      "native-four/native-traces/resting-surface-audit.csv": "1fa51d21800f09b98ec7b1b5feae8588b9efbc88365da1603fe3cb97294bf9cf",
+      "native-four/stderr.log": "3165ef661a41d47c00d2c5bc97be6d0a3b2643ab9e507a23d2d73a18395b423f",
+      "native-four/stdout.log": "3ee08eae98ad4c664a8b37771d06ff07c489e5a5d520a7bbf087bf425df1bea0",
+      "optimize_material_pockets.py": "6e252e4c600242069120e755d53cdfd07991935a0e46a711ea22e8cee1d340dc",
+      "optimized-pockets.json": "47e4d17aa92dd6e885c3bb6d1741548720e5159c8c77b0c045c5e71d90fd907b",
+      "pocket-response.json": "7e9502edd255e71e4b658adca0470155d628687ec9818988203cbd4e2ad79c7d",
+      "prerequisite/decision.json": "28ced63855d68348b0a0318557d143de186d3ead9bce6bcebf9968287c513181",
+      "prerequisite/dense-limit.json": "36598165ad32bf5670fa56c65c53ab24aed0d2d917b6598c49f7c31d481da8a2",
+      "prerequisite/dense-recovery.json": "f109d144ff6c41aff543d3a8beaaadfca8a2413c03146b54589ff82b12ee8ed8",
+      "prerequisite/held-fit.json": "420b6264f6613e4d7ae4f5588c0cf7c2198b839ae30fe39fb2d8f21cafed25cd",
+      "prerequisite/recovery.json": "f5dcd173b19820b3d0b9399ab6ef9e0cc52d24d2e6ade3bae4617b317ad2a603",
+      "prerequisite/resolve_dense_limit.py": "0a66683856ce61838a2c934f63be2f111bc7c9ffcc85d3f195833d291f554aae",
+      "prerequisite/resolve_release_inputs.py": "56c5b6a5effb09d29414512d68a167df2f0018f3cd3d2539409931ed6a896c19",
+      "qualify_pocket_response.py": "7152ea40623fb7b8faa49efeef6389ca92e4f0ef4791215ed25c963bbd78c076",
+      "recover_release.py": "5bf812b00f3b75db785aa789d91b9f5f1450eb248465774b317432836029d33a",
+      "relaxed/current.node": "3cbf2ff7db79838513e3c95171763ad6e8398444becbb6859a08be2bff026677",
+      "relaxed/fit.json": "323670a1a7fb2a82093d2d872ed7510b437b77fdc565cc756c7eaf4e5be8bedf",
+      "relaxed/installation.json": "4df166c7ac79e997187313e62bc7bf059d6a3eab9b865c7c5da6bb2517bd900b",
+      "relaxed/layers.json": "f83f7bfccb405566aa972d8f85e2c8e1ac50b0a73330f99ac3057cba08a86ed9",
+      "relaxed/owner/NumiHumanLoadedSkinPoseData.inc": "731eeba5496ebb4fed0b3e256dcd8b3f1036a082fe0b2b6bdbfcb5c05d837cbb",
+      "relaxed/owner/identities.json": "373806d3080738bbd21b196dea732485b9542448e81d48289ae876ca6e1d5f56",
+      "relaxed/owner/numi-human-native": "617030ab553d6e1df4ea0117a7ed4d12a2c5f7b81ac29932b3b354ef7b03ae0e",
+      "relaxed/preload.npz": "acca2a8be729d8f43cf0a47caa60894abb99d77d9d944e164df7c1aad34c89a3",
+      "run_matched.py": "9b4368777d9bcfa66fb76c13dd29d90c350d064e31a523a5130c6be5e19b1480",
+      "screen_initial_pockets.py": "5e5f6be0e52f7c091d09eee75f451dcf8d1bc3f4c493b81c1ea221a5bc3d644b",
+      "screen_initial_reconnectivity.py": "2589463120dc40eae44737284e3c12d4b5574b19efdd91858aeeb31754a7c77c",
+      "test_embedded_replacement.py": "4377bc4c15c9c1798528c767147bb03316f7604bc3fb7430754e0c6a3c32552f",
+      "witnesses.json": "1e0b549fb1f97df0dda2b4c9918244a05e98441e9efe43a76386f6a7e036fbab"
+    },
+    "scope": "Matched full-tissue four-step trial, generated binary and preload; conservative data and dense native controls."
+  }
+}
