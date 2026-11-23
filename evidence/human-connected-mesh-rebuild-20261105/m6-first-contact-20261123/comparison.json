@@ -1,0 +1,274 @@
+{
+  "parent_revision": "af37217c7bff00df2e13f66b1012b1e677998edd",
+  "baseline": {
+    "launch": "64d7d7ee3998180d7e270a691586be6f2010fa5d6ce7964207505940e474ffbf",
+    "binary": "617030ab553d6e1df4ea0117a7ed4d12a2c5f7b81ac29932b3b354ef7b03ae0e",
+    "full_tissue": true,
+    "variable_pleural": true,
+    "accepted_roots": 3,
+    "accepted_seconds": 4.68750022264e-05,
+    "native_exit": 1,
+    "wall_s": 275.7071550420951,
+    "accepted_per_wall": 1.7001735852391318e-07,
+    "first_failing_trial": 4,
+    "matter_code": 10,
+    "matter_diagnostics": [
+      0.05793628841638565,
+      1.0572933462071887e-07,
+      0,
+      -902
+    ],
+    "full_line_search_trial": {
+      "alpha": 1,
+      "valid_tile_min_J": 0.351529,
+      "first_bad_tet": 874304,
+      "trial_J": 0.159026,
+      "current_J": 0.35,
+      "reason": 2,
+      "invalid_tiles": 1,
+      "tile_witness_tets": [
+        874304
+      ],
+      "tile_witnesses_complete": true
+    },
+    "final_selected_step": 2.98023e-08,
+    "last_domain_norm": {
+      "root": 3,
+      "environment": 0,
+      "nonvascular_norm": 0.0579362884,
+      "vascular_norm": 2.38715891e-08,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    }
+  },
+  "variants": {
+    "translated_skin": {
+      "launch": "40ff269f363f6048a90de37cc1ce552c3134534948bbb9f1ce2441888aabd217",
+      "binary": "4baeb00db9fc8e4c8f6b0bed860317dfcda4707b2fb5f96b72412d83c0dd81dd",
+      "receipt": "0a25b0bf3d3bceeebbf5fa6d76760fbd70629ff526fec2efcd8d4a9382c3f1ef",
+      "prepared": {
+        "cells": 1448799,
+        "invalid_geometry": 0,
+        "outside_stretch_envelope": 0,
+        "outside_stress_cap": 0,
+        "minimum_stretch": 0.9965164851633861,
+        "maximum_stretch": 1.0040699909287976,
+        "peak_stress_Pa": 840.1942785465035,
+        "peak_stress_row": 615760,
+        "passed": true,
+        "materials": {
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+        }
+      },
+      "phase": "first contact under full gravity",
+      "accepted": {
+        "launch": "40ff269f363f6048a90de37cc1ce552c3134534948bbb9f1ce2441888aabd217",
+        "binary": "4baeb00db9fc8e4c8f6b0bed860317dfcda4707b2fb5f96b72412d83c0dd81dd",
+        "physical_nodes": "a252a9d30945cf89eb0329014e13f5ad38f4f9cf451ad0e11ffc2368c1b12cfc",
+        "source_materials": {
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+        },
+        "cells": 1448799,
+        "accepted_steps": 16,
+        "accepted_seconds": 0.000250000011874,
+        "end_to_end_cold_wall_s": 324.4060688749887,
+        "cold_factor": 7.706391336665733e-07,
+        "native_body_window_wall_s": 182.7857275,
+        "native_body_window_factor": 1.3677217324003748e-06,
+        "material": {
+          "cells": 1448799,
+          "invalid_geometry": 6,
+          "outside_stretch_envelope": 3,
+          "outside_stress_cap": 0,
+          "minimum_stretch": 0.5401010798843087,
+          "maximum_stretch": 1.5627351651321775,
+          "peak_stress_Pa": 10461.680212834715,
+          "peak_stress_row": 666727,
+          "passed": false
+        },
+        "world_weight_N": 952.864432911168,
+        "last_bed_reaction_N": 0.001857296979324019,
+        "terminal_active_bed_rows": 6,
+        "last_bed_fraction_of_weight": 1.9491723220790715e-06,
+        "peak_motion_m": 0.00013868057470012838,
+        "witness_J_start": 1.0,
+        "witness_J_end": 0.9999899610985266,
+        "variable_pleural": true,
+        "root_assistance": false,
+        "pleural_Pa_first_last": [
+          -490.332489014,
+          -490.332489014
+        ],
+        "complete_breaths": 0,
+        "complete_filling_ejection_cycles": 0
+      },
+      "terminal_cell_counts": [
+        {
+          "material": 15,
+          "cells": 705090,
+          "inverted": 0,
+          "nonfinite": 0,
+          "volume_le_1e_18": 0,
+          "shape_lt_1e_5": 0
+        },
+        {
+          "material": 16,
+          "cells": 743709,
+          "inverted": 0,
+          "nonfinite": 0,
+          "volume_le_1e_18": 1,
+          "shape_lt_1e_5": 5
+        }
+      ],
+      "layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          29
+        ]
+      ],
+      "physical_banks": {
+        "pack_sha256": "fd3b48e47ad8c7b4d4c0ff75f451154ad641111cedd49c4ea158e4678eaf956e",
+        "audit_sha256": "3d433605a0cea8593d8bb16517b94d49a4c50fcdc1ad66e1e4952a390eab026d",
+        "native_log_sha256": "db81af6d15c1029442addabf00d981b40c782be6c9845bf5ea0d4f512f9af33b",
+        "window_receipt_sha256": "671077325ce07f4e1fd4aedded4609ee1ca33d985d1d10b92d5df6c72061f0ab",
+        "checked_banks": 878,
+        "physical_nonocular_pairs": 10764,
+        "ocular_source_pairs": 350,
+        "eye_presentation_only_pairs": 274,
+        "bone_pairs": 0
+      },
+      "skin_self": 0,
+      "full_scene_qualified": false
+    },
+    "material_origin": {
+      "launch": "bd8ef70125a70604042017ee8e18b87f659fb817744f9f86ae6f194962e153f9",
+      "binary": "8761ab73e4df6cdf424b044b2b16dc4163f6631829f052d05334398c863b0754",
+      "receipt": "1222ea5b2a2467a5245e70686fb1ace589560c7a3e20db04a498cccf7606d4a8",
+      "prepared": {
+        "cells": 1448799,
+        "invalid_geometry": 0,
+        "outside_stretch_envelope": 0,
+        "outside_stress_cap": 0,
+        "minimum_stretch": 0.9999999999901441,
+        "maximum_stretch": 1.0000000000067752,
+        "peak_stress_Pa": 3.3845353755168617e-06,
+        "peak_stress_row": 650124,
+        "passed": true,
+        "materials": {
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+        }
+      },
+      "phase": "first contact under full gravity",
+      "accepted": {
+        "launch": "bd8ef70125a70604042017ee8e18b87f659fb817744f9f86ae6f194962e153f9",
+        "binary": "8761ab73e4df6cdf424b044b2b16dc4163f6631829f052d05334398c863b0754",
+        "physical_nodes": "4cd5ca385612ca642a923496a694f2f12e94bfe5d4e48c4dcd49aac1bf6689fe",
+        "source_materials": {
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+          "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+        },
+        "cells": 1448799,
+        "accepted_steps": 16,
+        "accepted_seconds": 0.000250000011874,
+        "end_to_end_cold_wall_s": 325.5072930830065,
+        "cold_factor": 7.680319832657278e-07,
+        "native_body_window_wall_s": 180.527524834,
+        "native_body_window_factor": 1.3848304412540121e-06,
+        "material": {
+          "cells": 1448799,
+          "invalid_geometry": 6,
+          "outside_stretch_envelope": 3,
+          "outside_stress_cap": 0,
+          "minimum_stretch": 0.5401011498477494,
+          "maximum_stretch": 1.5627245232381413,
+          "peak_stress_Pa": 10462.42100608588,
+          "peak_stress_row": 666727,
+          "passed": false
+        },
+        "world_weight_N": 952.8644330643456,
+        "last_bed_reaction_N": 0.001859460212472186,
+        "terminal_active_bed_rows": 6,
+        "last_bed_fraction_of_weight": 1.9514425640720913e-06,
+        "peak_motion_m": 0.00013868060082547655,
+        "witness_J_start": 1.0,
+        "witness_J_end": 0.999989944891373,
+        "variable_pleural": true,
+        "root_assistance": false,
+        "pleural_Pa_first_last": [
+          -490.332489014,
+          -490.332489014
+        ],
+        "complete_breaths": 0,
+        "complete_filling_ejection_cycles": 0
+      },
+      "terminal_cell_counts": [
+        {
+          "material": 15,
+          "cells": 705090,
+          "inverted": 0,
+          "nonfinite": 0,
+          "volume_le_1e_18": 0,
+          "shape_lt_1e_5": 0
+        },
+        {
+          "material": 16,
+          "cells": 743709,
+          "inverted": 0,
+          "nonfinite": 0,
+          "volume_le_1e_18": 1,
+          "shape_lt_1e_5": 5
+        }
+      ],
+      "layer_pairs": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          29
+        ]
+      ],
+      "physical_banks": {
+        "pack_sha256": "9ddbc701507aecc9aedcb4e0bbed7d5fc38aa71e6d0e6abc003b42154cfa6af0",
+        "audit_sha256": "e9af9f8a0577d78149a4b2e6e31f4119812a87f08f2314d0d43d87ceaa067ac7",
+        "native_log_sha256": "cc6fbc1dd83e160b2a05988b59a73a43279c0147f5759a906bbeaf9d4b9dcc6a",
+        "window_receipt_sha256": "94600f6ecfd57d8cc7a2f0e269cacb28a1d6ac510e0c894470bc730ce39ace67",
+        "checked_banks": 878,
+        "physical_nonocular_pairs": 10764,
+        "ocular_source_pairs": 350,
+        "eye_presentation_only_pairs": 274,
+        "bone_pairs": 0
+      },
+      "skin_self": 0,
+      "full_scene_qualified": false
+    }
+  },
+  "comparison": {
+    "same_clocks": true,
+    "identical_failed_cells": true,
+    "original_failed_cell_J_at_terminal": 0.999989944891373,
+    "declared_bed_plane_shift_m": -1.9073486328125e-06
+  }
+}

@@ -1,0 +1,13 @@
+# Whole-body first contact on Apple M6
+
+The precompressed full-volume control rejected step four of four. Raising the articulated body back to its registered material frame and starting under full gravity cleared that rejection. The native source retained all 26 fascia regions, the registered whole-body skin/fat, 14 elastic deep attachments, all 76,153 outer bed candidates, the rigid skeleton, muscle control and the circulatory and pleural coupling. The sole fixed bed supplies unilateral contact. Recruitment was in dynamic-release mode.
+
+Two full native runs accepted 16 steps of 15.625 microseconds each. In one, the body was translated vertically by 1.90735 micrometres from its source frame. In the second, the material coordinates were exactly the reference and the fixed bed origin was lowered by that distance. Both started with 1.94778 micrometres of minimum skin clearance. Moving the frame onto the source material reduced peak numerical opening stress from 840.19 Pa to 0.00000339 Pa. The prior fourth-step fat cell ended at a volume ratio of 0.999990.
+
+The second run advanced 0.000250 s in 325.51 s of cold wall time. The measured native body window was 180.53 s. The final bed reaction was 0.00186 N against a 952.86 N weight. Settling, physiological cycles, the respiratory intervention, native presentation throughput and sustained speed remain open.
+
+The same eight fat cells failed shape, volume or stretch admission in both moving endpoints. All cells retained positive volume. Both endpoints had 29 deep-fat surface intersections and 10,764 physical skin-to-tissue triangle pairs across the audited banks, including 9,896 muscle pairs and zero bone pairs. Of the 29 deep-fat pairs, 22 shared one material vertex. The exact surface predicate detected overlap outside that common vertex. Seven pairs shared no vertices.
+
+The disjoint local flip search considered 53 configurations across the eight cells. One topology met geometry and mass checks but changed the local endpoint force by 95.65%. No configuration passed every check. The two existing gluteal material surfaces were registered against the actual pelvic and femoral frames. At the first bed-contact ray, the registered deep-fat boundary was at 12.37 mm and the muscular surface was at 29.04 mm. That interval needs physical anatomical ownership before it can carry static load.
+
+On SSH Numi the diagnostic is available through `~/Work/run-numi-human-rest --full-first-contact`. The argument is optional and selects an unused output directory. The independent recovery receipt contains the exact inputs and commands for these runs and their source dependencies.

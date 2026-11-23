@@ -1,0 +1,22 @@
+#!/bin/bash
+set -eu
+here=$(dirname "$(realpath "$0")")
+assembly=$(dirname "$here")
+material=$(dirname "$assembly")
+prior="$material/run-tissue-registration"
+if [[ "${1:-}" == --help ]];then
+    "$prior" --help
+    echo 'Use --full-first-contact [new-output-directory] for 16 full-volume native steps of 15.625 microseconds each. This exercises contact at release. Supported rest remains unqualified.'
+    exit
+fi
+if [[ "${1:-}" != --full-first-contact ]];then exec "$prior" "$@";fi
+shift
+[[ $# -le 1 ]] || { echo 'Expected at most one output directory' >&2;exit 2; }
+out=${1:-$(mktemp -d "$here/full-contact.XXXXXX")/run}
+# Locate the existing native process watchdog in the installed preparation tree.
+runtime="$here"
+while [[ "$runtime" != / && ! -f "$runtime/run_cavity_motion.py" ]];do runtime=$(dirname "$runtime");done
+[[ -f "$runtime/run_cavity_motion.py" ]] || { echo 'Missing native process watchdog' >&2;exit 1; }
+export PYTHONPATH="$runtime${PYTHONPATH:+:$PYTHONPATH}"
+exec /Users/numi/numi-human-prep-venv-20261005/bin/python3 "$here/run_first_touch.py" \
+    "$assembly/full-tissue-release/parent" "$here/exact-material-origin" "$out" 16
