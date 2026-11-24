@@ -1,0 +1,464 @@
+{
+  "control": {
+    "launch_sha256": "0d26cd45aee5c34c287a049e1df0f1fe9c9c482ecd2268c2eeccc137f67f9b6d",
+    "execution": {
+      "exit": 1,
+      "wall_s": 190.0946219158359
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.0021018360275775194,
+      0.00023277878062799573,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 607,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 30,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.00210234965,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.00210234965,
+        "last_fgmres_residual_norm": 2.09643702e-07,
+        "last_fgmres_initial_norm": 0.00210234965,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.00210234965,
+        "last_newton_correction_ratio": 0.953677893,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.00210183603,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 19,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.0100539802
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.482531786,
+        "object_alpha": 0.482531786,
+        "residual": 0.00755366357
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.00393685466
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00295515009
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.00277058291
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00242465734
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00234892615
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00220222585
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 0.0078125,
+        "object_alpha": 0.0078125,
+        "residual": 0.00213344442
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 0.001953125,
+        "object_alpha": 0.001953125,
+        "residual": 0.00211678492
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.00211265218
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.00210440299
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.0021033762
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      }
+    ],
+    "physical_contact": []
+  },
+  "coupled": {
+    "launch_sha256": "d15d67a5e7292570df73da85cce53aad4df954c03fcf89d1207db21c44d36dca",
+    "execution": {
+      "exit": 1,
+      "wall_s": 192.5703214998357
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.0015712149906903505,
+      3.1124790245140588e-12,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 642,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 30,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.00157121499,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.00157121499,
+        "last_fgmres_residual_norm": 1.55882248e-07,
+        "last_fgmres_initial_norm": 0.00157121499,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.00157121499,
+        "last_newton_correction_ratio": 0.85555172,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.00157121499,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 19,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.0100539876
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.488586426,
+        "object_alpha": 0.488586426,
+        "residual": 0.00755367521
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.00389183941
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0019554894
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00171134993
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.015625,
+        "object_alpha": 0.015625,
+        "residual": 0.00160449557
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.00157944486
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 0.0009765625,
+        "object_alpha": 0.0009765625,
+        "residual": 0.00157328043
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.0015717448
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 6.10351562e-05,
+        "object_alpha": 6.10351562e-05,
+        "residual": 0.00157136202
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 3.05175781e-05,
+        "object_alpha": 3.05175781e-05,
+        "residual": 0.0015712661
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 1.90734863e-06,
+        "object_alpha": 1.90734863e-06,
+        "residual": 0.00157121767
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 2.38418579e-07,
+        "object_alpha": 2.38418579e-07,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 5.96046448e-08,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 3.63797881e-12,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 3.63797881e-12,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 3.63797881e-12,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      }
+    ],
+    "physical_contact": []
+  },
+  "gpu_schedule": {
+    "native": "device=Apple M6 matched_schedules=176",
+    "shader": "e209ba9cff25bee867556420bec9591052cbc1b7a18a331d47611221bbd7c13c",
+    "production": "5d5614c04499e2dd14b2706bd7e9fa3a2dbd3496d47bb3b4ddfb3731291e4436"
+  },
+  "active_tiles": 44,
+  "outcomes_by_tile": {
+    "36": 5,
+    "227": 5,
+    "284": 5,
+    "286": 5,
+    "393": 5,
+    "536": 5,
+    "606": 5,
+    "1239": 5,
+    "1657": 5,
+    "1714": 5,
+    "1791": 5,
+    "2073": 5,
+    "2275": 5,
+    "2281": 5,
+    "2479": 5,
+    "2652": 5,
+    "2869": 5,
+    "3210": 6,
+    "3993": 5,
+    "4064": 5,
+    "4117": 5,
+    "4335": 5,
+    "4618": 5,
+    "4664": 6,
+    "4682": 5,
+    "5030": 6,
+    "5119": 6,
+    "5123": 5,
+    "5143": 6,
+    "5144": 5,
+    "5153": 6,
+    "5624": 5,
+    "5638": 6,
+    "5642": 6,
+    "5645": 6,
+    "5648": 6,
+    "5649": 5,
+    "5660": 6,
+    "5661": 5,
+    "5662": 6,
+    "5674": 6,
+    "5676": 5,
+    "5678": 6,
+    "5688": 6
+  },
+  "outcome_semantics": {
+    "1": "inactive or already converged",
+    "2": "insufficient private nodes",
+    "3": "fixed node or ineligible mass",
+    "4": "starting determinant outside bounds",
+    "5": "full proposed endpoint already feasible",
+    "6": "direction written and rechecked",
+    "7": "refinement failed to improve",
+    "8": "post-balance correction failed",
+    "9": "singular local metric",
+    "10": "refinement exhausted"
+  }
+}
