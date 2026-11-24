@@ -25,7 +25,7 @@ def native(scene):
         elif name=='fem_deformable_limit_trace':
             d=json.loads(value)
             minima=sorted(d.get('minimum_lane_bounds',[]),key=lambda x:x['minimum_bound'])
-            records=d.get('records',[])
+            records=d.get('contacts',[])
             if minima:
                 winner=minima[0]
                 records=[r for r in records if r['contact_slot']==winner['contact_slot']]

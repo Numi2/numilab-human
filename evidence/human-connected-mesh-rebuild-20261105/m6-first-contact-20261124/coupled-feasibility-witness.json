@@ -1,0 +1,469 @@
+{
+  "raw_trace_summary": [
+    {
+      "root": 0,
+      "iteration": 15,
+      "rows": 21,
+      "minima": 0
+    }
+  ],
+  "control_diagnostics": [
+    0.0015712149906903505,
+    3.1124790245140588e-12,
+    0,
+    -902
+  ],
+  "traced_run": {
+    "launch_sha256": "d51b48c8766efb09ba40ccbf3f25f5c1eb02ea66aadaefc3adf8ff758de0a627",
+    "execution": {
+      "exit": 1,
+      "wall_s": 189.84897587494925
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.0015712149906903505,
+      3.1124790245140588e-12,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 642,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 30,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.00157121499,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.00157121499,
+        "last_fgmres_residual_norm": 1.55882248e-07,
+        "last_fgmres_initial_norm": 0.00157121499,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.00157121499,
+        "last_newton_correction_ratio": 0.85555172,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.00157121499,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 19,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.0100539876
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.488586426,
+        "object_alpha": 0.488586426,
+        "residual": 0.00755367521
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.00389183941
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0019554894
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00171134993
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.015625,
+        "object_alpha": 0.015625,
+        "residual": 0.00160449557
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.00157944486
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 0.0009765625,
+        "object_alpha": 0.0009765625,
+        "residual": 0.00157328043
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.0015717448
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 6.10351562e-05,
+        "object_alpha": 6.10351562e-05,
+        "residual": 0.00157136202
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 3.05175781e-05,
+        "object_alpha": 3.05175781e-05,
+        "residual": 0.0015712661
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 1.90734863e-06,
+        "object_alpha": 1.90734863e-06,
+        "residual": 0.00157121767
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 2.38418579e-07,
+        "object_alpha": 2.38418579e-07,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 5.96046448e-08,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 3.63797881e-12,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 3.63797881e-12,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 3.63797881e-12,
+        "object_alpha": 3.63797881e-12,
+        "residual": 0.00157121499
+      }
+    ],
+    "physical_contact": [
+      {
+        "minima": [],
+        "records": [
+          {
+            "environment": 0,
+            "active_slot": 340440,
+            "active_count": 659390,
+            "contact_slot": 1954334,
+            "identity": [
+              15,
+              15,
+              1,
+              1
+            ],
+            "source": [
+              365650,
+              365652,
+              1954334,
+              1
+            ],
+            "nodes": [
+              313242,
+              313249,
+              313243,
+              313244,
+              4294967295,
+              4294967295
+            ],
+            "weights": [
+              0.933665037,
+              0.0663349628,
+              -0.357944071,
+              -0.642055929,
+              0,
+              0
+            ],
+            "feature_side_by_vertex": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "feature_barycentric": [
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0
+              ]
+            ],
+            "geometry_coordinate_frame": "reference_local",
+            "reference_origin_m": [
+              0.0957440734,
+              -0.307348639,
+              0.113788575
+            ],
+            "feature_start": [
+              [
+                -2.18166125e-08,
+                2.04935944e-08,
+                -2.19175309e-08
+              ],
+              [
+                0.000287949573,
+                4.38172628e-06,
+                -0.000178601957
+              ],
+              [
+                -3.94604285e-07,
+                -6.41375266e-07,
+                -3.07942319e-05
+              ],
+              [
+                2.90748339e-05,
+                7.87602403e-06,
+                -2.53711914e-06
+              ]
+            ],
+            "feature_end": [
+              [
+                -6.44747544e-09,
+                -8.37281888e-08,
+                1.82420834e-08
+              ],
+              [
+                0.00028794934,
+                4.38187499e-06,
+                -0.000178602844
+              ],
+              [
+                -8.34792502e-07,
+                9.11957704e-06,
+                -3.12379743e-05
+              ],
+              [
+                2.90965036e-05,
+                7.75786157e-06,
+                -2.48962715e-06
+              ]
+            ],
+            "feature_endpoint_role": "ccd_projected",
+            "potential_feature_start_high": [
+              [
+                -2.18166125e-08,
+                2.04935944e-08,
+                -2.19175309e-08
+              ],
+              [
+                0.000287949573,
+                4.38172628e-06,
+                -0.000178601957
+              ],
+              [
+                -3.94604285e-07,
+                -6.41375266e-07,
+                -3.07942319e-05
+              ],
+              [
+                2.90748339e-05,
+                7.87602403e-06,
+                -2.53711914e-06
+              ]
+            ],
+            "potential_feature_start_low": [
+              [
+                1.15895283e-18,
+                -2.20318352e-16,
+                8.4901691e-16
+              ],
+              [
+                -1.85451025e-12,
+                -2.0192741e-13,
+                4.4035795e-12
+              ],
+              [
+                8.49396508e-15,
+                -6.87991331e-15,
+                -2.18563584e-13
+              ],
+              [
+                4.76956744e-13,
+                -1.88388327e-13,
+                9.38490076e-14
+              ]
+            ],
+            "potential_feature_end_high": [
+              [
+                -6.44747544e-09,
+                -8.37281888e-08,
+                1.82420834e-08
+              ],
+              [
+                0.00028794934,
+                4.38187499e-06,
+                -0.000178602844
+              ],
+              [
+                -8.34792502e-07,
+                9.11957704e-06,
+                -3.12379743e-05
+              ],
+              [
+                2.90965036e-05,
+                7.75786157e-06,
+                -2.48962715e-06
+              ]
+            ],
+            "potential_feature_end_low": [
+              [
+                -1.07286675e-16,
+                7.41128418e-16,
+                1.27487988e-16
+              ],
+              [
+                -1.02950018e-11,
+                -1.60026736e-13,
+                4.64455341e-12
+              ],
+              [
+                -1.37780954e-14,
+                -2.29473341e-13,
+                1.47748578e-12
+              ],
+              [
+                -4.75164558e-13,
+                3.37144185e-13,
+                -1.07622061e-13
+              ]
+            ],
+            "collision_thickness_m": 9.99999972e-10,
+            "ccd_toi": 1,
+            "ccd_separation_m": null,
+            "lane_bound_before": 1,
+            "lane_bound_after": 5.96046448e-08,
+            "requested_alpha": 5.96046448e-08,
+            "ccd_hit": false,
+            "ccd_certified": true,
+            "zero_bound_source": false,
+            "ccd_shortened_sweep_retries": 0,
+            "ccd_tested_fraction": 1,
+            "diagnostic_reason_code": 0,
+            "diagnostic_reason": "none",
+            "normal": [
+              0.120028622,
+              -0.97816503,
+              0.169665128
+            ],
+            "numerical_clearance_offset_m": 9.99999972e-10,
+            "initial_toi": 0,
+            "contact_point_and_separation": [
+              0.0957628787,
+              -0.307346076,
+              0.113776319,
+              4.61831632e-06
+            ],
+            "barrier_parameters": [
+              1.5797589e-07,
+              4.05037156e-07,
+              9.99999975e-06,
+              4105617540000.0
+            ],
+            "barrier": [
+              4.61731634e-06,
+              3.48563958e-06,
+              3.92568396e-08,
+              4.61831632e-06
+            ]
+          }
+        ],
+        "active_counts": [
+          659390
+        ],
+        "iteration": 15
+      }
+    ]
+  },
+  "conclusion": {
+    "accepted_steps": 0,
+    "initial_support": "One outer node within bed-contact range. CoM horizontal offset 87.27 mm. No balanced starting checkpoint.",
+    "anatomy": "All starting cell intervals pass on the retained material pose. Nonzero cortical overlap remains."
+  }
+}
