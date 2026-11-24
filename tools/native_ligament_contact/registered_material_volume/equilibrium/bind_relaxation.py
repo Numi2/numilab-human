@@ -5,7 +5,7 @@ from compile_connected_joint import digest
 from build_cortical_skin_registration import write_contact_include
 from run_cavity_motion import execute_native
 
-def run(source,fit,control,output,steps,trace_failure=None):
+def run(source,fit,control,output,steps,trace_failure=None,matter_variant=None):
     v=source/'volume';owner=source/'binding'
     data=json.loads((fit/'fit.json').read_bytes())
     for f,key in [('mesh.node','source_reference'),('current.node','control_loaded'),('mesh.ele','elements'),('node-mass.f64','source_mass')]:
@@ -48,6 +48,14 @@ def run(source,fit,control,output,steps,trace_failure=None):
         if val.startswith(str(control)+'/') and val not in cfg['pins']:env[k]=str(output/Path(val).relative_to(control))
     argv[0]=str(app/'numi-human-native');argv[4]=str(output/'native-traces')
     argv[argv.index('--muscle-step-count')+1]=str(steps)
+    if matter_variant is not None:
+        spec=json.loads((matter_variant/'build.json').read_bytes())
+        key='NUMI_MATTER_METALLIB_OVERRIDE'
+        if digest(Path(env[key]))!=spec['parent_shader']:raise ValueError('Unmatched physical kernel variant')
+        shader=matter_variant/'metal/NumiMatter.metallib'
+        if digest(shader)!=spec['shader']:raise ValueError('Unpinned physical shader')
+        cfg['pins'][str(shader)]=spec['shader']
+        env[key]=str(shader)
     if trace_failure is not None:
         root,iteration,object_id=trace_failure
         env['NM_FEM_NEWTON_TRACE_ROOT']=str(root)
@@ -68,5 +76,6 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     for n in ('source','fit','control','output'):p.add_argument(n,type=lambda x:Path(x).resolve())
     p.add_argument('steps',type=int)
+    p.add_argument('--matter-variant',type=lambda v:Path(v).resolve())
     p.add_argument('--trace-failure',type=int,nargs=3,metavar=('ROOT','NEWTON','OBJECT'))
     run(**vars(p.parse_args()))
