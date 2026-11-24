@@ -22,6 +22,12 @@ def main():
     parser.add_argument('--check',action='store_true',help='Verify the exact native inputs and print the simulated duration.')
     opt=parser.parse_args();src=opt.launch.resolve();cfg=json.loads(src.read_bytes());a=cfg['argv'].copy();env=cfg['environment'].copy()
     if cfg['pins'].get(a[0])!=sha(Path(a[0])) or env.get('NM_VASCULAR_STEP_EXTERNAL_PRESSURE')!='1' or env.get('NUMI_HUMAN_LOCAL_BED_LAYERS')!='1' or cfg.get('registered_shoulder') is None:raise ValueError('Incompatible native scene')
+    if '--resting-registered-ligaments' in a:
+        if env.get('NUMI_HUMAN_RESTING_PASSIVE_FASCIA')!='1' or '--pectoralis-fascia-payload' not in a:
+            raise ValueError('Registered ligaments require the active fascia tissue owner and its source payload')
+        payload=a.index('--pectoralis-fascia-payload')+1
+        if payload>=len(a) or a[payload] not in cfg['pins']:
+            raise ValueError('Registered ligaments require a pinned fascia source')
     for file,h in cfg['pins'].items():
         if sha(Path(file))!=h:raise ValueError('Changed scene input '+file)
     steps=int(a[a.index('--muscle-step-count')+1]);dt=float(a[a.index('--muscle-step-seconds')+1])

@@ -1,0 +1,9 @@
+# Physical shoulder ownership at supported release
+
+The 16-second regional bed benchmark used shoulder bone asset `43a31ef4`. Both glenohumeral pairs interpenetrated at all 250 saved motion samples. Closed-solid intersection volumes at release were 5.008 and 5.109 cm³. The left superior glenohumeral ligament site on the scapula lay 9.97 mm inside the opposing humerus. A source-oriented adjustment relieved both joints but introduced other intersections at the chest. The five original source meshes and their source identities are retained. The original clavicles also intersect the separately registered thorax when placed directly in its frame.
+
+Use the source-corrected skeleton and its matching vascular, muscle and ligament bindings for loaded shoulder work. Its cortical asset is `2870d52d`. The release registration transports six material paths with their respective bone owners. It checks cortical endpoints in barycentric coordinates and traverses the nearby bone solids for each material segment. All six passed. The maximum nonrigid path displacement was about 1.04 nm. The check uses all 157 actual native release transforms and 185 cortical records.
+
+The native flag for the registered ligament catalog now requires the active fascia owner and its payload. The launcher also verifies the named payload hash. The matched regional four-step controls have identical physical and trace outputs. The published runtime guard was compiled with the current owner headers. With the historical shader selection, both the upstream control and guarded build reproduce an existing surface export failure on stable ID 23.
+
+The regional benchmark remains a separate performance control. The registered dense model has valid skin and fat material cells at rest. Its last retained loaded run rejected the third physical step. The full native result with conserved mass and the regional bed owner is recorded separately.
