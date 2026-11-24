@@ -4,8 +4,9 @@ from pathlib import Path
 from compile_connected_joint import digest
 from build_cortical_skin_registration import write_contact_include
 from run_cavity_motion import execute_native
+from prepared_bed import registered_header, register_payload
 
-def run(source,fit,control,output,steps,trace_failure=None,matter_variant=None):
+def run(source,fit,control,output,steps,trace_failure=None,matter_variant=None,build_only=False):
     v=source/'volume';owner=source/'binding'
     data=json.loads((fit/'fit.json').read_bytes())
     for f,key in [('mesh.node','source_reference'),('current.node','control_loaded'),('mesh.ele','elements'),('node-mass.f64','source_mass')]:
@@ -25,7 +26,7 @@ def run(source,fit,control,output,steps,trace_failure=None,matter_variant=None):
         n='NumiHumanLoadedSkinPoseData.inc'
         code=(source_app/n).read_text()
         if code.count(data['control_loaded'])!=1:raise ValueError('Unexpected pose pin')
-        (app/n).write_text(code.replace(data['control_loaded'],data['registered']))
+        (app/n).write_text(registered_header(code.replace(data['control_loaded'],data['registered']),data))
         contact=json.loads((owner/'contact/result.json').read_bytes())
         if contact['loaded']!=data['control_loaded']:raise ValueError('Mismatched cortical contact')
         contact['loaded']=data['registered']
@@ -40,7 +41,8 @@ def run(source,fit,control,output,steps,trace_failure=None,matter_variant=None):
             cmds.append(cmd)
             with (build/f'compile-{len(cmds)}.log').open('w') as f:subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,check=True)
         (build/'build.json').write_text(json.dumps(dict(commands=cmds,app=digest(app/'numi-human-native'),library=ident['library'],loaded=data['registered']),indent=2)+'\n')
-    cfg=json.loads((control/'launch.json').read_bytes());env=cfg['environment'];argv=cfg['argv']
+    if build_only:return
+    cfg=json.loads((control/'launch.json').read_bytes());register_payload(cfg,fit);env=cfg['environment'];argv=cfg['argv']
     if Path(env['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']).resolve()!=(v/'current.node').resolve() or env['NM_VASCULAR_STEP_EXTERNAL_PRESSURE']!='1':raise ValueError('Mismatched control')
     env['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']=str(fit/'current.node')
     cfg['pins'][str(fit/'current.node')]=data['registered']
@@ -76,6 +78,7 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     for n in ('source','fit','control','output'):p.add_argument(n,type=lambda x:Path(x).resolve())
     p.add_argument('steps',type=int)
+    p.add_argument('--build-only',action='store_true')
     p.add_argument('--matter-variant',type=lambda v:Path(v).resolve())
     p.add_argument('--trace-failure',type=int,nargs=3,metavar=('ROOT','NEWTON','OBJECT'))
     run(**vars(p.parse_args()))
