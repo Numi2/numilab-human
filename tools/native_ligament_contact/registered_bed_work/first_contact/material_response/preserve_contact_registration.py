@@ -29,6 +29,9 @@ def native(scene):
             if minima:
                 winner=minima[0]
                 records=[r for r in records if r['contact_slot']==winner['contact_slot']]
+            elif records:
+                records=sorted(records,key=lambda r:r['lane_bound_after'])
+                records=[r for r in records if r['lane_bound_after'] in d['line_search_alpha']]
             floors.append(dict(minima=minima[:3],records=records[:1],active_counts=d['active_counts'],iteration=d['iteration']))
     return dict(launch_sha256=sha(scene/'launch.json'),execution=read(scene/'execution.json'),
                 accepted_steps=failure.get('stand_completed_steps'),trace_rows=len(accepted),
