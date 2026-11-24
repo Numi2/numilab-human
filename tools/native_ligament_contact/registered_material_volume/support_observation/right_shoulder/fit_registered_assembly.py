@@ -47,7 +47,7 @@ def layer_surface(j,org,lo,hi):
     return result
 
 
-def run(j,reg,cert,mat,lib,out,steps):
+def run(j,reg,cert,mat,lib,out,steps,witness=None):
     out.mkdir(exist_ok=True);case=j/'posterior-interface-082/native-pair';pose=frames(case)[-1]
     a=read(case/'launch.json')['argv'];tendon=Path(a[a.index('--tendon-payload')+1]);ends=read(tendon.with_suffix('.manifest.json'))['endpoints']
     org=np.array(read(reg/'registration.json')['origin']);p0=[];F=[];T=[];N=[];solver=[];pins=[];goal=[]
@@ -61,6 +61,13 @@ def run(j,reg,cert,mat,lib,out,steps):
             world=Rotation.from_quat(b['quaternion_xyzw']).apply(sites)+b['position_m']
             _,_,idx=nearest((np.ascontiguousarray(x/1000+org),np.ascontiguousarray(f,'i4')),world,lib)
             fixed.update(f[idx].ravel().tolist())
+        if witness is not None:
+            d=read(witness)
+            if d['cage']!=digest(cert/'result.json') or d['source']!=digest(mat/'results.json'):raise ValueError('Unmatched emitted-source witnesses')
+            extra=np.asarray(d['nodes'][str(sid)],int)
+            if extra.size:
+                if extra.min()<0 or extra.max()>=len(x):raise ValueError('Witness outside material')
+                fixed.update(t[np.any(np.isin(t,extra),axis=1)].ravel().tolist())
         if not fixed:raise ValueError('Unbound tendon footprint')
         inv=np.linalg.inv(x[t[:,1:]]-x[t[:,:1]])
         g=np.concatenate((-inv.sum(2,keepdims=True),inv),axis=2).transpose(0,2,1)
@@ -177,8 +184,8 @@ def run(j,reg,cert,mat,lib,out,steps):
             report['stopped']='No cell-valid and volume-conservative joint step improves occupancy without increasing another crossing';break
     for i,(y,x)in enumerate(zip(P,p0)):
         np.savez_compressed(out/f'{MOVING[i]}.npz',x=y/1000+org,t=T[i],f=F[i],fixed_nodes=pins[i],displacement_m=(y-x)/1000)
-    result=dict(source=digest(cert/'result.json'),native=digest(case/'launch.json'),layer_checks=digest(Path('layers.json')),history=history,
+    result=dict(source=digest(cert/'result.json'),native=digest(case/'launch.json'),layer_checks=digest(Path('layers.json')),witness=None if witness is None else digest(witness),history=history,
                 peak_displacements_mm=[float(np.linalg.norm(x-y,axis=1).max())for x,y in zip(P,p0)],
                 lowest_J=[float((dets(y,t)/d).min())for y,t,d in zip(P,T,ref)])
     (out/'result.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
-if __name__=='__main__':run(*(Path(s).resolve()for s in sys.argv[1:7]),int(sys.argv[7]))
+if __name__=='__main__':run(*(Path(s).resolve()for s in sys.argv[1:7]),int(sys.argv[7]),Path(sys.argv[8]) if len(sys.argv)>8 else None)

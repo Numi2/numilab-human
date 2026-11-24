@@ -1,0 +1,421 @@
+{
+  "parent": "512db954265c72bb2797d30c0cce566f40193083",
+  "control": "7b24560566c396f94041c5fe669bb46f1c662426a0db271aa8af5a634884860d",
+  "native": "5c2fd93d2c46facb011c2fd1c3592ec83cd130bde6bd24e9feba76646be57948",
+  "binding": "e65c6c6c2e4134aaef9f10e2bfa696f6514ecdf3274d7df899d36a9e18a01ae0",
+  "cells": 1457316,
+  "nodes": 314014,
+  "registration": {
+    "donor": 42,
+    "source_parent": 18512,
+    "distance_m": 7.77406280773638e-09,
+    "unchanged_cortical_facets": 4733
+  },
+  "mass": "1f9dbefb557034f437ed3b8d9dc31455ffa3ce1931cc279354de97f5cf4d4a06",
+  "execution": {
+    "exit": 0,
+    "wall_s": 215.41199100017548
+  },
+  "failure": {
+    "segment_start": null,
+    "matter_object_index": null,
+    "matter_diagnostics": null
+  },
+  "motion": {
+    "matched_accepted_times": true,
+    "old": {
+      "material": {
+        "accepted_step": 2,
+        "accepted_s": 1.5625000742147677e-05,
+        "reference": "30181fd3fc8be8d4d7c06b2b69535b04850ae777c116c500121413d53a2666f6",
+        "loaded": "1b8076d9af928a745203ec27a67ac9f6ed263c3f61f8d8f92d55f834490636aa",
+        "physical_frame": "c6773deac4d0a9204352413c052030b71d1fc1bf31b2f4104e5070174d4067d3",
+        "full_scene_launch": "7b24560566c396f94041c5fe669bb46f1c662426a0db271aa8af5a634884860d",
+        "receipt_sha256": "bd007667f41153f4c40c37dddf71bb6d4ef7e6647fd510bdd2d9a1f21f814727",
+        "world_pose_sha256": "c2c2406c95d09b3f654178258935b4f34f2f4fb32a00084a33560d1a03e56004",
+        "execution": {
+          "exit": 0,
+          "wall_s": 214.47294975002296
+        },
+        "roles": {
+          "skin": {
+            "inverted": 0,
+            "below_volume": 0,
+            "below_shape": 4,
+            "failing_cells": [
+              65272,
+              351620,
+              578584,
+              586443
+            ],
+            "min_J": 0.42277519533487673,
+            "max_J": 2.499983742290215,
+            "max_displacement_m": 0.0003719653395563738
+          },
+          "fat": {
+            "inverted": 0,
+            "below_volume": 0,
+            "below_shape": 34,
+            "failing_cells": [
+              735206,
+              876726,
+              1000482,
+              1023257,
+              1047552,
+              1063792,
+              1080535,
+              1124498,
+              1127745,
+              1197973,
+              1231609,
+              1254303,
+              1318105,
+              1319276,
+              1319551,
+              1321456,
+              1321598,
+              1321743,
+              1322299,
+              1322391,
+              1325618,
+              1325642,
+              1325643,
+              1330478,
+              1436396,
+              1447523,
+              1449513,
+              1453579,
+              1455079,
+              1455278,
+              1455518,
+              1457186,
+              1457200,
+              1457201
+            ],
+            "min_J": 0.35000122426822566,
+            "max_J": 2.499994075726385,
+            "max_displacement_m": 5.7386351948095676e-05
+          }
+        },
+        "exact_material_surface_pair_count": 0,
+        "wall_pair_counts": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "defects_in_changed_star": {
+          "skin": [],
+          "fat": []
+        },
+        "scope": "All skin/fat cells and four registered material surfaces at the accepted native endpoint."
+      },
+      "support": {
+        "step": 2,
+        "time_s": 1.56250007421e-05,
+        "native_mass_target_kg": 97.13195069110952,
+        "articulated_kg": 82.71639933710685,
+        "skin_fat_kg": 13.93967970996915,
+        "unassigned_in_COM_estimate_kg": 0.4758716440335231,
+        "estimated_COM_m": [
+          -0.02552448910083948,
+          -0.7722974228575227,
+          0.11567271993371574
+        ],
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.810000885566716
+        ],
+        "bed_normal": [
+          0.0017584916237841724,
+          -0.0017949832870491481,
+          0.9999968428661205
+        ],
+        "source_plane_offset_m": 0.0025520903044590772,
+        "normal_weight_N": 952.861513975741,
+        "accepted_normal_force_N": 11.01460571069014,
+        "weight_fraction": 0.011559503190272161,
+        "loaded_skin_nodes": 16,
+        "emitted_outer_nodes": 76153,
+        "terminal_impulse_center_distance_from_gravity_projection_m": 0.2282885303125272,
+        "active_footprint_distance_from_gravity_projection_m": 0.028327193243444578,
+        "minimum_plane_advance_for_reference_COM_in_frozen_footprint_m": 1.2094847081374916e-05,
+        "max_COM_offset_if_remaining_mass_within_outer_radius_m": 0.004848250123009228,
+        "remaining_mass_radius_assumption_m": 0.9895945635565623,
+        "launch_sha256": "7b24560566c396f94041c5fe669bb46f1c662426a0db271aa8af5a634884860d",
+        "material_endpoint_sha256": "c6773deac4d0a9204352413c052030b71d1fc1bf31b2f4104e5070174d4067d3"
+      },
+      "total": {
+        "exit": 0,
+        "wall_s": 214.47294975002296
+      },
+      "active_columns": [
+        395,
+        782
+      ],
+      "terminal": "resting_integrated_body=completed simulated_s=1.5625000742147677e-05 wall_s=70.784141040999998 real_time_factor=2.2074154623275393e-07 physiology_body_clock=matched root_assistance=false presentation_qualification=pending",
+      "frames": [
+        {
+          "step": 1.0,
+          "time_s": 7.81250037107e-06,
+          "pleural_pa": -490.332489014,
+          "lung_volume_ml": 2499.99994412,
+          "PaO2_mmhg": 99.9998703003,
+          "PaCO2_mmhg": 40.0,
+          "root_assistance_n": 0.0
+        },
+        {
+          "step": 2.0,
+          "time_s": 1.56250007421e-05,
+          "pleural_pa": -490.332489014,
+          "lung_volume_ml": 2499.99994412,
+          "PaO2_mmhg": 99.9998245239,
+          "PaCO2_mmhg": 39.9999885559,
+          "root_assistance_n": 0.0
+        }
+      ]
+    },
+    "new": {
+      "material": {
+        "accepted_step": 2,
+        "accepted_s": 1.5625000742147677e-05,
+        "reference": "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+        "loaded": "cb3f3046cf420626d9d5076e6653d10fe003738f01641984204a1932f837b728",
+        "physical_frame": "7374bb7af6370639a7f9f498c8dd4b5fe4a27c6390e97dce2712524b0c2b9512",
+        "full_scene_launch": "5c2fd93d2c46facb011c2fd1c3592ec83cd130bde6bd24e9feba76646be57948",
+        "receipt_sha256": "4783350c4991f2c1d6acd35938c5eb0532e8ea8c22faed43f599552c3bb601f3",
+        "world_pose_sha256": "95f3ac0a8b0a62df23bce64718f837ab894e6d3af5f9f305fd97e352d7dd62ef",
+        "execution": {
+          "exit": 0,
+          "wall_s": 215.41199100017548
+        },
+        "roles": {
+          "skin": {
+            "inverted": 0,
+            "below_volume": 0,
+            "below_shape": 4,
+            "failing_cells": [
+              65272,
+              351620,
+              578584,
+              586443
+            ],
+            "min_J": 0.42277543215531344,
+            "max_J": 2.4999790952625665,
+            "max_displacement_m": 0.0003719653395563738
+          },
+          "fat": {
+            "inverted": 0,
+            "below_volume": 0,
+            "below_shape": 33,
+            "failing_cells": [
+              735206,
+              876726,
+              1000482,
+              1023257,
+              1047552,
+              1063792,
+              1080535,
+              1124498,
+              1127745,
+              1197973,
+              1231609,
+              1254303,
+              1318105,
+              1319276,
+              1319551,
+              1321456,
+              1321598,
+              1321743,
+              1322299,
+              1322391,
+              1325618,
+              1325642,
+              1325643,
+              1330478,
+              1436396,
+              1447523,
+              1449513,
+              1453579,
+              1455079,
+              1455278,
+              1457186,
+              1457200,
+              1457201
+            ],
+            "min_J": 0.35000125908456253,
+            "max_J": 2.4999939725052887,
+            "max_displacement_m": 5.7386355173953246e-05
+          }
+        },
+        "exact_material_surface_pair_count": 0,
+        "wall_pair_counts": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "defects_in_changed_star": {
+          "skin": [],
+          "fat": []
+        },
+        "scope": "All skin/fat cells and four registered material surfaces at the accepted native endpoint."
+      },
+      "support": {
+        "step": 2,
+        "time_s": 1.56250007421e-05,
+        "native_mass_target_kg": 97.13195069110952,
+        "articulated_kg": 82.71639933710685,
+        "skin_fat_kg": 13.93967970996915,
+        "unassigned_in_COM_estimate_kg": 0.4758716440335231,
+        "estimated_COM_m": [
+          -0.02552448910078553,
+          -0.7722974228575076,
+          0.11567271993379293
+        ],
+        "gravity_m_s2": [
+          0.0,
+          0.0,
+          -9.810000885566716
+        ],
+        "bed_normal": [
+          0.0017584916237841724,
+          -0.0017949832870491481,
+          0.9999968428661205
+        ],
+        "source_plane_offset_m": 0.0025520903044590772,
+        "normal_weight_N": 952.861513975741,
+        "accepted_normal_force_N": 11.01474354715673,
+        "weight_fraction": 0.01155964784557051,
+        "loaded_skin_nodes": 16,
+        "emitted_outer_nodes": 76153,
+        "terminal_impulse_center_distance_from_gravity_projection_m": 0.2282903422511315,
+        "active_footprint_distance_from_gravity_projection_m": 0.028327193243496567,
+        "minimum_plane_advance_for_reference_COM_in_frozen_footprint_m": 1.2095451997077514e-05,
+        "max_COM_offset_if_remaining_mass_within_outer_radius_m": 0.00484825012300925,
+        "remaining_mass_radius_assumption_m": 0.9895945635565666,
+        "launch_sha256": "5c2fd93d2c46facb011c2fd1c3592ec83cd130bde6bd24e9feba76646be57948",
+        "material_endpoint_sha256": "7374bb7af6370639a7f9f498c8dd4b5fe4a27c6390e97dce2712524b0c2b9512"
+      },
+      "total": {
+        "exit": 0,
+        "wall_s": 215.41199100017548
+      },
+      "active_columns": [
+        397,
+        780
+      ],
+      "terminal": "resting_integrated_body=completed simulated_s=1.5625000742147677e-05 wall_s=70.781796666999995 real_time_factor=2.2074885744504405e-07 physiology_body_clock=matched root_assistance=false presentation_qualification=pending",
+      "frames": [
+        {
+          "step": 1.0,
+          "time_s": 7.81250037107e-06,
+          "pleural_pa": -490.332489014,
+          "lung_volume_ml": 2499.99994412,
+          "PaO2_mmhg": 99.9998703003,
+          "PaCO2_mmhg": 40.0,
+          "root_assistance_n": 0.0
+        },
+        {
+          "step": 2.0,
+          "time_s": 1.56250007421e-05,
+          "pleural_pa": -490.332489014,
+          "lung_volume_ml": 2499.99994412,
+          "PaO2_mmhg": 99.9998245239,
+          "PaCO2_mmhg": 39.9999885559,
+          "root_assistance_n": 0.0
+        }
+      ]
+    },
+    "existing_material_node_max_delta_m": 1.412093341383106e-08,
+    "existing_material_node_rms_delta_m": 4.534114108307315e-11
+  },
+  "source_fractions": {
+    "75": 1.0,
+    "79": 0.03125,
+    "83": 0.015625,
+    "85": 0.03125,
+    "87": 0.0625,
+    "89": 1.0
+  },
+  "registered_pair_sum_mm3": {
+    "before": 85653.574440112,
+    "after": 84246.45101954401
+  },
+  "jointly_admissible_choices": 8748,
+  "surrounding_pairs": 329,
+  "layer_volumes_measured_from_tetrahedra": [
+    {
+      "kind": 0,
+      "bank": 15,
+      "affected": [
+        75,
+        79,
+        83,
+        85,
+        87,
+        89
+      ],
+      "detail": {
+        "open_or_nonmanifold_edges": 3
+      }
+    },
+    {
+      "kind": 0,
+      "bank": 16,
+      "affected": [
+        75,
+        79,
+        83,
+        85,
+        87,
+        89
+      ],
+      "detail": {
+        "open_or_nonmanifold_edges": 6
+      }
+    }
+  ],
+  "deltoid_fat_mm3": 43161.01048331875
+}
