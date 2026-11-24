@@ -1,0 +1,46 @@
+{
+  "device": "Apple M6 / SSH Numi",
+  "parent": "39aa8569bbe2d6b1e055897c7fb921ed6dd38c3bc85892a137225ca912a117b5",
+  "launch": "9ce134d0150ecd101af86496f866df33218c6de3e6f3b41fa2e121d176e47083",
+  "build": "c89f0d602054f8a8a53a753d824b5aabfa449f1171cab3a8b11722cb8acf9ec4",
+  "execution": {
+    "exit": 1,
+    "wall_s": 127.51255195797421
+  },
+  "gpu_contact_parity": "GPU=Apple M6 comparisons=160 loaded_configurations=12 maximum_relative_error=7.97278e-08 rejected_invalid_payloads=5",
+  "law": "On the same slave coordinate and closed master BVH, sum disjoint source areas, integrate material stiffness against area, and retain the largest constituent pressure and strain slopes. Closure counts measure unique active nodal queries.",
+  "source_volume_overlap": {
+    "skin": {
+      "positive_bones": 6,
+      "unresolved": 0,
+      "sum_pair_volume_cm3": 1.1177593438891074
+    },
+    "fat": {
+      "positive_bones": 26,
+      "unresolved": 0,
+      "sum_pair_volume_cm3": 4.935989911484523
+    }
+  },
+  "native_witnesses": [
+    "registered_loaded_material_install=PASS cells=1457361 nodes=314015 fixed_bed_offset_m=-1.9073486328125e-06 minimum_skin_gap_m=1.9477788697486176e-06 ipc_width_m=9.9999997473787516e-06 outer_contact_nodes=1 anchors=14 pose_sha256=4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7 reference_and_mass_changed=0 initial_forces_applied=0",
+    "whole_body_skin_fat_registered_volume_install=PASS replacement_route=registered_bundle O_rows=76153 I_rows=118397 D_rows=104435 volume_nodes=314015 child_tets=1457361 source_donors=74 maximum_source_mass_delta_kg=5.4312110364662658e-13 maximum_cooked_parent_node_mass_error_kg=4.9986027423135071e-08 maximum_cooked_parent_node_mass_relative_error=0.00017670232996398619 attachment_rows=14 direct_O_render=exact_topology_volume_node_map reduction_labels=typed_O_I_D support_witness_mapping=bounded_source_four_influence_surface source_world_mutated=1 physical_steps=0 motion_qualification=pending",
+    "resting_fem_skin_bed_source=enabled object=15 outer_nodes=76153 proxy_count=1 normal=0,0,1 plane_offset_m=-1.9073486328125e-06 ground_friction_source=1 rigid_material=15 rigid_material_static_friction=0.050000000000000003 nhcnt_source_rows_mapped=32 unique_reduced_witness_nodes=28 witness_mapping=nearest_same_donor_typed_O_node_observational_only maximum_typed_O_witness_gap_m=0.026398 witness_force=0 rigid_pair_scope=all_outer_nodes_not_witness_representatives continuum_contact_and_skin_fat_attachments=preserved",
+    "registered_cortical_contact=compiled faces=4736 combined_incident_rows=1636 different_compliance_rows=206 nodal_rows=3306 owner=existing_metal_body_triangle_bvh",
+    "whole_body_skin_bone_static_bvh=prepared triangles=469136 nodes=938186 samples=15673493 state_owner=existing_Human_FEM_contact source=complete_registered_bone_banks sample_pair_scope=all_registered_bodies_per_triangle_slave approaching_master_pairs=all_registered_banks per_step_CPU_refresh=0 construction_envelope_restriction=removed",
+    "myosim_articulated_visual=failed error=\"volume-direction proposal requires its measured registered tissue topology and bed\""
+  ],
+  "native_log_tail": [
+    "passive_fem_clock_selection maximum_rate_exponent=0 physical_frame_s=7.8125e-06 blood_enabled=0 contact_connected_clock_lock=disabled",
+    "human_material_expression_cache=enabled materials=20 equations=unchanged",
+    "human_preparation_memory phase=shared_tissue_authoring_released available=1 resident_bytes=7979466752 footprint_bytes=6410493584 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "matter_runtime_initialize_begin",
+    "[NumiMatter] mixed-field smoother skipped_empty: multiphysics_objects=0 field_boundaries=0; mechanical and vascular solve unchanged",
+    "matter_metallib_image={\"path\":\"/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/shared-tissue-contact/metal/NumiMatter.metallib\",\"sha256\":\"1ab71c1018255a0aa3acb6db83d5d66d2030e01c8eedc2376943ab27aad65ba2\"}",
+    "myosim_articulated_visual=failed error=\"volume-direction proposal requires its measured registered tissue topology and bed\""
+  ],
+  "archive": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/shared-tissue-contact-9ce134d0150ecd1.tar.zst",
+    "archive_sha256": "b370e1608f8f6bc41b83d06a027a1437344233cf932e4ce92e7c66265162d957",
+    "size_bytes": 25131452
+  }
+}
