@@ -1,0 +1,169 @@
+{
+  "launch_sha256": "3c831df2935305d71b0620cee297a6d195137467b41076a930bc57579b4602c2",
+  "execution": {
+    "exit": 1,
+    "wall_s": 19.236887832870707
+  },
+  "native_binary": "c7a45cccd788aa156281927f8f2be93dd5543371f9003f748ba7c1e72bd0c8bb",
+  "bones_sha256": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+  "external_pleural_pressure": true,
+  "regional_bed": true,
+  "dense_skin_fat": false,
+  "active_fascia_regions": 26,
+  "admitted_ligament_catalog_rows": 34,
+  "initial_kg": 97.13195069110952,
+  "physical_mass_kg": 97.13195152269664,
+  "fem_mass_kg": 0.47587111886578093,
+  "total_gravity": {
+    "mass_kg": 97.13195149743389,
+    "center_m": [
+      -0.02516542090137016,
+      -0.7571207198587726,
+      0.10897308729536313
+    ],
+    "fem_nodes": 7206
+  },
+  "catalog_lines": [
+    "registered_ligament_source_geometry=admitted rows=34 retained_source_bone_meshes=185 source_bone_records=185 bone_payload_sha256=2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29 path_guard=all_current_pose_registered_meshes endpoint_projection=bounded_current_registered_surface"
+  ],
+  "terminal": "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 1 accepted steps: GPU rejected the Numi Human stand horizon: code=9 completed_steps=1 failing_index=1\"",
+  "human_joint_failure": "human_joint_failure completed_steps=1 matter_status=10 matter_failing_index=4294967295 matter_object_index=1 matter_diagnostics=[0.00012119844905100763,0.00059979484649375081,0.00012119820894440636,-1048584] failure_owner=passive_tissue_runtime",
+  "matter_fgmres_active_work": "matter_fgmres_active_work={\"root\":1,\"environment\":0,\"used_columns_sum\":1024,\"cycles_with_work\":64,\"encoded_cycles\":64,\"budget_exhausted_solves\":16,\"active_newton_begins\":16,\"active_restart_begins\":48,\"has_outer_sample\":true,\"last_newton_iteration\":15,\"last_newton_latched\":false,\"last_newton_norm\":6.60057485e-05,\"last_newton_threshold\":9.99999975e-06,\"minimum_newton_norm\":2.58613145e-05,\"last_fgmres_residual_norm\":1.65719189e-08,\"last_fgmres_initial_norm\":6.60057485e-05,\"last_fgmres_cycle_accepted\":0,\"last_fgmres_columns\":16,\"last_newton_current_norm\":6.60057485e-05,\"last_newton_correction_ratio\":0.000599794846,\"last_newton_converged\":0,\"final_nonpressure_nontransport_relative_residual\":0.000121198449,\"final_aggregate_transport_relative_residual\":0,\"aggregate_nonempty_cycle_ranges\":0,\"aggregate_selected_command_span_total\":0,\"status_code\":10,\"status_object\":1,\"status_failing_index\":4294967295,\"status_residual\":0.000121198209,\"status_correction\":-1048584}",
+  "last_logged_accepted_step": 1,
+  "retained_coupled_rows": 1,
+  "seconds": 0.0001250000059371814,
+  "elapsed_factor": 6.497932878913489e-06,
+  "gpu_first_step_ms": 2215.478,
+  "normal_force_from_accepted_impulse_n": 960.9475424435691,
+  "measured_world_force_n": [
+    -2.1971854113658904,
+    281.56542576798284,
+    961.4598450289803
+  ],
+  "tangent_force_n": 283.31744460624947,
+  "condensed_normal_load_before_step_n": 961.269002349,
+  "maximum_stock_fraction": 0.6151910571484064,
+  "initial_maximum_generalized_acceleration_residual": 119.330520152,
+  "initial_maximum_root_acceleration_residual": 101.054177372,
+  "initial_normalized_residual_rms": 0.472054829375,
+  "weight_normal_n": 952.8615323968371,
+  "initial_balance": false,
+  "active_source_regions": [
+    {
+      "body": 20,
+      "source": 17765,
+      "normal_n": 103.05139678006877
+    },
+    {
+      "body": 20,
+      "source": 37608,
+      "normal_n": 83.22972408987961
+    },
+    {
+      "body": 128,
+      "source": 34319,
+      "normal_n": 252.38900177940812
+    },
+    {
+      "body": 128,
+      "source": 21162,
+      "normal_n": 262.22075766580303
+    },
+    {
+      "body": 1,
+      "source": 33529,
+      "normal_n": 147.54883244168903
+    },
+    {
+      "body": 128,
+      "source": 20347,
+      "normal_n": 112.50782968672057
+    }
+  ],
+  "first_pleural_pa": -490.332641602,
+  "same_initial_step_as_intended": true,
+  "source_impulse_sha256": "4df972c739d85c6dac7e6eafde086f2363d3fc0dce5bc4b470855aa3657c731b",
+  "source_momentum_sha256": "9035b246fba017dbeadbb812e1c6d88ee3d88354b84109e84ee5c26f3d63f753",
+  "late_newton_history": [
+    {
+      "iteration": 0,
+      "rhs_norm": 0.000346929795,
+      "true_linear_residual": 2.63917741e-06
+    },
+    {
+      "iteration": 1,
+      "rhs_norm": 2.58613145e-05,
+      "true_linear_residual": 6.1054817e-07
+    },
+    {
+      "iteration": 2,
+      "rhs_norm": 6.89089866e-05,
+      "true_linear_residual": 2.10484615e-07
+    },
+    {
+      "iteration": 3,
+      "rhs_norm": 7.54785578e-05,
+      "true_linear_residual": 9.81928068e-08
+    },
+    {
+      "iteration": 4,
+      "rhs_norm": 5.02161165e-05,
+      "true_linear_residual": 5.17361016e-08
+    },
+    {
+      "iteration": 5,
+      "rhs_norm": 0.000114314083,
+      "true_linear_residual": 3.40682931e-08
+    },
+    {
+      "iteration": 6,
+      "rhs_norm": 5.03521951e-05,
+      "true_linear_residual": 1.97866665e-08
+    },
+    {
+      "iteration": 7,
+      "rhs_norm": 4.75082343e-05,
+      "true_linear_residual": 3.58515173e-08
+    },
+    {
+      "iteration": 8,
+      "rhs_norm": 5.88050789e-05,
+      "true_linear_residual": 1.88573317e-08
+    },
+    {
+      "iteration": 9,
+      "rhs_norm": 4.13933667e-05,
+      "true_linear_residual": 1.70968733e-08
+    },
+    {
+      "iteration": 10,
+      "rhs_norm": 6.31881703e-05,
+      "true_linear_residual": 1.51642148e-08
+    },
+    {
+      "iteration": 11,
+      "rhs_norm": 9.16277713e-05,
+      "true_linear_residual": 2.43334561e-08
+    },
+    {
+      "iteration": 12,
+      "rhs_norm": 4.61878735e-05,
+      "true_linear_residual": 2.56920671e-08
+    },
+    {
+      "iteration": 13,
+      "rhs_norm": 7.32921035e-05,
+      "true_linear_residual": 3.24362652e-08
+    },
+    {
+      "iteration": 14,
+      "rhs_norm": 4.29979918e-05,
+      "true_linear_residual": 2.46858995e-08
+    },
+    {
+      "iteration": 15,
+      "rhs_norm": 6.60057485e-05,
+      "true_linear_residual": 1.65719189e-08
+    }
+  ]
+}

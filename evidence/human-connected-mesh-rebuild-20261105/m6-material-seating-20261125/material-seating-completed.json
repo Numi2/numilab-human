@@ -1,0 +1,87 @@
+{
+  "launch_sha256": "0545d899323016726feb6b2e7451eb8b3110d0e300dc2fce9aa9723e9cc1ee1c",
+  "execution": {
+    "exit": 0,
+    "wall_s": 17.34455475001596
+  },
+  "native_binary": "c7a45cccd788aa156281927f8f2be93dd5543371f9003f748ba7c1e72bd0c8bb",
+  "bones_sha256": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+  "external_pleural_pressure": true,
+  "regional_bed": true,
+  "dense_skin_fat": false,
+  "active_fascia_regions": 26,
+  "admitted_ligament_catalog_rows": 34,
+  "initial_kg": 97.13195069110952,
+  "physical_mass_kg": 97.13195152269664,
+  "fem_mass_kg": 0.47587111886578093,
+  "total_gravity": {
+    "mass_kg": 97.13195149743389,
+    "center_m": [
+      -0.02516542090137016,
+      -0.7571207198587726,
+      0.10897308729536313
+    ],
+    "fem_nodes": 7206
+  },
+  "catalog_lines": [
+    "registered_ligament_source_geometry=admitted rows=34 retained_source_bone_meshes=185 source_bone_records=185 bone_payload_sha256=2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29 path_guard=all_current_pose_registered_meshes endpoint_projection=bounded_current_registered_surface"
+  ],
+  "terminal": "human_preparation_memory phase=accepted_step_1 available=1 resident_bytes=3699949568 footprint_bytes=5964763624 metal_allocated_bytes=2639708160 recommended_working_set_bytes=12713115648",
+  "matter_fgmres_active_work": "matter_fgmres_active_work={\"root\":0,\"environment\":0,\"used_columns_sum\":1024,\"cycles_with_work\":64,\"encoded_cycles\":64,\"budget_exhausted_solves\":16,\"active_newton_begins\":16,\"active_restart_begins\":48,\"has_outer_sample\":true,\"last_newton_iteration\":15,\"last_newton_latched\":false,\"last_newton_norm\":6.42658415e-05,\"last_newton_threshold\":9.99999975e-06,\"minimum_newton_norm\":4.21637669e-05,\"last_fgmres_residual_norm\":2.09445545e-08,\"last_fgmres_initial_norm\":6.42658415e-05,\"last_fgmres_cycle_accepted\":0,\"last_fgmres_columns\":16,\"last_newton_current_norm\":6.42658415e-05,\"last_newton_correction_ratio\":0.000611620722,\"last_newton_converged\":0,\"final_nonpressure_nontransport_relative_residual\":8.55776962e-05,\"final_aggregate_transport_relative_residual\":0,\"aggregate_nonempty_cycle_ranges\":0,\"aggregate_selected_command_span_total\":0,\"status_code\":0,\"status_object\":4294967295,\"status_failing_index\":4294967295,\"status_residual\":0,\"status_correction\":0}",
+  "last_logged_accepted_step": 1,
+  "retained_coupled_rows": 1,
+  "seconds": 0.0001250000059371814,
+  "elapsed_factor": 7.206873150610361e-06,
+  "gpu_first_step_ms": 2214.99325009,
+  "normal_force_from_accepted_impulse_n": 960.9475424435691,
+  "measured_world_force_n": [
+    -2.1971854113658904,
+    281.56542576798284,
+    961.4598450289803
+  ],
+  "tangent_force_n": 283.31744460624947,
+  "condensed_normal_load_before_step_n": 961.269002349,
+  "maximum_stock_fraction": 0.6151910571484064,
+  "initial_maximum_generalized_acceleration_residual": 119.330520152,
+  "initial_maximum_root_acceleration_residual": 101.054177372,
+  "initial_normalized_residual_rms": 0.472054829375,
+  "weight_normal_n": 952.8615323968371,
+  "initial_balance": false,
+  "active_source_regions": [
+    {
+      "body": 20,
+      "source": 17765,
+      "normal_n": 103.05139678006877
+    },
+    {
+      "body": 20,
+      "source": 37608,
+      "normal_n": 83.22972408987961
+    },
+    {
+      "body": 128,
+      "source": 34319,
+      "normal_n": 252.38900177940812
+    },
+    {
+      "body": 128,
+      "source": 21162,
+      "normal_n": 262.22075766580303
+    },
+    {
+      "body": 1,
+      "source": 33529,
+      "normal_n": 147.54883244168903
+    },
+    {
+      "body": 128,
+      "source": 20347,
+      "normal_n": 112.50782968672057
+    }
+  ],
+  "first_pleural_pa": -490.332641602,
+  "same_initial_step_as_intended": true,
+  "source_impulse_sha256": "4df972c739d85c6dac7e6eafde086f2363d3fc0dce5bc4b470855aa3657c731b",
+  "source_momentum_sha256": "9035b246fba017dbeadbb812e1c6d88ee3d88354b84109e84ee5c26f3d63f753",
+  "late_newton_history": []
+}
