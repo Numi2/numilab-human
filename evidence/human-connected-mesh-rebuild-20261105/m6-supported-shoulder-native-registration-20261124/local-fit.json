@@ -1,0 +1,61 @@
+{
+  "source": "2955089bce54ec2e484985550f0f77096b9594de9a5ec3c22616246726b39dca",
+  "skin_fat": "628cc83103687f4c8548f9cccbc3f5708c87a2fb1a5aea66591e8d26fc7337e6",
+  "variables": 2089,
+  "contact_inequalities": 7764,
+  "status": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+  "feasible": true,
+  "D": {
+    "max_displacement_mm": 0.0,
+    "min_J": 1.0,
+    "max_J": 1.0,
+    "min_shape": 1.2168409286921247e-05,
+    "exact_cropped_surface_self_pairs": 0
+  },
+  "153": {
+    "max_displacement_mm": 4.041309454910076,
+    "min_J": 0.7130942546736592,
+    "max_J": 1.2869057453263137,
+    "min_shape": 5.14983241489255e-06,
+    "exact_cropped_surface_self_pairs": 0
+  },
+  "83": {
+    "max_displacement_mm": 6.931680584446626,
+    "min_J": 0.7826723804865717,
+    "max_J": 1.2173276195135578,
+    "min_shape": 1.237436918736588e-05,
+    "exact_cropped_surface_self_pairs": 0
+  },
+  "volume_relative_error": {
+    "15": 0.0,
+    "16": 0.0,
+    "83": 2.220446049250313e-16,
+    "153": 0.0
+  },
+  "relative_registration": {
+    "D-153": {
+      "original_min_gap_mm": -3.8949469353731963,
+      "fit_min_gap_mm": 0.0,
+      "negative_corners_before": 1153,
+      "negative_corners_after": 0
+    },
+    "153-83": {
+      "original_min_gap_mm": 1.3504963945156525,
+      "fit_min_gap_mm": -3.469446951953614e-15,
+      "negative_corners_before": 0,
+      "negative_corners_after": 0
+    },
+    "83-scapula": {
+      "original_min_gap_mm": -4.2496842503576,
+      "fit_min_gap_mm": 0.0,
+      "negative_corners_before": 1992,
+      "negative_corners_after": 0
+    }
+  },
+  "max_gradient_by_region": [
+    -0.0,
+    0.28690574532625834,
+    0.2173276195132729
+  ],
+  "scope": "Cropped authoring fit. A zero gap may carry compression only after the contact owner computes it. Positive source intervals remain open."
+}
