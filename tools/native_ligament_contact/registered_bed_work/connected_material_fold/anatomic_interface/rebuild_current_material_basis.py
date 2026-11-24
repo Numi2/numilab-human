@@ -2,6 +2,7 @@
 from pathlib import Path
 import json,gc,sys
 import numpy as np
+from source_face_identity import primary_source_face
 from compile_current_material_support import array_hash
 from compile_connected_joint import digest
 from rebuild_connected_p1 import loadmod
@@ -99,7 +100,7 @@ def run(work,refined=False):
             valid=False
             for i in slot:
                 gid=composed['cell_group_ids'][i];fo=composed['cell_group_stable_face_offsets'];fs=composed['cell_group_stable_face_rows'][fo[i]:fo[i+1]]
-                if np.array_equal(groups[gid],tagrow[:3]) and tagrow[3] in fs:valid=True
+                if np.array_equal(groups[gid],tagrow[:3]) and primary_source_face(gid,fs,tagrow[3])==tagrow[3]:valid=True
             if not valid:bad.append(int(rows[ci]))
         rolefile=out/gf.name;np.savez_compressed(rolefile,points_world_m_f32=pt,tetrahedra=local.astype('u4'),combined_node_rows=nodes,combined_child_rows=rows);gh=digest(rolefile)
         composed.update(current_state_sha256=np.array(digest(now)),current_state_path=np.array(str(now)),geometry_sha256=np.array(gh),volume_sha256=np.array(gh))

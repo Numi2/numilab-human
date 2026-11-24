@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 import numpy as np
 from register_material_surfaces import pinned,sha,tetgen_positions
+from source_face_identity import primary_source_face
 
 
 def run(launch,mesh,support,packets,flow,out):
@@ -66,7 +67,7 @@ def run(launch,mesh,support,packets,flow,out):
                     dist=float(np.linalg.norm(centers[hist]-center,axis=1).min())
                     # The existing P1 compiler records multi-face support using a
                     # derived group identity. Every contributing face is retained below.
-                    face=int(faces[0]) if len(faces)==1 else 0x80000000+int(group)
+                    face=primary_source_face(group,faces)
                     choices.append((-kg,dist,int(group),slot,face))
                 negmass,_,group,slot,face=min(choices)
                 zero_flow+=negmass==0

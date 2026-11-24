@@ -7,6 +7,7 @@ from compile_connected_joint import digest
 from register_material_surfaces import pinned
 from write_material_witnesses import write_role
 from replay_connected_allocation import run as replay
+from source_face_identity import primary_source_face
 
 def run(job,out):
     rd=lambda p:json.loads(p.read_bytes())
@@ -50,7 +51,7 @@ def run(job,out):
                 gid=support['cell_group_ids'][a];parents=support['cell_group_parent_tet_offsets'];donors=support['cell_group_parent_tet_rows'][parents[a]:parents[a+1]]
                 group=support['group_tuples'][gid];faces=np.unique(src_label[donors,4])
                 if not np.all(src_label[donors,1:4]==group):raise ValueError('Foreign donor')
-                prior=outlabels[ids[i]];face=prior[4] if prior[4] in faces else faces[0]
+                prior=outlabels[ids[i]];face=primary_source_face(gid,faces,prior[4])
                 valid.append((not np.array_equal(group,prior[1:4]),face!=prior[4],int(gid),int(face)))
             _,_,gid,face=min(valid);outlabels[ids[i],1:4]=support['group_tuples'][gid];outlabels[ids[i],4]=face
         k=qpre+'CARRIERS_'+role
@@ -71,7 +72,7 @@ def run(job,out):
         rr=src_label[parent,3];off=support['cell_admissible_region_offsets'];rids=support['cell_admissible_region_ids']
         # Historical exceptions are tied to existing recipients. Never extend them to a new cell.
         dist=np.linalg.norm(pt[q1[n:]]-center[c1[n:]],axis=1)
-        good=np.array([rr[a] in rids[off[b]:off[b+1]] for a,b in zip(q1[n:],c1[n:])])&(dist<=radius)
+        good=np.array([rr[a] in rids[off[b]:off[b+1]] for a,b in zip(q1[n:],c1[n:])],dtype=bool)&(dist<=radius)
         if not np.all(good):
             f=out/(role+'-ineligible-overlay.npz');np.savez_compressed(f,carrier=q1[n:][~good],recipient=ids[c1[n:][~good]],mass=w1[n:][~good],distance=dist[~good])
             sol,info=rebalance(q1,c1,w1,n,good,center,pt,rr,off,rids,radius,cells[ids,:4]-1,ids,rd(vol/'transfer.json')['cavities'],src,dst)
@@ -112,7 +113,7 @@ def run(job,out):
         witness=write_role(role,m,env,cells,x,src_label[:,1:4],*source,packet,support,flow,radius,packets/(role.lower()+'-witness.csv.gz'))
         for name,file,h in [('CARRIERS_'+role,fpack,digest(fpack)),('CARRIER_WITNESS_'+role,Path(witness['path']),witness['sha256'])]:
             key=qpre+name;qpins[key+('_NPZ' if name.startswith('CARRIERS') else '_CSV')]=str(file);qpins[key+'_SHA256']=h
-        proof[role]=dict(edges=len(w1),affected_old_edges=len(affected),candidate_overlay_edges=len(dist),maximum_relative_carrier_mass_change=rel,maximum_carrier_mass_error_kg=err,maximum_cell_mass_error_kg=cerr,maximum_proposed_distance_m=float(dist.max()))
+        proof[role]=dict(edges=len(w1),affected_old_edges=len(affected),candidate_overlay_edges=len(dist),maximum_relative_carrier_mass_change=rel,maximum_carrier_mass_error_kg=err,maximum_cell_mass_error_kg=cerr,maximum_proposed_distance_m=float(dist.max()) if dist.size else None)
         print(role,proof[role],flush=True)
     if len(proof)!=2:raise ValueError('See bounded local infeasibility witnesses')
     f=vol/'current-child.labels.csv'

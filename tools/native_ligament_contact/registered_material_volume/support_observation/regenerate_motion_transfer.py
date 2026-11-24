@@ -32,8 +32,8 @@ def prepare(parent,case,mesh,ledger,out):
     # needs an explicit boolean dtype to combine it with the distance predicate.
     token='good=np.array([rr[a] in rids[off[b]:off[b+1]] for a,b in zip(q1[n:],c1[n:])])'
     script=out/'rebuild_cavity_ledger.py'
-    code=replace_once(code,token,token[:-1]+',dtype=bool)')
-    code=replace_once(code,'float(dist.max())','float(dist.max()) if dist.size else None')
+    if token in code:code=replace_once(code,token,token[:-1]+',dtype=bool)')
+    if 'float(dist.max()) if dist.size else None' not in code:code=replace_once(code,'float(dist.max())','float(dist.max()) if dist.size else None')
     script.write_text(code)
     subprocess.run([sys.executable,script,job,mesh],check=True)
     if sha(vol/'current-child.labels.csv')!=label_sha:raise ValueError('The proposed anatomical labels changed during allocation')
