@@ -1,0 +1,746 @@
+{
+  "device": "Apple M6",
+  "build": {
+    "commands": [
+      [
+        "/usr/bin/clang++",
+        "-I",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/shared-tissue-contact/include",
+        "-I",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-005/trimmed-guarded-pressure-skin-build/include",
+        "-I",
+        "/Users/numi/Work/skin-fat-native-integration-209/matter/tools",
+        "-DACCELERATE_NEW_LAPACK",
+        "-iquote",
+        "/Users/numi/Work/skin-fat-native-integration-209/apps",
+        "-DMETALROBO_METALLIB=\"/Users/numi/Work/skin-fat-native-integration-209/build-native/shaders/MetalRobo.metallib\"",
+        "-DNUMI_HUMAN_ANTERIOR_THORAX_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_anterior_abdominal_wall_composite_effective.nmatter\"",
+        "-DNUMI_HUMAN_FULL_REFERENCE_SKIN_CAPACITY=1",
+        "-DNUMI_HUMAN_OPEN_KNEE_LIGAMENT_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/open_knee_ligament_febio_exp_linear.nmatter\"",
+        "-DNUMI_HUMAN_PASSIVE_TISSUE_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/passive_skeletal_muscle_unqualified.nmatter\"",
+        "-DNUMI_HUMAN_PECTORALIS_FASCIA_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_pectoralis_fascia_goh_uniaxial.nmatter\"",
+        "-DNUMI_HUMAN_PLANTAR_FASCIA_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_plantar_fascia_reduced.nmatter\"",
+        "-DNUMI_HUMAN_REGIONAL_MYOFASCIA_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_myofascia_regional_transverse_isotropic.nmatter\"",
+        "-DNUMI_HUMAN_RESPIRATION_METALLIB=\"/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/exact-material-origin/owner/metalrobo/HumanRestingSkin.metallib\"",
+        "-DNUMI_HUMAN_RESTING_SCENE=1",
+        "-DNUMI_HUMAN_SKIN_DERMIS_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter\"",
+        "-DNUMI_HUMAN_SUBCUTANEOUS_ADIPOSE_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter\"",
+        "-DNUMI_HUMAN_THORACOLUMBAR_FASCIA_MATERIAL=\"/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_thoracolumbar_fascia_effective_isotropic.nmatter\"",
+        "-DNUMI_MATTER_METALLIB=\"/Users/numi/Work/skin-fat-native-integration-209/build-native/matter/shaders/NumiMatter.metallib\"",
+        "-I/Users/numi/numi-human-resting-integration-20261005/numi-brain/Sources/NumiBrainABI/include",
+        "-I/Users/numi/Work/skin-fat-native-integration-209/include",
+        "-I/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+        "-F/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks",
+        "-x",
+        "objective-c++",
+        "-O3",
+        "-DNDEBUG",
+        "-std=c++23",
+        "-arch",
+        "arm64",
+        "-fPIE",
+        "-fobjc-arc",
+        "-Wall",
+        "-Wextra",
+        "-Wpedantic",
+        "-Werror",
+        "-o",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/verified-connected-material/app/numi-human-native.o",
+        "-c",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/verified-connected-material/app/numilab_human_myosim_visual_probe.mm"
+      ],
+      [
+        "/usr/bin/clang++",
+        "-O3",
+        "-DNDEBUG",
+        "-arch",
+        "arm64",
+        "-Wl,-search_paths_first",
+        "-Wl,-headerpad_max_install_names",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/verified-connected-material/app/numi-human-native.o",
+        "-o",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/verified-connected-material/app/numi-human-native",
+        "-Wl,-rpath,/Users/numi/Work/skin-fat-native-integration-209/build-native/lib",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/compiled-owner/app-runtime.mm.o",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/compiled-owner/libmetalrobo.dylib",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Metal",
+        "-framework",
+        "CoreGraphics",
+        "-framework",
+        "ImageIO",
+        "-framework",
+        "AppKit",
+        "-framework",
+        "MetalKit",
+        "-framework",
+        "AVFoundation",
+        "-framework",
+        "CoreVideo",
+        "-framework",
+        "CoreMedia",
+        "-framework",
+        "QuartzCore",
+        "-lz",
+        "-framework",
+        "Accelerate"
+      ]
+    ],
+    "model": "e8a565f72a46854256e10ca848a68a8b68c9278625a850579b77b6d3bcbd1316",
+    "shader": "e1c24b88a288f07d6ba06aaaf61769c21a0f9619528a4c456411e2c3af45f39d",
+    "reference": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "loaded": "9e494b4fc1bffedc44ed4b372cc23e353bf54f0829af1f05fc25c087edff6566",
+    "topology": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "cell_mass": "b4fcc5bf7af3099b24c3a4c3409d2d4108a63bacc100f88db8a9e14eb9c34c0e",
+    "node_mass": "0f792ed119996565c9f2029305fe6e3486c1db8d4f900dc40ade8e261d3091be"
+  },
+  "launch_sha256": "2d74f2704bf1b3e6301cbe6cd81fb496a15b25c549456852adaef50c3caba2dc",
+  "initial_stretch": {
+    "rest": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "initial": "4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7",
+    "elements": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "layers": {
+      "15": {
+        "cells": 707604,
+        "reference_volume_m3": 0.0036554140356371955,
+        "volume_ratio": 1.004031253928043,
+        "max_principal_stretch": 9.419364999343436,
+        "min_principal_stretch": 0.10673905602885328,
+        "J_min": 0.4094799908905217,
+        "J_max": 2.453961923765244,
+        "descriptive_thresholds": {
+          "delta_J_gt_10_percent": {
+            "cells": 631,
+            "reference_volume_fraction": 0.016576924515242727
+          },
+          "delta_J_gt_50_percent": {
+            "cells": 188,
+            "reference_volume_fraction": 0.004457411507576685
+          },
+          "max_principal_stretch_gt_2": {
+            "cells": 106,
+            "reference_volume_fraction": 0.0036508419992454075
+          },
+          "min_principal_stretch_lt_half": {
+            "cells": 154,
+            "reference_volume_fraction": 0.0034157395771824664
+          }
+        }
+      },
+      "16": {
+        "cells": 749757,
+        "reference_volume_m3": 0.011506446631846357,
+        "volume_ratio": 1.0045387202381217,
+        "max_principal_stretch": 20.55392532369663,
+        "min_principal_stretch": 0.030153911764510634,
+        "J_min": 0.4084761658023205,
+        "J_max": 2.4920520652625613,
+        "descriptive_thresholds": {
+          "delta_J_gt_10_percent": {
+            "cells": 860,
+            "reference_volume_fraction": 0.011814144076699312
+          },
+          "delta_J_gt_50_percent": {
+            "cells": 183,
+            "reference_volume_fraction": 0.001660652975189366
+          },
+          "max_principal_stretch_gt_2": {
+            "cells": 195,
+            "reference_volume_fraction": 0.0016656021228313132
+          },
+          "min_principal_stretch_lt_half": {
+            "cells": 119,
+            "reference_volume_fraction": 0.00019814767110306033
+          }
+        }
+      }
+    },
+    "scope": "Initial registered geometry. Principal stretches use the rest-to-loaded affine mapping for each tetrahedron. Thresholds describe deformation and do not establish material injury or a constitutive failure."
+  },
+  "initial_anatomical_location": {
+    "layers": {
+      "15": {
+        "severe_cells": 231,
+        "isolated_interior_dofs": [
+          215,
+          16,
+          0,
+          0,
+          0
+        ],
+        "largest": [
+          {
+            "local_cell": 263537,
+            "stretch": [
+              9.419364999343436,
+              1.0,
+              0.23952173743918312
+            ],
+            "center_m": [
+              -0.3140524700284004,
+              -1.0004171431064606,
+              0.10981841571629047
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 357440,
+            "stretch": [
+              6.159719434719258,
+              1.0000452725643432,
+              0.10673905602885328
+            ],
+            "center_m": [
+              -0.3188350200653076,
+              -0.9897881895303726,
+              0.12544816732406616
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 1441992,
+            "stretch": [
+              5.394098736254122,
+              0.9999976784938084,
+              0.1079644030294504
+            ],
+            "center_m": [
+              -0.23336543515324593,
+              -0.6378542631864548,
+              0.060829115100204945
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 48173,
+            "stretch": [
+              6.463873289625713,
+              1.0000441452470352,
+              0.35368618180249917
+            ],
+            "center_m": [
+              -0.3084588348865509,
+              -1.0147510766983032,
+              0.12836231291294098
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 582557,
+            "stretch": [
+              6.108273071034391,
+              0.9999992600242008,
+              0.3357704831840821
+            ],
+            "center_m": [
+              0.25392260402441025,
+              -1.0097567439079285,
+              0.1471567526459694
+            ],
+            "free_nodes": 1
+          },
+          {
+            "local_cell": 636878,
+            "stretch": [
+              2.47805252704336,
+              1.0,
+              0.16829655934225782
+            ],
+            "center_m": [
+              0.2464875914156437,
+              -1.0070554614067078,
+              0.10818088427186012
+            ],
+            "free_nodes": 1
+          }
+        ]
+      },
+      "16": {
+        "severe_cells": 244,
+        "isolated_interior_dofs": [
+          175,
+          60,
+          8,
+          1,
+          0
+        ],
+        "largest": [
+          {
+            "local_cell": 1319352,
+            "stretch": [
+              15.717892130632798,
+              1.0000050173016697,
+              0.030153911764510634
+            ],
+            "center_m": [
+              -0.26951463520526886,
+              -0.7999393790960312,
+              0.10217856243252754
+            ],
+            "free_nodes": 1
+          },
+          {
+            "local_cell": 1316898,
+            "stretch": [
+              20.55392532369663,
+              0.9999909073764753,
+              0.11577631964586785
+            ],
+            "center_m": [
+              -0.27952878922224045,
+              -0.810213640332222,
+              0.09554948657751083
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 1456696,
+            "stretch": [
+              17.557143206712443,
+              1.0000000000000007,
+              0.08419965418818008
+            ],
+            "center_m": [
+              -0.16984057426452637,
+              -0.6118836998939514,
+              0.08539400435984135
+            ],
+            "free_nodes": 1
+          },
+          {
+            "local_cell": 1324291,
+            "stretch": [
+              16.68849496674045,
+              1.0000158204722436,
+              0.08044272468338352
+            ],
+            "center_m": [
+              -0.2609231695532799,
+              -0.7552413493394852,
+              0.08701447769999504
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 1324292,
+            "stretch": [
+              14.37301062438124,
+              1.000071872399594,
+              0.09409884260321555
+            ],
+            "center_m": [
+              -0.26060137152671814,
+              -0.7534788697957993,
+              0.08681079931557178
+            ],
+            "free_nodes": 0
+          },
+          {
+            "local_cell": 1316900,
+            "stretch": [
+              13.18560192463006,
+              1.000023519405171,
+              0.1410700066365685
+            ],
+            "center_m": [
+              -0.27955976128578186,
+              -0.8105646520853043,
+              0.09551315009593964
+            ],
+            "free_nodes": 0
+          }
+        ]
+      }
+    },
+    "free_nodes": 30,
+    "patch_cells": 670,
+    "source": "4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7"
+  },
+  "fitted": {
+    "pose": "4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7",
+    "rest": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "elements": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "affected_cells": 23004,
+    "unaffected_severe": 218,
+    "colors": 8,
+    "moved_nodes": 282,
+    "maximum_displacement_m": 0.0016600692991975631,
+    "history": [
+      {
+        "severe": 257,
+        "peak": 33.16319314751887,
+        "energy": 10143958.2799288,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      },
+      {
+        "severe": 241,
+        "peak": 33.16319314751887,
+        "energy": 9798352.949957918,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      },
+      {
+        "severe": 238,
+        "peak": 33.16319314751887,
+        "energy": 9727687.027061336,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      },
+      {
+        "severe": 233,
+        "peak": 33.16319314751887,
+        "energy": 9426254.95805476,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      },
+      {
+        "severe": 232,
+        "peak": 33.16319314751887,
+        "energy": 9358748.603878643,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      },
+      {
+        "severe": 231,
+        "peak": 33.16319314751887,
+        "energy": 9136346.693050493,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      },
+      {
+        "severe": 230,
+        "peak": 33.16319314751887,
+        "energy": 9050577.12893922,
+        "J_range": [
+          0.4094185218380298,
+          2.4920520652625613
+        ],
+        "min_shape": 1.0001511657063478e-05
+      }
+    ]
+  },
+  "prescribed_stretch": {
+    "pose": "9e494b4fc1bffedc44ed4b372cc23e353bf54f0829af1f05fc25c087edff6566",
+    "mesh": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "severe_cells": 448,
+    "bounds": {
+      "outer_skin_cortical_and_attachment_coordinates": {
+        "cells_with_prescribed_severe_stretch": {
+          "15": 55,
+          "16": 0
+        },
+        "worst": {
+          "15": {
+            "cell": 433010,
+            "protected_nodes": [
+              21819,
+              21998,
+              21745,
+              21999
+            ],
+            "severity": 4.494043860231329,
+            "minimum_prescribed_stretch": 0.22251674240413963,
+            "maximum_prescribed_stretch": 1.8432149829775732
+          }
+        }
+      },
+      "including_neighborhood_of_measured_bone_overlaps": {
+        "cells_with_prescribed_severe_stretch": {
+          "15": 123,
+          "16": 117
+        },
+        "worst": {
+          "15": {
+            "cell": 1439956,
+            "protected_nodes": [
+              112495,
+              113638,
+              112542,
+              23170
+            ],
+            "severity": 5.843802363672518,
+            "minimum_prescribed_stretch": 0.2081261117410442,
+            "maximum_prescribed_stretch": 5.843802363672518
+          },
+          "16": {
+            "cell": 1316898,
+            "protected_nodes": [
+              107973,
+              108696,
+              107960,
+              108683
+            ],
+            "severity": 20.553925323699204,
+            "minimum_prescribed_stretch": 0.1157763196458779,
+            "maximum_prescribed_stretch": 20.553925323699204
+          }
+        }
+      }
+    }
+  },
+  "surface_stretch": {
+    "material": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "loaded": "9e494b4fc1bffedc44ed4b372cc23e353bf54f0829af1f05fc25c087edff6566",
+    "layers": {
+      "O": {
+        "triangles": 152261,
+        "severe": 3,
+        "reference_area_fraction": 1.4684532072165537e-11,
+        "max_stretch": 2.907261595645107,
+        "min_stretch": 0.7529661008638291,
+        "worst_face": 102330,
+        "worst_source_nodes": [
+          50450,
+          50457,
+          50520
+        ]
+      },
+      "I": {
+        "triangles": 236593,
+        "severe": 4,
+        "reference_area_fraction": 1.3096234468436072e-06,
+        "max_stretch": 2.365798172005407,
+        "min_stretch": 0.40679429916288107,
+        "worst_face": 151032,
+        "worst_source_nodes": [
+          151211,
+          151201,
+          151192
+        ]
+      },
+      "D": {
+        "triangles": 208357,
+        "severe": 2,
+        "reference_area_fraction": 1.3969258008343638e-11,
+        "max_stretch": 1.7511531972818362,
+        "min_stretch": 0.4434552735238673,
+        "worst_face": 205682,
+        "worst_source_nodes": [
+          303795,
+          303660,
+          303659
+        ]
+      }
+    }
+  },
+  "severe_whole_before": 475,
+  "severe_whole_after": 448,
+  "interval_gate": {
+    "cells": 1457361,
+    "moved": 282,
+    "failed_intervals": [],
+    "minimum_margin": 0.0034057334468240302,
+    "checker": "9e580e6f9211ef33b1d62ad82fd9093000e2050e6cd11d81a33cb13120a8a41f",
+    "layer_checker": "b792b6ebba596584cde2744d8c3d72c324207f1290c9aa62de987bb71cf867f0",
+    "fit": "72fddd853b628f35eec0e4a41507bffd59cc49816da3e661136ce8ebe7328e1e"
+  },
+  "tissue_layers": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "cortical_overlap": {
+    "skin": {
+      "before_mm3": 1117.7593438891074,
+      "after_mm3": 1117.7593438891074,
+      "positive_bones": 6
+    },
+    "fat": {
+      "before_mm3": 4935.989911484523,
+      "after_mm3": 4935.989911484524,
+      "positive_bones": 26
+    }
+  },
+  "execution": {
+    "exit": 1,
+    "wall_s": 190.25580162508413
+  },
+  "partial_work": [
+    {
+      "root": 0,
+      "environment": 0,
+      "nonvascular_norm": 0.0237509087,
+      "vascular_norm": 3.12280299e-08,
+      "mechanical_threshold": 1.24999997e-05,
+      "vascular_threshold": 9.99999975e-06
+    },
+    {
+      "root": 0,
+      "environment": 0,
+      "used_columns_sum": 656,
+      "cycles_with_work": 48,
+      "encoded_cycles": 64,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 16,
+      "active_restart_begins": 32,
+      "has_outer_sample": true,
+      "last_newton_iteration": 15,
+      "last_newton_latched": false,
+      "last_newton_norm": 0.0237509087,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 0.0237509087,
+      "last_fgmres_residual_norm": 2.33425067e-06,
+      "last_fgmres_initial_norm": 0.0237509087,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 0.0237509087,
+      "last_newton_correction_ratio": 39.5243988,
+      "last_newton_converged": 0,
+      "final_nonpressure_nontransport_relative_residual": 0.0237509105,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 10,
+      "status_object": 12,
+      "status_failing_index": 4294967295,
+      "status_residual": 0,
+      "status_correction": -902
+    }
+  ],
+  "native_failure": {
+    "matter_object_index": 12,
+    "matter_failing_index": 4294967295,
+    "matter_diagnostics": [
+      0.02375091053545475,
+      3.2602574862039546e-08,
+      0,
+      -902
+    ],
+    "stand_completed_steps": 0,
+    "common_status": 0,
+    "common_residual": 1.7881393432617188e-06,
+    "respiratory_accepted_status": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "physiology_times": [],
+  "native_end": [
+    "resting_initialization=dynamic_release recruitment_activation_cap=0.25 recruited_muscles=416 active_muscles=165 maximum_activation=0.25 normalized_residual_rms=0.610667623223 maximum_acceleration_residual=68.3067563037 floating_root_residual_evaluated=0 maximum_root_acceleration_residual=0 support_force_n=0 active_support_rows=0 balanced=false qualification=initialization_transient_not_static_equilibrium",
+    "resting_bed_contact_owner=fem_outer_skin articulated_support_rows=0 initialization_only_support_rows=32",
+    "human_execution_stage=authoritative_segment_begin wall_elapsed_ms=2683.838458 stage_step=0",
+    "human_execution_stage=authoritative_segment_end wall_elapsed_ms=45579.53425 stage_step=0"
+  ],
+  "archive": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/connected-strain-native-2d74f2704bf1b3.tar.zst",
+    "archive_sha256": "ca3656843ddbbb19c796550123b22568de6e5745859943c3f36d5bbce684f046",
+    "size_bytes": 17128925
+  },
+  "linear_and_nonlinear_progress": [
+    {
+      "iteration": 0,
+      "rhs_l2": 0.0238867514,
+      "best_fresh_linear_l2": 2.34182494e-06
+    },
+    {
+      "iteration": 1,
+      "rhs_l2": 0.0237934757,
+      "best_fresh_linear_l2": 2.34090749e-06
+    },
+    {
+      "iteration": 2,
+      "rhs_l2": 0.0237702765,
+      "best_fresh_linear_l2": 2.33784317e-06
+    },
+    {
+      "iteration": 3,
+      "rhs_l2": 0.0237586871,
+      "best_fresh_linear_l2": 2.33599417e-06
+    },
+    {
+      "iteration": 4,
+      "rhs_l2": 0.0237528961,
+      "best_fresh_linear_l2": 2.33419428e-06
+    },
+    {
+      "iteration": 5,
+      "rhs_l2": 0.0237514488,
+      "best_fresh_linear_l2": 2.3331279e-06
+    },
+    {
+      "iteration": 6,
+      "rhs_l2": 0.0237510875,
+      "best_fresh_linear_l2": 2.33395076e-06
+    },
+    {
+      "iteration": 7,
+      "rhs_l2": 0.0237509981,
+      "best_fresh_linear_l2": 2.33375317e-06
+    },
+    {
+      "iteration": 8,
+      "rhs_l2": 0.0237509515,
+      "best_fresh_linear_l2": 2.33428932e-06
+    },
+    {
+      "iteration": 9,
+      "rhs_l2": 0.0237509292,
+      "best_fresh_linear_l2": 2.33375977e-06
+    },
+    {
+      "iteration": 10,
+      "rhs_l2": 0.0237509198,
+      "best_fresh_linear_l2": 2.33347487e-06
+    },
+    {
+      "iteration": 11,
+      "rhs_l2": 0.0237509124,
+      "best_fresh_linear_l2": 2.33325659e-06
+    },
+    {
+      "iteration": 12,
+      "rhs_l2": 0.0237509105,
+      "best_fresh_linear_l2": 2.33486003e-06
+    },
+    {
+      "iteration": 13,
+      "rhs_l2": 0.0237509105,
+      "best_fresh_linear_l2": 2.33475407e-06
+    },
+    {
+      "iteration": 14,
+      "rhs_l2": 0.0237509105,
+      "best_fresh_linear_l2": 2.33447372e-06
+    },
+    {
+      "iteration": 15,
+      "rhs_l2": 0.0237509087,
+      "best_fresh_linear_l2": 2.33425067e-06
+    }
+  ]
+}
