@@ -49,7 +49,14 @@ def build(vol,loaded,accepted,held,quality,material,out):
                 if sum(w)>.5:continue
                 B=np.eye(len(ids));B[slot,slot]=1-sum(w);B[slot,neigh]=w
                 moved=[B@p for p in coords]
-                for p in moved[:2]:p[slot]=p[slot].astype('f4')
+                # The reference uses one Float32 word. Matter stores the loaded
+                # displacement in two, including during its geometry checks.
+                reference = moved[0][slot].astype('f4').astype('f8')
+                displacement = moved[1][slot] - reference
+                high = displacement.astype('f4').astype('f8')
+                low = (displacement - high).astype('f4').astype('f8')
+                moved[0][slot] = reference
+                moved[1][slot] = reference + (high + low)
                 after=[geom(p,tc) for p in moved]
                 if any((v<=1e-18).any() or (q<1e-5).any() for v,q in after[:3]):continue
                 if np.any((after[3][1]<1e-5)&(previous[3][1]>=1e-5)) or np.any(after[3][0]<=1e-18):continue

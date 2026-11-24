@@ -17,7 +17,7 @@ inline const std::vector<Point>& points() {
         for(size_t i=0;i<count;++i) {
             size_t id=0;auto& p=out[i];
             require(bool(input>>id>>p[0]>>p[1]>>p[2])&&id==i+1,"invalid current material node identity");
-            for(double v:p)require(std::isfinite(v)&&v==double(float(v)),"non-Float32 loaded material position");
+            for(double v:p)require(std::isfinite(v),"nonfinite loaded material position");
             require(p[2]>=0.,"loaded material crosses the registered bed plane");
         }
         input>>std::ws;require(input.eof(),"extra rows in loaded material pose");
@@ -59,6 +59,24 @@ void install(Object& object,const Bundle& bundle,const Sidecars& sidecars){
     const char* ele=std::getenv("NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_ELEMENTS_SHA256");
     require(ref&&ele&&std::string_view(ref)==numiLoadedData::referenceSHA&&std::string_view(ele)==numiLoadedData::elementsSHA,
             "current pose reference and cell identities differ");
+    // The Matter compiler represents a registered coordinate as its exact float
+    // reference plus a high and low float displacement. Check the coordinates
+    // used by the geometry gates against that same representation before upload.
+    for (size_t i=0;i<p.size();++i) {
+        for (unsigned k=0;k<3;++k) {
+            const double current=p[i][k];
+            if (current==double(float(current))) continue;
+            const double reference=x[i][k];
+            require(object.femReferenceDisplacementGradient && reference==double(float(reference)),
+                    "precise loaded position requires a Float32 reference and compensated displacement");
+            const double displacement=current-reference;
+            const float high=static_cast<float>(displacement);
+            const float low=static_cast<float>(displacement-double(high));
+            require(std::isfinite(high) && std::isfinite(low) &&
+                    reference+(double(high)+double(low))==current,
+                    "loaded coordinate cannot be recovered from the registered physical state");
+        }
+    }
     auto geometry=[](const auto& xyz,const auto& id){
         Point u{},v{},w{};
         for(unsigned k=0;k<3;k++){
