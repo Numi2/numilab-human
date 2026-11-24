@@ -1,0 +1,503 @@
+{
+  "coordinates": {
+    "proposed_positions_sha256": "3e9a3a55881eb8bf2d53670984ea5181cb370da5e78805a50fcf050ef28a4d6a",
+    "skeleton_sha256": "297c765bd8b36a5a868cd5ac346f10726405f83758e16ac5b3c2c08af7e6aed4",
+    "nodes": 314013,
+    "total_cells": 1457312,
+    "min_bed_gap_m": 2.000055997989497e-09,
+    "bed_crossings": 0,
+    "outer_contact_vertices": 65,
+    "registered_attachments": 14,
+    "max_attachment_error_m": 2.7755575615628914e-17,
+    "sources": {
+      "mesh.node": "30181fd3fc8be8d4d7c06b2b69535b04850ae777c116c500121413d53a2666f6",
+      "mesh.ele": "6938d82b791870197bdb9fb6d810bbb112b66b98d640ffe8fbce0ed67f8c7bdd",
+      "current.node": "f7e38bd19c8236566dfdaa3fed9d1b4767821a4aa9288d65d2dd115b15cb5297",
+      "cell-mass.f64": "b4af16f4786e6c3ff4a17356bf76215eaea274df1ad598f58f4d619dcbc5672e",
+      "node-mass.f64": "4d9793ecc9f6493a674dd67feab8abe0a3ee452d7db72912b6f32fd058c0c248",
+      "current-child.labels.csv": "1c8d76812571c4c8e0995ccbdceaba91e5e206466b8e750750dc265211f909a0"
+    },
+    "mass_replay_max_relative_error": 1.8930620878168354e-15,
+    "materials": {
+      "15": {
+        "cells": 707597,
+        "mass_kg": 3.4525712828039024,
+        "failed": 42,
+        "inverted": 13,
+        "shape_below": 14,
+        "min_J": -1.9481380854066845,
+        "max_J": 72.30262462896589,
+        "minimum_shape": -0.049492661099187166
+      },
+      "16": {
+        "cells": 749715,
+        "mass_kg": 10.487108427165248,
+        "failed": 38,
+        "inverted": 18,
+        "shape_below": 21,
+        "min_J": -2.3949121419983466,
+        "max_J": 12.568374644119125,
+        "minimum_shape": -0.18398301915748644
+      }
+    }
+  },
+  "bed_clearance": {
+    "original_skeleton": "e211c0e74095d55104774307ad9da9dfa0c1defb65be43f9f1e2e6bddbf0f2d6",
+    "mesh": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "bed": "b38c8dc8db5c4233955e5f77cee8f7c0ca0a16eadd24104c6794f141ffc18047",
+    "unique_bones": 185,
+    "minimum_cortical_gap_m": 0.00042599303190602464,
+    "previous_minimum_cortical_gap_m": -0.0013556165699848697,
+    "previous_penetrating_banks": [
+      "100",
+      "103"
+    ],
+    "corrected": [
+      {
+        "clavicle_joint": 34,
+        "coordinates": [
+          35,
+          36,
+          38
+        ],
+        "from_q": [
+          -0.72887655164408,
+          0.2523163371207759,
+          -0.6289704002841463
+        ],
+        "to_q": [
+          -0.7272680512268367,
+          0.24847512779177716,
+          -0.6274795509946968
+        ],
+        "min_before_m": -0.0017956392671137785,
+        "min_after_m": 1.0000004642494315e-08,
+        "skin_nodes": 21457,
+        "distal_transform_error": 4.323920352049683e-16
+      }
+    ]
+  },
+  "live_vs_authoring": {
+    "native": {
+      "skin": {
+        "sum_mm3": 1117.6324210832222,
+        "positive_banks": 6,
+        "largest_mm3": [
+          [
+            14,
+            935.7754018199686
+          ],
+          [
+            16,
+            88.3170842322438
+          ],
+          [
+            18,
+            48.994763426089996
+          ],
+          [
+            19,
+            27.047229202691494
+          ],
+          [
+            17,
+            17.469034425025477
+          ],
+          [
+            15,
+            0.028907977202811512
+          ]
+        ],
+        "unresolved": 0
+      },
+      "fat": {
+        "sum_mm3": 4859.494781149713,
+        "positive_banks": 26,
+        "largest_mm3": [
+          [
+            14,
+            1676.295370423221
+          ],
+          [
+            18,
+            1580.418036865334
+          ],
+          [
+            19,
+            1258.965730087252
+          ],
+          [
+            16,
+            198.02324945668576
+          ],
+          [
+            17,
+            41.91322249991897
+          ],
+          [
+            90,
+            14.553640280432019
+          ],
+          [
+            26,
+            14.158576905444809
+          ],
+          [
+            89,
+            12.88453116999949
+          ]
+        ],
+        "unresolved": 0
+      }
+    },
+    "registered": {
+      "skin": {
+        "sum_mm3": 9509.007398272335,
+        "positive_banks": 49,
+        "largest_mm3": [
+          [
+            101,
+            973.53983545662
+          ],
+          [
+            14,
+            935.7809311716162
+          ],
+          [
+            117,
+            740.2982613142901
+          ],
+          [
+            108,
+            713.5950974511834
+          ],
+          [
+            102,
+            676.8520360530346
+          ],
+          [
+            114,
+            661.4549055074992
+          ],
+          [
+            98,
+            611.9922886982232
+          ],
+          [
+            16,
+            571.1220981661004
+          ]
+        ],
+        "unresolved": 0
+      },
+      "fat": {
+        "sum_mm3": 12690.768964035045,
+        "positive_banks": 61,
+        "largest_mm3": [
+          [
+            14,
+            1676.310792442548
+          ],
+          [
+            18,
+            1580.418036865334
+          ],
+          [
+            19,
+            1258.965730087252
+          ],
+          [
+            93,
+            848.6834727098885
+          ],
+          [
+            92,
+            573.7849467248541
+          ],
+          [
+            101,
+            529.2992679781311
+          ],
+          [
+            108,
+            496.48344615381063
+          ],
+          [
+            88,
+            478.6637820020247
+          ]
+        ],
+        "unresolved": 0
+      }
+    }
+  },
+  "wall_intersections": [
+    [
+      729,
+      57,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      874,
+      20
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "cortical_volume_mm3": {
+    "skin": {
+      "sum": 26348.372263971058,
+      "positive_banks": 77,
+      "largest_mm3": [
+        [
+          14,
+          4438.273518495694
+        ],
+        [
+          17,
+          4021.741019191754
+        ],
+        [
+          12,
+          3732.412383752225
+        ],
+        [
+          13,
+          2428.891863443472
+        ],
+        [
+          16,
+          2309.623560525087
+        ],
+        [
+          131,
+          1963.4161075484094
+        ],
+        [
+          81,
+          694.0163722351084
+        ],
+        [
+          74,
+          439.51555931239693
+        ]
+      ],
+      "unresolved": 0
+    },
+    "fat": {
+      "sum": 82997.88794465107,
+      "positive_banks": 121,
+      "largest_mm3": [
+        [
+          12,
+          16277.747755373812
+        ],
+        [
+          13,
+          15751.562311843016
+        ],
+        [
+          14,
+          15688.291232338603
+        ],
+        [
+          16,
+          11940.46490365318
+        ],
+        [
+          11,
+          1652.3614188245988
+        ],
+        [
+          126,
+          1493.285098300789
+        ],
+        [
+          15,
+          1233.7602408445678
+        ],
+        [
+          17,
+          1067.6561903387374
+        ]
+      ],
+      "unresolved": 0
+    }
+  },
+  "evaluated_bones": 185,
+  "blocked_step": {
+    "baseline_launch": "cddeb91fa0e6d11a1cacc34fda82abcfaf325b4dec89f8a93b3e50c961126718",
+    "accepted_pose": "a590bde1d992fcbc85edb4fb0041f7c2c8cb196b40b8e94e755166cc391b588e",
+    "witness_trace": "a30dce4fbc33e5bc8c77a30fcb9dee6a4f5db38ab263ee16194cb72839abf618",
+    "source_mesh": "6938d82b791870197bdb9fb6d810bbb112b66b98d640ffe8fbce0ed67f8c7bdd",
+    "global_element_offset": 3315,
+    "selected_alpha": 1.19209e-07,
+    "regions": [
+      {
+        "local_cell": 137663,
+        "global_cell": 140978,
+        "role": 15,
+        "registered_nodes": [
+          107183,
+          107176,
+          107185,
+          107177
+        ],
+        "layers": {
+          "O": 0,
+          "I": 4,
+          "D": 0,
+          "C": 0
+        },
+        "source_aspect": 0.00010941717976583847,
+        "star_cells": 47,
+        "proposals": [
+          {
+            "old": [
+              [
+                107176,
+                107177,
+                17930,
+                107185
+              ],
+              [
+                107183,
+                107176,
+                107185,
+                107177
+              ],
+              [
+                107183,
+                17930,
+                107177,
+                107185
+              ]
+            ],
+            "new": [
+              [
+                107177,
+                17930,
+                107176,
+                107183
+              ],
+              [
+                107185,
+                17930,
+                107183,
+                107176
+              ]
+            ],
+            "gain_in_worst_aspect": 2.5220897931112294,
+            "poses": [
+              {
+                "force_change_N": 1.7863622842318567e-16,
+                "force_relative": 1.7863622842318566e-06,
+                "energy_change_J": -1.0339546718953557e-37,
+                "energy_relative": 1.0339546718953556e-23
+              },
+              {
+                "force_change_N": 9.965883011958367e-05,
+                "force_relative": 0.9994368583191013,
+                "energy_change_J": -6.791695471247222e-15,
+                "energy_relative": 0.012893331850410805
+              }
+            ],
+            "force_and_energy_pass": false
+          }
+        ]
+      },
+      {
+        "local_cell": 612693,
+        "global_cell": 616008,
+        "role": 15,
+        "registered_nodes": [
+          23008,
+          22944,
+          23015,
+          22955
+        ],
+        "layers": {
+          "O": 4,
+          "I": 0,
+          "D": 0,
+          "C": 0
+        },
+        "source_aspect": 9.908651325279265e-05,
+        "star_cells": 67,
+        "proposals": []
+      },
+      {
+        "local_cell": 1439803,
+        "global_cell": 1443118,
+        "role": 15,
+        "registered_nodes": [
+          111350,
+          111352,
+          111351,
+          111348
+        ],
+        "layers": {
+          "O": 0,
+          "I": 4,
+          "D": 0,
+          "C": 0
+        },
+        "source_aspect": 2.234322150197458e-05,
+        "star_cells": 27,
+        "proposals": []
+      }
+    ]
+  },
+  "root_placement": {
+    "geometry": "1b8076d9af928a745203ec27a67ac9f6ed263c3f61f8d8f92d55f834490636aa",
+    "material_reference": "30181fd3fc8be8d4d7c06b2b69535b04850ae777c116c500121413d53a2666f6",
+    "live_pose": "903e3378adf6cfd18eaaa5e13df22e07b49b2980cab6305762f39605a880e9db",
+    "support": "b38c8dc8db5c4233955e5f77cee8f7c0ca0a16eadd24104c6794f141ffc18047",
+    "angle_rad": 0.0,
+    "initial_support_facet_vertices": [
+      26082,
+      24331,
+      24519
+    ],
+    "gravity_line_barycentric": [
+      0.6013935773180362,
+      0.17205536383714462,
+      0.22655105884481916
+    ],
+    "gravity_line_distance_from_edge_m": 0.020206801013300312,
+    "estimated_COM_uncertainty_m": 0.004848250123008412,
+    "facet_count_forward": 1,
+    "facet_count_with_COM_margin": 1,
+    "rotation_xyzw": [
+      -4.510333610503042e-11,
+      -5.4396343972164946e-09,
+      -9.68476956816112e-12,
+      1.0
+    ],
+    "translation_m": [
+      1.273563878638444e-09,
+      -1.11025665355593e-11,
+      3.048203862016979e-10
+    ],
+    "minimum_gap_m": 1.999999999771282e-08,
+    "outer_contact_nodes": 10,
+    "inverted": 0,
+    "failed_material_cells": 0,
+    "max_change_volume_ratio": 5.0830372799737233e-08,
+    "reference_scope": "Common rigid initial placement. Barycentric values are geometric equilibrium feasibility and are not applied forces."
+  },
+  "physical_source": "903e3378adf6cfd18eaaa5e13df22e07b49b2980cab6305762f39605a880e9db"
+}
