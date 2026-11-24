@@ -1,0 +1,295 @@
+{
+  "registered_cell": 821965,
+  "registration": {
+    "source": "9e494b4fc1bffedc44ed4b372cc23e353bf54f0829af1f05fc25c087edff6566",
+    "elements": "c8656ab0ebb567d9b89116ad28f5fa91f04c78124ef83ce9e75af63bbd4d7290",
+    "current": "ee59d8d4b223128924f55d731a605c7319af391e67e3f5111ed6b70396cb5d9b",
+    "witness": 825280,
+    "provisional_offset": 3315,
+    "target_nodes": [
+      110841,
+      110836,
+      110835,
+      110837
+    ],
+    "initial_J": 2.4438733593213056,
+    "fitted_J": 1.6813854085381978,
+    "moved": 23,
+    "maximum_change_m": 1.3334000002083811e-05,
+    "trials": [
+      {
+        "trust_um": 25.0,
+        "fraction": 0.5,
+        "solver_message": "Iteration limit reached",
+        "cells": 313,
+        "severe": 14,
+        "target_J": 1.6813854085381978
+      },
+      {
+        "trust_um": 100.0,
+        "fraction": 0.5,
+        "solver_message": "Iteration limit reached",
+        "cells": 313,
+        "severe": 14,
+        "target_J": 1.6813854085381978
+      }
+    ]
+  },
+  "quality": {
+    "cells": 1457316,
+    "minimum_interval_margin": 0.0034057334468240302,
+    "failed_intervals": 0,
+    "audited_bones": 185,
+    "increased_bone_overlap_mm3": []
+  },
+  "initial_layer_intersections": [
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0
+    ]
+  ],
+  "runtime_comparison": {
+    "remesh": {
+      "execution": {
+        "exit": 1,
+        "wall_s": 182.29391066590324
+      },
+      "trace_records": 0,
+      "start": null,
+      "end": null,
+      "accepted_steps": 0,
+      "diagnostics": [
+        2.500000238418579,
+        2.5,
+        825280,
+        4
+      ],
+      "root_solver_work": [
+        {
+          "root": 0,
+          "environment": 0,
+          "used_columns_sum": 434,
+          "cycles_with_work": 28,
+          "encoded_cycles": 64,
+          "budget_exhausted_solves": 0,
+          "active_newton_begins": 14,
+          "active_restart_begins": 14,
+          "has_outer_sample": true,
+          "last_newton_iteration": 13,
+          "last_newton_latched": false,
+          "last_newton_norm": 0.0224360246,
+          "last_newton_threshold": 9.99999975e-06,
+          "minimum_newton_norm": 0.0224360246,
+          "last_fgmres_residual_norm": 0,
+          "last_fgmres_initial_norm": 0,
+          "last_fgmres_cycle_accepted": 1,
+          "last_fgmres_columns": 0,
+          "last_newton_current_norm": 0,
+          "last_newton_correction_ratio": 0,
+          "last_newton_converged": 1,
+          "final_nonpressure_nontransport_relative_residual": 0,
+          "final_aggregate_transport_relative_residual": 0,
+          "aggregate_nonempty_cycle_ranges": 0,
+          "aggregate_selected_command_span_total": 0,
+          "status_code": 10,
+          "status_object": 15,
+          "status_failing_index": 13,
+          "status_residual": 825280,
+          "status_correction": 4
+        }
+      ],
+      "final_search_fractions": [
+        0.00390625,
+        0.0009765625,
+        0.00048828125,
+        0.000244140625,
+        6.10351562e-05,
+        1.52587891e-05,
+        7.62939453e-06,
+        5.96046448e-08,
+        1.49011612e-08,
+        7.4505806e-09,
+        1.86264515e-09,
+        9.31322575e-10,
+        4.65661287e-10,
+        0,
+        0,
+        0
+      ],
+      "compiled_span": null,
+      "launch": "730ef19be0efd473cc5ec1a9676453adec75890b1c02ef81d874786c23ca36bd"
+    },
+    "path_trial": {
+      "execution": {
+        "exit": 1,
+        "wall_s": 182.68237887509167
+      },
+      "trace_records": 0,
+      "start": null,
+      "end": null,
+      "accepted_steps": 0,
+      "diagnostics": [
+        2.500000238418579,
+        2.5,
+        825280,
+        4
+      ],
+      "root_solver_work": [
+        {
+          "root": 0,
+          "environment": 0,
+          "used_columns_sum": 434,
+          "cycles_with_work": 28,
+          "encoded_cycles": 64,
+          "budget_exhausted_solves": 0,
+          "active_newton_begins": 14,
+          "active_restart_begins": 14,
+          "has_outer_sample": true,
+          "last_newton_iteration": 13,
+          "last_newton_latched": false,
+          "last_newton_norm": 0.0224360246,
+          "last_newton_threshold": 9.99999975e-06,
+          "minimum_newton_norm": 0.0224360246,
+          "last_fgmres_residual_norm": 0,
+          "last_fgmres_initial_norm": 0,
+          "last_fgmres_cycle_accepted": 1,
+          "last_fgmres_columns": 0,
+          "last_newton_current_norm": 0,
+          "last_newton_correction_ratio": 0,
+          "last_newton_converged": 1,
+          "final_nonpressure_nontransport_relative_residual": 0,
+          "final_aggregate_transport_relative_residual": 0,
+          "aggregate_nonempty_cycle_ranges": 0,
+          "aggregate_selected_command_span_total": 0,
+          "status_code": 10,
+          "status_object": 15,
+          "status_failing_index": 13,
+          "status_residual": 825280,
+          "status_correction": 4
+        }
+      ],
+      "final_search_fractions": [
+        0.00390625,
+        0.0009765625,
+        0.00048828125,
+        0.000244140625,
+        6.10351562e-05,
+        1.52587891e-05,
+        7.62939453e-06,
+        5.96046448e-08,
+        1.49011612e-08,
+        7.4505806e-09,
+        1.86264515e-09,
+        9.31322575e-10,
+        4.65661287e-10,
+        0,
+        0,
+        0
+      ],
+      "compiled_span": null,
+      "launch": "fd96a9a7b10c0a268bbab7d18767474ef3b97d671b9d80fb50a652d2e24f98fb"
+    },
+    "material_registration": {
+      "execution": {
+        "exit": 1,
+        "wall_s": 190.55368116591126
+      },
+      "trace_records": 0,
+      "start": null,
+      "end": null,
+      "accepted_steps": 0,
+      "diagnostics": [
+        0.00891992449760437,
+        2.711256566478859e-12,
+        0,
+        -902
+      ],
+      "root_solver_work": [
+        {
+          "root": 0,
+          "environment": 0,
+          "used_columns_sum": 568,
+          "cycles_with_work": 46,
+          "encoded_cycles": 64,
+          "budget_exhausted_solves": 0,
+          "active_newton_begins": 16,
+          "active_restart_begins": 30,
+          "has_outer_sample": true,
+          "last_newton_iteration": 15,
+          "last_newton_latched": false,
+          "last_newton_norm": 0.0089199245,
+          "last_newton_threshold": 9.99999975e-06,
+          "minimum_newton_norm": 0.0089199245,
+          "last_fgmres_residual_norm": 8.89823809e-07,
+          "last_fgmres_initial_norm": 0.0089199245,
+          "last_fgmres_cycle_accepted": 1,
+          "last_fgmres_columns": 0,
+          "last_newton_current_norm": 0.0089199245,
+          "last_newton_correction_ratio": 1.49074984,
+          "last_newton_converged": 0,
+          "final_nonpressure_nontransport_relative_residual": 0.0089199245,
+          "final_aggregate_transport_relative_residual": 0,
+          "aggregate_nonempty_cycle_ranges": 0,
+          "aggregate_selected_command_span_total": 0,
+          "status_code": 10,
+          "status_object": 12,
+          "status_failing_index": 4294967295,
+          "status_residual": 0,
+          "status_correction": -902
+        }
+      ],
+      "final_search_fractions": [
+        0.0625,
+        0.5,
+        0.015625,
+        0.125,
+        0.03125,
+        0.0078125,
+        0.00048828125,
+        0.000244140625,
+        0.000122070312,
+        2.38418579e-07,
+        3.81469727e-06,
+        2.38418579e-07,
+        3.81469727e-06,
+        1.81872009e-12,
+        1.81872009e-12,
+        1.81872009e-12
+      ],
+      "compiled_span": "registered_material_span object=15 element_offset=3315 element_count=1457316 state_offset=1666 state_count=314015",
+      "launch": "510809b685a606280afb6959e0d45480668f2c0ccf35e46dbbb01292eb194aac"
+    }
+  },
+  "determinant_trial_math": {
+    "matrices": 2048,
+    "fractions": 65,
+    "seed": 72591,
+    "maximum_polynomial_error": 1.4210854715202004e-14,
+    "maximum_derivative_errors": [
+      1.9835599829320927e-10,
+      6.257572238155262e-10,
+      1.688217121653679e-09
+    ],
+    "endpoint_counterexample": [
+      1.0,
+      -0.33333333333333326,
+      -0.33333333333333326,
+      1.0
+    ]
+  },
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/coupled-material-star-510809b685a60628.tar.zst",
+    "archive_sha256": "5b73879cc6de0c92d6fe2354719a87461dd6e9ea610b66750134ca05a3c13d68"
+  }
+}
