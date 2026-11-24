@@ -1,0 +1,204 @@
+{
+  "parent_recovery": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/conservative-humeral-fat-seam-5b6fa9988da807bd.tar.zst",
+  "material": {
+    "parent_volume": "beeec849878d042986732fb7d07bf85df62c2f05090021a4344f94df44289817",
+    "local_patch": "87afbf05de6300d8aaf400bcae540fcc19f993d63cd69cc28620e2f06ce54366",
+    "whole_elements": 1457309,
+    "whole_nodes": 314012,
+    "replaced": 31,
+    "new_elements": 32,
+    "total_patch_mass_kg": 1.2411050792191632e-06,
+    "source_tag": [
+      16,
+      79,
+      79,
+      74739
+    ],
+    "sum_mass_by_role_kg": {
+      "15": 3.4525712828039024,
+      "16": 10.487108427165248
+    },
+    "maximum_relative_local_density_adjustment": 0.0005030690985167136,
+    "first_moment_residual_kg_m": 2.5849394142282115e-25,
+    "worst_mass_transfer_residual_kg": 1.3069453678337837e-22,
+    "global_reference_and_pose_quality_failures": 0,
+    "global_interval_failures": 0,
+    "minimum_interval_margin": 0.0034057334468240302,
+    "inputs": {
+      "current.node": "08bac3fe9971305740c03471f4d89fe97cfe58622b9daa035dc248b8bd9f484f",
+      "mesh.node": "0babc9e1ca92239ceeb119960cd14aa112b901fe23059cd1c191038a7843e051",
+      "mesh.ele": "35c4c76b60067f47c15558c6a6d43e319b874469e6823d53a0706b0a07d44429",
+      "current-child.labels.csv": "dd934e3af7cb68f132a694eaed8440a5a51eee8b491b67a2aa1f88ebbacd7d40",
+      "cell-mass.f64": "1feae1c9ce2b33796ecb4b2422a9f351d28c398f8fecda5221de94862c176467",
+      "node-mass.f64": "2e8000b429f28914363e7aaec9aabca119b58d3f7965336ef44d9a2abeec932d",
+      "ancestry.npz": "dc88afba3bc85a753ba3751c1c1280eb36dcdf332d4f3f94029fba945051468a"
+    }
+  },
+  "consolidation": {
+    "source": "e6b1103f803cd8cecb799b14f6260ce1326e450b35632039c5c50134071403a2",
+    "union_surface": "b0b51e9d2339ae77d626e0d602bcae34551bbea8dff6c962870efd176a99a6d8",
+    "selected": {
+      "single_component_count": 1
+    },
+    "minimum_face_normal_cosine": 0.9965420917824188,
+    "maximum_generated_point_displacement_um": 2.0319469496712985,
+    "retired_boolean_vertices": 8,
+    "unchanged_original_vertices": 22,
+    "protected_interfaces": 12
+  },
+  "tetrahedra": {
+    "source": "b0b51e9d2339ae77d626e0d602bcae34551bbea8dff6c962870efd176a99a6d8",
+    "trials": [
+      {
+        "input": "quality",
+        "operations": 1,
+        "new_elements": 32,
+        "below_quality": 0,
+        "below_volume": 0,
+        "minimum_shape": 1.0002896804123152e-05,
+        "min_volume_m3": 5.82042081146304e-17,
+        "matched_oriented_boundary": true
+      }
+    ],
+    "elements": "87afbf05de6300d8aaf400bcae540fcc19f993d63cd69cc28620e2f06ce54366"
+  },
+  "bones": {
+    "skin": {
+      "prior_cm3": 1.1177593440815383,
+      "current_cm3": 1.1177593440815383,
+      "maximum_bank_difference_mm3": 0.0
+    },
+    "fat": {
+      "prior_cm3": 4.935989911292093,
+      "current_cm3": 4.935989911292093,
+      "maximum_bank_difference_mm3": 0.0
+    }
+  },
+  "registered_walls": {
+    "layers": [
+      "outer skin",
+      "inner skin",
+      "deep fat",
+      "cortical material surface"
+    ],
+    "triangle_counts": [
+      152261,
+      236593,
+      208354,
+      4733
+    ],
+    "pair_counts": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        3
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "aabb_pairs": 11714317,
+    "witnesses": {
+      "3-3": [
+        [
+          824,
+          827
+        ]
+      ],
+      "2-3": [
+        [
+          208043,
+          825
+        ],
+        [
+          208043,
+          826
+        ],
+        [
+          208043,
+          827
+        ]
+      ]
+    }
+  },
+  "reference_walls": {
+    "layers": [
+      "outer skin",
+      "inner skin",
+      "deep fat",
+      "cortical material surface"
+    ],
+    "triangle_counts": [
+      152261,
+      236593,
+      208354,
+      4733
+    ],
+    "pair_counts": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        3
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "aabb_pairs": 11714003,
+    "witnesses": {
+      "3-3": [
+        [
+          824,
+          827
+        ]
+      ],
+      "2-3": [
+        [
+          208043,
+          825
+        ],
+        [
+          208043,
+          826
+        ],
+        [
+          208043,
+          827
+        ]
+      ]
+    }
+  },
+  "local_status": "The 11 material-wall crossings at bank 13 are absent in both complete four-wall audits. All four remaining pairs involve pre-existing bank 9 wall rows outside the repair. No accepted-motion claim."
+}
