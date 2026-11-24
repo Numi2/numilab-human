@@ -1,0 +1,80 @@
+// One environment is admitted by the registered material and fixed-bed owners.
+// Words 0..2 and 4..6 are Metal indirect-dispatch arguments. The suffix
+// contains the reduction and the last scalar verified for this correction.
+kernel void nm_fem_registered_release_bound_begin(
+    constant NMMatterDispatchGPU& d [[buffer(0)]], device const float* alpha [[buffer(1)]],
+    device atomic_uint* scratch [[buffer(2)]], constant uint& pass [[buffer(3)]],
+    device const NMFGMRESStateGPU* states [[buffer(4)]], device const NMMatterStatusGPU* status [[buffer(5)]],
+    uint id [[thread_position_in_grid]]) {
+    if(id) return;
+    if(!pass) atomic_store_explicit(scratch+11,as_type<uint>(1.f),memory_order_relaxed);
+    const bool measure=environmentHealthy(status,0)&&states[0].nonlinear.w<=.5f&&alpha[0]>0.f&&
+        atomic_load_explicit(scratch+11,memory_order_relaxed)!=as_type<uint>(alpha[0]);
+    atomic_store_explicit(scratch,measure?(d.tetrahedronCount+127u)/128u:0u,memory_order_relaxed);
+    atomic_store_explicit(scratch+1,1u,memory_order_relaxed);
+    atomic_store_explicit(scratch+2,1u,memory_order_relaxed);
+    atomic_store_explicit(scratch+8,0u,memory_order_relaxed);
+    atomic_store_explicit(scratch+9,0xffffffffu,memory_order_relaxed);
+}
+
+kernel void nm_fem_registered_release_bound_elements(
+    constant NMMatterDispatchGPU& d [[buffer(0)]], constant NMMicrostepGPU& micro [[buffer(1)]],
+    device const NMContinuumObjectGPU* objects [[buffer(2)]], device const NMMaterialGPU* materials [[buffer(3)]],
+    device const NMFEMNodeStateGPU* accepted [[buffer(4)]], device const NMFEMNodeStateGPU* candidate [[buffer(5)]],
+    device const float4* direction [[buffer(6)]], device const NMTetrahedronGPU* tets [[buffer(7)]],
+    device const NMSchedulerStateGPU* schedule [[buffer(8)]], device const NMAdaptiveStateGPU* adaptive [[buffer(9)]],
+    device const float4* floors [[buffer(10)]], device const float* alpha [[buffer(11)]],
+    device atomic_uint* scratch [[buffer(12)]], device const NMScalarProgramGPU* programs [[buffer(13)]],
+    device const NMExpressionInstructionGPU* instructions [[buffer(14)]], device const float* parameters [[buffer(15)]],
+    constant uint& budget [[buffer(16)]], uint e [[thread_position_in_grid]]) {
+    if(e>=d.tetrahedronCount) return;
+    const NMTetrahedronGPU tet=environmentTetrahedron(d,tets,0u,e);
+    if(!(tet.identity.w&NM_OBJECT_ACTIVE)||tet.identity.y>=d.objectCount) return;
+    const uint owner=tet.identity.y;
+    const NMContinuumObjectGPU obj=objects[owner];
+    if(obj.representation!=NM_REPRESENTATION_FEM || !objectDue(obj,schedule[owner],adaptive[owner],micro))return;
+    const NMMaterialGPU mat=materials[tet.identity.x];
+    const float lo=max(d.numericalLimits.z,max(mat.validity.x,floors[e].z));
+    const float dt=objectTimestep(d,schedule[owner]);
+    const float3x3 inv=matrixFromRows(tet.inverseRestRow0,tet.inverseRestRow1,tet.inverseRestRow2);
+    const bool reference=tet.identity.w&NM_TETRAHEDRON_REFERENCE_DISPLACEMENT_GRADIENT;
+    for(uint k=0u;k<budget;++k){
+        float a=ldexp(alpha[0],-int(k));
+        NMFEMNodeStateGPU p[4];float3 u[4],low[4],v[4];
+        for(uint i=0;i<4;++i){
+            uint n=tet.nodes[i];p[i]=femTrialNodeAtAlpha(accepted[n],candidate[n],direction[n].xyz,a,dt,true);
+            u[i]=p[i].referenceDisplacementAndMode.xyz;low[i]=p[i].referenceDisplacementLow.xyz;v[i]=p[i].velocityAndInverseMass.xyz;
+        }
+        const float3x3 F=registeredTrialF(p,inv,reference);
+        const float J=determinant(F);
+        if(!nmFEMBacktrackingFailureReason(J,lo,mat.validity.y,true) &&
+           ((obj.flags & NM_OBJECT_MIXED_FEM) || femBacktrackingConstitutiveValid(d,obj,tet,mat,F,inv,u,low,v,programs,instructions,parameters,0u,dt))){
+            if(k)atomic_fetch_max_explicit(scratch+8,k,memory_order_relaxed);
+            return;
+        }
+        if(!k)atomic_fetch_min_explicit(scratch+9,e,memory_order_relaxed);
+    }
+    atomic_fetch_max_explicit(scratch+8,budget,memory_order_relaxed);
+}
+
+kernel void nm_fem_registered_release_bound_finish(
+    constant NMMatterDispatchGPU& d [[buffer(0)]],device float* alpha [[buffer(1)]],
+    device float4* perObject [[buffer(2)]],device atomic_uint* scratch [[buffer(3)]],
+    device NMMatterStatusGPU* status [[buffer(4)]],constant uint& last [[buffer(5)]],
+    constant uint& budget [[buffer(6)]],device const NMTetrahedronGPU* tet [[buffer(7)]],
+    uint id [[thread_position_in_grid]]) {
+    if(id)return;
+    const uint k=atomic_load_explicit(scratch+8,memory_order_relaxed);
+    const bool failed=k && (last || k>=budget);
+    atomic_store_explicit(scratch+4,k&&!failed?1u:0u,memory_order_relaxed);
+    atomic_store_explicit(scratch+5,1u,memory_order_relaxed);
+    atomic_store_explicit(scratch+6,1u,memory_order_relaxed);
+    if(failed){
+        uint row=atomic_load_explicit(scratch+9,memory_order_relaxed);
+        recordFailure(status[0],NM_STATUS_NONLINEAR_SOLVER_FAILURE,tet[row].identity.y,row,float4(alpha[0],float(k),0,-929));
+    }else if(k){
+        const float next=ldexp(alpha[0],-int(k));
+        alpha[0]=next;
+        for(uint i=0;i<d.objectCount;++i)perObject[i].x=next;
+    }else atomic_store_explicit(scratch+11,as_type<uint>(alpha[0]),memory_order_relaxed);
+}
