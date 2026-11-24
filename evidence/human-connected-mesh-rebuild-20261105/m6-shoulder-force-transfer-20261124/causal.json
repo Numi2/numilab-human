@@ -1,0 +1,70 @@
+{
+  "control": "2bbaa6385cb786708f2ce32c53f4d535a5082602108ad3c510728d40b34b358c",
+  "trial": "ee800dd0e9b5d256e971e873ed907d260c284a0f0d6d188e7fcc06ec403ae5cd",
+  "bed_normal": [
+    0.0017584916237841724,
+    -0.0017949832870491481,
+    0.9999968428661205
+  ],
+  "bed_load_N": [
+    11.01474354715673,
+    0.7779576231115237
+  ],
+  "bed_load_delta_N": -10.236785924045206,
+  "terminal_step_skin_nodes": [
+    16,
+    16
+  ],
+  "max_skin_displacement_difference_m": 1.0047091258373851e-05,
+  "max_displacement_node": 26131,
+  "dominant_bed_node_delta_m": [
+    8.895153918997423e-10,
+    5.326772356539777e-11,
+    -2.4274685410299174e-07
+  ],
+  "scapular_sample_delta_m": [
+    -6.242228955954943e-14,
+    -3.7136960173711486e-14,
+    -2.2121193765656244e-14
+  ],
+  "sources": [
+    {
+      "step": 0,
+      "matching_rows": 2364,
+      "union_rows": 2364,
+      "same_ids": true,
+      "same_row_values": true,
+      "max_row_force_delta_N": 0.0,
+      "skin_fat_all_delta_normal_N": 0.0,
+      "skin_fat_to_scapula_delta_normal_N": 0.0,
+      "bone_vector_deltas_N": {}
+    },
+    {
+      "step": 1,
+      "matching_rows": 2369,
+      "union_rows": 2369,
+      "same_ids": true,
+      "same_row_values": false,
+      "max_row_force_delta_N": 1.186490157851513e-06,
+      "skin_fat_all_delta_normal_N": 7.422507053433947e-12,
+      "skin_fat_to_scapula_delta_normal_N": 0.0,
+      "bone_vector_deltas_N": {
+        "23": [
+          2.3551605110583296e-11,
+          -1.5098367001087354e-11,
+          7.354006292814574e-12
+        ],
+        "25": [
+          4.505891411099583e-07,
+          4.992853064322844e-08,
+          -1.0964649845845997e-06
+        ]
+      }
+    }
+  ],
+  "accepted_material": [
+    "7374bb7af6370639a7f9f498c8dd4b5fe4a27c6390e97dce2712524b0c2b9512",
+    "c74ed824d445d7b53b658610509572620d21a6643a8eef9e3a2b2fa3fb1ab53d"
+  ],
+  "scope": "Force source i is assembled from the beginning of accepted step i+1. Bed load is the terminal impulse divided by the physical root duration. This short perturbation resolves an initial response only."
+}
