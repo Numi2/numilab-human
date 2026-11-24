@@ -1,0 +1,70 @@
+// The determinant along an affine P1 Newton segment is a cubic. A full
+// endpoint can pass while the reduced line-search step leaves the material
+// domain. Check the extrema before choosing a Bernstein control to correct.
+struct NMRegisteredVolumeControl {
+    float value;
+    uint term;
+};
+
+inline float registeredTensorProduct(float3x3 a, float3x3 b) {
+    return dot(a[0], b[0]) + dot(a[1], b[1]) + dot(a[2], b[2]);
+}
+
+inline float registeredCubicValue(float4 b, float t) {
+    const float3 first = mix(b.xyz, b.yzw, t);
+    const float2 second = mix(first.xy, first.yz, t);
+    return mix(second.x, second.y, t);
+}
+
+inline float registeredIntervalViolation(float j, float lo, float hi) {
+    return max(lo - j, j - hi);
+}
+
+inline NMRegisteredVolumeControl registeredSweptControl(float3x3 start, float3x3 end,
+                                                        float lo, float hi) {
+    const float last = determinant(end);
+    if (!isfinite(last) || last <= lo || last >= hi) return {last, 3u};
+    const float first = determinant(start);
+    const float3x3 change = end - start;
+    const float inner1 = first + registeredTensorProduct(cofactorMatrix(start), change) / 3.f;
+    const float inner2 = last - registeredTensorProduct(cofactorMatrix(end), change) / 3.f;
+    const float excess1 = registeredIntervalViolation(inner1, lo, hi);
+    const float excess2 = registeredIntervalViolation(inner2, lo, hi);
+    if (max(excess1, excess2) <= 0.f) return {last, 3u};
+
+    const float4 controls = float4(first, inner1, inner2, last);
+    const float3 dc = controls.yzw - controls.xyz;
+    const float a = dc.z - 2.f * dc.y + dc.x;
+    const float b = 2.f * (dc.y - dc.x);
+    const float c = dc.x;
+    const float discriminant = fma(b, b, -4.f * a * c);
+    if (discriminant < 0.f) return {last, 3u};
+    float2 roots = float2(-1.f);
+    if (a == 0.f) {
+        if (b != 0.f) roots.x = -c / b;
+    } else {
+        const float q = -.5f * (b + copysign(sqrt(discriminant), b));
+        if (q != 0.f) roots = float2(q / a, c / q);
+        else roots.x = -b / (2.f * a);
+    }
+    for (uint i = 0; i < 2u; ++i) {
+        const float t = roots[i];
+        if (!(t > 0.f && t < 1.f)) continue;
+        // Evaluate the signed distances directly near a material limit.
+        if (registeredCubicValue(controls - lo, t) < 0.f ||
+            registeredCubicValue(controls - hi, t) > 0.f) {
+            return excess1 >= excess2 ? NMRegisteredVolumeControl{inner1, 1u}
+                                      : NMRegisteredVolumeControl{inner2, 2u};
+        }
+    }
+    return {last, 3u};
+}
+
+inline float3x3 registeredControlGradient(float3x3 start, float3x3 end, uint term) {
+    if (term == 3u) return cofactorMatrix(end);
+    if (term == 1u) return cofactorMatrix(start) * (1.f / 3.f);
+    // d/d(end) [cof(end):start / 3].
+    return float3x3(cross(start[1], end[2]) + cross(end[1], start[2]),
+                    cross(start[2], end[0]) + cross(end[2], start[0]),
+                    cross(start[0], end[1]) + cross(end[0], start[1])) * (1.f / 3.f);
+}
