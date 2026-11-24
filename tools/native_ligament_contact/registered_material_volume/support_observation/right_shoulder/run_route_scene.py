@@ -36,7 +36,7 @@ def run(case, build, out, steps=None):
     if steps is not None:
         if not 1 <= steps <= 4:
             raise ValueError("Invalid observation prefix")
-        i = args.index("--steps") + 1
+        i = args.index("--muscle-step-count") + 1
         args[i] = str(steps)
     for v in set(args + list(env.values())) & set(pins):
         if digest(Path(v)) != pins[v]:

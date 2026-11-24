@@ -10,12 +10,34 @@ from compile_connected_joint import digest
 from run_cavity_motion import execute_native
 
 
-def run(control, authored, out):
+def run(control, authored, out, steps=None):
     env0 = json.loads((control / "launch.json").read_bytes())
     c = bind(env0, authored)
     a = c["argv"]
     env = c["environment"]
     pins = c["pins"]
+    if steps is not None:
+        if not 1 <= steps <= 4 or a.count("--muscle-step-count") != 1:
+            raise ValueError("Invalid diagnostic prefix")
+        old_count = a[a.index("--muscle-step-count") + 1]
+        a[a.index("--muscle-step-count") + 1] = str(steps)
+        for name in (
+            "NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS",
+            "NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP",
+        ):
+            if name in env:
+                if env[name] != old_count:
+                    raise ValueError("Only a terminal capture can be retimed")
+                env[name] = str(steps)
+    if steps is not None and steps > 1:
+        for key in (
+            "NM_FEM_NEWTON_TRACE_ROOT",
+            "NM_FEM_RESIDUAL_ARMIJO_TRACE_ROOT",
+            "NM_FEM_DEFORMABLE_LIMIT_TRACE_ROOT",
+            "NM_FEM_BACKTRACKING_TRACE_ROOT",
+        ):
+            if key in env:
+                env[key] = str(steps - 1)
     out.mkdir()
     a[4] = str(out / "native-traces")
     for k, v in list(env.items()):
@@ -35,4 +57,7 @@ def run(control, authored, out):
 
 
 if __name__ == "__main__":
-    run(*(Path(s).resolve() for s in sys.argv[1:]))
+    run(
+        *(Path(s).resolve() for s in sys.argv[1:4]),
+        int(sys.argv[4]) if len(sys.argv) > 4 else None,
+    )

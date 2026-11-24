@@ -105,20 +105,38 @@ def build(case, fit, out):
     m["payload"].update(sha256=digest(target), bytes=len(t))
     m["source"]["myosim_muscle_payload_sha256"] = digest(binary)
     cov = m["coverage"]
+    cov["registered_bone_distributed_envelope_count"] = header[6] - cov.get(
+        "source_component_mechanics_surface_enthesis_envelope_count", 0
+    )
     cov["distributed_surface_envelope_count"] = header[6]
     cov["source_site_point_fallback_count"] = header[5] - header[6]
     cov["surface_coverage_fraction"] = header[6] / header[5]
-    m["admission"]["rejection_counts"]["surface_distance_exceeds_gate"] -= 1
     methods = {
         "connected_geodesic_compass_vertices": "compass_vertex_envelope_count",
         "connected_geodesic_topology_aware_exact_surface_points": "topology_aware_exact_surface_envelope_count",
     }
     cov[methods[e["surface_patch_method"]]] += 1
-    if (
-        sum(m["admission"]["rejection_counts"].values())
-        != cov["source_site_point_fallback_count"]
-    ):
+    from collections import Counter
+
+    # Reconstruct from actual endpoint bindings. Older envelopes retained
+    # historical rejection counts for two subsequently admitted attachments.
+    reasons = Counter()
+    for i, q in enumerate(m["endpoints"]):
+        b = struct.unpack_from("<8I8f", t, 144 + 64 * i)
+        if (
+            b[0] != q["muscle_index"]
+            or b[2] != q["route_node_index"]
+            or b[3] != q["source_site_index"]
+            or b[4] != q["body_index"]
+        ):
+            raise ValueError("Endpoint table disagrees with native owner")
+        if (b[5] == 0) != (q["attachment_mode"] == "source_site_point"):
+            raise ValueError("Native binding mode differs")
+        if b[5] == 0:
+            reasons[q["admission_reason"]] += 1
+    if sum(reasons.values()) != cov["source_site_point_fallback_count"]:
         raise ValueError("Invalid NHTENDON coverage")
+    m["admission"]["rejection_counts"] = dict(sorted(reasons.items()))
     packet = struct.unpack("<4I68f", t[-288:])
     nodes = np.array(packet[4:20]).reshape(4, 4)[:, :3]
     maps = np.array(packet[20:68]).reshape(4, 3, 4)[:, :, :3]

@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Launch the qualified regional shoulder-motion configuration into a new output directory."""
+
+import argparse
+import datetime
+import hashlib
+import json
+import os
+import sys
+from pathlib import Path
+
+
+def sha(path):
+    with path.open("rb") as stream:
+        h = hashlib.sha256()
+        while chunk := stream.read(1024 * 1024):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def main():
+    here = Path(__file__).resolve().parent
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--launch", type=Path, default=here / "moving-verified/launch.json"
+    )
+    parser.add_argument("--output", type=Path)
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify the exact native inputs and print the simulated duration.",
+    )
+    opt = parser.parse_args()
+    src = opt.launch.resolve()
+    cfg = json.loads(src.read_bytes())
+    a = cfg["argv"].copy()
+    env = cfg["environment"].copy()
+    if (
+        cfg["pins"].get(a[0]) != sha(Path(a[0]))
+        or env.get("NM_VASCULAR_STEP_EXTERNAL_PRESSURE") != "1"
+        or env.get("NUMI_HUMAN_LOCAL_BED_LAYERS") != "1"
+        or cfg.get("registered_shoulder") is None
+    ):
+        raise ValueError("Incompatible native scene")
+    for file, h in cfg["pins"].items():
+        if sha(Path(file)) != h:
+            raise ValueError("Changed scene input " + file)
+    steps = int(a[a.index("--muscle-step-count") + 1])
+    dt = float(a[a.index("--muscle-step-seconds") + 1])
+    if opt.check:
+        print(
+            f"Verified {len(cfg['pins'])} inputs for {steps} native steps ({dt * steps:g} simulated seconds)."
+        )
+        return
+    # Use the existing native runner and its disk guard. Both layouts contain
+    # the same published runner: the installed SSH Numi scene and the tool tree.
+    owner = here / "launch-owner/run_cavity_motion.py"
+    if not owner.is_file():
+        root = next(
+            (p for p in here.parents if p.name == "native_ligament_contact"), None
+        )
+        if root is None:
+            raise FileNotFoundError("Native runner ownership could not be located")
+        owner = root / "registered_digit_material/run_cavity_motion.py"
+    sys.path.insert(0, str(owner.resolve().parent))
+    from run_cavity_motion import execute_native
+
+    name = "run-" + datetime.datetime.now(datetime.timezone.utc).strftime(
+        "%Y%m%dT%H%M%S%fZ"
+    )
+    out = (opt.output or src.parent.parent / name).resolve()
+    out.mkdir(parents=True, exist_ok=False)
+    orig = Path(a[4]).parent
+    a[4] = str(out / "native-traces")
+    for k, v in list(env.items()):
+        if v.startswith(str(orig) + "/") and v not in cfg["pins"]:
+            env[k] = str(out / Path(v).relative_to(orig))
+    cfg.update(argv=a, environment=env, replayed_launch_sha256=sha(src))
+    (out / "launch.json").write_text(json.dumps(cfg, indent=2) + "\n")
+    base = {k: v for k, v in os.environ.items() if not k.startswith(("NM_", "NUMI_"))}
+    print(out, flush=True)
+    result = execute_native(
+        a, cfg["cwd"], base | env, out, minimum_free_bytes=4 * 2**30, timeout_s=900
+    )
+    if result["exit"] != 0:
+        raise SystemExit(f"Native exit {result}. Evidence is in {out}.")
+    print((out / "execution.json").read_text(), end="")
+
+
+if __name__ == "__main__":
+    main()
