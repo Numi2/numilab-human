@@ -1,0 +1,1112 @@
+{
+  "native_schedule_test": {
+    "native": "device=Apple M6 matched_schedules=112",
+    "shader": "5625e65fc40694148acae48864a9bab1b34d5caaedfe17261c8be7b21a3a31a4",
+    "production": "0a9490fa0d5d6baf02d836efcfe932aaea22350b6915cd471e19e097d21f8fed"
+  },
+  "same_physical_inputs": true,
+  "added_scratch_bytes": 132,
+  "control": {
+    "launch_sha256": "0d26cd45aee5c34c287a049e1df0f1fe9c9c482ecd2268c2eeccc137f67f9b6d",
+    "execution": {
+      "exit": 1,
+      "wall_s": 190.0946219158359
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.0021018360275775194,
+      0.00023277878062799573,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 607,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 30,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.00210234965,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.00210234965,
+        "last_fgmres_residual_norm": 2.09643702e-07,
+        "last_fgmres_initial_norm": 0.00210234965,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.00210234965,
+        "last_newton_correction_ratio": 0.953677893,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.00210183603,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 19,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.0100539802
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.482531786,
+        "object_alpha": 0.482531786,
+        "residual": 0.00755366357
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.00393685466
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00295515009
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.00277058291
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00242465734
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00234892615
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00220222585
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 0.0078125,
+        "object_alpha": 0.0078125,
+        "residual": 0.00213344442
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 0.001953125,
+        "object_alpha": 0.001953125,
+        "residual": 0.00211678492
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.00211265218
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.00210440299
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.0021033762
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      }
+    ],
+    "physical_contact": []
+  },
+  "incident_direction": {
+    "launch_sha256": "9ca1c56f620f4168b0de4d97767595b09516d5d18afdd82717ff77b7f7df5ecc",
+    "execution": {
+      "exit": 1,
+      "wall_s": 189.33863174985163
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.0021018360275775194,
+      0.00023277878062799573,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 607,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 30,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.00210234965,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.00210234965,
+        "last_fgmres_residual_norm": 2.09643702e-07,
+        "last_fgmres_initial_norm": 0.00210234965,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.00210234965,
+        "last_newton_correction_ratio": 0.953677893,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.00210183603,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 2,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.0100539802
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.482531786,
+        "object_alpha": 0.482531786,
+        "residual": 0.00755366357
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.00393685466
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00295515009
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.00277058291
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00242465734
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00234892615
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00220222585
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 0.0078125,
+        "object_alpha": 0.0078125,
+        "residual": 0.00213344442
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 0.001953125,
+        "object_alpha": 0.001953125,
+        "residual": 0.00211678492
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.00211265218
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.00210440299
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.0021033762
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      }
+    ],
+    "physical_contact": []
+  },
+  "initial_linkage_error": "The statically linked scene runtime still requested the old hint pipeline. The paired build links the same solver into the executable and the shared library.",
+  "parent": "38404271b02342a5fef722cda6723f3910c021bb3902fa8f558a33b9fc4c4e0e",
+  "unmodified_newton": {
+    "launch_sha256": "4a2fda7008d9ba75420970d610b8118078eca96b8c9452120549ab3e9637b954",
+    "execution": {
+      "exit": 1,
+      "wall_s": 205.48068004194647
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.015349443070590496,
+      5.911789612532414e-13,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 488,
+        "cycles_with_work": 32,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 16,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.0153494421,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.0153494421,
+        "last_fgmres_residual_norm": 1.53407996e-06,
+        "last_fgmres_initial_norm": 0.0153494421,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.0153494421,
+        "last_newton_correction_ratio": 2.60003257,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.0153494431,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 4,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.0173009727
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.016221894
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.015625,
+        "object_alpha": 0.015625,
+        "residual": 0.01571545
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.0154700112
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.001953125,
+        "object_alpha": 0.001953125,
+        "residual": 0.0154095879
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.001953125,
+        "object_alpha": 0.001953125,
+        "residual": 0.0153794922
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 9.53674316e-07,
+        "object_alpha": 9.53674316e-07,
+        "residual": 0.015349457
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 7.4505806e-09,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 2.27373675e-13,
+        "object_alpha": 2.27373675e-13,
+        "residual": 0.0153494421
+      }
+    ],
+    "physical_contact": []
+  },
+  "bounded_gpu_trace": {
+    "launch_sha256": "37d50a3de52ee5eab29dc68cd3ad62b1c3839b38b9f280d17fffa42e110af7b5",
+    "execution": {
+      "exit": 1,
+      "wall_s": 189.60792199987918
+    },
+    "accepted_steps": 0,
+    "trace_rows": 0,
+    "diagnostics": [
+      0.0021018360275775194,
+      0.00023277878062799573,
+      0,
+      -902
+    ],
+    "work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 607,
+        "cycles_with_work": 46,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 30,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.00210234965,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.00210234965,
+        "last_fgmres_residual_norm": 2.09643702e-07,
+        "last_fgmres_initial_norm": 0.00210234965,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.00210234965,
+        "last_newton_correction_ratio": 0.953677893,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.00210183603,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 14,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ],
+    "limits": [
+      {
+        "iteration": 0,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.0225646142
+      },
+      {
+        "iteration": 1,
+        "stage": "final_line_search",
+        "alpha": 0.5,
+        "object_alpha": 0.5,
+        "residual": 0.0197592881
+      },
+      {
+        "iteration": 2,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.0100539802
+      },
+      {
+        "iteration": 3,
+        "stage": "final_line_search",
+        "alpha": 0.482531786,
+        "object_alpha": 0.482531786,
+        "residual": 0.00755366357
+      },
+      {
+        "iteration": 4,
+        "stage": "final_line_search",
+        "alpha": 0.25,
+        "object_alpha": 0.25,
+        "residual": 0.00393685466
+      },
+      {
+        "iteration": 5,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00295515009
+      },
+      {
+        "iteration": 6,
+        "stage": "final_line_search",
+        "alpha": 0.125,
+        "object_alpha": 0.125,
+        "residual": 0.00277058291
+      },
+      {
+        "iteration": 7,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00242465734
+      },
+      {
+        "iteration": 8,
+        "stage": "final_line_search",
+        "alpha": 0.0625,
+        "object_alpha": 0.0625,
+        "residual": 0.00234892615
+      },
+      {
+        "iteration": 9,
+        "stage": "final_line_search",
+        "alpha": 0.03125,
+        "object_alpha": 0.03125,
+        "residual": 0.00220222585
+      },
+      {
+        "iteration": 10,
+        "stage": "final_line_search",
+        "alpha": 0.0078125,
+        "object_alpha": 0.0078125,
+        "residual": 0.00213344442
+      },
+      {
+        "iteration": 11,
+        "stage": "final_line_search",
+        "alpha": 0.001953125,
+        "object_alpha": 0.001953125,
+        "residual": 0.00211678492
+      },
+      {
+        "iteration": 12,
+        "stage": "final_line_search",
+        "alpha": 0.00390625,
+        "object_alpha": 0.00390625,
+        "residual": 0.00211265218
+      },
+      {
+        "iteration": 13,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.00210440299
+      },
+      {
+        "iteration": 14,
+        "stage": "final_line_search",
+        "alpha": 0.00048828125,
+        "object_alpha": 0.00048828125,
+        "residual": 0.0021033762
+      },
+      {
+        "iteration": 15,
+        "stage": "before_contact_limits",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_deformable_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_rigid_limit",
+        "alpha": 1,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_support_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "after_vascular_limit",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      },
+      {
+        "iteration": 15,
+        "stage": "final_line_search",
+        "alpha": 0.000244140625,
+        "object_alpha": 0.000244140625,
+        "residual": 0.00210234965
+      }
+    ],
+    "physical_contact": []
+  },
+  "gpu_cell_direction_outcomes": [
+    "registered_volume_direction_outcomes root=0 iteration=15 live=44 tile_reason="
+  ],
+  "deep_boundary": {
+    "registered_boundary_sha256": "0734ebd60849bfd1d10c9646787738887ecf7f441c484a81fc4e384d003c2332",
+    "native_witnesses_sha256": "c5d7d7e2a27044c81548fd1844c8e994def96a3134509a8d4adfb00f8a462288",
+    "shared_nodes": [
+      312844
+    ],
+    "nodes": [
+      {
+        "node": 312770,
+        "parent_face": 179039,
+        "barycentric": [
+          0.03665260413375748,
+          0.018306042566924523,
+          0.945041353299318
+        ],
+        "residual_m": [
+          2.8668372753087867e-06,
+          8.428887982636635e-06,
+          4.9647445199280105e-06
+        ]
+      },
+      {
+        "node": 312771,
+        "parent_face": 179038,
+        "barycentric": [
+          0.0001779928116275309,
+          0.9809983125067396,
+          0.018823694681632835
+        ],
+        "residual_m": [
+          3.697242795253075e-08,
+          1.0821336948740878e-07,
+          6.264717904158612e-08
+        ]
+      },
+      {
+        "node": 312772,
+        "parent_face": 179038,
+        "barycentric": [
+          0.003958504326291074,
+          0.9807597928498338,
+          0.015281702823875093
+        ],
+        "residual_m": [
+          8.031570041949765e-07,
+          2.3507335190631196e-06,
+          1.3608930608116632e-06
+        ]
+      },
+      {
+        "node": 312774,
+        "parent_face": 179038,
+        "barycentric": [
+          0.0064554716984671235,
+          0.9797767585720341,
+          0.01376776972949882
+        ],
+        "residual_m": [
+          3.6757540345516704e-06,
+          1.0758442212044361e-05,
+          6.228306710653886e-06
+        ]
+      },
+      {
+        "node": 312779,
+        "parent_face": 179068,
+        "barycentric": [
+          0.008913803577883381,
+          0.981124012872483,
+          0.009962183549633654
+        ],
+        "residual_m": [
+          -2.3297660606269588e-09,
+          -6.820383535721675e-09,
+          -3.950005322828076e-09
+        ]
+      },
+      {
+        "node": 312780,
+        "parent_face": 179065,
+        "barycentric": [
+          0.9815110252475858,
+          0.018470414847884316,
+          1.8559904529860534e-05
+        ],
+        "residual_m": [
+          2.0161318267652995e-08,
+          5.901104177530314e-08,
+          3.416728751315379e-08
+        ]
+      },
+      {
+        "node": 312781,
+        "parent_face": 179065,
+        "barycentric": [
+          0.9811049268997035,
+          0.01866308970406117,
+          0.00023198339623531743
+        ],
+        "residual_m": [
+          5.41347582982965e-07,
+          1.5844938517917129e-06,
+          9.174191030053569e-07
+        ]
+      },
+      {
+        "node": 312792,
+        "parent_face": 179381,
+        "barycentric": [
+          0.03606119884084058,
+          0.05980808847594967,
+          0.9041307126832098
+        ],
+        "residual_m": [
+          -9.403267284269212e-08,
+          8.881840535268637e-08,
+          9.050756949458005e-10
+        ]
+      },
+      {
+        "node": 312793,
+        "parent_face": 179382,
+        "barycentric": [
+          0.8973066379036717,
+          0.04315414164124681,
+          0.059539220455081414
+        ],
+        "residual_m": [
+          -8.204348388163307e-08,
+          7.852983308076489e-08,
+          -5.291421745212688e-10
+        ]
+      },
+      {
+        "node": 312794,
+        "parent_face": 179383,
+        "barycentric": [
+          0.05784926988710567,
+          0.9412857315312483,
+          0.0008649985816460487
+        ],
+        "residual_m": [
+          -1.582502843419653e-06,
+          1.554807838088923e-06,
+          -6.10948514695453e-08
+        ]
+      },
+      {
+        "node": 312844,
+        "parent_face": 179344,
+        "barycentric": [
+          0.0007517526060281257,
+          0.9976915720367663,
+          0.001556675357205591
+        ],
+        "residual_m": [
+          -1.082950911293623e-06,
+          1.037458849828532e-06,
+          4.4416067615515864e-08
+        ]
+      }
+    ],
+    "boundary_faces": 33,
+    "min_face_altitude_m": 2.570967256298675e-07,
+    "max_edge_over_altitude": 14387.564591476566,
+    "worst_source_face_row": 207245,
+    "local_cell_altitude_range_m": [
+      2.712027778582355e-07,
+      1.8967145655071944e-06
+    ],
+    "geometric_source_records": [
+      [
+        16,
+        79,
+        79,
+        74739
+      ]
+    ]
+  },
+  "initial_support": {
+    "native_launch": "0d26cd45aee5c34c287a049e1df0f1fe9c9c482ecd2268c2eeccc137f67f9b6d",
+    "position_sha256": "98544533023dc39f05b6f37fb095a64b5cc813ff307cc9e47e74ce11adeeaed2",
+    "gravity": {
+      "mass_kg": 97.13195028379516,
+      "center_m": [
+        -0.025410093595656384,
+        -0.7714896875778083,
+        0.11574023431906101
+      ],
+      "fem_nodes": 321221
+    },
+    "bed_z_m": -1.9073486328125e-06,
+    "activation_width_m": 9.999999747378752e-06,
+    "outer_nodes": 76153,
+    "contact_nodes": [
+      26199
+    ],
+    "com_to_only_contact_horizontal_m": 0.08726921056628544,
+    "gravity_moment_about_only_contact_Nm": 83.1557267821191,
+    "undeformed_gap_needed_for_com_in_footprint_m": 0.0009840303100645542,
+    "candidate_rigid_support": {
+      "tilt_degrees": 0.14397449404258067,
+      "support_nodes": [
+        24538,
+        26199,
+        24331
+      ],
+      "gravity_fractions": [
+        0.26332587687949194,
+        0.562489979645906,
+        0.17418414347460215
+      ],
+      "vertical_after_rotation": [
+        0.0017585021705404363,
+        -0.001794983623336209,
+        0.9999968428469703
+      ],
+      "com_above_support_m": 0.11552789057364764
+    },
+    "interpretation": "Static support geometry only. Reaction magnitudes from the contact constitutive law and deformable equilibrium still require native solution."
+  },
+  "support_pose_preflight": {
+    "native_checker_sha256": "9e580e6f9211ef33b1d62ad82fd9093000e2050e6cd11d81a33cb13120a8a41f",
+    "parent": "960ad35dd4157d1a26229ee51ef531c3c3b0c386f8b69a61bc618350d080e839",
+    "rigid_rotation_world_xyzw": [
+      -0.0008974925200486912,
+      -0.0008792517792535967,
+      0.0,
+      0.999999210711431
+    ],
+    "translation_world_m": [
+      0.0002047077638196726,
+      -0.000208954580655063,
+      -0.0015520655555783525
+    ],
+    "activation_nodes": [
+      24331,
+      24538,
+      26199
+    ],
+    "min_gap_m": 1.9477788697486176e-06,
+    "cells": 1457316,
+    "reference_cells_outside_native_domain": 317,
+    "tested_intervals": 1456999,
+    "failed_native_volume_intervals": 620,
+    "failed_absolute_geometry_cells": 1826,
+    "first_geometry_witnesses": [
+      2515,
+      8189,
+      9016,
+      9367,
+      9891,
+      11122,
+      11236,
+      12589,
+      12766,
+      12903,
+      17010,
+      17945,
+      18418,
+      21422,
+      21618,
+      23928
+    ],
+    "minimum_cell_volume_m3": -5.455425652255787e-15,
+    "minimum_cell_quality": -0.0008040889719106032,
+    "max_volume_ratio_change_after_emission": 104.59582070705738,
+    "scope": "Diagnostic rigid placement of the complete skin/fat volume, not an equilibrated or installed native scene.",
+    "immutable_reference_compensated": {
+      "reference_sha256": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+      "failed_native_volume_intervals": 10694,
+      "first_native_witnesses": [
+        675,
+        821,
+        1041,
+        1084,
+        1401,
+        1483,
+        2055,
+        2515,
+        2653,
+        3039,
+        3088,
+        3091,
+        3156,
+        3226,
+        4372,
+        4881
+      ],
+      "minimum_native_margin": -173897.4400651167,
+      "max_native_determinant_change": 9.844803188108209e-06,
+      "failed_absolute_geometry_cells": 0,
+      "maximum_relative_geometric_volume_change": 6.14448205649154e-08,
+      "contacted_outer_nodes": [
+        24331,
+        24538,
+        26199
+      ],
+      "minimum_gap_m": 1.947778869741462e-06,
+      "source_coordinates_and_masses_modified": false
+    }
+  }
+}
