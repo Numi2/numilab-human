@@ -34,20 +34,25 @@ def density_transfer(p,c,w,credit):
     if len(seen)!=len(nodes):raise ValueError('Cyclic density transfer')
     local=[(i,k,v)for k,values in credit_at.items()for i,v in values.items()if v>0]
     a,b,m=map(np.asarray,zip(*local));return np.r_[p[~sel],a],np.r_[c[~sel],b],np.r_[w[~sel],m]
-def run(work):
-    q=work.parent;p=q.parent;r=p/'relative';vol=q/'qualified-material';nr=work/'recorded-mass';nr.mkdir(exist_ok=True)
+def run(work,refined=False):
+    q=work.parent;p=q.parent
+    outputs=work/'witness-material' if refined else work
+    r=work/'recorded-mass' if refined else p/'relative'
+    oldvol=q/'qualified-material' if refined else r/'volume'
+    vol=outputs/'volume' if refined else q/'qualified-material'
+    nr=outputs/'recorded-mass';nr.mkdir(exist_ok=True)
     pr='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_';pref='NUMI_H706_FRACTIONAL_';rd=lambda f:json.loads(f.read_bytes())
-    d=rd(q/'gravity-scene/launch.json');env=d['environment'];basis=rd(work/'current-p1/result.json');env.update(basis['environment'])
+    d=rd(work/'native-integrated-01/launch.json' if refined else q/'gravity-scene/launch.json');env=d['environment'];basis=rd(outputs/'current-p1/result.json');env.update(basis['environment'])
     if any(r['inadmissible_label_rows']for r in basis['roles'].values()):raise ValueError('Physical labels disagree with P1')
     for key,h,f in [('TETGEN_NODE','TETGEN_NODE_SHA256','mesh.node'),('TETGEN_ELEMENTS','TETGEN_ELEMENTS_SHA256','mesh.ele'),('CHILD_LABELS','CHILD_LABELS_SHA256','current-child.labels.csv')]:
         env[pr+key]=str(vol/f);env[pr+h]=digest(vol/f)
-    for key,path in [('material-p1',work/'current-p1'),('posed-app',p.parent/'posed-app')]:
+    for key,path in [('material-p1',outputs/'current-p1'),('posed-app',p.parent/'posed-app')]:
         if not (nr/key).exists():(nr/key).symlink_to(path,target_is_directory=True)
     for k in ['flows','packets','scene']:(nr/k).mkdir(exist_ok=True)
-    pts=np.loadtxt(vol/'mesh.node',skiprows=1,usecols=(1,2,3)).astype('f4').astype('f8');cells=np.loadtxt(vol/'mesh.ele',skiprows=1,usecols=(1,2,3,4,5),dtype='i4');oldmat=np.loadtxt(r/'volume/mesh.ele',skiprows=1,usecols=5,dtype='i4')
+    pts=np.loadtxt(vol/'mesh.node',skiprows=1,usecols=(1,2,3)).astype('f4').astype('f8');cells=np.loadtxt(vol/'mesh.ele',skiprows=1,usecols=(1,2,3,4,5),dtype='i4');oldmat=np.loadtxt(oldvol/'mesh.ele',skiprows=1,usecols=5,dtype='i4')
     labels=np.loadtxt(pinned(env,'PARENT_LABELS_CSV','PARENT_LABELS_SHA256'),skiprows=1,delimiter=',',dtype='i8')
     tet=np.loadtxt(env[pref+'SOURCE330_TETS'],skiprows=1,delimiter=',',usecols=(3,4,5,6),dtype='i4');x=np.loadtxt(env[pref+'SOURCE330_NODES'],skiprows=1,delimiter=',',usecols=(5,6,7))
-    radius=float(env[pr+'MAXIMUM_MASS_TRANSPORT_DISTANCE_M']);m0=np.fromfile(r/'volume/cell-mass.f64','<f8');target=np.fromfile(vol/'cell-mass.f64','<f8');final={};pins={};priorflow=rd(r/'flows/result.json')
+    radius=float(env[pr+'MAXIMUM_MASS_TRANSPORT_DISTANCE_M']);m0=np.fromfile(oldvol/'cell-mass.f64','<f8');target=np.fromfile(vol/'cell-mass.f64','<f8');final={};pins={};priorflow=rd(r/'flows/result.json')
     def select(stage,mat,prev,gids):
         a=np.load(stage/'ancestry.npz');newids=len(a['unchanged_prior_cells']);which=mat==16
         return a['unchanged_prior_cells'],a['removed_prior_cells'] if which else np.array([],int),a['from_cell'] if which else np.array([],int),a['to_cell'] if which else np.array([],int),a['mass_kg'] if which else np.array([]),np.fromfile(stage/'cell-mass.f64','<f8')
@@ -57,20 +62,40 @@ def run(work):
         if digest(orig)!=priorflow[tag]['flow_sha256']:raise ValueError('Changed verified flow')
         old=np.load(orig);orig_id=np.flatnonzero(oldmat==mat);ids=np.flatnonzero(cells[:,4]==mat);aa=old['carrier'];cc=orig_id[old['role_cell']];mw=old['mass'];credit0=np.bincount(aa,weights=mw)
         packet=dict(np.load(env[pref+'CARRIERS_'+tag+'_NPZ']));base=orig_id[packet['carrier_target_child_rows']].copy();comp=packet.get('regional_compensation_child_rows',np.array([],int)).copy()
-        a=np.load(q/'seam-volume/local-ancestry.npz');prev=m0
-        stages=[(a['surviving_source_cells'],a['old_local_cells'],a['from_cell'],a['to_cell'],a['mass_kg'],np.fromfile(q/'seam-volume/cell-mass.f64','<f8'))]
-        for folder in (q/'fold-volume',q/'remaining-fold/collar-2/fold-volume'):stages.append(select(folder,mat,prev,ids))
-        for kept,remove,src,dst,kw,nextmass in stages:
-            if mat==15:src=dst=remove=np.array([],int);kw=np.array([])
-            aa,cc,mw,mapping=routed(aa,cc,mw,prev,kept,remove,src,dst,kw)
-            ok=base>=0;base[ok]=mapping[base[ok]];comp=mapping[comp];prev=nextmass
-            if (comp<0).any():raise ValueError('Historical exception affected by new material')
-        if mat==16:aa,cc,mw=density_transfer(aa,cc,mw,np.load(q/'local-density-transfer/allocation.npz'))
+        if refined:
+            overlay=np.load(vol/'source-overlay.npz')
+            affected=overlay['old_cells']
+            if mat==16:
+                if np.isin(comp,affected).any():raise ValueError('Repair touched a historical compensation destination')
+                base[np.isin(base,affected)]=-1
+                take=np.isin(cc,affected)
+                oldp,oldc,oldw=aa[take],cc[take],mw[take]
+                ps=[aa[~take]];cs=[cc[~take]];ws=[mw[~take]]
+                for u,v,fraction in zip(overlay['from_cell'],overlay['to_cell'],overlay['fraction']):
+                    selected=oldc==u
+                    if not selected.any() or fraction<=0:raise ValueError('Missing carrier contribution on remeshed fat')
+                    ps.append(oldp[selected]);cs.append(np.full(selected.sum(),v,dtype=cc.dtype));ws.append(oldw[selected]*fraction)
+                aa=np.concatenate(ps);cc=np.concatenate(cs);mw=np.concatenate(ws)
+        else:
+            a=np.load(q/'seam-volume/local-ancestry.npz');prev=m0
+            stages=[(a['surviving_source_cells'],a['old_local_cells'],a['from_cell'],a['to_cell'],a['mass_kg'],np.fromfile(q/'seam-volume/cell-mass.f64','<f8'))]
+            for folder in (q/'fold-volume',q/'remaining-fold/collar-2/fold-volume'):stages.append(select(folder,mat,prev,ids))
+            for kept,remove,src,dst,kw,nextmass in stages:
+                if mat==15:src=dst=remove=np.array([],int);kw=np.array([])
+                aa,cc,mw,mapping=routed(aa,cc,mw,prev,kept,remove,src,dst,kw)
+                ok=base>=0;base[ok]=mapping[base[ok]];comp=mapping[comp];prev=nextmass
+                if (comp<0).any():raise ValueError('Historical exception affected by new material')
+            if mat==16:aa,cc,mw=density_transfer(aa,cc,mw,np.load(q/'local-density-transfer/allocation.npz'))
         ci=np.searchsorted(ids,cc)
         if not np.array_equal(ids[ci],cc):raise ValueError('Cross-material flow')
         dest=np.full(len(cells),-1,'i4');dest[ids]=np.arange(len(ids))
         carrier=np.repeat(packet['global_source330_tet_rows'],np.diff(packet['parent_offsets']));Q=np.einsum('ij,ijk->ik',packet['carrier_barycentric'],x[tet[carrier]]);center=pts[cells[ids,:4]-1].mean(1)
         support=dict(np.load(env[pref+'P1_'+tag+'_NPZ']));off=support['cell_admissible_region_offsets'];regions=support['cell_admissible_region_ids'];region=labels[carrier,3]
+        if refined and mat==16:
+            from route_local_carriers import route
+            overlay=np.load(vol/'source-overlay.npz')
+            subset=dest[overlay['new_cells']]
+            aa,ci,mw=route(aa,ci,mw,subset,Q,center,radius,region,off,regions)
         for key in np.flatnonzero(base<0):
             rc=np.unique(ci[aa==key]);rc=rc[[region[key] in regions[off[k]:off[k+1]]for k in rc]];dd=np.linalg.norm(center[rc]-Q[key],axis=1)
             if not len(dd) or min(dd)>radius:raise ValueError('No eligible retained carrier target')
@@ -93,4 +118,4 @@ def run(work):
     (nr/'flows/result.json').write_text(json.dumps(priorflow,indent=2)+'\n');(nr/'packets/result.json').write_text(json.dumps(dict(environment=pins,trace=trace),indent=2)+'\n')
     (nr/'scene/launch.json').write_text(json.dumps(d,indent=2)+'\n')
     exe=Path(rd(r/'native-replay/launch.json')['command'][0]);return replay(nr/'scene',nr,nr/'flows',nr/'packets',exe.parent,nr/'native-replay')
-if __name__=='__main__':sys.exit(run(Path(__file__).resolve().parent))
+if __name__=='__main__':sys.exit(run(Path(__file__).resolve().parent,'--motion-witness' in sys.argv[1:]))

@@ -1,0 +1,576 @@
+{
+  "mesh": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+  "source_replay": "98cdebbb3d2dc360d78efc1de8b2eb02f43e524ee0239d3005b2b2b1604c7c65",
+  "native": {
+    "native_imported": true,
+    "nodes": 314013,
+    "cells": 1457313,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 0,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 1.3877787807814457e-17,
+    "skin_kg": 3.4525712828039414,
+    "fat_kg": 10.487108427165419,
+    "node_sha256": "88841a9f457722878db57da436afc52ff5d3344dc43ec0362a9e850cf0cf7982",
+    "element_sha256": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+    "label_sha256": "6a549b4a516dd6e0f74f0065ed3959479d63b6e333b4952d23de9227c74d3619"
+  },
+  "scope": "Mixed-source resting reference adult. Full coupled native release under gravity. A resting equilibrium, sustained speed, zero whole-body penetrations and long-duration integrated physiology remain unqualified.",
+  "native_device": "Apple M6",
+  "variable_pleural_pressure": true,
+  "motion": {
+    "launch": "88c6b3c9561f3a78c6a5fdbc3ea2a5c6a85e8901e828923078a49da891a054fc",
+    "file": "0559400c2553ff47682e6254d0b9813a2136a413dc70191901bb33ef4ba1e1af",
+    "initial_file": "803b457b6de572775a4208954c089500f057fac4c6593264380357df42d23336",
+    "run_exit": 0,
+    "accepted_s": 7.81250037107e-06,
+    "roles": {
+      "skin": {
+        "inverted": 0,
+        "below_volume": 0,
+        "below_shape": 4,
+        "max_displacement_m": 0.00021154742183296344,
+        "min_J": 0.36428431441074854,
+        "max_J": 2.4621758408764443
+      },
+      "fat": {
+        "inverted": 0,
+        "below_volume": 0,
+        "below_shape": 27,
+        "max_displacement_m": 4.088252436697507e-05,
+        "min_J": 0.350001023464388,
+        "max_J": 2.5000022837507596
+      }
+    },
+    "replaced_cavity_J": [
+      0.9472202094521267,
+      1.071912657699923
+    ],
+    "surface_counts": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "surface_intersections": 0,
+    "scope": "Exact accepted physical coordinates of the four material surfaces at step one. Resting initialization and one endpoint do not certify an arbitrary swept path or all other organs and rigid bodies."
+  },
+  "registered_material_mass_transfer": {
+    "source_cells": 5,
+    "new_cells": 10,
+    "unchanged_cells": 1457303,
+    "unchanged_vertices": 314012,
+    "existing_coordinates_bitwise_equal": true,
+    "external_oriented_faces": 10,
+    "same_wall_hash": true,
+    "mass_before_kg": 9.680132627356002e-07,
+    "mass_after_kg": 9.680132627356e-07,
+    "change_in_material_centroid_m": 1.4489821905059008e-07,
+    "change_in_gravity_torque_norm_Nm": 1.241778690508537e-12,
+    "relative_local_lumped_inertia_change": 0.06284095903980205,
+    "whole_body_relative_centroid_shift_m": 1.4440500512727717e-15,
+    "maximum_reference_pose_green_strain_before": 0.06509746082820689,
+    "maximum_reference_pose_green_strain_after": 0.07240219095900935,
+    "active_cell_carriers": {
+      "SKIN": {
+        "carriers": 48573,
+        "positive_connections": 2955897,
+        "mass_kg": 3.4525712828039024,
+        "max_cell_error_kg": 8.673617379884035e-19,
+        "max_carrier_error_kg": 0.0
+      },
+      "FAT": {
+        "carriers": 23066,
+        "positive_connections": 2031984,
+        "mass_kg": 10.48710842716525,
+        "max_cell_error_kg": 1.734723475976807e-18,
+        "max_carrier_error_kg": 2.168404344971009e-19
+      }
+    },
+    "cavity_volume_mean_green_strain_change_frobenius": 0.0003982940674219253,
+    "cavity_volume_mean_green_strain_change_fraction": 0.0038559131480966325,
+    "cavity_rms_green_strain_before": 0.10737482337587788,
+    "cavity_rms_green_strain_after": 0.1056580262413976
+  },
+  "mesh_resolution": {
+    "elements": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+    "metric": "Smallest vertex-to-opposite-face altitude of each tetrahedron, minimum of reference and supported starting pose. Screening thresholds are descriptive and do not establish dynamic failure.",
+    "roles": {
+      "skin": {
+        "submicron_cells_incident_to_submicron_registered_face": 2331,
+        "cells_by_constraining_wall": {
+          "O": 780,
+          "I": 1551,
+          "D": 0,
+          "C": 0
+        },
+        "total": 707597,
+        "minimum_um": 0.001894400291607582,
+        "counts_below_um": {
+          "1.0": {
+            "cells": 24094,
+            "mass_kg": 2.48891673262805e-06,
+            "connected_stars": 4274,
+            "largest_star_cells": 792,
+            "source_regions": 56,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 8648
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 1491
+              },
+              {
+                "anatomical_region": 64,
+                "cells": 1223
+              },
+              {
+                "anatomical_region": 104,
+                "cells": 1089
+              },
+              {
+                "anatomical_region": 107,
+                "cells": 933
+              }
+            ]
+          },
+          "5.0": {
+            "cells": 75236,
+            "mass_kg": 7.991654269911628e-05,
+            "connected_stars": 3681,
+            "largest_star_cells": 5449,
+            "source_regions": 58,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 23139
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 5209
+              },
+              {
+                "anatomical_region": 64,
+                "cells": 3953
+              },
+              {
+                "anatomical_region": 104,
+                "cells": 3524
+              },
+              {
+                "anatomical_region": 65,
+                "cells": 3118
+              }
+            ]
+          },
+          "10.0": {
+            "cells": 114636,
+            "mass_kg": 0.00028252363927342133,
+            "connected_stars": 2538,
+            "largest_star_cells": 19203,
+            "source_regions": 60,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 32680
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 8020
+              },
+              {
+                "anatomical_region": 64,
+                "cells": 5849
+              },
+              {
+                "anatomical_region": 104,
+                "cells": 5203
+              },
+              {
+                "anatomical_region": 65,
+                "cells": 4908
+              }
+            ]
+          },
+          "25.0": {
+            "cells": 188599,
+            "mass_kg": 0.0012756594681221634,
+            "connected_stars": 1264,
+            "largest_star_cells": 41741,
+            "source_regions": 62,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 49040
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 13641
+              },
+              {
+                "anatomical_region": 64,
+                "cells": 9135
+              },
+              {
+                "anatomical_region": 65,
+                "cells": 8225
+              },
+              {
+                "anatomical_region": 124,
+                "cells": 7885
+              }
+            ]
+          }
+        }
+      },
+      "fat": {
+        "submicron_cells_incident_to_submicron_registered_face": 14496,
+        "cells_by_constraining_wall": {
+          "O": 0,
+          "I": 1561,
+          "D": 12911,
+          "C": 38
+        },
+        "total": 749716,
+        "minimum_um": 0.0023698204224295656,
+        "counts_below_um": {
+          "1.0": {
+            "cells": 52960,
+            "mass_kg": 1.187278453695331e-05,
+            "connected_stars": 5634,
+            "largest_star_cells": 1194,
+            "source_regions": 64,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 30608
+              },
+              {
+                "anatomical_region": 139,
+                "cells": 2057
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 1728
+              },
+              {
+                "anatomical_region": 153,
+                "cells": 1618
+              },
+              {
+                "anatomical_region": 124,
+                "cells": 1353
+              }
+            ]
+          },
+          "5.0": {
+            "cells": 156454,
+            "mass_kg": 0.0002491442674990894,
+            "connected_stars": 2213,
+            "largest_star_cells": 63857,
+            "source_regions": 66,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 77738
+              },
+              {
+                "anatomical_region": 139,
+                "cells": 6725
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 5945
+              },
+              {
+                "anatomical_region": 153,
+                "cells": 5122
+              },
+              {
+                "anatomical_region": 124,
+                "cells": 4364
+              }
+            ]
+          },
+          "10.0": {
+            "cells": 196502,
+            "mass_kg": 0.0005319071724123002,
+            "connected_stars": 1498,
+            "largest_star_cells": 82745,
+            "source_regions": 66,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 92666
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 8536
+              },
+              {
+                "anatomical_region": 139,
+                "cells": 7709
+              },
+              {
+                "anatomical_region": 153,
+                "cells": 6596
+              },
+              {
+                "anatomical_region": 124,
+                "cells": 5821
+              }
+            ]
+          },
+          "25.0": {
+            "cells": 269273,
+            "mass_kg": 0.0017101986195070121,
+            "connected_stars": 939,
+            "largest_star_cells": 111598,
+            "source_regions": 68,
+            "most_affected": [
+              {
+                "anatomical_region": 23,
+                "cells": 120219
+              },
+              {
+                "anatomical_region": 59,
+                "cells": 12951
+              },
+              {
+                "anatomical_region": 139,
+                "cells": 9666
+              },
+              {
+                "anatomical_region": 153,
+                "cells": 9280
+              },
+              {
+                "anatomical_region": 124,
+                "cells": 8378
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "step_test": {
+    "physical_steps_requested": 4,
+    "accepted_steps": 1,
+    "accepted_seconds": 7.81250037107e-06,
+    "whole_launch_wall_s": 213.48383199982345,
+    "native_horizon_wall_s": 63.3791425,
+    "whole_launch_factor": 3.659527889248522e-08,
+    "native_horizon_factor": 1.2326611031491945e-07,
+    "launch": "016edcf3418fb466a4baaa2e5f4965c4df56b060032b9a91290c10a4480822ac",
+    "failure_object": 2,
+    "failure_diagnostics": [
+      0.0015272938180714846,
+      0.0588318295776844,
+      0,
+      -902
+    ],
+    "active_solver_work": [
+      {
+        "root": 0,
+        "used_columns_sum": 760,
+        "cycles_with_work": 49,
+        "budget_exhausted_solves": 7,
+        "active_newton_begins": 16,
+        "minimum_newton_norm": 2.27015917e-05,
+        "last_newton_norm": 2.27648325e-05,
+        "last_newton_threshold": 9.99999975e-06
+      },
+      {
+        "root": 1,
+        "used_columns_sum": 405,
+        "cycles_with_work": 31,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "minimum_newton_norm": 0.00152729091,
+        "last_newton_norm": 0.00152729219,
+        "last_newton_threshold": 9.99999975e-06
+      }
+    ]
+  },
+  "prior_motion": {
+    "matter_object": 15,
+    "tet": 1319243,
+    "material": 16,
+    "initial_J": 1.0,
+    "accepted_J": 2.4767531284915525,
+    "rejected_J": 2.500288248062134,
+    "min_reference_altitude_m": 3.119767261651634e-07,
+    "physical_nodes": [
+      309876,
+      107878,
+      107848,
+      107876
+    ]
+  },
+  "before_altitude_um": 0.31197672616516336,
+  "after_altitude_um": 4.576018136476207,
+  "segment_experiment": {
+    "math": {
+      "device": "Apple M6",
+      "cases": 8192,
+      "endpoint_pass_but_interior_invalid": 241,
+      "gpu_false_acceptances": 0,
+      "gpu_false_rejections": 0,
+      "shader": "8a908ec2526bd7b73b4250209150f75caa0b0a171a734bfb6f7406edce5f5b0f"
+    },
+    "whole_scene": {
+      "exit": 1,
+      "wall_s": 217.99715499999002
+    },
+    "failure": [
+      2.500000238418579,
+      2.5,
+      1322558,
+      4
+    ],
+    "accepted_steps": 1,
+    "selected_for_release": false
+  },
+  "rigid_overlap_registered_pose": {
+    "skin": 1117.6321612126603,
+    "fat": 4859.513962242674
+  },
+  "parent": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-accepted-connected-material-233c9d5cc2b68362.tar.zst",
+  "accepted_cell_quality": {
+    "cells": 31,
+    "regions": [
+      20,
+      42,
+      43,
+      64,
+      65,
+      76,
+      79,
+      93,
+      115,
+      116,
+      120,
+      124,
+      128
+    ],
+    "submicron_at_start": 14
+  },
+  "accepted_bone_overlap": {
+    "receipt": "78ba1ab1eb199fe6246b2c654b098ec24dc4cd7819364cd3e1e3b70c0fb963cc",
+    "banks": 185,
+    "native_body_count": 157,
+    "registered_body_count": 86,
+    "maximum_body_translation_from_start_m": 6.73427986107763e-07,
+    "accepted_s": 7.81250037107e-06,
+    "tissues": {
+      "skin": {
+        "sum_mm3": 1117.195548204082,
+        "change_from_start_mm3": -0.43661300857843344,
+        "positive_banks": 7,
+        "largest_banks_mm3": [
+          [
+            14,
+            935.3266246539898
+          ],
+          [
+            16,
+            88.35093681959502
+          ],
+          [
+            18,
+            48.97086303429604
+          ],
+          [
+            19,
+            27.03866643609202
+          ],
+          [
+            17,
+            17.479374064277845
+          ],
+          [
+            15,
+            0.02904784165021581
+          ],
+          [
+            11,
+            3.479790178644274e-05
+          ]
+        ]
+      },
+      "fat": {
+        "sum_mm3": 4859.503028572042,
+        "change_from_start_mm3": -0.01093367063185724,
+        "positive_banks": 32,
+        "largest_banks_mm3": [
+          [
+            14,
+            1676.6352725940337
+          ],
+          [
+            18,
+            1580.307126166457
+          ],
+          [
+            19,
+            1258.7908638182037
+          ],
+          [
+            16,
+            198.03409038718942
+          ],
+          [
+            17,
+            41.91151552453419
+          ],
+          [
+            90,
+            14.560891811658792
+          ],
+          [
+            26,
+            14.16007311313278
+          ],
+          [
+            89,
+            12.888878026496744
+          ]
+        ]
+      }
+    },
+    "scope": "Pairwise cortical-solid and material-solid intersection volumes at the accepted endpoint. Different pairs can occupy the same volume."
+  },
+  "successful_single_step_timing": {
+    "simulated_s": 7.81250037107e-06,
+    "native_horizon_wall_s": 38.364204916000006,
+    "native_horizon_factor": 2.0364035663389318e-07,
+    "whole_launch_wall_s": 187.69409437500872,
+    "whole_launch_factor": 4.1623581163192026e-08
+  }
+}

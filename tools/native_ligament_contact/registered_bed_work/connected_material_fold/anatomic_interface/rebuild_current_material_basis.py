@@ -30,16 +30,30 @@ def lineage(q):
         rows=np.r_[rows[a['unchanged_prior_cells']],np.full(n,-1,'i4')]
     return rows
 
-def run(work):
-    q=work.parent;v=q/'qualified-material';prior=q.parent/'relative/material-p1';reg=json.loads((prior/'result.json').read_bytes());src=Path((work/'owner.locator').read_text().strip())
+def run(work,refined=False):
+    q=work.parent
+    v=work/'witness-material/volume' if refined else q/'qualified-material'
+    prior=work/'current-p1' if refined else q.parent/'relative/material-p1'
+    reg=json.loads((prior/'result.json').read_bytes());src=Path((work/'owner.locator').read_text().strip())
     if digest(src)!=reg['owner']:raise ValueError('Wrong P1 owner')
     api=loadmod(src);owner=api._load_230(api.OWNER230);statepath=prior/'current-paired-volume-state.json';state=json.loads(statepath.read_bytes());ids=state['source330_identity']
     for k in ('source330_mass','source330_nodes'):
         if digest(Path(ids[k]['path']))!=ids[k]['sha256']:raise ValueError('Source330 asset changed')
     parent=owner.native.read_parent(Path(ids['source330_mass']['path']));parent['points']=np.loadtxt(ids['source330_nodes']['path'],delimiter=',',skiprows=1,usecols=(2,3,4))
-    idx=owner.native.build_index(parent);mi=owner.build_material_indices(parent);out=work/'current-p1';out.mkdir(exist_ok=True)
+    idx=owner.native.build_index(parent);mi=owner.build_material_indices(parent);out=(work/'witness-material' if refined else work)/'current-p1';out.mkdir(exist_ok=True)
     x=np.loadtxt(v/'mesh.node',skiprows=1,usecols=(1,2,3),dtype='f4');cells=np.loadtxt(v/'mesh.ele',skiprows=1,usecols=(1,2,3,4,5),dtype='i4');t=cells[:,:4]-1
-    labels=np.loadtxt(v/'current-child.labels.csv',delimiter=',',skiprows=1,dtype='i8');priorCells=lineage(q);nd=np.load(q/'seam-volume/local-ancestry.npz')['surviving_source_nodes'];cert=json.loads((v/'result.json').read_bytes());assert len(priorCells)==len(t)and len(nd)==len(x)
+    labels=np.loadtxt(v/'current-child.labels.csv',delimiter=',',skiprows=1,dtype='i8')
+    if refined:
+        overlay=np.load(v/'source-overlay.npz')
+        priorCells=np.arange(len(t),dtype='i4')
+        priorCells[overlay['new_cells']]=-1
+        nd=np.arange(len(x),dtype='i4')
+        nd[-1]=-1
+    else:
+        priorCells=lineage(q)
+        nd=np.load(q/'seam-volume/local-ancestry.npz')['surviving_source_nodes']
+    cert=json.loads((v/'result.json').read_bytes())
+    if len(priorCells)!=len(t) or len(nd)!=len(x) or cert['exit']:raise ValueError('Unverified mesh ancestry')
     for k in ('mesh.node','mesh.ele','cell-mass.f64','current-child.labels.csv'):
         if digest(v/k)!=cert['inputs'][k]:raise ValueError('Unverified material')
     now=out/statepath.name;state.update(geometry_receipt={'path':str(v/'result.json'),'sha256':digest(v/'result.json')},geometry_sha256=array_hash(x),tetrahedra_sha256=array_hash(t),mass_sha256=cert['inputs']['cell-mass.f64'],prior_geometry_state_sha256=digest(statepath),native_admitted=False);now.write_text(json.dumps(state,indent=2)+'\n')
@@ -49,8 +63,9 @@ def run(work):
         if digest(op)!=reg['environment'][key+'_SHA256'] or digest(gf)!=reg['environment'][prefix+'GEOMETRY_'+tag+'_SHA256']:raise ValueError('Unverified source basis')
         old=dict(np.load(op));g=np.load(gf);rows=np.flatnonzero(cells[:,4]==material);nodes,inv=np.unique(t[rows],return_inverse=True);local=inv.reshape(-1,4).astype('i4');pt=x[nodes]
         og=g['combined_node_rows'];ix=np.searchsorted(og,nd[nodes]);oldrows=g['combined_child_rows']
-        if not np.array_equal(og[ix],nd[nodes]):raise ValueError('Missing role node')
-        changed=np.flatnonzero(np.any(pt!=g['points_world_m_f32'][ix],axis=1));newnode=ix.copy();newnode[changed]=-1-np.arange(len(changed))
+        existing=nd[nodes]>=0
+        if not np.array_equal(og[ix[existing]],nd[nodes][existing]):raise ValueError('Missing role node')
+        changed=np.flatnonzero(~existing | np.any(pt!=g['points_world_m_f32'][ix],axis=1));newnode=ix.copy();newnode[changed]=-1-np.arange(len(changed))
         groups,lookup=api._source_groups(parent,role)
         if not np.array_equal(groups,old['group_tuples']):raise ValueError('Source group identity changed')
         newmap=api.build_node_support(pt[changed],role,parent,idx,mi,groups,lookup,owner,max_distance=state['p1_current_distance_limit_m']) if len(changed) else dict(maps=[],origin=np.empty(0,'u1'),distance=np.empty(0))
@@ -93,4 +108,4 @@ def run(work):
         roles[role]=dict(nodes=len(nodes),changed_node_classifications=len(changed),elements=len(rows),reintegrated_elements=len(add),unchanged_proven_elements=int((cr>=0).sum()),inadmissible_label_rows=bad)
         print(role,roles[role],flush=True);del composed,old;gc.collect()
     (out/'result.json').write_text(json.dumps(dict(owner=digest(src),roles=roles,environment=pins),indent=2)+'\n')
-if __name__=='__main__':run(Path(__file__).resolve().parent)
+if __name__=='__main__':run(Path(__file__).resolve().parent, '--motion-witness' in sys.argv[1:])
