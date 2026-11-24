@@ -1,0 +1,88 @@
+// The one reference compartment has 51 deep-fat parents and three bone donors.
+// Each invocation owns a complete material update in a single workgroup.
+kernel void nm_human_gluteal_interface(
+    constant NMNumiHumanTendonFEMLoadDispatchGPU& d [[buffer(0)]],
+    device const NMFEMNodeStateGPU* nodes [[buffer(1)]],
+    device const MRArticulatedBodyPoseGPU* poses [[buffer(2)]],
+    device float4* femForce [[buffer(3)]],
+    device NMNumiHumanBodyWrenchGPU* wrench [[buffer(4)]],
+    device const float* stiffness [[buffer(5)]],
+    device float4* observation [[buffer(6)]],
+    uint lane [[thread_index_in_threadgroup]]) {
+    threadgroup float coords[171], gradient[171];
+    threadgroup float3 forces[54], torques[54];
+    threadgroup float4 rotations[3];
+    const uint pelvis = gcBodies[0] - d.articulationFirstBody;
+    const auto base = poses[pelvis];
+    const float4 frame = normalize(humanQuaternionMultiply(normalize(base.orientation),
+                                    humanQuaternionConjugate(gcQuaternions[0])));
+    const float4 inverse = humanQuaternionConjugate(frame);
+    if (lane < 54u) {
+        const bool rigid = lane >= 51u;
+        const uint b = rigid ? lane - 51u : 0u;
+        const uint first = rigid ? 153u + 6u*b : 3u*lane;
+        const auto pose = poses[gcBodies[b] - d.articulationFirstBody];
+        const float3 x = rigid ? pose.position.xyz : nodes[gcNodes[lane]].positionAndMass.xyz;
+        const float3 ref = gcPoints[lane];
+        const float3 lever = ref - gcPoints[51];
+        const float3 du = (x - ref) - (base.position.xyz - gcPoints[51]);
+        // Evaluate (R^T-I)r without cancellation of metre-scale positions.
+        const float3 spun = 2.f*cross(inverse.xyz, lever);
+        const float3 u = humanQuaternionRotate(inverse,du) + inverse.w*spun + cross(inverse.xyz,spun);
+        for (uint k=0; k<3; ++k) coords[first+k] = u[k];
+        if (rigid) {
+            float4 h = normalize(humanQuaternionMultiply(inverse,humanQuaternionMultiply(
+                normalize(pose.orientation),humanQuaternionConjugate(gcQuaternions[b]))));
+            if (h.w < 0.f) h = -h;
+            rotations[b] = h;
+            for (uint k=0; k<3; ++k) coords[first+3+k] = 2.f*h[k];
+        }
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    if (lane < 171u) {
+        float g = 0.f;
+        for (uint k=0;k<171u;++k) g = fma(stiffness[lane*171u+k],coords[k],g);
+        gradient[lane] = g;
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    if (lane < 54u) {
+        const bool rigid = lane >= 51u;
+        const uint b = rigid ? lane - 51u : 0u;
+        const uint first = rigid ? 153u+6u*b : 3u*lane;
+        const float3 f = -humanQuaternionRotate(frame,float3(gradient[first],gradient[first+1],gradient[first+2]));
+        forces[lane] = f;
+        float3 intrinsic = 0.f;
+        const auto pose = poses[gcBodies[b]-d.articulationFirstBody];
+        const float3 x = rigid ? pose.position.xyz : nodes[gcNodes[lane]].positionAndMass.xyz;
+        if (rigid) {
+            const float3 g = float3(gradient[first+3],gradient[first+4],gradient[first+5]);
+            const float4 h = rotations[b];
+            intrinsic = -humanQuaternionRotate(frame,h.w*g+cross(h.xyz,g));
+        } else {
+            femForce[gcNodes[lane]].xyz += f;
+        }
+        torques[lane] = intrinsic + cross(x-base.position.xyz,f);
+    }
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+    if (lane >= 51u && lane < 54u) {
+        const uint b=lane-51u, body=gcBodies[b]-d.articulationFirstBody;
+        float3 f=forces[lane];
+        float3 t=torques[lane]-cross(poses[body].position.xyz-base.position.xyz,f);
+        if (b==0u) {
+            // Chain rule for the moving pelvis coordinate frame.
+            for (uint i=0u;i<54u;++i) { f-=forces[i]; t-=torques[i]; }
+        }
+        wrench[body].force.xyz += f;
+        wrench[body].torque.xyz += t;
+        const uint obs=8u*min(d.stepIndex,3u);
+        observation[obs+2u*b]=float4(f,1.f);
+        observation[obs+2u*b+1u]=float4(t,0.f);
+        if (b==0u) {
+            float energy=0.f,peak=0.f; float3 sum=0.f;
+            for (uint k=0;k<171u;++k) energy=fma(coords[k],gradient[k]*.5f,energy);
+            for (uint i=0;i<51u;++i) { sum+=forces[i]; peak=max(peak,length(forces[i])); }
+            observation[obs+6u]=float4(sum,peak);
+            observation[obs+7u]=float4(energy,float(d.stepIndex),float(d.femNodeCount),1.f);
+        }
+    }
+}
