@@ -1,0 +1,232 @@
+{
+  "points": 314013,
+  "tetrahedra": 1457313,
+  "source_cells_reintegrated": {
+    "Skin": {
+      "nodes": 201942,
+      "changed_node_classifications": 0,
+      "elements": 707597,
+      "reintegrated_elements": 0,
+      "unchanged_proven_elements": 707597,
+      "inadmissible_label_rows": []
+    },
+    "Fat": {
+      "nodes": 230468,
+      "changed_node_classifications": 1,
+      "elements": 749716,
+      "reintegrated_elements": 10,
+      "unchanged_proven_elements": 749706,
+      "inadmissible_label_rows": []
+    }
+  },
+  "native_mass_replay": {
+    "SKIN": "PASS_SOURCE_ONLY_SKIN_SOURCE_CARRIER_FEASIBLE_ALLOCATION",
+    "FAT": "PASS_SOURCE_ONLY_FAT_SOURCE_CARRIER_FEASIBLE_ALLOCATION"
+  },
+  "imported": {
+    "native_imported": true,
+    "nodes": 314013,
+    "cells": 1457313,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 0,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 1.3877787807814457e-17,
+    "skin_kg": 3.4525712828039414,
+    "fat_kg": 10.487108427165415,
+    "node_sha256": "ea2c10e1b249ce8e23507372266d8951d735d25edd8e492497dd1acb8c9887fa",
+    "element_sha256": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+    "label_sha256": "6a549b4a516dd6e0f74f0065ed3959479d63b6e333b4952d23de9227c74d3619"
+  },
+  "registration": [
+    {
+      "vertex": 309857,
+      "old_parent": 18251,
+      "parent": 18251,
+      "source_face": 13552,
+      "residual_m": 1.8885390870487476e-05
+    }
+  ],
+  "credits": {
+    "SKIN": {
+      "carriers": 48573,
+      "positive_connections": 2955897,
+      "mass_kg": 3.4525712828039024,
+      "max_cell_error_kg": 8.673617379884035e-19,
+      "max_carrier_error_kg": 0.0
+    },
+    "FAT": {
+      "carriers": 23066,
+      "positive_connections": 2032028,
+      "mass_kg": 10.487108427165252,
+      "max_cell_error_kg": 1.734723475976807e-18,
+      "max_carrier_error_kg": 2.168404344971009e-19
+    }
+  },
+  "closure": [
+    {
+      "vertex": 309857,
+      "role": 16,
+      "cells": 10,
+      "source_fraction_error": 3.3306690738754696e-16,
+      "destination_volume_relative_error": 1.509903313490213e-14,
+      "source_mass_kg": 4.135088027720405e-06,
+      "new_mass_kg": 4.135088027720406e-06,
+      "density_min": 949.999999999687,
+      "density_max": 949.9999999997044
+    }
+  ],
+  "motion": {
+    "accepted_step": 1,
+    "accepted_s": 7.812500371073838e-06,
+    "reference": "ea2c10e1b249ce8e23507372266d8951d735d25edd8e492497dd1acb8c9887fa",
+    "loaded": "6e93249054d858a8a66b23b660bdc96b1afd62e3693f5d84c6a12a12b24bfa10",
+    "physical_frame": "97901bd099b2289dbb9783ac191b15a167c2467ba3929138961904128eab14d6",
+    "full_scene_launch": "798437bc5f23e96a5446258fbc2845e824c21025782aef3f8d6119051b671297",
+    "receipt_sha256": "21d932637272fcedd274a4067fa54bae835d29ecc7484756c4610565ed82c665",
+    "world_pose_sha256": "220ca4cc95a2228f11926f9b0f8d121fbd3b21afc092c7ed3e36bd7f4c3e32d4",
+    "execution": {
+      "exit": 0,
+      "wall_s": 185.3979840001557
+    },
+    "roles": {
+      "skin": {
+        "inverted": 0,
+        "below_volume": 0,
+        "below_shape": 4,
+        "failing_cells": [
+          578584,
+          582472,
+          586443,
+          599861
+        ],
+        "min_J": 0.36428441100779196,
+        "max_J": 2.4621758479532976,
+        "max_displacement_m": 0.00021154742183296344
+      },
+      "fat": {
+        "inverted": 0,
+        "below_volume": 0,
+        "below_shape": 26,
+        "failing_cells": [
+          820711,
+          871921,
+          876728,
+          1000484,
+          1033365,
+          1063794,
+          1080537,
+          1083196,
+          1187424,
+          1198692,
+          1254305,
+          1318107,
+          1319278,
+          1319553,
+          1321458,
+          1321600,
+          1321745,
+          1322393,
+          1325620,
+          1325644,
+          1325645,
+          1436399,
+          1453582,
+          1455082,
+          1455281,
+          1455521
+        ],
+        "min_J": 0.3500010571175314,
+        "max_J": 2.5000023073148867,
+        "max_displacement_m": 4.0882527354540406e-05
+      }
+    },
+    "exact_material_surface_pair_count": 0,
+    "wall_pair_counts": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "defects_in_changed_star": {
+      "skin": [],
+      "fat": []
+    },
+    "scope": "All skin/fat cells and four registered material surfaces at the accepted native endpoint."
+  },
+  "accepted_bones": {
+    "material_endpoint": "97901bd099b2289dbb9783ac191b15a167c2467ba3929138961904128eab14d6",
+    "bone_count": 185,
+    "summed_pair_volumes": {
+      "skin": {
+        "before_mm3": 1117.195548204082,
+        "after_mm3": 1117.1955484773844,
+        "difference_mm3": 2.733024757617386e-07
+      },
+      "fat": {
+        "before_mm3": 4859.503028572042,
+        "after_mm3": 4859.50302553885,
+        "difference_mm3": -3.033192115253769e-06
+      }
+    },
+    "scope": "Pairwise solid intersections in the accepted endpoint, summed across anatomical bones."
+  },
+  "native_device": "Apple M6",
+  "variable_pleural_pressure": true,
+  "reference_passive_ligament_rows": 34,
+  "reference_skin_fat_surface_sets": 4,
+  "single_step_cold_factor": 4.2139079414516596e-08,
+  "single_step_native_horizon_s": 37.552648917,
+  "single_step_horizon_factor": 2.080412593087977e-07,
+  "compared_launch": "c83f165fea756949095f7cda7440a79f3f1748d6c6551bde5a7e6fc69c7c27f2",
+  "four_step": {
+    "accepted": 1,
+    "requested": 4,
+    "cold_s": 221.47967199981213,
+    "old_matter_code": 10,
+    "matter_code": 10,
+    "old_reported_object": 2,
+    "reported_object": 14,
+    "old_diagnostics": [
+      0.0015272938180714846,
+      0.0588318295776844,
+      0,
+      -902
+    ],
+    "diagnostics": [
+      0.0015272897435352206,
+      0.05869532376527786,
+      0,
+      -902
+    ],
+    "accepted_seconds_per_total_wall_s": 3.5274119292900456e-08
+  },
+  "owner": {
+    "executable": "3ec1bccc7fce048dd7d5c26782410c242886370066dbe75c9154a709db19075e",
+    "library": "336969cc2011afcb785226a0b8ce7682473b9621fc9410ac1e648b9e8dc53532",
+    "metal": null
+  },
+  "status": "Research checkpoint. Sustained whole-volume advancement and equilibrium remain unresolved."
+}
