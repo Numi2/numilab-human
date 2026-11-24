@@ -1,0 +1,21 @@
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -14216,6 +14216,18 @@
+         else return false;
+         if(nmReferenceContactSweepFraction<false>(kind,start,finish,direction,thickness)==1.0f)
+             return true;
++        if(kind==NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE){
++            // Subtracting projected world coordinates can erase the point/edge
++            // separation. Select an axis from the original two-word geometry;
++            // the interval certificate still covers both endpoints and every corner.
++            float3 bary,point;float distance;
++            MRCompensatedPositionGPU axis;
++            const thread MRCompensatedPositionGPU* p=endpoint==0u?start:finish;
++            if(contactCompensatedVertexTriangleWitness(p[0],p[1],p[2],p[3],
++                     bary,point,axis,distance) && distance>0.f &&
++               nmReferenceContactCompensatedPlaneFraction(kind,start,finish,axis,
++                     axis.high.xyz+axis.low.xyz,thickness)==1.f)return true;
++        }
+         if(kind==NM_DEFORMABLE_CONTACT_EDGE_EDGE) {
+             // Endpoint/edge Voronoi regions need a point/segment axis rather
+             // than the two edge cross product. Axis selection may be rounded;

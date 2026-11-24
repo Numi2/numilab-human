@@ -1,0 +1,129 @@
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -8876,6 +8876,7 @@
+             "nm_fem_registered_volume_hints_incident64",
+             "nm_fem_registered_volume_claim_incident64",
+             "nm_fem_registered_volume_active_incident64",
++            "nm_fem_refresh_volume_witness",
+             "nm_fem_registered_release_reset",
+             "nm_fem_registered_release_bed_begin_gate",
+             "nm_fem_registered_release_check",
+@@ -49864,7 +49865,7 @@
+                             [encoder setBytes:&count length:sizeof(count) atIndex:3];
+                         });
+                         [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+-                        dispatchThreads("nm_fem_registered_volume_active_incident64",count,[&]{
++                        const auto bindVolumeRows=[&] {
+                         setDispatch();
+                         [encoder setBytes:&micro length:sizeof(micro) atIndex:1u];
+                         [encoder setBuffer:state.objects offset:0u atIndex:2u];
+@@ -49881,7 +49882,21 @@
+                             [encoder setBuffer:state.volumeClaims offset:0 atIndex:13];
+                             [encoder setBuffer:state.releaseFloors ? state.releaseFloors : state.femSolution offset:0 atIndex:14];
+                             [encoder setBytes:&state.releaseVolumeMode length:sizeof(state.releaseVolumeMode) atIndex:15];
+-                        });
++                        };
++                        // After a shared vertex is updated the previous tile witness
++                        // can pass while its neighbor becomes limiting. Re-evaluate
++                        // the actual proposed endpoint before each local projection.
++                        for(uint32_t sweep=0;sweep<4u;++sweep){
++                            if(sweep){
++                                [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++                                dispatchGroups32("nm_fem_refresh_volume_witness",64u,bindVolumeRows);
++                                [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
++                            }
++                            dispatchThreads("nm_fem_registered_volume_active_incident64",count,[&]{
++                                bindVolumeRows();
++                                [encoder setBytes:&sweep length:sizeof(sweep) atIndex:16];
++                            });
++                        }
+                     }
+                     [encoder memoryBarrierWithScope:MTLBarrierScopeBuffers];
+                 }
+--- a/matter/src/metal/fem.metalinc
++++ b/matter/src/metal/fem.metalinc
+@@ -8034,6 +8034,60 @@
+     return 10u;
+ }
+
++kernel void nm_fem_refresh_volume_witness(
++    constant NMMatterDispatchGPU& d [[buffer(0)]],
++    constant NMMicrostepGPU& micro [[buffer(1)]],
++    device const NMContinuumObjectGPU* objects [[buffer(2)]],
++    device const NMMaterialGPU* materials [[buffer(3)]],
++    device const NMFEMNodeStateGPU* accepted [[buffer(4)]],
++    device const NMFEMNodeStateGPU* candidate [[buffer(5)]],
++    device float4* direction [[buffer(6)]],
++    device const NMTetrahedronGPU* tets [[buffer(7)]],
++    device const NMSchedulerStateGPU* schedule [[buffer(8)]],
++    device const NMAdaptiveStateGPU* adaptive [[buffer(9)]],
++    device const NMFGMRESStateGPU* states [[buffer(10)]],
++    device uint* rows [[buffer(11)]],
++    constant uint& count [[buffer(12)]],
++    device atomic_uint* claims [[buffer(13)]],
++    device const float4* releaseFloors [[buffer(14)]],
++    constant uint& releaseMode [[buffer(15)]],
++    uint lane [[thread_index_in_simdgroup]], uint group [[threadgroup_position_in_grid]]) {
++    const uint live=rows[count];
++    if(group>=live || live>64 || states[0].nonlinear.w>.5f)return;
++    const uint tile=rows[count+group+1u]&0xffffffu;
++    if(tile>=count || rows[tile]>=d.tetrahedronCount)return;
++    const uint old=rows[tile],owner=tets[old].identity.y;
++    if(owner>=d.objectCount)return;
++    const NMContinuumObjectGPU object=objects[owner];
++    if(!objectDue(object,schedule[owner],adaptive[owner],micro))return;
++    const float dt=objectTimestep(d,schedule[owner]);
++    float score=0.f; uint best=0xffffffffu;
++    for(uint local=tile*256u+lane; local<min(object.elementCount,(tile+1u)*256u); local+=32u){
++        const uint e=object.elementOffset+local;
++        const auto t=tets[e];
++        if(t.identity.y!=owner || !(t.identity.w&NM_OBJECT_ACTIVE))continue;
++        const auto mat=materials[t.identity.x];
++        const float lo=max(max(d.numericalLimits.z,mat.validity.x),releaseMode==2u?releaseFloors[e].z:0.f);
++        const float hi=mat.validity.y;
++        const auto inv=matrixFromRows(t.inverseRestRow0,t.inverseRestRow1,t.inverseRestRow2);
++        const bool reference=(t.identity.w&NM_TETRAHEDRON_REFERENCE_DISPLACEMENT_GRADIENT)!=0;
++        NMFEMNodeStateGPU trial[4];bool movable=true;
++        for(uint k=0;k<4;++k){
++            const uint n=t.nodes[k];const auto state=candidate[n];
++            movable=movable && state.restAndFixed.w<=.5f && state.positionAndMass.w>0.f;
++            trial[k]=femTrialNodeAtAlpha(accepted[n],state,direction[n].xyz,1.f,dt,true);
++        }
++        if(!movable)continue;
++        const float J=determinant(registeredTrialF(trial,inv,reference));
++        if(!isfinite(J) || (J>lo&&J<hi))continue;
++        const float severity=1.f+max(lo-J,J-hi)/max(hi-lo,kEpsilon);
++        if(severity>score || (severity==score && e<best)){score=severity;best=e;}
++    }
++    const float maximum=simd_max(score);
++    const uint winner=simd_min(score==maximum?best:0xffffffffu);
++    if(lane==0 && winner!=0xffffffffu)rows[tile]=winner;
++}
++
+ kernel void nm_fem_registered_volume_active_incident64(
+     constant NMMatterDispatchGPU& d [[buffer(0)]],
+     constant NMMicrostepGPU& micro [[buffer(1)]],
+@@ -8051,12 +8105,14 @@
+     device atomic_uint* claims [[buffer(13)]],
+     device const float4* releaseFloors [[buffer(14)]],
+     constant uint& releaseMode [[buffer(15)]],
++    constant uint& sweep [[buffer(16)]],
+     uint row [[thread_position_in_grid]],
+     uint lane [[thread_index_in_threadgroup]],uint group [[threadgroup_position_in_grid]],
+     uint width [[threads_per_threadgroup]]) {
+
+     const uint live=rows[count];
+     if(live>64u){
++        if(sweep!=0)return;
+         registeredVolumeCellDirection(d,micro,objects,materials,accepted,candidate,direction,tets,schedule,adaptive,states,rows,count,claims,releaseFloors,releaseMode,row,false);
+         return;
+     }
+@@ -8067,7 +8123,7 @@
+     if(lane==0u){
+         waves=0;
+         for(uint i=0;i<live;++i){
+-            const uint tile=rows[count+1u+i];
++            const uint tile=rows[count+1u+i]&0xffffffu;
+             uint at=i;
+             while(at>0u && sorted[at-1u]>tile){sorted[at]=sorted[at-1u];--at;}
+             sorted[at]=tile;

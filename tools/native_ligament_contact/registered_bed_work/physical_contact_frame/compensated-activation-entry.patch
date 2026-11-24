@@ -1,0 +1,64 @@
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -14194,6 +14194,47 @@
+     return size==0u;
+ }
+
++
++inline bool nmReferenceVertexHullInterval(
++    thread const MRCompensatedPositionGPU* a,thread const MRCompensatedPositionGPU* b,
++    float thickness,float lo,float hi) {
++    // For an affine vertex and any point of an affine triangle, the relative
++    // vector lies in the convex hull of the three relative corners at each
++    // interval endpoint. A supporting plane can touch any vertex, edge or
++    // face of that hull. Rounded values only pick axes. The certificate
++    // uses interval projections of the original compensated operands.
++    MRCompensatedPositionGPU corner[6];
++    for(uint k=0u;k<3u;++k){
++        const auto x=mrCompensatedVectorAdd(a[0],mrCompensatedVectorNegate(a[k+1u]));
++        const auto y=mrCompensatedVectorAdd(b[0],mrCompensatedVectorNegate(b[k+1u]));
++        for(uint e=0u;e<2u;++e){
++            const float t=e?hi:lo;
++            corner[3u*e+k]=t==0.f?x:(t==1.f?y:mrCompensatedVectorAdd(
++                mrCompensatedVectorScale(x,{1.f-t,0.f}),mrCompensatedVectorScale(y,{t,0.f})));
++        }
++    }
++    for(uint i=0;i<6u;++i)for(uint j=i+1u;j<6u;++j){
++        const auto edge=mrCompensatedVectorAdd(corner[j],mrCompensatedVectorNegate(corner[i]));
++        for(uint k=j+1u;k<6u;++k){
++            const auto v=mrCompensatedVectorAdd(corner[k],mrCompensatedVectorNegate(corner[i]));
++            auto axis=mrCompensatedVectorCross(edge,v);
++            if(contactCompensatedSign(mrCompensatedVectorDot(axis,corner[i]))<0)
++                axis=mrCompensatedVectorNegate(axis);
++            if(nmReferenceContactIntervalPlaneSeparated(NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE,
++                        a,b,axis,thickness,lo,hi))return true;
++        }
++        // Double cross gives the perpendicular from the origin to the edge
++        // line up to a positive scale. The interval test handles non-hull edges.
++        const auto edgeAxis=mrCompensatedVectorCross(edge,mrCompensatedVectorCross(corner[i],edge));
++        if(nmReferenceContactIntervalPlaneSeparated(NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE,
++                    a,b,edgeAxis,thickness,lo,hi))return true;
++    }
++    for(uint k=0u;k<6u;++k)
++        if(nmReferenceContactIntervalPlaneSeparated(NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE,
++                    a,b,corner[k],thickness,lo,hi))return true;
++    return false;
++}
++
+ inline bool nmReferenceUnresolvedSweepSeparated(
+     uint kind,thread const MRCompensatedPositionGPU* start,
+     thread const MRCompensatedPositionGPU* finish,float thickness) {
+@@ -14244,7 +14285,12 @@
+                     return true;
+         }
+     }
+-    return nmReferenceContactSubdividedSweepSeparated(kind,start,finish,thickness);
++    if(nmReferenceContactSubdividedSweepSeparated(kind,start,finish,thickness))return true;
++    if(kind!=NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE)return false;
++    if(nmReferenceVertexHullInterval(start,finish,thickness,0.f,1.f))return true;
++    for(uint k=0u;k<4u;++k)
++        if(!nmReferenceVertexHullInterval(start,finish,thickness,float(k)*.25f,float(k+1u)*.25f))return false;
++    return true;
+ }
+
+ // Candidate axes need not be exact: every success is certified against the
