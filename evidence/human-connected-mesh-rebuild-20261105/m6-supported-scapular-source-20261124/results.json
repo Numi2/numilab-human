@@ -1,0 +1,372 @@
+{
+  "original": "796413cc50ffe4a7a7d37614be63627b657bcd9528787f6d1cbd4155cc96dcad",
+  "native": "5c2fd93d2c46facb011c2fd1c3592ec83cd130bde6bd24e9feba76646be57948",
+  "atlas": {
+    "archive": "40665852c49f218326590e204db91064a1ecfc3c6f8cbd7bbbcaac62c7cd409e",
+    "bone_payload": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "native": "5c2fd93d2c46facb011c2fd1c3592ec83cd130bde6bd24e9feba76646be57948",
+    "physical_geometry": "7374bb7af6370639a7f9f498c8dd4b5fe4a27c6390e97dce2712524b0c2b9512",
+    "source_anchor": {
+      "core_body_index": 34,
+      "member_id": "FJ3384",
+      "member_sha256": "1641b04e55f9d75bdd6f1f4f07ea596e5dea0a8cb6b348bff47281b8a0bc6e5d",
+      "myosim_body": "scapula_r",
+      "source_record_index": 18,
+      "triangle_count": 26172,
+      "vertex_count": 13118
+    },
+    "frame": {
+      "linear_m_per_mm": [
+        [
+          0.0010066622947700068,
+          -4.3665461718981905e-05,
+          -2.1429315279748324e-06
+        ],
+        [
+          -1.0487197240905533e-06,
+          2.5256878042569198e-05,
+          -0.0010072940114759295
+        ],
+        [
+          4.3705434569336065e-05,
+          0.0010063476787784814,
+          2.5187658736984585e-05
+        ]
+      ],
+      "translation_m": [
+        -0.07152649480513484,
+        -1.6710737323137024,
+        -0.005430729734047794
+      ],
+      "max_vertex_residual_m": 6.076934126334135e-08,
+      "singular_values": [
+        0.0010076111584073418,
+        0.0010076111555351612,
+        0.0010076111462819191
+      ]
+    },
+    "members_scanned": 2234,
+    "bounds_candidates": 13,
+    "rows": [
+      {
+        "id": "FJ1500",
+        "name": "Right infraspinatus muscle",
+        "sha256": "28f61376a3a88a28d14c44e1c20e9b7a34129772c130afa003daceac801455b1",
+        "spans_mm": [
+          [
+            [
+              25.710355078967954,
+              29.594935245248653
+            ]
+          ],
+          [
+            [
+              25.72057533995083,
+              29.594935245248653
+            ]
+          ],
+          [
+            [
+              25.7001348179851,
+              29.594935245248653
+            ]
+          ],
+          [
+            [
+              25.71265253513288,
+              29.594935245248653
+            ]
+          ],
+          [
+            [
+              25.70805762280305,
+              29.594935245248653
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "FJ1520",
+        "name": "Ascending part of right trapezius",
+        "sha256": "6bb3d13198991bda4d0aae27561976b9ba53b0d21d817f180098307c7b99deb1",
+        "spans_mm": [
+          [
+            [
+              10.858799280662263,
+              20.485746119407096
+            ]
+          ],
+          [
+            [
+              10.862364786474943,
+              20.49563300344009
+            ]
+          ],
+          [
+            [
+              10.855233774849596,
+              20.475859235374138
+            ]
+          ],
+          [
+            [
+              10.863707441529293,
+              20.493030669788876
+            ]
+          ],
+          [
+            [
+              10.853891119795252,
+              20.47846156902535
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "FJ3384",
+        "name": "Right scapula",
+        "sha256": "1641b04e55f9d75bdd6f1f4f07ea596e5dea0a8cb6b348bff47281b8a0bc6e5d",
+        "spans_mm": [
+          [],
+          [
+            [
+              29.59014954356778,
+              29.594935245248653
+            ]
+          ],
+          [],
+          [],
+          [
+            [
+              29.585846617206045,
+              29.594935245248653
+            ]
+          ]
+        ]
+      }
+    ],
+    "ambiguous": [],
+    "limit_mm": 29.594935245248653,
+    "scope": "Scapula-registered atlas comparison. Other atlas members have not been admitted as actual native muscles, masses or force carriers."
+  },
+  "variants": {
+    "scapular-charts": {
+      "payload": "7a2bccc09f26b4be6558ddee43b6aa34a4681fc356839e149010e6428139eb62",
+      "bytes_changed": 42,
+      "patch": "17dc2d13b58f33e0c43da72ca41ad5f2c2f428e46b9f79addc9953d16c41f740",
+      "coverage": {
+        "153": {
+          "native": {
+            "self_pairs": [
+              0,
+              0,
+              0
+            ],
+            "volume_mm3": 142171.31733827345,
+            "depth_crossings_mm": [
+              31.260639614187095,
+              45.25751406540293
+            ]
+          },
+          "rebound": {
+            "self_pairs": [
+              294,
+              246,
+              249
+            ],
+            "volume_mm3": 133014.33965124073,
+            "depth_crossings_mm": [
+              12.522155436004876,
+              20.785740176281983
+            ]
+          },
+          "bed": [
+            {
+              "gap_m": 0.020459681451224933,
+              "below_bed_vertices": 0
+            },
+            {
+              "gap_m": 0.0009023511599010273,
+              "below_bed_vertices": 0
+            }
+          ],
+          "skin_fat": [
+            {
+              "kind": 0,
+              "bank": 15,
+              "control": 0.0,
+              "after": 6160.564122897315
+            },
+            {
+              "kind": 0,
+              "bank": 16,
+              "control": 2172.767609278923,
+              "after": 21055.240986480687
+            }
+          ],
+          "unresolved": [
+            {
+              "kind": 51010,
+              "bank": 20,
+              "unresolved": true
+            }
+          ]
+        },
+        "155": {
+          "native": {
+            "self_pairs": [
+              0,
+              54,
+              54
+            ],
+            "volume_mm3": 38679.413540917594,
+            "depth_crossings_mm": []
+          },
+          "rebound": {
+            "self_pairs": [
+              256,
+              218,
+              218
+            ],
+            "volume_mm3": 37788.25001047757,
+            "depth_crossings_mm": []
+          },
+          "bed": [
+            {
+              "gap_m": 0.032799898241314504,
+              "below_bed_vertices": 0
+            },
+            {
+              "gap_m": 0.02520971091250026,
+              "below_bed_vertices": 0
+            }
+          ],
+          "skin_fat": [
+            {
+              "kind": 0,
+              "bank": 15,
+              "control": 0.0,
+              "after": 0.0
+            },
+            {
+              "kind": 0,
+              "bank": 16,
+              "control": 56.45421444384848,
+              "after": 3853.8324151378406
+            }
+          ],
+          "unresolved": []
+        }
+      }
+    },
+    "scapular-common-charts": {
+      "payload": "95edc5d64328288d8f025d9a07eefb4ab5751959eccbe572d9c9290f9b84c9ad",
+      "bytes_changed": 141,
+      "patch": "914ca3c9eac7d13862af81cac3c5495907cebf6948516d285ee4dd3ff25a0d49",
+      "coverage": {
+        "153": {
+          "native": {
+            "self_pairs": [
+              0,
+              0,
+              0
+            ],
+            "volume_mm3": 142171.31733827345,
+            "depth_crossings_mm": [
+              31.260639614187095,
+              45.25751406540293
+            ]
+          },
+          "rebound": {
+            "self_pairs": [
+              0,
+              0,
+              0
+            ],
+            "volume_mm3": 141872.21376226854,
+            "depth_crossings_mm": [
+              10.779645399502805,
+              20.46547154552499
+            ]
+          },
+          "bed": [
+            {
+              "gap_m": 0.020459681451224933,
+              "below_bed_vertices": 0
+            },
+            {
+              "gap_m": -0.0018899856156008557,
+              "below_bed_vertices": 26
+            }
+          ],
+          "skin_fat": [
+            {
+              "kind": 0,
+              "bank": 15,
+              "control": 0.0,
+              "after": 8159.283660229274
+            },
+            {
+              "kind": 0,
+              "bank": 16,
+              "control": 2172.767609278923,
+              "after": 19373.867638743293
+            }
+          ],
+          "unresolved": [
+            {
+              "kind": 51010,
+              "bank": 20,
+              "unresolved": true
+            }
+          ]
+        },
+        "155": {
+          "native": {
+            "self_pairs": [
+              0,
+              54,
+              54
+            ],
+            "volume_mm3": 38679.413540917594,
+            "depth_crossings_mm": []
+          },
+          "rebound": {
+            "self_pairs": [
+              0,
+              56,
+              56
+            ],
+            "volume_mm3": 39211.68604919601,
+            "depth_crossings_mm": []
+          },
+          "bed": [
+            {
+              "gap_m": 0.032799898241314504,
+              "below_bed_vertices": 0
+            },
+            {
+              "gap_m": 0.01684265324989357,
+              "below_bed_vertices": 0
+            }
+          ],
+          "skin_fat": [
+            {
+              "kind": 0,
+              "bank": 15,
+              "control": 0.0,
+              "after": 4126.105048247512
+            },
+            {
+              "kind": 0,
+              "bank": 16,
+              "control": 56.45421444384848,
+              "after": 15566.898956988354
+            }
+          ],
+          "unresolved": []
+        }
+      }
+    }
+  }
+}
