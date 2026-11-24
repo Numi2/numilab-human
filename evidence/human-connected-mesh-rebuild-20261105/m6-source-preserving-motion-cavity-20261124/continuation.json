@@ -1,0 +1,95 @@
+{
+  "execution": {
+    "exit": 1,
+    "wall_s": 229.3704910830129
+  },
+  "launch": "dc97c0a6c1916665a9d12964e406a2aad154dc4ff6366edc3ee7987348ead479",
+  "maximum_published_step": [
+    1,
+    7.81250037107e-06
+  ],
+  "certificates": [
+    {
+      "root": 0,
+      "status": [
+        {
+          "code": 0,
+          "object_index": 4294967295,
+          "failing_index": 4294967295,
+          "completed_microsteps_at_certificate": 0,
+          "fgmres_iterations_microstep_max": 64,
+          "diagnostics": [
+            null,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "fgmres": [
+        {
+          "diagnostics": [
+            8.77400907e-09,
+            4.07170483e-05,
+            0,
+            16
+          ],
+          "nonlinear": [
+            0.435639948,
+            4.07170483e-05,
+            0.209366783,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "root": 1,
+      "status": [
+        {
+          "code": 10,
+          "object_index": 4,
+          "failing_index": 4294967295,
+          "completed_microsteps_at_certificate": 0,
+          "fgmres_iterations_microstep_max": 35,
+          "diagnostics": [
+            0.0362009034,
+            1.89235276e-08,
+            0,
+            -902
+          ]
+        }
+      ],
+      "fgmres": [
+        {
+          "diagnostics": [
+            3.45871172e-06,
+            0.0362009034,
+            1,
+            0
+          ],
+          "nonlinear": [
+            0.0374267735,
+            0.0362009034,
+            23.3950729,
+            0
+          ]
+        }
+      ]
+    }
+  ],
+  "work": [
+    {
+      "root": 0,
+      "used_columns_sum": 369,
+      "active_newton_begins": 16,
+      "budget_exhausted_solves": 1
+    },
+    {
+      "root": 1,
+      "used_columns_sum": 560,
+      "active_newton_begins": 16,
+      "budget_exhausted_solves": 0
+    }
+  ]
+}
