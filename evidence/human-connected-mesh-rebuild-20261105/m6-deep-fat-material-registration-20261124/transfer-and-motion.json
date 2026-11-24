@@ -1,0 +1,73 @@
+{
+  "device": "Apple M6",
+  "roles": {
+    "Skin": {
+      "nodes": 201942,
+      "changed_node_classifications": 0,
+      "elements": 707597,
+      "reintegrated_elements": 0,
+      "unchanged_proven_elements": 707597,
+      "inadmissible_label_rows": []
+    },
+    "Fat": {
+      "nodes": 230468,
+      "changed_node_classifications": 17,
+      "elements": 749716,
+      "reintegrated_elements": 14,
+      "unchanged_proven_elements": 749702,
+      "inadmissible_label_rows": []
+    }
+  },
+  "mass": {
+    "SKIN": {
+      "carriers": 48573,
+      "positive_connections": 2955897,
+      "mass_kg": 3.4525712828039024,
+      "max_cell_error_kg": 8.673617379884035e-19,
+      "max_carrier_error_kg": 0.0
+    },
+    "FAT": {
+      "carriers": 23066,
+      "positive_connections": 2032028,
+      "mass_kg": 10.487108427165252,
+      "max_cell_error_kg": 1.734723475976807e-18,
+      "max_carrier_error_kg": 0.0
+    }
+  },
+  "native_mass_replay_exit": 0,
+  "registered_surface_nodes": 17,
+  "native_cases": {
+    "native-reference-embedded": {
+      "execution": {
+        "exit": 0,
+        "wall_s": 176.1544262089301
+      },
+      "committed_steps": 1,
+      "physical_s": 7.81250037107e-06,
+      "bed_N": 46.97915460534758,
+      "launch_sha256": "17d6ac7b8b88a42d88eb7a65f0692f59dcc3fbee502af6e2c0c291fd7ef9af9e"
+    },
+    "native-reference-four": {
+      "execution": {
+        "exit": 1,
+        "wall_s": 213.88012570794672
+      },
+      "committed_steps": 1,
+      "physical_s": 7.81250037107e-06,
+      "bed_N": null,
+      "launch_sha256": "8db6fe8c6d6a7f6e49e4795332462dd02876e023850a330c12b9a0f4e19a4f5c",
+      "rejection": {
+        "segment_start": 1,
+        "matter_code": 10,
+        "matter_object_index": 4,
+        "matter_failing_index": 4294967295,
+        "matter_diagnostics": [
+          0.036221954971551895,
+          3.4875679943979776e-07,
+          0,
+          -902
+        ]
+      }
+    }
+  }
+}

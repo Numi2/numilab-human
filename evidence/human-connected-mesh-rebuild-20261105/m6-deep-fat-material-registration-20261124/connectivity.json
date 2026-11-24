@@ -1,0 +1,99 @@
+{
+  "total_material_components": 89,
+  "largest": {
+    "minimum_global_node": 0,
+    "nodes": 312811,
+    "tetrahedra": 1456022,
+    "mass_kg": 13.939679333371444,
+    "material_ids": [
+      15,
+      16
+    ],
+    "outer_skin": 76153,
+    "skin_fat_interface": 118397,
+    "deep_fat": 103256,
+    "cortical_surface": 3097,
+    "cortical_contact_facets": 2929,
+    "anatomical_attachment": 14,
+    "registered_bed_nodes": 10
+  },
+  "deep_fold_components": [
+    {
+      "minimum_global_node": 262154,
+      "nodes": 17,
+      "tetrahedra": 14,
+      "mass_kg": 2.0845514069684845e-09,
+      "material_ids": [
+        16
+      ],
+      "outer_skin": 0,
+      "skin_fat_interface": 0,
+      "deep_fat": 17,
+      "cortical_surface": 0,
+      "cortical_contact_facets": 0,
+      "anatomical_attachment": 0,
+      "registered_bed_nodes": 0
+    }
+  ],
+  "bed_components": [
+    {
+      "minimum_global_node": 0,
+      "nodes": 312811,
+      "tetrahedra": 1456022,
+      "mass_kg": 13.939679333371444,
+      "material_ids": [
+        15,
+        16
+      ],
+      "outer_skin": 76153,
+      "skin_fat_interface": 118397,
+      "deep_fat": 103256,
+      "cortical_surface": 3097,
+      "cortical_contact_facets": 2929,
+      "anatomical_attachment": 14,
+      "registered_bed_nodes": 10
+    }
+  ],
+  "total_mass_kg": 13.939679709969152,
+  "material_components_without_explicit_cortical_or_attachment_rows": 88,
+  "material_mass_without_those_rows_kg": 3.765978256123502e-07,
+  "nodes": 314013,
+  "tetrahedra": 1457313,
+  "reference": "0e2f5ed294f3fe9d6358f5da7f35c7bad51cdea019620bd66b00d8bf8b7ce42f",
+  "topology": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+  "scope": "Connected components of the conforming material node graph. Dynamic contacts, soft-tissue anchors outside this table, and nonconforming constraints can still couple separate components.",
+  "source_trace": {
+    "detached_cells": 1291,
+    "detached_labels": 27,
+    "labels_also_in_main": 27,
+    "labels_absent_from_main": [],
+    "detached_cells_with_label_in_main": 1291,
+    "mass_with_label_in_main_kg": 3.7659782561235026e-07,
+    "unmapped_source_labels": [
+      [
+        16,
+        23,
+        23,
+        2147483666
+      ]
+    ],
+    "detached_labels_with_parent_component_on_main": 26,
+    "distance_from_detached_vertex_to_nearest_main_deep_surface_vertex_m": {
+      "min": 2.563974180001222e-06,
+      "median": 0.0004198113255236064,
+      "max": 0.001460840470317075
+    },
+    "accepted_shape_failures": {
+      "skin": {
+        "total": 4,
+        "on_main_component": 4,
+        "detached_components": 0
+      },
+      "fat": {
+        "total": 27,
+        "on_main_component": 27,
+        "detached_components": 0
+      }
+    }
+  }
+}
