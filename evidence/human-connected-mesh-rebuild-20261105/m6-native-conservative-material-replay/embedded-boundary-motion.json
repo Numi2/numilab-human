@@ -1,0 +1,2515 @@
+{
+  "physical_parent_revision": "9188511519222dcfb21541377a751f8cbf006eb1",
+  "physical_parent_archive": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-coupled-material-witness-255efa11ae1a243c.tar.zst",
+  "interface_coverage": {
+    "native_import_sha256": "8be6de74226052d9a13985f0f7f09cee5ebdb174614db6c0f5a328f0dae7648a",
+    "elements_sha256": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+    "wall_sha256": "2807e59a2b486bfc5808e43b8d4db4f5378724b3baa64520ea9d5c2efe410f08",
+    "quality_sha256": "f63bcdb212ca87919027fd4a6e06ce0e7a99b87b568e6b1263cc1c739082e83a",
+    "nodes": 314013,
+    "material_wall_nodes": 300446,
+    "maximum_eliminable_interior_nodes": 13567,
+    "maximum_eliminable_fraction": 0.04320521761837886,
+    "maximum_coordinate_count_ratio": 1.0451562011143434,
+    "wall_node_counts": {
+      "O": 76153,
+      "I": 118397,
+      "D": 104432,
+      "C": 3097
+    },
+    "affected_cells_by_number_of_wall_vertices": {
+      "0": 0,
+      "1": 0,
+      "2": 1,
+      "3": 14,
+      "4": 16
+    },
+    "scope": "Coordinate count bound for exact interior elimination when all four registered material walls remain independent. This is neither a runtime bound nor a restriction on embedded wall quadrature."
+  },
+  "measured_embedding": {
+    "mesh": "58090ec759cea3133797c2950f5cd680992964ef125e6f182fa5646e49310d44",
+    "position": "803b457b6de572775a4208954c089500f057fac4c6593264380357df42d23336",
+    "capture": "0559400c2553ff47682e6254d0b9813a2136a413dc70191901bb33ef4ba1e1af",
+    "registrations": "f6bdbc02f75833294e23624ff6e6cafde512e0a3d9dada77979f64259f7b3491",
+    "source330": {
+      "source330_nodes": "a3137af6c8ddf3defe5f86c10140410a321fa0427257cc48f660dec562f751cc",
+      "source330_tets": "cc36e97adeb89c1df0ea5356dda3e6d36fb6afea8e091df7fca355cc5350385f"
+    },
+    "native_seconds": 7.81250037107e-06,
+    "source_parent_nodes": 7233,
+    "source_parents": 28632,
+    "registered_fine_nodes": 314013,
+    "rows_measured": 432410,
+    "prior_registration_error_quantiles_mm": [
+      2.622266645732944,
+      20.331145269856638,
+      61.787402629801065
+    ],
+    "bound_parent_displacement_m": 0.0343954849562912,
+    "unreconstructible_binding_rows": 11784,
+    "refitted_parent_tets_folded": 164,
+    "eligible_fine_rows_before_interface_protection": 130540,
+    "embedded_nodes": 122844,
+    "active_parent_nodes": 6532,
+    "control_node_count": 197701,
+    "coordinate_reduction_fraction": 0.37040504692480886,
+    "eligible_fraction": 0.39120673347918716,
+    "maximum_start_reconstruction_error_m": 3.638416147960553e-15,
+    "maximum_rigid_reproduction_error_m": 3.696503201363036e-15,
+    "test_moment_error_Nm": 7.964420245344885e-13,
+    "test_virtual_work_error_J": 8.526512829121202e-13,
+    "rms_nodal_displacement_error_m": 4.7705597050689745e-08,
+    "max_nodal_displacement_error_m": 2.2047729534701242e-05,
+    "incremental_strain_and_validity": {
+      "skin": {
+        "inverted": 2,
+        "below_shape": 12,
+        "relative_incremental_strain_error": 0.08174338468172818,
+        "rms_reference_incremental_strain": 0.0065594295062775,
+        "rms_incremental_strain_error": 0.0005361899694243201,
+        "regions": [
+          {
+            "region": 1,
+            "rms_reference": 2.062598394012068e-08,
+            "rms_error": 2.2112754128316234e-19
+          },
+          {
+            "region": 20,
+            "rms_reference": 0.0008575657377840111,
+            "rms_error": 6.036566748468052e-05
+          },
+          {
+            "region": 23,
+            "rms_reference": 1.5440691280001394e-09,
+            "rms_error": 6.386078441545776e-10
+          },
+          {
+            "region": 26,
+            "rms_reference": 1.0711121613022885e-11,
+            "rms_error": 2.5119558611609332e-20
+          },
+          {
+            "region": 29,
+            "rms_reference": 1.623187225753041e-10,
+            "rms_error": 1.7293394710773562e-10
+          },
+          {
+            "region": 34,
+            "rms_reference": 2.1594593097937763e-11,
+            "rms_error": 0.0
+          },
+          {
+            "region": 41,
+            "rms_reference": 0.001814539217730564,
+            "rms_error": 6.5537115914755e-10
+          },
+          {
+            "region": 42,
+            "rms_reference": 0.01526104591698013,
+            "rms_error": 0.0042189165925794105
+          },
+          {
+            "region": 43,
+            "rms_reference": 0.04476956888343421,
+            "rms_error": 0.0008092048304742982
+          },
+          {
+            "region": 46,
+            "rms_reference": 0.002158210081193249,
+            "rms_error": 0.00040083319693493225
+          },
+          {
+            "region": 48,
+            "rms_reference": 2.1827120875886902e-06,
+            "rms_error": 0.00014670196849465218
+          },
+          {
+            "region": 49,
+            "rms_reference": 1.3279178945873321e-05,
+            "rms_error": 0.0001025166809805349
+          },
+          {
+            "region": 52,
+            "rms_reference": 1.2373804035278966e-05,
+            "rms_error": 1.7456184548128238e-05
+          },
+          {
+            "region": 53,
+            "rms_reference": 4.1313971289852566e-05,
+            "rms_error": 3.0740617702261654e-06
+          },
+          {
+            "region": 54,
+            "rms_reference": 4.4303519411669755e-05,
+            "rms_error": 6.363742327434874e-06
+          },
+          {
+            "region": 56,
+            "rms_reference": 4.519411358204064e-07,
+            "rms_error": 0.0
+          },
+          {
+            "region": 57,
+            "rms_reference": 2.4622821323527848e-08,
+            "rms_error": 7.481261088068141e-21
+          },
+          {
+            "region": 59,
+            "rms_reference": 5.251649934334251e-05,
+            "rms_error": 2.6708183073621844e-05
+          },
+          {
+            "region": 60,
+            "rms_reference": 4.8735497140017975e-05,
+            "rms_error": 2.447950566029637e-19
+          },
+          {
+            "region": 61,
+            "rms_reference": 3.673582444905442e-06,
+            "rms_error": 1.0621795987524457e-08
+          },
+          {
+            "region": 62,
+            "rms_reference": 4.3724209432400455e-05,
+            "rms_error": 4.247295384515261e-06
+          },
+          {
+            "region": 64,
+            "rms_reference": 0.0001413893187963214,
+            "rms_error": 9.030662631911206e-06
+          },
+          {
+            "region": 65,
+            "rms_reference": 0.00021000819589002363,
+            "rms_error": 8.416655984983653e-05
+          },
+          {
+            "region": 66,
+            "rms_reference": 4.511755842124427e-05,
+            "rms_error": 3.737012842465408e-05
+          },
+          {
+            "region": 69,
+            "rms_reference": 7.515589424258026e-05,
+            "rms_error": 3.102816953361968e-05
+          },
+          {
+            "region": 70,
+            "rms_reference": 0.0003238286380026913,
+            "rms_error": 2.5046552290414907e-07
+          },
+          {
+            "region": 71,
+            "rms_reference": 3.223052101048481e-05,
+            "rms_error": 3.781869972064717e-07
+          },
+          {
+            "region": 72,
+            "rms_reference": 5.465517510357973e-07,
+            "rms_error": 3.1195759463149516e-05
+          },
+          {
+            "region": 74,
+            "rms_reference": 1.4050475865185804e-08,
+            "rms_error": 6.344790952901058e-08
+          },
+          {
+            "region": 75,
+            "rms_reference": 1.993767280179003e-05,
+            "rms_error": 5.406920648596803e-08
+          },
+          {
+            "region": 76,
+            "rms_reference": 0.0001426939050122351,
+            "rms_error": 4.9968720724556363e-05
+          },
+          {
+            "region": 79,
+            "rms_reference": 2.9583658504707885e-09,
+            "rms_error": 0.0
+          },
+          {
+            "region": 84,
+            "rms_reference": 9.390655770089498e-10,
+            "rms_error": 1.7277034624693822e-10
+          },
+          {
+            "region": 91,
+            "rms_reference": 0.0003179739148131884,
+            "rms_error": 1.9404715868574748e-10
+          },
+          {
+            "region": 92,
+            "rms_reference": 0.016510451187797575,
+            "rms_error": 2.1150889360724166e-15
+          },
+          {
+            "region": 93,
+            "rms_reference": 0.0035547312236503003,
+            "rms_error": 4.536240615052704e-05
+          },
+          {
+            "region": 95,
+            "rms_reference": 0.00020496534454306095,
+            "rms_error": 1.4963455573931585e-05
+          },
+          {
+            "region": 97,
+            "rms_reference": 0.0006904988213860599,
+            "rms_error": 7.4679432194248974e-06
+          },
+          {
+            "region": 98,
+            "rms_reference": 0.0005294148630474094,
+            "rms_error": 6.8322855852168086e-15
+          },
+          {
+            "region": 99,
+            "rms_reference": 1.5546988333588513e-05,
+            "rms_error": 1.5609809263772567e-05
+          },
+          {
+            "region": 100,
+            "rms_reference": 5.2793064178366385e-06,
+            "rms_error": 8.861010108984078e-07
+          },
+          {
+            "region": 102,
+            "rms_reference": 9.346962674764938e-07,
+            "rms_error": 1.6244982754885532e-06
+          },
+          {
+            "region": 103,
+            "rms_reference": 2.026331754352179e-08,
+            "rms_error": 1.4266441894596642e-07
+          },
+          {
+            "region": 104,
+            "rms_reference": 4.461724530877265e-09,
+            "rms_error": 1.2521923902015315e-09
+          },
+          {
+            "region": 107,
+            "rms_reference": 1.570680712467126e-05,
+            "rms_error": 7.0624706486777856e-06
+          },
+          {
+            "region": 109,
+            "rms_reference": 0.00010792288537145103,
+            "rms_error": 8.586692048751746e-05
+          },
+          {
+            "region": 111,
+            "rms_reference": 0.00012343939683352365,
+            "rms_error": 1.0128388830664591e-05
+          },
+          {
+            "region": 112,
+            "rms_reference": 6.3916608658694556e-06,
+            "rms_error": 1.3860973266964114e-07
+          },
+          {
+            "region": 114,
+            "rms_reference": 0.00018155336588308933,
+            "rms_error": 0.00015367661362690336
+          },
+          {
+            "region": 115,
+            "rms_reference": 8.645917008447125e-05,
+            "rms_error": 2.7198305306445187e-05
+          },
+          {
+            "region": 116,
+            "rms_reference": 6.530946750206463e-05,
+            "rms_error": 2.8454885137529893e-05
+          },
+          {
+            "region": 119,
+            "rms_reference": 5.686769840808027e-06,
+            "rms_error": 2.3146378788870995e-06
+          },
+          {
+            "region": 120,
+            "rms_reference": 0.00029116733932573846,
+            "rms_error": 5.99688362720245e-06
+          },
+          {
+            "region": 121,
+            "rms_reference": 2.891184236294872e-06,
+            "rms_error": 4.450845201922349e-07
+          },
+          {
+            "region": 122,
+            "rms_reference": 2.525601290369121e-06,
+            "rms_error": 2.208319298620012e-07
+          },
+          {
+            "region": 124,
+            "rms_reference": 0.0001600395185039728,
+            "rms_error": 2.4979249233309812e-06
+          },
+          {
+            "region": 125,
+            "rms_reference": 0.00017863129702893867,
+            "rms_error": 1.8334063045868593e-06
+          },
+          {
+            "region": 126,
+            "rms_reference": 4.770336163205014e-06,
+            "rms_error": 1.9655634015044072e-19
+          },
+          {
+            "region": 128,
+            "rms_reference": 0.0007959309180512467,
+            "rms_error": 1.5776628008005492e-05
+          },
+          {
+            "region": 131,
+            "rms_reference": 4.058488723444943e-11,
+            "rms_error": 4.172132380266663e-20
+          },
+          {
+            "region": 136,
+            "rms_reference": 2.0729098181970924e-13,
+            "rms_error": 4.0920810595219334e-18
+          },
+          {
+            "region": 138,
+            "rms_reference": 2.5695490779795255e-12,
+            "rms_error": 7.46516342845005e-12
+          },
+          {
+            "region": 139,
+            "rms_reference": 5.697153262970952e-10,
+            "rms_error": 1.0849373953308245e-09
+          },
+          {
+            "region": 142,
+            "rms_reference": 3.8042225552144053e-13,
+            "rms_error": 1.4372594615438056e-15
+          },
+          {
+            "region": 145,
+            "rms_reference": 9.931208030056804e-12,
+            "rms_error": 7.84717183592852e-20
+          },
+          {
+            "region": 150,
+            "rms_reference": 1.1848836211882225e-12,
+            "rms_error": 2.8982590660989e-12
+          },
+          {
+            "region": 152,
+            "rms_reference": 3.990965677151336e-12,
+            "rms_error": 1.1932798943078159e-11
+          },
+          {
+            "region": 153,
+            "rms_reference": 1.5273648056540548e-09,
+            "rms_error": 6.649857646539757e-09
+          },
+          {
+            "region": 156,
+            "rms_reference": 6.549635437070511e-13,
+            "rms_error": 1.5261112837756287e-19
+          }
+        ]
+      },
+      "fat": {
+        "inverted": 13,
+        "below_shape": 48,
+        "relative_incremental_strain_error": 0.24370244885795025,
+        "rms_reference_incremental_strain": 0.0010267444005104581,
+        "rms_incremental_strain_error": 0.0002502201247555867,
+        "regions": [
+          {
+            "region": 1,
+            "rms_reference": 3.6017266749256033e-09,
+            "rms_error": 6.851014615817808e-20
+          },
+          {
+            "region": 4,
+            "rms_reference": 6.594513470006974e-08,
+            "rms_error": 0.0
+          },
+          {
+            "region": 20,
+            "rms_reference": 0.00015232966628620832,
+            "rms_error": 8.873322184503286e-05
+          },
+          {
+            "region": 23,
+            "rms_reference": 1.616680494195378e-07,
+            "rms_error": 6.307123482566183e-08
+          },
+          {
+            "region": 26,
+            "rms_reference": 3.1238811620126805e-10,
+            "rms_error": 3.3825271592904516e-10
+          },
+          {
+            "region": 29,
+            "rms_reference": 8.521845233174027e-10,
+            "rms_error": 7.202885687413406e-10
+          },
+          {
+            "region": 34,
+            "rms_reference": 1.371400129949547e-11,
+            "rms_error": 0.0
+          },
+          {
+            "region": 41,
+            "rms_reference": 0.00010692751714820958,
+            "rms_error": 1.8593471161961172e-10
+          },
+          {
+            "region": 42,
+            "rms_reference": 0.009235440952923632,
+            "rms_error": 0.0017890460102060178
+          },
+          {
+            "region": 43,
+            "rms_reference": 0.0016016997384859647,
+            "rms_error": 0.0013464961442219401
+          },
+          {
+            "region": 46,
+            "rms_reference": 0.0003064682273945669,
+            "rms_error": 3.9097520652291505e-05
+          },
+          {
+            "region": 48,
+            "rms_reference": 1.164393679033258e-06,
+            "rms_error": 0.0006128343462896955
+          },
+          {
+            "region": 49,
+            "rms_reference": 5.743119735117627e-05,
+            "rms_error": 6.150529060651794e-05
+          },
+          {
+            "region": 52,
+            "rms_reference": 7.526601156993269e-06,
+            "rms_error": 1.4110133718976088e-05
+          },
+          {
+            "region": 53,
+            "rms_reference": 1.3170153090137929e-05,
+            "rms_error": 1.1809734615082858e-06
+          },
+          {
+            "region": 54,
+            "rms_reference": 2.650010551173326e-05,
+            "rms_error": 1.5100924589596012e-06
+          },
+          {
+            "region": 56,
+            "rms_reference": 2.137920538093493e-06,
+            "rms_error": 8.708476600481966e-06
+          },
+          {
+            "region": 57,
+            "rms_reference": 6.31945141544409e-08,
+            "rms_error": 1.8434835014351552e-11
+          },
+          {
+            "region": 59,
+            "rms_reference": 6.399890597807296e-05,
+            "rms_error": 2.5565528198293003e-05
+          },
+          {
+            "region": 60,
+            "rms_reference": 1.084346540268091e-05,
+            "rms_error": 7.156254378426616e-19
+          },
+          {
+            "region": 61,
+            "rms_reference": 1.50802998931014e-06,
+            "rms_error": 7.384761761539903e-09
+          },
+          {
+            "region": 62,
+            "rms_reference": 7.035977818098404e-05,
+            "rms_error": 1.4274144808072633e-05
+          },
+          {
+            "region": 64,
+            "rms_reference": 0.00014700951452780911,
+            "rms_error": 5.780270625193427e-06
+          },
+          {
+            "region": 65,
+            "rms_reference": 0.00022029984161554513,
+            "rms_error": 6.722913184556573e-05
+          },
+          {
+            "region": 66,
+            "rms_reference": 7.539129879072751e-05,
+            "rms_error": 5.127994835601975e-05
+          },
+          {
+            "region": 69,
+            "rms_reference": 0.0001309623738421687,
+            "rms_error": 2.9349878945681706e-05
+          },
+          {
+            "region": 70,
+            "rms_reference": 0.000192483174000375,
+            "rms_error": 2.7331699338378445e-07
+          },
+          {
+            "region": 71,
+            "rms_reference": 5.3793502543048873e-05,
+            "rms_error": 4.2986250393398274e-05
+          },
+          {
+            "region": 72,
+            "rms_reference": 1.2065936714229534e-07,
+            "rms_error": 3.6025688591309564e-05
+          },
+          {
+            "region": 74,
+            "rms_reference": 1.414671638987603e-07,
+            "rms_error": 1.821781671291234e-07
+          },
+          {
+            "region": 75,
+            "rms_reference": 3.2908533226815303e-06,
+            "rms_error": 8.918660593632271e-08
+          },
+          {
+            "region": 76,
+            "rms_reference": 0.0003416581505405173,
+            "rms_error": 9.035811406132294e-07
+          },
+          {
+            "region": 79,
+            "rms_reference": 0.0008977130924321413,
+            "rms_error": 3.273213264393275e-08
+          },
+          {
+            "region": 84,
+            "rms_reference": 3.1593228231016375e-10,
+            "rms_error": 5.0446997484549326e-11
+          },
+          {
+            "region": 91,
+            "rms_reference": 9.55603079845765e-05,
+            "rms_error": 4.3581352602220914e-06
+          },
+          {
+            "region": 92,
+            "rms_reference": 0.0023139617099288416,
+            "rms_error": 1.462802330682655e-16
+          },
+          {
+            "region": 93,
+            "rms_reference": 0.0008334130290751025,
+            "rms_error": 3.0303469030324295e-05
+          },
+          {
+            "region": 95,
+            "rms_reference": 6.938859308865715e-05,
+            "rms_error": 2.354283419024668e-05
+          },
+          {
+            "region": 97,
+            "rms_reference": 1.6011834562430193e-05,
+            "rms_error": 1.653527134934373e-05
+          },
+          {
+            "region": 98,
+            "rms_reference": 0.00012494783204258423,
+            "rms_error": 1.704702838867931e-05
+          },
+          {
+            "region": 99,
+            "rms_reference": 5.7122316113062114e-06,
+            "rms_error": 4.930683201576759e-06
+          },
+          {
+            "region": 100,
+            "rms_reference": 3.4974054389659234e-05,
+            "rms_error": 1.0967872872749968e-05
+          },
+          {
+            "region": 102,
+            "rms_reference": 1.687756118948948e-06,
+            "rms_error": 1.2683916066581281e-06
+          },
+          {
+            "region": 103,
+            "rms_reference": 3.033244178280655e-10,
+            "rms_error": 1.741126099159084e-08
+          },
+          {
+            "region": 104,
+            "rms_reference": 2.5671675170980457e-10,
+            "rms_error": 1.2082910326798307e-09
+          },
+          {
+            "region": 107,
+            "rms_reference": 2.5207216456238788e-05,
+            "rms_error": 8.06239763575917e-06
+          },
+          {
+            "region": 109,
+            "rms_reference": 8.670680659125385e-05,
+            "rms_error": 3.86768623516107e-05
+          },
+          {
+            "region": 111,
+            "rms_reference": 8.539558926754413e-05,
+            "rms_error": 4.097102245715236e-06
+          },
+          {
+            "region": 112,
+            "rms_reference": 5.9147883069209826e-06,
+            "rms_error": 4.38618747434667e-07
+          },
+          {
+            "region": 114,
+            "rms_reference": 7.166465793444823e-05,
+            "rms_error": 2.7594799080670723e-06
+          },
+          {
+            "region": 115,
+            "rms_reference": 0.00012963354082470084,
+            "rms_error": 9.260429062920408e-05
+          },
+          {
+            "region": 116,
+            "rms_reference": 0.00019674546605300084,
+            "rms_error": 0.0001588897309178511
+          },
+          {
+            "region": 119,
+            "rms_reference": 3.1773074547850765e-06,
+            "rms_error": 5.922896029043654e-07
+          },
+          {
+            "region": 120,
+            "rms_reference": 0.00020705992403113744,
+            "rms_error": 2.2447776047443403e-05
+          },
+          {
+            "region": 121,
+            "rms_reference": 5.127347813836475e-07,
+            "rms_error": 7.468431046608538e-07
+          },
+          {
+            "region": 122,
+            "rms_reference": 1.142472654780263e-06,
+            "rms_error": 2.4381337866478363e-07
+          },
+          {
+            "region": 124,
+            "rms_reference": 0.00021477987522706632,
+            "rms_error": 3.2605890834077575e-06
+          },
+          {
+            "region": 125,
+            "rms_reference": 0.00010388504351578577,
+            "rms_error": 6.23174265553486e-08
+          },
+          {
+            "region": 126,
+            "rms_reference": 1.3371459268941563e-05,
+            "rms_error": 3.597782373581142e-19
+          },
+          {
+            "region": 128,
+            "rms_reference": 0.00012442316976628653,
+            "rms_error": 5.712233321976144e-05
+          },
+          {
+            "region": 131,
+            "rms_reference": 3.7192085640095536e-11,
+            "rms_error": 6.09962910588718e-21
+          },
+          {
+            "region": 136,
+            "rms_reference": 5.344265658298381e-13,
+            "rms_error": 2.0511315763959527e-13
+          },
+          {
+            "region": 138,
+            "rms_reference": 4.84158170067823e-10,
+            "rms_error": 1.573694392851798e-10
+          },
+          {
+            "region": 139,
+            "rms_reference": 2.277971108514196e-09,
+            "rms_error": 2.804403577636326e-10
+          },
+          {
+            "region": 142,
+            "rms_reference": 4.765225393412556e-12,
+            "rms_error": 1.7893669102868558e-12
+          },
+          {
+            "region": 145,
+            "rms_reference": 4.3579006233377935e-13,
+            "rms_error": 3.4315379567020427e-20
+          },
+          {
+            "region": 150,
+            "rms_reference": 8.288975785049186e-09,
+            "rms_error": 1.1430694210933007e-08
+          },
+          {
+            "region": 152,
+            "rms_reference": 8.866061092239794e-11,
+            "rms_error": 3.048642915888208e-10
+          },
+          {
+            "region": 153,
+            "rms_reference": 2.78186069570425e-09,
+            "rms_error": 3.5457547044604564e-09
+          },
+          {
+            "region": 156,
+            "rms_reference": 9.451266288349264e-13,
+            "rms_error": 7.172413120360143e-13
+          }
+        ]
+      }
+    },
+    "admit": false,
+    "scope": "Authoring-side displacement-fit diagnostic on one accepted full-order frame; source-body ancestry, regional ownership and all retained material boundaries use the registered scene. Material inverse mass and dynamic tangent are not substituted by this test. No sustained or reduced native throughput is measured.",
+    "refined": {
+      "promotions": [
+        {
+          "sweep": 1,
+          "reason": "strain or material validity",
+          "promoted_nodes": 12337,
+          "remaining_embedded": 110507
+        },
+        {
+          "sweep": 2,
+          "reason": "strain or material validity",
+          "promoted_nodes": 1385,
+          "remaining_embedded": 109122
+        },
+        {
+          "sweep": 3,
+          "reason": "strain or material validity",
+          "promoted_nodes": 445,
+          "remaining_embedded": 108677
+        },
+        {
+          "sweep": 4,
+          "reason": "strain or material validity",
+          "promoted_nodes": 148,
+          "remaining_embedded": 108529
+        },
+        {
+          "sweep": 5,
+          "reason": "strain or material validity",
+          "promoted_nodes": 66,
+          "remaining_embedded": 108463
+        },
+        {
+          "sweep": 6,
+          "reason": "strain or material validity",
+          "promoted_nodes": 10,
+          "remaining_embedded": 108453
+        },
+        {
+          "sweep": 7,
+          "reason": "strain or material validity",
+          "promoted_nodes": 7,
+          "remaining_embedded": 108446
+        },
+        {
+          "sweep": 8,
+          "reason": "strain or material validity",
+          "promoted_nodes": 5,
+          "remaining_embedded": 108441
+        },
+        {
+          "sweep": 9,
+          "reason": "strain or material validity",
+          "promoted_nodes": 2,
+          "remaining_embedded": 108439
+        },
+        {
+          "sweep": 10,
+          "reason": "strain or material validity",
+          "promoted_nodes": 3,
+          "remaining_embedded": 108436
+        },
+        {
+          "sweep": 11,
+          "reason": "projected mass rank",
+          "promoted_nodes": 1668,
+          "remaining_embedded": 106768
+        },
+        {
+          "sweep": 12,
+          "reason": "projected mass rank",
+          "promoted_nodes": 857,
+          "remaining_embedded": 105911
+        },
+        {
+          "sweep": 13,
+          "reason": "projected mass rank",
+          "promoted_nodes": 375,
+          "remaining_embedded": 105536
+        },
+        {
+          "sweep": 14,
+          "reason": "projected mass rank",
+          "promoted_nodes": 153,
+          "remaining_embedded": 105383
+        },
+        {
+          "sweep": 15,
+          "reason": "projected mass rank",
+          "promoted_nodes": 96,
+          "remaining_embedded": 105287
+        },
+        {
+          "sweep": 16,
+          "reason": "projected mass rank",
+          "promoted_nodes": 57,
+          "remaining_embedded": 105230
+        },
+        {
+          "sweep": 17,
+          "reason": "projected mass rank",
+          "promoted_nodes": 54,
+          "remaining_embedded": 105176
+        },
+        {
+          "sweep": 18,
+          "reason": "projected mass rank",
+          "promoted_nodes": 40,
+          "remaining_embedded": 105136
+        },
+        {
+          "sweep": 19,
+          "reason": "projected mass rank",
+          "promoted_nodes": 34,
+          "remaining_embedded": 105102
+        },
+        {
+          "sweep": 20,
+          "reason": "projected mass rank",
+          "promoted_nodes": 16,
+          "remaining_embedded": 105086
+        },
+        {
+          "sweep": 21,
+          "reason": "projected mass rank",
+          "promoted_nodes": 10,
+          "remaining_embedded": 105076
+        },
+        {
+          "sweep": 22,
+          "reason": "projected mass rank",
+          "promoted_nodes": 7,
+          "remaining_embedded": 105069
+        },
+        {
+          "sweep": 23,
+          "reason": "projected mass rank",
+          "promoted_nodes": 6,
+          "remaining_embedded": 105063
+        },
+        {
+          "sweep": 24,
+          "reason": "projected mass rank",
+          "promoted_nodes": 3,
+          "remaining_embedded": 105060
+        },
+        {
+          "sweep": 25,
+          "reason": "projected mass rank",
+          "promoted_nodes": 5,
+          "remaining_embedded": 105055
+        },
+        {
+          "sweep": 26,
+          "reason": "projected mass rank",
+          "promoted_nodes": 6,
+          "remaining_embedded": 105049
+        },
+        {
+          "sweep": 27,
+          "reason": "projected mass rank",
+          "promoted_nodes": 7,
+          "remaining_embedded": 105042
+        },
+        {
+          "sweep": 28,
+          "reason": "projected mass rank",
+          "promoted_nodes": 5,
+          "remaining_embedded": 105037
+        },
+        {
+          "sweep": 29,
+          "reason": "projected mass rank",
+          "promoted_nodes": 2,
+          "remaining_embedded": 105035
+        },
+        {
+          "sweep": 30,
+          "reason": "projected mass rank",
+          "promoted_nodes": 7,
+          "remaining_embedded": 105028
+        },
+        {
+          "sweep": 31,
+          "reason": "projected mass rank",
+          "promoted_nodes": 7,
+          "remaining_embedded": 105021
+        },
+        {
+          "sweep": 32,
+          "reason": "projected mass rank",
+          "promoted_nodes": 4,
+          "remaining_embedded": 105017
+        },
+        {
+          "sweep": 33,
+          "reason": "projected mass rank",
+          "promoted_nodes": 5,
+          "remaining_embedded": 105012
+        },
+        {
+          "sweep": 34,
+          "reason": "projected mass rank",
+          "promoted_nodes": 5,
+          "remaining_embedded": 105007
+        },
+        {
+          "sweep": 35,
+          "reason": "projected mass rank",
+          "promoted_nodes": 3,
+          "remaining_embedded": 105004
+        },
+        {
+          "sweep": 36,
+          "reason": "projected mass rank",
+          "promoted_nodes": 2,
+          "remaining_embedded": 105002
+        },
+        {
+          "sweep": 37,
+          "reason": "projected mass rank",
+          "promoted_nodes": 5,
+          "remaining_embedded": 104997
+        },
+        {
+          "sweep": 38,
+          "reason": "projected mass rank",
+          "promoted_nodes": 4,
+          "remaining_embedded": 104993
+        },
+        {
+          "sweep": 39,
+          "reason": "projected mass rank",
+          "promoted_nodes": 1,
+          "remaining_embedded": 104992
+        },
+        {
+          "sweep": 40,
+          "reason": "projected mass rank",
+          "promoted_nodes": 2,
+          "remaining_embedded": 104990
+        },
+        {
+          "sweep": 41,
+          "reason": "projected mass rank",
+          "promoted_nodes": 25,
+          "remaining_embedded": 104965
+        }
+      ],
+      "minimum_equilibrated_mass_LU_pivot": 8.962652509048041e-09,
+      "passes_mass_pivot_check": true,
+      "embedded_nodes": 104965,
+      "independent_nodes": 210789,
+      "reduced_coordinate_fraction": 0.32872524385933066,
+      "projected_mass_relative_rigid_inertia_error": 1.7964243916455477e-14,
+      "maximum_reference_reconstruction_error_m": 3.638416147960553e-15,
+      "projected_mass_kg": 13.93967970996915,
+      "source_mass_kg": 13.93967970996915,
+      "sparse_matrix": "09160f77d58360b9adb2b39874e8f99f911ba46c4e9ad6159bc4900b4938b086",
+      "control_order": "Referenced source-parent nodes in ascending order, followed by retained current fine nodes in ascending order.",
+      "incremental_strain_and_validity": {
+        "skin": {
+          "inverted": 0,
+          "below_shape": 4,
+          "relative_incremental_strain_error": 0.010285936005735312,
+          "rms_reference_incremental_strain": 0.0065594295062775,
+          "rms_incremental_strain_error": 6.746987213570235e-05,
+          "regions": [
+            {
+              "region": 1,
+              "rms_reference": 2.062598394012068e-08,
+              "rms_error": 0.0
+            },
+            {
+              "region": 20,
+              "rms_reference": 0.0008575657377840111,
+              "rms_error": 2.4236145682073155e-05
+            },
+            {
+              "region": 23,
+              "rms_reference": 1.5440691280001394e-09,
+              "rms_error": 6.40151751048959e-11
+            },
+            {
+              "region": 26,
+              "rms_reference": 1.0711121613022885e-11,
+              "rms_error": 0.0
+            },
+            {
+              "region": 29,
+              "rms_reference": 1.623187225753041e-10,
+              "rms_error": 4.784220928763684e-12
+            },
+            {
+              "region": 34,
+              "rms_reference": 2.1594593097937763e-11,
+              "rms_error": 0.0
+            },
+            {
+              "region": 41,
+              "rms_reference": 0.001814539217730564,
+              "rms_error": 6.553711591475757e-10
+            },
+            {
+              "region": 42,
+              "rms_reference": 0.01526104591698013,
+              "rms_error": 0.000424130993588491
+            },
+            {
+              "region": 43,
+              "rms_reference": 0.04476956888343421,
+              "rms_error": 0.0002921502915424958
+            },
+            {
+              "region": 46,
+              "rms_reference": 0.002158210081193249,
+              "rms_error": 4.3620741816928996e-05
+            },
+            {
+              "region": 48,
+              "rms_reference": 2.1827120875886902e-06,
+              "rms_error": 0.0
+            },
+            {
+              "region": 49,
+              "rms_reference": 1.3279178945873321e-05,
+              "rms_error": 3.447103952838937e-07
+            },
+            {
+              "region": 52,
+              "rms_reference": 1.2373804035278966e-05,
+              "rms_error": 3.716712761049294e-07
+            },
+            {
+              "region": 53,
+              "rms_reference": 4.1313971289852566e-05,
+              "rms_error": 1.2658670092968934e-06
+            },
+            {
+              "region": 54,
+              "rms_reference": 4.4303519411669755e-05,
+              "rms_error": 8.15526604683809e-07
+            },
+            {
+              "region": 56,
+              "rms_reference": 4.519411358204064e-07,
+              "rms_error": 0.0
+            },
+            {
+              "region": 57,
+              "rms_reference": 2.4622821323527848e-08,
+              "rms_error": 7.481261088068141e-21
+            },
+            {
+              "region": 59,
+              "rms_reference": 5.251649934334251e-05,
+              "rms_error": 2.5271245921662143e-06
+            },
+            {
+              "region": 60,
+              "rms_reference": 4.8735497140017975e-05,
+              "rms_error": 0.0
+            },
+            {
+              "region": 61,
+              "rms_reference": 3.673582444905442e-06,
+              "rms_error": 1.0621795987524566e-08
+            },
+            {
+              "region": 62,
+              "rms_reference": 4.3724209432400455e-05,
+              "rms_error": 1.4155075286092537e-06
+            },
+            {
+              "region": 64,
+              "rms_reference": 0.0001413893187963214,
+              "rms_error": 4.743900306049886e-06
+            },
+            {
+              "region": 65,
+              "rms_reference": 0.00021000819589002363,
+              "rms_error": 5.4106562426469045e-06
+            },
+            {
+              "region": 66,
+              "rms_reference": 4.511755842124427e-05,
+              "rms_error": 1.1073121202969612e-06
+            },
+            {
+              "region": 69,
+              "rms_reference": 7.515589424258026e-05,
+              "rms_error": 2.6144842823401935e-06
+            },
+            {
+              "region": 70,
+              "rms_reference": 0.0003238286380026913,
+              "rms_error": 2.5046552290414907e-07
+            },
+            {
+              "region": 71,
+              "rms_reference": 3.223052101048481e-05,
+              "rms_error": 3.781869972064717e-07
+            },
+            {
+              "region": 72,
+              "rms_reference": 5.465517510357973e-07,
+              "rms_error": 4.785882971722073e-09
+            },
+            {
+              "region": 74,
+              "rms_reference": 1.4050475865185804e-08,
+              "rms_error": 4.1160335320954214e-10
+            },
+            {
+              "region": 75,
+              "rms_reference": 1.993767280179003e-05,
+              "rms_error": 5.406920648596803e-08
+            },
+            {
+              "region": 76,
+              "rms_reference": 0.0001426939050122351,
+              "rms_error": 1.6007728472555397e-06
+            },
+            {
+              "region": 79,
+              "rms_reference": 2.9583658504707885e-09,
+              "rms_error": 0.0
+            },
+            {
+              "region": 84,
+              "rms_reference": 9.390655770089498e-10,
+              "rms_error": 1.2225582099145408e-11
+            },
+            {
+              "region": 91,
+              "rms_reference": 0.0003179739148131884,
+              "rms_error": 1.9404715868574642e-10
+            },
+            {
+              "region": 92,
+              "rms_reference": 0.016510451187797575,
+              "rms_error": 0.0
+            },
+            {
+              "region": 93,
+              "rms_reference": 0.0035547312236503003,
+              "rms_error": 4.679370367085984e-05
+            },
+            {
+              "region": 95,
+              "rms_reference": 0.00020496534454306095,
+              "rms_error": 6.413445806503401e-06
+            },
+            {
+              "region": 97,
+              "rms_reference": 0.0006904988213860599,
+              "rms_error": 1.9209230271252333e-06
+            },
+            {
+              "region": 98,
+              "rms_reference": 0.0005294148630474094,
+              "rms_error": 6.8306987440245e-15
+            },
+            {
+              "region": 99,
+              "rms_reference": 1.5546988333588513e-05,
+              "rms_error": 6.149184418333109e-07
+            },
+            {
+              "region": 100,
+              "rms_reference": 5.2793064178366385e-06,
+              "rms_error": 1.5831829930934223e-07
+            },
+            {
+              "region": 102,
+              "rms_reference": 9.346962674764938e-07,
+              "rms_error": 3.5122079009829676e-08
+            },
+            {
+              "region": 103,
+              "rms_reference": 2.026331754352179e-08,
+              "rms_error": 5.2601408030052056e-11
+            },
+            {
+              "region": 104,
+              "rms_reference": 4.461724530877265e-09,
+              "rms_error": 1.1684188519576292e-10
+            },
+            {
+              "region": 107,
+              "rms_reference": 1.570680712467126e-05,
+              "rms_error": 7.66114333619295e-07
+            },
+            {
+              "region": 109,
+              "rms_reference": 0.00010792288537145103,
+              "rms_error": 2.4557953731511343e-06
+            },
+            {
+              "region": 111,
+              "rms_reference": 0.00012343939683352365,
+              "rms_error": 2.7589559874753992e-06
+            },
+            {
+              "region": 112,
+              "rms_reference": 6.3916608658694556e-06,
+              "rms_error": 1.3513163273055145e-07
+            },
+            {
+              "region": 114,
+              "rms_reference": 0.00018155336588308933,
+              "rms_error": 5.183147437802465e-06
+            },
+            {
+              "region": 115,
+              "rms_reference": 8.645917008447125e-05,
+              "rms_error": 2.2130839814873966e-06
+            },
+            {
+              "region": 116,
+              "rms_reference": 6.530946750206463e-05,
+              "rms_error": 1.546433955555426e-06
+            },
+            {
+              "region": 119,
+              "rms_reference": 5.686769840808027e-06,
+              "rms_error": 7.155713124316338e-08
+            },
+            {
+              "region": 120,
+              "rms_reference": 0.00029116733932573846,
+              "rms_error": 5.99688362720245e-06
+            },
+            {
+              "region": 121,
+              "rms_reference": 2.891184236294872e-06,
+              "rms_error": 8.349697854385318e-08
+            },
+            {
+              "region": 122,
+              "rms_reference": 2.525601290369121e-06,
+              "rms_error": 1.1883048833718415e-07
+            },
+            {
+              "region": 124,
+              "rms_reference": 0.0001600395185039728,
+              "rms_error": 2.4979249233309812e-06
+            },
+            {
+              "region": 125,
+              "rms_reference": 0.00017863129702893867,
+              "rms_error": 1.8334063045868593e-06
+            },
+            {
+              "region": 126,
+              "rms_reference": 4.770336163205014e-06,
+              "rms_error": 0.0
+            },
+            {
+              "region": 128,
+              "rms_reference": 0.0007959309180512467,
+              "rms_error": 1.488306458931304e-05
+            },
+            {
+              "region": 131,
+              "rms_reference": 4.058488723444943e-11,
+              "rms_error": 0.0
+            },
+            {
+              "region": 136,
+              "rms_reference": 2.0729098181970924e-13,
+              "rms_error": 0.0
+            },
+            {
+              "region": 138,
+              "rms_reference": 2.5695490779795255e-12,
+              "rms_error": 9.868115511040596e-14
+            },
+            {
+              "region": 139,
+              "rms_reference": 5.697153262970952e-10,
+              "rms_error": 1.834613335369051e-11
+            },
+            {
+              "region": 142,
+              "rms_reference": 3.8042225552144053e-13,
+              "rms_error": 0.0
+            },
+            {
+              "region": 145,
+              "rms_reference": 9.931208030056804e-12,
+              "rms_error": 0.0
+            },
+            {
+              "region": 150,
+              "rms_reference": 1.1848836211882225e-12,
+              "rms_error": 4.371758530973118e-14
+            },
+            {
+              "region": 152,
+              "rms_reference": 3.990965677151336e-12,
+              "rms_error": 1.14262451489056e-13
+            },
+            {
+              "region": 153,
+              "rms_reference": 1.5273648056540548e-09,
+              "rms_error": 5.993222586103937e-11
+            },
+            {
+              "region": 156,
+              "rms_reference": 6.549635437070511e-13,
+              "rms_error": 0.0
+            }
+          ]
+        },
+        "fat": {
+          "inverted": 0,
+          "below_shape": 26,
+          "relative_incremental_strain_error": 0.02045975381895932,
+          "rms_reference_incremental_strain": 0.0010267444005104581,
+          "rms_incremental_strain_error": 2.100693766943895e-05,
+          "regions": [
+            {
+              "region": 1,
+              "rms_reference": 3.6017266749256033e-09,
+              "rms_error": 0.0
+            },
+            {
+              "region": 4,
+              "rms_reference": 6.594513470006974e-08,
+              "rms_error": 0.0
+            },
+            {
+              "region": 20,
+              "rms_reference": 0.00015232966628620832,
+              "rms_error": 4.405291442604131e-06
+            },
+            {
+              "region": 23,
+              "rms_reference": 1.616680494195378e-07,
+              "rms_error": 6.546546701064892e-09
+            },
+            {
+              "region": 26,
+              "rms_reference": 3.1238811620126805e-10,
+              "rms_error": 1.086012980700396e-11
+            },
+            {
+              "region": 29,
+              "rms_reference": 8.521845233174027e-10,
+              "rms_error": 4.1618258166886425e-11
+            },
+            {
+              "region": 34,
+              "rms_reference": 1.371400129949547e-11,
+              "rms_error": 0.0
+            },
+            {
+              "region": 41,
+              "rms_reference": 0.00010692751714820958,
+              "rms_error": 1.8593471161965127e-10
+            },
+            {
+              "region": 42,
+              "rms_reference": 0.009235440952923632,
+              "rms_error": 0.00018276247821065873
+            },
+            {
+              "region": 43,
+              "rms_reference": 0.0016016997384859647,
+              "rms_error": 6.376236646828107e-05
+            },
+            {
+              "region": 46,
+              "rms_reference": 0.0003064682273945669,
+              "rms_error": 1.507875490038128e-05
+            },
+            {
+              "region": 48,
+              "rms_reference": 1.164393679033258e-06,
+              "rms_error": 0.0
+            },
+            {
+              "region": 49,
+              "rms_reference": 5.743119735117627e-05,
+              "rms_error": 1.6940625958212145e-06
+            },
+            {
+              "region": 52,
+              "rms_reference": 7.526601156993269e-06,
+              "rms_error": 3.6223533214295963e-07
+            },
+            {
+              "region": 53,
+              "rms_reference": 1.3170153090137929e-05,
+              "rms_error": 5.00407458502816e-07
+            },
+            {
+              "region": 54,
+              "rms_reference": 2.650010551173326e-05,
+              "rms_error": 6.489179765449454e-07
+            },
+            {
+              "region": 56,
+              "rms_reference": 2.137920538093493e-06,
+              "rms_error": 0.0
+            },
+            {
+              "region": 57,
+              "rms_reference": 6.31945141544409e-08,
+              "rms_error": 1.8434835014351552e-11
+            },
+            {
+              "region": 59,
+              "rms_reference": 6.399890597807296e-05,
+              "rms_error": 2.867899270273008e-06
+            },
+            {
+              "region": 60,
+              "rms_reference": 1.084346540268091e-05,
+              "rms_error": 0.0
+            },
+            {
+              "region": 61,
+              "rms_reference": 1.50802998931014e-06,
+              "rms_error": 7.384761760170788e-09
+            },
+            {
+              "region": 62,
+              "rms_reference": 7.035977818098404e-05,
+              "rms_error": 2.57296009240123e-06
+            },
+            {
+              "region": 64,
+              "rms_reference": 0.00014700951452780911,
+              "rms_error": 5.2252858635635825e-06
+            },
+            {
+              "region": 65,
+              "rms_reference": 0.00022029984161554513,
+              "rms_error": 5.2631926868869034e-06
+            },
+            {
+              "region": 66,
+              "rms_reference": 7.539129879072751e-05,
+              "rms_error": 1.6823263434747763e-06
+            },
+            {
+              "region": 69,
+              "rms_reference": 0.0001309623738421687,
+              "rms_error": 4.548411705483602e-06
+            },
+            {
+              "region": 70,
+              "rms_reference": 0.000192483174000375,
+              "rms_error": 2.7331699338378445e-07
+            },
+            {
+              "region": 71,
+              "rms_reference": 5.3793502543048873e-05,
+              "rms_error": 1.1821949917320762e-06
+            },
+            {
+              "region": 72,
+              "rms_reference": 1.2065936714229534e-07,
+              "rms_error": 2.984044051561479e-09
+            },
+            {
+              "region": 74,
+              "rms_reference": 1.414671638987603e-07,
+              "rms_error": 5.370231538326387e-09
+            },
+            {
+              "region": 75,
+              "rms_reference": 3.2908533226815303e-06,
+              "rms_error": 8.918660593632271e-08
+            },
+            {
+              "region": 76,
+              "rms_reference": 0.0003416581505405173,
+              "rms_error": 6.847296533465834e-07
+            },
+            {
+              "region": 79,
+              "rms_reference": 0.0008977130924321413,
+              "rms_error": 3.273213264393275e-08
+            },
+            {
+              "region": 84,
+              "rms_reference": 3.1593228231016375e-10,
+              "rms_error": 6.500571047268299e-12
+            },
+            {
+              "region": 91,
+              "rms_reference": 9.55603079845765e-05,
+              "rms_error": 4.358135260222086e-06
+            },
+            {
+              "region": 92,
+              "rms_reference": 0.0023139617099288416,
+              "rms_error": 0.0
+            },
+            {
+              "region": 93,
+              "rms_reference": 0.0008334130290751025,
+              "rms_error": 3.0021094701982146e-05
+            },
+            {
+              "region": 95,
+              "rms_reference": 6.938859308865715e-05,
+              "rms_error": 2.706682745050035e-06
+            },
+            {
+              "region": 97,
+              "rms_reference": 1.6011834562430193e-05,
+              "rms_error": 9.978855087522902e-09
+            },
+            {
+              "region": 98,
+              "rms_reference": 0.00012494783204258423,
+              "rms_error": 3.162653952583636e-06
+            },
+            {
+              "region": 99,
+              "rms_reference": 5.7122316113062114e-06,
+              "rms_error": 2.2974555385839387e-07
+            },
+            {
+              "region": 100,
+              "rms_reference": 3.4974054389659234e-05,
+              "rms_error": 6.579125129860458e-07
+            },
+            {
+              "region": 102,
+              "rms_reference": 1.687756118948948e-06,
+              "rms_error": 5.813484886554966e-08
+            },
+            {
+              "region": 103,
+              "rms_reference": 3.033244178280655e-10,
+              "rms_error": 7.390573667213527e-12
+            },
+            {
+              "region": 104,
+              "rms_reference": 2.5671675170980457e-10,
+              "rms_error": 9.104210106034e-12
+            },
+            {
+              "region": 107,
+              "rms_reference": 2.5207216456238788e-05,
+              "rms_error": 9.076718267285845e-07
+            },
+            {
+              "region": 109,
+              "rms_reference": 8.670680659125385e-05,
+              "rms_error": 1.2304904780981678e-06
+            },
+            {
+              "region": 111,
+              "rms_reference": 8.539558926754413e-05,
+              "rms_error": 1.4638179499468618e-06
+            },
+            {
+              "region": 112,
+              "rms_reference": 5.9147883069209826e-06,
+              "rms_error": 2.3436405829892115e-07
+            },
+            {
+              "region": 114,
+              "rms_reference": 7.166465793444823e-05,
+              "rms_error": 1.9322690789551876e-06
+            },
+            {
+              "region": 115,
+              "rms_reference": 0.00012963354082470084,
+              "rms_error": 2.0001931583787943e-06
+            },
+            {
+              "region": 116,
+              "rms_reference": 0.00019674546605300084,
+              "rms_error": 7.64050515544268e-06
+            },
+            {
+              "region": 119,
+              "rms_reference": 3.1773074547850765e-06,
+              "rms_error": 4.6543887841657594e-08
+            },
+            {
+              "region": 120,
+              "rms_reference": 0.00020705992403113744,
+              "rms_error": 2.733410353227253e-06
+            },
+            {
+              "region": 121,
+              "rms_reference": 5.127347813836475e-07,
+              "rms_error": 1.9270659051952165e-08
+            },
+            {
+              "region": 122,
+              "rms_reference": 1.142472654780263e-06,
+              "rms_error": 5.156603839713276e-08
+            },
+            {
+              "region": 124,
+              "rms_reference": 0.00021477987522706632,
+              "rms_error": 3.2605890834077575e-06
+            },
+            {
+              "region": 125,
+              "rms_reference": 0.00010388504351578577,
+              "rms_error": 6.23174265553486e-08
+            },
+            {
+              "region": 126,
+              "rms_reference": 1.3371459268941563e-05,
+              "rms_error": 0.0
+            },
+            {
+              "region": 128,
+              "rms_reference": 0.00012442316976628653,
+              "rms_error": 4.643529385768604e-06
+            },
+            {
+              "region": 131,
+              "rms_reference": 3.7192085640095536e-11,
+              "rms_error": 0.0
+            },
+            {
+              "region": 136,
+              "rms_reference": 5.344265658298381e-13,
+              "rms_error": 1.9219390011327088e-14
+            },
+            {
+              "region": 138,
+              "rms_reference": 4.84158170067823e-10,
+              "rms_error": 3.94415639640434e-12
+            },
+            {
+              "region": 139,
+              "rms_reference": 2.277971108514196e-09,
+              "rms_error": 3.420791106432496e-11
+            },
+            {
+              "region": 142,
+              "rms_reference": 4.765225393412556e-12,
+              "rms_error": 1.4974442484399555e-13
+            },
+            {
+              "region": 145,
+              "rms_reference": 4.3579006233377935e-13,
+              "rms_error": 0.0
+            },
+            {
+              "region": 150,
+              "rms_reference": 8.288975785049186e-09,
+              "rms_error": 4.301398142377045e-12
+            },
+            {
+              "region": 152,
+              "rms_reference": 8.866061092239794e-11,
+              "rms_error": 3.608968219879771e-12
+            },
+            {
+              "region": 153,
+              "rms_reference": 2.78186069570425e-09,
+              "rms_error": 9.267053015804933e-11
+            },
+            {
+              "region": 156,
+              "rms_reference": 9.451266288349264e-13,
+              "rms_error": 1.8031133657283076e-14
+            }
+          ]
+        }
+      },
+      "scope": "Same-frame adaptive fit. Its displacement and strain checks are in-sample. No nonlinear, force-response or sustained timing qualification."
+    }
+  },
+  "held_out": {
+    "frozen_basis": "09160f77d58360b9adb2b39874e8f99f911ba46c4e9ad6159bc4900b4938b086",
+    "launch": "3e7c3d6ed5fba6b17faae3bc3ae76ef53db9e298a74cf960eadb5e45a05d809d",
+    "exit": 0,
+    "wall_s": 161.88761004200205,
+    "native_completed": true,
+    "accepted_s": 3.90625018554e-06,
+    "native_nodes_sha256": "c35d8420a7075fdb6607ac5ac36984e7e9964a6b8e29e776c58777e81b20de4d",
+    "receipt": "67c9e2d3b8c61656de4482f4903b42af6961b239faafbf93d395e918a90a9016",
+    "mass_projection_residual_relative": 3.1449945636240596e-15,
+    "incremental_strain_and_validity": {
+      "skin": {
+        "inverted": 0,
+        "below_shape": 4,
+        "relative_incremental_strain_error": 0.004011047830368084,
+        "rms_reference_incremental_strain": 0.002637935596948583,
+        "rms_incremental_strain_error": 1.0580885852791353e-05,
+        "regions": [
+          {
+            "region": 1,
+            "rms_reference": 1.420953193962567e-09,
+            "rms_error": 0.0
+          },
+          {
+            "region": 20,
+            "rms_reference": 0.0002497131023868156,
+            "rms_error": 6.1927319829183965e-06
+          },
+          {
+            "region": 23,
+            "rms_reference": 4.05242690175112e-09,
+            "rms_error": 3.6106981569425277e-10
+          },
+          {
+            "region": 26,
+            "rms_reference": 1.0836738643783395e-11,
+            "rms_error": 0.0
+          },
+          {
+            "region": 29,
+            "rms_reference": 4.5040739198361535e-10,
+            "rms_error": 2.1733999276606536e-24
+          },
+          {
+            "region": 34,
+            "rms_reference": 2.642228345352435e-11,
+            "rms_error": 0.0
+          },
+          {
+            "region": 41,
+            "rms_reference": 0.00048365978103311416,
+            "rms_error": 1.5430281241468404e-08
+          },
+          {
+            "region": 42,
+            "rms_reference": 0.007827231110683482,
+            "rms_error": 7.577387666683698e-05
+          },
+          {
+            "region": 43,
+            "rms_reference": 0.01777155593320574,
+            "rms_error": 3.771481307392196e-06
+          },
+          {
+            "region": 46,
+            "rms_reference": 0.0013869389140488428,
+            "rms_error": 1.0721691192910527e-05
+          },
+          {
+            "region": 48,
+            "rms_reference": 2.1645020509545856e-07,
+            "rms_error": 0.0
+          },
+          {
+            "region": 49,
+            "rms_reference": 1.2825441358569006e-05,
+            "rms_error": 4.477996036503503e-08
+          },
+          {
+            "region": 52,
+            "rms_reference": 9.994787810092742e-06,
+            "rms_error": 3.7478452493720916e-07
+          },
+          {
+            "region": 53,
+            "rms_reference": 3.6775382774475364e-05,
+            "rms_error": 3.730902039514088e-08
+          },
+          {
+            "region": 54,
+            "rms_reference": 3.852121175918024e-05,
+            "rms_error": 5.460997791258988e-07
+          },
+          {
+            "region": 56,
+            "rms_reference": 3.593987600954227e-08,
+            "rms_error": 0.0
+          },
+          {
+            "region": 57,
+            "rms_reference": 7.695751941566149e-09,
+            "rms_error": 1.519960465335292e-23
+          },
+          {
+            "region": 59,
+            "rms_reference": 4.40161962564546e-05,
+            "rms_error": 1.9220895346195942e-07
+          },
+          {
+            "region": 60,
+            "rms_reference": 3.850981984399065e-05,
+            "rms_error": 0.0
+          },
+          {
+            "region": 61,
+            "rms_reference": 2.320727968553013e-06,
+            "rms_error": 1.2483561231204322e-08
+          },
+          {
+            "region": 62,
+            "rms_reference": 4.0773105317909244e-05,
+            "rms_error": 7.542277287564893e-08
+          },
+          {
+            "region": 64,
+            "rms_reference": 0.00011693562401462119,
+            "rms_error": 3.170540673730414e-06
+          },
+          {
+            "region": 65,
+            "rms_reference": 0.0001931286628350691,
+            "rms_error": 3.8659188394577425e-06
+          },
+          {
+            "region": 66,
+            "rms_reference": 4.053351114911034e-05,
+            "rms_error": 9.190300464459235e-07
+          },
+          {
+            "region": 69,
+            "rms_reference": 6.57286595640931e-05,
+            "rms_error": 1.8685060901014405e-06
+          },
+          {
+            "region": 70,
+            "rms_reference": 0.00030697811238228914,
+            "rms_error": 8.097949396649439e-08
+          },
+          {
+            "region": 71,
+            "rms_reference": 1.9036405272298273e-05,
+            "rms_error": 1.5661640882745267e-07
+          },
+          {
+            "region": 72,
+            "rms_reference": 4.3619546698075305e-08,
+            "rms_error": 1.089708553962381e-09
+          },
+          {
+            "region": 74,
+            "rms_reference": 1.2746382599540622e-08,
+            "rms_error": 7.818783736291392e-11
+          },
+          {
+            "region": 75,
+            "rms_reference": 1.4448984046639263e-05,
+            "rms_error": 2.1487651434186933e-08
+          },
+          {
+            "region": 76,
+            "rms_reference": 0.00011829305254947371,
+            "rms_error": 3.5184440862255467e-07
+          },
+          {
+            "region": 79,
+            "rms_reference": 1.6356444308855e-08,
+            "rms_error": 0.0
+          },
+          {
+            "region": 84,
+            "rms_reference": 1.9346009036815718e-08,
+            "rms_error": 9.067317973111378e-11
+          },
+          {
+            "region": 91,
+            "rms_reference": 8.129435972680361e-05,
+            "rms_error": 3.6509685684089833e-09
+          },
+          {
+            "region": 92,
+            "rms_reference": 0.005191814103273526,
+            "rms_error": 0.0
+          },
+          {
+            "region": 93,
+            "rms_reference": 0.000987187937152227,
+            "rms_error": 1.0420996454365093e-05
+          },
+          {
+            "region": 95,
+            "rms_reference": 5.440052446723165e-05,
+            "rms_error": 4.001404526822851e-07
+          },
+          {
+            "region": 97,
+            "rms_reference": 0.00018029320453596178,
+            "rms_error": 1.4436257428727335e-17
+          },
+          {
+            "region": 98,
+            "rms_reference": 0.00013942624497311474,
+            "rms_error": 1.845935242002812e-15
+          },
+          {
+            "region": 99,
+            "rms_reference": 1.5242687250515507e-05,
+            "rms_error": 5.603670656757672e-08
+          },
+          {
+            "region": 100,
+            "rms_reference": 1.8142756208942315e-06,
+            "rms_error": 1.5403502885683316e-08
+          },
+          {
+            "region": 102,
+            "rms_reference": 9.187926201962285e-08,
+            "rms_error": 1.333352870823366e-07
+          },
+          {
+            "region": 103,
+            "rms_reference": 8.000122708328633e-09,
+            "rms_error": 2.6745539294128276e-14
+          },
+          {
+            "region": 104,
+            "rms_reference": 3.0550673747470165e-08,
+            "rms_error": 4.776256243049009e-10
+          },
+          {
+            "region": 107,
+            "rms_reference": 1.3946312040894924e-05,
+            "rms_error": 4.39644142446837e-07
+          },
+          {
+            "region": 109,
+            "rms_reference": 9.99647850372025e-05,
+            "rms_error": 1.48833209950256e-06
+          },
+          {
+            "region": 111,
+            "rms_reference": 0.00011433761763045642,
+            "rms_error": 4.3684522625034185e-07
+          },
+          {
+            "region": 112,
+            "rms_reference": 5.981442987625841e-06,
+            "rms_error": 2.250727443431653e-08
+          },
+          {
+            "region": 114,
+            "rms_reference": 0.00016774063118266163,
+            "rms_error": 2.881612447190702e-06
+          },
+          {
+            "region": 115,
+            "rms_reference": 7.481330179397856e-05,
+            "rms_error": 1.1515671738514785e-06
+          },
+          {
+            "region": 116,
+            "rms_reference": 6.169963338967756e-05,
+            "rms_error": 8.298028639604272e-07
+          },
+          {
+            "region": 119,
+            "rms_reference": 3.4007892520885684e-06,
+            "rms_error": 7.773406132202535e-08
+          },
+          {
+            "region": 120,
+            "rms_reference": 0.00027867003920315294,
+            "rms_error": 3.329613688375015e-06
+          },
+          {
+            "region": 121,
+            "rms_reference": 2.475116870562115e-06,
+            "rms_error": 6.200258826678343e-08
+          },
+          {
+            "region": 122,
+            "rms_reference": 2.1352244429973528e-06,
+            "rms_error": 6.87107583131828e-08
+          },
+          {
+            "region": 124,
+            "rms_reference": 0.0001415312661579224,
+            "rms_error": 1.5635503633931393e-06
+          },
+          {
+            "region": 125,
+            "rms_reference": 0.0001392257309896989,
+            "rms_error": 9.827074946589766e-07
+          },
+          {
+            "region": 126,
+            "rms_reference": 3.1162663870751766e-06,
+            "rms_error": 0.0
+          },
+          {
+            "region": 128,
+            "rms_reference": 0.0003569120687657127,
+            "rms_error": 7.008056131415887e-06
+          },
+          {
+            "region": 131,
+            "rms_reference": 1.028427166181283e-11,
+            "rms_error": 0.0
+          },
+          {
+            "region": 136,
+            "rms_reference": 5.279327181994038e-13,
+            "rms_error": 0.0
+          },
+          {
+            "region": 138,
+            "rms_reference": 1.538363343232943e-11,
+            "rms_error": 3.5333038302713185e-13
+          },
+          {
+            "region": 139,
+            "rms_reference": 3.0921873183183745e-10,
+            "rms_error": 1.3274647502718932e-10
+          },
+          {
+            "region": 142,
+            "rms_reference": 5.125314951177741e-13,
+            "rms_error": 0.0
+          },
+          {
+            "region": 145,
+            "rms_reference": 9.387189476765158e-13,
+            "rms_error": 0.0
+          },
+          {
+            "region": 150,
+            "rms_reference": 1.2075938569376688e-11,
+            "rms_error": 1.1170483472384793e-13
+          },
+          {
+            "region": 152,
+            "rms_reference": 2.2730999064049367e-11,
+            "rms_error": 1.1213309367986612e-13
+          },
+          {
+            "region": 153,
+            "rms_reference": 3.4435361213978463e-09,
+            "rms_error": 6.670892422393286e-10
+          },
+          {
+            "region": 156,
+            "rms_reference": 6.634559124904922e-13,
+            "rms_error": 0.0
+          }
+        ]
+      },
+      "fat": {
+        "inverted": 0,
+        "below_shape": 24,
+        "relative_incremental_strain_error": 0.01757153403508694,
+        "rms_reference_incremental_strain": 0.00045259659175883143,
+        "rms_incremental_strain_error": 7.952816416254655e-06,
+        "regions": [
+          {
+            "region": 1,
+            "rms_reference": 2.3499268905628455e-10,
+            "rms_error": 0.0
+          },
+          {
+            "region": 4,
+            "rms_reference": 1.6294651444737643e-08,
+            "rms_error": 0.0
+          },
+          {
+            "region": 20,
+            "rms_reference": 4.713080484514062e-05,
+            "rms_error": 1.0005524552346828e-06
+          },
+          {
+            "region": 23,
+            "rms_reference": 6.413183589250122e-08,
+            "rms_error": 3.32172176603076e-09
+          },
+          {
+            "region": 26,
+            "rms_reference": 2.276185721175574e-10,
+            "rms_error": 5.57890743104553e-12
+          },
+          {
+            "region": 29,
+            "rms_reference": 1.0977219051373261e-08,
+            "rms_error": 4.7344566734616634e-11
+          },
+          {
+            "region": 34,
+            "rms_reference": 1.0621464662751852e-11,
+            "rms_error": 0.0
+          },
+          {
+            "region": 41,
+            "rms_reference": 2.904481203214169e-05,
+            "rms_error": 2.3903502834901378e-09
+          },
+          {
+            "region": 42,
+            "rms_reference": 0.0041786705084618314,
+            "rms_error": 7.374744429622482e-05
+          },
+          {
+            "region": 43,
+            "rms_reference": 0.0005566898639967933,
+            "rms_error": 1.0489630594607438e-05
+          },
+          {
+            "region": 46,
+            "rms_reference": 8.191427830236367e-05,
+            "rms_error": 6.204325514581131e-06
+          },
+          {
+            "region": 48,
+            "rms_reference": 8.224605892727596e-08,
+            "rms_error": 0.0
+          },
+          {
+            "region": 49,
+            "rms_reference": 5.0088895138427654e-05,
+            "rms_error": 1.1368146325290866e-07
+          },
+          {
+            "region": 52,
+            "rms_reference": 2.7959297582840804e-06,
+            "rms_error": 9.743070328446072e-08
+          },
+          {
+            "region": 53,
+            "rms_reference": 9.2741645086398e-06,
+            "rms_error": 3.464966991020095e-08
+          },
+          {
+            "region": 54,
+            "rms_reference": 2.037160577412124e-05,
+            "rms_error": 1.9865539233681473e-07
+          },
+          {
+            "region": 56,
+            "rms_reference": 2.712821272020876e-07,
+            "rms_error": 0.0
+          },
+          {
+            "region": 57,
+            "rms_reference": 1.7235598761276794e-08,
+            "rms_error": 1.8236147523831863e-13
+          },
+          {
+            "region": 59,
+            "rms_reference": 5.029057733984795e-05,
+            "rms_error": 2.461879936061209e-07
+          },
+          {
+            "region": 60,
+            "rms_reference": 6.967163141701977e-06,
+            "rms_error": 0.0
+          },
+          {
+            "region": 61,
+            "rms_reference": 1.019851083616987e-06,
+            "rms_error": 6.901069768417313e-09
+          },
+          {
+            "region": 62,
+            "rms_reference": 6.24229213267675e-05,
+            "rms_error": 3.7162128807385344e-07
+          },
+          {
+            "region": 64,
+            "rms_reference": 0.00012092766207336522,
+            "rms_error": 3.858519046015338e-06
+          },
+          {
+            "region": 65,
+            "rms_reference": 0.00019857887183224632,
+            "rms_error": 3.5172498222923874e-06
+          },
+          {
+            "region": 66,
+            "rms_reference": 6.942739691120721e-05,
+            "rms_error": 1.2793181718556114e-06
+          },
+          {
+            "region": 69,
+            "rms_reference": 0.00011189678273318584,
+            "rms_error": 2.6085912437856845e-06
+          },
+          {
+            "region": 70,
+            "rms_reference": 0.00018496472161073858,
+            "rms_error": 3.912574744518009e-08
+          },
+          {
+            "region": 71,
+            "rms_reference": 3.83548444252696e-05,
+            "rms_error": 4.7359719385200735e-07
+          },
+          {
+            "region": 72,
+            "rms_reference": 7.878696593672202e-09,
+            "rms_error": 1.5145789583269884e-09
+          },
+          {
+            "region": 74,
+            "rms_reference": 5.7916443815075856e-08,
+            "rms_error": 4.841925820428963e-08
+          },
+          {
+            "region": 75,
+            "rms_reference": 1.6174284407312937e-06,
+            "rms_error": 3.67851672914313e-08
+          },
+          {
+            "region": 76,
+            "rms_reference": 0.0002576795341627639,
+            "rms_error": 1.9973330681472587e-07
+          },
+          {
+            "region": 79,
+            "rms_reference": 0.0008366056222789006,
+            "rms_error": 4.847194410029491e-09
+          },
+          {
+            "region": 84,
+            "rms_reference": 4.0750066273293176e-09,
+            "rms_error": 3.0454852682354385e-11
+          },
+          {
+            "region": 91,
+            "rms_reference": 2.471733996668863e-05,
+            "rms_error": 1.1224243092524114e-06
+          },
+          {
+            "region": 92,
+            "rms_reference": 0.000642754329134236,
+            "rms_error": 0.0
+          },
+          {
+            "region": 93,
+            "rms_reference": 0.0002175140559642973,
+            "rms_error": 1.0041261694829666e-05
+          },
+          {
+            "region": 95,
+            "rms_reference": 1.86712265449985e-05,
+            "rms_error": 4.5320652266844654e-07
+          },
+          {
+            "region": 97,
+            "rms_reference": 2.7404954091263214e-06,
+            "rms_error": 1.2381285327359936e-20
+          },
+          {
+            "region": 98,
+            "rms_reference": 3.4378517993043534e-05,
+            "rms_error": 2.245900287487452e-07
+          },
+          {
+            "region": 99,
+            "rms_reference": 4.653227101694072e-06,
+            "rms_error": 2.272719336376617e-08
+          },
+          {
+            "region": 100,
+            "rms_reference": 1.1177065751534244e-05,
+            "rms_error": 1.5169170568565885e-07
+          },
+          {
+            "region": 102,
+            "rms_reference": 1.1049450185578766e-07,
+            "rms_error": 4.625469070613405e-09
+          },
+          {
+            "region": 103,
+            "rms_reference": 3.285183889773706e-10,
+            "rms_error": 1.1555047966449262e-12
+          },
+          {
+            "region": 104,
+            "rms_reference": 1.155360560784816e-09,
+            "rms_error": 3.9806262317950705e-11
+          },
+          {
+            "region": 107,
+            "rms_reference": 1.9889126503310772e-05,
+            "rms_error": 2.450396978086838e-07
+          },
+          {
+            "region": 109,
+            "rms_reference": 6.40610304213943e-05,
+            "rms_error": 4.846426499407916e-07
+          },
+          {
+            "region": 111,
+            "rms_reference": 8.130281179085951e-05,
+            "rms_error": 1.6311528337994246e-07
+          },
+          {
+            "region": 112,
+            "rms_reference": 4.513680261121357e-06,
+            "rms_error": 2.0037852959850456e-08
+          },
+          {
+            "region": 114,
+            "rms_reference": 5.3676911476802453e-05,
+            "rms_error": 8.911102414335374e-07
+          },
+          {
+            "region": 115,
+            "rms_reference": 0.00011543167397611117,
+            "rms_error": 1.4631274846799123e-06
+          },
+          {
+            "region": 116,
+            "rms_reference": 0.00016393260984598896,
+            "rms_error": 1.8047390771772e-06
+          },
+          {
+            "region": 119,
+            "rms_reference": 1.0968328739829906e-06,
+            "rms_error": 1.8378705689268012e-08
+          },
+          {
+            "region": 120,
+            "rms_reference": 0.00018337339788597912,
+            "rms_error": 9.814945427022339e-07
+          },
+          {
+            "region": 121,
+            "rms_reference": 1.6382001648487316e-07,
+            "rms_error": 2.1915641328668385e-08
+          },
+          {
+            "region": 122,
+            "rms_reference": 9.358544535642108e-07,
+            "rms_error": 3.8431875992205024e-08
+          },
+          {
+            "region": 124,
+            "rms_reference": 0.00017080395088964415,
+            "rms_error": 1.9147871782983705e-06
+          },
+          {
+            "region": 125,
+            "rms_reference": 7.92975653817916e-05,
+            "rms_error": 1.5508031656107557e-08
+          },
+          {
+            "region": 126,
+            "rms_reference": 5.3514373170899065e-06,
+            "rms_error": 0.0
+          },
+          {
+            "region": 128,
+            "rms_reference": 6.731002792941393e-05,
+            "rms_error": 1.5123109676483266e-06
+          },
+          {
+            "region": 131,
+            "rms_reference": 8.552887795898028e-12,
+            "rms_error": 0.0
+          },
+          {
+            "region": 136,
+            "rms_reference": 1.222707821183178e-12,
+            "rms_error": 6.10304592353795e-14
+          },
+          {
+            "region": 138,
+            "rms_reference": 1.5556035698913974e-10,
+            "rms_error": 1.5086464374205e-11
+          },
+          {
+            "region": 139,
+            "rms_reference": 1.0903002745865734e-09,
+            "rms_error": 2.4647399334539754e-10
+          },
+          {
+            "region": 142,
+            "rms_reference": 1.3086702056059004e-11,
+            "rms_error": 4.212668709270764e-13
+          },
+          {
+            "region": 145,
+            "rms_reference": 5.003440383570356e-13,
+            "rms_error": 0.0
+          },
+          {
+            "region": 150,
+            "rms_reference": 3.776305228966875e-09,
+            "rms_error": 6.503504365834774e-13
+          },
+          {
+            "region": 152,
+            "rms_reference": 2.3517872682416046e-11,
+            "rms_error": 3.126953466765857e-12
+          },
+          {
+            "region": 153,
+            "rms_reference": 2.816903944442202e-09,
+            "rms_error": 1.223167847229446e-09
+          },
+          {
+            "region": 156,
+            "rms_reference": 2.7966434434926106e-12,
+            "rms_error": 4.400971210517273e-15
+          }
+        ]
+      }
+    },
+    "material": {
+      "skin": {
+        "native_inverted": 0,
+        "native_low_shape": 4,
+        "added_inversions": 0,
+        "added_shape_failures": 0
+      },
+      "fat": {
+        "native_inverted": 0,
+        "native_low_shape": 23,
+        "added_inversions": 0,
+        "added_shape_failures": 1
+      }
+    },
+    "wall_audits": {
+      "physical": {
+        "sum_pairs": 0,
+        "sha256": "c4f3c3558ec2f836ebc7e50d45816cf122d45c3a54359897451a2d844d7bc96c"
+      },
+      "projected": {
+        "sum_pairs": 0,
+        "sha256": "d3b14ced5fc2d10587d16c7867fb927762e8258ec2965f76568da9bb4eec3283"
+      }
+    },
+    "worst_regional_relative_incremental_strain_error": {
+      "skin": 1.4512011105820584,
+      "fat": 0.8360191858272542
+    },
+    "passed_motion_comparison": false,
+    "scope": "Unseen half-interval full-order mechanical release. Fixed-basis projection is a kinematic comparison. Forces, accepted dynamic advancement of the reduced space, and sustained speed require their own tests."
+  },
+  "scope": "Reduced coordinate construction and native full-order reference. This basis has no qualified reduced native advance. The detailed mesh remains the physical reference."
+}
