@@ -1,0 +1,9 @@
+## Native bed reaction and connected shoulder registration
+
+The matched whole-body trial measured a terminal bed reaction of 11.0147 N. Skin node 24331 carried 66.98% of the normal impulse. Along its bed normal the first scapular surface was 29.595 mm below skin. The terminal observer checked 22 native continuum objects, reporting 0 additional tetrahedra intersecting the central line. After combining those materials with the registered skin, fat and muscle intervals, 23.866 mm remained unassigned along that line. The four offset rays and every measured interval are in the recovery archive. This local test does not resolve oblique force paths or unmodeled anatomical tissues.
+
+The prior fit froze 34 inferred muscle surface vertices more than 0.05 mm inside a cortical bone. The source tendon sites, force-distribution records and their moment arms retain their original bytes. The authoring repair allows those inferred volume vertices to move toward their measured cortical exits. It checks source, skeletal and supported poses while solving for the displacement and restores intermediate material volume before choosing the six muscles jointly.
+
+Tested summed overlap across the six muscle regions changed from 85.6536 to 79.7766 cm³ in emitted coordinates. Multiple overlapping structures can contribute to this sum. Spinal deltoid and fat still share 40.4785 cm³. The candidate remains a registration result. The actual new native material in the coupled run is the conservatively remapped adipose cavity recorded in the preceding commit. Supported resting equilibrium, whole-body clearance and the 16-second performance target remain open.
+
+BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International. Original OBJ headers are preserved in the recovered source. [Archive licensing](https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html)

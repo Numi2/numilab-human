@@ -1,4 +1,6 @@
 """Fit six registered muscles together, using signed material volumes and fixed native tissue boundaries."""
+from cortical_registration_metric import DirectedMaterialMetric
+from coupled_shoulder_poses import MaterialPoses
 from itertools import combinations
 from pathlib import Path
 import json,sys
@@ -47,11 +49,13 @@ def layer_surface(j,org,lo,hi):
     return result
 
 
-def run(j,reg,cert,mat,lib,out,steps,witness=None):
+def run(j,reg,cert,mat,lib,out,steps,witness=None,exits=None,all_poses=False):
     out.mkdir(exist_ok=True);case=j/'posterior-interface-082/native-pair';pose=frames(case)[-1]
     a=read(case/'launch.json')['argv'];tendon=Path(a[a.index('--tendon-payload')+1]);ends=read(tendon.with_suffix('.manifest.json'))['endpoints']
     org=np.array(read(reg/'registration.json')['origin']);p0=[];F=[];T=[];N=[];solver=[];pins=[];goal=[]
+    limits=[];pose_constraints=[]
     for sid in MOVING:
+        if all_poses:pose_constraints.append(MaterialPoses(sid,case,cert,mat))
         z=np.load(cert/f'bank-{sid}.npz');m=np.load(mat/f'bank-{sid}.npz')
         x=(z['accepted']-org)*1000;t=z['t'];f=m['f'];ref=dets(x,t);goal.append(volume(x,f))
         fixed=set()
@@ -68,14 +72,27 @@ def run(j,reg,cert,mat,lib,out,steps,witness=None):
             if extra.size:
                 if extra.min()<0 or extra.max()>=len(x):raise ValueError('Witness outside material')
                 fixed.update(t[np.any(np.isin(t,extra),axis=1)].ravel().tolist())
-        if not fixed:raise ValueError('Unbound tendon footprint')
+        normals={};obs={}
+        if exits is not None:
+            record=read(exits)
+            if record['native']!=digest(case/'launch.json') or record['manifest']!=digest(tendon.with_suffix('.manifest.json')):raise ValueError('Different attachment frame')
+            for row in record['cases']:
+                if row['muscle']!=sid or row['site_kind']!='fixed_material_vertex' or row['obstacle_kind']!=51004:continue
+                v=row['site']
+                if v not in fixed:raise ValueError('Missing source attachment vertex')
+                b=np.array(row['cortical_or_tissue_exit_mm']);origin=np.array(row['point_mm']);arm=b-origin
+                if np.linalg.norm(x[v]-origin)>.002 or abs(np.linalg.norm(arm)-row['distance_inside_mm'])>1e-5:raise ValueError('Different cortex or source point')
+                normals[v]=arm/np.linalg.norm(arm);obs[v]=(x[v].copy(),normals[v],row['distance_inside_mm'])
+            fixed-=set(normals)
+        limits.append(obs)
+        if not fixed and not normals:raise ValueError('Unbound tendon footprint')
         inv=np.linalg.inv(x[t[:,1:]]-x[t[:,:1]])
         g=np.concatenate((-inv.sum(2,keepdims=True),inv),axis=2).transpose(0,2,1)
         ii,jj=np.broadcast_arrays(t[:,:,None],t[:,None,:]);E=(g@g.transpose(0,2,1))*(ref/6)[:,None,None]
         mass=np.bincount(t.ravel(),weights=np.repeat(ref/24,4),minlength=len(x))
         ell=2*np.median(np.linalg.norm(x[f[:,1]]-x[f[:,0]],axis=1))
         K=coo_matrix((E.ravel(),(ii.ravel(),jj.ravel())),shape=(len(x),len(x))).tocsc()+diags(mass/ell**2)
-        free=np.setdiff1d(np.arange(len(x)),sorted(fixed));solver.append((free,splu(K[free][:,free].tocsc())))
+        free=np.setdiff1d(np.arange(len(x)),sorted(fixed));solver.append((free,DirectedMaterialMetric(K,free,normals) if normals else splu(K[free][:,free].tocsc())))
         pins.append(sorted(fixed));p0.append(x);T.append(t);F.append(f);N.append(len(x))
     start=np.cumsum([0]+N);ref=[dets(x,t)for x,t in zip(p0,T)]
     data=np.load(reg/'neighbors.npz');fixed={}
@@ -133,6 +150,15 @@ def run(j,reg,cert,mat,lib,out,steps,witness=None):
         base_rhs=np.r_[.15*obs[:contacts],[volume(x,f)-g for x,f,g in zip(P,F,goal)]]
         types=[(0,None)]*contacts+[(None,None)]*len(MOVING)
         rhs_rows=base_rhs.copy();rows=G;selected=set()
+        directional=[];desired=[]
+        for i,o in enumerate(limits):
+            for node,(origin,normal,depth) in o.items():
+                distance=depth-(P[i][node]-origin)@normal
+                if distance<=.001:continue
+                rr=np.zeros((start[-1],3));rr[start[i]+node]=-normal
+                directional.append(rr);desired.append(.12*distance)
+        if directional:
+            rows=np.concatenate((rows,directional));rhs_rows=np.r_[rhs_rows,desired];types.extend([(0,None)]*len(directional))
         for working in range(5):
             H=np.zeros_like(rows)
             for i,(free,K)in enumerate(solver):
@@ -159,6 +185,21 @@ def run(j,reg,cert,mat,lib,out,steps,witness=None):
                     row=np.zeros((start[-1],3))
                     row[t[k]+start[i]]=side*np.vstack((-g.sum(0),g))
                     block.append(row);brhs.append(.42-jval if side<0 else jval-2.45)
+            for i,bounds in enumerate(limits):
+                for v,(o,n,d) in bounds.items():
+                    traveled=(P[i][v]-o)@n;component=delta[start[i]+v]@n
+                    side=-1 if component< -1e-8 else 1 if traveled+component>d else 0
+                    tag=('cortical',i,v,side)
+                    if not side or tag in selected:continue
+                    row=np.zeros((start[-1],3));row[start[i]+v]=side*n
+                    selected.add(tag);block.append(row);brhs.append(0. if side<0 else traveled-d)
+            for i,poses in enumerate(pose_constraints):
+                current=P[i]-p0[i]
+                for tag,ids,gradient,violation in poses.restrictions(current,current+delta[start[i]:start[i+1]]):
+                    key=(i,*tag)
+                    if key in selected:continue
+                    rr=np.zeros((start[-1],3));np.add.at(rr,ids+start[i],gradient)
+                    selected.add(key);block.append(rr);brhs.append(violation)
             if not block:break
             rows=np.concatenate((rows,block));rhs_rows=np.r_[rhs_rows,brhs];types.extend([(0,None)]*len(block))
         report['active_material_bounds']=len(selected)
@@ -174,8 +215,10 @@ def run(j,reg,cert,mat,lib,out,steps,witness=None):
                     if den<=0:raise ValueError('No free volume correction')
                     y[free]-=(dvol/den)*u
                 trial.append(y)
+            if any((trial[i][v]-P[i][v])@n < -1e-7 or (trial[i][v]-o)@n>d+1e-5 or np.linalg.norm(np.cross(trial[i][v]-o,n))>1e-7 for i,bounds in enumerate(limits)for v,(o,n,d) in bounds.items()):continue
             if any(np.any((v<.4)|(v>2.5))for x,t,d in zip(trial,T,ref) for v in [dets(x,t)/d]):continue
             if any(np.all((y.max(0)>=lo)&(y.min(0)<=hi)) for _,lo,hi in pending_fixed for y in trial):continue
+            if any(not poses.safe(trial[i]-p0[i])for i,poses in enumerate(pose_constraints)):continue
             new,ids,_=measure(trial);vv={str(q):z for q,z in zip(ids[:-len(MOVING)],new[:-len(MOVING)])}
             # Reject new occupied tissue and increasing existing overlaps beyond Boolean roundoff.
             if abs(new[-len(MOVING):]).max()>1e-5 or sum(vv.values())>=sum(values.values()) or any(v>values.get(k,0)+1e-4 for k,v in vv.items()):continue
@@ -184,8 +227,8 @@ def run(j,reg,cert,mat,lib,out,steps,witness=None):
             report['stopped']='No cell-valid and volume-conservative joint step improves occupancy without increasing another crossing';break
     for i,(y,x)in enumerate(zip(P,p0)):
         np.savez_compressed(out/f'{MOVING[i]}.npz',x=y/1000+org,t=T[i],f=F[i],fixed_nodes=pins[i],displacement_m=(y-x)/1000)
-    result=dict(source=digest(cert/'result.json'),native=digest(case/'launch.json'),layer_checks=digest(Path('layers.json')),witness=None if witness is None else digest(witness),history=history,
+    result=dict(joint_source_pose_constraints=all_poses,cortical_exit_constraints=None if exits is None else digest(exits),cortical_travel_mm=[{v:float((y[v]-o)@n)for v,(o,n,d)in limits[i].items()} for i,y in enumerate(P)],source=digest(cert/'result.json'),native=digest(case/'launch.json'),layer_checks=digest(Path('layers.json')),witness=None if witness is None else digest(witness),history=history,
                 peak_displacements_mm=[float(np.linalg.norm(x-y,axis=1).max())for x,y in zip(P,p0)],
                 lowest_J=[float((dets(y,t)/d).min())for y,t,d in zip(P,T,ref)])
     (out/'result.json').write_text(json.dumps(result,indent=2,allow_nan=False)+'\n')
-if __name__=='__main__':run(*(Path(s).resolve()for s in sys.argv[1:7]),int(sys.argv[7]),Path(sys.argv[8]) if len(sys.argv)>8 else None)
+if __name__=='__main__':run(*(Path(s).resolve()for s in sys.argv[1:7]),int(sys.argv[7]),Path(sys.argv[8]) if len(sys.argv)>8 and sys.argv[8]!='-' else None,Path(sys.argv[9]) if len(sys.argv)>9 and sys.argv[9]!='-' else None,'--all-poses' in sys.argv[10:])
