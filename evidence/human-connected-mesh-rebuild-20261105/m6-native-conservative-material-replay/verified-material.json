@@ -1,0 +1,60 @@
+{
+  "registered_pose": {
+    "base": "77a76959407869881960198d5708e81b990b4a7f71a5b1e3e4bce607694a5dde",
+    "field": "6b3e26f511e426a2708b24b7b92e16aac05d45f286eacbc38f69983932105dce",
+    "interval_violations": 0,
+    "worst_interval_margin": 0.0034057334468240302,
+    "violating_cells": [],
+    "wall_crossings": 0,
+    "changed_rigid_overlap_mm3": {
+      "14": {
+        "skin": -0.12354272554341605,
+        "fat": -0.8161938084017493
+      },
+      "18": {
+        "skin": 0.0005670337437777562,
+        "fat": -57.598055087226385
+      },
+      "19": {
+        "skin": -0.004207177078360047,
+        "fat": -18.06170015379098
+      }
+    },
+    "total_change_mm3": {
+      "skin": -0.12718286887799835,
+      "fat": -76.47594904941911
+    }
+  },
+  "tissue_wall_triangles": [
+    152261,
+    236593,
+    208354,
+    4733
+  ],
+  "remaining_summed_bone_overlap_mm3": {
+    "skin": 1117.6321612126603,
+    "fat": 4859.513962242674
+  },
+  "native_carrier_replay": {
+    "SKIN": {
+      "carriers": 48573,
+      "positive_connections": 2955897,
+      "mass_kg": 3.4525712828039024,
+      "max_cell_error_kg": 8.673617379884035e-19,
+      "max_carrier_error_kg": 5.421010862427522e-19
+    },
+    "FAT": {
+      "carriers": 23066,
+      "positive_connections": 2031976,
+      "mass_kg": 10.487108427165252,
+      "max_cell_error_kg": 1.734723475976807e-18,
+      "max_carrier_error_kg": 1.734723475976807e-18
+    }
+  },
+  "full_scene_qualification": "Open. No accepted motion or speed measured for this candidate.",
+  "upstream": {
+    "registration": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/supported-rigid-fat-witnesses-41902914ce4d31cf.tar.zst",
+    "material": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-registered-skin-fat-61ddeca028013645.tar.zst",
+    "rebound": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/native-cortical-material-binding-7624d144a338481a.tar.zst"
+  }
+}
