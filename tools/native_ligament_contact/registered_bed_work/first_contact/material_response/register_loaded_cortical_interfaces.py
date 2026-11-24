@@ -9,9 +9,10 @@ from classify_connected_boundary import pack
 from inspect_shoulder_source import nearest
 from compare_supported_postures import poses
 
-def run(h,job,lib,out):
+def run(h,job,lib,out,pose_file=None):
+    pose_file=pose_file or job/'posed-app/current.node'
     sw=np.load(h/'cortical-registration/registered-cortical-facets.npz')
-    wr=np.load(job/'wrist/cortical-facets.npz');xyz=np.loadtxt(job/'posed-app/current.node',skiprows=1,usecols=(1,2,3))
+    wr=np.load(job/'wrist/cortical-facets.npz');xyz=np.loadtxt(pose_file,skiprows=1,usecols=(1,2,3))
     ct=sw['cell_side_material_bank_nodes'];c2=np.column_stack((wr['child'],wr['side'],wr['material'],np.full(len(wr['side']),int(wr['source_bone'])),wr['nodes']))
     rows=np.vstack((ct,c2)).astype('i4');z=np.load(job/'boundaries/faces.npz');K=pack(z['face']);ii=np.searchsorted(K,pack(rows[:,4:]))
     if len(np.unique(ii))!=len(ii) or not np.array_equal(K[ii],pack(rows[:,4:])) or not np.array_equal(z['cell'][ii],rows[:,0]) or not np.array_equal(z['side'][ii],rows[:,1]):raise ValueError('Lost exact cortical material incidence')
@@ -30,6 +31,6 @@ def run(h,job,lib,out):
         summary[int(sid)]=dict(body=body,material_faces=int(select.sum()),distance_m=np.quantile(dist,[0,.5,.95,1]).tolist())
     out.mkdir();file=out/'registered-cortical-facets.npz'
     np.savez_compressed(file,cell_side_material_bank_nodes=rows,body=owner,quadrature_barycentric=weights,cortex_faces=ids,cortex_barycentric=bc,loaded_distance_m=dst)
-    result=dict(registered=summary,facets=len(rows),samples=dst.size,loaded_geometry=digest(job/'posed-app/current.node'),body_pose=digest(initial),bone=digest(bone),source_shoulder=digest(h/'cortical-registration/registered-cortical-facets.npz'),source_wrist=digest(job/'wrist/cortical-facets.npz'),mapping=digest(file))
+    result=dict(registered=summary,facets=len(rows),samples=dst.size,loaded_geometry=digest(pose_file),body_pose=digest(initial),bone=digest(bone),source_shoulder=digest(h/'cortical-registration/registered-cortical-facets.npz'),source_wrist=digest(job/'wrist/cortical-facets.npz'),mapping=digest(file))
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(result['registered'])
 if __name__=='__main__':run(*(Path(v).resolve() for v in sys.argv[1:]))

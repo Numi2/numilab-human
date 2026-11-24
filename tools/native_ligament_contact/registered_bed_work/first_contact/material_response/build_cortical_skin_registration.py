@@ -5,6 +5,18 @@ import numpy as np
 from prepare_live_cortex import exact
 from compile_connected_joint import digest
 
+def write_contact_include(contact,app):
+    rec=json.loads((contact/'result.json').read_bytes());f=contact/'material-contact.npz'
+    if digest(f)!=rec['program']:raise ValueError('Unregistered material program')
+    z=np.load(f);rows=z['facets'];rows=rows[np.lexsort((rows[:,1],rows[:,0]))];s=z['samples']
+    flat=lambda values:','.join(map(str,map(int,values)))
+    texts=['namespace registeredCorticalSkin {','using Facet=metalrobo::human::coarse_tissue::PhysicalSkinCorticalFacet;','struct Sample{unsigned node,material,bank,body;double area,thickness;};','inline constexpr Facet faces[]={']
+    for r in rows:texts.append('{'+flat([*r[:4],r[7]])+',{'+flat(r[4:7])+'},{'+flat(r[8:])+'}},')
+    texts+=['};','inline constexpr Sample samples[]={']
+    for row in s:texts.append('{'+flat(row[:4])+','+','.join(format(n,'.17g') for n in row[4:])+'},')
+    texts+=['};']+['inline constexpr char '+k+'[]="'+rec[k]+'";' for k in ['material_reference','elements','loaded','bone']]+['}']
+    (app/'NumiHumanCorticalSkinBinding.inc').write_text('\n'.join(texts)+'\n')
+
 def run(base,contact,out):
     out.mkdir();src=base/'app';app=out/'app';app.mkdir()
     for f in src.iterdir():
@@ -85,16 +97,7 @@ inline bool corticalFacetMatches(const PhysicalSkinCorticalFacet& row,
 '''+a),('    measured.authoredHeadWallFaces=usedWalls;','    if(usedCortex!=bundle.corticalFacets.size())return fail("cortical facets not all used exactly once");\n    measured.authoredHeadWallFaces=usedWalls;')])
     h='    if(!preparePhysicalSkinRegisteredFacetMaps(nextBundle,'
     patch(vol,[('struct PhysicalSkinRegisteredVolumeAssetFiles {','struct PhysicalSkinRegisteredVolumeAssetFiles {\n    std::span<const PhysicalSkinCorticalFacet> corticalFacets;'),(h,'    nextBundle.corticalFacets.assign(files.corticalFacets.begin(),files.corticalFacets.end());\n'+h)])
-    rec=json.loads((contact/'result.json').read_bytes());f=contact/'material-contact.npz'
-    if digest(f)!=rec['program']:raise ValueError('Unregistered material program')
-    z=np.load(f);rows=z['facets'];rows=rows[np.lexsort((rows[:,1],rows[:,0]))];s=z['samples']
-    flat=lambda values:','.join(map(str,map(int,values)))
-    texts=['namespace registeredCorticalSkin {','using Facet=metalrobo::human::coarse_tissue::PhysicalSkinCorticalFacet;','struct Sample{unsigned node,material,bank,body;double area,thickness;};','inline constexpr Facet faces[]={']
-    for r in rows:texts.append('{'+flat([*r[:4],r[7]])+',{'+flat(r[4:7])+'},{'+flat(r[8:])+'}},')
-    texts+=['};','inline constexpr Sample samples[]={']
-    for row in s:texts.append('{'+flat(row[:4])+','+','.join(format(n,'.17g') for n in row[4:])+'},')
-    texts+=['};']+['inline constexpr char '+k+'[]="'+rec[k]+'";' for k in ['material_reference','elements','loaded','bone']]+['}']
-    (app/'NumiHumanCorticalSkinBinding.inc').write_text('\n'.join(texts)+'\n')
+    write_contact_include(contact,app)
     mm='numilab_human_myosim_visual_probe.mm';line='#include "NumiHumanLoadedSkinPose.hpp"';v='                    PhysicalSkinRegisteredVolumeFileImportReport importReport;'
     step='        const std::size_t totalRows=wholeBodySkinCoarseRest.size()+wholeBodyFatDeepRest.size()-wholeBodyDeepAttachmentRows.size();'
     patch(mm,[(line,line+'\n#include "NumiHumanCorticalSkinBinding.inc"'),(v,v+'''

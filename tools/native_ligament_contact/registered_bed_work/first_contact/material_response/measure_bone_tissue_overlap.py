@@ -10,8 +10,8 @@ from audit_fiber_load_bounds import read_pose
 from build_carpal_cavity import boundary
 from partition_carpal_material import solid
 
-def run(h,out,capture=None,field=None):
-    out.mkdir();vol=h/'closed-native/native';bone=next((h.parent/'supported-bones').glob('*.nhbones'))
+def run(h,out,capture=None,field=None,volume=None):
+    out.mkdir();vol=volume or h/'closed-native/native';bone=next((h.parent/'supported-bones').glob('*.nhbones'))
     x=np.loadtxt(vol/'mesh.node',skiprows=1,usecols=(1,2,3));cells=np.loadtxt(vol/'mesh.ele',skiprows=1,dtype='i4');tet=cells[:,1:5]-1;mat=cells[:,5]
     if field is not None:
         transport=np.load(field);old=x.copy();x[transport['nodes']]=transport['positions']

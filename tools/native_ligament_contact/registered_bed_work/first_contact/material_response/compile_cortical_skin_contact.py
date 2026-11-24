@@ -6,9 +6,10 @@ from scipy.sparse import coo_matrix,diags
 from scipy.sparse.linalg import spsolve
 from compile_connected_joint import digest
 
-def run(h,job,tables,out):
-    out.mkdir();inputs=json.loads((tables/'result.json').read_bytes());z=np.load(job/'loaded-cortex/registered-cortical-facets.npz')
-    r=np.array(z['cell_side_material_bank_nodes'],dtype='i4');bodies=z['body'];seeds=z['cortex_faces'];src=h/'closed-native/native';x=np.loadtxt(src/'mesh.node',skiprows=1,usecols=(1,2,3));tet=np.loadtxt(src/'mesh.ele',skiprows=1,usecols=(1,2,3,4,5),dtype='i4')
+def run(h,job,tables,out,material=None,pose_file=None,cortex=None):
+    src=material or h/'closed-native/native';pose_file=pose_file or job/'posed-app/current.node';cortex=cortex or job/'loaded-cortex'
+    out.mkdir();inputs=json.loads((tables/'result.json').read_bytes());z=np.load(cortex/'registered-cortical-facets.npz')
+    r=np.array(z['cell_side_material_bank_nodes'],dtype='i4');bodies=z['body'];seeds=z['cortex_faces'];x=np.loadtxt(src/'mesh.node',skiprows=1,usecols=(1,2,3));tet=np.loadtxt(src/'mesh.ele',skiprows=1,usecols=(1,2,3,4,5),dtype='i4')
     boundary=np.load(job/'registered-boundary/registered-boundary.npz');env=json.loads((job/'posed-app/scene/launch.json').read_bytes())['environment'];pr='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_'
     area=np.linalg.norm(np.cross(x[r[:,5]]-x[r[:,4]],x[r[:,6]]-x[r[:,4]]),axis=1)*.5
     if not np.isfinite(area).all() or np.any(area<=0):raise ValueError('Degenerate cortical face')
@@ -47,6 +48,6 @@ def run(h,job,tables,out):
         if abs(total-area[which].sum())>1e-12*total:raise ValueError('Cortical area was counted twice or lost')
         report[str(mat)]=dict(facets=len(which),samples=len(contributions),area_m2=total,interpolated_interior_nodes=len(free),relative_residual=float(rel),minimum_thickness_m=min(th[list(contributions)]),maximum_thickness_m=max(th[list(contributions)]))
     np.savez_compressed(out/'material-contact.npz',facets=np.column_stack((r,bodies,seeds)),samples=np.array(samples))
-    result=dict(layers=report,material_reference=digest(src/'mesh.node'),elements=digest(src/'mesh.ele'),loaded=digest(job/'posed-app/current.node'),bone=json.loads((job/'loaded-cortex/result.json').read_bytes())['bone'],surface_binding=digest(tables/'result.json'),cortex=digest(job/'loaded-cortex/registered-cortical-facets.npz'),program=digest(out/'material-contact.npz'),rule='Reference tributary area; three vertex quadrature points per face, accumulated per material and node. Positive thickness uses the existing role values, harmonically extended through same-material edges to interior cortical nodes.')
+    result=dict(layers=report,material_reference=digest(src/'mesh.node'),elements=digest(src/'mesh.ele'),loaded=digest(pose_file),bone=json.loads((cortex/'result.json').read_bytes())['bone'],surface_binding=digest(tables/'result.json'),cortex=digest(cortex/'registered-cortical-facets.npz'),program=digest(out/'material-contact.npz'),rule='Reference tributary area; three vertex quadrature points per face, accumulated per material and node. Positive thickness uses the existing role values, harmonically extended through same-material edges to interior cortical nodes.')
     (out/'result.json').write_text(json.dumps(result,indent=2)+'\n');print(report)
 if __name__=='__main__':run(*(Path(x).resolve() for x in sys.argv[1:]))
