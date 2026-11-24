@@ -3,7 +3,8 @@ from pathlib import Path
 import sys,json,os,subprocess
 from compile_connected_joint import digest
 
-def run(base,pose,out,contact=None):
+def run(base,pose,out,contact=None,control=None):
+    launch=(control or base/'scene')/'launch.json'
     s=base/'app';out.mkdir();app=out/'app';app.mkdir()
     key='NumiHumanLoadedSkinPoseData.inc';src=s/key
     for f in s.iterdir():
@@ -11,12 +12,12 @@ def run(base,pose,out,contact=None):
     if contact:
         from build_cortical_skin_registration import write_contact_include
         write_contact_include(contact,app)
-    ref=json.loads((base/'scene/launch.json').read_bytes())['environment']['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']
+    ref=json.loads(launch.read_bytes())['environment']['NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE']
     old='char nodeSHA[]="'+digest(Path(ref))+'"';new='char nodeSHA[]="'+digest(pose)+'"';txt=src.read_text()
     if txt.count(old)!=1:raise ValueError('Incorrect original material pin')
     txt=txt.replace(old,new)
     if contact:
-        contact_data=json.loads((contact/'result.json').read_bytes());env=json.loads((base/'scene/launch.json').read_bytes())['environment']
+        contact_data=json.loads((contact/'result.json').read_bytes());env=json.loads(launch.read_bytes())['environment']
         reference='NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_NODE_SHA256'
         old_ref='char referenceSHA[]="'+env[reference]+'"'
         if txt.count(old_ref)!=1 or contact_data['loaded']!=digest(pose) or contact_data['elements']!=env['NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_ELEMENTS_SHA256']:raise ValueError('Mismatched assembled material pair')
