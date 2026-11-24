@@ -1,0 +1,71 @@
+{
+  "runtime": {
+    "binary": "11a7ee5558148ea2ba5fc531f7df5832629cdd79ba88aeb1f42a96f978d92a14",
+    "library": "69cfa690625780e95853f3ddaa63ad2911d188cba03f81d46a7590125f7b8034",
+    "metal": "1ab71c1018255a0aa3acb6db83d5d66d2030e01c8eedc2376943ab27aad65ba2",
+    "source_elements": "f5d4a65b4a6047a2604f25ca132b5af5602c6d2ea54f927d92266f374b7ec1fd",
+    "source_rest": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "source_initial": "4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7",
+    "ordered_nodes_and_material": "d874d2d8a9d876754398927878b2517defbd2368ece6b91067f1e5505d13605b",
+    "nodes": 314015,
+    "tetrahedra": 1457361
+  },
+  "launch": "312c3550a16dc1d4b487666b3995360614f64024f212f30b90448262572fbe58",
+  "execution": {
+    "exit": 1,
+    "wall_s": 189.7214579579886
+  },
+  "contact_work": {
+    "mesh": "4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7",
+    "bone": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+    "capture": "c4bcc38cb831930ade9b4e4a020d9f242384422e995540e7e4796f798a2176d4",
+    "nodes": 182244,
+    "bodies": 86,
+    "all_pairs": 15672984,
+    "band_50mm_candidates": 1031003,
+    "closed_solid_candidates": 207483,
+    "max_bodies_per_node": [
+      20,
+      5
+    ],
+    "scope": "Starting pose only. Conservative box comparison in bone-local metres with padded extents and squared-distance margin. Recompute on the GPU at every candidate. No measured speedup."
+  },
+  "native_witnesses": [
+    "registered_loaded_material_install=PASS cells=1457361 nodes=314015 fixed_bed_offset_m=-1.9073486328125e-06 minimum_skin_gap_m=1.9477788697486176e-06 ipc_width_m=9.9999997473787516e-06 outer_contact_nodes=1 anchors=14 pose_sha256=4d9d6a79b9d47f2a0dd8840dc4d752838bd674a302582f7c8cf9b0dc42c78ef7 reference_and_mass_changed=0 initial_forces_applied=0",
+    "whole_body_skin_fat_registered_volume_install=PASS replacement_route=registered_bundle O_rows=76153 I_rows=118397 D_rows=104435 volume_nodes=314015 child_tets=1457361 source_donors=74 maximum_source_mass_delta_kg=5.4312110364662658e-13 maximum_cooked_parent_node_mass_error_kg=4.9986027423135071e-08 maximum_cooked_parent_node_mass_relative_error=0.00017670232996398619 attachment_rows=14 direct_O_render=exact_topology_volume_node_map reduction_labels=typed_O_I_D support_witness_mapping=bounded_source_four_influence_surface source_world_mutated=1 physical_steps=0 motion_qualification=pending",
+    "resting_fem_skin_bed_source=enabled object=15 outer_nodes=76153 proxy_count=1 normal=0,0,1 plane_offset_m=-1.9073486328125e-06 ground_friction_source=1 rigid_material=15 rigid_material_static_friction=0.050000000000000003 nhcnt_source_rows_mapped=32 unique_reduced_witness_nodes=28 witness_mapping=nearest_same_donor_typed_O_node_observational_only maximum_typed_O_witness_gap_m=0.026398 witness_force=0 rigid_pair_scope=all_outer_nodes_not_witness_representatives continuum_contact_and_skin_fat_attachments=preserved",
+    "registered_cortical_contact=compiled faces=4736 combined_incident_rows=1636 different_compliance_rows=206 nodal_rows=3306 owner=existing_metal_body_triangle_bvh",
+    "whole_body_skin_bone_static_bvh=prepared triangles=469136 nodes=938186 samples=15673493 state_owner=existing_Human_FEM_contact source=complete_registered_bone_banks sample_pair_scope=all_registered_bodies_per_triangle_slave approaching_master_pairs=all_registered_banks per_step_CPU_refresh=0 construction_envelope_restriction=removed",
+    "resting_shared_skin_fat_preconditioner=installed final_world_physics_fingerprint=12151118118803685083 object=15 regions=95 modes=1140 source_rows=317444 source_geometry_order=verified source_anatomical_labels=retained mass_whitened=false optic_longitudinal_bins=5 split_skin_source_tets=none split_skin_patch_count=0 max_skin_faces_per_region=36 embedded_contact_boundary=fine_complement",
+    "human_preparation_memory phase=before_fractional_p1_support available=1 resident_bytes=3088318464 footprint_bytes=2133478400 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=after_fractional_p1_merge_release available=1 resident_bytes=3396206592 footprint_bytes=2441481456 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=after_fractional_carrier_load available=1 resident_bytes=3407249408 footprint_bytes=2452491504 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=after_fractional_mass_mapping available=1 resident_bytes=6101286912 footprint_bytes=5147284952 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=registered_skin_fat_import_complete available=1 resident_bytes=7049838592 footprint_bytes=5905619592 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=registered_skin_fat_import_scratch_released available=1 resident_bytes=4843716608 footprint_bytes=3515962720 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=passive_tissue_compile_begin available=1 resident_bytes=4844077056 footprint_bytes=3516192096 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=passive_tissue_compile_complete available=1 resident_bytes=5632098304 footprint_bytes=4025391008 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=shared_tissue_authoring_released available=1 resident_bytes=5729746944 footprint_bytes=6995992208 metal_allocated_bytes=0 recommended_working_set_bytes=0",
+    "human_preparation_memory phase=shared_runtime_initialized available=1 resident_bytes=1045430272 footprint_bytes=8163221352 metal_allocated_bytes=4973068288 recommended_working_set_bytes=12713115648",
+    "myosim_articulated_visual=failed error=\"intercostal per-vertex rib attachment payload identity differs\""
+  ],
+  "stderr_tail": [
+    "human_regional_work_tiles nodes=1696 padded_nodes=24605 tets=9926 padded_tets=141645 metadata_bytes=185952",
+    "human_partitioned_tangent_storage fused=1 action_rows=30340044 retained_action_bytes=128 omitted_action_bytes=3883525504",
+    "human_partitioned_coefficients encoding=sparse stored_values=5074680 dense_capacity=361886160 dense_mirror=0",
+    "matter_upload_memory staging_peak_bytes=33554432 batches=7 device_allocated_bytes=5831426048 recommended_working_set_bytes=12713115648 complete=1",
+    "matter_allocation_phase phase=before_proof_scratch resident_bytes=4913710224 device_allocated_bytes=5831426048 recommended_working_set_bytes=12713115648",
+    "matter_upload_memory staging_peak_bytes=0 batches=1 device_allocated_bytes=5834604544 recommended_working_set_bytes=12713115648 complete=1",
+    "matter_runtime_initialize_complete",
+    "respiration_runtime_initialize_begin",
+    "resting_gas_transport_subcycling=1 respiratory_mechanics_subcycling=1 parallel_respiratory_muscles=1 parallel_respiratory_gas=0 maximum_internal_mechanics_dt_s=0.002 maximum_substeps=32 donor_fraction_bound=0.1 external_blood=operator_split_orifice_ballistic_packets source_anatomy_id=9 donor_compartment_id=7 area_fraction=0.25 discharge_coefficient=0.6 density_kg_m3=1050.6 cut_step=4294967295 bleeding_enabled=0 blood_mpm_enabled=0 blood_mpm_object=4294967295 free_surface_solver=existing_mpm_high_shear_newtonian_reduced_scope",
+    "respiration_runtime_initialize_complete",
+    "human_preparation_memory phase=shared_runtime_initialized available=1 resident_bytes=1045430272 footprint_bytes=8163221352 metal_allocated_bytes=4973068288 recommended_working_set_bytes=12713115648",
+    "myosim_articulated_visual=failed error=\"intercostal per-vertex rib attachment payload identity differs\""
+  ],
+  "archive": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/current-registered-volume-solver-312c3550a16dc1d.tar.zst",
+    "archive_sha256": "21a11711bebb1e5460585a2aae5526d5cdd02351e18ff7c1ba3338a5021a859b",
+    "size_bytes": 17236499
+  }
+}
