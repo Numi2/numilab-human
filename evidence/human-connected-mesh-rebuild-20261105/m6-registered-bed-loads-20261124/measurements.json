@@ -1,0 +1,242 @@
+{
+  "scope": "Native reduced local-contact resting scene with variable pleural pressure and its existing controller. Full-volume trials have separate launches.",
+  "runs": {
+    "registered-section-native": {
+      "launch": "97093bc2ad4ccf2a602c97edb13a8e20bc6aa887b519520c678663cf9697b0d8",
+      "execution": {
+        "exit": 1,
+        "wall_s": 13.015792333055288
+      },
+      "last_engine_status": [
+        "myosim_articulated_visual=failed error=\"accepted full skin intersects the bed beyond the 1 mm inspection tolerance\""
+      ],
+      "end_to_end_intervals": [],
+      "last_display_audit": {
+        "step": "31",
+        "time_s": "0.0620000029448",
+        "min_skin_bed_gap_m": "-0.0155244618654",
+        "vertices_below_1mm": "333",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": []
+    },
+    "finite-section-native": {
+      "launch": "6ccdda94f655031ad60301c8d69a85761252119bb24225c58b79785aaabc80f6",
+      "execution": {
+        "exit": 1,
+        "wall_s": 14.119706958997995
+      },
+      "last_engine_status": [
+        "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 0 accepted steps: GPU rejected the Numi Human stand horizon: code=6 completed_steps=11 failing_index=1\""
+      ],
+      "end_to_end_intervals": [],
+      "last_display_audit": {
+        "step": "0",
+        "time_s": "0",
+        "min_skin_bed_gap_m": "1.00061297417e-05",
+        "vertices_below_1mm": "0",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": []
+    },
+    "finite-section-witness": {
+      "launch": "b30e15b3a38ea85da8502575c388594de64173b58157e86e42851868dc7e4b4a",
+      "execution": {
+        "exit": 1,
+        "wall_s": 2.8221111251041293
+      },
+      "last_engine_status": [
+        "myosim_articulated_visual=failed error=\"accepted geometry step is not an initial, submission-cadence, or true terminal accepted state: 15\""
+      ],
+      "end_to_end_intervals": [],
+      "exported_surface_receipts": []
+    },
+    "finite-section-prefix": {
+      "launch": "ee8870daaf77c30dee0f39665caee8458f9e84c7b9c5cdbfcbcac517d47730e9",
+      "execution": {
+        "exit": 0,
+        "wall_s": 12.711654792074114
+      },
+      "last_engine_status": [],
+      "end_to_end_intervals": [
+        "resting_integrated_throughput accepted_start_step=1 accepted_end_step=11 simulated_s=0.0200000009499 wall_s=0.207971791 real_time_factor=0.0961668928934 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=load_compile_initial_parity_first_accepted_observer_movie_finalization"
+      ],
+      "last_display_audit": {
+        "step": "10",
+        "time_s": "0.0200000009499",
+        "min_skin_bed_gap_m": "0",
+        "vertices_below_1mm": "0",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": [
+        {
+          "step": 0,
+          "surface": "passed",
+          "sha256": "4de28715c3cfb5ff77deeb74f30f0db1eeabb89e0b9fc9b88127d01551297076"
+        }
+      ]
+    },
+    "live-column-native": {
+      "launch": "b0b87e9e50ae4ba413fb2aea28b5893c459ff705217c84a548c8cecb78ec98f8",
+      "execution": {
+        "exit": 1,
+        "wall_s": 13.823952957987785
+      },
+      "last_engine_status": [
+        "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 9 accepted steps: GPU rejected the Numi Human stand horizon: code=6 completed_steps=9 failing_index=1\""
+      ],
+      "end_to_end_intervals": [],
+      "last_display_audit": {
+        "step": "0",
+        "time_s": "0",
+        "min_skin_bed_gap_m": "1.00061297417e-05",
+        "vertices_below_1mm": "0",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": []
+    },
+    "audit-control": {
+      "launch": "62625b4077be80511d6e75bc5114abeedcafd153d009043781381ac52db7e515",
+      "execution": {
+        "exit": 1,
+        "wall_s": 12.702910375082865
+      },
+      "last_engine_status": [
+        "myosim_articulated_visual=failed error=\"accepted full skin intersects the bed beyond the 1 mm inspection tolerance\""
+      ],
+      "end_to_end_intervals": [],
+      "last_display_audit": {
+        "step": "31",
+        "time_s": "0.0620000029448",
+        "min_skin_bed_gap_m": "-0.0155244618654",
+        "vertices_below_1mm": "333",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": [
+        {
+          "step": 31,
+          "surface": "passed",
+          "sha256": "c43b3f95c5bfe741d15788e9500e2e798722c34e9d8bc25c5a8595159bae5853"
+        }
+      ]
+    },
+    "audit-qualified-order": {
+      "launch": "b33b042b0ac1c8fc18acc5264b9b070e3599b5f8247d5fb084d4068e753a1e14",
+      "execution": {
+        "exit": 1,
+        "wall_s": 12.34259400004521
+      },
+      "last_engine_status": [
+        "myosim_articulated_visual=failed error=\"accepted full skin intersects the bed beyond the 1 mm inspection tolerance\""
+      ],
+      "end_to_end_intervals": [],
+      "last_display_audit": {
+        "step": "31",
+        "time_s": "0.0620000029448",
+        "min_skin_bed_gap_m": "-0.0155244618654",
+        "vertices_below_1mm": "333",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": []
+    },
+    "audit-passing-frame": {
+      "launch": "363b8b274a149cab6a6edb63e8e9017b51701f00004eaba7971c6608fed0b50e",
+      "execution": {
+        "exit": 0,
+        "wall_s": 13.226751249982044
+      },
+      "last_engine_status": [],
+      "end_to_end_intervals": [
+        "resting_integrated_throughput accepted_start_step=1 accepted_end_step=8 simulated_s=0.014000000665 wall_s=0.160023417 real_time_factor=0.0874871998575 includes=physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export excludes=terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization"
+      ],
+      "last_display_audit": {
+        "step": "8",
+        "time_s": "0.01600000076",
+        "min_skin_bed_gap_m": "0",
+        "vertices_below_1mm": "0",
+        "nonfinite_skin_vertices": "0",
+        "functional_geometry_status": "0"
+      },
+      "exported_surface_receipts": [
+        {
+          "step": 8,
+          "surface": "passed",
+          "sha256": "20cb1f87c3a51082ceca867254efb10b83504166530e0205ea8c59b95ca32a7a"
+        }
+      ]
+    }
+  },
+  "earlier_settled_support_N": 952.8457332780818,
+  "load_on_regions_below_J035_in_mean_pressure_comparison_N": 415.1200335472822,
+  "limiting_region": {
+    "index": 1,
+    "body": 20,
+    "regional_table": {
+      "source": 17765,
+      "query": 629,
+      "columns": 276,
+      "area_m2": 0.012389940786768097,
+      "increment_m": 1.54818881128449e-05,
+      "limit_m": 0.001981681678444147,
+      "compliance": 6.673517847724322e-05,
+      "capacity_N": 68.35529955820068
+    },
+    "assumed_limiting_source_vertex": {
+      "vertex": "21151",
+      "row": "1",
+      "source_geometry_index": "17765",
+      "x_m": "-0.068017877638339996",
+      "y_m": "-0.44617930054664612",
+      "z_m": "0.0087677165865898132",
+      "area_m2": "0.00035637718264242669",
+      "skin_m": "0.0023936232487751304",
+      "fat_m": "0.0029586066817679098"
+    },
+    "region_pose_samples": [
+      {
+        "accepted_step": "1",
+        "point_world_z_m": "2.5412746254005469e-05",
+        "point_velocity_world_z_m_s": "0"
+      },
+      {
+        "accepted_step": "11",
+        "point_world_z_m": "-0.0019736341200768948",
+        "point_velocity_world_z_m_s": "-0.16418126976434549"
+      }
+    ]
+  },
+  "live_source_witness": {
+    "invalid_columns_observed": 3,
+    "pre_dynamics_step": 9,
+    "vertex": 17764,
+    "region": 1,
+    "depth_m": 0.00176251365338,
+    "allowed_depth_m": 0.00143058365211,
+    "area_m2": 8.74160541571e-05
+  },
+  "actual_accepted_step": 9,
+  "actual_reaction_N": 15.481090951652732,
+  "live_pressure_ceiling_Pa": 3703.49097783799,
+  "native_gpu_parity": {
+    "max_relative_force_error": 1.81907601511e-05,
+    "max_relative_tangent_error": 0.00186595811584,
+    "max_force_normalized_transfer_error": 1.46363074063e-05,
+    "open_row_N": 0,
+    "excess_strain_propagated": true
+  },
+  "finite_table_force_tangent_relative_errors": [
+    4.481110212969353e-07,
+    1.312592756865621e-05
+  ],
+  "storage_archive_members": {
+    "closed-build-recovery": 344,
+    "closed-frame-recovery": 20
+  },
+  "viewer_commit": "8acc4a1f8ccbb2b84bd3e86a88b539a7dbc21b20"
+}
