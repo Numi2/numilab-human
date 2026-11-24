@@ -1,0 +1,170 @@
+{
+  "device": "Apple M6",
+  "control": {
+    "launch": "ac2d0b294dd02da4468546ac73636b34e9a589743da7996b9ad54d5607005ef8",
+    "execution": {
+      "exit": 1,
+      "wall_s": 185.84473279095255
+    },
+    "failure": {
+      "stand_completed_steps": 0,
+      "matter_object_index": 15,
+      "matter_failing_index": 13,
+      "matter_diagnostics": [
+        2.500000238418579,
+        2.5,
+        825429,
+        4
+      ],
+      "common_status": 0,
+      "respiratory_candidate_status": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "coupled_times": [],
+    "stages": [
+      "human_execution_stage=authoritative_segment_begin wall_elapsed_ms=2721.882 stage_step=0",
+      "human_execution_stage=authoritative_segment_end wall_elapsed_ms=42001.238458 stage_step=0"
+    ],
+    "active_work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 560,
+        "cycles_with_work": 42,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 14,
+        "active_restart_begins": 28,
+        "has_outer_sample": true,
+        "last_newton_iteration": 13,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.0360257737,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.0360257737,
+        "last_fgmres_residual_norm": 0,
+        "last_fgmres_initial_norm": 0,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0,
+        "last_newton_correction_ratio": 0,
+        "last_newton_converged": 1,
+        "final_nonpressure_nontransport_relative_residual": 0,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 15,
+        "status_failing_index": 13,
+        "status_residual": 825429,
+        "status_correction": 4
+      }
+    ]
+  },
+  "trial": {
+    "launch": "99deff70dccb8595563abcd7eff86b766c615ce6a03d04c2b9366d1d081376f9",
+    "execution": {
+      "exit": 1,
+      "wall_s": 187.1038565421477
+    },
+    "failure": {
+      "stand_completed_steps": 0,
+      "matter_object_index": 20,
+      "matter_failing_index": 4294967295,
+      "matter_diagnostics": [
+        0.03602680563926697,
+        1.6301020977493863e-08,
+        0,
+        -902
+      ],
+      "common_status": 0,
+      "respiratory_candidate_status": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "coupled_times": [],
+    "stages": [
+      "human_execution_stage=authoritative_segment_begin wall_elapsed_ms=2661.527416 stage_step=0",
+      "human_execution_stage=authoritative_segment_end wall_elapsed_ms=44658.302208 stage_step=0"
+    ],
+    "active_work": [
+      {
+        "root": 0,
+        "environment": 0,
+        "used_columns_sum": 640,
+        "cycles_with_work": 48,
+        "encoded_cycles": 64,
+        "budget_exhausted_solves": 0,
+        "active_newton_begins": 16,
+        "active_restart_begins": 32,
+        "has_outer_sample": true,
+        "last_newton_iteration": 15,
+        "last_newton_latched": false,
+        "last_newton_norm": 0.0360268019,
+        "last_newton_threshold": 9.99999975e-06,
+        "minimum_newton_norm": 0.0360268019,
+        "last_fgmres_residual_norm": 3.01470709e-06,
+        "last_fgmres_initial_norm": 0.0360268019,
+        "last_fgmres_cycle_accepted": 1,
+        "last_fgmres_columns": 0,
+        "last_newton_current_norm": 0.0360268019,
+        "last_newton_correction_ratio": 39.524559,
+        "last_newton_converged": 0,
+        "final_nonpressure_nontransport_relative_residual": 0.0360268056,
+        "final_aggregate_transport_relative_residual": 0,
+        "aggregate_nonempty_cycle_ranges": 0,
+        "aggregate_selected_command_span_total": 0,
+        "status_code": 10,
+        "status_object": 20,
+        "status_failing_index": 4294967295,
+        "status_residual": 0,
+        "status_correction": -902
+      }
+    ]
+  },
+  "build": {
+    "commands": [
+      [
+        "xcrun",
+        "-sdk",
+        "macosx",
+        "metal",
+        "-std=metal4.0",
+        "-O3",
+        "-fno-fast-math",
+        "-I",
+        "/Users/numi/Work/skin-fat-native-integration-209/matter/include",
+        "-I",
+        "/Users/numi/Work/skin-fat-native-integration-209/include",
+        "-c",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/persistent-volume-witness/metal/src/matter_kernels.metal",
+        "-o",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/persistent-volume-witness/metal/NumiMatter.air"
+      ],
+      [
+        "xcrun",
+        "-sdk",
+        "macosx",
+        "metallib",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/persistent-volume-witness/metal/NumiMatter.air",
+        "-o",
+        "/Users/numi/Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/pelvic-contact-response-048/repartition/digital-corridor-049/posterior-equilibrium-050/thoracic-bed-port-051/visible-bed-052/extensor-motion-053/support-equilibrium-054/posterior-contact-refinement-055/live-surface-056/brachioradialis-057/connected-forearm-058/posterior-load-059/loaded-interface-060/connected-material-061/shoulder-assembly-062/coupled-support-063/connected-digit-registration-064/continuous-material-065/physical-shoulder-registration-066/shoulder-owner-069/live-cortical-071/persistent-volume-witness/metal/NumiMatter.metallib"
+      ]
+    ],
+    "metal": "e1c24b88a288f07d6ba06aaaf61769c21a0f9619528a4c456411e2c3af45f39d",
+    "source": "9b2d6e400a89cd818e45b8de1d5824026184ccdc7eaa19071dc70f7c8e670e82",
+    "parent_source": "c6d5e76331d81b3abfedc8e5210b53a69a002cf1a35ff8b9117db507192d78ea",
+    "baseline_metal": "1ab71c1018255a0aa3acb6db83d5d66d2030e01c8eedc2376943ab27aad65ba2"
+  },
+  "archive": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/registered-persistent-witness-99deff70dccb85.tar.zst",
+    "archive_sha256": "ec1d29f7ab093b0af6fcfa528b16eb89a0219335b9b015b75c294f5601610280",
+    "size_bytes": 8472812
+  }
+}
