@@ -1,0 +1,15 @@
+// This filter acts only on the Newton direction. The physical material interval
+// and the separate represented-node line-search and final certificates still apply.
+inline NMRegisteredVolumeControl registeredEndpointControl(
+    float3x3 start, float3x3 end, float lo, float hi, NMRegisteredVolumeControl original) {
+    const float initial = determinant(start);
+    const float finalValue = determinant(end);
+    const float3 a=abs(end[0]), b=abs(end[1]), c=abs(end[2]);
+    const float permanent=dot(a,b.yzx*c.zxy+b.zxy*c.yzx);
+    // An arithmetic margin scales with the three products making up the determinant.
+    // Limit it to a fraction of the true interval, and permit directions moving inward.
+    const float guard=min(.125f*(hi-lo),16.f*0x1p-23f*max(permanent,abs(finalValue)));
+    if (finalValue>initial && hi-finalValue<=guard) return {hi,3u,1.f};
+    if (finalValue<initial && finalValue-lo<=guard) return {lo,3u,1.f};
+    return original;
+}
