@@ -1,0 +1,43 @@
+{
+  "device": "Apple M6",
+  "model": "ed9f9d950fca0ef87244f5487c9f9b8c89ce247639c4583dfdbe108e89a3d7bc",
+  "launch_sha256": "9dc6ee41bf077368870d305fbb8c7635e306460660fdcd70f292db4d02b99165",
+  "physical_law": "Existing seven-coordinate cardiac field retains the certified pressure intervals and GPU acceptance rules.",
+  "execution": {
+    "exit": -15,
+    "wall_s": 151.16501312493347,
+    "stop_reason": "disk_reserve",
+    "available_bytes": 3320336384,
+    "min_free_bytes": 4294967296
+  },
+  "coupled_trace_rows": 0,
+  "coupled_times_s": [],
+  "messages": [
+    "resting_fem_skin_bed_source=enabled object=15 outer_nodes=76153 proxy_count=1 normal=0,0,1 plane_offset_m=-1.9073486328125e-06 ground_friction_source=1 rigid_material=15 rigid_material_static_friction=0.050000000000000003 nhcnt_source_rows_mapped=32 unique_reduced_witness_nodes=28 witness_mapping=nearest_same_donor_typed_O_node_observational_only maximum_typed_O_witness_gap_m=0.026398 witness_force=0 rigid_pair_scope=all_outer_nodes_not_witness_representatives continuum_contact_and_skin_fat_attachments=preserved",
+    "resting_vascular_external_pressure=accepted_absolute_pleural_gauge continuation_s=5 compartment_mask=2080819",
+    "resting_tissue_shared_runtime=bound FEM_nodes=321221 fascia_body_contact_samples=15673493 fascia_body_contact_regions=26 ligament_FEM_objects=2 passive_ligament_force_rows=34 registered_ligament_force_rows=34 legacy_fascia_reduced_ligament_rows=0 FEM_mass_kg=14.415550945782693 duplicate_runtime=0 duplicate_load_schedule=0"
+  ],
+  "stderr_tail": [
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "fgmres_completed_cycle_work=1 control_step=0",
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "fgmres_completed_cycle_work=1 control_step=0",
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "fgmres_completed_cycle_work=1 control_step=0",
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "fgmres_completed_cycle_work=1 control_step=0",
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "fgmres_completed_cycle_work=1 control_step=0",
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "fgmres_completed_cycle_work=1 control_step=0",
+    "fgmres_completed_zero_operator_action=1 control_step=0 fem_nodes=321221 vascular_unknowns=46 deformable_contact_capacity=4207296",
+    "matter_mixed_field_smoother_dispatch_count=skipped step=0 count=9216 multiphysics_objects=0 field_boundaries=0",
+    "matter_fgmres_empty_field_preconditioner_dispatch_count=skipped step=0 count=3072",
+    "matter_fgmres_gpu_indirect_dispatch_count=encoded step=0 node=3264 element=1152 environment_count=1"
+  ],
+  "archive": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/current-cardiac-pressure-domain-9dc6ee41bf07736.tar.zst",
+    "archive_sha256": "65029cf7c50fc59100db0235f1bd09fa03896597848bacf99af12798ee4eb786",
+    "size_bytes": 180489664
+  }
+}
