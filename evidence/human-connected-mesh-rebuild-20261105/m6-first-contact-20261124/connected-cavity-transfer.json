@@ -1,0 +1,174 @@
+{
+  "device": "Apple M6",
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/registered-cavity-transfer-730ef19be0efd473.tar.zst",
+    "sha256": "fda0574d70e6dfbfc1eb84821ac0ec56b9fab11e90a7dedb891b229b36bd70ae"
+  },
+  "geometry": {
+    "cells": 1457316,
+    "nodes": 314015,
+    "components": 91,
+    "input_affected": 430,
+    "new_cells": 385,
+    "reference": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "initial": "9e494b4fc1bffedc44ed4b372cc23e353bf54f0829af1f05fc25c087edff6566",
+    "elements": "c8656ab0ebb567d9b89116ad28f5fa91f04c78124ef83ce9e75af63bbd4d7290",
+    "mass": "5cc3dab340120902b7b849d7abdc5d9fadd0c815e2f8358726584586ff48f099",
+    "minimum_native_interval_margin": 0.0034057334468240302,
+    "failed_intervals": 0,
+    "maximum_source_relative_error": 3.0531133177191805e-14,
+    "maximum_target_relative_error": 2.0961010704922955e-13,
+    "first_moment_change_kg_m": [
+      -1.2030720200123719e-06,
+      -2.032423543546342e-06,
+      5.314778726903074e-07
+    ]
+  },
+  "stretch_by_material": {
+    "15": {
+      "start": 218,
+      "remaining": 172
+    },
+    "16": {
+      "start": 230,
+      "remaining": 145
+    }
+  },
+  "material_import": {
+    "native_imported": true,
+    "nodes": 314015,
+    "cells": 1457316,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 0,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 1.3877787807814457e-17,
+    "skin_kg": 3.4525712828039414,
+    "fat_kg": 10.48710842716542,
+    "node_sha256": "dfdb8e4beb2ae499774eebe5e3037137d4e208242e33971fa8f6a72023d39b20",
+    "element_sha256": "c8656ab0ebb567d9b89116ad28f5fa91f04c78124ef83ce9e75af63bbd4d7290",
+    "label_sha256": "f1368535a14c931dc737aeaca4bb4b16b66b743a6ed4625ce5f07d8f981b004f"
+  },
+  "per_role_quadrature_audit": {
+    "SKIN": {
+      "new_receiver_edges": 1644,
+      "maximum_new_distance_m": 0.18742519982128916,
+      "radius_m": 0.187444,
+      "ineligible_regions": 0,
+      "outside_radius": 0
+    },
+    "FAT": {
+      "new_receiver_edges": 2267,
+      "maximum_new_distance_m": 0.1868400393983036,
+      "radius_m": 0.187444,
+      "ineligible_regions": 0,
+      "outside_radius": 0
+    }
+  },
+  "native_ledger": {
+    "SKIN": "PASS_SOURCE_ONLY_SKIN_SOURCE_CARRIER_FEASIBLE_ALLOCATION",
+    "FAT": "PASS_SOURCE_ONLY_FAT_SOURCE_CARRIER_FEASIBLE_ALLOCATION"
+  },
+  "maximum_thickness_change_m": 1.2162305165527854e-05,
+  "control": {
+    "execution": {
+      "exit": 1,
+      "wall_s": 188.57155104214326
+    },
+    "accepted_steps": 0,
+    "physical_status": 10,
+    "physical_diagnostics": [
+      0.02375091053545475,
+      3.2602574862039546e-08,
+      0,
+      -902
+    ],
+    "active_linear_work": {
+      "root": 0,
+      "environment": 0,
+      "used_columns_sum": 656,
+      "cycles_with_work": 48,
+      "encoded_cycles": 64,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 16,
+      "active_restart_begins": 32,
+      "has_outer_sample": true,
+      "last_newton_iteration": 15,
+      "last_newton_latched": false,
+      "last_newton_norm": 0.0237509087,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 0.0237509087,
+      "last_fgmres_residual_norm": 2.33425067e-06,
+      "last_fgmres_initial_norm": 0.0237509087,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 0.0237509087,
+      "last_newton_correction_ratio": 39.5243988,
+      "last_newton_converged": 0,
+      "final_nonpressure_nontransport_relative_residual": 0.0237509105,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 10,
+      "status_object": 8,
+      "status_failing_index": 4294967295,
+      "status_residual": 0,
+      "status_correction": -902
+    },
+    "final_selected_alpha": 9.31322575e-10,
+    "last_limiting_global_tet": 825429,
+    "launch": "d589f0c83fdca875b3535b4a1d7a1ce6978025af533355437f9487b957889054"
+  },
+  "coupled": {
+    "execution": {
+      "exit": 1,
+      "wall_s": 182.29391066590324
+    },
+    "accepted_steps": 0,
+    "physical_status": 10,
+    "physical_diagnostics": [
+      2.500000238418579,
+      2.5,
+      825280,
+      4
+    ],
+    "active_linear_work": {
+      "root": 0,
+      "environment": 0,
+      "used_columns_sum": 434,
+      "cycles_with_work": 28,
+      "encoded_cycles": 64,
+      "budget_exhausted_solves": 0,
+      "active_newton_begins": 14,
+      "active_restart_begins": 14,
+      "has_outer_sample": true,
+      "last_newton_iteration": 13,
+      "last_newton_latched": false,
+      "last_newton_norm": 0.0224360246,
+      "last_newton_threshold": 9.99999975e-06,
+      "minimum_newton_norm": 0.0224360246,
+      "last_fgmres_residual_norm": 0,
+      "last_fgmres_initial_norm": 0,
+      "last_fgmres_cycle_accepted": 1,
+      "last_fgmres_columns": 0,
+      "last_newton_current_norm": 0,
+      "last_newton_correction_ratio": 0,
+      "last_newton_converged": 1,
+      "final_nonpressure_nontransport_relative_residual": 0,
+      "final_aggregate_transport_relative_residual": 0,
+      "aggregate_nonempty_cycle_ranges": 0,
+      "aggregate_selected_command_span_total": 0,
+      "status_code": 10,
+      "status_object": 15,
+      "status_failing_index": 13,
+      "status_residual": 825280,
+      "status_correction": 4
+    },
+    "final_selected_alpha": 0,
+    "last_limiting_global_tet": null,
+    "launch": "730ef19be0efd473cc5ec1a9676453adec75890b1c02ef81d874786c23ca36bd"
+  },
+  "first_full_import_failure": "One carrier failed the 1e-10 relative-only closure. Corrected and revalidated local feasible flow with its true source mass."
+}
