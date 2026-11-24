@@ -1,0 +1,82 @@
+{
+  "launch": "d311ffea83fbf469bcb6e4ef1642516c867c16192e6b4543bf290fd6a463f582",
+  "inputs": {
+    "mesh.node": "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+    "mesh.ele": "6a37bf967244328239c8ad4e504c2263194862c5d6a36c50c6e48ac080861a0f",
+    "material-walls.npz": "2807e59a2b486bfc5808e43b8d4db4f5378724b3baa64520ea9d5c2efe410f08"
+  },
+  "roles": {
+    "15": "skin",
+    "16": "fat"
+  },
+  "columns": [
+    "cells",
+    "same_wall_cells",
+    "volume_m3",
+    "same_wall_volume_m3"
+  ],
+  "categories": {
+    "all": {
+      "15": [
+        707597,
+        172483,
+        0.003655414035637195,
+        8.500835772328528e-05
+      ],
+      "16": [
+        749719,
+        296793,
+        0.011506446632433739,
+        0.0006389768376416151
+      ]
+    },
+    "altitude_below_1um": {
+      "15": [
+        24093,
+        13419,
+        2.6212592932150943e-09,
+        7.087754793827313e-10
+      ],
+      "16": [
+        52947,
+        29916,
+        1.2829656148100312e-08,
+        5.122691248259384e-09
+      ]
+    },
+    "aspect_above_1000": {
+      "15": [
+        29724,
+        11464,
+        3.062813827362004e-06,
+        1.5972794042017038e-07
+      ],
+      "16": [
+        69972,
+        33609,
+        4.46676998512706e-06,
+        1.5234952458567712e-06
+      ]
+    },
+    "aspect_above_10000": {
+      "15": [
+        3044,
+        1544,
+        5.9536426413703406e-08,
+        5.086419055598449e-09
+      ],
+      "16": [
+        8940,
+        4428,
+        1.359031615437032e-07,
+        4.196032248559849e-08
+      ]
+    }
+  },
+  "minimum_altitude_and_row_and_edge_m": [
+    1.894400291607538e-09,
+    1390418,
+    0.00010782167426266845
+  ],
+  "scope": "A same-wall cell has four vertices on at least one identical registered O/I/D/C wall. The scale and aspect counts describe reference geometry. They are not material failure thresholds."
+}

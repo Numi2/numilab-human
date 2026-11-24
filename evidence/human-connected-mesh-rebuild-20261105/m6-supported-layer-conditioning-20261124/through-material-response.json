@@ -1,0 +1,105 @@
+{
+  "launch": "d311ffea83fbf469bcb6e4ef1642516c867c16192e6b4543bf290fd6a463f582",
+  "mesh": "6a37bf967244328239c8ad4e504c2263194862c5d6a36c50c6e48ac080861a0f",
+  "candidates": "9911d694245230d245e1dedfcaffc6be1c9822dec05dee8d223b86db20dbc0df",
+  "checked_deformation": "7374bb7af6370639a7f9f498c8dd4b5fe4a27c6390e97dce2712524b0c2b9512",
+  "rows": [
+    {
+      "candidate": "03b7d0235b87a6a048f3aac4ff6df0f522911c0b5575612c2b97eacab21510a5",
+      "path": "cell-137663-width-1/candidate-0.npz",
+      "retained": 152,
+      "changed_original": 12,
+      "changed_new": 16,
+      "response": [
+        {
+          "state": "release",
+          "force_N": 3.2518264709226214e-15,
+          "force_error_N": 3.5129753549737946e-15,
+          "energy_J": 7.188809400103197e-23,
+          "energy_error_J": 1.09332414852579e-22
+        },
+        {
+          "state": "accepted_other_case",
+          "force_N": 0.0009814499429963706,
+          "force_error_N": 0.005040149946282058,
+          "energy_J": 1.3239578754121255e-10,
+          "energy_error_J": 1.757778688208022e-10
+        }
+      ],
+      "outcome": "fails local constitutive response"
+    },
+    {
+      "candidate": "03b7d0235b87a6a048f3aac4ff6df0f522911c0b5575612c2b97eacab21510a5",
+      "path": "cell-137663-width-1/candidate-1.npz",
+      "retained": 152,
+      "changed_original": 12,
+      "changed_new": 16,
+      "response": [
+        {
+          "state": "release",
+          "force_N": 3.2518264709226214e-15,
+          "force_error_N": 3.5129753549737946e-15,
+          "energy_J": 7.188809400103197e-23,
+          "energy_error_J": 1.09332414852579e-22
+        },
+        {
+          "state": "accepted_other_case",
+          "force_N": 0.0009814499429963706,
+          "force_error_N": 0.005040149946282058,
+          "energy_J": 1.3239578754121255e-10,
+          "energy_error_J": 1.757778688208022e-10
+        }
+      ],
+      "outcome": "fails local constitutive response"
+    },
+    {
+      "candidate": "99920dead5ffd7022969e8215d809d6f5e2e4faf10e42cdbd335d6b2f082206e",
+      "path": "cell-1439803-width-1/candidate-0.npz",
+      "retained": 254,
+      "changed_original": 104,
+      "changed_new": 127,
+      "response": [
+        {
+          "state": "release",
+          "force_N": 3.9647515623603085e-13,
+          "force_error_N": 4.507370131750424e-13,
+          "energy_J": 7.354289866727407e-20,
+          "energy_error_J": 3.324083458937288e-20
+        },
+        {
+          "state": "accepted_other_case",
+          "force_N": 0.16549811485090263,
+          "force_error_N": 0.025046732358166728,
+          "energy_J": 9.8684954332555e-08,
+          "energy_error_J": 3.0884693336793534e-10
+        }
+      ],
+      "outcome": "fails local constitutive response"
+    },
+    {
+      "candidate": "4cacc6063ec6c1e31030d14f40963911871a5ece59ed6d55934c474a81ece5a5",
+      "path": "cell-1439803-width-1/candidate-1.npz",
+      "retained": 254,
+      "changed_original": 104,
+      "changed_new": 125,
+      "response": [
+        {
+          "state": "release",
+          "force_N": 4.0047696919339036e-13,
+          "force_error_N": 4.497128869634591e-13,
+          "energy_J": 5.0305361794303566e-20,
+          "energy_error_J": 3.96966984186436e-20
+        },
+        {
+          "state": "accepted_other_case",
+          "force_N": 0.1671199012784352,
+          "force_error_N": 0.03381579906888467,
+          "energy_J": 9.952702075963624e-08,
+          "energy_error_J": 5.190838757864099e-10
+        }
+      ],
+      "outcome": "fails local constitutive response"
+    }
+  ],
+  "scope": "All changed FEM contributions compared after exact transpose force transfer. Identical tets are removed from both sides of the comparison so a larger region cannot dilute the result."
+}

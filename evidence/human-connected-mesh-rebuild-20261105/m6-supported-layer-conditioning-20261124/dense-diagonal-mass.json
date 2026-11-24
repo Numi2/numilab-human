@@ -1,0 +1,172 @@
+{
+  "launch": "d311ffea83fbf469bcb6e4ef1642516c867c16192e6b4543bf290fd6a463f582",
+  "walls": "f0b9f11be23b48c8e34851934b9f03e671e8a02cb3a3313f5b0e6ea6107ee137",
+  "rows": [
+    {
+      "row": 137663,
+      "wall": "I",
+      "old_interface": [
+        [
+          107183,
+          107176,
+          107185
+        ],
+        [
+          107183,
+          107176,
+          107177
+        ]
+      ],
+      "prospective_interface": [
+        [
+          107183,
+          107185,
+          107177
+        ],
+        [
+          107176,
+          107185,
+          107177
+        ]
+      ],
+      "role_and_owner": [
+        15,
+        46,
+        42
+      ],
+      "source_mass_kg": 6.28678970759784e-14,
+      "exchanged_material_volume_m3": 6.985321897328605e-17,
+      "remaining_same_owner_cells": 26,
+      "conservative_retired_cell_mass_map": false,
+      "least_centroid_L1_error_mm": 0.14261964308111738,
+      "skin_removal_response": [
+        {
+          "state": "release",
+          "force_change_N": 1.7800326425706003e-16,
+          "original_force_N": 4.881576429680493e-14,
+          "energy_change_J": -1.88079096131566e-37,
+          "original_energy_J": -9.434249130396532e-22
+        },
+        {
+          "state": "accepted_other_case",
+          "force_change_N": 5.7981043539319834e-05,
+          "original_force_N": 0.04043479653351838,
+          "energy_change_J": -1.6877155419266306e-14,
+          "original_energy_J": 1.478912399965054e-08
+        }
+      ],
+      "requires_coupled_fat_cavity": true
+    },
+    {
+      "row": 612693,
+      "wall": "O",
+      "old_interface": [
+        [
+          23008,
+          22944,
+          23015
+        ],
+        [
+          23008,
+          22944,
+          22955
+        ]
+      ],
+      "prospective_interface": [
+        [
+          23008,
+          23015,
+          22955
+        ],
+        [
+          22944,
+          23015,
+          22955
+        ]
+      ],
+      "role_and_owner": [
+        15,
+        20,
+        128
+      ],
+      "source_mass_kg": 3.881020496874096e-10,
+      "exchanged_material_volume_m3": 4.312244996522461e-13,
+      "remaining_same_owner_cells": 66,
+      "conservative_retired_cell_mass_map": true,
+      "least_centroid_L1_error_mm": 0.0,
+      "skin_removal_response": [
+        {
+          "state": "release",
+          "force_change_N": 4.680690441283495e-14,
+          "original_force_N": 8.459885751852083e-14,
+          "energy_change_J": -3.0995435042482077e-34,
+          "original_energy_J": 1.26845308147283e-20
+        },
+        {
+          "state": "accepted_other_case",
+          "force_change_N": 0.3452176127690974,
+          "original_force_N": 0.2606294035753704,
+          "energy_change_J": -5.931407947602515e-08,
+          "original_energy_J": 7.0082698506038e-07
+        }
+      ],
+      "requires_coupled_fat_cavity": false
+    },
+    {
+      "row": 1439803,
+      "wall": "I",
+      "old_interface": [
+        [
+          111350,
+          111351,
+          111348
+        ],
+        [
+          111352,
+          111351,
+          111348
+        ]
+      ],
+      "prospective_interface": [
+        [
+          111350,
+          111352,
+          111351
+        ],
+        [
+          111350,
+          111352,
+          111348
+        ]
+      ],
+      "role_and_owner": [
+        15,
+        43,
+        20
+      ],
+      "source_mass_kg": 4.3590644806325776e-15,
+      "exchanged_material_volume_m3": 4.843404978479027e-18,
+      "remaining_same_owner_cells": 24,
+      "conservative_retired_cell_mass_map": false,
+      "least_centroid_L1_error_mm": 0.05081811683932569,
+      "skin_removal_response": [
+        {
+          "state": "release",
+          "force_change_N": 1.0021018638286466e-15,
+          "original_force_N": 6.030012871673185e-14,
+          "energy_change_J": -7.52316384526264e-37,
+          "original_energy_J": 5.647216499117081e-22
+        },
+        {
+          "state": "accepted_other_case",
+          "force_change_N": 8.580585677784405e-05,
+          "original_force_N": 0.005153311965040946,
+          "energy_change_J": -2.8349857068060394e-13,
+          "original_energy_J": 2.2099545739064917e-10
+        }
+      ],
+      "requires_coupled_fat_cavity": true
+    }
+  ],
+  "scope": "Counterfactual redistribution in the same material star with nonnegative mass, fixed surviving cells, original density bounds and unchanged skin connectivity outside the flipped diagonal. A joint remesh can have different admissible maps. Fat has not been reassigned in this test."
+}

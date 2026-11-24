@@ -1,0 +1,134 @@
+{
+  "launch": "d311ffea83fbf469bcb6e4ef1642516c867c16192e6b4543bf290fd6a463f582",
+  "inputs": {
+    "mesh.node": "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+    "current.node": "cb3f3046cf420626d9d5076e6653d10fe003738f01641984204a1932f837b728",
+    "mesh.ele": "6a37bf967244328239c8ad4e504c2263194862c5d6a36c50c6e48ac080861a0f",
+    "current-child.labels.csv": "9161a59c672608f62947e20d8813299a88ac6ffd42038ce8db9fcb70f9150da8"
+  },
+  "native_import": {
+    "native_imported": true,
+    "nodes": 314014,
+    "cells": 1457316,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 0,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 1.3877787807814457e-17,
+    "skin_kg": 3.4525712828039397,
+    "fat_kg": 10.487108427165417,
+    "node_sha256": "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+    "element_sha256": "6a37bf967244328239c8ad4e504c2263194862c5d6a36c50c6e48ac080861a0f",
+    "label_sha256": "9161a59c672608f62947e20d8813299a88ac6ffd42038ce8db9fcb70f9150da8"
+  },
+  "release": {
+    "min": 0.40066013533254047,
+    "negative": 0,
+    "below_035": 0,
+    "below_040": 0,
+    "below_050": 77,
+    "region_counts_below_040": {}
+  },
+  "trial": {
+    "root": 2,
+    "iteration": 15,
+    "object": 15,
+    "global_cell": 140978,
+    "registered_cell": 137663,
+    "current_J": 0.35,
+    "unit_trial_J": -0.0385918,
+    "chosen_alpha": 1.19209e-07,
+    "last_failing_alpha": 2.38419e-07,
+    "unit_trial_witnesses": [
+      140978,
+      616008,
+      1443118
+    ]
+  },
+  "witnesses": [
+    {
+      "global_tet": 140978,
+      "registered_row": 137663,
+      "material": 15,
+      "donor": 46,
+      "region": 42,
+      "source_face": 9702,
+      "node_indices_zero_based": [
+        107183,
+        107176,
+        107185,
+        107177
+      ],
+      "release_centroid_m": [
+        -0.2850169762969017,
+        -0.84983129799366,
+        0.14347873628139496
+      ],
+      "release_J": 1.0,
+      "release_stretches": [
+        1.0000000000000777,
+        1.0,
+        0.9999999999998559
+      ],
+      "reference_minimum_altitude_mm": 2.504228670577649e-05,
+      "reference_max_edge_mm": 0.18308590993132365
+    },
+    {
+      "global_tet": 616008,
+      "registered_row": 612693,
+      "material": 15,
+      "donor": 20,
+      "region": 128,
+      "source_face": 21646,
+      "node_indices_zero_based": [
+        23008,
+        22944,
+        23015,
+        22955
+      ],
+      "release_centroid_m": [
+        -0.1685124784708023,
+        -0.7370991408824921,
+        0.1325584277510643
+      ],
+      "release_J": 1.0,
+      "release_stretches": [
+        1.0000000000000873,
+        1.0,
+        0.9999999999999593
+      ],
+      "reference_minimum_altitude_mm": 0.00037329162087294826,
+      "reference_max_edge_mm": 4.153584280063672
+    },
+    {
+      "global_tet": 1443118,
+      "registered_row": 1439803,
+      "material": 15,
+      "donor": 43,
+      "region": 20,
+      "source_face": 10134,
+      "node_indices_zero_based": [
+        111350,
+        111352,
+        111351,
+        111348
+      ],
+      "release_centroid_m": [
+        -0.24266746640205383,
+        -0.6006390452384949,
+        0.0901806466281414
+      ],
+      "release_J": 1.0,
+      "release_stretches": [
+        1.000000000000233,
+        1.0,
+        0.9999999999990954
+      ],
+      "reference_minimum_altitude_mm": 2.985878963022945e-06,
+      "reference_max_edge_mm": 0.12059559582655106
+    }
+  ],
+  "scope": "Jacobian from stored reference to stored current coordinates supplied to the dense compiler, before any physical step. The native Newton certificate describes the later root. Reference shape quality, stored release distortion and trial rejection are different measurements."
+}
