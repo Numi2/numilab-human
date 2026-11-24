@@ -6,7 +6,7 @@ from compile_connected_joint import digest
 from import_conditioned_interior import write_nodes
 from supported_material_admission import geom
 
-def run(source,attribution,pins_file,out,checker=None,checker_receipt=None,committed=None):
+def run(source,attribution,pins_file,out,checker=None,checker_receipt=None,committed=None,coupled=False):
     volume=source/'volume'
     x,y=[np.loadtxt(volume/f,skiprows=1,usecols=(1,2,3)) for f in ('mesh.node','current.node')]
     src=y.copy()
@@ -108,7 +108,11 @@ def run(source,attribution,pins_file,out,checker=None,checker_receipt=None,commi
         return dict(energy_J=float(energy(local(every,y[t]),every)),min_J=float(min(vv/vr)),max_J=float(max(vv/vr)),min_shape=float(min(q)),witness_force_N=float(np.linalg.norm(block(witness)[0])))
     if witness not in stars:raise ValueError('Terminal defect is a fixed boundary')
     baseline=bounds();progress=[]
-    for sweep in range(12):
+    if coupled:
+        from coupled_direction import fit
+        if not guards or interval is None:raise ValueError('Coupled fit requires measured motion and native intervals')
+        progress=fit(y,src,x,t,free,inv,vr,mu,bulk,guards,interval,radii,local,energy,geom,witness)
+    for sweep in range(0 if coupled else 12):
         changed=0
         for n in order:
             a,b=stars[n];gradient,H,old=block(n)
@@ -135,13 +139,14 @@ def run(source,attribution,pins_file,out,checker=None,checker_receipt=None,commi
     if np.intersect1d(ids,locked).size or not len(ids) or not progress[-1]['energy_J']<baseline['energy_J']:raise ValueError('No admissible energy reduction')
     write_nodes(volume/'current.node',out/'current.node',{n:y[n] for n in ids})
     result=dict(control_loaded=digest(volume/'current.node'),registered=digest(out/'current.node'),source_reference=digest(volume/'mesh.node'),
-        source_mass=digest(volume/'node-mass.f64'),elements=digest(volume/'mesh.ele'),source_material=pins,motion_control=(digest(committed) if committed is not None else None),flagged_cells=len(flagged),free_nodes=len(free),affected_cells=len(t),changed_nodes=len(ids),
+        source_mass=digest(volume/'node-mass.f64'),elements=digest(volume/'mesh.ele'),source_material=pins,coupled=coupled,motion_control=(digest(committed) if committed is not None else None),flagged_cells=len(flagged),free_nodes=len(free),affected_cells=len(t),changed_nodes=len(ids),
         max_displacement_m=float(np.linalg.norm(y-src,axis=1).max()),shifted_interface_nodes=int(np.isin(ids,walls['I']).sum()),baseline=baseline,progress=progress)
     (out/'fit.json').write_text(json.dumps(result,indent=2)+'\n')
     print(json.dumps([baseline,progress[-1]]))
 if __name__=='__main__':
     p=argparse.ArgumentParser()
     for n in ('source','attribution','pins_file','out'):p.add_argument(n,type=Path)
+    p.add_argument('--coupled',action='store_true')
     p.add_argument('--committed',type=Path)
     p.add_argument('--checker',type=Path)
     p.add_argument('--checker-receipt',type=Path)

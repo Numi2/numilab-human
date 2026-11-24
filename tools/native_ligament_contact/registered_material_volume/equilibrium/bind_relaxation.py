@@ -5,7 +5,7 @@ from compile_connected_joint import digest
 from build_cortical_skin_registration import write_contact_include
 from run_cavity_motion import execute_native
 
-def run(source,fit,control,output,steps):
+def run(source,fit,control,output,steps,trace_failure=None):
     v=source/'volume';owner=source/'binding'
     data=json.loads((fit/'fit.json').read_bytes())
     for f,key in [('mesh.node','source_reference'),('current.node','control_loaded'),('mesh.ele','elements'),('node-mass.f64','source_mass')]:
@@ -48,8 +48,15 @@ def run(source,fit,control,output,steps):
         if val.startswith(str(control)+'/') and val not in cfg['pins']:env[k]=str(output/Path(val).relative_to(control))
     argv[0]=str(app/'numi-human-native');argv[4]=str(output/'native-traces')
     argv[argv.index('--muscle-step-count')+1]=str(steps)
+    if trace_failure is not None:
+        root,iteration,object_id=trace_failure
+        env['NM_FEM_NEWTON_TRACE_ROOT']=str(root)
+        env['NM_FEM_BACKTRACKING_TRACE_ROOT']=str(root)
+        env['NM_FEM_BACKTRACKING_TRACE_OBJECT']=str(object_id)
+        env['NM_FEM_BACKTRACKING_TRACE_NEWTON']=str(iteration)
     cfg['pins'][argv[0]]=json.loads((build/'build.json').read_bytes())['app']
     env['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']=str(steps)
+    env['NUMI_HUMAN_ACCEPTED_Q_INTEGRATION_AUDIT_LAST_STEP']=str(steps)
     for val in set(argv+list(env.values())) & cfg['pins'].keys():
         if digest(Path(val))!=cfg['pins'][val]:raise ValueError('Stale '+val)
     output.mkdir()
@@ -61,4 +68,5 @@ if __name__=='__main__':
     p=argparse.ArgumentParser()
     for n in ('source','fit','control','output'):p.add_argument(n,type=lambda x:Path(x).resolve())
     p.add_argument('steps',type=int)
+    p.add_argument('--trace-failure',type=int,nargs=3,metavar=('ROOT','NEWTON','OBJECT'))
     run(**vars(p.parse_args()))
