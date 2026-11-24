@@ -1,0 +1,255 @@
+--- a/apps/NumiHumanLoadedSkinPose.hpp
++++ b/apps/NumiHumanLoadedSkinPose.hpp
+@@ -3,6 +3,10 @@
+
+ namespace numiLoadedSkin {
+ using Point=std::array<double,3>;
++inline double registeredBedGap(const Point& p) {
++    const auto& n=numiLoadedData::bedNormal;
++    return p[0]*n[0]+p[1]*n[1]+(p[2]-numiLoadedData::fixedBedHeight)*n[2];
++}
+ inline bool enabled() {return std::getenv("NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE")!=nullptr;}
+ inline const std::vector<Point>& points() {
+     static const std::vector<Point> result=[] {
+@@ -18,7 +22,7 @@
+             size_t id=0;auto& p=out[i];
+             require(bool(input>>id>>p[0]>>p[1]>>p[2])&&id==i+1,"invalid current material node identity");
+             for(double v:p)require(std::isfinite(v)&&v==double(float(v)),"non-Float32 loaded material position");
+-            require(p[2]>=numiLoadedData::fixedBedHeight,"loaded material crosses the registered bed plane");
++            require(registeredBedGap(p)>=0.0,"loaded material crosses the registered bed plane");
+         }
+         input>>std::ws;require(input.eof(),"extra rows in loaded material pose");
+         return out;
+@@ -41,11 +45,13 @@
+ }
+ template<class Ground>
+ bool align(std::span<const float> q,const Ground& bed,metalrobo::human::coarse_tissue::FEMOuterGroundAlignment& result,std::string& error){
+-    if(bed.groundNormalX!=0 || bed.groundNormalY!=0 || bed.groundNormalZ!=1 || bed.groundPointZ!=numiLoadedData::fixedBedHeight){
++    const auto& n=numiLoadedData::bedNormal;
++    if(bed.groundNormalX!=n[0] || bed.groundNormalY!=n[1] || bed.groundNormalZ!=n[2] ||
++       bed.groundPointX!=0 || bed.groundPointY!=0 || bed.groundPointZ!=numiLoadedData::fixedBedHeight){
+         error="physical bed differs from the loaded material boundary";return false;}
+     const auto& p=points();double minimum=std::numeric_limits<double>::infinity();
+-    for(const auto& v:p) minimum=std::min(minimum,v[2]-bed.groundPointZ);
+-    if(minimum!=numiLoadedData::minimumBedGap){error="loaded material has no first contact";return false;}
++    for(const auto& v:p) minimum=std::min(minimum,registeredBedGap(v));
++    if(std::abs(minimum-numiLoadedData::minimumBedGap)>8*std::numeric_limits<double>::epsilon()*std::max(std::abs(numiLoadedData::fixedBedHeight),1.0e-15)){error="loaded material has no first contact";return false;}
+     result.q.assign(q.begin(),q.end());result.outerNodeCount=numiLoadedData::outerNodes;
+     result.initialMinimumGapM=result.alignedMinimumGapM=minimum;result.legacyNHCNTWitnessCount=bed.contactCount;return true;
+ }
+@@ -103,7 +109,7 @@
+     require(bundle.boundaryMap.outer.size()==numiLoadedData::outerNodes,"registered outer boundary row count changed");
+     std::vector<unsigned> occupied;
+     for (const auto node : bundle.boundaryMap.outer) {
+-        const double gap=p.at(node)[2]-numiLoadedData::fixedBedHeight;
++        const double gap=registeredBedGap(p.at(node));
+         require(std::isfinite(gap) && gap>0.0,"invalid registered outer bed gap");
+         if (gap<0x1.4f8b580000000p-17) occupied.push_back(node);
+     }
+--- a/apps/NumiHumanLoadedSkinPoseData.inc
++++ b/apps/NumiHumanLoadedSkinPoseData.inc
+@@ -271,6 +271,6 @@
+ };
+ }
+
+-namespace numiLoadedData { constexpr unsigned registeredBedContactNodes[]={26199u}; }
++namespace numiLoadedData { constexpr unsigned registeredBedContactNodes[]={24331u,24538u,26199u}; }
+
+-namespace numiLoadedData { constexpr double minimumBedGap = 0x1.056d2c2000000p-19; constexpr double fixedBedHeight = -0x1.0000000000000p-19; }
++namespace numiLoadedData { constexpr double minimumBedGap = 0x1.056bca4536000p-19; constexpr double fixedBedHeight = 0x1.965db00000000p-10; constexpr double bedNormal[]={0x1.ccfb160000000p-10,-0x1.d68b500000000p-10,0x1.ffff960000000p-1}; }
+--- a/matter/src/runtime.mm
++++ b/matter/src/runtime.mm
+@@ -104,9 +104,11 @@
+     demand(d.environmentCount==1 && world.contact.rigidProxies.size()==1 && !pairs.empty(),
+            "registered plane requires one human and its unique fixed plane");
+     const auto& plane=world.contact.rigidProxies.front();
+-    demand(plane.shapeKind==NM_RIGID_PLANE && !plane.flags && plane.localCenterAndRadius.x==0.f &&
+-           plane.localCenterAndRadius.y==0.f && plane.localCenterAndRadius.z==1.f,
+-           "registered plane requires an upward fixed plane");
++    const auto n=plane.localCenterAndRadius;
++    const double norm2=double(n.x)*n.x+double(n.y)*n.y+double(n.z)*n.z;
++    demand(plane.shapeKind==NM_RIGID_PLANE && !plane.flags && std::isfinite(norm2) &&
++           std::abs(norm2-1.)<=8.*std::numeric_limits<float>::epsilon() && n.z>=.9999f,
++           "registered bed requires a fixed, near-horizontal unit plane");
+     const auto object=pairs.front().objectIndex;
+     std::vector<uint32_t> owner(nodes.size(),NM_INVALID_INDEX);
+     for(uint32_t i=0;i<pairs.size();++i){
+@@ -16396,6 +16398,13 @@
+             const bool useBedModes = bedModeSetting && !std::strcmp(bedModeSetting, "1");
+             uint32_t bedNodeOffset = 0;
+             if (useBedModes) {
++                // These optional response vectors were compiled on a horizontal bed.
++                if(world.contact.rigidProxies.size()!=1 ||
++                   world.contact.rigidProxies.front().localCenterAndRadius.x!=0.f ||
++                   world.contact.rigidProxies.front().localCenterAndRadius.y!=0.f) {
++                    diagnostics.message="registered bed modes require their source plane";
++                    return diagnostics;
++                }
+                 if (!candidate->releaseVolumeMode || !candidate->femHumanGlobalCoarseEnabled ||
+                     candidate->femHumanHybridGlobalCoarseEnabled || candidate->femHumanGlobalCoarseCoupledTailsEnabled ||
+                     candidate->femHumanGlobalCoarseCavityPressureModeEnabled) {
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -11965,7 +11965,7 @@
+ // material-area potential. Off-diagonal normal stiffness acts on neighboring FEM nodes.
+ inline float3 registeredPlaneRow(
+     constant NMPrimalContactArguments& contact, uint pair, float width, float dt,
+-    device const NMFEMNodeStateGPU* nodes, float planeHeight, device const NMFEMNodeStateGPU* accepted, bool linearize) {
++    device const NMFEMNodeStateGPU* nodes, float3 normal, float planeOffset, device const NMFEMNodeStateGPU* accepted, bool linearize) {
+     float normalImpulse=0.f, diagonal=0.f;
+     const uint2 range=contact.planeRanges[pair];
+     constexpr float gauss[4]={.0694318442f,.3300094782f,.6699905218f,.9305681558f};
+@@ -11974,15 +11974,15 @@
+     for(uint row=range.x;row<range.x+range.y;++row){
+         const uint code=contact.planeCorners[row],f=code/3,k=code%3;
+         const uint3 ids=contact.planeFaces[f].xyz;
+-        const float3 gap=float3(nodes[ids.x].positionAndMass.z,nodes[ids.y].positionAndMass.z,
+-                                nodes[ids.z].positionAndMass.z)-planeHeight;
++        const float3 gap=float3(dot(normal,nodes[ids.x].positionAndMass.xyz),dot(normal,nodes[ids.y].positionAndMass.xyz),
++                                dot(normal,nodes[ids.z].positionAndMass.xyz))-planeOffset;
+         float3 stiff=0.f;
+         if(min(gap.x,min(gap.y,gap.z))<width){
+             const float4 geometry=contact.planeMeasure[f];
+             const float invScale=max(dt*dt*width*width,1.e-20f);
+             const float3 mass=float3(nodes[ids.x].positionAndMass.w,nodes[ids.y].positionAndMass.w,nodes[ids.z].positionAndMass.w);
+-            const float3 oldGap=float3(accepted[ids.x].positionAndMass.z,accepted[ids.y].positionAndMass.z,accepted[ids.z].positionAndMass.z)-planeHeight;
+-            const float3 oldVelocity=float3(accepted[ids.x].velocityAndInverseMass.z,accepted[ids.y].velocityAndInverseMass.z,accepted[ids.z].velocityAndInverseMass.z);
++            const float3 oldGap=float3(dot(normal,accepted[ids.x].positionAndMass.xyz),dot(normal,accepted[ids.y].positionAndMass.xyz),dot(normal,accepted[ids.z].positionAndMass.xyz))-planeOffset;
++            const float3 oldVelocity=float3(dot(normal,accepted[ids.x].velocityAndInverseMass.xyz),dot(normal,accepted[ids.y].velocityAndInverseMass.xyz),dot(normal,accepted[ids.z].velocityAndInverseMass.xyz));
+             // Freeze the material coefficient on the accepted reference nodes.
+             // The clipped quadrature domain can then move independently of it.
+             const float3 closing=max(-oldVelocity,0.f);
+@@ -12297,7 +12297,7 @@
+         min(admissionNormalVelocity, 0.0f) * dt;
+     const bool surfacePlane=contact.planeEnabled[0]!=0u;
+     const float3 surfaceResponse=surfacePlane
+-        ? registeredPlaneRow(contact,pairIndex,slop,dt,femNodes,rigid.centerAndRadius.w,
++        ? registeredPlaneRow(contact,pairIndex,slop,dt,femNodes,normal,rigid.centerAndRadius.w,
+                              acceptedPlaneNodes,planeLinearization!=0) : float3(0);
+     if (surfacePlane && (!all(isfinite(surfaceResponse)) || any(surfaceResponse<0.f))) {
+         recordFailure(statuses[environment],NM_STATUS_NONFINITE_RESULT,pair.objectIndex,pairIndex,
+@@ -15752,7 +15752,7 @@
+                     }
+                 } else if (contact.planeEnabled[0] != 0u) {
+                     bound = min(bound, registeredPlaneFraction(separation,
+-                        feasibleSeparation, relativeDisplacement.z, boundaryRoundoff));
++                        feasibleSeparation, directionalSeparation, boundaryRoundoff));
+                 } else if (!certifiedOutward) {
+                     const float safeFraction = mpmContact ? 0.5f : 0.9f;
+                     bound = min(bound, clamp(
+@@ -16322,6 +16322,14 @@
+ constant float bedInactive = -2.f;
+ constant float bedSticking = -1.f;
+
++// Columns map contact-frame impulses to world coordinates. The normal is
++// supplied by the same registered plane used for separation and CCD.
++inline float3x3 registeredBedFrame(float3 normal) {
++    const float3 n=normalize(normal);
++    const float3 u=normalize(float3(n.z,0,-n.x));
++    return float3x3(u,cross(n,u),n);
++}
++
+ inline BedProjection projectBedMomentum(float3 rhs, float3 velocity, float mass,
+                                          float gap, float dt, float2 friction) {
+     BedProjection row = {float3(0), float4(0,0,bedInactive,0)};
+@@ -16404,19 +16412,21 @@
+     const float dt = objectTimestep(d,schedulers[pair.objectIndex]);
+     const float2 mu = sqrt(max(float2(0),materials[objects[pair.objectIndex].materialIndex].interfaceResponse.xy
+                                          * materials[pair.materialInterface].interfaceResponse.xy));
+-    if (any(n != float3(0,0,1)) || !(mass>0 && dt>0) || !all(isfinite(b)) ||
++    if ((!all(isfinite(n)) || abs(dot(n,n)-1.f)>8.f*kEpsilon || n.z<0.9999f) || !(mass>0 && dt>0) || !all(isfinite(b)) ||
+         !all(isfinite(v)) || !isfinite(gap) || !all(isfinite(mu)) || mu.y>mu.x) {
+         recordFailure(status[0],NM_STATUS_INVALID_DISPATCH,pair.objectIndex,pairID,float4(gap,mass,dt,-910));
+         return;
+     }
+-    const BedProjection row = projectBedMomentum(b,v,mass,gap,dt,mu);
++    const float3x3 frame=registeredBedFrame(n);
++    const BedProjection row = projectBedMomentum(transpose(frame)*b,transpose(frame)*v,mass,gap,dt,mu);
+     if (!all(isfinite(row.impulse)) || !all(isfinite(row.tangent))) {
+         recordFailure(status[0],NM_STATUS_NONFINITE_RESULT,pair.objectIndex,pairID,float4(row.impulse,-911));
+         return;
+     }
+     if (!finalPass) tangent[pairID] = row.tangent;
+     if (row.tangent.z == bedInactive) return;
+-    residual[nodeID].xyz += row.impulse;
++    const float3 worldImpulse=frame*row.impulse;
++    residual[nodeID].xyz += worldImpulse;
+     // An active dual can support the body only at the physical boundary.
+     // The geometric certificate and the independent swept tests still run.
+     const bool feasible = abs(gap)<=margin &&
+@@ -16433,11 +16443,11 @@
+         return;
+     }
+     device NMContactSampleGPU& out = samples[index];
+-    const float3 bedImpulse = -row.impulse;
++    const float3 bedImpulse = -worldImpulse;
+     out.impulseAndNormal.xyz += bedImpulse;
+     out.impulseAndNormal.w += row.impulse.z;
+     out.angularImpulseAndTangent.xyz += cross(sample.pointAndSeparation.xyz-rigid.bodyCenter.xyz,bedImpulse);
+-    out.angularImpulseAndTangent.w = length(out.impulseAndNormal.xy);
++    out.angularImpulseAndTangent.w = length((transpose(frame)*out.impulseAndNormal.xyz).xy);
+     candidateHistories[pairID] = out.impulseAndNormal;
+ }
+
+@@ -16457,7 +16467,8 @@
+     const float4 t=tangent[pairID];
+     if(t.z==bedInactive) return;
+     const uint i=contact.pairs[pairID].continuumNode-d.gridNodeCount;
+-    work[i].xyz=applyBedMomentum(work[i].xyz,direction[i].xyz,nodes[i].positionAndMass.w,t);
++    const float3x3 frame=registeredBedFrame(primalContactSample(d,contact,0,pairID).normalAndVelocity.xyz);
++    work[i].xyz=frame*applyBedMomentum(transpose(frame)*work[i].xyz,transpose(frame)*direction[i].xyz,nodes[i].positionAndMass.w,t);
+ }
+
+ kernel void nm_fem_registered_bed_certify(
+@@ -16512,7 +16523,8 @@
+     const float floor=registeredPlaneCertificateFloor(n,pos,offset,sample.barrier.z,
+         solver.contactAcceptance.x*d.numericalLimits.x);
+     const float target=floor+2.f*ccdDistanceRoundoff(floor,scale);
+-    direction[i].xyz=admissibleBedDirection(direction[i].xyz,nodes[i].velocityAndInverseMass.xyz,
++    const float3x3 frame=registeredBedFrame(n);
++    direction[i].xyz=frame*admissibleBedDirection(transpose(frame)*direction[i].xyz,transpose(frame)*nodes[i].velocityAndInverseMass.xyz,
+         sample.pointAndSeparation.w-target,objectTimestep(d,schedulers[pair.objectIndex]),tangent[pairID].z);
+ }
+
+--- a/matter/src/metal/fgmres.metalinc
++++ b/matter/src/metal/fgmres.metalinc
+@@ -547,16 +547,16 @@
+         second * cross(phi, firstCross);
+ }
+
+-inline float3 planeNeighborAction(constant NMPrimalContactArguments& contact,uint pair,device const float4* direction) {
++inline float3 planeNeighborAction(constant NMPrimalContactArguments& contact,uint pair,float3 n,device const float4* direction) {
+     if(!contact.planeEnabled[0]) return float3(0);
+-    const uint2 range=contact.planeRanges[pair];float z=0;
++    const uint2 range=contact.planeRanges[pair];float value=0;
+     for(uint i=range.x;i<range.x+range.y;++i){
+         const uint code=contact.planeCorners[i],k=code%3;
+         const uint3 nodes=contact.planeFaces[code/3].xyz;
+         const float2 off=contact.planeOffDiagonal[i];
+-        z+=dot(off,float2(direction[nodes[(k+1)%3]].z,direction[nodes[(k+2)%3]].z));
+-    }
+-    return float3(0,0,z);
++        value+=dot(off,float2(dot(n,direction[nodes[(k+1)%3]].xyz),dot(n,direction[nodes[(k+2)%3]].xyz)));
++    }
++    return n*value;
+ }
+
+ inline float3 coupledRigidPointDirection(
+@@ -9458,7 +9458,7 @@
+                 environment, pairIndex,
+                 articulatedNv, direction);
+             work[global].xyz += coupledBarrierDirectionalForce(
+-                sample, direction[global].xyz - rigidDirection) + planeNeighborAction(contact,pairIndex,direction) +
++                sample, direction[global].xyz - rigidDirection) + planeNeighborAction(contact,pairIndex,sample.normalAndVelocity.xyz,direction) +
+                 coupledFreeBoxAngularBarrierCorrection(
+                     dispatch, contact, environment, pairIndex,
+                     articulatedNv, direction);
+@@ -9638,7 +9638,7 @@
+                     environment, pairIndex,
+                     articulatedNv, direction);
+                 value = coupledBarrierDirectionalForce(
+-                    sample, direction[global].xyz - rigidDirection) + planeNeighborAction(contact,pairIndex,direction) +
++                    sample, direction[global].xyz - rigidDirection) + planeNeighborAction(contact,pairIndex,sample.normalAndVelocity.xyz,direction) +
+                     coupledFreeBoxAngularBarrierCorrection(
+                         dispatch, contact, environment, pairIndex,
+                         articulatedNv, direction);

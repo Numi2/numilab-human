@@ -1,0 +1,193 @@
+--- a/matter/src/metal/common.metalinc
++++ b/matter/src/metal/common.metalinc
+@@ -211,7 +211,8 @@
+ // the hard CCD boundary. Keep the actual IPC polynomial there; no new force,
+ // state, clearance or extrapolation at nonpositive gaps is introduced.
+ inline MRCompensatedScalar nmFEMPositiveGapIPCEnergy(
+-    MRCompensatedScalar gap,float width,float stiffness) {
++    MRCompensatedScalar gap,float width,float stiffness,
++    thread MRCompensatedScalar* radialDerivative=nullptr) {
+     const auto u=mrCompensatedDivide(gap,{width,0.0f});
+     const auto u2=mrCompensatedMultiply(u,u);
+     const auto v=mrCompensatedAdd(u2,{-1.0f,0.0f});
+@@ -219,6 +220,16 @@
+     const auto width2=mrCompensatedProduct(width,width);
+     const auto scale=mrCompensatedMultiply(
+         mrCompensatedMultiply({stiffness,0.0f},width2),width2);
++    if (radialDerivative!=nullptr) {
++        // E=-k*w^4*(u^2-1)^2*log(u^2), u=(distance-offset)/w.
++        // Differentiate in u and apply du/ddistance before gap powers underflow.
++        const auto scale3=mrCompensatedMultiply(
++            mrCompensatedMultiply({stiffness,0.f},width2),{width,0.f});
++        const auto term=mrCompensatedAdd(mrCompensatedMultiply({2.f,0.f},
++            mrCompensatedMultiply(u,logRatio)),mrCompensatedDivide(v,u));
++        *radialDerivative=mrCompensatedNegate(mrCompensatedMultiply(
++            mrCompensatedMultiply({2.f,0.f},scale3),mrCompensatedMultiply(v,term)));
++    }
+     return mrCompensatedNegate(mrCompensatedMultiply(scale,
+         mrCompensatedMultiply(mrCompensatedMultiply(v,v),logRatio)));
+ }
+@@ -276,7 +287,7 @@
+     const bool belowFloor = floorDelta.high < 0.0f ||
+         (floorDelta.high == 0.0f && floorDelta.low < 0.0f);
+     if(clearanceOffset>0.0f && belowFloor)
+-        return nmFEMPositiveGapIPCEnergy(separation,thickness,stiffness);
++        return nmFEMPositiveGapIPCEnergy(separation,thickness,stiffness,radialDerivative);
+     const MRCompensatedScalar distance = belowFloor
+         ? MRCompensatedScalar{regularizationFloor, 0.0f}
+         : separation;
+--- a/matter/src/metal/contact.metalinc
++++ b/matter/src/metal/contact.metalinc
+@@ -1281,14 +1281,23 @@
+         nmDeformableMollifierCurvature(p.x,p.y,p.z,true));
+ }
+
++inline bool identicalContactTrial(thread const MRCompensatedPositionGPU* base,
++    thread const MRCompensatedPositionGPU* trial,MRCompensatedScalar energy,
++    MRCompensatedScalar trialEnergy) {
++    if(energy.high!=trialEnergy.high || energy.low!=trialEnergy.low)return false;
++    for(uint i=0;i<4u;++i)
++        if(any(base[i].high.xyz!=trial[i].high.xyz) || any(base[i].low.xyz!=trial[i].low.xyz))return false;
++    return true;
++}
++
+ inline bool deformableBarrierEnergyAt(
+     const NMDeformableContactGPU contact,
+     thread const MRCompensatedPositionGPU* position,
+     thread float& energy,
+     thread float& separation,
+     thread MRCompensatedScalar* energyWords = nullptr,
+-    thread const float3* edgeDirection = nullptr,
+-    thread float* edgeDerivative = nullptr
++    thread const float3* featureDirection = nullptr,
++    thread float* featureDerivative = nullptr
+ ) {
+     if (energyWords != nullptr) *energyWords = {NAN, 0.0f};
+     float featureMollifier = 1.0f;
+@@ -1296,7 +1305,7 @@
+     MRCompensatedPositionGPU relative;
+     float3 relativeDirection = float3(0.0f);
+     float mollifierDerivative = 0.0f;
+-    if (edgeDerivative != nullptr) *edgeDerivative = NAN;
++    if (featureDerivative != nullptr) *featureDerivative = NAN;
+     if (contact.identity.z == NM_DEFORMABLE_CONTACT_POINT_POINT) {
+         relative = mrCompensatedVectorAdd(position[0],
+             mrCompensatedVectorNegate(position[1]));
+@@ -1317,6 +1326,15 @@
+         featureMollifier = ipcFeatureMollifierDifferential(
+             ab, ac, firstGradient, secondGradient,
+             energyWords != nullptr ? &featureMollifierWords : nullptr);
++        if (featureDirection != nullptr) {
++            // Closest-point stationarity cancels barycentric derivatives. Use
++            // relative velocities so a rigid translation contributes no slope.
++            relativeDirection=barycentric.x*(featureDirection[0]-featureDirection[1])+
++                barycentric.y*(featureDirection[0]-featureDirection[2])+
++                barycentric.z*(featureDirection[0]-featureDirection[3]);
++            mollifierDerivative=dot(firstGradient,featureDirection[2]-featureDirection[1])+
++                dot(secondGradient,featureDirection[3]-featureDirection[1]);
++        }
+     } else if (contact.identity.z == NM_DEFORMABLE_CONTACT_EDGE_EDGE) {
+         float firstParameter, secondParameter;
+         float3 firstPoint, secondPoint;
+@@ -1336,10 +1354,10 @@
+             firstEdge, secondEdge, firstGradient, secondGradient,
+             energyWords != nullptr ? &featureMollifierWords : nullptr);
+
+-        if (edgeDirection != nullptr) {
+-            const float3 firstVelocity = edgeDirection[1] - edgeDirection[0];
+-            const float3 secondVelocity = edgeDirection[3] - edgeDirection[2];
+-            relativeDirection = (edgeDirection[0] - edgeDirection[2]) +
++        if (featureDirection != nullptr) {
++            const float3 firstVelocity = featureDirection[1] - featureDirection[0];
++            const float3 secondVelocity = featureDirection[3] - featureDirection[2];
++            relativeDirection = (featureDirection[0] - featureDirection[2]) +
+                 firstParameter * firstVelocity - secondParameter * secondVelocity;
+             mollifierDerivative = dot(firstGradient, firstVelocity) +
+                 dot(secondGradient, secondVelocity);
+@@ -1369,8 +1387,8 @@
+         ipcFEMBarrierEnergyCompensated(
+             distance, contact.barrier.z, contact.mollifier.w,
+             nmFEMClearanceAlignedBarrierActive ? contact.barrierHessianRow2.w : 0.0f,
+-            edgeDerivative != nullptr ? &radialDerivative : nullptr);
+-    if (edgeDerivative != nullptr && separation > 0.0f) {
++            featureDerivative != nullptr ? &radialDerivative : nullptr);
++    if (featureDerivative != nullptr && separation > 0.0f) {
+         const auto speed = mrCompensatedVectorDot(relative,
+             mrCompensatedVector(float4(relativeDirection, 0.0f)));
+         const auto distanceDerivative = mrCompensatedDivide(speed, distance);
+@@ -1379,7 +1397,7 @@
+         const auto angularTerm = mrCompensatedMultiply(
+             barrierEnergy, {mollifierDerivative, 0.0f});
+         const auto derivative = mrCompensatedAdd(radialTerm, angularTerm);
+-        *edgeDerivative = derivative.high + derivative.low;
++        *featureDerivative = derivative.high + derivative.low;
+     }
+     const MRCompensatedScalar mollifiedEnergy = mrCompensatedMultiply(
+         barrierEnergy, energyWords != nullptr
+@@ -14980,14 +14998,15 @@
+             if (captureMinimumWitness != 0u && bound < beforeGapBound) contactBoundReason = 3u;
+         }
+
+-        // Match the edge-edge Armijo slope to the same compensated geometry
++        // Match the reference-feature Armijo slope to the same compensated geometry
+         // and potential as the trial energy. Stored force rows are assembled
+         // separately and may use a differently rounded point or mollifier.
+-        const bool matchedEdgeSlope = referenceModeContact &&
+-            contact.identity.z == NM_DEFORMABLE_CONTACT_EDGE_EDGE &&
+-            (!nmFEMClearanceAlignedBarrierActive || contact.barrierHessianRow2.w == 0.0f);
++        const bool matchedFeatureSlope = referenceModeContact &&
++            (contact.identity.z == NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE ||
++             (contact.identity.z == NM_DEFORMABLE_CONTACT_EDGE_EDGE &&
++              (!nmFEMClearanceAlignedBarrierActive || contact.barrierHessianRow2.w == 0.0f)));
+         float3 edgeDirection[4];
+-        if (matchedEdgeSlope) {
++        if (matchedFeatureSlope) {
+             const bool mapped = (contact.identity.w & NM_CONTACT_MAPPED_FEATURE) != 0u;
+             for (uint feature = 0u; feature < 4u; ++feature) {
+                 if (mapped) {
+@@ -15008,8 +15027,8 @@
+         const bool currentEnergyValid = referenceModeContact
+             ? deformableBarrierEnergyAt(contact, featurePotentialPosition,
+                 currentEnergy, currentSeparation, &currentEnergyWords,
+-                matchedEdgeSlope ? edgeDirection : nullptr,
+-                matchedEdgeSlope ? &matchedDerivative : nullptr)
++                matchedFeatureSlope ? edgeDirection : nullptr,
++                matchedFeatureSlope ? &matchedDerivative : nullptr)
+             : deformableBarrierEnergyAt(contact, featurePosition,
+                 currentEnergy, currentSeparation);
+         if (!currentEnergyValid) {
+@@ -15055,7 +15074,7 @@
+                 dispatch,
+                 schedulers[environment * dispatch.objectCount +
+                            contact.identity.x]);
+-            const float directionalDerivative = matchedEdgeSlope
++            const float directionalDerivative = matchedFeatureSlope
+                 ? matchedDerivative : contactBarrierDirectionalDerivative(
+                     contact, analyticDisplacement, dt);
+             if (!isfinite(directionalDerivative)) {
+@@ -15301,8 +15320,15 @@
+                            contactCompensatedSign(contactCompensatedSubtract(
+                                trialEnergyWords, armijoRightWords)) <= 0)
+                         : trialEnergy <= armijoRight;
++                    // The energy and virtual work of a stationary feature are
++                    // unchanged. Other degrees of freedom can still move during this
++                    // coupled trial. Equality is tested on both words at all vertices.
++                    const bool stationary=referenceModeContact && finiteTrial &&
++                        !femFeasibilityOnly && !energyDescending &&
++                        identicalContactTrial(featurePotentialPosition,trialPotentialPosition,
++                                              currentEnergyWords,trialEnergyWords);
+                     const bool trialArmijoAccepted = finiteTrial &&
+-                        (femFeasibilityOnly || energyDescending);
++                        (femFeasibilityOnly || energyDescending || stationary);
+                     if (captureThisTrial) {
+                         trialTraceRecords[trialTraceIndex].guards.y =
+                             trialInitialTouchNonclosing ? 1u : 0u;
+@@ -15313,7 +15339,7 @@
+                         trialTraceRecords[trialTraceIndex].energy = float4(
+                             finiteTrial ? trialEnergy : NAN,
+                             finiteTrial ? trialSeparation : NAN,
+-                            armijoRight, 0.0f);
++                            stationary ? currentEnergy : armijoRight, 0.0f);
+                         trialTraceRecords[trialTraceIndex].weightedDirection =
+                             float4(trialWeightedDirection,
+                                 dot(contact.normalAndTOI.xyz,
