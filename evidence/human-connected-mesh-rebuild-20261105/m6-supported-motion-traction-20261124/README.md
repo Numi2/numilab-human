@@ -23,6 +23,19 @@ The native physiological and body clocks matched with variable pleural pressure.
 
 The executable uses the established normal skin/fat bed-section law with area, layer thickness, moduli and damping. Section mass is included in articulated donor inertia. Passive whole-body fascia is disabled in this configuration. Average support near body weight, a valid shoulder footprint, and repeated pumping establish separate measured properties. They leave dense whole-body settling, all internal crossings, clinical accuracy, 15 wall-clock frames per second, and long-duration gas regulation open.
 
+## Whole-body skin through motion
+
+The external skin fails the anatomical release checks at both native captures. The same established Float32 audit evaluated all 878 target meshes. None of the observed pairs was classified as ocular.
+
+| Accepted time | Skin-to-structure triangle pairs | Skin self-intersection pairs | Target meshes touched |
+| ---: | ---: | ---: | ---: |
+| 7.998 s | 11,514 | 32 | 86 |
+| 16.000 s | 11,531 | 24 | 86 |
+
+At the final capture, 8,869 pairs involved muscle surfaces and 2,217 involved bones. The remaining 445 belonged to semantic class 51011. The two captures shared 8,211 exact face pairs, while 3,303 disappeared and 3,320 new pairs appeared. These are triangle-pair counts. Distinct affected skin faces numbered 2,490 and 2,543. Both complete native geometry packs from the independently executed launcher repeat were byte-identical to those audited. The [recovery record](skin-audit-recovery.json) identifies the complete face-level evidence.
+
+Use this configuration as a repeatable benchmark for bed loading, physiological coupling and the registered shoulder attachment. Whole-body anatomical release remains blocked by these observed defects.
+
 Both skeleton registrations contain the same scapular cortical triangles. Their per-vertex residual after the fitted rigid transform is below 3e-16 m. The dense and regional payloads use the same four cortical vertex identities. The dense native scene with this force attachment accepted two 7.8125 µs steps, then rejected step three. Its retained fresh nonlinear residual was 0.0317013. At the last Newton iterate the volume lower bound on global cell 140978 restricted the step fraction to 1.19209e-7. Fresh mechanical, contact and material acceptance remain in force. An attempted transplant of the latest dense muscle surface into the regional moving poses produced 53 self-intersection pairs at each of the two captures. That tissue transplant was excluded from the running model. The dense volume still has four skin and 33 fat shape failures in the measured reference prefix.
 
 Run the verified regional scene on Numi from its installed directory. The launcher verifies 80 pinned inputs, writes each run to a fresh directory, and uses the existing native executable. Launch configuration, source geometry, physics owners and timestamped output are retained beside the executable inputs.
