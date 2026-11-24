@@ -1,0 +1,345 @@
+{
+  "material": {
+    "evidence": "59987250643b742603fab8e4eed3052fe2b0e80064536b06470e967db292a4d6",
+    "nodes": 314012,
+    "cells": 1457308,
+    "interval_failures": 0,
+    "reference_and_loaded_quality_failures": 0,
+    "minimum_interval_margin": 0.0034057334468240302,
+    "minimum_normalized_shape": 1.0000002302107746e-05,
+    "role_mass_kg": {
+      "15": {
+        "before_kg": 3.4525712828039024,
+        "after_kg": 3.4525712828039024
+      },
+      "16": {
+        "before_kg": 10.487108427165248,
+        "after_kg": 10.48710842716525
+      }
+    },
+    "maximum_local_mass_transport_error_kg": 1.7536228986124187e-22,
+    "maximum_positive_transport_distance_m": 0.002061876601755144,
+    "first_moment_delta_kg_m": [
+      9.986456106503283e-14,
+      2.6645352591003757e-14,
+      -3.1308289294429414e-14
+    ],
+    "inputs": {
+      "mesh.node": "0babc9e1ca92239ceeb119960cd14aa112b901fe23059cd1c191038a7843e051",
+      "current.node": "08bac3fe9971305740c03471f4d89fe97cfe58622b9daa035dc248b8bd9f484f",
+      "mesh.ele": "69674ce4c1950aeca1a21bcb99b54ff60ed49b677c5dbce051b367c251cfaaac",
+      "cell-mass.f64": "0485ce929a8942ec226f027adb333e8b98b94c863889607f453e2fdc2d0cee6e",
+      "node-mass.f64": "dc4e445c51d54f9dceebe70b5d6e88a27619ac6c88d4bd44b842fef520f4c87c",
+      "current-child.labels.csv": "d11a35e982f863d78480f4975d5de3ff40cc68aededf77a7ccce30755014c6ac",
+      "local-ancestry.npz": "5fb624c84e7020130681ac443c7d4aac6857e502689b5d7fd48c40d2dc738353"
+    }
+  },
+  "source_native": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/registered-gravity-contact-ea143f6bc39c1a81.tar.zst",
+  "original_target_count": 6,
+  "removed_witnesses": [
+    1443389,
+    1448995,
+    1456294
+  ],
+  "selected_mapping": {
+    "312779": 312781,
+    "312780": 312781,
+    "312793": 312792
+  },
+  "covered_donor_patch_components": [
+    {
+      "remove": 312779,
+      "survivor": 312780,
+      "old_altitude_m": 2.1839913687744232e-07,
+      "new_altitude_m": 2.712027778582355e-07,
+      "loaded_shift_m": 1.377853900857786e-06,
+      "max_local_source_density_change": 0.0001326300269677283
+    },
+    {
+      "remove": 312793,
+      "survivor": 312792,
+      "old_altitude_m": 2.812426180424021e-07,
+      "new_altitude_m": 2.812426180424021e-07,
+      "loaded_shift_m": 1.9136537426415674e-06,
+      "max_local_source_density_change": 0.0027410604741366917
+    },
+    {
+      "remove": 312780,
+      "survivor": 312781,
+      "old_altitude_m": 2.3937617624238675e-07,
+      "new_altitude_m": 2.3937617624238675e-07,
+      "loaded_shift_m": 2.0465240895838906e-06,
+      "max_local_source_density_change": 0.00016998310517224446
+    }
+  ],
+  "registered_patch_before": {
+    "2/3": 14,
+    "3/3": 1
+  },
+  "registered_patch_after": {
+    "2/3": 10,
+    "3/3": 1
+  },
+  "new_registered_pairs": 0,
+  "layer_pairs": {
+    "reference": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ],
+    "registered": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "rigid_solid_audit": {
+    "banks": 185,
+    "max_change_mm3": {
+      "skin": 0.0,
+      "fat": 0.0
+    },
+    "remaining_cortical_overlap_cm3": {
+      "skin": 1.1177593440815383,
+      "fat": 4.935989911292093
+    }
+  },
+  "remaining_fold": {
+    "exact_registered_material_sources": [
+      {
+        "surface_ids": [
+          596099,
+          600076
+        ],
+        "material_source_cells": [
+          1443333,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596099,
+          600077
+        ],
+        "material_source_cells": [
+          1443333,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596100,
+          600076
+        ],
+        "material_source_cells": [
+          1456404,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596100,
+          600077
+        ],
+        "material_source_cells": [
+          1456404,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596102,
+          600076
+        ],
+        "material_source_cells": [
+          1455262,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596102,
+          600077
+        ],
+        "material_source_cells": [
+          1455262,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596105,
+          600076
+        ],
+        "material_source_cells": [
+          1450905,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          596105,
+          600077
+        ],
+        "material_source_cells": [
+          1450905,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          597175,
+          600076
+        ],
+        "material_source_cells": [
+          1446148,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          597175,
+          600077
+        ],
+        "material_source_cells": [
+          1446148,
+          1450146
+        ]
+      },
+      {
+        "surface_ids": [
+          600076,
+          600078
+        ],
+        "material_source_cells": [
+          1450146,
+          1456293
+        ]
+      }
+    ],
+    "unresolved_surface_owners": [],
+    "unique_intersected_cell_pairs": [
+      {
+        "source_cells": [
+          1443333,
+          1450146
+        ],
+        "shared_volume_um3": 1.0099677921444561e-05,
+        "smaller_cell_volume_um3": 1127.9676286793765
+      },
+      {
+        "source_cells": [
+          1446148,
+          1450146
+        ],
+        "shared_volume_um3": 0.12554192785793739,
+        "smaller_cell_volume_um3": 1127.9676286793765
+      },
+      {
+        "source_cells": [
+          1450146,
+          1450905
+        ],
+        "shared_volume_um3": 0.004541760210783749,
+        "smaller_cell_volume_um3": 1127.9676286793765
+      },
+      {
+        "source_cells": [
+          1450146,
+          1455262
+        ],
+        "shared_volume_um3": 0.003166415526331151,
+        "smaller_cell_volume_um3": 1127.9676286793765
+      },
+      {
+        "source_cells": [
+          1450146,
+          1456293
+        ],
+        "shared_volume_um3": 97.24027073768957,
+        "smaller_cell_volume_um3": 1127.9676286793765
+      },
+      {
+        "source_cells": [
+          1450146,
+          1456404
+        ],
+        "shared_volume_um3": 0.007038893176043004,
+        "smaller_cell_volume_um3": 1127.9676286793765
+      }
+    ],
+    "cortical_quadrature": [
+      {
+        "face": 2865,
+        "source_cell": 1450146,
+        "bone": 13,
+        "rigid_source_triangles": [
+          694,
+          694,
+          694
+        ],
+        "distance_um": [
+          3.417551287925654,
+          2.4326629799579145,
+          1.497230021542011
+        ]
+      },
+      {
+        "face": 2866,
+        "source_cell": 1450146,
+        "bone": 13,
+        "rigid_source_triangles": [
+          694,
+          694,
+          694
+        ],
+        "distance_um": [
+          9.145007193662037,
+          2.9290939979645914,
+          3.8645269563775253
+        ]
+      },
+      {
+        "face": 2867,
+        "source_cell": 1456293,
+        "bone": 13,
+        "rigid_source_triangles": [
+          694,
+          694,
+          694
+        ],
+        "distance_um": [
+          8.895654251356207,
+          2.8671151873649627,
+          2.6797410557671117
+        ]
+      }
+    ],
+    "source_archive_mesh": "69674ce4c1950aeca1a21bcb99b54ff60ed49b677c5dbce051b367c251cfaaac"
+  },
+  "physical_status": "Offline compact mesh and locally conserved mass. The native trial in the parent receipt preceded these topology edits. Skin/fat and cortical material sheet intersections still require repair before motion qualification."
+}
