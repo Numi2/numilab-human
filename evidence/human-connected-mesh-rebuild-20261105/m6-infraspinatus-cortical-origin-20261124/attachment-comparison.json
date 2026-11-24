@@ -1,0 +1,52 @@
+{
+  "registration": "e8d3eac1e0c64db899e0425aac248bfb7d62f514ad1dff72ddd304f2bc596651",
+  "native_muscle_sha256": "79819cf79e590ebaca8b6c0a79a1df68edc275e605c363e2c19b6c1bbf7d171f",
+  "native_tendon_payload_sha256": "d4fe82d67bf0b0ce45689841214f8d1e094fa7d7c951f2a524fc5949f7915f3f",
+  "control": "2bbaa6385cb786708f2ce32c53f4d535a5082602108ad3c510728d40b34b358c",
+  "trial": "575ff8bf617f06af9b10bd0c2c2025b71bca99690d5170298781ed6331977786",
+  "accepted_s": 1.5625000742147677e-05,
+  "accepted_steps": 2,
+  "source_contact": [
+    {
+      "step": 0,
+      "ids_identical": true,
+      "values_identical": true
+    },
+    {
+      "step": 1,
+      "ids_identical": true,
+      "values_identical": true
+    }
+  ],
+  "bone_count": 157,
+  "max_bone_translation_m": 0.0,
+  "max_bone_rotation_rad": 0.0,
+  "file_comparisons": {
+    "physical-accepted.node": true,
+    "native-traces/resting-body-motion-partition.csv": false,
+    "native-traces/resting-com-q-integration.csv": false,
+    "force-observer.f32": true
+  },
+  "numerical_channels": 77,
+  "nonzero_channel_deltas": {
+    "pre_projection_equality_residual_generalized_s": 3.388296588e-13,
+    "post_projection_equality_residual_generalized_s": 3.70060405929e-12,
+    "equality_velocity_projection_max_generalized_s": 9.0949470177e-13
+  },
+  "bed_N": [
+    11.01474354715673,
+    11.01474354715673
+  ],
+  "accepted_material_identical_to_audited": true,
+  "shape_failures": {
+    "skin": 4,
+    "fat": 33
+  },
+  "inversions": {
+    "skin": 0,
+    "fat": 0
+  },
+  "cold_wall_s": 215.70655087498017,
+  "native_body_clock": "resting_integrated_body=completed simulated_s=1.5625000742147677e-05 wall_s=70.892342459000005 real_time_factor=2.204046332815743e-07 physiology_body_clock=matched root_assistance=false presentation_qualification=pending",
+  "scope": "The source and distributed force geometry were changed. An individual infraspinatus tension was not sampled. The comparison covers two coupled physical steps."
+}
