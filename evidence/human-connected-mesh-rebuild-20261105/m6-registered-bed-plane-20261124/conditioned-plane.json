@@ -1,0 +1,34 @@
+{
+  "launch_sha256": "c57c7d4041644ba87b90d3d72ec02d076840772bf165ffb7f39237b0c29d7083",
+  "execution": {
+    "exit": 1,
+    "wall_s": 16.72786512505263
+  },
+  "native_binary": "fb8807ba35a42e7bcf0e70422d7eb5d6c9dc5423395e4bc2ae32f103e748cf64",
+  "bones_sha256": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+  "external_pleural_pressure": true,
+  "regional_bed": true,
+  "dense_skin_fat": false,
+  "active_fascia_regions": 26,
+  "admitted_ligament_catalog_rows": 34,
+  "initial_kg": 97.13195069110952,
+  "physical_mass_kg": 97.13195258509218,
+  "fem_mass_kg": 0.4758712247930366,
+  "total_gravity": {
+    "mass_kg": 97.13195256890286,
+    "center_m": [
+      -0.025153335766237125,
+      -0.7571328782102574,
+      0.11582989444899482
+    ],
+    "fem_nodes": 7206
+  },
+  "catalog_lines": [
+    "registered_ligament_source_geometry=admitted rows=34 retained_source_bone_meshes=185 source_bone_records=185 bone_payload_sha256=2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29 path_guard=all_current_pose_registered_meshes endpoint_projection=bounded_current_registered_surface"
+  ],
+  "terminal": "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 0 accepted steps: GPU rejected the Numi Human stand horizon: code=9 completed_steps=0 failing_index=1\"",
+  "human_joint_failure": "human_joint_failure completed_steps=0 matter_status=10 matter_failing_index=4294967295 matter_object_index=1 matter_diagnostics=[0.00098417047411203384,0.00089148955885320902,0.00098416837863624096,-1048584] failure_owner=passive_tissue_runtime",
+  "matter_fgmres_active_work": "matter_fgmres_active_work={\"root\":0,\"environment\":0,\"used_columns_sum\":1024,\"cycles_with_work\":64,\"encoded_cycles\":64,\"budget_exhausted_solves\":16,\"active_newton_begins\":16,\"active_restart_begins\":48,\"has_outer_sample\":true,\"last_newton_iteration\":15,\"last_newton_latched\":false,\"last_newton_norm\":0.00104337453,\"last_newton_threshold\":9.99999975e-06,\"minimum_newton_norm\":0.000781575218,\"last_fgmres_residual_norm\":2.66414718e-05,\"last_fgmres_initial_norm\":0.00104337453,\"last_fgmres_cycle_accepted\":0,\"last_fgmres_columns\":16,\"last_newton_current_norm\":0.00104337453,\"last_newton_correction_ratio\":0.000891489559,\"last_newton_converged\":0,\"final_nonpressure_nontransport_relative_residual\":0.000984170474,\"final_aggregate_transport_relative_residual\":0,\"aggregate_nonempty_cycle_ranges\":0,\"aggregate_selected_command_span_total\":0,\"status_code\":10,\"status_object\":1,\"status_failing_index\":4294967295,\"status_residual\":0.000984168379,\"status_correction\":-1048584}",
+  "last_logged_accepted_step": 0,
+  "retained_coupled_rows": 0
+}
