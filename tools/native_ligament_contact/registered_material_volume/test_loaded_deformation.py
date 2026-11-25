@@ -3,7 +3,7 @@
 import unittest
 
 import numpy as np
-from audit_registered_cortical_occupancy import loaded_deformation
+from audit_registered_cortical_occupancy import accepted_bed_load, loaded_deformation
 
 
 class LoadedMaterialTests(unittest.TestCase):
@@ -38,6 +38,14 @@ class LoadedMaterialTests(unittest.TestCase):
         )[15]
         self.assertEqual(stats["minimum_stretch"], 1)
         self.assertEqual(self.measure(observed)["relative_volume_failures"], 1)
+
+    def test_dense_bed_force_matches_accepted_impulse(self):
+        line = ("resting_fem_skin_bed_accepted_root_reaction normal_impulse_Ns=0.01 "
+                "mean_normal_force_N=10 root_dt_s=0.001 valid_contact_sample_count=2 "
+                "scope=last_accepted_root_existing_frame_reduction articulated_support_rows=0")
+        self.assertEqual(accepted_bed_load([line], 0.001)["last_root_mean_normal_force_N"], 10)
+        with self.assertRaises(ValueError):
+            accepted_bed_load([line], 0.002)
 
     def test_inverted_stress_free_reference(self):
         self.reference[[1, 2]] = self.reference[[2, 1]]

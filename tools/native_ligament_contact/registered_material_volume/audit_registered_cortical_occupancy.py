@@ -82,6 +82,35 @@ def loaded_deformation(reference, loaded, cells, materials, *, compensated=False
     return result
 
 
+def accepted_bed_load(lines, physical_step_s):
+    """Read the force from the dense FEM/bed owner at its last accepted root."""
+    result = {}
+    for line in lines:
+        if line.startswith("resting_initialization="):
+            fields = dict(word.split("=", 1) for word in line.split() if "=" in word)
+            result["initialization"] = fields["resting_initialization"]
+            result["initial_balanced"] = fields["balanced"] == "true"
+            result["initial_maximum_acceleration_residual_m_s2"] = float(
+                fields["maximum_acceleration_residual"]
+            )
+        elif line.startswith("resting_fem_skin_bed_accepted_root_reaction "):
+            fields = dict(word.split("=", 1) for word in line.split()[1:] if "=" in word)
+            if fields["scope"] != "last_accepted_root_existing_frame_reduction":
+                raise ValueError("Unmatched dense support reaction interval")
+            dt = float(fields["root_dt_s"])
+            impulse = float(fields["normal_impulse_Ns"])
+            force = float(fields["mean_normal_force_N"])
+            if (dt <= 0 or impulse < 0 or force < 0
+                    or not np.isfinite((dt, impulse, force)).all()
+                    or not np.isclose(dt, physical_step_s, rtol=1e-7, atol=0)
+                    or not np.isclose(impulse / dt, force, rtol=1e-7, atol=1e-10)):
+                raise ValueError("Inconsistent bed impulse, force or physical time")
+            result["last_root_mean_normal_force_N"] = force
+            result["last_root_normal_impulse_Ns"] = impulse
+            result["last_root_contact_samples"] = int(fields["valid_contact_sample_count"])
+    return result
+
+
 def read_material_capture(
     directory, cortex, reference, elements, labels, cells, material_rows
 ):
@@ -194,11 +223,15 @@ def read_material_capture(
                 raise ValueError("Cavity crosses physical material identities")
             cells = np.vstack([cells[retained], new])
             material_rows = np.r_[material_rows[retained], child_material]
+    step_s = float(cfg["argv"][cfg["argv"].index("--muscle-step-seconds") + 1])
+    with (directory / "stdout.log").open() as log:
+        bed = accepted_bed_load(log, step_s)
     displacement = np.linalg.norm(final - opening, axis=1)
     observation = {
         "launch_sha256": digest(directory / "launch.json"),
         "receipt_sha256": digest(receipt),
         "accepted_node_sha256": digest(state),
+        "bed_support": bed,
         "loaded_node_sha256": digest(initial_path),
         "step": steps,
         "time_s": capture["accepted_time_s"],
