@@ -73,6 +73,11 @@ def main():
         f"Verified {len(cfg['pins'])} native input identities. Physical timestep {argv[argv.index('--muscle-step-seconds') + 1]} s.",
         flush=True,
     )
+    print(
+        f"Physical scope from the launch manifest: {cfg['scope']} "
+        f"Variable pleural pressure={settings['NM_VASCULAR_STEP_EXTERNAL_PRESSURE']}.",
+        flush=True,
+    )
     if args.check:
         return 0
 

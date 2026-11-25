@@ -1,0 +1,129 @@
+{
+  "native_pack": "427be289690edcbe57981b2c5069b6f44b13675444dbf1a4f60c6077916f4151",
+  "banks": 347,
+  "tested_samples": 2020005,
+  "over_2mm": 41,
+  "over_2mm_already_at_opening": 39,
+  "largest": [
+    {
+      "id": 103,
+      "name": "long head of right biceps brachii",
+      "opening_mm": 19.648123305988797,
+      "accepted_mm": 19.706008404985532,
+      "at_witness_abs_winding": 3.4292191082117146e-05
+    },
+    {
+      "id": 138,
+      "name": "left extensor digitorum",
+      "opening_mm": 14.43267804700399,
+      "accepted_mm": 14.427250769139182,
+      "at_witness_abs_winding": 8.721078603585175e-06
+    },
+    {
+      "id": 137,
+      "name": "right extensor digitorum",
+      "opening_mm": 13.564592977331237,
+      "accepted_mm": 13.53718934652847,
+      "at_witness_abs_winding": 8.822776607075866e-06
+    },
+    {
+      "id": 110,
+      "name": "left brachioradialis",
+      "opening_mm": 11.850964684937631,
+      "accepted_mm": 11.813708005997759,
+      "at_witness_abs_winding": 1.741874152472872e-05
+    },
+    {
+      "id": 120,
+      "name": "humeral head of left flexor carpi ulnaris",
+      "opening_mm": 11.601931238644799,
+      "accepted_mm": 11.70823466690024,
+      "at_witness_abs_winding": 2.0524611840690155e-05
+    },
+    {
+      "id": 135,
+      "name": "right flexor pollicis longus",
+      "opening_mm": 9.486609590157764,
+      "accepted_mm": 9.396568307113046,
+      "at_witness_abs_winding": 7.130348264952624e-06
+    },
+    {
+      "id": 136,
+      "name": "left flexor pollicis longus",
+      "opening_mm": 9.20865831055026,
+      "accepted_mm": 9.161554772494842,
+      "at_witness_abs_winding": 8.348168029276293e-06
+    },
+    {
+      "id": 105,
+      "name": "short head of right biceps brachii",
+      "opening_mm": 8.898171008651868,
+      "accepted_mm": 8.946888445130128,
+      "at_witness_abs_winding": 3.781848196079268e-05
+    }
+  ],
+  "cortical_samples": {
+    "registered_reference": {
+      "skin": 105,
+      "fat": 220
+    },
+    "unpromoted_material_proposal": {
+      "skin": 103,
+      "fat": 211
+    }
+  },
+  "attempted_material_quality": {
+    "15": {
+      "cells": 707597,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 0
+    },
+    "16": {
+      "cells": 749719,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 0
+    }
+  },
+  "cortical_cage_incompatible": 61,
+  "cortical_cage_overlaps_selected_muscle": 8,
+  "tendon_preparation": {
+    "cells": 30516,
+    "inverted": 0,
+    "min_J": 0.2970420359459673,
+    "max_handle_error_mm": 0.0009301054634594943,
+    "muscle_self_folds": {
+      "91": 0,
+      "103": 0,
+      "105": 0,
+      "107": 10
+    }
+  },
+  "wall_trial": {
+    "incompatible": 88,
+    "max_handle_error_mm": 11.287903448766038
+  },
+  "connected_volume_trial": {
+    "changed_nodes": 1861,
+    "max_delta_mm": 0.7972039635185671,
+    "interior_samples": 309,
+    "new_sampled_occupancy": 0,
+    "invalid_cells": 0,
+    "new_deep_wall_pairs": 6,
+    "volume_ratio_min_max": [
+      0.03690326085511885,
+      250.21389370850966
+    ],
+    "mass_kg": {
+      "15": 3.4525712828039024,
+      "16": 10.487108427165248
+    },
+    "maximum_nodal_mapping_error_kg": 1.3877787807814457e-17
+  },
+  "bounded_five_percent_volume_trial": {
+    "interior_samples": 325,
+    "deep_exterior_samples": 490
+  },
+  "decision": "Retain the native contact correction. Both the physical volume trial and the reconstructed arm remain experimental. Repair the typed deep boundary, adjacent muscle volumes, and source mass registration together before whole-body qualification."
+}
