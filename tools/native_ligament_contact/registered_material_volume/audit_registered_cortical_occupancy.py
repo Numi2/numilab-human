@@ -386,13 +386,6 @@ def validate(
     deformation = loaded_deformation(
         reference[:, 1:], x, cells, lab[:, 1], compensated=observation is not None
     )
-    lo = np.empty((len(cells), 3))
-    hi = np.empty_like(lo)
-    for begin in range(0, len(cells), 32768):
-        sl = slice(begin, begin + 32768)
-        v = x[cells[sl]]
-        lo[sl] = v.min(axis=1)
-        hi[sl] = v.max(axis=1)
     from torso_cell_geometry import geom
 
     quality = {
@@ -433,8 +426,26 @@ def validate(
     rows = {}
     sample_records = []
     visited = set()
-    for (body, sid), (f, y, _) in banks(cortex).items():
-        if body not in body_ids:
+    cortex_banks = banks(cortex)
+    all_bodies = {key[0] for key in cortex_banks}
+    requested = all_bodies if body_ids is None else set(body_ids)
+    if not requested or not requested <= poses.keys():
+        raise ValueError("Cortical audit lacks a requested registered rigid pose")
+    # For the complete skeleton, reuse one tetrahedral hierarchy across all banks.
+    whole_tree = None
+    if requested == all_bodies:
+        whole_tree = igl.AABB()
+        whole_tree.init(x, cells)
+    else:
+        lo = np.empty((len(cells), 3))
+        hi = np.empty_like(lo)
+        for begin in range(0, len(cells), 32768):
+            sl = slice(begin, begin + 32768)
+            v = x[cells[sl]]
+            lo[sl] = v.min(axis=1)
+            hi[sl] = v.max(axis=1)
+    for (body, sid), (f, y, _) in cortex_banks.items():
+        if body not in requested:
             continue
         visited.add(body)
         rot, t = poses[body]
@@ -443,20 +454,23 @@ def validate(
         v = (rot.apply(unique) + t)[seam]
         used = np.unique(f)
         pts = np.ascontiguousarray(np.vstack((v[used], v[f].mean(1))))
-        selected = np.flatnonzero(
-            np.all((hi >= pts.min(0)) & (lo <= pts.max(0)), axis=1)
-        )
-        bank = np.ascontiguousarray(cells[selected])
-        idx = np.full(len(pts), -1, dtype="i8")
-        if len(bank):
-            tree = igl.AABB()
-            tree.init(x, bank)
-            idx = igl.in_element(x, bank, pts, tree)
+        if whole_tree is not None:
+            idx = igl.in_element(x, cells, pts, whole_tree)
+        else:
+            selected = np.flatnonzero(np.all((hi >= pts.min(0)) & (lo <= pts.max(0)), axis=1))
+            idx = np.full(len(pts), -1, dtype="i8")
+            if len(selected):
+                bank = np.ascontiguousarray(cells[selected])
+                tree = igl.AABB()
+                tree.init(x, bank)
+                local = igl.in_element(x, bank, pts, tree)
+                hit = local >= 0
+                idx[hit] = selected[local[hit]]
         samples = np.flatnonzero(idx >= 0)
         counts = {15: 0, 16: 0}
         witness = {}
         if len(samples):
-            ids = selected[idx[samples]]
+            ids = idx[samples]
             verts = x[cells[ids]]
             edges = verts[:, 1:] - verts[:, :1]
             inv = np.linalg.inv(edges.transpose(0, 2, 1))
@@ -501,7 +515,7 @@ def validate(
             "interior_samples_by_material": counts,
             "witness": witness,
         }
-    if visited != set(body_ids):
+    if visited != requested:
         raise ValueError("Missing requested cortical body")
     if sample_output is not None:
         np.save(sample_output, np.array(sample_records, dtype=np.int64).reshape(-1, 5))
@@ -515,6 +529,12 @@ def validate(
         "stress_free_nodes": digest(reference_path),
         "loaded_deformation": deformation,
         "cortex": digest(cortex),
+        "cortical_coverage": {
+            "registered_banks": len(cortex_banks), "tested_banks": len(rows),
+            "registered_bodies": len(all_bodies), "tested_bodies": len(visited),
+            "samples": sum(row["tested_samples"] for row in rows.values()),
+            "sampling": "Referenced cortical vertices and face centroids; a zero count cannot certify surface separation.",
+        },
         "material_nodes": digest(node),
         "elements": digest(tet),
         "labels": digest(labels),
@@ -547,9 +567,9 @@ if __name__ == "__main__":
         required=True,
         help="Compiled material-boundary.json",
     )
-    parser.add_argument(
-        "--bodies", nargs="+", type=int, default=[34, 41, 42, 43, 84, 91, 92, 93]
-    )
+    selection = parser.add_mutually_exclusive_group()
+    selection.add_argument("--bodies", nargs="+", type=int, help="Restrict sampling to listed rigid-body IDs")
+    selection.add_argument("--all-bodies", action="store_true", help="Sample every registered cortical bank (default)")
     parser.add_argument(
         "--proposal",
         type=Path,
