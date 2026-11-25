@@ -1,5 +1,6 @@
 """Find positive-barycentric cortical samples inside the actual registered skin/fat tetrahedra."""
 
+import csv
 import gzip
 import hashlib
 import json
@@ -27,10 +28,11 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
-def loaded_deformation(reference, loaded, cells, materials):
-    """Measure the loaded state in the native Float32 material coordinates."""
+def loaded_deformation(reference, loaded, cells, materials, *, compensated=False):
+    """Keep the native reference precision and the observed displacement precision."""
     reference = reference.astype(np.float32).astype(np.float64)
-    loaded = loaded.astype(np.float32).astype(np.float64)
+    if not compensated:
+        loaded = loaded.astype(np.float32).astype(np.float64)
     result = {
         material: {
             "invalid_reference_cells": 0,
@@ -80,8 +82,142 @@ def loaded_deformation(reference, loaded, cells, materials):
     return result
 
 
+def read_material_capture(
+    directory, cortex, reference, elements, labels, cells, material_rows
+):
+    """Read the terminal physical FEM state and skeleton from the same native transaction."""
+    cfg = json.loads((directory / "launch.json").read_bytes())
+    if json.loads((directory / "execution.json").read_bytes())["exit"] != 0:
+        raise ValueError("The native capture did not complete")
+    settings = cfg["environment"]
+    pre = "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
+    for key, expected in (
+        ("TETGEN_NODE", reference),
+        ("TETGEN_ELEMENTS", elements),
+        ("CHILD_LABELS", labels),
+    ):
+        if settings[pre + key + "_SHA256"] != digest(expected):
+            raise ValueError(
+                "The observed scene and the audit use different material inputs"
+            )
+    if digest(cortex) != cfg["pins"].get(cfg["argv"][3]):
+        raise ValueError("The observed scene uses a different cortical asset")
+    traces = Path(cfg["argv"][4])
+    prefix = Path(settings["NUMI_HUMAN_REGISTERED_CELL_NODE_PREFIX"])
+    if (
+        traces.resolve().parent != directory.resolve()
+        or prefix.resolve().parent != directory.resolve()
+    ):
+        raise ValueError("The accepted outputs were not produced in the supplied run")
+    with (traces / "resting-coupled.csv").open() as stream:
+        rows = list(csv.DictReader(stream))
+    steps = int(cfg["argv"][cfg["argv"].index("--muscle-step-count") + 1])
+    if not rows or int(rows[-1]["step"]) != steps:
+        raise ValueError("Missing terminal physiology sample")
+    receipt = traces / "accepted-geometry" / f"step-{steps}.receipt.json"
+    capture = json.loads(receipt.read_bytes())
+    if (
+        capture["accepted_step"] != steps
+        or not np.isfinite([capture["accepted_time_s"], float(rows[-1]["time_s"])]).all()
+        or abs(capture["accepted_time_s"] - float(rows[-1]["time_s"])) > 1e-10
+    ):
+        raise ValueError("Terminal material and rigid capture times disagree")
+    pack = receipt.with_name(f"step-{steps}.mrvpack")
+    if (
+        Path(capture["accepted_pack_path"]).resolve() != pack.resolve()
+        or digest(pack) != capture["pack_file_sha256"]
+    ):
+        raise ValueError("The terminal render pack differs from its accepted receipt")
+    poses = {
+        rec["body_index"]: (
+            Rotation.from_quat(rec["quaternion_xyzw"]),
+            rec["position_m"],
+        )
+        for rec in capture["accepted_registered_body_poses"]
+    }
+    if len(poses) != len(capture["accepted_registered_body_poses"]):
+        raise ValueError("Repeated registered rigid body")
+    initial_path = Path(settings["NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE"])
+    if digest(initial_path) != cfg["pins"].get(str(initial_path)):
+        raise ValueError("Unmatched loaded material in the native trial")
+
+    def nodes(path):
+        values = np.loadtxt(path, skiprows=1, usecols=(0, 1, 2, 3))
+        if (
+            not np.array_equal(values[:, 0], np.arange(1, len(values) + 1))
+            or not np.isfinite(values).all()
+        ):
+            raise ValueError("Invalid accepted material nodes")
+        return values[:, 1:]
+
+    source = nodes(initial_path)
+    opening = nodes(prefix.with_name(prefix.name + "-reference.node"))
+    state = prefix.with_name(prefix.name + "-accepted.node")
+    final = nodes(state)
+    if not np.array_equal(source, opening) or final.shape != opening.shape:
+        raise ValueError(
+            "Captured material node identities or initial coordinates differ"
+        )
+    if "NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ" in settings:
+        cavity = Path(settings["NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ"])
+        if digest(cavity) != settings[
+            "NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_SHA256"
+        ] or digest(cavity) != cfg["pins"].get(str(cavity)):
+            raise ValueError("Unmatched cavity topology")
+        with np.load(cavity) as change:
+            retained = change["retained_input_cell_rows"]
+            new = change["replacement_tetrahedra"]
+            offsets = change["replacement_parent_offsets"]
+            donors = change["replacement_parent_cell_rows"]
+            if (
+                new.ndim != 2 or new.shape[1] != 4
+                or np.any(new < 0) or np.any(new >= len(final))
+                or len(np.unique(retained)) != len(retained)
+                or not np.array_equal(
+                    np.unique(np.r_[retained, donors]), np.arange(len(cells))
+                )
+                or np.intersect1d(retained, donors).size
+            ):
+                raise ValueError("Cavity does not close the source cell ledger")
+            if (
+                len(offsets) != len(new) + 1
+                or np.any(offsets[1:] <= offsets[:-1])
+                or offsets[0] != 0
+                or offsets[-1] != len(donors)
+            ):
+                raise ValueError("Invalid cavity parent ranges")
+            parent_material = material_rows[donors]
+            child_material = parent_material[offsets[:-1]]
+            if not np.array_equal(
+                parent_material, np.repeat(child_material, np.diff(offsets))
+            ):
+                raise ValueError("Cavity crosses physical material identities")
+            cells = np.vstack([cells[retained], new])
+            material_rows = np.r_[material_rows[retained], child_material]
+    displacement = np.linalg.norm(final - opening, axis=1)
+    observation = {
+        "launch_sha256": digest(directory / "launch.json"),
+        "receipt_sha256": digest(receipt),
+        "accepted_node_sha256": digest(state),
+        "loaded_node_sha256": digest(initial_path),
+        "step": steps,
+        "time_s": capture["accepted_time_s"],
+        "cell_count": len(cells),
+        "maximum_node_displacement_m": float(displacement.max()),
+        "median_node_displacement_m": float(np.median(displacement)),
+        "worst_node_row": int(displacement.argmax()),
+    }
+    return final, poses, cells, material_rows, receipt, observation
+
+
 def validate(
-    scene, volume_launch, registration, body_ids, proposal=None, sample_output=None
+    scene,
+    volume_launch,
+    registration,
+    body_ids,
+    proposal=None,
+    sample_output=None,
+    accepted_run=None,
 ):
     source = json.loads(volume_launch.read_bytes())
     scene_bytes = scene.read_bytes()
@@ -159,8 +295,23 @@ def validate(
         raise ValueError("The stress-free and loaded node rows differ")
     if not np.isfinite(reference).all() or not np.isfinite(x).all():
         raise ValueError("Nonfinite registered coordinates")
-    x = x.astype(np.float32).astype(np.float64)
-    deformation = loaded_deformation(reference[:, 1:], x, cells, lab[:, 1])
+    observation = None
+    if accepted_run is not None:
+        if proposal is not None:
+            raise ValueError("An accepted run supplies its own loaded coordinates")
+        x, poses, cells, materials, pose_path, observation = read_material_capture(
+            accepted_run, cortex, reference_path, tet, labels, cells, lab[:, 1]
+        )
+        lab = np.column_stack((np.arange(len(cells)), materials))
+    if observation is None:
+        x = x.astype(np.float32).astype(np.float64)
+    else:
+        observation["coordinate_representation"] = (
+            "native rest + high displacement + low displacement"
+        )
+    deformation = loaded_deformation(
+        reference[:, 1:], x, cells, lab[:, 1], compensated=observation is not None
+    )
     lo = np.empty((len(cells), 3))
     hi = np.empty_like(lo)
     for begin in range(0, len(cells), 32768):
@@ -184,6 +335,27 @@ def validate(
             stats["inverted"] += int(np.sum(vol[on] <= 0))
             stats["tiny"] += int(np.sum(vol[on] <= 1e-18))
             stats["low_shape"] += int(np.sum(shape[on] < 1e-5))
+    if observation:
+        declared = {}
+        with (accepted_run / "stdout.log").open() as stream:
+            for line in stream:
+                if not line.startswith("registered_cell_shape phase=accepted "):
+                    continue
+                fields = dict(
+                    part.split("=", 1) for part in line.split()[1:] if "=" in part
+                )
+                if int(fields["step"]) == observation["step"]:
+                    declared[int(fields["material"])] = {
+                        "cells": int(fields["cells"]),
+                        "inverted": int(fields["inverted"]),
+                        "tiny": int(fields["volume_le_1e_18"]),
+                        "low_shape": int(fields["shape_lt_1e_5"]),
+                    }
+        if declared != quality:
+            raise ValueError(
+                "Terminal node geometry differs from the native accepted material certificate"
+            )
+        observation["native_cell_quality_reproduced"] = True
     rows = {}
     sample_records = []
     visited = set()
@@ -260,6 +432,7 @@ def validate(
     if sample_output is not None:
         np.save(sample_output, np.array(sample_records, dtype=np.int64).reshape(-1, 5))
     return {
+        "accepted_observation": observation,
         "scene": hashlib.sha256(scene_bytes).hexdigest(),
         "volume_launch": digest(volume_launch),
         "registration": digest(registration),
@@ -272,7 +445,11 @@ def validate(
         "elements": digest(tet),
         "labels": digest(labels),
         "frame": digest(pose_path),
-        "scope": "Current cortical asset in the registered loaded material reference frame. Strict interior of actual labelled positive-volume cells. Counts describe sampled cortical points; a zero sample count does not prove separation.",
+        "scope": (
+            "Accepted native cortical pose and terminal material coordinates."
+            if observation
+            else "Current cortical asset in the registered loaded material reference frame. Strict interior of actual labelled positive-volume cells. Counts describe sampled cortical points; a zero sample count does not prove separation."
+        ),
         "rows": rows,
     }
 
@@ -320,6 +497,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Also enforce the registered whole-volume Jacobian and principal-stretch envelope",
     )
+    parser.add_argument(
+        "--accepted-run",
+        type=Path,
+        help="Completed dense native run with terminal tissue nodes and registered rigid poses",
+    )
     args = parser.parse_args()
     result = validate(
         args.scene,
@@ -328,6 +510,7 @@ if __name__ == "__main__":
         args.bodies,
         args.proposal,
         args.sample_output,
+        args.accepted_run,
     )
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
     count = sum(

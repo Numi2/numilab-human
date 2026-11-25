@@ -52,7 +52,16 @@ def main():
         action="store_true",
         help="use the full registered skin/fat volume and its native timestep",
     )
+    parser.add_argument(
+        "--accepted-run",
+        type=Path,
+        help="Audit the terminal dense material and rigid capture in this run",
+    )
     args = parser.parse_args()
+    if args.accepted_run and (not args.material_report or args.material_proposal):
+        parser.error(
+            "--accepted-run requires --material-report and supplies its own material positions"
+        )
     if args.dense and args.material_report:
         parser.error(
             "Use the registered reference scene with --material-report and --material-proposal."
@@ -65,7 +74,7 @@ def main():
     if args.dense:
         checkpoint = "m6-loaded-material-motion-20261125"
         expected_launch = (
-            "eee58f1d7ecb2c2eca4f759b03f4fb076779edcb0ff416f08e3b386c8dd7ca03"
+            "85975fc8ddfedc6c2cb0f017649ee27b0ea6d3442dbcbdebc5f1cab0f227a999"
         )
     else:
         checkpoint = "m6-contact-feature-ownership-20261125"
@@ -173,6 +182,11 @@ def main():
                 *(
                     ["--proposal", str(args.material_proposal)]
                     if args.material_proposal
+                    else []
+                ),
+                *(
+                    ["--accepted-run", str(args.accepted_run)]
+                    if args.accepted_run
                     else []
                 ),
                 "--output",

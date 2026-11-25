@@ -31,6 +31,14 @@ class LoadedMaterialTests(unittest.TestCase):
         self.assertAlmostEqual(stats["maximum_stretch"], 1 + np.sqrt(2))
         self.assertEqual(stats["worst_stretch_cell"], 0)
 
+    def test_compensated_displacements_survive_world_coordinate_rounding(self):
+        observed = self.reference + 2**26
+        stats = loaded_deformation(
+            self.reference, observed, self.tet, np.array([15]), compensated=True
+        )[15]
+        self.assertEqual(stats["minimum_stretch"], 1)
+        self.assertEqual(self.measure(observed)["relative_volume_failures"], 1)
+
     def test_inverted_stress_free_reference(self):
         self.reference[[1, 2]] = self.reference[[2, 1]]
         stats = self.measure(self.reference)
