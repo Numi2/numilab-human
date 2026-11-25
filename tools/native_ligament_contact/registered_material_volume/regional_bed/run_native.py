@@ -12,12 +12,14 @@ def run(parent,owner,material,out,steps,seating=None):
     if out.exists(): raise ValueError('Output directory already exists')
     for name,expected in pins.items():
         if sha(Path(name))!=expected:raise ValueError('Stale source '+name)
+    previous_output=Path(a[4]).resolve().parent
     a[0]=str(owner/'numi-human-native')
     a[4]=str(out/'native-traces')
     a[a.index('--muscle-step-count')+1]=str(steps)
     if '--persistent-metal-stand-steps' in a:a[a.index('--persistent-metal-stand-steps')+1]=str(steps)
     for k,v in list(e.items()):
-        if v.startswith(str(parent)+'/') and v not in pins:e[k]=str(out/Path(v).relative_to(parent))
+        if v.startswith(str(previous_output)+'/') and v not in pins:
+            e[k]=str(out/Path(v).relative_to(previous_output))
     reuse=os.environ.get('NUMI_HUMAN_RESTING_CAPTURE_REUSE_SOURCE_DIR')
     if reuse:
         e['NUMI_HUMAN_RESTING_CAPTURE_REUSE_SOURCE_DIR']=str(Path(reuse).resolve())
