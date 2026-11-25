@@ -2,11 +2,42 @@
 
 import argparse
 import json
+from itertools import combinations
 from pathlib import Path
 import subprocess
 import tempfile
 
 import numpy as np
+
+
+def external_incidence_conflicts(source, patches):
+    """Find newly introduced edges or faces already occupied outside their cavity."""
+    removed = np.concatenate([rows for rows, _ in patches])
+    if len(np.unique(removed)) != len(removed):
+        raise ValueError("Source cavities overlap")
+    keep = np.ones(len(source), dtype=bool)
+    keep[removed] = False
+    retained = source[keep]
+    final = np.vstack([retained, *(new for _, new in patches)])
+    flat = final.ravel()
+    order = np.argsort(flat, kind="stable")
+    offsets = np.r_[0, np.cumsum(np.bincount(flat))]
+    begin = len(retained)
+    conflicts = []
+    for patch, (rows, new) in enumerate(patches):
+        end = begin + len(new)
+        for size in (2, 3, 4):
+            def simplices(tets):
+                return {tuple(sorted(s)) for tet in tets for s in combinations(tet, size)}
+
+            for simplex in sorted(simplices(new) - simplices(source[rows])):
+                first = min(simplex, key=lambda i: offsets[i + 1] - offsets[i])
+                shared = order[offsets[first]:offsets[first + 1]] // 4
+                outside = shared[(shared < begin) | (shared >= end)]
+                if len(outside) and np.any(np.isin(final[outside], simplex).sum(1) == size):
+                    conflicts.append(dict(patch=patch, simplex=list(map(int, simplex))))
+        begin = end
+    return conflicts
 
 
 def check(nodes, elements, proposal, executable):
@@ -30,6 +61,7 @@ def check(nodes, elements, proposal, executable):
                 or np.any(np.diff(offsets) > 96)
                 or parents.min() < 0 or parents.max() >= len(cells)):
             raise ValueError("Invalid cavity parent or replacement ranges")
+        patches = []
         path = Path(tmp) / "reference.txt"
         for patch, (start, end) in enumerate(zip(children[:-1], children[1:])):
             old_rows = parents[offsets[start]:offsets[start + 1]]
@@ -38,6 +70,7 @@ def check(nodes, elements, proposal, executable):
                 for j in range(start + 1, end)
             ):
                 raise ValueError("Replacement cells do not share the declared cavity parents")
+            patches.append((old_rows, kids[start:end]))
             old = cells[old_rows]
             new = kids[start:end]
             local_nodes = np.union1d(old.ravel(), new.ravel())
@@ -52,6 +85,15 @@ def check(nodes, elements, proposal, executable):
                                  capture_output=True, text=True)
             reports.append(dict(patch=patch, returned=run.returncode,
                                 detail=(run.stdout + run.stderr).strip()))
+        if "retained_input_cell_rows" in z:
+            retained = np.ones(len(cells), dtype=bool)
+            retained[np.concatenate([rows for rows, _ in patches])] = False
+            if not np.array_equal(np.flatnonzero(retained), z["retained_input_cell_rows"]):
+                raise ValueError("Cavity parents and retained source cells do not partition the mesh")
+        for conflict in external_incidence_conflicts(cells, patches):
+            report = reports[conflict["patch"]]
+            report["returned"] = 1
+            report.setdefault("foreign_incidence", []).append(conflict["simplex"])
     return reports
 
 
