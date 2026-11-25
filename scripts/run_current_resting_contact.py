@@ -58,7 +58,7 @@ def main():
         help="Audit the terminal dense material and rigid capture in this run",
     )
     parser.add_argument(
-        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders"),
+        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar"),
         help="select a matched dense posterior tissue and bed registration",
     )
     args = parser.parse_args()
@@ -93,6 +93,7 @@ def main():
         expected_launch = {
             "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
             "expanded": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+            "registered-lumbar": "32f804a4b5e8be8e320e6f72d04907e61b1cfdf9a4532466a5b1fe19733521c8",
             "registered-shoulders": "2056a5888386590054b9fc4cc75fc56e8d1561e55ad802399f5fa74a330ea605",
             "covered-shoulder": "0142f2c91c24ea5cbd7cfcfab13af5245043d77055102398bc706676692aca56",
         }[args.posterior_support]
