@@ -111,6 +111,44 @@ def accepted_bed_load(lines, physical_step_s):
     return result
 
 
+def certify_capture_face_labels(cfg, previous, pre):
+    """Authenticate metadata-only source-face changes against the actual winning P1 donors."""
+    from support_observation.verify_final_tissue_labels import verify
+
+    env = cfg["environment"]
+    key = pre + "CHILD_LABELS"
+    current = Path(env[key])
+    if env[key + "_SHA256"] != digest(current) or cfg["pins"].get(
+        str(current)
+    ) != digest(current):
+        raise ValueError("Unpinned native source faces")
+    a, b = (
+        np.loadtxt(p, delimiter=",", skiprows=1, dtype=np.int64)
+        for p in (previous, current)
+    )
+    if a.shape != b.shape or a.shape[1] != 5 or not np.array_equal(a[:, :4], b[:, :4]):
+        raise ValueError(
+            "Anatomical owner, regional material, or physical cell changed"
+        )
+    edits = np.flatnonzero(a[:, 4] != b[:, 4])
+    if len(edits) != cfg.get("source_face_reconciliations"):
+        raise ValueError("Unaccounted source-face edits")
+    p1 = Path(env["NUMI_H706_FRACTIONAL_P1_FAT_NPZ"]).parent.parent
+    state = json.loads((p1 / "result.json").read_bytes())["environment"]
+    for tag in ("SKIN", "FAT"):
+        field = "NUMI_H706_FRACTIONAL_P1_" + tag + "_SHA256"
+        if state[field] != env[field]:
+            raise ValueError("Different native donor basis")
+    result = verify(current.parent, p1)
+    if any(role["invalid_final_labels"] for role in result["roles"].values()):
+        raise ValueError("Uncertified source face")
+    return {
+        "previous": digest(previous),
+        "current": digest(current),
+        "reconciled_faces": len(edits),
+    }
+
+
 def read_material_capture(
     directory, cortex, reference, elements, labels, cells, material_rows
 ):
@@ -120,10 +158,12 @@ def read_material_capture(
         raise ValueError("The native capture did not complete")
     settings = cfg["environment"]
     pre = "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
+    source_faces = None
+    if settings[pre + "CHILD_LABELS_SHA256"] != digest(labels):
+        source_faces = certify_capture_face_labels(cfg, labels, pre)
     for key, expected in (
         ("TETGEN_NODE", reference),
         ("TETGEN_ELEMENTS", elements),
-        ("CHILD_LABELS", labels),
     ):
         if settings[pre + key + "_SHA256"] != digest(expected):
             raise ValueError(
@@ -229,6 +269,7 @@ def read_material_capture(
     displacement = np.linalg.norm(final - opening, axis=1)
     observation = {
         "launch_sha256": digest(directory / "launch.json"),
+        **({"source_face_reconciliation": source_faces} if source_faces else {}),
         "receipt_sha256": digest(receipt),
         "accepted_node_sha256": digest(state),
         "bed_support": bed,

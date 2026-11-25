@@ -23,3 +23,15 @@ The registered muscle surfaces meet the physical fat volume on two right-hand tr
 The native reference-volume importer accepted all 1,457,778 tetrahedra. It registered 3.452571 kg of skin and 10.487108 kg of fat, with zero inverted cells, low-quality cells, density outliers or unassigned nodes. Original donor tetrahedra resolved 7,027 inherited face-label discrepancies. Every final cell has a winning P1 tissue group and a supported source-face identity. The native source-carrier allocation passed separately for both tissues. The physical bed-load test still uses the preceding volume topology.
 
 The two prospective passive muscle volumes were tested at 8, 4 and 2 mm coordinate spacing. The 4 to 2 mm change in strain energy exceeded the 5% engineering gate on both sides. The registered muscles remain passive anatomy in the coupled run. [Physical registration and convergence results](lumbar-material-transfer.json)
+
+## Coupled replay with corrected source faces
+
+The source-face correction also runs on the current dense topology. This version repaired 7,047 inherited face IDs, preserved the original skin, fat and skeletal donors, and passed both native mass allocations. On SSH Numi the comparison launches with this command.
+
+```sh
+bash scripts/run_resting_human_on_numi.sh --dense --posterior-support registered-lumbar-faces --steps 2
+```
+
+Both roots were accepted with variable pleural pressure. The 15.625 µs interval took 221.16 s including initialization and export. Peak tissue position difference from the previous capture was 0.184 µm. Bed impulses and the muscle-force trace matched byte for byte. Gas and momentum measurements contained small numerical differences. The largest local dermal Green-strain tensor difference was 0.0368. The shape, volume and principal-stretch failure sets were unchanged. The two lumbar muscles had zero self-intersections and zero neighboring crossings in this capture.
+
+The skin transferred 11.01 N to the bed against 952.86 N of body weight. The skeleton continued accelerating toward the bed at 9.798 m/s². Whole-body occupancy still found 908 cortical samples inside the tissue, alongside 37 low-shape cells and 563 principal-stretch failures. Supported rest, a full respiratory cycle and sustained throughput remain unqualified. The denser local fat receivers described above passed registration and still require a new deep-wall binding before running in this scene. [Coupled measurements](registered-lumbar-canonical-motion.json) · [Native recording and carrier recovery](registered-faces-motion-recovery.json) · [Refined volume and source recovery](lumbar-material-recovery.json)
