@@ -1,5 +1,8 @@
 # Loaded skin and fat on SSH Numi
 
+On SSH Numi, `bash scripts/run_resting_human_on_numi.sh` replays the two-step integrated release with the full registered skin/fat volume, anatomical joint stops, the physical bed and variable pleural pressure. Use `--check` to verify its 564 pinned inputs. The explicit `16` and `60` durations use this same physical scene. The regional isolation run remains available under `--regional` or its existing `--current` alias. The current integrated release still starts out of equilibrium.
+
+
 The dense native owner imports 314,014 nodes and 1,457,316 skin and fat tetrahedra. The larger experimental registration changes 453 loaded nodes. The stress-free positions, tissue identities, 14 deep attachments, 4,733 cortical binding facets and physical mass tables match the parent.
 
 The whole-volume native-coordinate audit found 626 cells outside the project's principal-stretch interval of 2/3 to 1.5 in the previous registration and 314 in the larger repair. Both registrations have positive cells. The repair reduced stored elastic energy from 4.149 J to 2.744 J and conserved 3.452571 kg of skin and 10.487108 kg of fat. The tissue still contains 325 sampled cortical points. For the affected cortical banks the measured overlap decreased by 33.168 mm³. No new cortical triangle pairs were detected.
