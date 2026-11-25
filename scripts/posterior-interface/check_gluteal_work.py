@@ -15,8 +15,9 @@ def evaluate(points, locations, orientations, ref, bases, initial, K):
     quat = relative.as_quat(canonical=True)
     u = np.r_[displacement.ravel(), np.c_[translation,2*quat[:,:3]].ravel()]
     g = K @ u
-    grad = g[153:].reshape(3,6)
-    skin = -frame.apply(g[:153].reshape(51,3))
+    split = 3 * len(points)
+    grad = g[split:].reshape(3,6)
+    skin = -frame.apply(g[:split].reshape(-1,3))
     force = -frame.apply(grad[:,:3])
     torque = -frame.apply(quat[:,3:] * grad[:,3:]+np.cross(quat[:,:3],grad[:,3:]))
     rem_force = skin.sum(0)+force.sum(0)
@@ -28,7 +29,7 @@ def evaluate(points, locations, orientations, ref, bases, initial, K):
 
 def test(material,parent,out):
     z=np.load(material/'parents.npz');K=np.load(material/'reference-tangent.npz')['matrix']
-    ref=z['reference'][:51];bases=z['origins']
+    ref=z['reference'][:len(z['fat'])];bases=z['origins']
     poses={b['body_index']:b['current'] for b in json.loads((parent/'native-initial-bodies.json').read_bytes())['all_bodies']}
     initial=Rotation.from_quat([poses[b]['orientation_world_xyzw'] for b in z['donors']])
     rng=np.random.default_rng(82)

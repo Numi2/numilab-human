@@ -1,5 +1,3 @@
-// The one reference compartment has 51 deep-fat parents and three bone donors.
-// Each invocation owns a complete material update in a single workgroup.
 kernel void nm_human_gluteal_interface(
     constant NMNumiHumanTendonFEMLoadDispatchGPU& d [[buffer(0)]],
     device const NMFEMNodeStateGPU* nodes [[buffer(1)]],
@@ -9,23 +7,23 @@ kernel void nm_human_gluteal_interface(
     device const float* stiffness [[buffer(5)]],
     device float4* observation [[buffer(6)]],
     uint lane [[thread_index_in_threadgroup]]) {
-    threadgroup float coords[171], gradient[171];
-    threadgroup float3 forces[54], torques[54];
+    threadgroup float coords[gcDofs], gradient[gcDofs];
+    threadgroup float3 forces[gcPorts], torques[gcPorts];
     threadgroup float4 rotations[3];
     const uint pelvis = gcBodies[0] - d.articulationFirstBody;
     const auto base = poses[pelvis];
     const float4 frame = normalize(humanQuaternionMultiply(normalize(base.orientation),
                                     humanQuaternionConjugate(gcQuaternions[0])));
     const float4 inverse = humanQuaternionConjugate(frame);
-    if (lane < 54u) {
-        const bool rigid = lane >= 51u;
-        const uint b = rigid ? lane - 51u : 0u;
-        const uint first = rigid ? 153u + 6u*b : 3u*lane;
+    if (lane < gcPorts) {
+        const bool rigid = lane >= gcFat;
+        const uint b = rigid ? lane - gcFat : 0u;
+        const uint first = rigid ? gcTranslations + 6u*b : 3u*lane;
         const auto pose = poses[gcBodies[b] - d.articulationFirstBody];
         const float3 x = rigid ? pose.position.xyz : nodes[gcNodes[lane]].positionAndMass.xyz;
         const float3 ref = gcPoints[lane];
-        const float3 lever = ref - gcPoints[51];
-        const float3 du = (x - ref) - (base.position.xyz - gcPoints[51]);
+        const float3 lever = ref - gcPoints[gcFat];
+        const float3 du = (x - ref) - (base.position.xyz - gcPoints[gcFat]);
         // Evaluate (R^T-I)r without cancellation of metre-scale positions.
         const float3 spun = 2.f*cross(inverse.xyz, lever);
         const float3 u = humanQuaternionRotate(inverse,du) + inverse.w*spun + cross(inverse.xyz,spun);
@@ -39,16 +37,16 @@ kernel void nm_human_gluteal_interface(
         }
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
-    if (lane < 171u) {
+    for (uint i = lane; i < gcDofs; i += 256u) {
         float g = 0.f;
-        for (uint k=0;k<171u;++k) g = fma(stiffness[lane*171u+k],coords[k],g);
-        gradient[lane] = g;
+        for (uint k=0;k<gcDofs;++k) g = fma(stiffness[i*gcDofs+k],coords[k],g);
+        gradient[i] = g;
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
-    if (lane < 54u) {
-        const bool rigid = lane >= 51u;
-        const uint b = rigid ? lane - 51u : 0u;
-        const uint first = rigid ? 153u+6u*b : 3u*lane;
+    if (lane < gcPorts) {
+        const bool rigid = lane >= gcFat;
+        const uint b = rigid ? lane - gcFat : 0u;
+        const uint first = rigid ? gcTranslations+6u*b : 3u*lane;
         const float3 f = -humanQuaternionRotate(frame,float3(gradient[first],gradient[first+1],gradient[first+2]));
         forces[lane] = f;
         float3 intrinsic = 0.f;
@@ -64,13 +62,13 @@ kernel void nm_human_gluteal_interface(
         torques[lane] = intrinsic + cross(x-base.position.xyz,f);
     }
     threadgroup_barrier(mem_flags::mem_threadgroup);
-    if (lane >= 51u && lane < 54u) {
-        const uint b=lane-51u, body=gcBodies[b]-d.articulationFirstBody;
+    if (lane >= gcFat && lane < gcPorts) {
+        const uint b=lane-gcFat, body=gcBodies[b]-d.articulationFirstBody;
         float3 f=forces[lane];
         float3 t=torques[lane]-cross(poses[body].position.xyz-base.position.xyz,f);
         if (b==0u) {
             // Chain rule for the moving pelvis coordinate frame.
-            for (uint i=0u;i<54u;++i) { f-=forces[i]; t-=torques[i]; }
+            for (uint i=0u;i<gcPorts;++i) { f-=forces[i]; t-=torques[i]; }
         }
         wrench[body].force.xyz += f;
         wrench[body].torque.xyz += t;
@@ -79,8 +77,8 @@ kernel void nm_human_gluteal_interface(
         observation[obs+2u*b+1u]=float4(t,0.f);
         if (b==0u) {
             float energy=0.f,peak=0.f; float3 sum=0.f;
-            for (uint k=0;k<171u;++k) energy=fma(coords[k],gradient[k]*.5f,energy);
-            for (uint i=0;i<51u;++i) { sum+=forces[i]; peak=max(peak,length(forces[i])); }
+            for (uint k=0;k<gcDofs;++k) energy=fma(coords[k],gradient[k]*.5f,energy);
+            for (uint i=0;i<gcFat;++i) { sum+=forces[i]; peak=max(peak,length(forces[i])); }
             observation[obs+6u]=float4(sum,peak);
             observation[obs+7u]=float4(energy,float(d.stepIndex),float(d.femNodeCount),1.f);
         }

@@ -1,0 +1,47 @@
+{
+  "source_reference_gradient_error": 1.0772503241354653e-15,
+  "endpoint": "1fa797451d409c6a937e848100fd02377344fb90984a923ab99326aac77cd410",
+  "skin": "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6",
+  "material": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f",
+  "adipose_modulus_multiplier": 1.0,
+  "observations": {
+    "accepted_step_2": {
+      "min_J": 0.9996958504222397,
+      "max_J": 1.00013784886829,
+      "energy_J": 1.0852596091703649e-09,
+      "iterative_residual": [
+        5.823956418134089e-05,
+        2.1060108349379593e-09,
+        1.4566479606633685e-17
+      ],
+      "force_balance_relative": 3.1200000331978834e-15,
+      "moment_balance_m": 1.2949962914193504e-16,
+      "computed_fat_energy_gradient_N": [
+        -5.071074207744396e-05,
+        0.00013514774984283776,
+        0.0005722140484618892
+      ],
+      "directional_tangent_error": 1.988523931646279e-08
+    },
+    "virtual_compression_0p1_mm": {
+      "min_J": 0.9563081541284791,
+      "max_J": 1.0049641573752774,
+      "energy_J": 3.0452240324362465e-06,
+      "iterative_residual": [
+        0.009283508211643405,
+        6.09320405283645e-05,
+        4.1753732145426185e-09,
+        4.381562362459185e-17
+      ],
+      "force_balance_relative": 6.838580991614592e-16,
+      "moment_balance_m": 2.4784322997098457e-16,
+      "computed_fat_energy_gradient_N": [
+        0.01889392956436266,
+        0.018412455248666425,
+        0.14472609302819375
+      ],
+      "directional_tangent_error": 1.1830351717830717e-08
+    }
+  },
+  "scope": "Offline evaluation on actual accepted geometry and a virtual indentation. Native motion used the registered corotational tangent. This independent evaluation uses the full nonlinear local tissue law on the accepted positions and synchronized rigid poses."
+}

@@ -1,0 +1,444 @@
+{
+  "accepted_observation": {
+    "launch_sha256": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+    "receipt_sha256": "1fa797451d409c6a937e848100fd02377344fb90984a923ab99326aac77cd410",
+    "accepted_node_sha256": "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6",
+    "bed_support": {
+      "initialization": "dynamic_release",
+      "initial_balanced": false,
+      "initial_maximum_acceleration_residual_m_s2": 68.3067562932,
+      "last_root_mean_normal_force_N": 11.01170556134183,
+      "last_root_normal_impulse_Ns": 8.602894969798307e-05,
+      "last_root_contact_samples": 16
+    },
+    "loaded_node_sha256": "577f61c767e5a57dd4516d5ddcd337c6aba99ea4fb9030cd7b01683600b369d9",
+    "step": 2,
+    "time_s": 1.5625000742147677e-05,
+    "cell_count": 1457316,
+    "maximum_node_displacement_m": 0.0003719653395563738,
+    "median_node_displacement_m": 1.7962662191038592e-09,
+    "worst_node_row": 17901,
+    "coordinate_representation": "native rest + high displacement + low displacement",
+    "native_cell_quality_reproduced": true
+  },
+  "scene": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+  "volume_launch": "575ff8bf617f06af9b10bd0c2c2025b71bca99690d5170298781ed6331977786",
+  "registration": "55224f20273a4b8793b8f257d8d2c2b6dd756d77128fc15c446077e4430babbf",
+  "proposal": null,
+  "material_quality": {
+    "15": {
+      "cells": 707597,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 4
+    },
+    "16": {
+      "cells": 749719,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 33
+    }
+  },
+  "stress_free_nodes": "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+  "loaded_deformation": {
+    "15": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 0,
+      "principal_stretch_failures": 240,
+      "minimum_stretch": 0.22512840810354492,
+      "maximum_stretch": 4.378580295114065,
+      "worst_stretch_cell": 1440182
+    },
+    "16": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 4,
+      "principal_stretch_failures": 323,
+      "minimum_stretch": 0.01954555741892483,
+      "maximum_stretch": 20.958021942723,
+      "worst_stretch_cell": 1287665
+    }
+  },
+  "cortex": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+  "material_nodes": "cb3f3046cf420626d9d5076e6653d10fe003738f01641984204a1932f837b728",
+  "elements": "6a37bf967244328239c8ad4e504c2263194862c5d6a36c50c6e48ac080861a0f",
+  "labels": "9161a59c672608f62947e20d8813299a88ac6ffd42038ce8db9fcb70f9150da8",
+  "frame": "1fa797451d409c6a937e848100fd02377344fb90984a923ab99326aac77cd410",
+  "scope": "Accepted native cortical pose and terminal material coordinates.",
+  "rows": {
+    "34/10": {
+      "body": 34,
+      "stable": 10,
+      "tested_samples": 39290,
+      "interior_samples_by_material": {
+        "15": 0,
+        "16": 0
+      },
+      "witness": {}
+    },
+    "84/11": {
+      "body": 84,
+      "stable": 11,
+      "tested_samples": 42174,
+      "interior_samples_by_material": {
+        "15": 12,
+        "16": 538
+      },
+      "witness": {
+        "15": {
+          "cortical_sample": "vertex",
+          "source_index": 1245,
+          "material_tet_row": 1440203,
+          "material_nodes": [
+            312561,
+            29405,
+            312559,
+            312550
+          ],
+          "point_m": [
+            0.12026980833982695,
+            -0.30732557368209873,
+            0.11347366217974737
+          ],
+          "barycentric": [
+            0.0032031520496276222,
+            7.506649741073623e-05,
+            0.9960374203561887,
+            0.0006843610967729188
+          ],
+          "min_distance_to_cell_faces_mm": 4.218793343194234e-05,
+          "volume_m3": 1.7853564202399214e-12
+        },
+        "16": {
+          "cortical_sample": "face_centroid",
+          "source_index": 3272,
+          "material_tet_row": 1447576,
+          "material_nodes": [
+            312241,
+            312257,
+            312245,
+            312234
+          ],
+          "point_m": [
+            0.11558490572328778,
+            -0.3105981307897536,
+            0.1105443106524745
+          ],
+          "barycentric": [
+            0.33367794429663844,
+            0.3329169299922364,
+            0.0001365610170078746,
+            0.3332685646941173
+          ],
+          "min_distance_to_cell_faces_mm": 0.0001325317936365268,
+          "volume_m3": 5.735395954345831e-11
+        }
+      }
+    },
+    "41/12": {
+      "body": 41,
+      "stable": 12,
+      "tested_samples": 6017,
+      "interior_samples_by_material": {
+        "15": 0,
+        "16": 31
+      },
+      "witness": {
+        "16": {
+          "cortical_sample": "vertex",
+          "source_index": 925,
+          "material_tet_row": 1457197,
+          "material_nodes": [
+            217021,
+            112542,
+            217327,
+            311013
+          ],
+          "point_m": [
+            -0.18301780784057065,
+            -0.6241081020793705,
+            0.08654115448918989
+          ],
+          "barycentric": [
+            0.056883246869733894,
+            0.003984861124947003,
+            0.2446120768200153,
+            0.6945198151853038
+          ],
+          "min_distance_to_cell_faces_mm": 0.011726133139478324,
+          "volume_m3": 3.749624913898563e-08
+        }
+      }
+    },
+    "91/13": {
+      "body": 91,
+      "stable": 13,
+      "tested_samples": 5917,
+      "interior_samples_by_material": {
+        "15": 0,
+        "16": 3
+      },
+      "witness": {
+        "16": {
+          "cortical_sample": "face_centroid",
+          "source_index": 1398,
+          "material_tet_row": 1450695,
+          "material_nodes": [
+            313851,
+            313849,
+            313774,
+            313842
+          ],
+          "point_m": [
+            0.1434478550176065,
+            -0.32881987828064074,
+            0.12753502025767213
+          ],
+          "barycentric": [
+            0.20138281698774518,
+            0.3461900556604748,
+            4.179273570935858e-06,
+            0.45242294807820904
+          ],
+          "min_distance_to_cell_faces_mm": 2.244314935753051e-05,
+          "volume_m3": 4.643312000218948e-09
+        }
+      }
+    },
+    "42/14": {
+      "body": 42,
+      "stable": 14,
+      "tested_samples": 1334,
+      "interior_samples_by_material": {
+        "15": 23,
+        "16": 81
+      },
+      "witness": {
+        "15": {
+          "cortical_sample": "face_centroid",
+          "source_index": 168,
+          "material_tet_row": 134588,
+          "material_nodes": [
+            110030,
+            19425,
+            109881,
+            109007
+          ],
+          "point_m": [
+            -0.2680331758621632,
+            -0.8056217635262106,
+            0.0966377635358218
+          ],
+          "barycentric": [
+            0.26934199551118865,
+            0.4212180327710563,
+            0.2095624444902502,
+            0.09987752722750493
+          ],
+          "min_distance_to_cell_faces_mm": 0.6263861746523729,
+          "volume_m3": 1.2922170856529567e-07
+        },
+        "16": {
+          "cortical_sample": "vertex",
+          "source_index": 295,
+          "material_tet_row": 1316088,
+          "material_nodes": [
+            214790,
+            111633,
+            214899,
+            109609
+          ],
+          "point_m": [
+            -0.2718369725113369,
+            -0.8118746848218906,
+            0.10493622671677326
+          ],
+          "barycentric": [
+            0.4159526630614627,
+            0.07112969844945242,
+            0.25245832102787924,
+            0.26045931746120554
+          ],
+          "min_distance_to_cell_faces_mm": 1.3583498363041264,
+          "volume_m3": 1.9172912507844765e-07
+        }
+      }
+    },
+    "92/15": {
+      "body": 92,
+      "stable": 15,
+      "tested_samples": 1320,
+      "interior_samples_by_material": {
+        "15": 1,
+        "16": 28
+      },
+      "witness": {
+        "15": {
+          "cortical_sample": "vertex",
+          "source_index": 39,
+          "material_tet_row": 627345,
+          "material_nodes": [
+            37551,
+            144078,
+            144132,
+            144170
+          ],
+          "point_m": [
+            0.22964916857488066,
+            -0.8662253048642904,
+            0.10013812416007423
+          ],
+          "barycentric": [
+            0.013745255867737782,
+            0.31580524344066285,
+            0.15340617384834987,
+            0.5170433268432495
+          ],
+          "min_distance_to_cell_faces_mm": 0.0326065030112258,
+          "volume_m3": 1.1181259597115552e-09
+        },
+        "16": {
+          "cortical_sample": "face_centroid",
+          "source_index": 134,
+          "material_tet_row": 1429652,
+          "material_nodes": [
+            144231,
+            144159,
+            293519,
+            293485
+          ],
+          "point_m": [
+            0.22990807957892498,
+            -0.8662716203932602,
+            0.10240668632649148
+          ],
+          "barycentric": [
+            0.37434925908370853,
+            0.32785971348793025,
+            0.07477132540690017,
+            0.22301970202146107
+          ],
+          "min_distance_to_cell_faces_mm": 0.1996236699223793,
+          "volume_m3": 1.0105307831619938e-09
+        }
+      }
+    },
+    "43/16": {
+      "body": 43,
+      "stable": 16,
+      "tested_samples": 1060,
+      "interior_samples_by_material": {
+        "15": 61,
+        "16": 77
+      },
+      "witness": {
+        "15": {
+          "cortical_sample": "face_centroid",
+          "source_index": 251,
+          "material_tet_row": 142227,
+          "material_nodes": [
+            106927,
+            18172,
+            107045,
+            107224
+          ],
+          "point_m": [
+            -0.2857236955650628,
+            -0.8672635597695657,
+            0.13819810784153927
+          ],
+          "barycentric": [
+            0.35237386499287005,
+            0.1510255532081895,
+            0.29965235963153347,
+            0.19694822216740698
+          ],
+          "min_distance_to_cell_faces_mm": 0.36361547232067903,
+          "volume_m3": 4.325557779387419e-09
+        },
+        "16": {
+          "cortical_sample": "face_centroid",
+          "source_index": 392,
+          "material_tet_row": 1319862,
+          "material_nodes": [
+            309945,
+            108561,
+            109467,
+            107696
+          ],
+          "point_m": [
+            -0.2823707593210601,
+            -0.861582912276322,
+            0.13278290255997058
+          ],
+          "barycentric": [
+            0.4171470371336068,
+            0.03151694519306465,
+            0.03229114628504055,
+            0.519044871388288
+          ],
+          "min_distance_to_cell_faces_mm": 0.3827082922479584,
+          "volume_m3": 2.8291025870151514e-07
+        }
+      }
+    },
+    "93/17": {
+      "body": 93,
+      "stable": 17,
+      "tested_samples": 1000,
+      "interior_samples_by_material": {
+        "15": 20,
+        "16": 33
+      },
+      "witness": {
+        "15": {
+          "cortical_sample": "face_centroid",
+          "source_index": 55,
+          "material_tet_row": 1401745,
+          "material_nodes": [
+            145141,
+            310558,
+            39111,
+            144578
+          ],
+          "point_m": [
+            0.23212458757488788,
+            -0.8708171154763887,
+            0.1445268554971992
+          ],
+          "barycentric": [
+            0.15993400388558876,
+            0.07348545087817893,
+            0.2774594513541117,
+            0.48912109388212055
+          ],
+          "min_distance_to_cell_faces_mm": 0.2279417473397939,
+          "volume_m3": 5.253707185851281e-09
+        },
+        "16": {
+          "cortical_sample": "vertex",
+          "source_index": 133,
+          "material_tet_row": 1423021,
+          "material_nodes": [
+            292734,
+            142263,
+            292657,
+            292639
+          ],
+          "point_m": [
+            0.21638456833231837,
+            -0.8640035507832292,
+            0.1212035225936688
+          ],
+          "barycentric": [
+            0.1233165005402197,
+            0.0926323242541838,
+            0.06053954325559045,
+            0.7235116319500061
+          ],
+          "min_distance_to_cell_faces_mm": 0.21864739595783747,
+          "volume_m3": 6.942591719159509e-09
+        }
+      }
+    }
+  }
+}

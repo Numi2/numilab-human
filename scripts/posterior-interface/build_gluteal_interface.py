@@ -52,7 +52,8 @@ def build(j, material, link, out):
     K = ((K+K.T)*.5).astype('<f4')
     out.mkdir(exist_ok=True)
     (out/'material.f32').write_bytes(K.tobytes())
-    const = 'constant uint gcNodes[] = {'+','.join(map(str,first+local))+'};\n'
+    const = 'constant uint gcFat=51u,gcPorts=54u,gcTranslations=153u,gcDofs=171u;\n'
+    const += 'constant uint gcNodes[] = {'+','.join(map(str,first+local))+'};\n'
     const += 'constant uint gcBodies[] = {'+','.join(map(str,donors))+'};\n'
     const += vectors('gcPoints',np.vstack([ref,origins]))+vectors('gcQuaternions',orientation)
     parent = j/'exact-release'
