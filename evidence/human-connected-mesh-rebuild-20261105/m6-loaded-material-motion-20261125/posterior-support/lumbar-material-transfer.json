@@ -1,0 +1,252 @@
+{
+  "native_import": {
+    "native_imported": true,
+    "nodes": 314246,
+    "cells": 1457778,
+    "inverted": 0,
+    "below_shape": 0,
+    "below_volume": 0,
+    "nonfinite": 0,
+    "density_outliers": 0,
+    "zero_mass_nodes": 0,
+    "maximum_nodal_error_kg": 1.3877787807814457e-17,
+    "skin_kg": 3.4525712828039397,
+    "fat_kg": 10.48710842716542,
+    "node_sha256": "65f91918a258ab143598ff10b5e45040ce966bc478f469e90cb6dc44d25ca75c",
+    "element_sha256": "395e530070f3fe3a09610736eb2f06cb06407bd9eb9df97d11218545c5c68e20",
+    "label_sha256": "f7dbd7037f98e3bdb7ac077a400b80f7afb7f8be28a6eacf849560eb9358b794"
+  },
+  "native_carrier_allocation": {
+    "SKIN": "PASS_SOURCE_ONLY_SKIN_SOURCE_CARRIER_FEASIBLE_ALLOCATION",
+    "FAT": "PASS_SOURCE_ONLY_FAT_SOURCE_CARRIER_FEASIBLE_ALLOCATION"
+  },
+  "final_p1": {
+    "before": {
+      "native_label_sha256": "abe60991da4ac9233595aef7a6973a0c164d764309588ec76991e1378e29733e",
+      "roles": {
+        "Skin": {
+          "wrong_donor_group": 0,
+          "cells": 707597,
+          "invalid_final_labels": 4266,
+          "first_witnesses": [
+            276,
+            309,
+            1424,
+            1462,
+            1470,
+            1525,
+            1561,
+            1631,
+            1902,
+            2223,
+            2680,
+            4421
+          ],
+          "before_carrier_replay": 3
+        },
+        "Fat": {
+          "wrong_donor_group": 0,
+          "cells": 750181,
+          "invalid_final_labels": 2761,
+          "first_witnesses": [
+            669844,
+            670583,
+            670877,
+            671680,
+            671788,
+            673139,
+            673140,
+            673630,
+            678249,
+            678391,
+            679345,
+            680365
+          ],
+          "before_carrier_replay": 273
+        }
+      }
+    },
+    "after": {
+      "native_label_sha256": "f7dbd7037f98e3bdb7ac077a400b80f7afb7f8be28a6eacf849560eb9358b794",
+      "roles": {
+        "Skin": {
+          "wrong_donor_group": 0,
+          "cells": 707597,
+          "invalid_final_labels": 0,
+          "first_witnesses": [],
+          "before_carrier_replay": 3
+        },
+        "Fat": {
+          "wrong_donor_group": 0,
+          "cells": 750181,
+          "invalid_final_labels": 0,
+          "first_witnesses": [],
+          "before_carrier_replay": 273
+        }
+      }
+    },
+    "source": "af4602416c1c202e649b972c3929fbbf24759d48ade90f86545d93cf559b40b0",
+    "lineage": "a3f8767707bfce1a97f934995f3773c0ddffa398a9c92ea021702f0936b487d9",
+    "changed_rows": 7027
+  },
+  "local_transfer": {
+    "material": "35a1ff20043895b9c58b0f7fb6af9b4c2b29cd135b94b9f1880a4fb7fe17bf1d",
+    "motion_witness": "89b6ffb30a29f2367c244cb6b74280511c8118e5a226a6442aacfdd0e8750ea4",
+    "roles": {
+      "15": [
+        {
+          "old_energy_J": 0.00794842826565657,
+          "refined_energy_J": 0.00794842826565657,
+          "relative_energy_error": 0.0,
+          "force_difference_N": 0.0,
+          "relative_force_error": 0.0
+        },
+        {
+          "old_energy_J": 0.006883285264990945,
+          "refined_energy_J": 0.006883285264990945,
+          "relative_energy_error": 0.0,
+          "force_difference_N": 0.0,
+          "relative_force_error": 0.0
+        }
+      ],
+      "16": [
+        {
+          "old_energy_J": 0.0007308500131118876,
+          "refined_energy_J": 0.0007308500131118704,
+          "relative_energy_error": 2.3439001187578056e-14,
+          "force_difference_N": 9.54147186873901e-13,
+          "relative_force_error": 3.502814744916648e-13
+        },
+        {
+          "old_energy_J": 0.0007310565755953228,
+          "refined_energy_J": 0.0007310565755953044,
+          "relative_energy_error": 2.5212052729632128e-14,
+          "force_difference_N": 1.0793746591526724e-12,
+          "relative_force_error": 3.975929011275975e-13
+        }
+      ]
+    }
+  },
+  "refined_fat": {
+    "elements": "6a37bf967244328239c8ad4e504c2263194862c5d6a36c50c6e48ac080861a0f",
+    "walls": "2807e59a2b486bfc5808e43b8d4db4f5378724b3baa64520ea9d5c2efe410f08",
+    "mass_source": "07ea57829ec65c5d7fc7325ee95f4768e4e2576c2c79121654b7752bf030d39d",
+    "input": [
+      "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+      "577f61c767e5a57dd4516d5ddcd337c6aba99ea4fb9030cd7b01683600b369d9",
+      "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6"
+    ],
+    "material": "89b6ffb30a29f2367c244cb6b74280511c8118e5a226a6442aacfdd0e8750ea4",
+    "new_nodes": 232,
+    "source_cells": 946,
+    "refined_cells": 1408,
+    "untouched_cut_faces": 318,
+    "max_parent_mass_error_kg": 1.3010426069826053e-18,
+    "max_parent_moment_error_kg_m": 1.8346758073252764e-15,
+    "skin_mass_delta_kg": 0.0,
+    "fat_mass_delta_kg": -1.1102230246251565e-16,
+    "accepted_wall_faces": 475,
+    "max_stretch_delta": 2.969979817635249e-11,
+    "min_shape": [
+      1.0129401544486817e-05,
+      1.0129401544486817e-05,
+      1.0129402305534219e-05
+    ],
+    "parent_material": "019fb7c4af3878cb5a7c404274d0baf7eb62b016bff68029e7f0d9a0b3bd330b",
+    "face_insertions": 124,
+    "source_cut_faces_preserved": 318,
+    "physical_footprint_minimum_span_m": 0.006
+  },
+  "force_ports": {
+    "FJ1527": {
+      "original_contact_nodes": 4,
+      "refined_contact_nodes": 124,
+      "original_contact_faces": 2,
+      "refined_contact_faces": 230,
+      "quadrature_points": 3677,
+      "max_contact_edge_m": 0.1510704994947959,
+      "median_contact_edge_m": 0.03995729717222657,
+      "max_position_error_m": 4.152873702694556e-13,
+      "minimum_weight": 3.331016851904067e-05,
+      "force_balance_N": 2.2375243184701663e-16,
+      "moment_balance_Nm": 1.324730302586601e-15,
+      "virtual_work_error_J": 6.776263578034403e-21,
+      "old_mapping": "97fe95b74a625b85d03d92d5f1dd2904ab8b5b63dcb55d09fd3ae2055799abc8",
+      "material": "2cc45e75a60b31e3e2bdac05506ea74c600100e196912bfb4a8ec9ac782ca196"
+    },
+    "FJ1527M": {
+      "original_contact_nodes": 13,
+      "refined_contact_nodes": 45,
+      "original_contact_faces": 11,
+      "refined_contact_faces": 37,
+      "quadrature_points": 214,
+      "max_contact_edge_m": 0.0723281086170574,
+      "median_contact_edge_m": 0.010270223628984663,
+      "max_position_error_m": 9.497201820839302e-12,
+      "minimum_weight": 0.001920931777511122,
+      "force_balance_N": 5.753426884836168e-18,
+      "moment_balance_Nm": 8.996517359653023e-15,
+      "virtual_work_error_J": 2.117582368135751e-21,
+      "old_mapping": "fd28176016bc4143bff60d6913bb60cab6c8a79eef9cfc3b7a6c1f76fe462d54",
+      "material": "d5b821315c093cef3df4f3df653e4cc418351ad473ae22d021c3d92cf5f29969"
+    }
+  },
+  "muscle_lattice_comparison": {
+    "right": {
+      "material": "04d5f0139cb22b9c874976d96f193113092ecd861a7d64aed8945ff6eb54d817",
+      "energy_J_by_spacing_mm": {
+        "8": 1.0284881950301055e-06,
+        "4": 2.6103690229221255e-06,
+        "2": 5.333690897526365e-06
+      },
+      "change_over_4mm": 1.043270836686405,
+      "difference_over_2mm": 0.5105886199493205,
+      "reference_mass_kg": 0.054693671343375695,
+      "approved_for_native_force": false
+    },
+    "left": {
+      "material": "04d5f0139cb22b9c874976d96f193113092ecd861a7d64aed8945ff6eb54d817",
+      "energy_J_by_spacing_mm": {
+        "8": 0.00047193190399412693,
+        "4": 0.0010533614434546507,
+        "2": 0.0019279511550948153
+      },
+      "change_over_4mm": 0.8302845306088114,
+      "difference_over_2mm": 0.45363686176849893,
+      "reference_mass_kg": 0.055779925069364474,
+      "approved_for_native_force": false
+    }
+  },
+  "compiler_reproduction": {
+    "FJ1527": {
+      "source": "86c55a6b99384bf0a428088fb848e21a466afa0328124417e21b73a880468988",
+      "all_compiled_arrays_identical": true,
+      "minimum_source_barycentric_weight": 5.910558828798329e-05
+    },
+    "FJ1527M": {
+      "source": "a3f5dbc086b46fbb949815bdf9faf96c13d10a2c172ad9f61eec1fd64da91456",
+      "all_compiled_arrays_identical": true,
+      "minimum_source_barycentric_weight": 2.5257640547482683e-05
+    }
+  },
+  "reference_native_check": {
+    "native_label_sha256": "d33e90b42dfdcf5802ed590bcbe4e38f818bdaf562a9b935bcbecf15d4388e34",
+    "roles": {
+      "Skin": {
+        "wrong_donor_group": 0,
+        "cells": 707597,
+        "invalid_final_labels": 0,
+        "first_witnesses": [],
+        "before_carrier_replay": 0
+      },
+      "Fat": {
+        "wrong_donor_group": 0,
+        "cells": 749719,
+        "invalid_final_labels": 0,
+        "first_witnesses": [],
+        "before_carrier_replay": 0
+      }
+    }
+  },
+  "scope": "Canonical native reference-volume import and carrier allocation, two stored material poses, and static material tests. Bilateral lumbar anatomy and motion of the older FE topology are qualified separately. Additional wall nodes have not been installed in the full native coupled scene."
+}

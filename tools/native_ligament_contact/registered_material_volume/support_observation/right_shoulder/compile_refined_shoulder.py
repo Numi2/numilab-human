@@ -67,12 +67,40 @@ def compile_patch(w, patch, out):
         for a,b,mid in z['splits']:
             faces,mask=split_rows(faces,a,b,mid)
             parents0=np.r_[parents0[~mask],parents0[mask],parents0[mask]]
+        if 'face_splits' in z:
+            for a,b,c,mid in z['face_splits']:
+                face = (a,b,c)
+                mask = np.isin(faces,face).sum(axis=1) == 3
+                if not np.any(mask):
+                    continue
+                children = []
+                for corner in face:
+                    child = faces[mask].copy()
+                    child[child == corner] = mid
+                    children.append(child)
+                faces = np.concatenate([faces[~mask], *children])
+                parents0 = np.concatenate([parents0[~mask], np.tile(parents0[mask],3)])
         if not np.array_equal(faces,z[k]):raise ValueError('Lost wall-face ancestry')
         keep=np.ones(len(original),dtype=bool);keep[initial]=False
         walls[k]=np.concatenate((original[keep],node[faces]))
         wall_ancestry[k]=np.r_[np.flatnonzero(keep),parents0]
     np.savez_compressed(out/'material-walls.npz',**walls)
-    np.savez_compressed(out/'source-overlay.npz',from_cell=rows[packet_source],to_cell=dest[packet_target],mass_kg=packet_mass,geometric_parent=rows[parents],geometric_child=dest,geometric_fraction=z['fraction'],node_splits=node[z['splits']],**{'parent_wall_'+k:v for k,v in wall_ancestry.items()})
+    insertions = {}
+    if 'split_fractions' in z:
+        weights = z['split_fractions']
+        if weights.shape != (len(z['splits']),) or not np.all((weights > 0) & (weights < 1)):
+            raise ValueError('Invalid edge insertion coordinates')
+        insertions['node_split_fractions'] = weights
+    if 'face_splits' in z:
+        ops = z['face_splits']
+        f = z['face_split_weights']
+        if ops.ndim != 2 or ops.shape[1] != 4 or f.shape != (len(ops),3) or not np.isfinite(f).all() or np.any(f < 0) or np.any(abs(f.sum(1)-1) > 1e-12):
+            raise ValueError('Invalid face insertion coordinates')
+        expected = np.einsum('ij,ijk->ik', f, z['X'][0,ops[:,:3]])
+        if np.any(np.max(ops[:,:3],axis=1) >= ops[:,3]) or np.max(np.linalg.norm(expected-z['X'][0,ops[:,3]],axis=1),initial=0.) > 2e-7:
+            raise ValueError('Face insertion disagrees with its emitted reference')
+        insertions.update(node_face_insertions=node[ops], node_face_weights=f)
+    np.savez_compressed(out/'source-overlay.npz',from_cell=rows[packet_source],to_cell=dest[packet_target],mass_kg=packet_mass,geometric_parent=rows[parents],geometric_child=dest,geometric_fraction=z['fraction'],node_splits=node[z['splits']],**insertions,**{'parent_wall_'+k:v for k,v in wall_ancestry.items()})
     cmd=read(w/'material-import/result.json')['native_import_command'].copy();cmd[1]=str(out.resolve())
     with (out/'native-import.json').open('w') as log,(out/'native-import.stderr').open('w')as err:
         result=subprocess.run(cmd,stdout=log,stderr=err)

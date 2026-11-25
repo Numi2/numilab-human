@@ -5,7 +5,47 @@ from scipy.sparse import coo_matrix, vstack
 from refine_shoulder_material import FACES,determinant
 
 
+def direct_source_packets(z, source_mass, labels):
+    """Use original donor packets when emitted children already conserve their mass and moment."""
+    t, old, root, x = z['t'], z['base'], z['source_parent'], z['X'][0]
+    mass = z['mass'].copy()
+    if not np.array_equal(z['roles'], labels[root, 0]) or not np.isfinite(mass).all() or np.any(mass <= 0):
+        return None
+    e = x[t[:, 1:]] - x[t[:, :1]]
+    a, b, c = e.transpose(1, 2, 0)
+    volume = (a[0] * (b[1]*c[2] - b[2]*c[1])
+              - a[1] * (b[0]*c[2] - b[2]*c[0])
+              + a[2] * (b[0]*c[1] - b[1]*c[0])) / 6
+    if np.any(volume <= 0) or not np.isfinite(volume).all():
+        return None
+    unchanged = (t == old[root]).all(axis=1) & (mass == source_mass[root])
+    density = mass / volume
+    lower = np.where(z['roles'] == 15, 900., 850.)
+    upper = np.where(z['roles'] == 15, 1100., 950.)
+    if not np.isfinite(density).all() or np.any(~unchanged & ((density < lower) | (density > upper))):
+        return None
+    n = len(old)
+    delta = x[t].mean(axis=1) - x[old].mean(axis=1)[root]
+    moment = np.column_stack([np.bincount(root, mass*d, minlength=n) for d in delta.T])
+    mass_error = abs(np.bincount(root, mass, minlength=n) - source_mass).max()
+    moment_error = np.linalg.norm(moment, axis=1).max()
+    if not np.isfinite([mass_error, moment_error]).all() or mass_error > 1e-14 or moment_error > 1e-14:
+        return None
+    # Unchanged original elements retain their exact mass. The whole-volume native
+    # importer subsequently checks the density and geometry of every element.
+    summary = dict(max_source_mass_error_kg=float(mass_error),
+                   max_source_moment_error_kg_m=float(moment_error),
+                   adjacent_source_packets=0, adjacent_source_mass_kg=0.,
+                   density_kg_m3={int(role): [float(density[z['roles'] == role].min()),
+                                              float(density[z['roles'] == role].max())]
+                                  for role in np.unique(z['roles'])})
+    return mass, root, np.arange(len(t)), mass, summary
+
+
 def map_mass(z, source_mass, labels):
+    exact = direct_source_packets(z, source_mass, labels)
+    if exact is not None:
+        return exact
     t, old, root, x = z['t'], z['base'], z['source_parent'], z['X'][0]
     mu = z['mass'].copy()
     centroid = x[t].mean(1)
