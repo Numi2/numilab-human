@@ -140,6 +140,32 @@ def transfer(stiffness, ports, port_matrix, bed, library=None, springs=None):
     )
 
 
+def material_parameters(cfg, verify):
+    """Read the two constitutive laws used by the selected native executable."""
+    command = json.loads(
+        verify(Path(cfg["argv"][0]).parent / "build.json", False).read_bytes()
+    )["commands"][0]
+    params = {}
+    for tag, key in [(15, "SKIN_DERMIS"), (16, "SUBCUTANEOUS_ADIPOSE")]:
+        prefix = "-DNUMI_HUMAN_" + key + "_MATERIAL="
+        (arg,) = (a for a in command if a.startswith(prefix))
+        law = verify(arg[len(prefix) :].strip('"'), False).read_text()
+        equation = re.search(r"energy\s*=\s*([^;]+);", law)[1]
+        if (
+            "".join(equation.split())
+            != "0.5*shear*(I1()-3-2*log(J()))+0.5*bulk*pow(log(J()),2)"
+        ):
+            raise ValueError("Unrecognized skin or fat energy")
+        params[tag] = [
+            float(
+                re.search(r"parameter " + k + r"\s*:\s*MPa\s*=\s*([0-9.eE+-]+)", law)[1]
+            )
+            * 1e6
+            for k in ("shear", "bulk")
+        ]
+    return params
+
+
 def run(case, output, library=None, proposal=None):
     if proposal is not None and (
         proposal.suffix != ".npz" or proposal.resolve() == output.resolve()
@@ -179,27 +205,7 @@ def run(case, output, library=None, proposal=None):
     label = np.r_[raw[keep, 4], np.full(len(t) - len(keep), 15)]
     if set(label) != {15, 16}:
         raise ValueError("Unexpected material identities")
-    command = json.loads(
-        verify(Path(cfg["argv"][0]).parent / "build.json", False).read_bytes()
-    )["commands"][0]
-    params = {}
-    for tag, key in [(15, "SKIN_DERMIS"), (16, "SUBCUTANEOUS_ADIPOSE")]:
-        prefix = "-DNUMI_HUMAN_" + key + "_MATERIAL="
-        (arg,) = (a for a in command if a.startswith(prefix))
-        law = verify(arg[len(prefix) :].strip('"'), False).read_text()
-        equation = re.search(r"energy\s*=\s*([^;]+);", law)[1]
-        if (
-            "".join(equation.split())
-            != "0.5*shear*(I1()-3-2*log(J()))+0.5*bulk*pow(log(J()),2)"
-        ):
-            raise ValueError("Unrecognized skin or fat energy")
-        params[tag] = [
-            float(
-                re.search(r"parameter " + k + r"\s*:\s*MPa\s*=\s*([0-9.eE+-]+)", law)[1]
-            )
-            * 1e6
-            for k in ("shear", "bulk")
-        ]
+    params = material_parameters(cfg, verify)
     log = verify(case / "stdout.log", False).read_text().splitlines()
     frame = next(s for s in log if s.startswith("resting_fem_skin_bed_source="))
     normal = np.fromstring(re.search(r" normal=(\S+)", frame)[1], sep=",")
