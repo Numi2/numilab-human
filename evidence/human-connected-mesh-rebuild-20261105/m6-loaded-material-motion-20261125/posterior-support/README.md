@@ -1,5 +1,7 @@
 # Posterior load transfer on SSH Numi
 
+The default native launcher uses four source-mapped tissue cavities. The opening-release comparison and its limits are recorded in [the tissue motion results](./dermal-cavity-motion.md).
+
 ## Dense release with anatomical joint stops
 
 On SSH Numi, run `scripts/run_resting_human_on_numi.sh --dense --posterior-support joint-stops --steps 2`. The profile uses the original muscle recruitment, the connected skin/fat volume, the FEM bed and variable pleural pressure. The same command with `--check` verifies 564 inputs. The tracked launch selects the original-recruitment run. The archive also contains the experimental recruitment trial and its exploratory launcher.

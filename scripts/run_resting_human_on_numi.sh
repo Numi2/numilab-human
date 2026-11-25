@@ -3,7 +3,7 @@
 set -euo pipefail
 python="$HOME/numi-human-prep-venv-20261005/bin/python3"
 owner="$(dirname "$0")/run_current_resting_contact.py"
-integrated=(--dense --posterior-support joint-stops)
+integrated=(--dense --posterior-support conditioned-release)
 case ${1:-} in
     "") exec "$python" "$owner" "${integrated[@]}" ;;
     --dense) shift; exec "$python" "$owner" --dense "$@" ;;

@@ -64,7 +64,7 @@ def main():
         help="Audit the terminal dense material and rigid capture in this run",
     )
     parser.add_argument(
-        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar", "connected-release", "joint-stops", "forearm-material", "wrist-material"),
+        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar", "connected-release", "joint-stops", "forearm-material", "wrist-material", "pelvic-material", "conservative-cells", "conditioned-release"),
         help="select a matched dense posterior tissue and bed registration",
     )
     parser.add_argument("--wall-pairs", type=Path, help="Also enumerate accepted tissue-wall and cortical triangle pairs")
@@ -102,6 +102,9 @@ def main():
         expected_launch = {
             "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
             "expanded": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+            "conditioned-release": "59a615766cd3121c4151b3a31067453f6126f34b145dafd4f3ce0c895e196c56",
+            "conservative-cells": "ccb1eca9a01104e6d1692beebd54dd469ed494ab87290679aa96c395b7e4e9fa",
+            "pelvic-material": "3bcd473e33546d1dfffe35b836ad836c46c879c31d496ae7d8fb1e6390864036",
             "wrist-material": "b8806ba1dd0ac5fd6fe06670e186a071b47a8297748ac3e02c0d37129d5366f8",
             "forearm-material": "f2a52ffa037e7a3294360d649a9d642c496ea8b81542286f83dd85275019394d",
             "joint-stops": "a31cd17b225c23a9c3219cdb4b5111d39d89f8ac6f27210919324b2763531148",
