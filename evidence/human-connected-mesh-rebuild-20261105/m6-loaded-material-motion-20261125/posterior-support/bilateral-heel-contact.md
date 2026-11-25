@@ -27,3 +27,5 @@ The exact first-step articulated coordinates and momentum measurements matched b
 The native checks included the connected scene, the reference skeleton, all 185 cortical meshes, the exterior and bonded tissue walls, and the actual positive bed impulses. The comparison spans only two accepted roots. It provides no evidence of periodic breathing or cardiac output, sustained throughput or settled support. The earlier native scene remains the default.
 
 [Measurements and exact force ownership](bilateral-heel-contact.json) · [Verified archive with executables, source, native output and triangle witnesses](bilateral-heel-recovery.json)
+
+A subsequent measurement accounted for the full three-dimensional elastic attachments and tested the gravity proposal against the material limits. [Connected bed-load calculation](connected-gravity.md)

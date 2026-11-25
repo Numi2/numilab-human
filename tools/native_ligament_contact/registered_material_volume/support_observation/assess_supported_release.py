@@ -43,7 +43,7 @@ def read_momentum(run):
     return step, dt, mass, force, gravity, center, normal, digest(trace)
 
 
-def skin_to_bone(run, step):
+def contact_observation(run, step):
     dump = run / f"contact-{step - 1}.rows"
     counts = np.fromfile(run / "contact-counts.u32", "<u4")
     if not 1 <= step <= len(counts) or counts[step - 1] > 8192:
@@ -70,7 +70,32 @@ def skin_to_bone(run, step):
         raise ValueError("Pressure times area differs from observed cortical force")
     if not np.allclose(force, -data[:, 3, :3], rtol=1e-6, atol=1e-7):
         raise ValueError("Material and skeletal contact forces do not cancel")
-    return data[:, 2, :3], force, per_pascal, closure, pressure, digest(dump)
+    flags = ids[:, 3]
+    if not np.isin(flags, (1, 3, 5)).all():
+        raise ValueError("Unknown native body-interface force law")
+    return ids[:, 1].astype(int) - offset, flags, area, force, closure, pressure, data[:, 2, :3], digest(dump)
+
+
+def skin_to_bone(run, step):
+    _, _, _, force, closure, pressure, points, row_hash = contact_observation(run, step)
+    return points, force, force / pressure[:, None], closure, pressure, row_hash
+
+
+def mixed_normal_bound(flags, areas, force, closure, pressure, normal, target):
+    # Elastic attachment forces may point anywhere within a vector-norm bound.
+    # The other rows push only along their captured contact direction.
+    direction = force / (pressure * areas)[:, None]
+    projection = np.maximum((1 if target >= 0 else -1) * (direction @ normal), 0)
+    yield_per_pa = areas * np.where(flags == 3, 1.0, projection)
+    stiffness = pressure / closure
+    def bound(capacity):
+        return float(abs(target) / capacity) if capacity > 0 else (0.0 if target == 0 else None)
+    return {
+        "elastic_vector_rows": int(np.sum(flags == 3)),
+        "unilateral_normal_rows": int(np.sum(flags != 3)),
+        "peak_pressure_equivalent_kPa": bound(1000 * yield_per_pa.sum()),
+        "peak_attachment_extension_or_contact_closure_mm": bound(.001 * (yield_per_pa @ stiffness)),
+    }
 
 
 def peak_required(operator, target):
@@ -94,7 +119,8 @@ def peak_required(operator, target):
 
 def assess(run):
     step, dt, mass, total, gravity, center, normal, trace_hash = read_momentum(run)
-    points, f, per_pa, closure, pressure, dump_hash = skin_to_bone(run, step)
+    _, flags, areas, f, closure, pressure, points, dump_hash = contact_observation(run, step)
+    per_pa = f / pressure[:, None]
     measured = f.sum(axis=0)
     other = total - gravity - measured
     target = -gravity - other
@@ -125,7 +151,8 @@ def assess(run):
         "required_skin_bone_normal_N": float(target @ normal),
         "measured_peak_pressure_kPa": float(pressure.max(initial=0.0) / 1000),
         "measured_peak_closure_mm": float(closure.max(initial=0.0) * 1000), "bounds": bounds,
-        "scope": "Frozen measured contact areas, normals and slopes. Independent nonnegative pressures allow arbitrary redistribution. The torque case holds the observed interface moment fixed. A new contact set or different physical owners require a new measurement.",
+        "mixed_law_normal_bound": mixed_normal_bound(flags, areas, f, closure, pressure, normal, target @ normal),
+        "scope": "The mixed-law normal bound allows elastic attachments to rotate. The legacy bounds additionally freeze their force directions. Frozen measured contact areas, normals and slopes. Independent nonnegative pressures allow arbitrary redistribution. The torque case holds the observed interface moment fixed. A new contact set or different physical owners require a new measurement.",
     }
 
 

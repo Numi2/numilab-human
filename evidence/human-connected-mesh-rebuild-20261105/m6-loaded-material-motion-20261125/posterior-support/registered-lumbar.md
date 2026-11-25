@@ -73,3 +73,5 @@ bash scripts/run_resting_human_on_numi.sh --dense --posterior-support connected-
   --accepted-run "$RUN" --material-report "$RUN/material-report.json" \
   --wall-pairs "$RUN/wall-crossings.json"
 ```
+
+A subsequent measurement accounted for the full three-dimensional elastic attachments and tested the gravity proposal against the material limits. [Connected bed-load calculation](connected-gravity.md)
