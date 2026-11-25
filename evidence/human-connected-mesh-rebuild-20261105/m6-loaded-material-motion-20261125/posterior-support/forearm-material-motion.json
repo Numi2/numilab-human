@@ -1,0 +1,562 @@
+{
+  "runs": [
+    {
+      "run": "physical-stops-original-recruitment",
+      "launch": "7e366167ec93146d3a6f1490c909aea9fd95b9e1e56de327d6cd1ede5de39621",
+      "accepted_time_s": 1.5625000742147677e-05,
+      "wall_s": 233.059411625145,
+      "end_to_end": 6.704299402969007e-08,
+      "bed_force_N": 10.99171468265326,
+      "skeletal_normal_acceleration_m_s2": -9.79834443435656,
+      "skin_to_skeleton_N": 1.4375508893842979,
+      "shape": {
+        "15": {
+          "cells": 707597,
+          "inverted": 0,
+          "tiny": 0,
+          "low_shape": 5
+        },
+        "16": {
+          "cells": 750181,
+          "inverted": 0,
+          "tiny": 0,
+          "low_shape": 35
+        }
+      },
+      "deformation": {
+        "15": {
+          "invalid_reference_cells": 0,
+          "relative_volume_failures": 0,
+          "principal_stretch_failures": 203,
+          "minimum_stretch": 0.24887707602651446,
+          "maximum_stretch": 4.077052951273565,
+          "worst_stretch_cell": 1440182
+        },
+        "16": {
+          "invalid_reference_cells": 0,
+          "relative_volume_failures": 7,
+          "principal_stretch_failures": 303,
+          "minimum_stretch": 0.03143894252915771,
+          "maximum_stretch": 16.20546687498513,
+          "worst_stretch_cell": 1316621
+        }
+      },
+      "transverse_wall_cortex": {
+        "O": 212,
+        "I": 747,
+        "D": 5085,
+        "C": 524
+      },
+      "tissue_sha256": "db9c481c7cbe8a5c8f40606ba0c8985d4cb186302c37853e911246980a24184d"
+    },
+    {
+      "run": "traction-release",
+      "launch": "b8ed24ea2586365dd61153aa828c1a4b4ab06c8761417cf14f59248c09182e5f",
+      "accepted_time_s": 1.5625000742147677e-05,
+      "wall_s": 235.79988187504932,
+      "end_to_end": 6.626381920932168e-08,
+      "bed_force_N": 10.97907099588996,
+      "skeletal_normal_acceleration_m_s2": -9.798392861930793,
+      "skin_to_skeleton_N": 1.4375508879938144,
+      "shape": {
+        "15": {
+          "cells": 707597,
+          "inverted": 0,
+          "tiny": 0,
+          "low_shape": 5
+        },
+        "16": {
+          "cells": 750181,
+          "inverted": 0,
+          "tiny": 0,
+          "low_shape": 35
+        }
+      },
+      "deformation": {
+        "15": {
+          "invalid_reference_cells": 0,
+          "relative_volume_failures": 0,
+          "principal_stretch_failures": 206,
+          "minimum_stretch": 0.24888591881400007,
+          "maximum_stretch": 4.077074411713944,
+          "worst_stretch_cell": 1440182
+        },
+        "16": {
+          "invalid_reference_cells": 0,
+          "relative_volume_failures": 7,
+          "principal_stretch_failures": 303,
+          "minimum_stretch": 0.03144348362720078,
+          "maximum_stretch": 16.206107214973283,
+          "worst_stretch_cell": 1316621
+        }
+      },
+      "transverse_wall_cortex": {
+        "O": 212,
+        "I": 747,
+        "D": 5085,
+        "C": 524
+      },
+      "tissue_sha256": "ab06f524fbe07c4f2f9780cc010435163920179d62325d99f3f40dfde1515106"
+    },
+    {
+      "run": "motion-qualified-traction",
+      "launch": "ae67bf67e5d6a510c984f7f9394cc9cd0d8efe54b08342d55bf7abd7667272a0",
+      "accepted_time_s": 1.5625000742147677e-05,
+      "wall_s": 232.77260808297433,
+      "end_to_end": 6.712559897330348e-08,
+      "bed_force_N": 10.97985703328054,
+      "skeletal_normal_acceleration_m_s2": -9.79838353149307,
+      "skin_to_skeleton_N": 1.437550889384297,
+      "shape": {
+        "15": {
+          "cells": 707597,
+          "inverted": 0,
+          "tiny": 0,
+          "low_shape": 5
+        },
+        "16": {
+          "cells": 750181,
+          "inverted": 0,
+          "tiny": 0,
+          "low_shape": 35
+        }
+      },
+      "deformation": {
+        "15": {
+          "invalid_reference_cells": 0,
+          "relative_volume_failures": 0,
+          "principal_stretch_failures": 203,
+          "minimum_stretch": 0.24888502747525706,
+          "maximum_stretch": 4.077072547811051,
+          "worst_stretch_cell": 1440182
+        },
+        "16": {
+          "invalid_reference_cells": 0,
+          "relative_volume_failures": 7,
+          "principal_stretch_failures": 303,
+          "minimum_stretch": 0.03144313530990638,
+          "maximum_stretch": 16.206052809333315,
+          "worst_stretch_cell": 1316621
+        }
+      },
+      "transverse_wall_cortex": {
+        "O": 212,
+        "I": 747,
+        "D": 5085,
+        "C": 524
+      },
+      "tissue_sha256": "a444efc7169e80e8f08588793f9cf44eb2bf8154e79a6ff0b873b658fb30dd4a"
+    }
+  ],
+  "control_repeat": {
+    "exit": 0,
+    "wall_s": 232.80414283415303
+  },
+  "matched_patch": {
+    "before": 793,
+    "after": 791,
+    "introduced": [],
+    "removed": [
+      [
+        "51005/110",
+        60593,
+        1955
+      ],
+      [
+        "51005/124",
+        60320,
+        4282
+      ]
+    ],
+    "control": {
+      "time_s": 1.5625000742147677e-05,
+      "step": 2,
+      "case_sha256": "7e366167ec93146d3a6f1490c909aea9fd95b9e1e56de327d6cd1ede5de39621",
+      "pack_sha256": "a651fed42de4436a5b0615301dad2fc806d69f0b5a5c68de294bcaca88705a48",
+      "walls_sha256": "761d1fe9b459286d9ac82886a9cc3664135bedaa57495bb6ae2292079f5d6901",
+      "cortex_sha256": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+      "tested_outer_rows": [
+        59688,
+        59692,
+        59718,
+        59719,
+        59892,
+        60025,
+        60026,
+        60027,
+        60040,
+        60046,
+        60047,
+        60106,
+        60139,
+        60159,
+        60215,
+        60216,
+        60217,
+        60275,
+        60276,
+        60320,
+        60321,
+        60322,
+        60323,
+        60592,
+        60593,
+        60899,
+        60900,
+        60901,
+        61333,
+        61380,
+        61381,
+        61382,
+        61383,
+        61384,
+        61385,
+        61386,
+        61387,
+        61388,
+        61389,
+        61390,
+        61391,
+        61392,
+        61438,
+        77951,
+        77952,
+        77954,
+        87995,
+        90227,
+        91401
+      ]
+    },
+    "trial": {
+      "time_s": 1.5625000742147677e-05,
+      "step": 2,
+      "case_sha256": "ae67bf67e5d6a510c984f7f9394cc9cd0d8efe54b08342d55bf7abd7667272a0",
+      "pack_sha256": "9ba9193e1e9e4d138cdb400c8adbbcd633c27e8ae5e22e1b54427c2c95fb51b8",
+      "walls_sha256": "761d1fe9b459286d9ac82886a9cc3664135bedaa57495bb6ae2292079f5d6901",
+      "cortex_sha256": "2870d52dc6b74e03240b39d3a789bb52157e69d94fafde0a4613ae50dd7edb29",
+      "tested_outer_rows": [
+        59688,
+        59692,
+        59718,
+        59719,
+        59892,
+        60025,
+        60026,
+        60027,
+        60040,
+        60046,
+        60047,
+        60106,
+        60139,
+        60159,
+        60215,
+        60216,
+        60217,
+        60275,
+        60276,
+        60320,
+        60321,
+        60322,
+        60323,
+        60592,
+        60593,
+        60899,
+        60900,
+        60901,
+        61333,
+        61380,
+        61381,
+        61382,
+        61383,
+        61384,
+        61385,
+        61386,
+        61387,
+        61388,
+        61389,
+        61390,
+        61391,
+        61392,
+        61438,
+        77951,
+        77952,
+        77954,
+        87995,
+        90227,
+        91401
+      ]
+    }
+  },
+  "matched_strain": {
+    "introduced": [],
+    "cleared": []
+  },
+  "reference_surface": {
+    "physical_opening": "a99702b73038b2c9232150f0136e38dd760cc6a143d6bb3d5664dc24faa9cdfa",
+    "reference_skin": "dc8451a5c2d3080a3c61664582293f02d4d4c8ce1edbbd754c5fb4c3b52e04bc",
+    "registered_skin": "d33f2965db5db7794960f474d1b53af090eaced190a362b0db06458e993e25cf",
+    "native_wall": "761d1fe9b459286d9ac82886a9cc3664135bedaa57495bb6ae2292079f5d6901",
+    "whole_surface_quantile_mm": {
+      "median": 0.6053101710102485,
+      "p95": 7.224837663369742,
+      "p99": 36.38860773474316,
+      "p999": 107.97540147347932,
+      "max": 224.936034315863
+    },
+    "source_quantile_mm": [
+      4.465241536373273,
+      17.768746747400318,
+      28.733795538110915,
+      43.74528511242914,
+      82.1459947315781
+    ],
+    "physical_edges_gt_50mm": 1446,
+    "source_edges_gt_50mm": 66,
+    "patch_edges": [
+      {
+        "ids": [
+          29335,
+          29546
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 18.148954369187027,
+        "accepted_mm": 18.443795751437786,
+        "source_face_rows": [
+          71194,
+          78990
+        ],
+        "endpoints_to_surface_mm": [
+          0.5611596746399827,
+          0.5639848239617143
+        ],
+        "largest_distance_to_source_mm": 1.4473190657161559,
+        "source_edge_path_upper_mm": 23.53199302642843
+      },
+      {
+        "ids": [
+          29335,
+          29609
+        ],
+        "donors": [
+          20,
+          92
+        ],
+        "reference_mm": 59.6321848131945,
+        "accepted_mm": 61.82368607725609,
+        "source_face_rows": [
+          71194,
+          78941
+        ],
+        "endpoints_to_surface_mm": [
+          0.5611596746399827,
+          1.8117551558205969
+        ],
+        "largest_distance_to_source_mm": 9.046977690160395,
+        "source_edge_path_upper_mm": 69.77807204507816
+      },
+      {
+        "ids": [
+          29425,
+          29609
+        ],
+        "donors": [
+          20,
+          92
+        ],
+        "reference_mm": 67.13454819054287,
+        "accepted_mm": 69.39086102711389,
+        "source_face_rows": [
+          71301,
+          78941
+        ],
+        "endpoints_to_surface_mm": [
+          0.3328131446266024,
+          1.8117551558205969
+        ],
+        "largest_distance_to_source_mm": 6.258879233707605,
+        "source_edge_path_upper_mm": 79.37160675816968
+      },
+      {
+        "ids": [
+          29500,
+          29609
+        ],
+        "donors": [
+          20,
+          92
+        ],
+        "reference_mm": 75.49488508298168,
+        "accepted_mm": 77.81814898205764,
+        "source_face_rows": [
+          72518,
+          78941
+        ],
+        "endpoints_to_surface_mm": [
+          1.1588811453526306,
+          1.8117551558205969
+        ],
+        "largest_distance_to_source_mm": 4.521017524161337,
+        "source_edge_path_upper_mm": 90.08878968160545
+      },
+      {
+        "ids": [
+          29500,
+          29639
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 45.15099656711613,
+        "accepted_mm": 45.10222474999489,
+        "source_face_rows": [
+          72518,
+          80207
+        ],
+        "endpoints_to_surface_mm": [
+          1.1588811453526306,
+          0.026228793512401784
+        ],
+        "largest_distance_to_source_mm": 1.1902362487646263,
+        "source_edge_path_upper_mm": 59.72871354390055
+      },
+      {
+        "ids": [
+          29500,
+          30208
+        ],
+        "donors": [
+          20,
+          93
+        ],
+        "reference_mm": 86.3226531846038,
+        "accepted_mm": 87.79024770149776,
+        "source_face_rows": [
+          72518,
+          83974
+        ],
+        "endpoints_to_surface_mm": [
+          1.1588811453526306,
+          1.335924581762044
+        ],
+        "largest_distance_to_source_mm": 3.4745828775752585,
+        "source_edge_path_upper_mm": 97.0579001616769
+      },
+      {
+        "ids": [
+          29507,
+          29639
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 48.368289823879884,
+        "accepted_mm": 48.36923267481162,
+        "source_face_rows": [
+          73574,
+          80207
+        ],
+        "endpoints_to_surface_mm": [
+          0.01049847049041317,
+          0.026228793512401784
+        ],
+        "largest_distance_to_source_mm": 10.931309065477883,
+        "source_edge_path_upper_mm": 60.93898271519077
+      },
+      {
+        "ids": [
+          29510,
+          29639
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 45.748112747902304,
+        "accepted_mm": 45.74756164877609,
+        "source_face_rows": [
+          75639,
+          80207
+        ],
+        "endpoints_to_surface_mm": [
+          0.2745557649185851,
+          0.026228793512401784
+        ],
+        "largest_distance_to_source_mm": 2.9711432098755775,
+        "source_edge_path_upper_mm": 56.546553900082856
+      },
+      {
+        "ids": [
+          29525,
+          29639
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 32.224625170959165,
+        "accepted_mm": 32.22475893748642,
+        "source_face_rows": [
+          74581,
+          80207
+        ],
+        "endpoints_to_surface_mm": [
+          0.13311468196249016,
+          0.026228793512401784
+        ],
+        "largest_distance_to_source_mm": 2.737897606435078,
+        "source_edge_path_upper_mm": 38.7063054267416
+      },
+      {
+        "ids": [
+          29562,
+          29639
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 45.94667676950915,
+        "accepted_mm": 45.946192915352015,
+        "source_face_rows": [
+          78915,
+          80207
+        ],
+        "endpoints_to_surface_mm": [
+          1.0978245885048479,
+          0.026228793512401784
+        ],
+        "largest_distance_to_source_mm": 2.163475445423851,
+        "source_edge_path_upper_mm": 61.299978681267994
+      },
+      {
+        "ids": [
+          29562,
+          30029
+        ],
+        "donors": [
+          20,
+          91
+        ],
+        "reference_mm": 40.78583799201187,
+        "accepted_mm": 40.78583909988465,
+        "source_face_rows": [
+          78915,
+          81431
+        ],
+        "endpoints_to_surface_mm": [
+          1.0978245885048479,
+          0.015771699539781747
+        ],
+        "largest_distance_to_source_mm": 4.68035623630094,
+        "source_edge_path_upper_mm": 64.45733523866362
+      }
+    ],
+    "scope": "Material opening and the independently emitted source-bound skin in the same native initial registration. Edge-graph path lengths are upper bounds on intrinsic distance. Nearest triangle identities do not uniquely define anatomical correspondence."
+  },
+  "scope": "End-to-end timing includes initialization and recording. The matched native observations extend through two steps only."
+}
