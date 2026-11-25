@@ -1,0 +1,158 @@
+{
+  "device": "Apple M6 on SSH Numi",
+  "binary_sha256": "ea1ef340b4dad044d575e5c5d3b32a8060e6831f32ce9ca9f053a867c6650e0e",
+  "launch_sha256": "c4d6c3e265d87ed8e664c5583a70822ef08a7ed18c58f34862c4d6f47e6282bd",
+  "parent_launch_sha256": "678887409fbb6ea1e22f5e37054892f2c24cd0ba402a20652edc0b448a0e3cc6",
+  "variable_pleural_pressure_enabled": true,
+  "old_cells": [
+    30,
+    28
+  ],
+  "new_cells": [
+    27,
+    31
+  ],
+  "native_volume_check": {
+    "registered_volume_fixed_cavities": "PASS",
+    "cavities": "2",
+    "input_cells": "1457316",
+    "output_cells": "1457316",
+    "affected_nodes": "44",
+    "restricted_transport_cavities": "2",
+    "maximum_transport_distance_used_m": "0.056707857856885396",
+    "minimum_patch_quality_before": "1.454641851742183e-05",
+    "minimum_patch_quality_after": "3.4755274394909059e-05",
+    "maximum_nodal_mass_change_kg": "3.1363265885007479e-07",
+    "nodal_mass_l1_change_kg": "1.8604151718316346e-06",
+    "maximum_source_mass_change_kg": "1.3010426069826053e-18",
+    "maximum_source_first_moment_change_kg_m": "5.4210108624275222e-20",
+    "lumped_first_moment_change_kg_m": "-6.4253263466554204e-22,-2.4797667112957185e-21,-7.5549044809948015e-23",
+    "proposal_sha256": "8dabd286d5816210d93714090cd25300dc4f340a78d01edb2e41f9a93f170a2f",
+    "composition_sha256": "ec180e5886f34c1f96035def3471434372de1652de6e33e9b58316ca2ab866f0",
+    "points_fixed": "1",
+    "boundary_exact": "1",
+    "volume_exact": "1",
+    "mass_conservative": "1",
+    "source_bundle": "immutable_provenance",
+    "physical_steps": "0",
+    "motion_qualification": "pending"
+  },
+  "loaded_mass_check": {
+    "registered_loaded_cavity_mass": "PASS",
+    "changed_cells": "0",
+    "mass_drift_kg": "2.9910850949917481e-21",
+    "first_moment_change_kg_m": "1.0717290077844794e-22,-7.0735251483221115e-22,-3.7281884449462003e-22"
+  },
+  "cortical_registration": {
+    "registered_cavity_cortical_transfer": "PASS",
+    "retained_facets": "4733"
+  },
+  "material_install": {
+    "registered_loaded_material_install": "PASS",
+    "cells": "1457316",
+    "nodes": "314014",
+    "fixed_bed_offset_m": "0.002552098361775279",
+    "minimum_skin_gap_m": "1.946154139231826e-08",
+    "ipc_width_m": "9.9999997473787516e-06",
+    "outer_contact_nodes": "10",
+    "anchors": "14",
+    "pose_sha256": "7ab5791e6cc2fa456f701c9b65685e9384495addb55bebc2de2668cc040a54cf",
+    "reference_and_mass_changed": "0",
+    "initial_forces_applied": "0"
+  },
+  "initial_and_terminal_support": {
+    "initialization": "dynamic_release",
+    "initial_balanced": false,
+    "initial_maximum_acceleration_residual_m_s2": 68.3067562932,
+    "last_root_mean_normal_force_N": 10.99135238453929,
+    "last_root_normal_impulse_Ns": 8.586994050421322e-05,
+    "last_root_contact_samples": 16
+  },
+  "execution": {
+    "exit": 0,
+    "wall_s": 215.78169754194096
+  },
+  "accepted_trace_steps": [
+    1,
+    2
+  ],
+  "terminal_simulated_s": 1.56250007421e-05,
+  "end_to_end_realtime_factor": 7.241114941670623e-08,
+  "native_failure_lines": [],
+  "root_zero_solver_work": {
+    "root": 1,
+    "used_columns_sum": 776,
+    "cycles_with_work": 55,
+    "budget_exhausted_solves": 6,
+    "active_newton_begins": 16,
+    "last_newton_norm": 7.7045639e-05,
+    "last_newton_threshold": 9.99999975e-06
+  },
+  "accepted_material": {
+    "accepted_observation": {
+      "launch_sha256": "c4d6c3e265d87ed8e664c5583a70822ef08a7ed18c58f34862c4d6f47e6282bd",
+      "receipt_sha256": "99cf974b2ec07cd11b099c80c70d29702e00be6cdc18de7f307eaba78af87b89",
+      "accepted_node_sha256": "2c3b84c703d91cf8af22ca1bdadedba43857516aba77ace3906e2181c0633356",
+      "bed_support": {
+        "initialization": "dynamic_release",
+        "initial_balanced": false,
+        "initial_maximum_acceleration_residual_m_s2": 68.3067562932,
+        "last_root_mean_normal_force_N": 10.99135238453929,
+        "last_root_normal_impulse_Ns": 8.586994050421322e-05,
+        "last_root_contact_samples": 16
+      },
+      "loaded_node_sha256": "7ab5791e6cc2fa456f701c9b65685e9384495addb55bebc2de2668cc040a54cf",
+      "step": 2,
+      "time_s": 1.5625000742147677e-05,
+      "cell_count": 1457316,
+      "maximum_node_displacement_m": 0.0003719653395563738,
+      "median_node_displacement_m": 1.7962854815537078e-09,
+      "worst_node_row": 17901,
+      "coordinate_representation": "native rest + high displacement + low displacement",
+      "native_cell_quality_reproduced": true
+    },
+    "quality": {
+      "15": {
+        "cells": 707597,
+        "inverted": 0,
+        "tiny": 0,
+        "low_shape": 4
+      },
+      "16": {
+        "cells": 749719,
+        "inverted": 0,
+        "tiny": 0,
+        "low_shape": 33
+      }
+    },
+    "deformation": {
+      "15": {
+        "invalid_reference_cells": 0,
+        "relative_volume_failures": 0,
+        "principal_stretch_failures": 240,
+        "minimum_stretch": 0.2251284479431713,
+        "maximum_stretch": 4.378580285989627,
+        "worst_stretch_cell": 1440182
+      },
+      "16": {
+        "invalid_reference_cells": 0,
+        "relative_volume_failures": 4,
+        "principal_stretch_failures": 323,
+        "minimum_stretch": 0.01954607752171417,
+        "maximum_stretch": 20.958027960713682,
+        "worst_stretch_cell": 1287665
+      }
+    },
+    "interior_cortical_samples_by_bank": {
+      "34/10": 0,
+      "84/11": 550,
+      "41/12": 31,
+      "91/13": 3,
+      "42/14": 104,
+      "92/15": 29,
+      "43/16": 138,
+      "93/17": 53
+    },
+    "physical_audit_exit": 1
+  }
+}

@@ -62,25 +62,25 @@ def main():
         parser.error(
             "--accepted-run requires --material-report and supplies its own material positions"
         )
-    if args.dense and args.material_report:
+    if args.dense and args.material_report and not args.accepted_run:
         parser.error(
-            "Use the registered reference scene with --material-report and --material-proposal."
+            "A dense material report needs --accepted-run. Use --current for an unrun proposal."
         )
     if args.material_proposal is not None and args.material_report is None:
         parser.error("--material-proposal requires --material-report")
 
     repo = Path(__file__).resolve().parents[1]
     evidence = repo / "evidence/human-connected-mesh-rebuild-20261105"
+    reference_checkpoint = "m6-contact-feature-ownership-20261125"
+    reference_sha = "f2c198650665551959263aabb2cd967088cabf56292151f573e83eae90a3624b"
     if args.dense:
         checkpoint = "m6-loaded-material-motion-20261125"
         expected_launch = (
-            "85975fc8ddfedc6c2cb0f017649ee27b0ea6d3442dbcbdebc5f1cab0f227a999"
+            "c4d6c3e265d87ed8e664c5583a70822ef08a7ed18c58f34862c4d6f47e6282bd"
         )
     else:
-        checkpoint = "m6-contact-feature-ownership-20261125"
-        expected_launch = (
-            "f2c198650665551959263aabb2cd967088cabf56292151f573e83eae90a3624b"
-        )
+        checkpoint = reference_checkpoint
+        expected_launch = reference_sha
     cfg_path = evidence / checkpoint / "launch.json.gz"
     payload = gzip.decompress(cfg_path.read_bytes())
     if hashlib.sha256(payload).hexdigest() != expected_launch:
@@ -125,14 +125,25 @@ def main():
         flush=True,
     )
     if args.material_report is not None:
+        reference_pins = cfg["pins"]
+        if args.dense:
+            # The source registration is retained by the anatomical checkpoint.
+            # Observations and the scene remain those selected by the dense launch.
+            source = evidence / reference_checkpoint / "launch.json.gz"
+            reference_bytes = gzip.decompress(source.read_bytes())
+            if hashlib.sha256(reference_bytes).hexdigest() != reference_sha:
+                raise SystemExit("The anatomical registration checkpoint changed")
+            reference_pins = json.loads(reference_bytes)["pins"]
         registrations = [
             Path(name)
-            for name in cfg["pins"]
+            for name in reference_pins
             if Path(name).name == "material-boundary.json"
         ]
         if len(registrations) != 1:
             raise SystemExit("Ambiguous registered material in the launch manifest.")
         registration = registrations[0]
+        if digest(registration) != reference_pins[str(registration)]:
+            raise SystemExit("The anatomical registration changed")
         volume_launch = Path(
             json.loads(registration.read_bytes())["initial_bodies_path"]
         ).with_name("launch.json")

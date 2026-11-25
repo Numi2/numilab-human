@@ -1,6 +1,6 @@
 {
   "device": "Apple M6 on SSH Numi",
-  "scope": "Two accepted 7.8125 us steps with dense skin/fat, matched initial inputs except for the registration. Wall time includes startup. Eight upper-limb cortical surfaces sampled. Physical qualification remains open.",
+  "scope": "Matched dense trials with two accepted 7.8125 us steps, one physical bed and variable pleural pressure. The bounded configurations share exactly the same opening tissue positions. The final pair includes two conservative dermal topology changes. Wall time includes startup. Cortical samples cover eight upper-limb bones.",
   "runs": {
     "previous dense": {
       "initial_stretch_failures": 626,
@@ -103,6 +103,59 @@
         "simulated_s": 7.81250037107e-06,
         "wall_s": 38.447199833,
         "real_time_factor": 2.03200763775e-07,
+        "includes": "physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export",
+        "excludes": "terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization"
+      }
+    },
+    "bounded dense with both dermal cavities": {
+      "initial_stretch_failures": 569,
+      "accepted_stretch_failures": 563,
+      "accepted_ratio_failures": 4,
+      "accepted_low_shape_by_material": {
+        "15": 4,
+        "16": 33
+      },
+      "accepted_inversions": 0,
+      "interior_cortical_samples_by_bank": {
+        "34/10": 0,
+        "84/11": 550,
+        "41/12": 31,
+        "91/13": 3,
+        "42/14": 104,
+        "92/15": 29,
+        "43/16": 138,
+        "93/17": 53
+      },
+      "terminal_state": {
+        "launch_sha256": "c4d6c3e265d87ed8e664c5583a70822ef08a7ed18c58f34862c4d6f47e6282bd",
+        "receipt_sha256": "99cf974b2ec07cd11b099c80c70d29702e00be6cdc18de7f307eaba78af87b89",
+        "accepted_node_sha256": "2c3b84c703d91cf8af22ca1bdadedba43857516aba77ace3906e2181c0633356",
+        "bed_support": {
+          "initialization": "dynamic_release",
+          "initial_balanced": false,
+          "initial_maximum_acceleration_residual_m_s2": 68.3067562932,
+          "last_root_mean_normal_force_N": 10.99135238453929,
+          "last_root_normal_impulse_Ns": 8.586994050421322e-05,
+          "last_root_contact_samples": 16
+        },
+        "loaded_node_sha256": "7ab5791e6cc2fa456f701c9b65685e9384495addb55bebc2de2668cc040a54cf",
+        "step": 2,
+        "time_s": 1.5625000742147677e-05,
+        "cell_count": 1457316,
+        "maximum_node_displacement_m": 0.0003719653395563738,
+        "median_node_displacement_m": 1.7962854815537078e-09,
+        "worst_node_row": 17901,
+        "coordinate_representation": "native rest + high displacement + low displacement",
+        "native_cell_quality_reproduced": true
+      },
+      "time_wall_s": 215.78169754194096,
+      "elapsed_realtime_factor": 7.241114941670623e-08,
+      "timed_native_interval": {
+        "accepted_start_step": "1",
+        "accepted_end_step": "2",
+        "simulated_s": 7.81250037107e-06,
+        "wall_s": 38.038326792,
+        "real_time_factor": 2.05384963797e-07,
         "includes": "physics_physiology_controller_audits_trace_viewer_movie_frames_cadence_geometry_export",
         "excludes": "terminal_query_fk_terminal_frame_render_terminal_geometry_export_load_compile_initial_parity_first_accepted_observer_movie_finalization"
       }
