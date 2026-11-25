@@ -57,7 +57,13 @@ def main():
         type=Path,
         help="Audit the terminal dense material and rigid capture in this run",
     )
+    parser.add_argument(
+        "--posterior-support", choices=("pressure-fit",),
+        help="select a matched dense posterior tissue and bed registration",
+    )
     args = parser.parse_args()
+    if args.posterior_support and not args.dense:
+        parser.error("--posterior-support requires --dense")
     if args.accepted_run and (not args.material_report or args.material_proposal):
         parser.error(
             "--accepted-run requires --material-report and supplies its own material positions"
@@ -82,6 +88,11 @@ def main():
         checkpoint = reference_checkpoint
         expected_launch = reference_sha
     cfg_path = evidence / checkpoint / "launch.json.gz"
+    if args.posterior_support:
+        cfg_path = evidence / checkpoint / "posterior-support" / f"{args.posterior_support}-launch.json.gz"
+        expected_launch = {
+            "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
+        }[args.posterior_support]
     payload = gzip.decompress(cfg_path.read_bytes())
     if hashlib.sha256(payload).hexdigest() != expected_launch:
         raise SystemExit("The launch manifest differs from the verified checkpoint.")

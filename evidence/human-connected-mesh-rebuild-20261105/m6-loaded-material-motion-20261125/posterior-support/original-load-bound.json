@@ -1,0 +1,44 @@
+{
+  "matrix_sha256": "28c36affdc78579bcbf53bde67a725295d7dc868a150990f49841b97afc47759",
+  "gradient_sha256": "b24da3a26a2c6e135ba6e074634569f9c6dfeac5cc14c5c2f0145fcd450fe50a",
+  "parents_sha256": "74b9f617e5fe6944aa7293b65b82a8d726f2e404adb2d4c75e2bcec243c1ed39",
+  "volume_m3": 4.7626152805928075e-05,
+  "elements": 2256,
+  "fat_parent_count": 51,
+  "donors": [
+    128,
+    131,
+    145
+  ],
+  "shear_Pa": 551.7241379999999,
+  "bulk_Pa": 5333.33333,
+  "stretch_bounds": [
+    0.6666666666666666,
+    1.5
+  ],
+  "volume_ratio_bounds": [
+    0.4,
+    2.5
+  ],
+  "native_linear_force_upper_bound_N_per_m_of_peak_relative_displacement": 971.533608178047,
+  "tested_three_site_share_N": 541.0414888629152,
+  "min_peak_relative_displacement_for_share_m": 0.5568942590442655,
+  "finite_strain_bounds_by_modulus_multiplier": {
+    "0.5": {
+      "effective_reference_area_m2": 0.003449216925196565,
+      "piola_stress_upper_bound_Pa": 4492.749132205893,
+      "total_force_upper_bound_N": 15.496466347466747
+    },
+    "1.0": {
+      "effective_reference_area_m2": 0.003449216925196565,
+      "piola_stress_upper_bound_Pa": 8985.498264411786,
+      "total_force_upper_bound_N": 30.992932694933494
+    },
+    "1.5": {
+      "effective_reference_area_m2": 0.003449216925196565,
+      "piola_stress_upper_bound_Pa": 13478.24739661768,
+      "total_force_upper_bound_N": 46.489399042400244
+    }
+  },
+  "scope": "Only this registered deep adipose compartment. The native linear bound fixes the relative bone pose. The finite-strain bound allows arbitrary nodal motion and admissible strains in the sourced nonlinear material. Other tissues can carry an independent share."
+}
