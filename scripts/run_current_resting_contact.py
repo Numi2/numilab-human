@@ -1,16 +1,16 @@
 """Replay the registered full-contact Human scene on its native Numi host."""
 
 import argparse
-from fractions import Fraction
 import gzip
 import hashlib
 import importlib.util
 import json
 import os
-from pathlib import Path
-import tempfile
 import subprocess
 import sys
+import tempfile
+from fractions import Fraction
+from pathlib import Path
 
 
 def digest(path):
@@ -26,7 +26,11 @@ def main():
         action="store_true",
         help="verify the native owner and all pinned inputs",
     )
-    options.add_argument("--steps", type=int, help="number of 0.125 ms physical steps")
+    options.add_argument(
+        "--steps",
+        type=int,
+        help="number of physical steps at the selected checkpoint timestep",
+    )
     options.add_argument(
         "--seconds",
         type=int,
@@ -38,23 +42,49 @@ def main():
         type=Path,
         help="write a cortical occupancy report and return failure on an invalid registered reference",
     )
-    args = parser.parse_args()
-    repo = Path(__file__).resolve().parents[1]
-    cfg_path = (
-        repo
-        / "evidence/human-connected-mesh-rebuild-20261105/m6-contact-feature-ownership-20261125/launch.json.gz"
+    parser.add_argument(
+        "--material-proposal",
+        type=Path,
+        help="Evaluate a sparse registered material correction in the material report",
     )
+    parser.add_argument(
+        "--dense",
+        action="store_true",
+        help="use the full registered skin/fat volume and its native timestep",
+    )
+    args = parser.parse_args()
+    if args.dense and args.material_report:
+        parser.error(
+            "Use the registered reference scene with --material-report and --material-proposal."
+        )
+    if args.material_proposal is not None and args.material_report is None:
+        parser.error("--material-proposal requires --material-report")
+
+    repo = Path(__file__).resolve().parents[1]
+    evidence = repo / "evidence/human-connected-mesh-rebuild-20261105"
+    if args.dense:
+        checkpoint = "m6-loaded-material-motion-20261125"
+        expected_launch = (
+            "eee58f1d7ecb2c2eca4f759b03f4fb076779edcb0ff416f08e3b386c8dd7ca03"
+        )
+    else:
+        checkpoint = "m6-contact-feature-ownership-20261125"
+        expected_launch = (
+            "f2c198650665551959263aabb2cd967088cabf56292151f573e83eae90a3624b"
+        )
+    cfg_path = evidence / checkpoint / "launch.json.gz"
     payload = gzip.decompress(cfg_path.read_bytes())
-    if (
-        hashlib.sha256(payload).hexdigest()
-        != "f2c198650665551959263aabb2cd967088cabf56292151f573e83eae90a3624b"
-    ):
+    if hashlib.sha256(payload).hexdigest() != expected_launch:
         raise SystemExit("The launch manifest differs from the verified checkpoint.")
     cfg = json.loads(payload)
     argv = cfg["argv"]
     settings = cfg["environment"]
     old_output = Path(argv[4]).parent
-    steps = args.steps if args.steps is not None else 256
+    steps = (
+        args.steps
+        if args.steps is not None
+        else int(argv[argv.index("--muscle-step-count") + 1])
+    )
     if args.seconds is not None:
         ticks = args.seconds / Fraction(argv[argv.index("--muscle-step-seconds") + 1])
         if ticks.denominator != 1:
@@ -139,6 +169,12 @@ def main():
                 "--material-registration",
                 str(registration),
                 "--require-clear",
+                "--require-deformation",
+                *(
+                    ["--proposal", str(args.material_proposal)]
+                    if args.material_proposal
+                    else []
+                ),
                 "--output",
                 str(args.material_report),
             ],
@@ -184,6 +220,7 @@ def main():
         minimum_free_bytes=4 * 2**30,
         timeout_s=float("inf"),
     )
+    (out / "execution.json").write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result), flush=True)
     return result["exit"]
 

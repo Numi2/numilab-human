@@ -1,0 +1,122 @@
+{
+  "materials": {
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_skin_dermis_frequency_specific_effective.nmatter": "c575b204d975bfb77ae16973708e833796e3a4ad71794d69ac7e433f58dbd7ad",
+    "/Users/numi/Work/skin-fat-native-integration-209/matter/materials/human_subcutaneous_adipose_low_strain_effective.nmatter": "3d3a83e9d1803a60b103a45064c4b4020ebc6bfc8ae518acb6e4d3ec0cc8e29f"
+  },
+  "cell_mass": "07ea57829ec65c5d7fc7325ee95f4768e4e2576c2c79121654b7752bf030d39d",
+  "node_mass": "127f896fcab5dd8151d77518175b07c77f304ba91aa7a22e2928425c0fc90084",
+  "cell_lump_error_kg": 1.3877787807814457e-17,
+  "mass_kg": {
+    "15": 3.4525712828039024,
+    "16": 10.487108427165248
+  },
+  "geometry": {
+    "loaded": "b0d37f6fde28e76ce5a673eea70ec8b9184c07c7d526dbd6733d5786a4026751",
+    "reference": "identical immutable reference"
+  },
+  "source_reference": "dc549a5e12cf2d77b4f5169439c5bc1516dafb5697097a673c5e2be2a28f2b7d",
+  "source_loaded": "cb3f3046cf420626d9d5076e6653d10fe003738f01641984204a1932f837b728",
+  "cells": 1457316,
+  "changed_cells": 8415,
+  "native_float32": {
+    "control": {
+      "energy_J": 4.148736865181108,
+      "minimum_stretch": 0.030152365473233574,
+      "maximum_stretch": 20.55392532369663,
+      "max_stress_Pa": 3045619.2687733117,
+      "min_J": 0.40066013533254924,
+      "max_J": 2.4920520652625293,
+      "failures": {
+        "geometry": 0,
+        "jacobian": 0,
+        "stretch": 626,
+        "stress": 0
+      }
+    },
+    "candidate": {
+      "energy_J": 2.7439709703841517,
+      "minimum_stretch": 0.08240734680410271,
+      "maximum_stretch": 15.071645258345951,
+      "max_stress_Pa": 1660882.3356072025,
+      "min_J": 0.4000321238976242,
+      "max_J": 2.4980753447419763,
+      "failures": {
+        "geometry": 0,
+        "jacobian": 0,
+        "stretch": 314,
+        "stress": 0
+      }
+    }
+  },
+  "changed_failures": {
+    "geometry": {
+      "introduced": 0,
+      "cleared": 0,
+      "introduced_first": [],
+      "cleared_first": []
+    },
+    "jacobian": {
+      "introduced": 0,
+      "cleared": 0,
+      "introduced_first": [],
+      "cleared_first": []
+    },
+    "stretch": {
+      "introduced": 0,
+      "cleared": 312,
+      "introduced_first": [],
+      "cleared_first": [
+        1401,
+        2313,
+        8749,
+        8971,
+        9367,
+        16942,
+        17703,
+        18342,
+        54177,
+        54712
+      ]
+    },
+    "stress": {
+      "introduced": 0,
+      "cleared": 0,
+      "introduced_first": [],
+      "cleared_first": []
+    }
+  },
+  "changed_reference_density_kg_m3": {
+    "source": {
+      "15": [
+        899.9999999999803,
+        900.0,
+        900.0000000003,
+        939.4239923572834,
+        1099.9999999997
+      ],
+      "16": [
+        850.0,
+        850.0000000003,
+        949.6629400801285,
+        950.0000000000011,
+        950.0000000000064
+      ]
+    },
+    "candidate": {
+      "15": [
+        899.9999999999803,
+        900.0,
+        900.0000000003,
+        939.4239923572834,
+        1099.9999999997
+      ],
+      "16": [
+        850.0,
+        850.0000000003,
+        949.6629400801285,
+        950.0000000000011,
+        950.0000000000064
+      ]
+    }
+  }
+}

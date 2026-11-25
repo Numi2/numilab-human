@@ -1,12 +1,13 @@
 """Find positive-barycentric cortical samples inside the actual registered skin/fat tetrahedra."""
 
-from pathlib import Path
-import json
-import igl
-import numpy as np
 import gzip
 import hashlib
+import json
 import sys
+from pathlib import Path
+
+import igl
+import numpy as np
 
 # The native ligament reader owns the NHBONES layout and typed cortical IDs.
 sys.path.insert(
@@ -24,6 +25,59 @@ from scipy.spatial.transform import Rotation
 def digest(path):
     with path.open("rb") as stream:
         return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def loaded_deformation(reference, loaded, cells, materials):
+    """Measure the loaded state in the native Float32 material coordinates."""
+    reference = reference.astype(np.float32).astype(np.float64)
+    loaded = loaded.astype(np.float32).astype(np.float64)
+    result = {
+        material: {
+            "invalid_reference_cells": 0,
+            "relative_volume_failures": 0,
+            "principal_stretch_failures": 0,
+            "minimum_stretch": None,
+            "maximum_stretch": None,
+            "worst_stretch_cell": None,
+        }
+        for material in (15, 16)
+    }
+    for start in range(0, len(cells), 32768):
+        block = cells[start : start + 32768]
+        src = reference[block]
+        cur = loaded[block]
+        source_edges = src[:, 1:] - src[:, :1]
+        valid = np.linalg.det(source_edges) > 0.0
+        rows = np.flatnonzero(valid)
+        gradient = np.linalg.solve(source_edges[rows], (cur[:, 1:] - cur[:, :1])[rows])
+        relative_volume = np.linalg.det(gradient)
+        stretch = np.linalg.svd(gradient, compute_uv=False)
+        if not np.all(np.isfinite(stretch)) or not np.all(np.isfinite(relative_volume)):
+            raise ValueError("Nonfinite deformation in the registered material")
+        for material, stats in result.items():
+            belongs = materials[start : start + len(block)] == material
+            stats["invalid_reference_cells"] += int(np.sum(belongs & ~valid))
+            selected = np.flatnonzero(belongs[rows])
+            if not len(selected):
+                continue
+            j = relative_volume[selected]
+            s = stretch[selected]
+            # Same release envelope as the supported material admission owner.
+            stats["relative_volume_failures"] += int(np.sum((j < 0.4) | (j > 2.5)))
+            stats["principal_stretch_failures"] += int(
+                np.sum((s[:, -1] < 2 / 3) | (s[:, 0] > 1.5))
+            )
+            lowest = float(s[:, -1].min())
+            peak = int(np.argmax(s[:, 0]))
+            if stats["minimum_stretch"] is None or lowest < stats["minimum_stretch"]:
+                stats["minimum_stretch"] = lowest
+            if (
+                stats["maximum_stretch"] is None
+                or s[peak, 0] > stats["maximum_stretch"]
+            ):
+                stats["maximum_stretch"] = float(s[peak, 0])
+                stats["worst_stretch_cell"] = start + int(rows[selected[peak]])
+    return result
 
 
 def validate(
@@ -60,7 +114,10 @@ def validate(
         or digest(labels) != e[pref + "CHILD_LABELS_SHA256"]
     ):
         raise ValueError("Unmatched cell ledger")
-    node = tet.parent / "current.node"
+    node_path = e.get("NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE")
+    node = Path(node_path) if node_path else tet.parent / "current.node"
+    if node_path and source["pins"].get(node_path) != digest(node):
+        raise ValueError("Unmatched loaded material input in the volume launch")
     if digest(node) != reg["loaded_nodes_sha256"]:
         raise ValueError("Unmatched material coordinate frame")
     table = np.loadtxt(node, skiprows=1, usecols=(0, 1, 2, 3))
@@ -73,10 +130,9 @@ def validate(
             delta = field["delta_m"]
             if (
                 ids.ndim != 1
+                or not np.issubdtype(ids.dtype, np.integer)
                 or len(np.unique(ids)) != len(ids)
-                or len(ids) == 0
-                or ids.min() < 0
-                or ids.max() >= len(x)
+                or np.any((ids < 0) | (ids >= len(x)))
                 or delta.shape != (len(ids), 3)
                 or not np.isfinite(delta).all()
             ):
@@ -93,6 +149,18 @@ def validate(
         np.unique(lab[:, 1])
     ) != {15, 16}:
         raise ValueError("Unmatched skin and fat materials")
+    reference_path = Path(e[pref + "TETGEN_NODE"])
+    if digest(reference_path) != e[pref + "TETGEN_NODE_SHA256"]:
+        raise ValueError("Unmatched stress-free material reference")
+    reference = np.loadtxt(reference_path, skiprows=1, usecols=(0, 1, 2, 3))
+    if reference.shape != table.shape or not np.array_equal(
+        reference[:, 0], table[:, 0]
+    ):
+        raise ValueError("The stress-free and loaded node rows differ")
+    if not np.isfinite(reference).all() or not np.isfinite(x).all():
+        raise ValueError("Nonfinite registered coordinates")
+    x = x.astype(np.float32).astype(np.float64)
+    deformation = loaded_deformation(reference[:, 1:], x, cells, lab[:, 1])
     lo = np.empty((len(cells), 3))
     hi = np.empty_like(lo)
     for begin in range(0, len(cells), 32768):
@@ -102,7 +170,9 @@ def validate(
         hi[sl] = v.max(axis=1)
     from torso_cell_geometry import geom
 
-    quality = {m: dict(cells=0, inverted=0, tiny=0, low_shape=0) for m in (15, 16)}
+    quality = {
+        m: {"cells": 0, "inverted": 0, "tiny": 0, "low_shape": 0} for m in (15, 16)
+    }
     for begin in range(0, len(cells), 32768):
         sl = slice(begin, begin + 32768)
         vol, shape = geom(x, cells[sl])
@@ -122,7 +192,9 @@ def validate(
             continue
         visited.add(body)
         rot, t = poses[body]
-        v = rot.apply(y) + t
+        # Transform each exact seam position once, preserving source sample IDs.
+        unique, seam = np.unique(y, axis=0, return_inverse=True)
+        v = (rot.apply(unique) + t)[seam]
         used = np.unique(f)
         pts = np.ascontiguousarray(np.vstack((v[used], v[f].mean(1))))
         selected = np.flatnonzero(
@@ -166,41 +238,43 @@ def validate(
                 j = ok[np.argmax(depths[ok])]
                 i = int(samples[j])
                 which = "vertex" if i < len(used) else "face_centroid"
-                witness[material] = dict(
-                    cortical_sample=which,
-                    source_index=int(used[i]) if i < len(used) else i - len(used),
-                    material_tet_row=int(ids[j]),
-                    material_nodes=cells[ids[j]].tolist(),
-                    point_m=pts[i].tolist(),
-                    barycentric=bary[j].tolist(),
-                    min_distance_to_cell_faces_mm=float(depths[j] * 1000),
-                    volume_m3=float(physical_volume[j]),
-                )
-        rows[f"{body}/{sid}"] = dict(
-            body=body,
-            stable=sid,
-            tested_samples=len(pts),
-            interior_samples_by_material=counts,
-            witness=witness,
-        )
+                witness[material] = {
+                    "cortical_sample": which,
+                    "source_index": int(used[i]) if i < len(used) else i - len(used),
+                    "material_tet_row": int(ids[j]),
+                    "material_nodes": cells[ids[j]].tolist(),
+                    "point_m": pts[i].tolist(),
+                    "barycentric": bary[j].tolist(),
+                    "min_distance_to_cell_faces_mm": float(depths[j] * 1000),
+                    "volume_m3": float(physical_volume[j]),
+                }
+        rows[f"{body}/{sid}"] = {
+            "body": body,
+            "stable": sid,
+            "tested_samples": len(pts),
+            "interior_samples_by_material": counts,
+            "witness": witness,
+        }
     if visited != set(body_ids):
         raise ValueError("Missing requested cortical body")
     if sample_output is not None:
         np.save(sample_output, np.array(sample_records, dtype=np.int64).reshape(-1, 5))
-    return dict(
-        scene=hashlib.sha256(scene_bytes).hexdigest(),
-        volume_launch=digest(volume_launch),
-        registration=digest(registration),
-        proposal=digest(proposal) if proposal is not None else None,
-        material_quality=quality,
-        cortex=digest(cortex),
-        material_nodes=digest(node),
-        elements=digest(tet),
-        labels=digest(labels),
-        frame=digest(pose_path),
-        scope="Current cortical asset in the registered loaded material reference frame. Strict interior of actual labelled positive-volume cells. Counts describe sampled cortical points; a zero sample count does not prove separation.",
-        rows=rows,
-    )
+    return {
+        "scene": hashlib.sha256(scene_bytes).hexdigest(),
+        "volume_launch": digest(volume_launch),
+        "registration": digest(registration),
+        "proposal": digest(proposal) if proposal is not None else None,
+        "material_quality": quality,
+        "stress_free_nodes": digest(reference_path),
+        "loaded_deformation": deformation,
+        "cortex": digest(cortex),
+        "material_nodes": digest(node),
+        "elements": digest(tet),
+        "labels": digest(labels),
+        "frame": digest(pose_path),
+        "scope": "Current cortical asset in the registered loaded material reference frame. Strict interior of actual labelled positive-volume cells. Counts describe sampled cortical points; a zero sample count does not prove separation.",
+        "rows": rows,
+    }
 
 
 if __name__ == "__main__":
@@ -241,6 +315,11 @@ if __name__ == "__main__":
         action="store_true",
         help="Return failure on any certified interior sample or invalid material cell",
     )
+    parser.add_argument(
+        "--require-deformation",
+        action="store_true",
+        help="Also enforce the registered whole-volume Jacobian and principal-stretch envelope",
+    )
     args = parser.parse_args()
     result = validate(
         args.scene,
@@ -261,5 +340,23 @@ if __name__ == "__main__":
     print(
         f"Confirmed cortical samples inside material: {count}. Invalid material cells present: {invalid}."
     )
-    if args.require_clear and (invalid or count):
+    deformation_invalid = any(
+        row[key]
+        for row in result["loaded_deformation"].values()
+        for key in (
+            "invalid_reference_cells",
+            "relative_volume_failures",
+            "principal_stretch_failures",
+        )
+    )
+    stretch_count = sum(
+        row["principal_stretch_failures"]
+        for row in result["loaded_deformation"].values()
+    )
+    print(
+        f"Loaded skin/fat cells outside the principal-stretch envelope: {stretch_count}."
+    )
+    if (args.require_clear and (invalid or count)) or (
+        args.require_deformation and deformation_invalid
+    ):
         raise SystemExit(1)
