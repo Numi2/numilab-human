@@ -18,11 +18,14 @@ def run(parent,owner,material,out,steps,seating=None):
     if '--persistent-metal-stand-steps' in a:a[a.index('--persistent-metal-stand-steps')+1]=str(steps)
     for k,v in list(e.items()):
         if v.startswith(str(parent)+'/') and v not in pins:e[k]=str(out/Path(v).relative_to(parent))
+    reuse=os.environ.get('NUMI_HUMAN_RESTING_CAPTURE_REUSE_SOURCE_DIR')
+    if reuse:
+        e['NUMI_HUMAN_RESTING_CAPTURE_REUSE_SOURCE_DIR']=str(Path(reuse).resolve())
     e['NUMI_HUMAN_RESTING_EXPORT_MRV_STEPS']=str(steps)
     e['NUMI_HUMAN_REGISTERED_BED_MATERIAL_RECEIPT']=str(material/'material-boundary.json')
     reg=json.loads((material/'material-boundary.json').read_bytes())
     for p in [owner/'numi-human-native',owner/'NumiHumanRestingVisual.hpp',
-              owner/'numilab_human_myosim_visual_probe.mm',material/'registered-boundary.nhskin',
+              owner/'numilab_human_myosim_visual_probe.mm',owner/'metalrobo/HumanRestingSkin.metallib',owner/'metalrobo/MetalRobo.metallib',material/'registered-boundary.nhskin',
               material/'material-boundary.json',Path(reg['contact_columns_path'])]:pins[str(p)]=sha(p)
     cfg.update(parent_launch=sha(parent/'launch.json'),registered_regional_material=reg['nhskin_sha256'])
     if seating is not None:

@@ -19,3 +19,22 @@ The native M6 accepted 64 steps of 0.125 ms using the loaded material boundary f
 **Loading and qualification.** The native bed selected six loaded regions after a one-time 1.740 mm translation toward the plane and a 0.151-degree rotation of the body. Constitutive preload was 954.01 N against 952.86 N required. Every step retained the existing physical acceptance path, including 26 fascia regions, 34 registered ligament force rows and variable pleural pressure. Initial recruitment reported unbalanced. The timing interval from steps 1 to 64 reached 0.000174×. The run did not span a heartbeat, breath or the 16-second qualification.
 
 **Reproduction on SSH Numi.** The independent recovery archive includes the exact native launch records, rejected pose, matched source and binaries, contact receipts and raw replay captures. The owner delta lists both sides of the application and contact change. Apply the compressed patch under tools/native_ligament_contact/registered_material_volume/regional_bed to the matching native owner. The compiler runs with the existing NHSKIN v5 reader on the Human tools Python path. Its positional arguments are the dense native launch JSON, its original NHSKIN and a new output directory. Set NUMI_HUMAN_REGISTERED_BED_MATERIAL_RECEIPT to the resulting material-boundary.json for the regional bed run. The cortical include in this directory belongs to the seated launch.
+
+## Matched material precision run
+
+Computing bone-local reference points from the loaded body origins before Float32 storage, and using compensated rotation and position accumulation on Metal, reduced the measured self-intersections from 49 to 44 at 8 ms. All 64 physical steps passed. The 11,687 skin–anatomy pairs persisted. The previous regional control had three self-intersections. The new boundary remains experimental.
+
+The complete accepted interval from step 1 to 64 reached 0.00017489×. Including startup, 8 ms took 61.78 s, or 0.0001295×. The relative L2 change in regional bed force was 0.0378% across the 64 steps compared with the same reseated material in the previous arithmetic path. The largest difference in total reaction magnitude measured as the norm of the vector difference was 0.105 N. Fore-aft reaction was still 172.17 N at the endpoint.
+
+A separate distance check sampled matching source triangles on the union of 36 bone and 75 muscle surfaces implicated by the native crossing checks. Each stratum represented up to a share of 512 samples per surface. Absolute winding below 0.2 classified a sampled centroid as exterior, and its nearest point on the skin gave the distance. These sampled maxima are lower bounds on the worst protrusion. The full-mesh crossing checks cover all 878 target banks.
+
+| Matched sample | Previous regional skin | Loaded material with precise transfer |
+|---|---:|---:|
+| Estimated exterior bone area | 18,713 mm² | 6.29 mm² |
+| Largest sampled exterior bone distance | 15.20 mm | 0.232 mm |
+| Estimated exterior muscle area | 80,207 mm² | 65,122 mm² |
+| Largest sampled exterior muscle distance | 37.30 mm | 40.25 mm |
+
+The abductor pollicis longus surfaces account for the deepest remaining sampled muscle protrusions on both forearms. The two thenar force lines still miss their respective rendered muscle volumes. Their attachments and material points should be reconciled against the same loaded anatomical skeleton before further skin contour edits.
+
+The second native patch applies after registered-bed-material.patch.gz. Recompile the local bed skin Metal library. Keep the separate full respiration library for its other 127 kernels. An attempted startup with the 50-kernel bed library in both positions failed before the first physical step. The independently restored precision archive retains the failed startup and the corrected native run.
