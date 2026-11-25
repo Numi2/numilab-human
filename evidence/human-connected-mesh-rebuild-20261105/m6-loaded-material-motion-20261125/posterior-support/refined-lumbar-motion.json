@@ -1,0 +1,414 @@
+{
+  "execution": {
+    "exit": 0,
+    "wall_s": 223.20777237508446
+  },
+  "physical_time_s": 1.5625000742147677e-05,
+  "including_initialization_and_export_rtf": 7.000204596769595e-08,
+  "body_time_s": 78.01526625,
+  "body_rtf": 2.002813230435867e-07,
+  "total_mass_kg": 97.13195028401935,
+  "native_receipt": {
+    "launch_sha256": "0c32bf2d6d542f8c759bae2196b16ae74f7973480a963bf6764da9b9fa491081",
+    "receipt_sha256": "3e826ab66ffff9a622bd0a9993502ea7093a7621061865b0c1dad964555a2b34",
+    "accepted_node_sha256": "3baaaec1132456cf657605e557e381d0162ea72a24c950e2493f41015a4ee666",
+    "bed_support": {
+      "initialization": "dynamic_release",
+      "initial_balanced": false,
+      "initial_maximum_acceleration_residual_m_s2": 68.3067564113,
+      "last_root_mean_normal_force_N": 11.01440270936865,
+      "last_root_normal_impulse_Ns": 8.60500211669426e-05,
+      "last_root_contact_samples": 16
+    },
+    "loaded_node_sha256": "756419c477eb76cc2f47dcb6edd9d8d0cd03caa8529dbf22701c772d04a4f583",
+    "step": 2,
+    "time_s": 1.5625000742147677e-05,
+    "cell_count": 1457778,
+    "maximum_node_displacement_m": 0.00037196534620492213,
+    "median_node_displacement_m": 1.7962649701008862e-09,
+    "worst_node_row": 17901,
+    "coordinate_representation": "native rest + high displacement + low displacement",
+    "native_cell_quality_reproduced": true
+  },
+  "material_quality": {
+    "15": {
+      "cells": 707597,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 4
+    },
+    "16": {
+      "cells": 750181,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 33
+    }
+  },
+  "loaded_deformation": {
+    "15": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 0,
+      "principal_stretch_failures": 240,
+      "minimum_stretch": 0.22512849026666537,
+      "maximum_stretch": 4.37858028819664,
+      "worst_stretch_cell": 1440182
+    },
+    "16": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 4,
+      "principal_stretch_failures": 323,
+      "minimum_stretch": 0.01954612871971169,
+      "maximum_stretch": 20.958032919577207,
+      "worst_stretch_cell": 1287665
+    }
+  },
+  "skin_bone_support": {
+    "launch_sha256": "0c32bf2d6d542f8c759bae2196b16ae74f7973480a963bf6764da9b9fa491081",
+    "momentum_sha256": "22e6a67107a389271db00ffec05e6f49134b61beb2dd64408afcd9afe28194b9",
+    "skin_bone_rows_sha256": "271b6d5d27deee441421e71dcec49dfd1feda9932e31ce43cb3ebeaacbcb5453",
+    "bed_impulses_sha256": "42191e0a7a7627eec7f393396a8d9df4ae80be2c2f60297ef073de93ced99f3b",
+    "accepted_step": 2,
+    "physical_step_s": 7.812500371073838e-06,
+    "skeletal_mass_kg": 82.71639933710685,
+    "skeletal_normal_acceleration_m_s2": -9.798496037908004,
+    "skeletal_gravity_normal_N": -811.4453488047789,
+    "physical_skin_bed_terminal_impulse_Ns": 8.605003653212677e-05,
+    "skin_bone_rows": 2216,
+    "skin_bone_normal_N": 1.4380706353073511,
+    "other_owners_inferred_normal_N": -0.48903300518620624,
+    "required_skin_bone_normal_N": 811.9343818099651,
+    "measured_peak_pressure_kPa": 6.04421484375,
+    "measured_peak_closure_mm": 3.575140843167901,
+    "bounds": {
+      "peak_pressure_kPa": {
+        "bed_normal_only": 127.16149749796703,
+        "three_force_components": 141.36967197155454,
+        "with_current_interface_moment": 191.59313196622853
+      },
+      "peak_closure_mm": {
+        "bed_normal_only": 584.9615114564546,
+        "three_force_components": 663.1583426913141,
+        "with_current_interface_moment": 717.7705122876898
+      }
+    },
+    "scope": "Frozen measured contact areas, normals and slopes. Independent nonnegative pressures allow arbitrary redistribution. The torque case holds the observed interface moment fixed. A new contact set or different physical owners require a new measurement."
+  },
+  "coverage": {
+    "registered_banks": 185,
+    "tested_banks": 185,
+    "registered_bodies": 86,
+    "tested_bodies": 86,
+    "samples": 725929,
+    "sampling": "Referenced cortical vertices and face centroids; a zero count cannot certify surface separation."
+  },
+  "inside_by_material": {
+    "15": 146,
+    "16": 2285
+  },
+  "deep_surface": {
+    "source_launch_sha256": "654d2678f48951597d3cf4ba865646c4cfba9bb09818f7f6173b545558a9f9a5",
+    "element_sha256": "395e530070f3fe3a09610736eb2f06cb06407bd9eb9df97d11218545c5c68e20",
+    "node_sha256": "65f91918a258ab143598ff10b5e45040ce966bc478f469e90cb6dc44d25ca75c",
+    "source_overlay_sha256": "c146408bb0022c2e5564597cbf034106e5f4840d6fb73cfbf91d91548bf96531",
+    "old_nodes": 104432,
+    "new_nodes": 104664,
+    "old_faces": 208354,
+    "new_faces": 208818,
+    "refined_parent_faces": 8,
+    "max_position_error_m": 3.0635462511932305e-11,
+    "max_relative_oriented_area_error": 0.0,
+    "max_relative_area_error": 1.5852192990094065e-14,
+    "outputs": {
+      "surface_d_faces.csv": "1cb63e82c43c7532fe1589b298d7ff3c322eb6793f795b8ddca1e91495a79b73",
+      "role_d_full86.csv": "6e890715764814c2bdbb34b9ff2b23460a8f5253c57ef6d17f059daf6490f112",
+      "role_d_contact_thickness.csv": "d5a72abcc9749da1eeda1e01a85d0707020f4134a3658def3feb8f6b62df79f4",
+      "deep-registration.npz": "abee493e6b73a663a1d4f3c733fefadc243fe8aeb5e42268b750398629700e29"
+    }
+  },
+  "donor_registration": {
+    "registered_nodes": 232,
+    "new_facet_ancestry_rows": 464,
+    "updated_original_node_addresses": 257,
+    "max_source_face_offset_m": 0.001403014280252135,
+    "max_historical_parent_offset_m": 0.0011965048377609395,
+    "max_reference_projection_m": 0.0011965063657850205,
+    "source_face_labels_sha256": "f7dbd7037f98e3bdb7ac077a400b80f7afb7f8be28a6eacf849560eb9358b794",
+    "outputs": {
+      "surface_d_nodes.csv": "3c2f3e00a181a7bb983a63ddc6041e51d0409f4e04a52a2db6f5291c6e8300e2",
+      "node_registration.csv": "162d3b29703830ab0c16f1645bdafda42ba57cffdf242f66473d1fd96b9692a5",
+      "combined_node_map.csv": "58521f14c01c667e2357e1caba97b8e99a737ed607ee19db6e56ccfaaa43e376",
+      "facet_ancestry.csv": "11810a2228ab2449b1a068c170271a228f7d8cf7e068e2832c96bbcd85176449"
+    }
+  },
+  "material_transition": {
+    "launch_sha256": "0c32bf2d6d542f8c759bae2196b16ae74f7973480a963bf6764da9b9fa491081",
+    "receipt_sha256": "3e826ab66ffff9a622bd0a9993502ea7093a7621061865b0c1dad964555a2b34",
+    "physical_seconds": 1.5625000742147677e-05,
+    "cells": {
+      "15": {
+        "shape": {
+          "opening": 0,
+          "terminal": 4,
+          "new": 4,
+          "recovered": 0
+        },
+        "volume": {
+          "opening": 0,
+          "terminal": 0,
+          "new": 0,
+          "recovered": 0
+        },
+        "stretch": {
+          "opening": 288,
+          "terminal": 240,
+          "new": 31,
+          "recovered": 79
+        }
+      },
+      "16": {
+        "shape": {
+          "opening": 0,
+          "terminal": 33,
+          "new": 33,
+          "recovered": 0
+        },
+        "volume": {
+          "opening": 0,
+          "terminal": 4,
+          "new": 4,
+          "recovered": 0
+        },
+        "stretch": {
+          "opening": 281,
+          "terminal": 323,
+          "new": 93,
+          "recovered": 51
+        }
+      }
+    },
+    "maximum_node_motion": [
+      {
+        "node": 17901,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00037196534620492213,
+        "initial": [
+          -0.2788679897785187,
+          -0.6921342015266418,
+          0.13648897409439087
+        ],
+        "terminal": [
+          -0.27903395165546246,
+          -0.6920330702726192,
+          0.13680612917260726
+        ]
+      },
+      {
+        "node": 18021,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00036357226713533446,
+        "initial": [
+          -0.2778969407081604,
+          -0.6918712258338928,
+          0.13695555925369263
+        ],
+        "terminal": [
+          -0.27807087567529704,
+          -0.6917765869341543,
+          0.13726047711032519
+        ]
+      },
+      {
+        "node": 18500,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.0003225721819116529,
+        "initial": [
+          -0.2802588939666748,
+          -0.833562970161438,
+          0.14914728701114655
+        ],
+        "terminal": [
+          -0.28015343056118247,
+          -0.8334767387580148,
+          0.14885489270937433
+        ]
+      },
+      {
+        "node": 15378,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00030833001706481267,
+        "initial": [
+          -0.29701733589172363,
+          -0.760943591594696,
+          0.1403849720954895
+        ],
+        "terminal": [
+          -0.29719350186827076,
+          -0.7609055744428757,
+          0.14063514732267607
+        ]
+      },
+      {
+        "node": 17009,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.0002956487262216703,
+        "initial": [
+          -0.28605562448501587,
+          -0.6939699053764343,
+          0.13288678228855133
+        ],
+        "terminal": [
+          -0.2861988287561605,
+          -0.6938782404170605,
+          0.1331286463852367
+        ]
+      },
+      {
+        "node": 17501,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00028894197028769776,
+        "initial": [
+          -0.2810015380382538,
+          -0.6926817297935486,
+          0.13542628288269043
+        ],
+        "terminal": [
+          -0.2811455048838093,
+          -0.6926143454020502,
+          0.13566757182432873
+        ]
+      },
+      {
+        "node": 18475,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00028520752255200806,
+        "initial": [
+          -0.275278776884079,
+          -0.6911851763725281,
+          0.13824693858623505
+        ],
+        "terminal": [
+          -0.2754228169502188,
+          -0.6911066360361823,
+          0.138480234976763
+        ]
+      },
+      {
+        "node": 15078,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00027548527184911224,
+        "initial": [
+          -0.29962357878685,
+          -0.7790721654891968,
+          0.14187751710414886
+        ],
+        "terminal": [
+          -0.2997730572518179,
+          -0.7790547913402449,
+          0.14210826905422688
+        ]
+      },
+      {
+        "node": 17304,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.00025284474224005724,
+        "initial": [
+          -0.28357115387916565,
+          -0.6933363676071167,
+          0.13413524627685547
+        ],
+        "terminal": [
+          -0.28369852691003683,
+          -0.6932596253623126,
+          0.13433973882573574
+        ]
+      },
+      {
+        "node": 16319,
+        "partition": "skin",
+        "layer": "O",
+        "donor": "43",
+        "motion_m": 0.0002493565014223286,
+        "initial": [
+          -0.2939959466457367,
+          -0.7598078846931458,
+          0.1420755237340927
+        ],
+        "terminal": [
+          -0.29412486454339215,
+          -0.7597735570559737,
+          0.1422861904229447
+        ]
+      }
+    ],
+    "scope": "Identical compiled cell rows in the authoring loaded start and accepted endpoint. Absolute nodal motion over two roots includes the response to releasing the initial loads."
+  },
+  "boundary_strain": {
+    "launch_sha256": "0c32bf2d6d542f8c759bae2196b16ae74f7973480a963bf6764da9b9fa491081",
+    "walls_sha256": "761d1fe9b459286d9ac82886a9cc3664135bedaa57495bb6ae2292079f5d6901",
+    "material_cells": 569,
+    "per_wall": {
+      "O": {
+        "faces": 152261,
+        "prescribed_triangles_outside_stretch": 2,
+        "incident_to_failing_cells": 2,
+        "smallest": 0.7529661008638291,
+        "largest": 2.907261595645107
+      },
+      "I": {
+        "faces": 236593,
+        "prescribed_triangles_outside_stretch": 11,
+        "incident_to_failing_cells": 11,
+        "smallest": 0.45205401593435063,
+        "largest": 1.9968271606077677
+      },
+      "D": {
+        "faces": 208818,
+        "prescribed_triangles_outside_stretch": 3,
+        "incident_to_failing_cells": 3,
+        "smallest": 0.5992302927591961,
+        "largest": 1.671711365907925
+      },
+      "C": {
+        "faces": 4733,
+        "prescribed_triangles_outside_stretch": 0,
+        "incident_to_failing_cells": 0,
+        "smallest": 0.9951393576303331,
+        "largest": 1.0034124384176484
+      }
+    },
+    "cell_classification": {
+      "prescribed_wall_face": 27,
+      "other_fixed_edge": 101,
+      "remaining_fixed_vertices": 348,
+      "free_interior": 93
+    },
+    "scope": "Prescribed triangle tangent stretches hold for any continuation with these triangle coordinates and connectivity. Edge results on other node pairs apply to the retained linear material edge."
+  },
+  "opening_interior_trial": {
+    "launch_sha256": "0c32bf2d6d542f8c759bae2196b16ae74f7973480a963bf6764da9b9fa491081",
+    "proposal_sha256": "f0682672e49af316e99bb22e266a47662fa00d54d1895b939bf6d5f54ec2f788",
+    "initial_failures": 569,
+    "all_wall_cells": 461,
+    "interior_nodes_considered": 37,
+    "moved_nodes": 34,
+    "removed": 15
+  }
+}

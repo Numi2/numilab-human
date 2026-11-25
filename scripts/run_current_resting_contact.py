@@ -58,7 +58,7 @@ def main():
         help="Audit the terminal dense material and rigid capture in this run",
     )
     parser.add_argument(
-        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces"),
+        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar"),
         help="select a matched dense posterior tissue and bed registration",
     )
     args = parser.parse_args()
@@ -93,6 +93,7 @@ def main():
         expected_launch = {
             "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
             "expanded": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+            "refined-lumbar": "4d63951480b11958458b1e5af6f310433d715a1170081e7f8e14f371167b0387",
             "registered-lumbar-faces": "158a15e86b31e32f786120a5d5e49db2fe4f040c4e74b8a4d13db8006f79168c",
             "registered-lumbar": "32f804a4b5e8be8e320e6f72d04907e61b1cfdf9a4532466a5b1fe19733521c8",
             "registered-shoulders": "2056a5888386590054b9fc4cc75fc56e8d1561e55ad802399f5fa74a330ea605",
@@ -189,6 +190,14 @@ def main():
                 raise SystemExit(
                     f"Missing or changed native geometry dependency: {path}"
                 )
+        if "material_registration" in cfg:
+            registration = Path(cfg["material_registration"])
+            if cfg["pins"].get(str(registration)) != digest(registration):
+                raise SystemExit("The selected material registration changed")
+            initial = Path(json.loads(registration.read_bytes())["initial_bodies_path"])
+            volume_launch = initial.with_name("launch.json")
+            if cfg["pins"].get(str(volume_launch)) != digest(volume_launch):
+                raise SystemExit("The selected material volume launch changed")
         audit_env = dict(
             os.environ,
             PYTHONPATH=os.pathsep.join(map(str, (geometry, manifold))),
