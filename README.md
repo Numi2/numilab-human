@@ -177,6 +177,8 @@ gates, and explicit go/no-go decisions. The current cross-repository activity,
 risks, and board recommendations are in the
 [Numi2 board executive summary](Docs/NUMI2_BOARD_EXECUTIVE_SUMMARY.md).
 
+[Numi Lab branch history and recovery](Docs/NumiLabMigration/README.md)
+
 ## Visual progress
 
 The current articular-placement pass replaces misleading nearest-surface-only
