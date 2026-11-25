@@ -1,0 +1,70 @@
+{
+  "dense_launch": "7e366167ec93146d3a6f1490c909aea9fd95b9e1e56de327d6cd1ede5de39621",
+  "condensed_launch": "f2c198650665551959263aabb2cd967088cabf56292151f573e83eae90a3624b",
+  "dense_rigid_frames": "903e3378adf6cfd18eaaa5e13df22e07b49b2980cab6305762f39605a880e9db",
+  "condensed_rigid_frames": "6cb27559ac62034bfbf326d2868fcd95209d4e439fe1f187e978e19a7e731a6f",
+  "wall_sha256": "761d1fe9b459286d9ac82886a9cc3664135bedaa57495bb6ae2292079f5d6901",
+  "material_nodes_sha256": "a99702b73038b2c9232150f0136e38dd760cc6a143d6bb3d5664dc24faa9cdfa",
+  "rows": [
+    {
+      "donor_body": 138,
+      "support_geometry": 20234,
+      "physical_outer_node": 23741,
+      "registered_outer_nodes_on_donor": 185,
+      "dense_outer_clearance_m": 0.044691672445091805,
+      "dense_minus_condensed_bone_origin_height_m": 0.04772877925398042,
+      "dense_nodes_in_condensed_heel_frame_min_gap_m": -0.0024037388745780045,
+      "dense_nodes_in_condensed_heel_frame_below_bed": 2,
+      "condensed_first_accepted_heel_force_N": 51.873919884143476,
+      "first_skin_fat_interface_depth_m": 0.0025915791760017584,
+      "first_deep_fat_depth_m": 0.012847306814774702,
+      "first_cortex_depth_m": 0.017332820827009064,
+      "first_cortex_source": [
+        138,
+        6
+      ],
+      "deep_fat_to_cortex_m": 0.004485514012234362
+    },
+    {
+      "donor_body": 152,
+      "support_geometry": 34831,
+      "physical_outer_node": 26905,
+      "registered_outer_nodes_on_donor": 200,
+      "dense_outer_clearance_m": 0.04399892920836456,
+      "dense_minus_condensed_bone_origin_height_m": 0.046587946342412534,
+      "dense_nodes_in_condensed_heel_frame_min_gap_m": -0.002032529393281394,
+      "dense_nodes_in_condensed_heel_frame_below_bed": 2,
+      "condensed_first_accepted_heel_force_N": 44.30069191443241,
+      "first_skin_fat_interface_depth_m": 0.0021791723039144145,
+      "first_deep_fat_depth_m": 0.008857329941804125,
+      "first_cortex_depth_m": 0.017868471473873514,
+      "first_cortex_source": [
+        152,
+        7
+      ],
+      "deep_fat_to_cortex_m": 0.009011141532069389
+    }
+  ],
+  "scope": "Opening poses of the same NHRIGID, NHSKIN, NHBONES and NHCNT source assets. Rigid transfer of heel nodes is a placement diagnostic. Distances along two bed-normal rays establish neither constitutive attachment nor force transmission.",
+  "recovery": {
+    "url": "https://github.com/Numi2/numilab-human/releases/download/human-historical-support-checkpoints-20261122/m6-registered-heels-and-stop-selection-c5247d4a64f1.tar.zst",
+    "archive_sha256": "fce5bc21140df0c64edf8c546de0f75b6baa7cc191c633ab0f549c1eda4e1ca6",
+    "size_bytes": 84767,
+    "verified_member_sha256": {
+      "checked-control-recruitment.json": "aeabd28cfac4419068906ce2dc49fc4f2c4e16db77183ec20cfd55f6181e1958",
+      "checked-measured-recruitment.json": "8e24559e8b29fc756455e5c2d7e5147d7f08bd7d0fc7bdd84a937738c8f96d55",
+      "checked-original-recruitment.json": "20bc6d4cefe8a2dd962c158d9367d7b5d59359bf99795084c16c9f01c4a9a4b3",
+      "compare_registered_heel_support.py": "02279563bbbd9f1117944cf5ca8c15e420ea58133d12e2a2f407b52fa56087d6",
+      "heel-layer-depths.json": "cc6ef23984d36413ae1ebe771636d3171fdc32ce3871cd3b11f6113aecdc67e9",
+      "heel-transfer-evidence.json": "c5247d4a64f12b9ed0ef6113be1f1ba809bf001ba1abf9b0cc873b9c975efa89",
+      "measure_heel_layers.py": "c19961d630f8474971fb21bdf92dbea48d8976b8a861171823e80ced2ac2fd4c",
+      "publish_joint_stop_scene.py": "c6df8e345b1d1f0c8baa62a481d829c85e6246284f7b25303a991971fc28ad95",
+      "selected-public-audit.log": "5621e09ba71e81ce332e5a7381d205a78cb500535409ed47f807bbfb6dd404bf",
+      "selected-public-launch.json.gz": "97457f25708951faad8de1df86dda50acb0568aa843ed88119604b2ae74cfca5",
+      "selected-public-material.json": "bb551d70d831df1de640a0c03d39dd5170ec110ea0911ce1aa1a033d6bb69b52",
+      "selected-public-wall-pairs.json": "c52c6efbffd3be2fd8de6e81355a1ce46bd762868fe9c5c05616d8b300c003a0",
+      "selected-public-wall-pairs.npz": "e5cee2f1346ddc971d93e490bb202927439fde6afe0f40fa64b1a82fdd7aa01d"
+    },
+    "scope": "Selected dense launch and its exact cortical and material checks, bilateral heel placement against reduced source and two independent depth measurements. The first archive contains the native trials."
+  }
+}
