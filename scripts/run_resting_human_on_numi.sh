@@ -10,7 +10,7 @@ case ${1:-} in
     --current|--regional) shift; exec "$python" "$owner" "$@" ;;
     --check-material)
         if (( $# != 2 )); then echo "Supply the material report output path" >&2; exit 2; fi
-        exec "$python" "$owner" --material-report "$2"
+        exec "$python" "$owner" "${integrated[@]}" --material-report "$2"
         ;;
     --check|--steps|--seconds|-h|--help) exec "$python" "$owner" "${integrated[@]}" "$@" ;;
     16|60)

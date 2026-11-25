@@ -18,6 +18,12 @@ def digest(path):
         return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
+def same_input(selected, selected_path, observed, observed_path):
+    """Match recorded input hashes across independent native runs."""
+    expected = selected["pins"].get(selected_path)
+    return expected is not None and observed["pins"].get(observed_path) == expected
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     options = parser.add_mutually_exclusive_group()
@@ -63,7 +69,7 @@ def main():
     )
     parser.add_argument("--wall-pairs", type=Path, help="Also enumerate accepted tissue-wall and cortical triangle pairs")
     args = parser.parse_args()
-    if args.wall_pairs and not (args.accepted_run and args.material_report):
+    if args.wall_pairs and not (args.material_report and (args.accepted_run or args.posterior_support)):
         parser.error("--wall-pairs requires --accepted-run and --material-report")
     if args.posterior_support and not args.dense:
         parser.error("--posterior-support requires --dense")
@@ -71,7 +77,7 @@ def main():
         parser.error(
             "--accepted-run requires --material-report and supplies its own material positions"
         )
-    if args.dense and args.material_report and not args.accepted_run:
+    if args.dense and args.material_report and not args.accepted_run and (not args.posterior_support or args.material_proposal):
         parser.error(
             "A dense material report needs --accepted-run. Use --current for an unrun proposal."
         )
@@ -148,6 +154,28 @@ def main():
         flush=True,
     )
     if args.material_report is not None:
+        if args.dense and args.accepted_run is None:
+            # The selected profile owns the retained capture. Resolve its original
+            # launch before passing a directory to the terminal-state verifier.
+            retained = Path(cfg["argv"][4]).parent
+            launch = retained / "launch.json"
+            if not launch.is_file() or digest(launch) != cfg.get("source_launch_sha256"):
+                parser.error("This dense profile requires an explicit --accepted-run")
+            args.accepted_run = retained
+        if args.dense:
+            observed = json.loads((args.accepted_run / "launch.json").read_bytes())
+            for index in (0, 1, 3):
+                if not same_input(cfg, cfg["argv"][index], observed, observed["argv"][index]):
+                    parser.error("The accepted run and selected profile have different native owners or anatomy")
+            for key in (
+                "NUMI_HUMAN_CURRENT_MATERIAL_TETGEN_NODE",
+                "NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ",
+            ):
+                requested = settings.get(key)
+                captured = observed["environment"].get(key)
+                if (requested or captured) and not same_input(cfg, requested, observed, captured):
+                    parser.error("The accepted run and selected profile have different loaded material")
+            print(f"Auditing the selected physical capture at {args.accepted_run}", flush=True)
         reference_pins = cfg["pins"]
         if args.dense:
             # The source registration is retained by the anatomical checkpoint.
