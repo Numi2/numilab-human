@@ -1,0 +1,241 @@
+{
+  "native_scene": "76d94a9fd1aafbf5bb3991e1435c339488caab1036d6e5e8e5fe593011c2d887",
+  "preload": "2b94114156af4392805f30fa6097b9ecba21e4d2c02f229881214c67102f0c90",
+  "projected_normal_bed_force_N": 952.8614645360682,
+  "elastic_force_change": {
+    "movable_material": {
+      "nodes_with_force": 9752,
+      "net_material_force_along_bed_normal_N": -919.3853151204136,
+      "positive_N": 44.34068817209992,
+      "negative_N": -963.7260032925161
+    },
+    "cortical_binding_samples": {
+      "nodes_with_force": 17,
+      "net_material_force_along_bed_normal_N": 0.004862765712224879,
+      "positive_N": 0.031318913603238976,
+      "negative_N": -0.026456147891014095
+    },
+    "body_anchors": {
+      "nodes_with_force": 1,
+      "net_material_force_along_bed_normal_N": -6.696408058431871e-05,
+      "positive_N": 0.0,
+      "negative_N": -6.696408058431871e-05
+    },
+    "other_cortical_boundary": {
+      "nodes_with_force": 0,
+      "net_material_force_along_bed_normal_N": 0.0,
+      "positive_N": 0.0,
+      "negative_N": 0.0
+    },
+    "other_held_material": {
+      "nodes_with_force": 1344,
+      "net_material_force_along_bed_normal_N": 919.3805193187853,
+      "positive_N": 3240.033901640366,
+      "negative_N": -2320.653382321581
+    }
+  },
+  "peak_other_held_node_increment_N": 797.6854933816866,
+  "native_row_check": {
+    "total_traction_rows": 1344,
+    "same_rows_in_native_generic_rigid_contact": 0,
+    "signed_change_on_same_rows_N": 0.0,
+    "scope": "Identity comparison with the actual generic rigid contacts of the terminal native microstep. Further neighbors and new contacts under preload are unmeasured."
+  },
+  "sum_increment_on_gluteal_donors_N": 20.138394054450167,
+  "largest_cut_components": [
+    {
+      "count": 311,
+      "net_N": 822.7227364104729,
+      "opposing_magnitudes_N": [
+        3105.1738336564717,
+        -2282.4510972459993
+      ],
+      "positive_force_center_m": [
+        -0.04420411627010688,
+        -0.686278544188169,
+        0.050328783043383
+      ],
+      "node_with_largest_force": 135312,
+      "nearby_bones": [
+        {
+          "stable_id": 166,
+          "rigid_body": 13,
+          "source_body_names": [
+            "lumbar3"
+          ],
+          "distance_m": 0.029328405435859885,
+          "face": 1700
+        },
+        {
+          "stable_id": 167,
+          "rigid_body": 10,
+          "source_body_names": [
+            "lumbar4"
+          ],
+          "distance_m": 0.03354501004144614,
+          "face": 1649
+        },
+        {
+          "stable_id": 165,
+          "rigid_body": 16,
+          "source_body_names": [
+            "lumbar2"
+          ],
+          "distance_m": 0.03517765270655735,
+          "face": 1749
+        },
+        {
+          "stable_id": 164,
+          "rigid_body": 19,
+          "source_body_names": [
+            "lumbar1"
+          ],
+          "distance_m": 0.04609268853774157,
+          "face": 1330
+        },
+        {
+          "stable_id": 168,
+          "rigid_body": 4,
+          "source_body_names": [
+            "lumbar5"
+          ],
+          "distance_m": 0.04883863691932278,
+          "face": 1960
+        }
+      ]
+    },
+    {
+      "count": 32,
+      "net_N": 97.34603476447383,
+      "opposing_magnitudes_N": [
+        132.23371480024161,
+        -34.88768003576776
+      ],
+      "positive_force_center_m": [
+        -0.1107299676426127,
+        -1.4083421883585339,
+        0.04481210347823707
+      ],
+      "node_with_largest_force": 114401,
+      "nearby_bones": [
+        {
+          "stable_id": 20,
+          "rigid_body": 136,
+          "source_body_names": [
+            "tibia_r"
+          ],
+          "distance_m": 0.05378865608013825,
+          "face": 291
+        },
+        {
+          "stable_id": 4,
+          "rigid_body": 136,
+          "source_body_names": [
+            "tibia_r"
+          ],
+          "distance_m": 0.07185674367297694,
+          "face": 1134
+        },
+        {
+          "stable_id": 2,
+          "rigid_body": 131,
+          "source_body_names": [
+            "femur_r"
+          ],
+          "distance_m": 0.12774344238956287,
+          "face": 292
+        },
+        {
+          "stable_id": 5,
+          "rigid_body": 150,
+          "source_body_names": [
+            "tibia_l"
+          ],
+          "distance_m": 0.16565698134676646,
+          "face": 1653
+        },
+        {
+          "stable_id": 18,
+          "rigid_body": 128,
+          "source_body_names": [
+            "pelvis"
+          ],
+          "distance_m": 0.49365896932323317,
+          "face": 3
+        }
+      ]
+    }
+  ],
+  "bound": {
+    "new_failures": 312,
+    "incurable_by_tangential_displacement": 164,
+    "forced_normal_gradient_max": 103.0416594498753,
+    "affected_volume_exceeding_normal_bound_mm3": 78294.69481350045
+  },
+  "lateral_only": {
+    "initial": {
+      "iteration": 0,
+      "energy_J": 1.5761441039488973,
+      "peak_tangential_residual_N": 897.4276534362132,
+      "new_principal_stretch_failures": 312,
+      "volume_failures": 32,
+      "min_stretch": 0.0062575692719932735,
+      "max_stretch": 103.04648913191765,
+      "line_fraction": 0.03125,
+      "descent_shift": 0.0001
+    },
+    "terminal": {
+      "iteration": 31,
+      "energy_J": 0.7377280708096612,
+      "peak_tangential_residual_N": 1.4449452591559407e-07,
+      "new_principal_stretch_failures": 474,
+      "volume_failures": 25,
+      "min_stretch": 0.012923320193847813,
+      "max_stretch": 103.07035565273007
+    },
+    "gradient_tangent_error": [
+      0.001807040519974944,
+      5.153166738430096e-05,
+      5.393513258732966e-06,
+      4.822384512002037e-07
+    ]
+  },
+  "vector_trial": {
+    "initial": {
+      "iteration": 0,
+      "energy_J": 0.7615472515046471,
+      "peak_free_residual_N": 213.53527463643968,
+      "projected_normal_reaction_N": 545.2683447201711,
+      "root_wrench_residual": [
+        -407.5931198150205,
+        3.90575478075701,
+        -27.6997867191374
+      ],
+      "new_stretch_failures": 474,
+      "volume_failures": 25,
+      "min_stretch": 0.012923320191830725,
+      "max_stretch": 103.07035565272022,
+      "step_fraction": 0.0078125,
+      "contact_subsolves": 216,
+      "consistent_tangent": false
+    },
+    "terminal": {
+      "iteration": 21,
+      "energy_J": -0.4760200880830524,
+      "peak_free_residual_N": 190.6900565151259,
+      "projected_normal_reaction_N": 533.8401743754437,
+      "root_wrench_residual": [
+        -419.0212901597479,
+        3.4826041288079517,
+        -32.783988395048254
+      ],
+      "new_stretch_failures": 1096,
+      "volume_failures": 96,
+      "min_stretch": 1.1097655520429199e-07,
+      "max_stretch": 129.90749940423527
+    },
+    "iterations": 21,
+    "converged": false
+  },
+  "accepted_for_native_initialization": false
+}
