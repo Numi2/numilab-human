@@ -9,6 +9,8 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import subprocess
+import sys
 
 
 def digest(path):
@@ -30,6 +32,11 @@ def main():
         type=int,
         choices=(16, 60),
         help="requested integrated duration in seconds",
+    )
+    options.add_argument(
+        "--material-report",
+        type=Path,
+        help="write a cortical occupancy report and return failure on an invalid registered reference",
     )
     args = parser.parse_args()
     repo = Path(__file__).resolve().parents[1]
@@ -78,6 +85,66 @@ def main():
         f"Variable pleural pressure={settings['NM_VASCULAR_STEP_EXTERNAL_PRESSURE']}.",
         flush=True,
     )
+    if args.material_report is not None:
+        registrations = [
+            Path(name)
+            for name in cfg["pins"]
+            if Path(name).name == "material-boundary.json"
+        ]
+        if len(registrations) != 1:
+            raise SystemExit("Ambiguous registered material in the launch manifest.")
+        registration = registrations[0]
+        volume_launch = Path(
+            json.loads(registration.read_bytes())["initial_bodies_path"]
+        ).with_name("launch.json")
+        verifier = (
+            repo
+            / "tools/native_ligament_contact/registered_material_volume/audit_registered_cortical_occupancy.py"
+        )
+        volume = json.loads(volume_launch.read_bytes())["environment"]
+        material_node = Path(
+            volume["NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_NODE"]
+        )
+        geometry = material_node.parents[2] / "offline-geometry"
+        manifold = (
+            Path.home()
+            / "Work/human-integrated-gaps-20261104/resting-clearance-and-atrium-017/extended-equilibrium-027/material-bed-equilibrium-046/pelvic-interface-tools/lib"
+        )
+        modules = {
+            geometry
+            / "igl/__init__.py": "a7b3c75c4c68adea69e637ac1649a80a17cf3012e87cc31a9ee0978a15065e90",
+            geometry
+            / "igl/pyigl_core.abi3.so": "1284a530488349061c127b9030010671775ef3e8df3d3e87afd45a68cc3811b2",
+            manifold
+            / "manifold3d.cpython-313-darwin.so": "7f3a490aa64951ec8fecd12c65bfe76753f7c476e12b347853f4b1c28a5c9916",
+        }
+        for path, expected in modules.items():
+            if not path.is_file() or digest(path) != expected:
+                raise SystemExit(
+                    f"Missing or changed native geometry dependency: {path}"
+                )
+        audit_env = dict(
+            os.environ,
+            PYTHONPATH=os.pathsep.join(map(str, (geometry, manifold))),
+            PYTHONDONTWRITEBYTECODE="1",
+        )
+        return subprocess.run(
+            [
+                sys.executable,
+                str(verifier),
+                "--scene",
+                str(cfg_path),
+                "--volume-launch",
+                str(volume_launch),
+                "--material-registration",
+                str(registration),
+                "--require-clear",
+                "--output",
+                str(args.material_report),
+            ],
+            check=False,
+            env=audit_env,
+        ).returncode
     if args.check:
         return 0
 

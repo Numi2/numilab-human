@@ -4,16 +4,36 @@ from pathlib import Path
 import json
 import igl
 import numpy as np
-from compile_connected_joint import digest
+import gzip
+import hashlib
+import sys
+
+# The native ligament reader owns the NHBONES layout and typed cortical IDs.
+sys.path.insert(
+    0,
+    str(
+        Path(__file__).resolve().parents[1]
+        / "registered_bed_work/first_contact/material_response"
+    ),
+)
+
 from rebind_ligament_material import banks
 from scipy.spatial.transform import Rotation
+
+
+def digest(path):
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
 
 
 def validate(
     scene, volume_launch, registration, body_ids, proposal=None, sample_output=None
 ):
     source = json.loads(volume_launch.read_bytes())
-    cfg = json.loads(scene.read_bytes())
+    scene_bytes = scene.read_bytes()
+    if scene.suffix == ".gz":
+        scene_bytes = gzip.decompress(scene_bytes)
+    cfg = json.loads(scene_bytes)
     cortex = Path(cfg["argv"][3])
     if digest(cortex) != cfg["pins"][str(cortex)]:
         raise ValueError("Wrong native cortex")
@@ -168,7 +188,7 @@ def validate(
     if sample_output is not None:
         np.save(sample_output, np.array(sample_records, dtype=np.int64).reshape(-1, 5))
     return dict(
-        scene=digest(scene),
+        scene=hashlib.sha256(scene_bytes).hexdigest(),
         volume_launch=digest(volume_launch),
         registration=digest(registration),
         proposal=digest(proposal) if proposal is not None else None,
