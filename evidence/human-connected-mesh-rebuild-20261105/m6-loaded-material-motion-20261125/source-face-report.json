@@ -1,0 +1,88 @@
+{
+  "device": "Apple M6 on SSH Numi",
+  "binary_sha256": "5e8e4b1511c9794c4465aa80b66b18ab6374ecf3fd67c879dd115e409c68f2bd",
+  "launch_sha256": "33d53bfc39ebcda219593a611f3bfafb94c18fa37d2e4b9a8dcbd0523713b372",
+  "parent_launch_sha256": "f8fb7f9709d1cf58aec19d57a0025a890ec44d86cbe97964c39ec44a96ed415b",
+  "variable_pleural_pressure_enabled": true,
+  "old_cells": [
+    30,
+    28
+  ],
+  "new_cells": [
+    27,
+    31
+  ],
+  "native_volume_check": {
+    "registered_volume_fixed_cavities": "PASS",
+    "cavities": "2",
+    "input_cells": "1457316",
+    "output_cells": "1457316",
+    "affected_nodes": "44",
+    "restricted_transport_cavities": "2",
+    "maximum_transport_distance_used_m": "0.056707857856885396",
+    "minimum_patch_quality_before": "1.454641851742183e-05",
+    "minimum_patch_quality_after": "3.4755274394909059e-05",
+    "maximum_nodal_mass_change_kg": "3.1363265885007479e-07",
+    "nodal_mass_l1_change_kg": "1.8604151718316346e-06",
+    "maximum_source_mass_change_kg": "1.3010426069826053e-18",
+    "maximum_source_first_moment_change_kg_m": "5.4210108624275222e-20",
+    "lumped_first_moment_change_kg_m": "-6.4253263466554204e-22,-2.4797667112957185e-21,-7.5549044809948015e-23",
+    "proposal_sha256": "8dabd286d5816210d93714090cd25300dc4f340a78d01edb2e41f9a93f170a2f",
+    "composition_sha256": "ec180e5886f34c1f96035def3471434372de1652de6e33e9b58316ca2ab866f0",
+    "points_fixed": "1",
+    "boundary_exact": "1",
+    "volume_exact": "1",
+    "mass_conservative": "1",
+    "source_bundle": "immutable_provenance",
+    "physical_steps": "0",
+    "motion_qualification": "pending"
+  },
+  "loaded_mass_check": {
+    "registered_loaded_cavity_mass": "PASS",
+    "changed_cells": "0",
+    "mass_drift_kg": "2.9910850949917481e-21",
+    "first_moment_change_kg_m": "1.0521647625743217e-22,-7.1103383284109643e-22,-3.7219644293106873e-22"
+  },
+  "cortical_registration": {
+    "registered_cavity_cortical_transfer": "PASS",
+    "retained_facets": "4733"
+  },
+  "material_install": {
+    "registered_loaded_material_install": "PASS",
+    "cells": "1457316",
+    "nodes": "314014",
+    "fixed_bed_offset_m": "0.002552098361775279",
+    "minimum_skin_gap_m": "1.946154139231826e-08",
+    "ipc_width_m": "9.9999997473787516e-06",
+    "outer_contact_nodes": "10",
+    "anchors": "14",
+    "pose_sha256": "bcd6241e54cd29936e9b3487e1b0f31ce4a7d0c990df13710d7e277964388973",
+    "reference_and_mass_changed": "0",
+    "initial_forces_applied": "0"
+  },
+  "initial_and_terminal_support": {
+    "initialization": "dynamic_release",
+    "initial_balanced": false,
+    "initial_maximum_acceleration_residual_m_s2": 68.3067562932
+  },
+  "execution": {
+    "exit": 1,
+    "wall_s": 182.2101917078253
+  },
+  "accepted_trace_steps": [],
+  "terminal_simulated_s": 0,
+  "end_to_end_realtime_factor": 0.0,
+  "native_failure_lines": [
+    "myosim_articulated_visual=failed error=\"persistent Human stand Metal horizon failed: segmented authoritative Human horizon failed after 0 accepted steps: GPU rejected the Numi Human stand horizon: code=9 completed_steps=0 failing_index=12\""
+  ],
+  "human_joint_failure": "human_joint_failure completed_steps=0 matter_status=10 matter_failing_index=4294967295 matter_object_index=12 matter_diagnostics=[0.031992916017770767,4.8605074880470056e-06,0,-902] failure_owner=passive_tissue_runtime",
+  "root_zero_solver_work": {
+    "root": 0,
+    "used_columns_sum": 298,
+    "cycles_with_work": 31,
+    "budget_exhausted_solves": 0,
+    "active_newton_begins": 16,
+    "last_newton_norm": 0.0319929197,
+    "last_newton_threshold": 9.99999975e-06
+  }
+}
