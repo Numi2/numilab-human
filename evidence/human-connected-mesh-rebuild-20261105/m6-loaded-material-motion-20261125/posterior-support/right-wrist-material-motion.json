@@ -1,0 +1,3358 @@
+{
+  "runs": [
+    {
+      "name": "motion-qualified-traction",
+      "launch_sha256": "ae67bf67e5d6a510c984f7f9394cc9cd0d8efe54b08342d55bf7abd7667272a0",
+      "binary_sha256": "c9eb0adaa397ff264cbdd69da6f7b1088dfba487e379ed213bc559f3311fcb15",
+      "material_sha256": "bfc7608638c37d9b4c74d071e06551a35c1cffe676f7bbb484faec58d8021da6",
+      "variable_pleural": "1",
+      "newton_limit": "16",
+      "exit": 0,
+      "wall_s": 232.77260808297433,
+      "accepted_time_s": 1.5625000742147677e-05,
+      "accepted_steps": 2,
+      "receipt_sha256": "2b43c0b0b2becef717901d3842b0325d18d152578b9f5584f16600a1e3e532f1",
+      "process_realtime_factor": 6.712559897330348e-08,
+      "body_clock": {
+        "simulated_s": "1.5625000742147677e-05",
+        "wall_s": "84.696003167000001",
+        "real_time_factor": "1.8448333047474461e-07",
+        "presentation_qualification": "pending"
+      },
+      "active_solves": [
+        {
+          "root": 0,
+          "used_columns_sum": 778,
+          "active_newton_begins": 8,
+          "budget_exhausted_solves": 11,
+          "final_nonpressure_nontransport_relative_residual": 1.21913372e-05
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 725,
+          "active_newton_begins": 16,
+          "budget_exhausted_solves": 1,
+          "final_nonpressure_nontransport_relative_residual": 4.53085049e-05
+        }
+      ],
+      "certificates": [
+        {
+          "root": 0,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              1.21913372e-05,
+              5.63357708e-06,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.998780787,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "root": 1,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              4.53085049e-05,
+              0.0433118008,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.999437869,
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "wrist-direct-motion",
+      "launch_sha256": "e0e0f6a66338223a34d19b705b40bc681d21d4a9b8b871744cd6c5fb4b59511b",
+      "binary_sha256": "9a492cf288fed36a07164989f33913faa854e54385c384509d65bb8a318a7284",
+      "material_sha256": "6fc08530241575a5611cecb6d3aef781942c31d0690ca0e6b58337218f07abbc",
+      "variable_pleural": "1",
+      "newton_limit": "16",
+      "exit": 0,
+      "wall_s": 235.49631420802325,
+      "accepted_time_s": 1.5625000742147677e-05,
+      "accepted_steps": 2,
+      "receipt_sha256": "d7f5d92ee9fbb98aed4e2a845f02c94f88eb090adefc606da75504384d63ea92",
+      "process_realtime_factor": 6.634923690714536e-08,
+      "body_clock": {
+        "simulated_s": "1.5625000742147677e-05",
+        "wall_s": "86.311322042",
+        "real_time_factor": "1.8103071963773636e-07",
+        "presentation_qualification": "pending"
+      },
+      "active_solves": [
+        {
+          "root": 0,
+          "used_columns_sum": 779,
+          "active_newton_begins": 8,
+          "budget_exhausted_solves": 11,
+          "final_nonpressure_nontransport_relative_residual": 1.21910507e-05
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 759,
+          "active_newton_begins": 16,
+          "budget_exhausted_solves": 1,
+          "final_nonpressure_nontransport_relative_residual": 4.49209438e-05
+        }
+      ],
+      "certificates": [
+        {
+          "root": 0,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              1.21910507e-05,
+              5.66114204e-06,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.998780787,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "root": 1,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              4.49209438e-05,
+              0.0379843116,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.999437928,
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "wrist-registered-motion",
+      "launch_sha256": "ede36c52c027bca6d438db2089073d162e4ce555f0086992e46796afcdda035f",
+      "binary_sha256": "ce7c57d87d42948beaf0bbc55e91cc1dba8d22d0fce81b8a10170f02fb9596d3",
+      "material_sha256": "f6b918a38b936ed760cd4cadf9d88e9883cbfcac7921d4193dd8703cbc59f505",
+      "variable_pleural": "1",
+      "newton_limit": "16",
+      "exit": 1,
+      "wall_s": 233.35757737490349,
+      "rejection": {
+        "segment_start": 1,
+        "matter_code": 10,
+        "matter_object_index": 18,
+        "matter_diagnostics": [
+          0.0005537967663258314,
+          0.03614696487784386,
+          0,
+          -902
+        ]
+      },
+      "active_solves": [
+        {
+          "root": 0,
+          "used_columns_sum": 779,
+          "active_newton_begins": 8,
+          "budget_exhausted_solves": 11,
+          "final_nonpressure_nontransport_relative_residual": 1.21909125e-05
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 746,
+          "active_newton_begins": 16,
+          "budget_exhausted_solves": 0,
+          "final_nonpressure_nontransport_relative_residual": 0.000553796766
+        }
+      ],
+      "certificates": [
+        {
+          "root": 0,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              1.21909125e-05,
+              1.14162312e-05,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.998780787,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "root": 1,
+          "status": [
+            {
+              "code": 10,
+              "object_index": 18,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 56,
+              "diagnostics": [
+                0.000553796766,
+                0.0361469649,
+                0,
+                -902
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              0.000553796766,
+              0.0361469649,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.999428749,
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "wrist-registered-convergence",
+      "launch_sha256": "5be8c0cddbd4ab6b9352cf34e770623e1e4689844c8e33d6329fc8844a0f47c6",
+      "binary_sha256": "ce7c57d87d42948beaf0bbc55e91cc1dba8d22d0fce81b8a10170f02fb9596d3",
+      "material_sha256": "f6b918a38b936ed760cd4cadf9d88e9883cbfcac7921d4193dd8703cbc59f505",
+      "variable_pleural": "1",
+      "newton_limit": "32",
+      "exit": 1,
+      "wall_s": 136.85475320904516,
+      "active_solves": [],
+      "certificates": []
+    },
+    {
+      "name": "wrist-registered-newton24",
+      "launch_sha256": "32f363f8344f71049bd2633dcd7041acf6de9e1f8fa15ac6669deba88cd2e0ab",
+      "binary_sha256": "ce7c57d87d42948beaf0bbc55e91cc1dba8d22d0fce81b8a10170f02fb9596d3",
+      "material_sha256": "f6b918a38b936ed760cd4cadf9d88e9883cbfcac7921d4193dd8703cbc59f505",
+      "variable_pleural": "1",
+      "newton_limit": "24",
+      "exit": 0,
+      "wall_s": 275.44320687511936,
+      "accepted_time_s": 1.5625000742147677e-05,
+      "accepted_steps": 2,
+      "receipt_sha256": "7aaaa0883ec0c5cf901e5cb13e7389532b77a33892829429bb3a50abf8db154e",
+      "process_realtime_factor": 5.672676018919483e-08,
+      "body_clock": {
+        "simulated_s": "1.5625000742147677e-05",
+        "wall_s": "126.9067055",
+        "real_time_factor": "1.2312194758020629e-07",
+        "presentation_qualification": "pending"
+      },
+      "active_solves": [
+        {
+          "root": 0,
+          "used_columns_sum": 1163,
+          "active_newton_begins": 8,
+          "budget_exhausted_solves": 19,
+          "final_nonpressure_nontransport_relative_residual": 1.21908224e-05
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 1193,
+          "active_newton_begins": 24,
+          "budget_exhausted_solves": 6,
+          "final_nonpressure_nontransport_relative_residual": 4.41905504e-05
+        }
+      ],
+      "certificates": [
+        {
+          "root": 0,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              1.21908224e-05,
+              1.11484706e-08,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.998780787,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "root": 1,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              4.41905504e-05,
+              0.0203421135,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.999437988,
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "forearm-control-newton24",
+      "launch_sha256": "0351126665afc6f805be48f3ed2cc8c34a82d0fb986985ec813673187cffee1b",
+      "binary_sha256": "c9eb0adaa397ff264cbdd69da6f7b1088dfba487e379ed213bc559f3311fcb15",
+      "material_sha256": "bfc7608638c37d9b4c74d071e06551a35c1cffe676f7bbb484faec58d8021da6",
+      "variable_pleural": "1",
+      "newton_limit": "24",
+      "exit": 0,
+      "wall_s": 279.37230149982497,
+      "accepted_time_s": 1.5625000742147677e-05,
+      "accepted_steps": 2,
+      "receipt_sha256": "480d6d60f0826e0a0a59d2142d7b7086aefaf751014ce6c481ddde9598479698",
+      "process_realtime_factor": 5.5928954510751546e-08,
+      "body_clock": {
+        "simulated_s": "1.5625000742147677e-05",
+        "wall_s": "126.87170275",
+        "real_time_factor": "1.2315591580682618e-07",
+        "presentation_qualification": "pending"
+      },
+      "active_solves": [
+        {
+          "root": 0,
+          "used_columns_sum": 1162,
+          "active_newton_begins": 8,
+          "budget_exhausted_solves": 19,
+          "final_nonpressure_nontransport_relative_residual": 1.21913017e-05
+        },
+        {
+          "root": 1,
+          "used_columns_sum": 1146,
+          "active_newton_begins": 24,
+          "budget_exhausted_solves": 6,
+          "final_nonpressure_nontransport_relative_residual": 4.43283825e-05
+        }
+      ],
+      "certificates": [
+        {
+          "root": 0,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              1.21913017e-05,
+              5.63354979e-06,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.998780787,
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        {
+          "root": 1,
+          "status": [
+            {
+              "code": 0,
+              "object_index": 4294967295,
+              "failing_index": 4294967295,
+              "completed_microsteps_at_certificate": 0,
+              "fgmres_iterations_microstep_max": 64,
+              "diagnostics": [
+                null,
+                0,
+                0,
+                0
+              ]
+            }
+          ],
+          "object_18": {
+            "nonlinear": [
+              4.43283825e-05,
+              0.0203445349,
+              0,
+              0
+            ],
+            "contact": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "transport": [
+              0,
+              0,
+              0,
+              0
+            ],
+            "validity": [
+              0.999437988,
+              0,
+              0,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "matched_topology_comparison": {
+    "unchanged_cell_strain_witnesses": {
+      "introduced": 1,
+      "cleared": 1,
+      "before": [
+        {
+          "nodes": [
+            17699,
+            17702,
+            17716,
+            107168
+          ],
+          "min_max_stretch": [
+            0.6949472157166435,
+            1.2115426539838163
+          ],
+          "volume_ratio": 0.8403125860548908
+        },
+        {
+          "nodes": [
+            107131,
+            107132,
+            107133,
+            107149
+          ],
+          "min_max_stretch": [
+            0.8946446307520537,
+            1.5122632136311958
+          ],
+          "volume_ratio": 1.3517481658389432
+        }
+      ],
+      "after": [
+        {
+          "nodes": [
+            17699,
+            17702,
+            17716,
+            107168
+          ],
+          "min_max_stretch": [
+            0.6519955141511404,
+            1.2591012630478504
+          ],
+          "volume_ratio": 0.8195272203835703
+        },
+        {
+          "nodes": [
+            107131,
+            107132,
+            107133,
+            107149
+          ],
+          "min_max_stretch": [
+            0.890088433577818,
+            1.3945806649333936
+          ],
+          "volume_ratio": 1.240163967988932
+        }
+      ]
+    },
+    "selected_patches": 53,
+    "metric_order": [
+      "inverted",
+      "low_shape",
+      "volume",
+      "stretch"
+    ],
+    "minimum_patch_shape_improvement_factor_quantiles": [
+      1.076933300337385,
+      3.1268413421107497,
+      1985.5783306372773
+    ],
+    "runs": [
+      {
+        "run": "forearm-control-newton24",
+        "selected_cells": 281,
+        "minimum_shape_per_patch": [
+          4.873381703391921e-05,
+          3.7969590753257465e-05,
+          0.0030811135541808387,
+          1.728748985659297e-05,
+          1.1305687855910627e-05,
+          0.000729950923614233,
+          0.0002120342831420928,
+          0.0005815049845853393,
+          0.005758421494764238,
+          6.343047232913718e-05,
+          0.010720876408702118,
+          0.0004872890055858653,
+          2.5788264875747794e-05,
+          0.05668070274191288,
+          1.1957818369881267e-05,
+          0.01163301606463165,
+          0.004190761390197766,
+          0.006625936141958907,
+          0.0002878795440809419,
+          0.0004984577300007845,
+          0.004636853828002238,
+          0.0038634763320357195,
+          0.002278768541354877,
+          0.016318176534039545,
+          7.073173288098706e-05,
+          0.00013664523368751158,
+          0.0013387372871518065,
+          0.0012020053304684043,
+          9.536971700862146e-05,
+          0.0015399553727035444,
+          0.0010616307009258614,
+          0.0011262521091347105,
+          0.0021229890633281366,
+          0.0008475909655457169,
+          0.0006778403809758547,
+          0.006650023775938228,
+          0.0015407220734715487,
+          0.0002779963843035826,
+          1.388492042337089e-05,
+          0.00047366111585547154,
+          6.0549411707345535e-05,
+          0.0025815356899769933,
+          9.041343815355375e-05,
+          0.013176617350258372,
+          0.000267019284538988,
+          6.803608822213044e-05,
+          1.9387309062002237e-05,
+          4.179109500789791e-05,
+          0.0015141655867480822,
+          4.1608667327440776e-05,
+          0.001753913540053141,
+          0.0039376172326393176,
+          0.0003533605027087264
+        ],
+        "accepted_seconds": 1.5625000742147677e-05,
+        "wall_seconds": 279.37230149982497,
+        "realtime_factor": 5.5928954510751546e-08,
+        "skin_fat": [
+          [
+            0,
+            5,
+            0,
+            202
+          ],
+          [
+            0,
+            35,
+            7,
+            303
+          ]
+        ],
+        "changed_skin_fat": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "wall_pairs": 6568,
+        "right_radius_pairs": 568,
+        "bed": {
+          "initialization": "dynamic_release",
+          "initial_balanced": false,
+          "initial_maximum_acceleration_residual_m_s2": 68.3067564113,
+          "last_root_mean_normal_force_N": 10.97926098438317,
+          "last_root_normal_impulse_Ns": 8.57754764404935e-05,
+          "last_root_contact_samples": 16
+        },
+        "skeletal_acceleration_m_s2": -9.79852184267084
+      },
+      {
+        "run": "wrist-registered-newton24",
+        "selected_cells": 248,
+        "minimum_shape_per_patch": [
+          0.0034427315766803967,
+          0.00022105037705039165,
+          0.031067732409237495,
+          0.034325665250362736,
+          0.0002515285143183327,
+          0.0015376070424834953,
+          0.0011390624581615776,
+          0.0009258757548389105,
+          0.007243142267841917,
+          0.00014848104679643736,
+          0.018784193422695782,
+          0.0014116709776274435,
+          0.000854936788306875,
+          0.07710368361252416,
+          0.0001817786427548705,
+          0.022764993966485604,
+          0.01918761470622708,
+          0.015865728883327976,
+          0.001387061050742108,
+          0.0007026319113151589,
+          0.007430930983750002,
+          0.004160706317034603,
+          0.008516231166141286,
+          0.022407485423437574,
+          0.0002211669065714046,
+          0.0008749486834655039,
+          0.010104701574490161,
+          0.007375832591743423,
+          0.0007631960981519509,
+          0.001703004364116114,
+          0.0018144148926369631,
+          0.016254750665574542,
+          0.03423344817408852,
+          0.06221503538648173,
+          0.01275373532622842,
+          0.009187948940245725,
+          0.0038730145981473937,
+          0.0003281652121029461,
+          3.684566243307331e-05,
+          0.0023952868559311857,
+          0.0001211042715190983,
+          0.02489855111711328,
+          0.001906095006294256,
+          0.02953729385986388,
+          0.009173995415835415,
+          0.0067313558518127085,
+          7.237248312016024e-05,
+          0.00012201497975125078,
+          0.0025662172940966606,
+          7.237138541706216e-05,
+          0.0031195605922796376,
+          0.026235800260631048,
+          0.0004499648977013894
+        ],
+        "accepted_seconds": 1.5625000742147677e-05,
+        "wall_seconds": 275.44320687511936,
+        "realtime_factor": 5.672676018919483e-08,
+        "skin_fat": [
+          [
+            0,
+            5,
+            0,
+            200
+          ],
+          [
+            0,
+            35,
+            7,
+            302
+          ]
+        ],
+        "changed_skin_fat": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "wall_pairs": 6568,
+        "right_radius_pairs": 568,
+        "bed": {
+          "initialization": "dynamic_release",
+          "initial_balanced": false,
+          "initial_maximum_acceleration_residual_m_s2": 68.3067565372,
+          "last_root_mean_normal_force_N": 10.98495323643419,
+          "last_root_normal_impulse_Ns": 8.58199471596421e-05,
+          "last_root_contact_samples": 16
+        },
+        "skeletal_acceleration_m_s2": -9.798333809056327
+      }
+    ],
+    "unchanged_cells_new_failures": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "unchanged_cells_cleared_failures": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "wall_pairs_added": 0,
+    "wall_pairs_removed": 0
+  },
+  "comparison_with_retained_release": {
+    "unchanged_cell_strain_witnesses": {
+      "introduced": 1,
+      "cleared": 2,
+      "before": [
+        {
+          "nodes": [
+            17699,
+            17702,
+            17716,
+            107168
+          ],
+          "min_max_stretch": [
+            0.6894378955774182,
+            1.2226350181420127
+          ],
+          "volume_ratio": 0.8415867977318199
+        },
+        {
+          "nodes": [
+            22781,
+            22782,
+            22783,
+            200340
+          ],
+          "min_max_stretch": [
+            0.6579109444794458,
+            1.4247357907359195
+          ],
+          "volume_ratio": 0.939714609797472
+        },
+        {
+          "nodes": [
+            107131,
+            107132,
+            107133,
+            107149
+          ],
+          "min_max_stretch": [
+            0.8945790902827304,
+            1.512927431840215
+          ],
+          "volume_ratio": 1.3522399246935342
+        }
+      ],
+      "after": [
+        {
+          "nodes": [
+            17699,
+            17702,
+            17716,
+            107168
+          ],
+          "min_max_stretch": [
+            0.6519955141511404,
+            1.2591012630478504
+          ],
+          "volume_ratio": 0.8195272203835703
+        },
+        {
+          "nodes": [
+            22781,
+            22782,
+            22783,
+            200340
+          ],
+          "min_max_stretch": [
+            0.6690995587259765,
+            1.393416300957702
+          ],
+          "volume_ratio": 0.9344361138147658
+        },
+        {
+          "nodes": [
+            107131,
+            107132,
+            107133,
+            107149
+          ],
+          "min_max_stretch": [
+            0.890088433577818,
+            1.3945806649333936
+          ],
+          "volume_ratio": 1.240163967988932
+        }
+      ]
+    },
+    "selected_patches": 53,
+    "metric_order": [
+      "inverted",
+      "low_shape",
+      "volume",
+      "stretch"
+    ],
+    "minimum_patch_shape_improvement_factor_quantiles": [
+      1.0769369458390186,
+      3.126841887384195,
+      1985.5733184858257
+    ],
+    "runs": [
+      {
+        "run": "motion-qualified-traction",
+        "selected_cells": 281,
+        "minimum_shape_per_patch": [
+          4.8733784166460955e-05,
+          3.7969640934414105e-05,
+          0.003081100847262635,
+          1.7287533495131307e-05,
+          1.1305674436464898e-05,
+          0.0007299508931650731,
+          0.00021203428789103796,
+          0.0005815047839754573,
+          0.0057584316315929356,
+          6.344474910858727e-05,
+          0.010720875912901572,
+          0.0004872892834189112,
+          2.5787547484666268e-05,
+          0.05668059505520339,
+          1.1985344201343708e-05,
+          0.011633028831782816,
+          0.004190761453099909,
+          0.006626007225492763,
+          0.0002878795916973535,
+          0.0004984526706554473,
+          0.004636853760761775,
+          0.0038634632539169557,
+          0.002278733491896655,
+          0.016318183612041216,
+          7.073172054645365e-05,
+          0.00013664575150813474,
+          0.001338740756331604,
+          0.0012020735194716201,
+          9.536981466004639e-05,
+          0.0015399553362566718,
+          0.0010616307317769227,
+          0.0011262495921506113,
+          0.0021229884413260037,
+          0.0008476233241988583,
+          0.000677840272193623,
+          0.006650024293415177,
+          0.0015407171929543355,
+          0.00027799306123776495,
+          1.3884695852375422e-05,
+          0.0004736617570005519,
+          6.054919229872905e-05,
+          0.002581499528633952,
+          9.041315388345501e-05,
+          0.013176616620394667,
+          0.00026702736520820355,
+          6.805426335623982e-05,
+          1.9387066824855602e-05,
+          4.1732873605192967e-05,
+          0.001514165994084672,
+          4.161097764356761e-05,
+          0.0017539543643614495,
+          0.0039376176419856765,
+          0.00035336151161466514
+        ],
+        "accepted_seconds": 1.5625000742147677e-05,
+        "wall_seconds": 232.77260808297433,
+        "realtime_factor": 6.712559897330348e-08,
+        "skin_fat": [
+          [
+            0,
+            5,
+            0,
+            203
+          ],
+          [
+            0,
+            35,
+            7,
+            303
+          ]
+        ],
+        "changed_skin_fat": [
+          [
+            0,
+            0,
+            0,
+            3
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "wall_pairs": 6568,
+        "right_radius_pairs": 568,
+        "bed": {
+          "initialization": "dynamic_release",
+          "initial_balanced": false,
+          "initial_maximum_acceleration_residual_m_s2": 68.3067564113,
+          "last_root_mean_normal_force_N": 10.97985703328054,
+          "last_root_normal_impulse_Ns": 8.57801330725042e-05,
+          "last_root_contact_samples": 16
+        },
+        "skeletal_acceleration_m_s2": -9.79838353149307
+      },
+      {
+        "run": "wrist-registered-newton24",
+        "selected_cells": 248,
+        "minimum_shape_per_patch": [
+          0.0034427315766803967,
+          0.00022105037705039165,
+          0.031067732409237495,
+          0.034325665250362736,
+          0.0002515285143183327,
+          0.0015376070424834953,
+          0.0011390624581615776,
+          0.0009258757548389105,
+          0.007243142267841917,
+          0.00014848104679643736,
+          0.018784193422695782,
+          0.0014116709776274435,
+          0.000854936788306875,
+          0.07710368361252416,
+          0.0001817786427548705,
+          0.022764993966485604,
+          0.01918761470622708,
+          0.015865728883327976,
+          0.001387061050742108,
+          0.0007026319113151589,
+          0.007430930983750002,
+          0.004160706317034603,
+          0.008516231166141286,
+          0.022407485423437574,
+          0.0002211669065714046,
+          0.0008749486834655039,
+          0.010104701574490161,
+          0.007375832591743423,
+          0.0007631960981519509,
+          0.001703004364116114,
+          0.0018144148926369631,
+          0.016254750665574542,
+          0.03423344817408852,
+          0.06221503538648173,
+          0.01275373532622842,
+          0.009187948940245725,
+          0.0038730145981473937,
+          0.0003281652121029461,
+          3.684566243307331e-05,
+          0.0023952868559311857,
+          0.0001211042715190983,
+          0.02489855111711328,
+          0.001906095006294256,
+          0.02953729385986388,
+          0.009173995415835415,
+          0.0067313558518127085,
+          7.237248312016024e-05,
+          0.00012201497975125078,
+          0.0025662172940966606,
+          7.237138541706216e-05,
+          0.0031195605922796376,
+          0.026235800260631048,
+          0.0004499648977013894
+        ],
+        "accepted_seconds": 1.5625000742147677e-05,
+        "wall_seconds": 275.44320687511936,
+        "realtime_factor": 5.672676018919483e-08,
+        "skin_fat": [
+          [
+            0,
+            5,
+            0,
+            200
+          ],
+          [
+            0,
+            35,
+            7,
+            302
+          ]
+        ],
+        "changed_skin_fat": [
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "wall_pairs": 6568,
+        "right_radius_pairs": 568,
+        "bed": {
+          "initialization": "dynamic_release",
+          "initial_balanced": false,
+          "initial_maximum_acceleration_residual_m_s2": 68.3067565372,
+          "last_root_mean_normal_force_N": 10.98495323643419,
+          "last_root_normal_impulse_Ns": 8.58199471596421e-05,
+          "last_root_contact_samples": 16
+        },
+        "skeletal_acceleration_m_s2": -9.798333809056327
+      }
+    ],
+    "unchanged_cells_new_failures": [
+      0,
+      0,
+      0,
+      1
+    ],
+    "unchanged_cells_cleared_failures": [
+      0,
+      0,
+      0,
+      2
+    ],
+    "wall_pairs_added": 0,
+    "wall_pairs_removed": 0
+  },
+  "patches": {
+    "start": 84,
+    "geometry": 83,
+    "native_source_routes_direct": 42,
+    "conserved_reroutes": 11,
+    "total_admitted": 53
+  },
+  "material_source_control": {
+    "physical_pose": "903e3378adf6cfd18eaaa5e13df22e07b49b2980cab6305762f39605a880e9db",
+    "source_pose": "51f4ffa366186b444077340ecf86d95ae90154812969f90f42c77ba17abfdac4",
+    "current_material": "29f1379e3656afdbca10af61ad73fb5b83597c750ccf08067cf0665b22f45664",
+    "mass_registration": "58521f14c01c667e2357e1caba97b8e99a737ed607ee19db6e56ccfaaa43e376",
+    "map_world_to_current_mm": [
+      0.0,
+      0.0,
+      20.162801832821692,
+      20.238053358671202
+    ],
+    "registered_donor_local_to_current_mm": [
+      4.635749570871895e-07,
+      1.728042984469197e-05,
+      20.162803156430893,
+      20.238056273971704
+    ],
+    "native_donor_local_to_current_mm": [
+      5.015234865633405e-07,
+      1.8397737373240497e-05,
+      23.124628611581993,
+      28.07935276466731
+    ],
+    "right_witness_registered_error_mm": [
+      20.162800914967878,
+      20.162801069422635,
+      20.16280142182105,
+      20.162801895904252
+    ],
+    "right_witness_native_error_mm": [
+      18.00192804497509,
+      18.23626112627773,
+      18.315866392792206,
+      18.484320469985594
+    ],
+    "proposed_right_witness_motion_mm": [
+      3.8988400889885724,
+      5.5891904491052715,
+      5.875899105866885,
+      6.190750762069539
+    ],
+    "right_radius_original": {
+      "O": 212,
+      "I": 211,
+      "D": 145,
+      "C": 0
+    },
+    "right_radius_map_world_opening": {
+      "O": 242,
+      "I": 387,
+      "D": 377,
+      "C": 0
+    },
+    "right_radius_source_donor_coordinates": {
+      "O": 242,
+      "I": 387,
+      "D": 377,
+      "C": 0
+    },
+    "right_radius_mechanical_donor_coordinates": {
+      "O": 339,
+      "I": 472,
+      "D": 441,
+      "C": 0
+    },
+    "right_radius_with_direct_frame_transfer": {
+      "O": 298,
+      "I": 229,
+      "D": 122,
+      "C": 0
+    },
+    "scope": "Apply only the rigid source-to-mechanical change to each recorded material donor, retaining its offsets. An authoring counterfactual. Nearest-body reassignment, tissue equilibration, and native promotion are excluded."
+  },
+  "source_distance": {
+    "physical_to_registered_source": {
+      "faces": 152261,
+      "area_m2": 1.8387550393641323,
+      "p50_p95_p99_mm": [
+        2.847440737552662,
+        9.885259681228485,
+        14.561682137028212
+      ],
+      "area_above_10mm_m2": 0.08570402167049858,
+      "maximum_mm": 24.536012109492322,
+      "worst_face": 5073
+    },
+    "registered_source_to_physical": {
+      "faces": 108987,
+      "area_m2": 1.8162737401254283,
+      "p50_p95_p99_mm": [
+        2.1574461378304672,
+        8.915088699047676,
+        12.709736994832607
+      ],
+      "area_above_10mm_m2": 0.05983915147480566,
+      "maximum_mm": 24.354799318293544,
+      "worst_face": 13071
+    }
+  },
+  "gravity_direction": {
+    "residual_before_N": -810.0069432516557,
+    "residual_after_N": -810.0069410085321,
+    "admissible_skeletal_descent_m": 9.5367431640625e-10,
+    "proposal_installed": false
+  },
+  "scope": "Complete physical owner, accepted endpoint comparisons. Different initial approximations may alter nonlinear convergence. These captures do not qualify sustained performance, continuous anatomy, supported rest or cardiorespiratory cycles.",
+  "cortical_crossings_by_body": [
+    {
+      "body": 23,
+      "name": "head",
+      "pairs": [
+        0,
+        0,
+        1809,
+        0
+      ],
+      "total": 1809
+    },
+    {
+      "body": 43,
+      "name": "radius_r",
+      "pairs": [
+        212,
+        211,
+        145,
+        0
+      ],
+      "total": 568
+    },
+    {
+      "body": 20,
+      "name": "torso",
+      "pairs": [
+        0,
+        0,
+        564,
+        0
+      ],
+      "total": 564
+    },
+    {
+      "body": 128,
+      "name": "pelvis",
+      "pairs": [
+        0,
+        226,
+        335,
+        0
+      ],
+      "total": 561
+    },
+    {
+      "body": 42,
+      "name": "ulna_r",
+      "pairs": [
+        0,
+        170,
+        297,
+        0
+      ],
+      "total": 467
+    },
+    {
+      "body": 84,
+      "name": "scapula_l",
+      "pairs": [
+        0,
+        33,
+        122,
+        290
+      ],
+      "total": 445
+    },
+    {
+      "body": 93,
+      "name": "radius_l",
+      "pairs": [
+        0,
+        80,
+        204,
+        0
+      ],
+      "total": 284
+    },
+    {
+      "body": 67,
+      "name": "fourthmc_r",
+      "pairs": [
+        0,
+        0,
+        248,
+        0
+      ],
+      "total": 248
+    },
+    {
+      "body": 74,
+      "name": "5proxph_r",
+      "pairs": [
+        0,
+        0,
+        219,
+        0
+      ],
+      "total": 219
+    },
+    {
+      "body": 41,
+      "name": "humerus_r",
+      "pairs": [
+        0,
+        0,
+        52,
+        144
+      ],
+      "total": 196
+    },
+    {
+      "body": 62,
+      "name": "thirdmc_r",
+      "pairs": [
+        0,
+        0,
+        192,
+        0
+      ],
+      "total": 192
+    },
+    {
+      "body": 57,
+      "name": "secondmc_r",
+      "pairs": [
+        0,
+        0,
+        173,
+        0
+      ],
+      "total": 173
+    },
+    {
+      "body": 69,
+      "name": "4proxph_r",
+      "pairs": [
+        0,
+        0,
+        122,
+        0
+      ],
+      "total": 122
+    },
+    {
+      "body": 75,
+      "name": "midph5_r",
+      "pairs": [
+        0,
+        0,
+        119,
+        0
+      ],
+      "total": 119
+    },
+    {
+      "body": 92,
+      "name": "ulna_l",
+      "pairs": [
+        0,
+        27,
+        89,
+        0
+      ],
+      "total": 116
+    },
+    {
+      "body": 79,
+      "name": "clavicle_l",
+      "pairs": [
+        0,
+        0,
+        42,
+        63
+      ],
+      "total": 105
+    },
+    {
+      "body": 52,
+      "name": "firstmc_r",
+      "pairs": [
+        0,
+        0,
+        100,
+        0
+      ],
+      "total": 100
+    },
+    {
+      "body": 100,
+      "name": "trapezium_l",
+      "pairs": [
+        0,
+        0,
+        93,
+        0
+      ],
+      "total": 93
+    },
+    {
+      "body": 91,
+      "name": "humerus_l",
+      "pairs": [
+        0,
+        0,
+        26,
+        27
+      ],
+      "total": 53
+    },
+    {
+      "body": 152,
+      "name": "calcn_l",
+      "pairs": [
+        0,
+        0,
+        33,
+        0
+      ],
+      "total": 33
+    },
+    {
+      "body": 150,
+      "name": "tibia_l",
+      "pairs": [
+        0,
+        0,
+        26,
+        0
+      ],
+      "total": 26
+    },
+    {
+      "body": 153,
+      "name": "toes_l",
+      "pairs": [
+        0,
+        0,
+        22,
+        0
+      ],
+      "total": 22
+    },
+    {
+      "body": 50,
+      "name": "trapezium_r",
+      "pairs": [
+        0,
+        0,
+        16,
+        0
+      ],
+      "total": 16
+    },
+    {
+      "body": 138,
+      "name": "calcn_r",
+      "pairs": [
+        0,
+        0,
+        15,
+        0
+      ],
+      "total": 15
+    },
+    {
+      "body": 136,
+      "name": "tibia_r",
+      "pairs": [
+        0,
+        0,
+        10,
+        0
+      ],
+      "total": 10
+    },
+    {
+      "body": 64,
+      "name": "3proxph_r",
+      "pairs": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "total": 4
+    },
+    {
+      "body": 121,
+      "name": "distph4_l",
+      "pairs": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "total": 4
+    },
+    {
+      "body": 139,
+      "name": "toes_r",
+      "pairs": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "total": 4
+    }
+  ],
+  "supported_intersections": {
+    "skeletal_weight_N": 811.4453488047789,
+    "summed_interface_bed_normal_N": 1.437550972640962,
+    "reaction_by_body": [
+      {
+        "body": 20,
+        "name": "torso",
+        "rows": 154,
+        "summed_quadrature_area_cm2": 75.3705219818511,
+        "signed_skeletal_normal_N": 0.0035513065865406005,
+        "maximum_native_closure_mm": 0.7787322974763811,
+        "pressure_at_maximum_kPa": 0.12583800506591797,
+        "max_row_bed_normal_force_N": 0.00014607221147808127,
+        "max_row_node": 267652,
+        "nearby_max_depth_witness": [
+          1.3409851911127812,
+          27,
+          "D",
+          0.8653326299075714
+        ]
+      },
+      {
+        "body": 23,
+        "name": "head",
+        "rows": 628,
+        "summed_quadrature_area_cm2": 30.88948250305257,
+        "signed_skeletal_normal_N": 0.00016408509457566844,
+        "maximum_native_closure_mm": 0.009677767593530007,
+        "pressure_at_maximum_kPa": 0.00512969446182251,
+        "max_row_bed_normal_force_N": -4.305453385104684e-05,
+        "max_row_node": 284000,
+        "nearby_max_depth_witness": [
+          4.541965934354177e-06,
+          31,
+          "D",
+          0.00973033927997457
+        ]
+      },
+      {
+        "body": 41,
+        "name": "humerus_r",
+        "rows": 6,
+        "summed_quadrature_area_cm2": 0.23957152436082652,
+        "signed_skeletal_normal_N": 2.154515557060827e-06,
+        "maximum_native_closure_mm": 0.0013654668009621673,
+        "pressure_at_maximum_kPa": 0.00022162911295890808,
+        "max_row_bed_normal_force_N": 2.026713803060278e-06,
+        "max_row_node": 311010,
+        "nearby_max_depth_witness": [
+          0.0033670797037649186,
+          12,
+          "C",
+          0.004621441978775858
+        ]
+      },
+      {
+        "body": 42,
+        "name": "ulna_r",
+        "rows": 131,
+        "summed_quadrature_area_cm2": 20.81079088946891,
+        "signed_skeletal_normal_N": -0.060853211765286075,
+        "maximum_native_closure_mm": 3.350810380652547,
+        "pressure_at_maximum_kPa": 0.5414570922851563,
+        "max_row_bed_normal_force_N": -0.007408582817628065,
+        "max_row_node": 215970,
+        "nearby_max_depth_witness": [
+          4.619018954268318e-05,
+          14,
+          "D",
+          3.3509103709211145
+        ]
+      },
+      {
+        "body": 43,
+        "name": "radius_r",
+        "rows": 210,
+        "summed_quadrature_area_cm2": 7.2442322363068525,
+        "signed_skeletal_normal_N": -0.04331299311445584,
+        "maximum_native_closure_mm": 1.3856232399120927,
+        "pressure_at_maximum_kPa": 0.5140484008789062,
+        "max_row_bed_normal_force_N": -0.00014155200804235755,
+        "max_row_node": 213609,
+        "nearby_max_depth_witness": [
+          1.2532746882295855,
+          16,
+          "D",
+          1.4421249692426938
+        ]
+      },
+      {
+        "body": 50,
+        "name": "trapezium_r",
+        "rows": 3,
+        "summed_quadrature_area_cm2": 0.00444085678119599,
+        "signed_skeletal_normal_N": 9.015869604778947e-08,
+        "maximum_native_closure_mm": 0.004764389359479537,
+        "pressure_at_maximum_kPa": 0.0018632895946502687,
+        "max_row_bed_normal_force_N": 2.1240456461323294e-10,
+        "max_row_node": 214150,
+        "nearby_max_depth_witness": [
+          0.38336947899357676,
+          78,
+          "D",
+          0.011612042039568298
+        ]
+      },
+      {
+        "body": 52,
+        "name": "firstmc_r",
+        "rows": 40,
+        "summed_quadrature_area_cm2": 0.07762553285939333,
+        "signed_skeletal_normal_N": 4.768358354634252e-05,
+        "maximum_native_closure_mm": 0.08370511932298541,
+        "pressure_at_maximum_kPa": 0.02957242202758789,
+        "max_row_bed_normal_force_N": 1.459131992763689e-06,
+        "max_row_node": 214004,
+        "nearby_max_depth_witness": [
+          3.063539648203563e-05,
+          88,
+          "D",
+          0.08373668824821663
+        ]
+      },
+      {
+        "body": 57,
+        "name": "secondmc_r",
+        "rows": 84,
+        "summed_quadrature_area_cm2": 2.0957684545663824,
+        "signed_skeletal_normal_N": -0.00041509529566388626,
+        "maximum_native_closure_mm": 0.12424973829183728,
+        "pressure_at_maximum_kPa": 0.03587998580932617,
+        "max_row_bed_normal_force_N": -5.323417757297331e-05,
+        "max_row_node": 208476,
+        "nearby_max_depth_witness": [
+          5.081559297026564,
+          89,
+          "D",
+          0.10432149502984668
+        ]
+      },
+      {
+        "body": 62,
+        "name": "thirdmc_r",
+        "rows": 109,
+        "summed_quadrature_area_cm2": 1.7799645409222187,
+        "signed_skeletal_normal_N": -0.0006125115153067478,
+        "maximum_native_closure_mm": 0.18904263561125845,
+        "pressure_at_maximum_kPa": 0.04834865951538086,
+        "max_row_bed_normal_force_N": 1.6737732793176212e-05,
+        "max_row_node": 209110,
+        "nearby_max_depth_witness": [
+          5.960704298730473e-05,
+          90,
+          "D",
+          0.1891823703616614
+        ]
+      },
+      {
+        "body": 67,
+        "name": "fourthmc_r",
+        "rows": 157,
+        "summed_quadrature_area_cm2": 0.4535945923594617,
+        "signed_skeletal_normal_N": 0.00030233984058866914,
+        "maximum_native_closure_mm": 0.21874764934182167,
+        "pressure_at_maximum_kPa": 0.053132831573486326,
+        "max_row_bed_normal_force_N": 8.037084067625466e-07,
+        "max_row_node": 209516,
+        "nearby_max_depth_witness": [
+          1.0687727245478327,
+          91,
+          "D",
+          0.21746894075249118
+        ]
+      },
+      {
+        "body": 69,
+        "name": "4proxph_r",
+        "rows": 62,
+        "summed_quadrature_area_cm2": 2.037398944025326,
+        "signed_skeletal_normal_N": 0.0007742655943341854,
+        "maximum_native_closure_mm": 0.055593569413758814,
+        "pressure_at_maximum_kPa": 0.014582578659057616,
+        "max_row_bed_normal_force_N": 1.605611258619645e-05,
+        "max_row_node": 206663,
+        "nearby_max_depth_witness": [
+          0.1803450302574666,
+          101,
+          "D",
+          0.05632947913714779
+        ]
+      },
+      {
+        "body": 74,
+        "name": "5proxph_r",
+        "rows": 111,
+        "summed_quadrature_area_cm2": 1.5890151327135893,
+        "signed_skeletal_normal_N": 0.00024063363529168525,
+        "maximum_native_closure_mm": 0.11325718514854088,
+        "pressure_at_maximum_kPa": 0.026247541427612306,
+        "max_row_bed_normal_force_N": -1.5053497236027184e-06,
+        "max_row_node": 209865,
+        "nearby_max_depth_witness": [
+          0.20091170600686306,
+          104,
+          "D",
+          0.1179650572035778
+        ]
+      },
+      {
+        "body": 75,
+        "name": "midph5_r",
+        "rows": 39,
+        "summed_quadrature_area_cm2": 1.4615448049984272,
+        "signed_skeletal_normal_N": 7.209720049581906e-05,
+        "maximum_native_closure_mm": 0.06284729897743091,
+        "pressure_at_maximum_kPa": 0.016511928558349608,
+        "max_row_bed_normal_force_N": -0.00010000305217461346,
+        "max_row_node": 209844,
+        "nearby_max_depth_witness": null
+      },
+      {
+        "body": 79,
+        "name": "clavicle_l",
+        "rows": 15,
+        "summed_quadrature_area_cm2": 0.5389134395450412,
+        "signed_skeletal_normal_N": -3.5679492764755313e-07,
+        "maximum_native_closure_mm": 0.00011560134538513012,
+        "pressure_at_maximum_kPa": 1.8680062144994734e-05,
+        "max_row_bed_normal_force_N": -7.750279330178469e-08,
+        "max_row_node": 311600,
+        "nearby_max_depth_witness": [
+          2.130920549054706,
+          9,
+          "C",
+          0.00010126525749063297
+        ]
+      },
+      {
+        "body": 84,
+        "name": "scapula_l",
+        "rows": 158,
+        "summed_quadrature_area_cm2": 0.7572815860523718,
+        "signed_skeletal_normal_N": -2.9377265460482325e-07,
+        "maximum_native_closure_mm": 0.00011507561481494122,
+        "pressure_at_maximum_kPa": 1.8595326691865923e-05,
+        "max_row_bed_normal_force_N": -1.1416518679544849e-08,
+        "max_row_node": 312402,
+        "nearby_max_depth_witness": [
+          3.1980452408071174,
+          11,
+          "I",
+          4.7522774170881166e-05
+        ]
+      },
+      {
+        "body": 92,
+        "name": "ulna_l",
+        "rows": 25,
+        "summed_quadrature_area_cm2": 0.3229649515912314,
+        "signed_skeletal_normal_N": -0.0015483934545205873,
+        "maximum_native_closure_mm": 0.5022008554078639,
+        "pressure_at_maximum_kPa": 0.49041769409179686,
+        "max_row_bed_normal_force_N": -0.000897340818611017,
+        "max_row_node": 293517,
+        "nearby_max_depth_witness": [
+          0.3821591892959686,
+          15,
+          "D",
+          0.523645714542418
+        ]
+      },
+      {
+        "body": 93,
+        "name": "radius_l",
+        "rows": 88,
+        "summed_quadrature_area_cm2": 2.9930657245125225,
+        "signed_skeletal_normal_N": 0.039610689220405976,
+        "maximum_native_closure_mm": 0.8088734466582537,
+        "pressure_at_maximum_kPa": 1.7912684326171875,
+        "max_row_bed_normal_force_N": 0.0036887199247140237,
+        "max_row_node": 293742,
+        "nearby_max_depth_witness": [
+          2.914171516224294,
+          17,
+          "D",
+          0.9017461854403224
+        ]
+      },
+      {
+        "body": 96,
+        "name": "scaphoid_l",
+        "rows": 2,
+        "summed_quadrature_area_cm2": 0.00047490321675169866,
+        "signed_skeletal_normal_N": 7.839933584087166e-11,
+        "maximum_native_closure_mm": 5.238732114776212e-06,
+        "pressure_at_maximum_kPa": 1.524533424526453e-05,
+        "max_row_bed_normal_force_N": 1.1405929447688654e-11,
+        "max_row_node": 310715,
+        "nearby_max_depth_witness": null
+      },
+      {
+        "body": 100,
+        "name": "trapezium_l",
+        "rows": 43,
+        "summed_quadrature_area_cm2": 1.2133465173080893,
+        "signed_skeletal_normal_N": 0.0036864506206854934,
+        "maximum_native_closure_mm": 0.10095418110722676,
+        "pressure_at_maximum_kPa": 0.13422352600097656,
+        "max_row_bed_normal_force_N": 0.0015390511627509649,
+        "max_row_node": 293092,
+        "nearby_max_depth_witness": [
+          7.355524615342036e-05,
+          85,
+          "D",
+          0.10099609061261222
+        ]
+      },
+      {
+        "body": 128,
+        "name": "pelvis",
+        "rows": 131,
+        "summed_quadrature_area_cm2": 82.33595739930877,
+        "signed_skeletal_normal_N": 1.4958927366187664,
+        "maximum_native_closure_mm": 3.575140843167901,
+        "pressure_at_maximum_kPa": 0.5776614990234376,
+        "max_row_bed_normal_force_N": 0.007115151636308384,
+        "max_row_node": 219265,
+        "nearby_max_depth_witness": [
+          1.630678215225545e-05,
+          18,
+          "D",
+          3.575233995824084
+        ]
+      },
+      {
+        "body": 138,
+        "name": "calcn_r",
+        "rows": 1,
+        "summed_quadrature_area_cm2": 0.060557872529898304,
+        "signed_skeletal_normal_N": 7.940890595151431e-08,
+        "maximum_native_closure_mm": 0.00017482051362094353,
+        "pressure_at_maximum_kPa": 2.885364554822445e-05,
+        "max_row_bed_normal_force_N": 7.940890595151431e-08,
+        "max_row_node": 227745,
+        "nearby_max_depth_witness": null
+      },
+      {
+        "body": 139,
+        "name": "toes_r",
+        "rows": 3,
+        "summed_quadrature_area_cm2": 0.06778612203106604,
+        "signed_skeletal_normal_N": -1.1275857685835186e-07,
+        "maximum_native_closure_mm": 0.0004485843589918659,
+        "pressure_at_maximum_kPa": 2.4997737258672716e-05,
+        "max_row_bed_normal_force_N": -6.245084059875667e-08,
+        "max_row_node": 223761,
+        "nearby_max_depth_witness": null
+      },
+      {
+        "body": 150,
+        "name": "tibia_l",
+        "rows": 3,
+        "summed_quadrature_area_cm2": 0.4540196096058935,
+        "signed_skeletal_normal_N": -3.837295675358521e-06,
+        "maximum_native_closure_mm": 0.005907356808165787,
+        "pressure_at_maximum_kPa": 0.0011747686862945558,
+        "max_row_bed_normal_force_N": -3.173476788573477e-06,
+        "max_row_node": 281663,
+        "nearby_max_depth_witness": [
+          2.4612355475070107,
+          5,
+          "D",
+          0.014736424679131228
+        ]
+      },
+      {
+        "body": 152,
+        "name": "calcn_l",
+        "rows": 6,
+        "summed_quadrature_area_cm2": 23.956827357229926,
+        "signed_skeletal_normal_N": -4.57955222577378e-05,
+        "maximum_native_closure_mm": 0.0006744421625626273,
+        "pressure_at_maximum_kPa": 4.113845527172089e-05,
+        "max_row_bed_normal_force_N": -1.5849057982462087e-05,
+        "max_row_node": 286932,
+        "nearby_max_depth_witness": [
+          123.52105358631249,
+          146,
+          "D",
+          0.0003949456749461719
+        ]
+      },
+      {
+        "body": 153,
+        "name": "toes_l",
+        "rows": 4,
+        "summed_quadrature_area_cm2": 0.528974258031667,
+        "signed_skeletal_normal_N": -1.0382265019019075e-06,
+        "maximum_native_closure_mm": 0.0005715619977308961,
+        "pressure_at_maximum_kPa": 5.825350433588028e-05,
+        "max_row_bed_normal_force_N": -4.098636298141549e-09,
+        "max_row_node": 289748,
+        "nearby_max_depth_witness": null
+      }
+    ],
+    "scope": "Existing signed tissue-on-skeleton forces projected onto the bed normal. Summed native quadrature weights can share a surface footprint. Distances compare the most compressed row with the nearest sampled maximum on this donor."
+  },
+  "sampled_solid_penetration": {
+    "receipt": "7aaaa0883ec0c5cf901e5cb13e7389532b77a33892829429bb3a50abf8db154e",
+    "pairs": "e5cee2f1346ddc971d93e490bb202927439fde6afe0f40fa64b1a82fdd7aa01d",
+    "banks": [
+      {
+        "donor": 136,
+        "bank": 4,
+        "name": "tibia_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 4,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 150,
+        "bank": 5,
+        "name": "tibia_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 20,
+            "interior_samples": 12,
+            "sampled_max_depth_mm": 0.014736424679131228,
+            "witness_m": [
+              0.03416544193359762,
+              -1.6344770192870712,
+              0.12552132650969122
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 79,
+        "bank": 9,
+        "name": "clavicle_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 42,
+            "interior_samples": 28,
+            "sampled_max_depth_mm": 9.380098576677348e-05,
+            "witness_m": [
+              0.09504015371424206,
+              -0.3073288947403974,
+              0.11416880607250454
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 63,
+            "interior_samples": 62,
+            "sampled_max_depth_mm": 0.00010126525749063297,
+            "witness_m": [
+              0.10115747899048491,
+              -0.30703189969799916,
+              0.11240088760623212
+            ]
+          }
+        ]
+      },
+      {
+        "donor": 84,
+        "bank": 11,
+        "name": "scapula_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 33,
+            "interior_samples": 24,
+            "sampled_max_depth_mm": 4.7522774170881166e-05,
+            "witness_m": [
+              0.1202033124873894,
+              -0.3074029982090323,
+              0.11345267488627567
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 122,
+            "interior_samples": 115,
+            "sampled_max_depth_mm": 0.00014534952034144462,
+            "witness_m": [
+              0.11243585496318007,
+              -0.3104047775398175,
+              0.10921621889307803
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 290,
+            "interior_samples": 298,
+            "sampled_max_depth_mm": 6.636376865180353e-05,
+            "witness_m": [
+              0.12315344065546045,
+              -0.30851590633557385,
+              0.11094500690024565
+            ]
+          }
+        ]
+      },
+      {
+        "donor": 41,
+        "bank": 12,
+        "name": "humerus_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 52,
+            "interior_samples": 37,
+            "sampled_max_depth_mm": 0.004621441978775858,
+            "witness_m": [
+              -0.18303443858168975,
+              -0.6259868268105538,
+              0.08670975152008539
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 144,
+            "interior_samples": 131,
+            "sampled_max_depth_mm": 0.004621441978775858,
+            "witness_m": [
+              -0.18303443858168975,
+              -0.6259868268105538,
+              0.08670975152008539
+            ]
+          }
+        ]
+      },
+      {
+        "donor": 91,
+        "bank": 13,
+        "name": "humerus_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 26,
+            "interior_samples": 15,
+            "sampled_max_depth_mm": 0.00024767252687148855,
+            "witness_m": [
+              0.13690805025748556,
+              -0.6387076720775546,
+              0.118285591694962
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 27,
+            "interior_samples": 27,
+            "sampled_max_depth_mm": 0.00024767252687148855,
+            "witness_m": [
+              0.13690805025748556,
+              -0.6387076720775546,
+              0.118285591694962
+            ]
+          }
+        ]
+      },
+      {
+        "donor": 42,
+        "bank": 14,
+        "name": "ulna_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 170,
+            "interior_samples": 169,
+            "sampled_max_depth_mm": 2.61689443331527,
+            "witness_m": [
+              -0.2643634313254092,
+              -0.788808830926675,
+              0.09808035646084443
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 297,
+            "interior_samples": 409,
+            "sampled_max_depth_mm": 3.3509103709211145,
+            "witness_m": [
+              -0.2548124650021497,
+              -0.7495950006742667,
+              0.09609032094442099
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 92,
+        "bank": 15,
+        "name": "ulna_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 27,
+            "interior_samples": 5,
+            "sampled_max_depth_mm": 0.1283216116250667,
+            "witness_m": [
+              0.23014322605835677,
+              -0.8665798009541801,
+              0.1021596737981053
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 89,
+            "interior_samples": 97,
+            "sampled_max_depth_mm": 0.523645714542418,
+            "witness_m": [
+              0.22942096281414387,
+              -0.8643104162317653,
+              0.10251774204832323
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 43,
+        "bank": 16,
+        "name": "radius_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 212,
+            "interior_samples": 354,
+            "sampled_max_depth_mm": 0.37440815851109,
+            "witness_m": [
+              -0.28398570304653664,
+              -0.8522874733032967,
+              0.14353056352933471
+            ]
+          },
+          {
+            "wall": "I",
+            "pairs": 211,
+            "interior_samples": 316,
+            "sampled_max_depth_mm": 0.8899395420704764,
+            "witness_m": [
+              -0.2845804750216886,
+              -0.8506728453783695,
+              0.14272370640888177
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 145,
+            "interior_samples": 156,
+            "sampled_max_depth_mm": 1.4421249692426938,
+            "witness_m": [
+              -0.28521115540297876,
+              -0.8476731630836921,
+              0.14046794458632822
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 93,
+        "bank": 17,
+        "name": "radius_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 80,
+            "interior_samples": 80,
+            "sampled_max_depth_mm": 0.5631841531413294,
+            "witness_m": [
+              0.23162191370951687,
+              -0.8696353145864237,
+              0.14286110328121862
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 204,
+            "interior_samples": 219,
+            "sampled_max_depth_mm": 0.9017461854403224,
+            "witness_m": [
+              0.231473415670434,
+              -0.8693367221070041,
+              0.14301493983536484
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 128,
+        "bank": 18,
+        "name": "pelvis",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 127,
+            "interior_samples": 173,
+            "sampled_max_depth_mm": 1.3040446957651792,
+            "witness_m": [
+              -0.1577788253573122,
+              -0.7277370110696271,
+              0.11903258314903412
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 226,
+            "interior_samples": 213,
+            "sampled_max_depth_mm": 3.575233995824084,
+            "witness_m": [
+              -0.145802775290141,
+              -0.7279957501221503,
+              0.11634180876706199
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 128,
+        "bank": 19,
+        "name": "pelvis",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 99,
+            "interior_samples": 143,
+            "sampled_max_depth_mm": 1.0598208343830342,
+            "witness_m": [
+              0.11222190305854322,
+              -0.7299305537751645,
+              0.12346490720526232
+            ]
+          },
+          {
+            "wall": "D",
+            "pairs": 109,
+            "interior_samples": 119,
+            "sampled_max_depth_mm": 2.5752319806839865,
+            "witness_m": [
+              0.09903581499003887,
+              -0.7318482471542962,
+              0.11897180006732706
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 136,
+        "bank": 20,
+        "name": "tibia_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 6,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 150,
+        "bank": 21,
+        "name": "tibia_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 6,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 20,
+        "bank": 26,
+        "name": "torso",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 434,
+            "interior_samples": 439,
+            "sampled_max_depth_mm": 0.719276444350051,
+            "witness_m": [
+              -0.0233512999298448,
+              -0.38894544129258884,
+              0.2262634273021521
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 20,
+        "bank": 27,
+        "name": "torso",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 82,
+            "interior_samples": 77,
+            "sampled_max_depth_mm": 0.8653326299075714,
+            "witness_m": [
+              -0.012200293510762796,
+              -0.3819823217338734,
+              0.22341073311005882
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 23,
+        "bank": 28,
+        "name": "head",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 191,
+            "interior_samples": 148,
+            "sampled_max_depth_mm": 0.0038473379454667376,
+            "witness_m": [
+              -0.0933345032089605,
+              -0.1305129378911456,
+              0.11883058219149259
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 23,
+        "bank": 29,
+        "name": "head",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 321,
+            "interior_samples": 340,
+            "sampled_max_depth_mm": 0.005617606594275281,
+            "witness_m": [
+              0.044367250063981976,
+              -0.11382198413819582,
+              0.1296227092229329
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 23,
+        "bank": 30,
+        "name": "head",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 502,
+            "interior_samples": 465,
+            "sampled_max_depth_mm": 0.00464173473968045,
+            "witness_m": [
+              -0.0879596322141058,
+              -0.13946981723325624,
+              0.12773878691120766
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 23,
+        "bank": 31,
+        "name": "head",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 777,
+            "interior_samples": 734,
+            "sampled_max_depth_mm": 0.00973033927997457,
+            "witness_m": [
+              0.038550368852082136,
+              -0.15818692434551287,
+              0.16274909564049866
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 23,
+        "bank": 32,
+        "name": "head",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 8,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 23,
+        "bank": 33,
+        "name": "head",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 10,
+            "interior_samples": 1,
+            "sampled_max_depth_mm": 0.00020084298720034256,
+            "witness_m": [
+              -0.016222007572416347,
+              -0.16406066715911538,
+              0.05322333245552622
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 20,
+        "bank": 45,
+        "name": "torso",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 48,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 50,
+        "bank": 78,
+        "name": "trapezium_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 16,
+            "interior_samples": 12,
+            "sampled_max_depth_mm": 0.011612042039568298,
+            "witness_m": [
+              -0.28168786561650355,
+              -0.8967813253090103,
+              0.14448676323484957
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 100,
+        "bank": 85,
+        "name": "trapezium_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 93,
+            "interior_samples": 100,
+            "sampled_max_depth_mm": 0.10099609061261222,
+            "witness_m": [
+              0.22261312186412327,
+              -0.8908023542611523,
+              0.13362487633364714
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 52,
+        "bank": 88,
+        "name": "firstmc_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 100,
+            "interior_samples": 148,
+            "sampled_max_depth_mm": 0.08373668824821663,
+            "witness_m": [
+              -0.2824735103636874,
+              -0.8971439429343901,
+              0.1468523208768718
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 57,
+        "bank": 89,
+        "name": "secondmc_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 173,
+            "interior_samples": 248,
+            "sampled_max_depth_mm": 0.10432149502984668,
+            "witness_m": [
+              -0.30641271529722,
+              -0.9280058918957251,
+              0.1375456812190014
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 62,
+        "bank": 90,
+        "name": "thirdmc_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 192,
+            "interior_samples": 254,
+            "sampled_max_depth_mm": 0.1891823703616614,
+            "witness_m": [
+              -0.30551193078503985,
+              -0.9254502335167385,
+              0.12026201134831335
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 67,
+        "bank": 91,
+        "name": "fourthmc_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 248,
+            "interior_samples": 447,
+            "sampled_max_depth_mm": 0.21746894075249118,
+            "witness_m": [
+              -0.3044715454930921,
+              -0.9266923627855185,
+              0.11196655390732956
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 64,
+        "bank": 98,
+        "name": "3proxph_r",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 4
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 69,
+        "bank": 101,
+        "name": "4proxph_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 122,
+            "interior_samples": 133,
+            "sampled_max_depth_mm": 0.05632947913714779,
+            "witness_m": [
+              -0.31215806704406657,
+              -0.9583837075357358,
+              0.1069778239857723
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 74,
+        "bank": 104,
+        "name": "5proxph_r",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 219,
+            "interior_samples": 318,
+            "sampled_max_depth_mm": 0.1179650572035778,
+            "witness_m": [
+              -0.302940869861564,
+              -0.9724861481119667,
+              0.09770821644119498
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 75,
+        "bank": 105,
+        "name": "midph5_r",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 119
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 121,
+        "bank": 122,
+        "name": "distph4_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 4,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 138,
+        "bank": 126,
+        "name": "calcn_r",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 15
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 139,
+        "bank": 137,
+        "name": "toes_r",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 4
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 152,
+        "bank": 145,
+        "name": "calcn_l",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 18
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 152,
+        "bank": 146,
+        "name": "calcn_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 15,
+            "interior_samples": 2,
+            "sampled_max_depth_mm": 0.0003949456749461719,
+            "witness_m": [
+              0.06670917570577277,
+              -1.7314766645437067,
+              0.2264564913432246
+            ]
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 153,
+        "bank": 154,
+        "name": "toes_l",
+        "closed_oriented_edges": true,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 4,
+            "interior_samples": 0
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 153,
+        "bank": 161,
+        "name": "toes_l",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 14
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      },
+      {
+        "donor": 153,
+        "bank": 162,
+        "name": "toes_l",
+        "closed_oriented_edges": false,
+        "materials": [
+          {
+            "wall": "O",
+            "pairs": 0
+          },
+          {
+            "wall": "I",
+            "pairs": 0
+          },
+          {
+            "wall": "D",
+            "pairs": 4
+          },
+          {
+            "wall": "C",
+            "pairs": 0
+          }
+        ]
+      }
+    ],
+    "scope": "Exact registered cortical pairs in the accepted state. Solid-depth lower bounds use the wall triangle vertices, midpoints and centroid and closed, edge-oriented cortical meshes with absolute winding above one half. An unsampled penetration can be deeper."
+  }
+}
