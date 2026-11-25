@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
+from registered_cavity_materials import apply_registered_cavities
 from normal_gravity_step import constitutive_gradient
 from solve_connected_normal_transfer import digest, material_parameters
 
@@ -37,14 +38,7 @@ def load_endpoint(run, cortex_report):
     cells, labels = raw[:, :4] - 1, raw[:, 4]
     if "NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ" in env:
         with np.load(verify(env["NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ"])) as cavity:
-            keep = cavity["retained_input_cell_rows"]
-            parents = labels[cavity["replacement_parent_cell_rows"]]
-            offsets = cavity["replacement_parent_offsets"]
-            materials = parents[offsets[:-1]]
-            if not np.array_equal(parents, np.repeat(materials, np.diff(offsets))):
-                raise ValueError("A cavity spans different materials")
-            cells = np.vstack((cells[keep], cavity["replacement_tetrahedra"]))
-            labels = np.r_[labels[keep], materials]
+            cells, labels = apply_registered_cavities(cells, labels, cavity)
     if set(np.unique(labels)) != {15, 16}:
         raise ValueError("Unrecognized tissue material set")
     positions = np.loadtxt(state, skiprows=1, usecols=(1, 2, 3))

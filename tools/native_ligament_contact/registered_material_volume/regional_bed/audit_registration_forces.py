@@ -6,6 +6,7 @@ from pathlib import Path
 
 import numpy as np
 
+from registered_cavity_materials import apply_registered_cavities
 from normal_gravity_step import constitutive_gradient
 from solve_connected_normal_transfer import digest, material_parameters
 
@@ -79,17 +80,7 @@ def audit(run, proposal):
     cells, labels = raw[:, :4] - 1, raw[:, 4]
     if "NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ" in env:
         with np.load(verify(env["NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ"])) as z:
-            keep = z["retained_input_cell_rows"]
-            parents = z["replacement_parent_cell_rows"]
-            offsets = z["replacement_parent_offsets"]
-            if np.any(np.diff(offsets) <= 0):
-                raise ValueError("Replacement cell has no material ancestor")
-            owners = labels[parents]
-            first = owners[offsets[:-1]]
-            if not np.array_equal(owners, np.repeat(first, np.diff(offsets))):
-                raise ValueError("A cavity spans different tissue materials")
-            cells = np.vstack((cells[keep], z["replacement_tetrahedra"]))
-            labels = np.r_[labels[keep], first]
+            cells, labels = apply_registered_cavities(cells, labels, z)
     if set(np.unique(labels)) != {15, 16}:
         raise ValueError("Different material identities")
     def load_xyz(p):

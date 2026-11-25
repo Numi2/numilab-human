@@ -16,6 +16,7 @@ import tempfile
 from pathlib import Path
 
 import numpy as np
+from registered_cavity_materials import apply_registered_cavities
 from scipy import sparse
 from scipy.sparse.csgraph import connected_components
 from scipy.sparse.linalg import spsolve
@@ -199,10 +200,7 @@ def run(case, output, library=None, proposal=None):
     )
     cavity = np.load(verify(env["NUMI_HUMAN_SKIN_FAT_FIXED_CAVITIES_NPZ"]))
     keep = cavity["retained_input_cell_rows"]
-    if set(raw[np.setdiff1d(np.arange(len(raw)), keep), 4]) != {15}:
-        raise ValueError("Cavity ancestry differs from the dermal registration")
-    t = np.vstack((raw[keep, :4] - 1, cavity["replacement_tetrahedra"]))
-    label = np.r_[raw[keep, 4], np.full(len(t) - len(keep), 15)]
+    t, label = apply_registered_cavities(raw[:, :4] - 1, raw[:, 4], cavity)
     if set(label) != {15, 16}:
         raise ValueError("Unexpected material identities")
     params = material_parameters(cfg, verify)
