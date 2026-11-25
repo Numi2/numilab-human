@@ -58,7 +58,7 @@ def main():
         help="Audit the terminal dense material and rigid capture in this run",
     )
     parser.add_argument(
-        "--posterior-support", choices=("pressure-fit", "expanded"),
+        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder"),
         help="select a matched dense posterior tissue and bed registration",
     )
     args = parser.parse_args()
@@ -93,6 +93,7 @@ def main():
         expected_launch = {
             "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
             "expanded": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+            "covered-shoulder": "0142f2c91c24ea5cbd7cfcfab13af5245043d77055102398bc706676692aca56",
         }[args.posterior_support]
     payload = gzip.decompress(cfg_path.read_bytes())
     if hashlib.sha256(payload).hexdigest() != expected_launch:

@@ -1,0 +1,155 @@
+{
+  "control": {
+    "launch_sha256": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+    "binary_sha256": "d930c2b8f0bc21a262456a69b237f843292d31e21fc1967bfa6454b6853bec11",
+    "tissue_nodes_sha256": "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6",
+    "receipt_sha256": "1fa797451d409c6a937e848100fd02377344fb90984a923ab99326aac77cd410",
+    "native_pack": "31e85f02091890c6adb26290493bdfc814b748b321909af20a159b26293bd01a",
+    "pleural_pressure_variable": true,
+    "steps": 2,
+    "simulated_s": 1.5625000742147677e-05,
+    "wall_s": 219.2890049580019,
+    "final_bed_mean_N": 11.01170556134183,
+    "final_bed_impulse_Ns": 8.602894969798307e-05,
+    "maximum_opening_contact_site_recoil_m": 1.2982877364266112e-05,
+    "gluteal_connection": [
+      {
+        "source_step": 0,
+        "donor_normal_N": [
+          0.0005241947878246264,
+          -8.756244872945526e-06,
+          6.248429672195389e-05
+        ],
+        "tissue_normal_N": -0.0005779225942732209,
+        "closure_N": 2.5730614797428496e-10,
+        "stored_energy_J": 1.4856882391001136e-09
+      },
+      {
+        "source_step": 1,
+        "donor_normal_N": [
+          0.0005162735811304528,
+          -9.510934682870119e-06,
+          6.230771667483747e-05
+        ],
+        "tissue_normal_N": -0.0005690700263921113,
+        "closure_N": 3.4849639430575564e-10,
+        "stored_energy_J": 1.4859125041510879e-09
+      }
+    ],
+    "generic_contact": [
+      {
+        "source_step": 0,
+        "skin_rows": 2211,
+        "rigid_normal_N": 1.4380937059614995,
+        "nearest_row_to_posterior_patch_m": 0.1831543853871578
+      },
+      {
+        "source_step": 1,
+        "skin_rows": 2216,
+        "rigid_normal_N": 1.4380706380573722,
+        "nearest_row_to_posterior_patch_m": 0.1831543853871578
+      }
+    ],
+    "end_to_end_real_time_factor": 7.125300579999516e-08
+  },
+  "trial": {
+    "launch_sha256": "a0542432dc444ea5d3d3665d9cce06c733af7b01514c4cbb9beb76a846b90df5",
+    "binary_sha256": "d930c2b8f0bc21a262456a69b237f843292d31e21fc1967bfa6454b6853bec11",
+    "tissue_nodes_sha256": "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6",
+    "receipt_sha256": "4b02cad7fc31047861a76c71afdf30d299230dee63d8c5ed4352d295de55e337",
+    "native_pack": "f90109a498ba6d1094ad9a2f434d0f99f881b8c0e3102c5ec4209ce4c3803afb",
+    "pleural_pressure_variable": true,
+    "steps": 2,
+    "simulated_s": 1.5625000742147677e-05,
+    "wall_s": 218.80053541692905,
+    "final_bed_mean_N": 11.01170556134183,
+    "final_bed_impulse_Ns": 8.602894969798307e-05,
+    "maximum_opening_contact_site_recoil_m": 1.2982877364266112e-05,
+    "gluteal_connection": [
+      {
+        "source_step": 0,
+        "donor_normal_N": [
+          0.0005241947878246264,
+          -8.756244872945526e-06,
+          6.248429672195389e-05
+        ],
+        "tissue_normal_N": -0.0005779225942732209,
+        "closure_N": 2.5730614797428496e-10,
+        "stored_energy_J": 1.4856882391001136e-09
+      },
+      {
+        "source_step": 1,
+        "donor_normal_N": [
+          0.0005162735811304528,
+          -9.510934682870119e-06,
+          6.230771667483747e-05
+        ],
+        "tissue_normal_N": -0.0005690700263921113,
+        "closure_N": 3.4849639430575564e-10,
+        "stored_energy_J": 1.4859125041510879e-09
+      }
+    ],
+    "generic_contact": [
+      {
+        "source_step": 0,
+        "skin_rows": 2211,
+        "rigid_normal_N": 1.4380937059615009,
+        "nearest_row_to_posterior_patch_m": 0.1831543853871578
+      },
+      {
+        "source_step": 1,
+        "skin_rows": 2216,
+        "rigid_normal_N": 1.4380706380573731,
+        "nearest_row_to_posterior_patch_m": 0.1831543853871578
+      }
+    ],
+    "end_to_end_real_time_factor": 7.14120772710812e-08
+  },
+  "native_geometry_sha256": "d14adefadba284e3da003c8e9406b73e47129eb6fe045ce35b74903f4141ab38",
+  "native_material_sha256": "1d7929f25a73b67d49c031edc8f75d864d77904988c98dd4b2ab52ee4db4072c",
+  "bed_support": {
+    "initialization": "dynamic_release",
+    "initial_balanced": false,
+    "initial_maximum_acceleration_residual_m_s2": 68.3067562932,
+    "last_root_mean_normal_force_N": 11.01170556134183,
+    "last_root_normal_impulse_Ns": 8.602894969798307e-05,
+    "last_root_contact_samples": 16
+  },
+  "material_quality": {
+    "15": {
+      "cells": 707597,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 4
+    },
+    "16": {
+      "cells": 749719,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 33
+    }
+  },
+  "loaded_deformation": {
+    "15": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 0,
+      "principal_stretch_failures": 240,
+      "minimum_stretch": 0.22512840810354492,
+      "maximum_stretch": 4.378580295114065,
+      "worst_stretch_cell": 1440182
+    },
+    "16": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 4,
+      "principal_stretch_failures": 323,
+      "minimum_stretch": 0.01954555741892483,
+      "maximum_stretch": 20.958021942723,
+      "worst_stretch_cell": 1287665
+    }
+  },
+  "sum_neighbor_triangle_pairs": {
+    "control": 14337,
+    "recovery": 590
+  },
+  "scope": "The posterior muscle has been re-registered in the complete scene. A two-step dense release cannot certify supported equilibrium, physiological cycles or sustained throughput."
+}
