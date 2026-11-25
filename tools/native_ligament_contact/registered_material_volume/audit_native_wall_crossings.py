@@ -23,44 +23,14 @@ def straddles(faces, vertices):
     return (side.min(axis=1) < -uncertainty) & (side.max(axis=1) > uncertainty)
 
 
-def audit(case, volume, verification, out, expected_walls):
-    if out.suffix != ".json" or out.resolve() == verification.resolve():
-        raise ValueError("Use a separate JSON path for wall intersections")
-
-    cfg = json.loads((case / "launch.json").read_bytes())
-    verified = json.loads(verification.read_bytes())
-    o = verified["accepted_observation"]
-    step = o["step"]
-    rp = case / "native-traces/accepted-geometry" / f"step-{step}.receipt.json"
-    r = json.loads(rp.read_bytes())
-    if (
-        o["launch_sha256"] != digest(case / "launch.json")
-        or o["receipt_sha256"] != digest(rp)
-        or r["accepted_time_s"] != o["time_s"]
-    ):
-        raise ValueError("Unmatched native surface and rigid frame")
-    source = Path(cfg["argv"][3])
-    if cfg["pins"].get(str(source)) != digest(source):
-        raise ValueError("The registered cortical input changed")
-    settings = cfg["environment"]
-    pre = "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
-    if digest(volume / "mesh.ele") != settings[pre + "TETGEN_ELEMENTS_SHA256"]:
-        raise ValueError("Mismatched wall connectivity")
-    wall_file = volume / "material-walls.npz"
-    if digest(wall_file) != expected_walls:
-        raise ValueError("The registered skin and fat wall file changed")
-    p = case / "physical-accepted.node"
-    if digest(p) != o["accepted_node_sha256"]:
-        raise ValueError("The accepted material coordinates changed")
-    x = np.loadtxt(p, skiprows=1, usecols=(1, 2, 3))
+def wall_cortex_intersections(x, wall_file, cortical_banks, poses):
+    """Enumerate oriented feature identities for a supplied material and skeletal pose."""
     roles = ("O", "I", "D", "C")
     with np.load(wall_file) as walls:
         wall_faces = np.vstack([walls[role] for role in roles])
         offsets = np.r_[0, np.cumsum([len(walls[role]) for role in roles])]
     lower = x[wall_faces].min(axis=1)
     upper = x[wall_faces].max(axis=1)
-    poses = {pose["body_index"]: pose for pose in r["accepted_registered_body_poses"]}
-    cortical_banks = banks(source)
     found = []
     stats = {}
     for (body_id, stable_id), (faces, local_points, _) in cortical_banks.items():
@@ -110,6 +80,41 @@ def audit(case, volume, verification, out, expected_walls):
                 )
         stats[f"{body_id}/{stable_id}"] = dict(zip(roles, counts.tolist(), strict=True))
     pairs = np.array(sorted(found), dtype="i4").reshape(-1, 6)
+    return roles, stats, pairs, len(wall_faces)
+
+
+def audit(case, volume, verification, out, expected_walls):
+    if out.suffix != ".json" or out.resolve() == verification.resolve():
+        raise ValueError("Use a separate JSON path for wall intersections")
+
+    cfg = json.loads((case / "launch.json").read_bytes())
+    verified = json.loads(verification.read_bytes())
+    o = verified["accepted_observation"]
+    step = o["step"]
+    rp = case / "native-traces/accepted-geometry" / f"step-{step}.receipt.json"
+    r = json.loads(rp.read_bytes())
+    if (
+        o["launch_sha256"] != digest(case / "launch.json")
+        or o["receipt_sha256"] != digest(rp)
+        or r["accepted_time_s"] != o["time_s"]
+    ):
+        raise ValueError("Unmatched native surface and rigid frame")
+    source = Path(cfg["argv"][3])
+    if cfg["pins"].get(str(source)) != digest(source):
+        raise ValueError("The registered cortical input changed")
+    settings = cfg["environment"]
+    pre = "NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_"
+    if digest(volume / "mesh.ele") != settings[pre + "TETGEN_ELEMENTS_SHA256"]:
+        raise ValueError("Mismatched wall connectivity")
+    wall_file = volume / "material-walls.npz"
+    if digest(wall_file) != expected_walls:
+        raise ValueError("The registered skin and fat wall file changed")
+    p = case / "physical-accepted.node"
+    if digest(p) != o["accepted_node_sha256"]:
+        raise ValueError("The accepted material coordinates changed")
+    x = np.loadtxt(p, skiprows=1, usecols=(1, 2, 3))
+    poses = {pose["body_index"]: pose for pose in r["accepted_registered_body_poses"]}
+    roles, stats, pairs, wall_triangles = wall_cortex_intersections(x, wall_file, banks(source), poses)
     np.savez_compressed(out.with_suffix(".npz"), pairs=pairs)
     totals = {
         k: np.array([v[k] for v in stats.values()]).sum(axis=0).tolist() for k in roles
@@ -119,9 +124,9 @@ def audit(case, volume, verification, out, expected_walls):
         receipt_sha256=digest(rp),
         wall_sha256=digest(volume / "material-walls.npz"),
         pair_sha256=digest(out.with_suffix(".npz")),
-        tested_banks=len(cortical_banks),
+        tested_banks=len(stats),
         roles=roles,
-        wall_triangles=len(wall_faces),
+        wall_triangles=wall_triangles,
         total=totals,
         by_bank=stats,
         scope="All CGAL wall/cortex intersections and the subset whose triangles each strictly straddle the opposing plane. Roles retain intended cortical-interface identity. This endpoint calculation does not measure continuous trajectories or tissue/tissue self-intersection.",
