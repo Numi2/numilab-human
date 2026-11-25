@@ -1,0 +1,457 @@
+{
+  "launch": "3e87087752272134c07b6f4be3a6b778df29b830eeca117b25cbadeb4ba69cfa",
+  "tissue": "4b1c0d906aa606dd4615676f2bc8d824d85ca8538263be4a526afcfadc7e1377",
+  "muscles": "20b4f04abaf4c8338ef199ee82dc0e51b75c719ab5f195dc857fca6e1683cafc",
+  "tendons": "ff79151b8822a9615c808cba5924ace8e2f497453c55296337e6a0242d96eaf3",
+  "candidates": "80c3309e0e32b1d610d75489e19163e883312239e5500a95b672932339c70582",
+  "guides": {
+    "119": {
+      "actuator": 238,
+      "sites": [
+        685,
+        797,
+        796,
+        864,
+        1031
+      ],
+      "bodies": [
+        41,
+        43,
+        43,
+        47,
+        72
+      ],
+      "name": "humeral head of right flexor carpi ulnaris"
+    },
+    "120": {
+      "actuator": 301,
+      "sites": [
+        1106,
+        1218,
+        1217,
+        1285,
+        1452
+      ],
+      "bodies": [
+        91,
+        93,
+        93,
+        97,
+        122
+      ],
+      "name": "humeral head of left flexor carpi ulnaris"
+    },
+    "147": {
+      "actuator": 259,
+      "sites": [
+        832,
+        833,
+        834,
+        835,
+        836,
+        885,
+        886,
+        887
+      ],
+      "bodies": [
+        43,
+        43,
+        43,
+        43,
+        43,
+        52,
+        52,
+        52
+      ],
+      "name": "right abductor pollicis longus"
+    },
+    "148": {
+      "actuator": 322,
+      "sites": [
+        1253,
+        1254,
+        1255,
+        1256,
+        1257,
+        1306,
+        1307,
+        1308
+      ],
+      "bodies": [
+        93,
+        93,
+        93,
+        93,
+        93,
+        102,
+        102,
+        102
+      ],
+      "name": "left abductor pollicis longus"
+    }
+  },
+  "poses": {
+    "release": {
+      "pack": "cc6cce5794c1228a6707bab67e6a3d95ee36b896ee7ba015f6759236a66fc6fd",
+      "rows": {
+        "119": {
+          "control": {
+            "self_pairs": 0,
+            "volume_cm3": 20.099477822868298,
+            "source_scaled_range_cm3": [
+              26.65060679674874,
+              30.624066406333906
+            ],
+            "face_area_ratio_quantiles": [
+              0.2126077615537452,
+              0.634766230297182,
+              0.8955873925273956,
+              1.2364288819794,
+              3.103645946818006
+            ],
+            "max_vertex_mm": 2.8971928614490707,
+            "outside_vertices": 69,
+            "outside_centroid_area_cm2": 3.615901457182404,
+            "area_cm2": 97.52952717868898,
+            "positive_centroid_depth_integral_cm3": 0.4709936114196103,
+            "severe_area_cm2": 0.7325595008524903
+          },
+          "routed": {
+            "self_pairs": 25,
+            "volume_cm3": 18.190226385941106,
+            "source_scaled_range_cm3": [
+              26.65060679674874,
+              30.624066406333906
+            ],
+            "face_area_ratio_quantiles": [
+              0.26320875783612524,
+              0.4645179408093178,
+              0.8677273899322204,
+              2.3520098732004944,
+              9.928057314017375
+            ],
+            "max_vertex_mm": 8.63138730722771,
+            "outside_vertices": 496,
+            "outside_centroid_area_cm2": 35.916672120914015,
+            "area_cm2": 93.35004603464103,
+            "positive_centroid_depth_integral_cm3": 10.020250656078618,
+            "severe_area_cm2": 19.984315704754184
+          }
+        },
+        "120": {
+          "control": {
+            "self_pairs": 0,
+            "volume_cm3": 14.947063252081067,
+            "source_scaled_range_cm3": [
+              26.65719964639012,
+              30.671050542137877
+            ],
+            "face_area_ratio_quantiles": [
+              0.1928310030250353,
+              0.22473645568277703,
+              0.785544890218931,
+              1.6416627055770485,
+              6.42977809690923
+            ],
+            "max_vertex_mm": 11.601309340788145,
+            "outside_vertices": 966,
+            "outside_centroid_area_cm2": 70.8290406660688,
+            "area_cm2": 92.24881602882887,
+            "positive_centroid_depth_integral_cm3": 34.0141859850392,
+            "severe_area_cm2": 56.879874569905496
+          },
+          "routed": {
+            "self_pairs": 77,
+            "volume_cm3": 18.353917976708715,
+            "source_scaled_range_cm3": [
+              26.65719964639012,
+              30.671050542137877
+            ],
+            "face_area_ratio_quantiles": [
+              0.022070130976778457,
+              0.158312797699943,
+              0.856739836517576,
+              2.2087565770754063,
+              4.49861636831469
+            ],
+            "max_vertex_mm": 4.053588491914462,
+            "outside_vertices": 154,
+            "outside_centroid_area_cm2": 10.400852401765057,
+            "area_cm2": 93.46084922304078,
+            "positive_centroid_depth_integral_cm3": 1.8308638695350952,
+            "severe_area_cm2": 4.515987281130345
+          }
+        },
+        "147": {
+          "control": {
+            "self_pairs": 135,
+            "volume_cm3": 9.053906934083736,
+            "source_scaled_range_cm3": [
+              16.302934468900286,
+              17.814861400868992
+            ],
+            "face_area_ratio_quantiles": [
+              0.004917023769711832,
+              0.07705680676393979,
+              0.822662219482022,
+              2.7727033435664494,
+              3.053215342031543
+            ],
+            "max_vertex_mm": 40.76533796400774,
+            "outside_vertices": 555,
+            "outside_centroid_area_cm2": 37.36461145334068,
+            "area_cm2": 61.96346099032734,
+            "positive_centroid_depth_integral_cm3": 69.37150195771957,
+            "severe_area_cm2": 34.72884723393614
+          },
+          "routed": {
+            "self_pairs": 32,
+            "volume_cm3": 17.7064721147313,
+            "source_scaled_range_cm3": [
+              16.302934468900286,
+              17.814861400868992
+            ],
+            "face_area_ratio_quantiles": [
+              0.01640254630778137,
+              0.09416726609460524,
+              1.077118277368676,
+              3.130674085092156,
+              14.824959024201046
+            ],
+            "max_vertex_mm": 8.299510371428964,
+            "outside_vertices": 81,
+            "outside_centroid_area_cm2": 4.269202469749285,
+            "area_cm2": 67.71483933312248,
+            "positive_centroid_depth_integral_cm3": 1.0293326978800506,
+            "severe_area_cm2": 1.685990399667095
+          }
+        },
+        "148": {
+          "control": {
+            "self_pairs": 114,
+            "volume_cm3": 9.470609033077347,
+            "source_scaled_range_cm3": [
+              16.30316114575763,
+              17.883152766048493
+            ],
+            "face_area_ratio_quantiles": [
+              0.032067879583234225,
+              0.07280813126930569,
+              0.827565224611586,
+              2.7500060134052573,
+              3.0821285947176937
+            ],
+            "max_vertex_mm": 40.44932484494379,
+            "outside_vertices": 580,
+            "outside_centroid_area_cm2": 38.12535776598316,
+            "area_cm2": 62.06540562164606,
+            "positive_centroid_depth_integral_cm3": 68.76910815609155,
+            "severe_area_cm2": 36.109672553834486
+          },
+          "routed": {
+            "self_pairs": 36,
+            "volume_cm3": 17.74205348940718,
+            "source_scaled_range_cm3": [
+              16.30316114575763,
+              17.883152766048493
+            ],
+            "face_area_ratio_quantiles": [
+              0.03130632097650646,
+              0.11067711794075016,
+              1.0798588144058,
+              3.1327347400636887,
+              18.861848330185833
+            ],
+            "max_vertex_mm": 8.907678975078703,
+            "outside_vertices": 102,
+            "outside_centroid_area_cm2": 2.7615339072340204,
+            "area_cm2": 67.59804478630213,
+            "positive_centroid_depth_integral_cm3": 1.2364699673159363,
+            "severe_area_cm2": 2.2569649151794793
+          }
+        }
+      }
+    },
+    "step-64": {
+      "pack": "9c16c6dd723dc4485311b30d9c53b93ed6e5ec5bad30b50f1ba3f74cbff2799b",
+      "rows": {
+        "119": {
+          "control": {
+            "self_pairs": 0,
+            "volume_cm3": 20.104471667588033,
+            "source_scaled_range_cm3": [
+              26.65060679674874,
+              30.624066406333906
+            ],
+            "face_area_ratio_quantiles": [
+              0.2123417342501871,
+              0.6346387557285412,
+              0.8956618904288061,
+              1.2365755913817895,
+              3.107658317243755
+            ],
+            "max_vertex_mm": 2.9040027857326183,
+            "outside_vertices": 69,
+            "outside_centroid_area_cm2": 3.6930518085367394,
+            "area_cm2": 97.53959970244696,
+            "positive_centroid_depth_integral_cm3": 0.4743000984040983,
+            "severe_area_cm2": 0.7529052355341914
+          },
+          "routed": {
+            "self_pairs": 25,
+            "volume_cm3": 18.191594796718434,
+            "source_scaled_range_cm3": [
+              26.65060679674874,
+              30.624066406333906
+            ],
+            "face_area_ratio_quantiles": [
+              0.2621154027528589,
+              0.46402665325545606,
+              0.8678065525473617,
+              2.3527274651272396,
+              9.950499879495165
+            ],
+            "max_vertex_mm": 8.620447338275733,
+            "outside_vertices": 498,
+            "outside_centroid_area_cm2": 35.93146662192508,
+            "area_cm2": 93.35353937131593,
+            "positive_centroid_depth_integral_cm3": 10.03502492308367,
+            "severe_area_cm2": 20.097832258674828
+          }
+        },
+        "120": {
+          "control": {
+            "self_pairs": 0,
+            "volume_cm3": 14.948042635566443,
+            "source_scaled_range_cm3": [
+              26.65719964639012,
+              30.671050542137877
+            ],
+            "face_area_ratio_quantiles": [
+              0.19289239356659718,
+              0.22483880056793965,
+              0.7856299468091555,
+              1.6415525994712359,
+              6.429276761958393
+            ],
+            "max_vertex_mm": 11.61951596577737,
+            "outside_vertices": 966,
+            "outside_centroid_area_cm2": 70.84942161664071,
+            "area_cm2": 92.24957388400298,
+            "positive_centroid_depth_integral_cm3": 34.081829607844554,
+            "severe_area_cm2": 56.88370964189762
+          },
+          "routed": {
+            "self_pairs": 73,
+            "volume_cm3": 18.352946419692636,
+            "source_scaled_range_cm3": [
+              26.65719964639012,
+              30.671050542137877
+            ],
+            "face_area_ratio_quantiles": [
+              0.022063782692510196,
+              0.1582835580092191,
+              0.8567268409199911,
+              2.208067243380151,
+              4.498606076517934
+            ],
+            "max_vertex_mm": 4.062948157012877,
+            "outside_vertices": 154,
+            "outside_centroid_area_cm2": 10.416663696090223,
+            "area_cm2": 93.45753737980827,
+            "positive_centroid_depth_integral_cm3": 1.8230336245293666,
+            "severe_area_cm2": 4.515675713678048
+          }
+        },
+        "147": {
+          "control": {
+            "self_pairs": 137,
+            "volume_cm3": 9.063525252526798,
+            "source_scaled_range_cm3": [
+              16.302934468900286,
+              17.814861400868992
+            ],
+            "face_area_ratio_quantiles": [
+              0.004320715168770739,
+              0.07677372751475485,
+              0.8235515405320788,
+              2.7744013400830756,
+              3.05378188552633
+            ],
+            "max_vertex_mm": 40.67929579176005,
+            "outside_vertices": 555,
+            "outside_centroid_area_cm2": 37.402959677212095,
+            "area_cm2": 62.01831291654832,
+            "positive_centroid_depth_integral_cm3": 69.1869551647471,
+            "severe_area_cm2": 34.630385811510145
+          },
+          "routed": {
+            "self_pairs": 30,
+            "volume_cm3": 17.706550184669748,
+            "source_scaled_range_cm3": [
+              16.302934468900286,
+              17.814861400868992
+            ],
+            "face_area_ratio_quantiles": [
+              0.016370002058041847,
+              0.09425096961328211,
+              1.0771172765557342,
+              3.1300994522513146,
+              14.805664838628717
+            ],
+            "max_vertex_mm": 8.287632247550464,
+            "outside_vertices": 81,
+            "outside_centroid_area_cm2": 4.269586893271526,
+            "area_cm2": 67.71356926821511,
+            "positive_centroid_depth_integral_cm3": 1.0235407650248256,
+            "severe_area_cm2": 1.6752004987230904
+          }
+        },
+        "148": {
+          "control": {
+            "self_pairs": 112,
+            "volume_cm3": 9.478771927585706,
+            "source_scaled_range_cm3": [
+              16.30316114575763,
+              17.883152766048493
+            ],
+            "face_area_ratio_quantiles": [
+              0.03270274865427064,
+              0.07301335361226062,
+              0.8274905676372759,
+              2.751220197265858,
+              3.083605503134541
+            ],
+            "max_vertex_mm": 40.418802341828176,
+            "outside_vertices": 580,
+            "outside_centroid_area_cm2": 38.152936859144106,
+            "area_cm2": 62.10818992765704,
+            "positive_centroid_depth_integral_cm3": 68.61776616148691,
+            "severe_area_cm2": 35.99645774096735
+          },
+          "routed": {
+            "self_pairs": 36,
+            "volume_cm3": 17.742014720762537,
+            "source_scaled_range_cm3": [
+              16.30316114575763,
+              17.883152766048493
+            ],
+            "face_area_ratio_quantiles": [
+              0.03126549988510329,
+              0.1107746121637831,
+              1.0798583661828554,
+              3.130391699346603,
+              18.860549841855754
+            ],
+            "max_vertex_mm": 8.900480025349564,
+            "outside_vertices": 103,
+            "outside_centroid_area_cm2": 2.761908700463189,
+            "area_cm2": 67.59817076534836,
+            "positive_centroid_depth_integral_cm3": 1.2348125847391953,
+            "severe_area_cm2": 2.257227629744326
+          }
+        }
+      }
+    }
+  }
+}

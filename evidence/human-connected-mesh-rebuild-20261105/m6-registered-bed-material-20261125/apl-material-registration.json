@@ -1,0 +1,236 @@
+{
+  "parent": "3e87087752272134c07b6f4be3a6b778df29b830eeca117b25cbadeb4ba69cfa",
+  "updated_ids": [
+    147,
+    148
+  ],
+  "source_payload": "4b1c0d906aa606dd4615676f2bc8d824d85ca8538263be4a526afcfadc7e1377",
+  "current_payload": "ee58fdaea10e831d0c1cb8669faa77768da5e45a2e69b612d4171ac11ad9b144",
+  "registration": "60f193831120eea03b3879edf1235462c00e4351af8b218c6c220e1476933586",
+  "guide_program": "20b4f04abaf4c8338ef199ee82dc0e51b75c719ab5f195dc857fca6e1683cafc",
+  "tendon_manifest": "ff79151b8822a9615c808cba5924ace8e2f497453c55296337e6a0242d96eaf3",
+  "revised_source_rows": {
+    "147": {
+      "body_bindings": [
+        {
+          "core_body_index": 43,
+          "myosim_body": "radius_r"
+        },
+        {
+          "core_body_index": 52,
+          "myosim_body": "firstmc_r"
+        }
+      ],
+      "body_weight_count": 2,
+      "endpoint_source": "all_named_authored_myosim_route_endpoints",
+      "label": "right abductor pollicis longus",
+      "layer": "muscle",
+      "matched_muscles": [
+        {
+          "binding_bodies": [
+            "radius_r",
+            "firstmc_r"
+          ],
+          "name": "APL",
+          "primary_body": "radius_r",
+          "secondary_body": "firstmc_r",
+          "source_actuator_index": 259,
+          "source_route_node_count": 8
+        }
+      ],
+      "member": "isa_BP3D_4.0_obj_99/FJ1484.obj",
+      "member_id": "FJ1484",
+      "member_sha256": "35a1077de93e2bdcaaa68e688f4f31a371c3c61e35d629314507e549e5241d14",
+      "reference_surface_reconstruction": {
+        "candidate": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/stable-147-reference-resolution-row-patch.npz",
+        "candidate_sha256": "55cd6bc5a92ede5dc674aecf950b92c435af455d7a18ac37b87ae647482145f3",
+        "original_member_identity_retained": true,
+        "report": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/report.json",
+        "report_sha256": "63bef1968e1a87b61fd709b004ea2eb94c4d89f649231dd16b2b76febcf3201c",
+        "scope": "Source-derived passive reference surface repair; source identity and laterality retained. Physical routes and attachment bindings unchanged. Not measured-person geometry; anatomical and native-pose admission separate.",
+        "stable_id": 147,
+        "triangle_count_after": 1870,
+        "triangle_count_before": 1874,
+        "vertex_count_after": 933,
+        "vertex_count_before": 1439
+      },
+      "route_binding": {
+        "method": "piecewise_linear_authored_route_material_station",
+        "guides": {
+          "actuator": 259,
+          "sites": [
+            832,
+            833,
+            834,
+            835,
+            836,
+            885,
+            886,
+            887
+          ],
+          "bodies": [
+            43,
+            43,
+            43,
+            43,
+            43,
+            52,
+            52,
+            52
+          ],
+          "name": "right abductor pollicis longus"
+        },
+        "source_binding": {
+          "method": "piecewise_linear_authored_route_material_station",
+          "guides": {
+            "actuator": 259,
+            "sites": [
+              832,
+              833,
+              834,
+              835,
+              836,
+              885,
+              886,
+              887
+            ],
+            "bodies": [
+              43,
+              43,
+              43,
+              43,
+              43,
+              52,
+              52,
+              52
+            ],
+            "name": "right abductor pollicis longus"
+          },
+          "source_binding": {
+            "binding_body_count": 2,
+            "maximum_vertex_influences": 2,
+            "method": "two_authored_route_endpoint_body_axis_linear_blend"
+          }
+        },
+        "material_station_reference_program_sha256": "0750c96548176754f45e517af862fa0e6d36bab1aa7bf1dbebcfe04024a85007"
+      },
+      "stable_id": 147,
+      "triangle_count": 1870,
+      "vertex_count": 933
+    },
+    "148": {
+      "body_bindings": [
+        {
+          "core_body_index": 93,
+          "myosim_body": "radius_l"
+        },
+        {
+          "core_body_index": 102,
+          "myosim_body": "firstmc_l"
+        }
+      ],
+      "body_weight_count": 2,
+      "endpoint_source": "all_named_authored_myosim_route_endpoints",
+      "label": "left abductor pollicis longus",
+      "layer": "muscle",
+      "matched_muscles": [
+        {
+          "binding_bodies": [
+            "radius_l",
+            "firstmc_l"
+          ],
+          "name": "APL_l",
+          "primary_body": "radius_l",
+          "secondary_body": "firstmc_l",
+          "source_actuator_index": 322,
+          "source_route_node_count": 8
+        }
+      ],
+      "member": "isa_BP3D_4.0_obj_99/FJ1484M.obj",
+      "member_id": "FJ1484M",
+      "member_sha256": "330a078635dd13630811d8725ab5919c0fae5b001071a6cb3b7282bcf955fc4e",
+      "reference_surface_reconstruction": {
+        "candidate": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/stable-148-reference-resolution-row-patch.npz",
+        "candidate_sha256": "8f78ef33f0ade691f686da7a398a305c5a9a28b6e431d056a843ae89291c7d5c",
+        "original_member_identity_retained": true,
+        "report": "/Users/n/numi-human-retained-delivery-20261009/anatomy-completion-1276/apl-tfl-source-resolution-001/report.json",
+        "report_sha256": "63bef1968e1a87b61fd709b004ea2eb94c4d89f649231dd16b2b76febcf3201c",
+        "scope": "Source-derived passive reference surface repair; source identity and laterality retained. Physical routes and attachment bindings unchanged. Not measured-person geometry; anatomical and native-pose admission separate.",
+        "stable_id": 148,
+        "triangle_count_after": 1870,
+        "triangle_count_before": 1874,
+        "vertex_count_after": 933,
+        "vertex_count_before": 1439
+      },
+      "route_binding": {
+        "method": "piecewise_linear_authored_route_material_station",
+        "guides": {
+          "actuator": 322,
+          "sites": [
+            1253,
+            1254,
+            1255,
+            1256,
+            1257,
+            1306,
+            1307,
+            1308
+          ],
+          "bodies": [
+            93,
+            93,
+            93,
+            93,
+            93,
+            102,
+            102,
+            102
+          ],
+          "name": "left abductor pollicis longus"
+        },
+        "source_binding": {
+          "method": "piecewise_linear_authored_route_material_station",
+          "guides": {
+            "actuator": 322,
+            "sites": [
+              1253,
+              1254,
+              1255,
+              1256,
+              1257,
+              1306,
+              1307,
+              1308
+            ],
+            "bodies": [
+              93,
+              93,
+              93,
+              93,
+              93,
+              102,
+              102,
+              102
+            ],
+            "name": "left abductor pollicis longus"
+          },
+          "source_binding": {
+            "binding_body_count": 2,
+            "maximum_vertex_influences": 2,
+            "method": "two_authored_route_endpoint_body_axis_linear_blend"
+          }
+        },
+        "material_station_reference_program_sha256": "0750c96548176754f45e517af862fa0e6d36bab1aa7bf1dbebcfe04024a85007"
+      },
+      "stable_id": 148,
+      "triangle_count": 1870,
+      "vertex_count": 933
+    }
+  },
+  "source_material_stations": {
+    "registered_source": "2286d2bffca891d6415de45d0fd14a619493c8a750e01524822e4b18ea50caa0",
+    "source_manifest": "ba90b922c8a1de7e6ea1621befbb7546a3f3677374adc7928a9a93babe23dd0c",
+    "reference_route_sha256": "0750c96548176754f45e517af862fa0e6d36bab1aa7bf1dbebcfe04024a85007",
+    "original_material_geometry_connectivity_and_donor_frames_match": true
+  }
+}
