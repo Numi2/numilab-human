@@ -1,5 +1,26 @@
 # Posterior load transfer on SSH Numi
 
+## Dense release with anatomical joint stops
+
+On SSH Numi, run `scripts/run_resting_human_on_numi.sh --dense --posterior-support joint-stops --steps 2`. The profile uses the original muscle recruitment, the connected skin/fat volume, the FEM bed and variable pleural pressure. The same command with `--check` verifies 564 inputs. The tracked launch selects the original-recruitment run. The archive also contains the experimental recruitment trial and its exploratory launcher.
+
+The application disabled the skeletal stop solver whenever FEM skin owned bed contact. The fix keeps the 118 authored joint limits eligible and supplies zero articulated bed rows. In two accepted steps the GPU applied 24 limit impulses per step. Peak acceleration is the largest measured angular acceleration across internal coordinates at that step. The peak coordinates in these four runs are revolute.
+
+| Muscle recruitment | Skeletal stops | Opening peak (rad/s²) | Second peak (rad/s²) | Final bed force (N) | Terminal wall–cortex pairs |
+|---|---|---:|---:|---:|---:|
+| Original | Disabled | 195.55 | 194.74 | 10.992 | 6,568 |
+| Measured opening tissue load | Disabled | 537.27 | 537.14 | 10.992 | Unaudited |
+| Original | Enabled | 114.07 | 114.02 | 10.992 | 6,568 |
+| Measured opening tissue load | Enabled | 29.23 | 29.10 | 10.987 | 6,712 |
+
+Select the third row for further dense mechanics work. Its set of intersecting triangle pairs matches the control exactly. The fourth row introduced 524 intersection pairs and removed 380. Recruitment changes the opening muscle forces and, in the measured-load experiment, includes the floating root in the static solve.
+
+The final bed force carried 1.15% of the 952.86 N gravitational load. The articulated centre of mass accelerated toward the bed at 9.798 m/s². The accepted geometry contained 40 low-shape cells, 506 principal-stretch failures, seven relative-volume failures, zero inverted cells and 2,433 cortical occupancy samples. The selected release advanced 15.625 µs in 85.62 s of body runtime and 233.06 s from launch to exit. It does not qualify supported rest, a complete cardiopulmonary cycle or sustained native-viewer throughput.
+
+On the control, three material nodes carried 99.88% of measured bed impulse. Their nearest material nodes with positive bed-normal force on the skeleton lay 179–231 mm away. Those distances describe the active generic cortical contacts. Other tissue and tendon force paths are modeled separately. The next physical test needs a gravity-loaded initial configuration with distributed bed contact and measured force transmission to the skeleton.
+
+[Four native runs and material measurements](joint-stops-motion.json) · [Verified recovery archive and member hashes](joint-stops-recovery.json) · [Native source fix](https://github.com/Numi2/numi-lab/commit/505149ad127dc85252ad7bae431fc41edd346d53)
+
 Run the matched full-volume GPU release with `scripts/run_resting_human_on_numi.sh --dense --posterior-support pressure-fit`. Add `--check` to verify the inputs. The dense control and this release use the same two steps of 7.8125 µs and the same registered bed, tissue material and variable pleural pressure.
 
 At the opening pose the numerical collision barrier in Metal produced 120,393 N at zero velocity. A smooth inward displacement of at most 3.503 µm at 325 skin/fat nodes brought this frozen-pose force to 952.85 N. The normal component of weight was 952.86 N. Most pressure still acted over one small gluteal patch, leaving about 86 N·m of moment. In the coupled release the terminal mean bed reaction rose from 10.991 N to 11.012 N. Peak recoil at the ten initial contact sites fell from 19.8 to 13.0 µm. The full release took 219.59 s. The material audit at the terminal frame still found 563 stretch failures, 37 poor cell shapes, four relative-volume failures and 908 cortical occupancy samples. Zero cells inverted. This state does not meet supported rest or the motion qualification.

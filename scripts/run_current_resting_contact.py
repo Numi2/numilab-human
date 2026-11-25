@@ -58,7 +58,7 @@ def main():
         help="Audit the terminal dense material and rigid capture in this run",
     )
     parser.add_argument(
-        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar", "connected-release"),
+        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar", "connected-release", "joint-stops"),
         help="select a matched dense posterior tissue and bed registration",
     )
     parser.add_argument("--wall-pairs", type=Path, help="Also enumerate accepted tissue-wall and cortical triangle pairs")
@@ -96,6 +96,7 @@ def main():
         expected_launch = {
             "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
             "expanded": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
+            "joint-stops": "a31cd17b225c23a9c3219cdb4b5111d39d89f8ac6f27210919324b2763531148",
             "connected-release": "577640741029e3f87df1556e6f42607d77c55744a80d183610d4729968e76da1",
             "refined-lumbar": "07b1cb379fe2b352f6f79f57d0ab6f527af74cbc3c50b1597935ffa262091406",
             "registered-lumbar-faces": "158a15e86b31e32f786120a5d5e49db2fe4f040c4e74b8a4d13db8006f79168c",
