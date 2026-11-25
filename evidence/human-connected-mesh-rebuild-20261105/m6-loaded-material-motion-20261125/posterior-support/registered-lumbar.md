@@ -44,3 +44,32 @@ Run `bash scripts/run_resting_human_on_numi.sh --dense --posterior-support refin
 The complete native run accepted two steps with variable pleural pressure enabled. The 1,457,778-cell skin and fat volume advanced 15.625 µs in 223.21 s with initialization and export. The body loop took 78.02 s. At the terminal root the real bed carried 11.014 N of the 952.86 N body weight. All 185 cortical meshes were sampled. The count remained 2,431 interior samples, with 146 in skin and 2,285 in fat. The positive-cell reference developed 37 low-shape cells and four volume-ratio failures through this short release. [Native release, support and deformation](refined-lumbar-motion.json) · [Exact native replay, all bank witnesses and recovery checksums](refined-lumbar-recovery.json)
 
 The initial registered pose already had 569 cells outside the prescribed principal-stretch envelope. Across the two steps, 130 returned inside and 124 newly failed, leaving 563. Holding all four anatomical wall meshes fixed left 461 of the initial 569 failing cells with no interior vertex available to move. A separate interior-coordinate trial removed 15 opening failures. Its geometry was excluded from the native replay. Sixteen prescribed boundary triangles already violate the stretch envelope in their own tangent planes. Achieving a qualified starting pose requires addressing their registered coordinates or their source correspondence and distributing real posterior support before attempting a sustained run.
+
+
+## Connected skin and fat release
+
+Run `bash scripts/run_resting_human_on_numi.sh --dense --posterior-support connected-release --steps 2` on SSH Numi. The corrected starting pose uses the same body, stress-free tissue geometry, masses, material laws, joint attachments, bed and coupled controllers. The fit preserves the registered cortical wall, the anchors, the deep lumbar receivers and the bed contact neighborhood. Surface points move on their original incident anatomical triangles. The native loader rejected one trial on the cavity mass moment and a second on the executable determinant interval. The final configuration passed the original mass and determinant checks.
+
+| Measurement | Before | After |
+| --- | ---: | ---: |
+| Opening cells outside principal stretch | 569 | 475 |
+| Terminal cells outside principal stretch | 563 | 506 |
+| Terminal low-shape cells | 37 | 40 |
+| Terminal inverted cells | 0 | 0 |
+| Terminal cells outside volume ratio | 4 | 7 |
+| Interior bone samples across all 185 meshes | 2431 | 2433 |
+| Terminal bed reaction | 11.014 N | 10.992 N |
+
+Both runs used variable pleural pressure. The new body run advanced 15.625 µs in 85.92 s. Including initialization and recording took 228.82 s. The three most heavily loaded skin vertices carried 99.88% of the terminal bed impulse. Opening geometry, accepted motion, and equilibrium are reported separately. The matched runs do not qualify supported rest, a complete heartbeat or breath, 16 seconds of motion or 0.1× throughput.
+
+The corrected pose reduced the initial stretch violations by 94 and the terminal violations by 57. It also introduced 60 terminal wall/cortex pairs and cleared 21. Two additional cortical sample points were inside fat at bank 41/12, and three additional cells had poor shape. This scene remains an explicit comparison profile. The preceding dense profile remains available.
+
+The exact terminal surface audit compared the four registered tissue walls with all 185 cortical meshes. The release includes bank and triangle identities and distinguishes two-sided plane crossings from the broader set of intersection pairs. The cortical interface is reported separately. [Measurements and material comparisons](connected-release-motion.json) · [Download and restore the native recordings, authoring inputs and exact witnesses](connected-release-recovery.json)
+
+To reproduce both audits from an accepted recording on SSH Numi, set `RUN` to its native output directory and run the following command from the Human repository. It writes the material report, the wall-by-bank counts, and a compressed table containing every intersecting triangle identity. The command returns failure when the material gates fail.
+
+```sh
+bash scripts/run_resting_human_on_numi.sh --dense --posterior-support connected-release \
+  --accepted-run "$RUN" --material-report "$RUN/material-report.json" \
+  --wall-pairs "$RUN/wall-crossings.json"
+```

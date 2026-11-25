@@ -58,10 +58,13 @@ def main():
         help="Audit the terminal dense material and rigid capture in this run",
     )
     parser.add_argument(
-        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar"),
+        "--posterior-support", choices=("pressure-fit", "expanded", "covered-shoulder", "registered-shoulders", "registered-lumbar", "registered-lumbar-faces", "refined-lumbar", "connected-release"),
         help="select a matched dense posterior tissue and bed registration",
     )
+    parser.add_argument("--wall-pairs", type=Path, help="Also enumerate accepted tissue-wall and cortical triangle pairs")
     args = parser.parse_args()
+    if args.wall_pairs and not (args.accepted_run and args.material_report):
+        parser.error("--wall-pairs requires --accepted-run and --material-report")
     if args.posterior_support and not args.dense:
         parser.error("--posterior-support requires --dense")
     if args.accepted_run and (not args.material_report or args.material_proposal):
@@ -93,7 +96,8 @@ def main():
         expected_launch = {
             "pressure-fit": "324dcf87639e8dfd01e77d504afca338aa16fd603d9854666f7519154a319302",
             "expanded": "6ba126054085b3fac6d8ecd6d002dbb838b2c30f4039a9f780c4917822822cbf",
-            "refined-lumbar": "4d63951480b11958458b1e5af6f310433d715a1170081e7f8e14f371167b0387",
+            "connected-release": "577640741029e3f87df1556e6f42607d77c55744a80d183610d4729968e76da1",
+            "refined-lumbar": "07b1cb379fe2b352f6f79f57d0ab6f527af74cbc3c50b1597935ffa262091406",
             "registered-lumbar-faces": "158a15e86b31e32f786120a5d5e49db2fe4f040c4e74b8a4d13db8006f79168c",
             "registered-lumbar": "32f804a4b5e8be8e320e6f72d04907e61b1cfdf9a4532466a5b1fe19733521c8",
             "registered-shoulders": "2056a5888386590054b9fc4cc75fc56e8d1561e55ad802399f5fa74a330ea605",
@@ -185,6 +189,16 @@ def main():
             manifold
             / "manifold3d.cpython-313-darwin.so": "7f3a490aa64951ec8fecd12c65bfe76753f7c476e12b347853f4b1c28a5c9916",
         }
+        pair_args = []
+        if args.wall_pairs:
+            wall = cfg.get("registered_material_walls")
+            if not wall or wall not in cfg["pins"]:
+                parser.error("The selected profile lacks a registered tissue-wall identity")
+            if args.wall_pairs.suffix != ".json" or args.wall_pairs.resolve() == args.material_report.resolve():
+                parser.error("--wall-pairs needs a separate JSON output path")
+            pair_args = ["--wall-pairs", str(args.wall_pairs), "--registered-walls-sha256", cfg["pins"][wall]]
+            modules[geometry / "igl/copyleft/cgal/__init__.py"] = "677e9b1ec585722d78685ad5e00e091ceb5ecef2ba2eecb877c5c8eb153fa1b5"
+            modules[geometry / "igl/copyleft/cgal/pyigl_copyleft_cgal.abi3.so"] = "eb5b958e7c7a1adcf604e91ef3c429a44336f33f1ca4ed41542cf1b457adab5e"
         for path, expected in modules.items():
             if not path.is_file() or digest(path) != expected:
                 raise SystemExit(
@@ -225,6 +239,7 @@ def main():
                     if args.accepted_run
                     else []
                 ),
+                *pair_args,
                 "--output",
                 str(args.material_report),
             ],

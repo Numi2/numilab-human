@@ -596,7 +596,11 @@ if __name__ == "__main__":
         type=Path,
         help="Completed dense native run with terminal tissue nodes and registered rigid poses",
     )
+    parser.add_argument("--wall-pairs", type=Path)
+    parser.add_argument("--registered-walls-sha256")
     args = parser.parse_args()
+    if bool(args.wall_pairs) != bool(args.registered_walls_sha256) or (args.wall_pairs and not args.accepted_run):
+        parser.error("Paired wall output requires an accepted run and a registered wall identity")
     result = validate(
         args.scene,
         args.volume_launch,
@@ -607,6 +611,14 @@ if __name__ == "__main__":
         args.accepted_run,
     )
     args.output.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n")
+    transverse_pairs = 0
+    if args.wall_pairs:
+        from audit_native_wall_crossings import audit
+        run = args.accepted_run.resolve()
+        environment = json.loads((run / "launch.json").read_bytes())["environment"]
+        volume = Path(environment["NUMI_HUMAN_PHYSICAL_SKIN_REGISTERED_VOLUME_PREFLIGHT_TETGEN_ELEMENTS"]).parent
+        totals = audit(run, volume, args.output, args.wall_pairs, args.registered_walls_sha256)
+        transverse_pairs = sum(row[1] for row in totals.values())
     count = sum(
         sum(r["interior_samples_by_material"].values()) for r in result["rows"].values()
     )
@@ -633,7 +645,7 @@ if __name__ == "__main__":
     print(
         f"Loaded skin/fat cells outside the principal-stretch envelope: {stretch_count}."
     )
-    if (args.require_clear and (invalid or count)) or (
+    if (args.require_clear and (invalid or count or transverse_pairs)) or (
         args.require_deformation and deformation_invalid
     ):
         raise SystemExit(1)
