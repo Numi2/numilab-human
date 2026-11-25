@@ -1,0 +1,314 @@
+{
+  "cases": {
+    "covered-native": {
+      "observation": {
+        "launch_sha256": "a0542432dc444ea5d3d3665d9cce06c733af7b01514c4cbb9beb76a846b90df5",
+        "binary_sha256": "d930c2b8f0bc21a262456a69b237f843292d31e21fc1967bfa6454b6853bec11",
+        "tissue_nodes_sha256": "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6",
+        "receipt_sha256": "4b02cad7fc31047861a76c71afdf30d299230dee63d8c5ed4352d295de55e337",
+        "native_pack": "f90109a498ba6d1094ad9a2f434d0f99f881b8c0e3102c5ec4209ce4c3803afb",
+        "pleural_pressure_variable": true,
+        "steps": 2,
+        "simulated_s": 1.5625000742147677e-05,
+        "wall_s": 218.80053541692905,
+        "final_bed_mean_N": 11.01170556134183,
+        "final_bed_impulse_Ns": 8.602894969798307e-05,
+        "maximum_opening_contact_site_recoil_m": 1.2982877364266112e-05,
+        "gluteal_connection": [
+          {
+            "source_step": 0,
+            "donor_normal_N": [
+              0.0005241947878246264,
+              -8.756244872945526e-06,
+              6.248429672195389e-05
+            ],
+            "tissue_normal_N": -0.0005779225942732209,
+            "closure_N": 2.5730614797428496e-10,
+            "stored_energy_J": 1.4856882391001136e-09
+          },
+          {
+            "source_step": 1,
+            "donor_normal_N": [
+              0.0005162735811304528,
+              -9.510934682870119e-06,
+              6.230771667483747e-05
+            ],
+            "tissue_normal_N": -0.0005690700263921113,
+            "closure_N": 3.4849639430575564e-10,
+            "stored_energy_J": 1.4859125041510879e-09
+          }
+        ],
+        "generic_contact": [
+          {
+            "source_step": 0,
+            "skin_rows": 2211,
+            "rigid_normal_N": 1.4380937059615009,
+            "nearest_row_to_posterior_patch_m": 0.1831543853871578
+          },
+          {
+            "source_step": 1,
+            "skin_rows": 2216,
+            "rigid_normal_N": 1.4380706380573731,
+            "nearest_row_to_posterior_patch_m": 0.1831543853871578
+          }
+        ]
+      },
+      "real_time_factor": 7.14120772710812e-08,
+      "matched_muscle_generalized_coordinates": 128,
+      "maximum_absolute_generalized_change": {
+        "dof": 2,
+        "source": 0,
+        "trial": 0,
+        "difference": 0.0
+      },
+      "whole_model_rows_above_one_percent_with_0_001_floor": []
+    },
+    "cortical-ports-native": {
+      "observation": {
+        "launch_sha256": "f85679ff4f0a4a81b7e48ad7bef14f294ad8bfa3bf4f83132b7690d56215ec38",
+        "binary_sha256": "d930c2b8f0bc21a262456a69b237f843292d31e21fc1967bfa6454b6853bec11",
+        "tissue_nodes_sha256": "e26bb02dd39e91fabc2914b1a4af0aeba580812fe53c4000878d7bd771ee2a22",
+        "receipt_sha256": "f6b6bd12a333c9658718b75ad49fca3c27a96658a0010907d6ecf504bf5fa329",
+        "native_pack": "4fdb9a8690bea185a269b6be0cccd692b7c78542bf48797c96ff8bd5d3ad9f78",
+        "pleural_pressure_variable": true,
+        "steps": 2,
+        "simulated_s": 1.5625000742147677e-05,
+        "wall_s": 216.42244666605256,
+        "final_bed_mean_N": 11.01170556134183,
+        "final_bed_impulse_Ns": 8.602894969798307e-05,
+        "maximum_opening_contact_site_recoil_m": 1.2982877364266112e-05,
+        "gluteal_connection": [
+          {
+            "source_step": 0,
+            "donor_normal_N": [
+              0.0005241947878246264,
+              -8.756244872945526e-06,
+              6.248429672195389e-05
+            ],
+            "tissue_normal_N": -0.0005779225942732209,
+            "closure_N": 2.5730614797428496e-10,
+            "stored_energy_J": 1.4856882391001136e-09
+          },
+          {
+            "source_step": 1,
+            "donor_normal_N": [
+              0.0005162735811304528,
+              -9.510934682870119e-06,
+              6.230771667483747e-05
+            ],
+            "tissue_normal_N": -0.0005690700263921113,
+            "closure_N": 3.4849639430575564e-10,
+            "stored_energy_J": 1.4859125041510879e-09
+          }
+        ],
+        "generic_contact": [
+          {
+            "source_step": 0,
+            "skin_rows": 2211,
+            "rigid_normal_N": 1.438093705961501,
+            "nearest_row_to_posterior_patch_m": 0.1831543853871578
+          },
+          {
+            "source_step": 1,
+            "skin_rows": 2216,
+            "rigid_normal_N": 1.4380706362849502,
+            "nearest_row_to_posterior_patch_m": 0.1831543853871578
+          }
+        ]
+      },
+      "real_time_factor": 7.219676601409835e-08,
+      "matched_muscle_generalized_coordinates": 128,
+      "maximum_absolute_generalized_change": {
+        "dof": 118,
+        "source": 788.8082885742188,
+        "trial": 801.5310668945312,
+        "difference": 12.7227783203125
+      },
+      "whole_model_rows_above_one_percent_with_0_001_floor": [
+        6,
+        7,
+        13,
+        16,
+        19,
+        22,
+        70,
+        26,
+        30,
+        31,
+        71,
+        73,
+        27,
+        33,
+        28,
+        34,
+        72,
+        23,
+        8,
+        20,
+        14,
+        17,
+        69,
+        35,
+        38,
+        36,
+        32,
+        39,
+        37,
+        74,
+        77,
+        75,
+        41,
+        79,
+        29,
+        10,
+        11,
+        118,
+        46,
+        9,
+        117,
+        126,
+        120,
+        121,
+        107
+      ]
+    },
+    "wrapped-ports-native": {
+      "observation": {
+        "launch_sha256": "76d94a9fd1aafbf5bb3991e1435c339488caab1036d6e5e8e5fe593011c2d887",
+        "binary_sha256": "d930c2b8f0bc21a262456a69b237f843292d31e21fc1967bfa6454b6853bec11",
+        "tissue_nodes_sha256": "ea7a78aee7c762dd9bed74975d7dd66c0d745960fd83962e44df4da61d9e84c6",
+        "receipt_sha256": "2000c9e3838261e5b46612e9390c783e5cccf61ed54283eb415d8b71d89a9b7a",
+        "native_pack": "ba401554711729b53aba1ff23b7611c54e46faed96c4cc9e6abed8a4852225fb",
+        "pleural_pressure_variable": true,
+        "steps": 2,
+        "simulated_s": 1.5625000742147677e-05,
+        "wall_s": 219.48529337509535,
+        "final_bed_mean_N": 11.01170556134183,
+        "final_bed_impulse_Ns": 8.602894969798307e-05,
+        "maximum_opening_contact_site_recoil_m": 1.2982877364266112e-05,
+        "gluteal_connection": [
+          {
+            "source_step": 0,
+            "donor_normal_N": [
+              0.0005241947878246264,
+              -8.756244872945526e-06,
+              6.248429672195389e-05
+            ],
+            "tissue_normal_N": -0.0005779225942732209,
+            "closure_N": 2.5730614797428496e-10,
+            "stored_energy_J": 1.4856882391001136e-09
+          },
+          {
+            "source_step": 1,
+            "donor_normal_N": [
+              0.0005162735811304528,
+              -9.510934682870119e-06,
+              6.230771667483747e-05
+            ],
+            "tissue_normal_N": -0.0005690700263921113,
+            "closure_N": 3.4849639430575564e-10,
+            "stored_energy_J": 1.4859125041510879e-09
+          }
+        ],
+        "generic_contact": [
+          {
+            "source_step": 0,
+            "skin_rows": 2211,
+            "rigid_normal_N": 1.4380937059615,
+            "nearest_row_to_posterior_patch_m": 0.1831543853871578
+          },
+          {
+            "source_step": 1,
+            "skin_rows": 2216,
+            "rigid_normal_N": 1.4380706380573725,
+            "nearest_row_to_posterior_patch_m": 0.1831543853871578
+          }
+        ]
+      },
+      "real_time_factor": 7.118928335414668e-08,
+      "matched_muscle_generalized_coordinates": 128,
+      "maximum_absolute_generalized_change": {
+        "dof": 118,
+        "source": 788.8082885742188,
+        "trial": 788.8045654296875,
+        "difference": -0.00372314453125
+      },
+      "whole_model_rows_above_one_percent_with_0_001_floor": []
+    }
+  },
+  "accepted_scapular_attachment_offsets_mm": {
+    "control": {
+      "TMAJ": 56.94186300698654,
+      "TMAJ_l": 56.86534977722608
+    },
+    "trial": {
+      "TMAJ": 5.102996509180814e-05,
+      "TMAJ_l": 3.727248759928498e-05
+    }
+  },
+  "recovered_muscle": {
+    "external_intersections": {
+      "O": 0,
+      "I": 0,
+      "D": 0
+    },
+    "self_intersections": 0,
+    "neighbor_face_pairs": {
+      "51004/12": 118,
+      "51005/85": 146,
+      "51005/89": 51,
+      "51005/93": 131,
+      "51005/103": 144
+    },
+    "right_teres_cortical_endpoint_to_belly_mm": 50.539821705123785
+  },
+  "material_quality": {
+    "15": {
+      "cells": 707597,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 4
+    },
+    "16": {
+      "cells": 749719,
+      "inverted": 0,
+      "tiny": 0,
+      "low_shape": 33
+    }
+  },
+  "deformation": {
+    "15": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 0,
+      "principal_stretch_failures": 240,
+      "minimum_stretch": 0.22512840810354492,
+      "maximum_stretch": 4.378580295114065,
+      "worst_stretch_cell": 1440182
+    },
+    "16": {
+      "invalid_reference_cells": 0,
+      "relative_volume_failures": 4,
+      "principal_stretch_failures": 323,
+      "minimum_stretch": 0.01954555741892483,
+      "maximum_stretch": 20.958021942723,
+      "worst_stretch_cell": 1287665
+    }
+  },
+  "initial": {
+    "initialization": "dynamic_release",
+    "initial_balanced": false,
+    "initial_maximum_acceleration_residual_m_s2": 68.3067563181,
+    "last_root_mean_normal_force_N": 11.01170556134183,
+    "last_root_normal_impulse_Ns": 8.602894969798307e-05,
+    "last_root_contact_samples": 16
+  },
+  "checks": {
+    "wrapped-ports-geometry.json": "70f79b5a58756d6437dae1129f2e900c23a870a86a3d53ea4e9b29680529f436",
+    "wrapped-ports-material.json": "9d4dec075c26efd944fa46cc30df9cda68ef914375190e0cf5ad3c8c295340d0",
+    "wrapped-cortical-distances.json": "51e0b914f9e97c5ac72d860c5bbca1db5d49b0978934356d1bdeb36fe85276e0",
+    "wrapped-route-lengths.json": "6a190fbb5b5ccc82c7c32275c79f0193a1186600b471cdd245eedf489f1ef595",
+    "wrapped-joint-sweep.json": "2a0649a22951e32e754fbd8729f96ee398e5656357e4db2aed4d0df829b123b3",
+    "ports-route-clearance.json": "1e5e8856a8a83a5c70530085096e12fde3ddb851af048217d44bd8c4190aca70"
+  },
+  "scope": "Measured dense native releases at two accepted steps, and separate static source path checks. Distances to the muscle surface characterize the assembly; continuity of this tissue with its tendon still needs material verification."
+}
