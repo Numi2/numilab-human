@@ -1,0 +1,64 @@
+// Unmapped inter-object FEM edges have one physical stencil even when
+// adjacent surface triangles enumerate both orientations of both edges.
+inline uint4 nmCanonicalContactEdges(uint4 n) {
+    const uint2 a = uint2(min(n.x,n.y),max(n.x,n.y));
+    const uint2 b = uint2(min(n.z,n.w),max(n.z,n.w));
+    return uint4(a,b);
+}
+
+inline uint4 nmContactFeatureKey(uint kind,uint4 n) {
+    if(kind==NM_DEFORMABLE_CONTACT_EDGE_EDGE) return nmCanonicalContactEdges(n);
+    const uint lo=min(n.y,min(n.z,n.w)), hi=max(n.y,max(n.z,n.w));
+    return uint4(n.x,lo,n.y^n.z^n.w^lo^hi,hi);
+}
+
+kernel void nm_contact_own_shared_edge_forces(
+    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
+    device NMDeformableContactGPU* contacts [[buffer(1)]],
+    device const uint* incidence [[buffer(2)]],
+    device const NMIncidenceRangeGPU* ranges [[buffer(3)]],
+    uint global [[thread_position_in_grid]]) {
+    const uint nodes = dispatch.gridNodeCount + dispatch.femNodeCount;
+    if (global >= dispatch.environmentCount * nodes) return;
+    const uint environment = global / nodes;
+    const uint node = global - environment * nodes;
+    const auto range = ranges[global];
+    if (node < dispatch.gridNodeCount || range.count < 2u) return;
+    device NMDeformableContactGPU* records = contacts + environment * dispatch.deformableContactCapacity;
+    for (uint i=0; i<range.count; ++i) {
+        const uint slot = incidence[range.first+i] >> 3u;
+        if (slot >= dispatch.deformableContactCapacity) continue;
+        device NMDeformableContactGPU& row = records[slot];
+        const uint4 identity = row.identity;
+        if ((identity.z != NM_DEFORMABLE_CONTACT_EDGE_EDGE && identity.z != NM_DEFORMABLE_CONTACT_VERTEX_TRIANGLE) || identity.x == identity.y ||
+            (identity.w & (NM_CONTACT_VALID | NM_CONTACT_MAPPED_FEATURE)) != NM_CONTACT_VALID) continue;
+        const uint4 key = nmContactFeatureKey(identity.z,row.nodes);
+        // This single writer also excludes grid and degenerate/shared-node edges.
+        if (min(min(key.x,key.y),min(key.z,key.w)) != node || key.x==key.y || key.z==key.w || key.x==key.w ||
+            key.x==key.z || key.y==key.z || key.y==key.w) continue;
+        const uint4 source = row.source;
+        bool alias = false;
+        for (uint j=0; j<range.count && !alias; ++j) {
+            const uint otherSlot = incidence[range.first+j] >> 3u;
+            if (otherSlot >= dispatch.deformableContactCapacity || otherSlot == slot) continue;
+            device const NMDeformableContactGPU& other = records[otherSlot];
+            const uint4 id = other.identity;
+            if (id.z != identity.z || id.w != identity.w ||
+                id.x != identity.x || id.y != identity.y ||
+                !all(nmContactFeatureKey(id.z,other.nodes)==key)) continue;
+            const uint4 sibling = other.source;
+            if (sibling.w != source.w) continue;
+            alias = sibling.x < source.x || (sibling.x == source.x &&
+                (sibling.y < source.y || (sibling.y == source.y && otherSlot < slot)));
+        }
+        if (!alias) continue;
+        // Keep the active feature, normal, times, clearance, and swept geometry.
+        // Zero only this duplicate's energy, impulse and tangent coefficients.
+        row.impulseAndFriction.xyz = 0.0f;
+        row.barrier.xyw = 0.0f;
+        row.barrierHessianRow0.xyz = 0.0f;
+        row.barrierHessianRow1.xyz = 0.0f;
+        row.barrierHessianRow2.xyz = 0.0f;
+        row.mollifier.yzw = 0.0f;
+    }
+}

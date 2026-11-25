@@ -1,0 +1,100 @@
+// For a fixed separating axis the minimum vertex-pair projection is concave
+// along an affine Newton trial. Interpolating its two endpoint minima gives
+// a conservative lower bound throughout the trial.
+inline void nmBirthAxis(thread const float3* p, thread const float3* q,
+                        float3 axis, float width, thread float& safe) {
+    float n2=dot(axis,axis);
+    if (!(n2>0.f) || !isfinite(n2)) return;
+    axis *= rsqrt(n2);
+    float2 startA=float2(INFINITY,-INFINITY), startB=startA;
+    float2 endA=startA, endB=startA;
+    for(uint i=0;i<3u;++i) {
+        float pa=dot(axis,p[i]), pb=dot(axis,p[i+3]);
+        float qa=dot(axis,q[i]), qb=dot(axis,q[i+3]);
+        startA=float2(min(startA.x,pa),max(startA.y,pa));
+        startB=float2(min(startB.x,pb),max(startB.y,pb));
+        endA=float2(min(endA.x,qa),max(endA.y,qa));
+        endB=float2(min(endB.x,qb),max(endB.y,qb));
+    }
+    float start=startB.x-startA.y, end=endB.x-endA.y;
+    if(startA.x-startB.y>start) {start=startA.x-startB.y;end=endA.x-endB.y;}
+    if (!(start>=width)) return;
+    const float target=0.8f*width;
+    safe=max(safe,end>=target?1.f:(start-target)/(start-end));
+}
+
+kernel void nm_contact_limit_new_feature_entry(
+    constant NMMatterDispatchGPU& dispatch [[buffer(0)]],
+    constant NMMicrostepGPU& micro [[buffer(1)]],
+    device const NMDeformableContactCandidateGPU* pairs [[buffer(2)]],
+    device const uint* counts [[buffer(3)]],
+    device const NMDeformableContactGPU* contacts [[buffer(4)]],
+    device const NMContinuumSurfacePrimitiveGPU* surfaces [[buffer(5)]],
+    device const NMFEMNodeStateGPU* accepted [[buffer(6)]],
+    device const NMFEMNodeStateGPU* candidate [[buffer(7)]],
+    device const float4* solution [[buffer(8)]],
+    device const NMContinuumObjectGPU* objects [[buffer(9)]],
+    device const NMSchedulerStateGPU* schedulers [[buffer(10)]],
+    device const NMAdaptiveStateGPU* adaptive [[buffer(11)]],
+    device const NMFGMRESStateGPU* solver [[buffer(12)]],
+    device atomic_uint* lineSearchWords [[buffer(13)]],
+    device const NMMatterStatusGPU* status [[buffer(14)]],
+    uint lane [[thread_index_in_threadgroup]], uint group [[threadgroup_position_in_grid]]) {
+    constexpr uint tiles=128u;
+    const uint env=group/tiles;
+    if (env>=dispatch.environmentCount || !environmentHealthy(status,env) ||
+        solver[env].nonlinear.w>0.5f || dispatch.cohesiveFaceCount!=0u) return;
+    const uint cap=dispatch.deformableContactCapacity;
+    const uint count=min(counts[env],cap);
+    const uint primCount=continuumSurfacePrimitiveCount(dispatch);
+    const float width=dispatch.numericalLimits.x;
+    float bound=1.f;
+    for(uint slot=(group%tiles)*32u+lane;slot<count;slot+=tiles*32u) {
+        const uint row=env*cap+slot;
+        if(contacts[row].identity.w & NM_CONTACT_VALID)continue;
+        const auto pair=pairs[row].identity;
+        if (!(pair.w & NM_TOPOLOGY_ACTIVE) || max(pair.x,pair.y)>=primCount)continue;
+        const auto a=surfaces[env*primCount+pair.x], b=surfaces[env*primCount+pair.y];
+        if(a.identity.y!=NM_CONTINUUM_SURFACE_TRIANGLE || b.identity.y!=NM_CONTINUUM_SURFACE_TRIANGLE ||
+           a.nodesAndObject.w==b.nodesAndObject.w ||
+           max(a.nodesAndObject.w,b.nodesAndObject.w)>=dispatch.objectCount)continue;
+        float3 p[6],q[6],origin=0.f;
+        bool eligible=true;
+        for(uint i=0;i<6u;++i) {
+            const uint4 part=i<3u?a.nodesAndObject:b.nodesAndObject;
+            uint n=part[i%3u]-dispatch.gridNodeCount;
+            if(n>=dispatch.femNodeCount) { eligible=false;break; }
+            n+=env*dispatch.femNodeCount;
+            const auto current=candidate[n];
+            if(current.referenceDisplacementAndMode.w!=1.f) {eligible=false;break;}
+            const uint owner=env*dispatch.objectCount+part.w;
+            const auto scheduler=schedulers[owner];
+            if(i==0u)origin=current.restAndFixed.xyz;
+            const auto trial=femTrialNodeAtAlpha(accepted[n],current,solution[n].xyz,1.f,
+                objectTimestep(dispatch,scheduler),objectDue(objects[part.w],scheduler,adaptive[owner],micro));
+            p[i]=femContactPositionRelativeProjection(femContactPositionRelativeExpansion(current,origin));
+            q[i]=femContactPositionRelativeProjection(femContactPositionRelativeExpansion(trial,origin));
+        }
+        if(!eligible)continue;
+        float safe=-1.f;
+        for(uint k=0;k<3u && safe<1.f;++k) {
+            float3 axis=0.f;axis[k]=1.f;nmBirthAxis(p,q,axis,width,safe);
+        }
+        if(safe>=1.f)continue;
+        const float3 na=cross(p[1]-p[0],p[2]-p[0]);
+        const float3 nb=cross(p[4]-p[3],p[5]-p[3]);
+        nmBirthAxis(p,q,na,width,safe);nmBirthAxis(p,q,nb,width,safe);
+        for(uint i=0;i<3u && safe<1.f;++i) {
+            const float3 ei=p[(i+1u)%3u]-p[i];
+            nmBirthAxis(p,q,cross(ei,na),width,safe);
+            const float3 fi=p[3u+(i+1u)%3u]-p[3u+i];
+            nmBirthAxis(p,q,cross(fi,nb),width,safe);
+            for(uint j=0;j<3u && safe<1.f;++j)
+                nmBirthAxis(p,q,cross(ei,p[3u+(j+1u)%3u]-p[3u+j]),width,safe);
+        }
+        if(safe>0.f)bound=min(bound,safe);
+    }
+    bound=simd_min(bound);
+    if(lane==0u && bound<1.f)
+        atomic_fetch_min_explicit(lineSearchWords+4u*env*dispatch.objectCount,as_type<uint>(bound),memory_order_relaxed);
+}
