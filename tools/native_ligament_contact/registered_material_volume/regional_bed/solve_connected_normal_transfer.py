@@ -167,7 +167,9 @@ def material_parameters(cfg, verify):
     return params
 
 
-def run(case, output, library=None, proposal=None):
+def run(case, output, library=None, proposal=None, affine_radius=None):
+    if affine_radius is not None and proposal is None:
+        raise ValueError("An affine gravity search requires a proposal output")
     if proposal is not None and (
         proposal.suffix != ".npz" or proposal.resolve() == output.resolve()
     ):
@@ -379,13 +381,21 @@ def run(case, output, library=None, proposal=None):
         upper[O] = np.maximum(0.0, gap[O] - width)
         active = np.zeros(len(xyz), bool)
         active[bed] = True
-        q, reactions, history = contact_step(
-            H,
-            gz,
-            np.r_[upper[active_nodes], np.inf],
-            np.r_[active[active_nodes], False],
-            lambda A, f: solve_positive(A, f, library),
-        )
+        if affine_radius is None:
+            q, reactions, history = contact_step(
+                H,
+                gz,
+                np.r_[upper[active_nodes], np.inf],
+                np.r_[active[active_nodes], False],
+                lambda A, f: solve_positive(A, f, library),
+            )
+        else:
+            from smooth_gravity_start import affine_contact_step, near_shape_limits
+
+            q, reactions, history = affine_contact_step(
+                H, gz, xyz[active_nodes], upper[active_nodes], affine_radius, normal=normal,
+                shape=near_shape_limits(xyz,t,active_nodes,.04)
+            )
         y = np.zeros(len(xyz))
         y[active_nodes] = q[:-1]
         # Components with no branch loads have no supported static solution under gravity.
@@ -448,6 +458,9 @@ def run(case, output, library=None, proposal=None):
             candidate_minimum_outer_gap_m=float(np.min(gap[O] - alpha * y[O])),
             scope="Static starting-coordinate search in the bed-normal direction. Gravity acts on the imported mass, with no depth cutoff or fixed material anchors. Held skeletal joint angles, frozen cortical features, omitted other tissue paths and off-axis forces require complete native verification.",
         )
+        if affine_radius is not None:
+            result["search_basis"] = "affine material motion and independent skeletal translation"
+            result["quadratic_bed_load_scope"] = "Reduced trial KKT multiplier. Trust-bound reactions are excluded. A binding trust limit leaves an unbalanced physical load."
         np.savez_compressed(
             proposal, node_rows=np.flatnonzero(y), delta_m=alpha * dy[y != 0]
         )
@@ -467,6 +480,7 @@ if __name__ == "__main__":
         type=Path,
         help="prepare a sparse starting-coordinate proposal under the measured gravitational loads",
     )
+    parser.add_argument("--affine-trust-mm", type=float, help="use a bounded affine normal search for gravity initialization")
     args = parser.parse_args()
     with tempfile.TemporaryDirectory(prefix="numi-static-factor-") as tmp:
         library = Path(tmp) / "normal_transfer.dylib"
@@ -487,6 +501,7 @@ if __name__ == "__main__":
             check=True,
         )
         result = run(
-            args.native_run.resolve(), args.output, library, args.gravity_proposal
+            args.native_run.resolve(), args.output, library, args.gravity_proposal,
+            None if args.affine_trust_mm is None else args.affine_trust_mm / 1000
         )
     print(result["bed_stiffness_N_per_m"], "N/m", flush=True)
