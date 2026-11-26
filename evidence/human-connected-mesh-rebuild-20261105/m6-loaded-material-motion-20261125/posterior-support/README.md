@@ -1,5 +1,7 @@
 # Posterior load transfer on SSH Numi
 
+[November 26 session handoff, recovery instructions and next mechanical test](session-handoff-20261126.md)
+
 The default native launcher uses four source-mapped tissue cavities. The opening-release comparison and its limits are recorded in [the tissue motion results](./dermal-cavity-motion.md).
 
 ## Dense release with anatomical joint stops
